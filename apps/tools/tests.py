@@ -5,7 +5,9 @@ from django.urls import reverse
 
 from apps.leads.models import AuditRequest
 
-from .models import AuditIssue, AuditRun
+from .models import AuditIssue, AuditPage, AuditRun
+from .recommendations import build_audit_summary
+from .scoring import apply_audit_scores
 from .services import run_public_site_audit
 
 
@@ -117,5 +119,76 @@ class PublicAuditFlowTests(TestCase):
         self.assertEqual(audit_run.pages_crawled, 2)
         self.assertGreater(AuditIssue.objects.filter(audit_run=audit_run).count(), 0)
         self.assertIn("scores", audit_run.summary)
+        self.assertIn("score_breakdown", audit_run.summary)
+        self.assertIn("recommendations", audit_run.summary)
         self.assertEqual(audit_run.performance_score, 84)
         self.assertEqual(audit_run.summary["pagespeed"]["source"], "Google PageSpeed Insights")
+
+
+class AuditScoringTests(TestCase):
+    def test_issue_based_performance_score_is_used_without_pagespeed(self):
+        audit_run = AuditRun.objects.create(
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+        )
+        AuditIssue.objects.create(
+            audit_run=audit_run,
+            code="slow_response",
+            category=AuditIssue.Category.PERFORMANCE,
+            severity=AuditIssue.Severity.MEDIUM,
+            message="Page response time appears slow.",
+            recommendation="Review hosting, caching, and page weight to improve response speed.",
+        )
+
+        apply_audit_scores(audit_run, has_pagespeed=False)
+
+        self.assertEqual(audit_run.performance_score, 93)
+        self.assertGreater(audit_run.overall_score, 0)
+
+    def test_summary_builds_ranked_recommendations_and_score_breakdown(self):
+        audit_run = AuditRun.objects.create(
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+        )
+        high_page = AuditPage.objects.create(
+            audit_run=audit_run,
+            url="https://example.com/about/",
+            status_code=200,
+            response_time_ms=1800,
+        )
+        low_page = AuditPage.objects.create(
+            audit_run=audit_run,
+            url="https://example.com/blog/",
+            status_code=200,
+            response_time_ms=500,
+        )
+
+        AuditIssue.objects.create(
+            audit_run=audit_run,
+            page=high_page,
+            code="missing_title",
+            category=AuditIssue.Category.ON_PAGE,
+            severity=AuditIssue.Severity.HIGH,
+            message="Page title is missing.",
+            recommendation="Add a unique page title aligned with the page intent.",
+        )
+        AuditIssue.objects.create(
+            audit_run=audit_run,
+            page=low_page,
+            code="thin_content",
+            category=AuditIssue.Category.CONTENT,
+            severity=AuditIssue.Severity.LOW,
+            message="Page copy is thin for a commercial page.",
+            recommendation="Expand the page with clearer explanations and proof.",
+        )
+
+        apply_audit_scores(audit_run, has_pagespeed=False)
+        summary = build_audit_summary(audit_run)
+
+        self.assertIn("score_breakdown", summary)
+        self.assertIn("recommendations", summary)
+        self.assertEqual(summary["recommendations"][0]["title"], "Page title is missing.")
+        self.assertGreaterEqual(
+            summary["recommendations"][0]["priority_score"],
+            summary["recommendations"][1]["priority_score"],
+        )

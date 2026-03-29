@@ -12,6 +12,8 @@ from django.utils import timezone
 from requests.exceptions import SSLError
 
 from .models import AuditIssue, AuditPage, AuditRun
+from .recommendations import build_audit_summary
+from .scoring import apply_audit_scores
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -671,29 +673,8 @@ def analyze_page(audit_run, page, parsed):
 
 
 def calculate_scores(audit_run):
-    scores = {
-        AuditIssue.Category.TECHNICAL: 100,
-        AuditIssue.Category.ON_PAGE: 100,
-        AuditIssue.Category.CONTENT: 100,
-        AuditIssue.Category.AEO: 100,
-        AuditIssue.Category.INTERNAL_LINKING: 100,
-        AuditIssue.Category.PERFORMANCE: 100,
-    }
-
-    for issue in audit_run.issues.all():
-        scores[issue.category] = max(0, scores[issue.category] - ISSUE_WEIGHTS[issue.severity])
-
-    audit_run.technical_score = scores[AuditIssue.Category.TECHNICAL]
-    audit_run.on_page_score = scores[AuditIssue.Category.ON_PAGE]
-    audit_run.content_score = scores[AuditIssue.Category.CONTENT]
-    audit_run.aeo_score = scores[AuditIssue.Category.AEO]
-    audit_run.internal_linking_score = scores[AuditIssue.Category.INTERNAL_LINKING]
-    
-    # Only use heuristics if PageSpeed scores haven't been fetched
-    if audit_run.performance_score is None:
-        audit_run.performance_score = scores[AuditIssue.Category.PERFORMANCE]
-        
-    audit_run.overall_score = round(sum(scores.values()) / len(scores))
+    has_pagespeed = bool((audit_run.summary or {}).get("pagespeed"))
+    return apply_audit_scores(audit_run, has_pagespeed=has_pagespeed)
 
 
 def apply_pagespeed_score(audit_run):
@@ -1077,28 +1058,7 @@ def run_public_site_audit(*, audit_run, page_limit=PAGE_LIMIT):
         audit_run.seo_score = homepage_ps["seo_score"]
         audit_run.summary = {"pagespeed": homepage_ps}
         
-    calculate_scores(audit_run)
-    # If we have a real pagespeed score, it should dominate the performance category
-    if homepage_ps:
-        ps_perf = audit_run.performance_score or 0
-        ps_acc = audit_run.accessibility_score or 0
-        ps_bp = audit_run.best_practices_score or 0
-        ps_seo = audit_run.seo_score or 0
-        
-        audit_run.overall_score = round(
-            (
-                audit_run.technical_score
-                + audit_run.on_page_score
-                + audit_run.content_score
-                + audit_run.aeo_score
-                + audit_run.internal_linking_score
-                + ps_perf
-                + ps_acc
-                + ps_bp
-                + ps_seo
-            )
-            / 9
-        )
+    apply_audit_scores(audit_run, has_pagespeed=bool(homepage_ps))
         
     # Expert Intelligence Aggregation
     tech_summary = {"cms": [], "frameworks": [], "analytics": set(), "marketing": set(), "security": True}
@@ -1117,7 +1077,7 @@ def run_public_site_audit(*, audit_run, page_limit=PAGE_LIMIT):
     tech_summary["marketing"] = list(tech_summary["marketing"])
     audit_run.tech_summary = tech_summary
 
-    build_summary(audit_run)
+    audit_run.summary = build_audit_summary(audit_run)
     audit_run.status = AuditRun.Status.COMPLETED
     audit_run.completed_at = timezone.now()
     audit_run.save(update_fields=[
