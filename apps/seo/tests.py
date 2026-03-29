@@ -525,3 +525,61 @@ class SEOCompetitorDiscoveryTests(TestCase):
         self.assertEqual(discovery["competitors"][0]["normalized_domain"], "competitor-a.com")
         self.assertEqual(discovery["competitors"][0]["query_count"], 2)
         self.assertEqual(discovery["competitors"][0]["best_position"], 1)
+
+    @override_settings(
+        SERP_DISCOVERY_ENABLED=True,
+        SERP_DISCOVERY_PROVIDER="serpapi",
+        SERPAPI_API_KEY="test-key",
+        SERP_DISCOVERY_QUERY_LIMIT=1,
+        SERP_DISCOVERY_RESULTS_PER_QUERY=5,
+    )
+    @patch("apps.seo.discovery.fetch_serpapi_results")
+    def test_discover_serp_competitors_tolerates_string_and_nested_local_results(self, mocked_serp_fetch):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="ops@example.com",
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified leads",
+            primary_service="used car dealership",
+            target_audience="price-sensitive car buyers",
+        )
+        mocked_serp_fetch.return_value = {
+            "organic_results": [
+                "https://competitor-a.com/used-cars/",
+                {
+                    "position": 2,
+                    "title": "Competitor B Nairobi",
+                    "link": "https://competitor-b.com/",
+                    "snippet": "Another used car dealer",
+                },
+            ],
+            "local_results": {
+                "places": [
+                    {
+                        "position": 3,
+                        "title": "Competitor C Nairobi",
+                        "website": "https://competitor-c.com/",
+                        "description": "Local competitor",
+                    }
+                ]
+            },
+        }
+
+        discovery = discover_serp_competitors(project, profile)
+
+        domains = [item["normalized_domain"] for item in discovery["competitors"]]
+        self.assertIn("competitor-a.com", domains)
+        self.assertIn("competitor-b.com", domains)
+        self.assertIn("competitor-c.com", domains)

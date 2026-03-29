@@ -74,10 +74,22 @@ def fetch_serpapi_results(query, location=""):
 
 
 def _candidate_link(result):
+    if isinstance(result, str):
+        return result.strip()
+    if not isinstance(result, dict):
+        return ""
     for key in ("link", "website", "url"):
         value = result.get(key)
         if value:
             return value
+    sitelinks = result.get("sitelinks")
+    if isinstance(sitelinks, dict):
+        for group in ("expanded", "inline"):
+            for item in sitelinks.get(group, []) or []:
+                if isinstance(item, dict):
+                    value = item.get("link") or item.get("url")
+                    if value:
+                        return value
     return ""
 
 
@@ -101,7 +113,8 @@ def _parse_result(result, *, query, own_domain):
     domain = extract_domain(link)
     if _is_blocked_domain(domain, own_domain):
         return None
-    position = result.get("position") or result.get("rank") or 99
+    result_dict = result if isinstance(result, dict) else {}
+    position = result_dict.get("position") or result_dict.get("rank") or 99
     try:
         position = int(position)
     except (TypeError, ValueError):
@@ -110,11 +123,24 @@ def _parse_result(result, *, query, own_domain):
         "homepage_url": _domain_root_url(link) or normalize_url(link),
         "normalized_domain": domain,
         "position": position,
-        "title": (result.get("title") or "").strip(),
-        "snippet": (result.get("snippet") or result.get("description") or "").strip(),
+        "title": (result_dict.get("title") or "").strip(),
+        "snippet": (result_dict.get("snippet") or result_dict.get("description") or "").strip(),
         "query": query,
         "result_url": link,
     }
+
+
+def _result_items(payload, key):
+    items = payload.get(key, [])
+    if isinstance(items, dict):
+        for nested_key in ("places", "results"):
+            nested = items.get(nested_key, [])
+            if isinstance(nested, list):
+                return nested
+        return []
+    if isinstance(items, list):
+        return items
+    return []
 
 
 def _aggregate_candidates(raw_candidates):
@@ -190,11 +216,11 @@ def discover_serp_competitors(project, profile):
         except requests.RequestException as exc:
             errors.append({"query": query, "message": str(exc)})
             continue
-        for result in payload.get("organic_results", []):
+        for result in _result_items(payload, "organic_results"):
             parsed = _parse_result(result, query=query, own_domain=own_domain)
             if parsed:
                 raw_candidates.append(parsed)
-        for result in payload.get("local_results", []):
+        for result in _result_items(payload, "local_results"):
             parsed = _parse_result(result, query=query, own_domain=own_domain)
             if parsed:
                 raw_candidates.append(parsed)
