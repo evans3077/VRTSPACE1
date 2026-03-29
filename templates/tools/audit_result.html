@@ -1,6 +1,55 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% if is_processing %}
+<section class="hero" style="padding-bottom: 3rem;">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Audit In Progress</p>
+            <h1 style="max-width: none;">We are analyzing {{ audit_run.normalized_domain|default:audit_run.start_url }}</h1>
+            <p class="section-text" style="max-width: 760px;">
+                The request was accepted and moved off the web request thread so Render does not time out.
+                This page refreshes automatically while the crawl and PageSpeed calls finish.
+            </p>
+            <div style="margin-top: 1.5rem; display: inline-flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+                <span class="score-pill score-med" style="font-size: 0.75rem;">Status: {{ audit_run.get_status_display }}</span>
+                <a class="button button-secondary" href="{% url 'core:home' %}#audit">Run another audit</a>
+            </div>
+        </div>
+
+        <div class="system-grid" style="margin-top: 3rem;">
+            <article class="system-card" style="border-top: 4px solid var(--signal);">
+                <h3>Current step</h3>
+                <p>Fetching public pages, collecting crawl signals, and requesting PageSpeed data for the scanned URLs.</p>
+            </article>
+            <article class="system-card" style="border-top: 4px solid #0f172a;">
+                <h3>What happens next</h3>
+                <p>As soon as the job completes, this page will switch to the full audit report with scores, grouped fixes, and workspace actions.</p>
+            </article>
+        </div>
+    </div>
+</section>
+<script>
+setTimeout(function () {
+    window.location.reload();
+}, 5000);
+</script>
+{% elif audit_run.status == "failed" %}
+<section class="hero" style="padding-bottom: 3rem;">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Audit Failed</p>
+            <h1 style="max-width: none;">We could not finish the audit for {{ audit_run.normalized_domain|default:audit_run.start_url }}</h1>
+            <p class="section-text" style="max-width: 760px;">
+                {{ audit_run.error_message|default:"The audit could not complete with the current public URL." }}
+            </p>
+            <div style="margin-top: 1.5rem;">
+                <a class="button button-primary" href="{% url 'core:home' %}#audit">Try another audit</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% else %}
 <section class="hero" style="padding-bottom: 3rem;">
     <div class="container">
         <div class="section-heading">
@@ -403,4 +452,5 @@
         </div>
     </div>
 </section>
+{% endif %}
 {% endblock %}

@@ -16,17 +16,8 @@ from .services import get_pagespeed_api_key, run_public_site_audit
 
 
 class PublicAuditFlowTests(TestCase):
-    @patch("apps.tools.views.run_public_site_audit")
-    def test_public_audit_submission_creates_run_and_redirects(self, mocked_run):
-        def complete_run(*, audit_run, page_limit=5):
-            audit_run.status = AuditRun.Status.COMPLETED
-            audit_run.normalized_domain = "example.com"
-            audit_run.overall_score = 78
-            audit_run.summary = {"recommendations": [], "score_breakdown": {}, "product_modules": [], "service_fit": []}
-            audit_run.save()
-            return audit_run
-
-        mocked_run.side_effect = complete_run
+    @patch("apps.tools.views.enqueue_public_site_audit")
+    def test_public_audit_submission_creates_run_and_redirects(self, mocked_enqueue):
 
         response = self.client.post(
             reverse("tools:free-seo-audit"),
@@ -43,6 +34,20 @@ class PublicAuditFlowTests(TestCase):
         self.assertEqual(AuditRequest.objects.count(), 1)
         self.assertEqual(AuditRun.objects.count(), 1)
         self.assertIn("/tools/audits/", response["Location"])
+        mocked_enqueue.assert_called_once()
+
+    def test_pending_audit_result_shows_processing_state(self):
+        audit_run = AuditRun.objects.create(
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            status=AuditRun.Status.PENDING,
+        )
+
+        response = self.client.get(reverse("tools:audit-result", args=[audit_run.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Audit In Progress")
+        self.assertContains(response, "This page refreshes automatically")
 
     @patch("apps.tools.services.fetch_pagespeed_insights")
     @patch("apps.tools.services.safe_fetch")
@@ -480,6 +485,7 @@ class ProjectDashboardTests(TestCase):
             normalized_domain="example.com",
             start_url="https://example.com/",
             overall_score=61,
+            status=AuditRun.Status.COMPLETED,
             summary={
                 "scores": {"technical": 60, "aeo": 64, "on_page": 58, "content": 70, "internal_linking": 66, "performance": 72, "accessibility": 0, "best_practices": 0, "seo": 0},
                 "gauge_offsets": {"overall": 0},

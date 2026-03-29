@@ -23,8 +23,9 @@ from apps.leads.forms import AuditRequestForm, WorkspaceLoginForm, WorkspaceSign
 from apps.leads.models import ClientProject
 from apps.leads.services import create_audit_request_from_form, sync_client_project_from_audit_run
 
+from .jobs import enqueue_public_site_audit
 from .models import AuditRun
-from .services import normalize_url, run_public_site_audit
+from .services import normalize_url
 
 
 class PublicAuditCreateView(View):
@@ -62,15 +63,8 @@ class PublicAuditCreateView(View):
             start_url=normalize_url(audit_request.website),
         )
 
-        run_public_site_audit(audit_run=audit_run)
-        if audit_run.status == AuditRun.Status.FAILED:
-            messages.error(request, "We could not audit that site automatically. Try a different public URL.")
-            return redirect("/#audit")
-
-        if audit_run.audit_request_id:
-            sync_client_project_from_audit_run(audit_run)
-
-        messages.success(request, "Audit complete. Review the summary below.")
+        enqueue_public_site_audit(audit_run.pk)
+        messages.success(request, "Audit started. We are analyzing the site now.")
         return redirect("tools:audit-result", pk=audit_run.pk)
 
 
@@ -127,6 +121,7 @@ class AuditResultDetailView(DetailView):
         context["packages"] = PACKAGES
         context["audit_tier_enforcement"] = settings.AUDIT_TIER_ENFORCEMENT
         context["pages"] = audit_run.pages.all()
+        context["is_processing"] = audit_run.status in {AuditRun.Status.PENDING, AuditRun.Status.RUNNING}
         return context
 from .admin_utils import get_service_recommendations
 

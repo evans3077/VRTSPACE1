@@ -27,6 +27,7 @@ Status: complete
 - [x] Add a public workspace signup and user dashboard path from audit results
 - [x] Rework the broader public marketing layer so public CTAs route into audit, workspace, plans, or custom-work exceptions
 - [x] Add workspace sign-in and Google OAuth-ready authentication flow for user testing
+- [x] Move live audit execution off the request thread so Render can return a status page instead of timing out
 
 ## Phase 3: Billing and Plan Enforcement
 
