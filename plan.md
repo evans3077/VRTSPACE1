@@ -100,7 +100,9 @@ Status: in progress
 - [x] Add a workspace AEO hub for AI visibility, entity clarity, and answer-readiness analysis
 - [x] Extend the SEO layer into deeper keyword planning, page mapping, and execution workflows
 - [x] Turn real competitor benchmarks into a stored SEO opportunity snapshot with value reporting, keyword queue, page map, and execution queue
+- [x] Add localized SERP-backed competitor discovery with persisted query/ranking evidence and merge it into the SEO benchmark flow
 - [ ] Connect SEO page-map and execution outputs directly into content generation and future SEO automation workflows
+- [ ] Add a production-grade secondary discovery provider or fallback path so competitor discovery is not tied to a single SERP source
 
 ## Working Rule
 

@@ -3,6 +3,7 @@ from unittest.mock import patch
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
+from django.test.utils import override_settings
 
 from apps.leads.models import AuditRequest, ClientProject
 from apps.tools.models import AuditPage, AuditRun
@@ -14,13 +15,20 @@ from .models import (
     SEOProjectProfile,
     SEOSiteStructureSnapshot,
 )
+from .discovery import build_discovery_queries, discover_serp_competitors
 from .services import build_seo_context_payload, build_seo_opportunity_payload, get_or_build_seo_snapshot
 
 
 class SEOContextServiceTests(TestCase):
+    @patch("apps.seo.services.discover_serp_competitors")
     @patch("apps.seo.services.fetch_many")
     @patch("apps.seo.services.safe_fetch")
-    def test_build_seo_context_payload_generates_local_keyword_clusters(self, mocked_fetch, mocked_fetch_many):
+    def test_build_seo_context_payload_generates_local_keyword_clusters(
+        self,
+        mocked_fetch,
+        mocked_fetch_many,
+        mocked_discovery,
+    ):
         audit_request = AuditRequest.objects.create(
             company_name="Northwind",
             email="ops@example.com",
@@ -101,6 +109,26 @@ class SEOContextServiceTests(TestCase):
             }
 
         mocked_fetch.side_effect = fake_fetch
+        mocked_discovery.return_value = {
+            "provider": "serpapi",
+            "enabled": True,
+            "queries": ["used car dealership Nairobi", "best used car dealership Nairobi"],
+            "competitors": [
+                {
+                    "homepage_url": "https://competitor.com/",
+                    "normalized_domain": "competitor.com",
+                    "label": "competitor.com",
+                    "queries": ["used car dealership Nairobi"],
+                    "query_count": 1,
+                    "best_position": 2,
+                    "average_position": 2.0,
+                    "sample_titles": ["Best Used Car Dealership Nairobi"],
+                    "sample_snippets": ["Buy used cars in Nairobi"],
+                    "result_urls": ["https://competitor.com/"],
+                    "discovery_score": 33,
+                }
+            ],
+        }
         mocked_fetch_many.return_value = {
             "https://competitor.com/": {
                 "final_url": "https://competitor.com/",
@@ -137,6 +165,7 @@ class SEOContextServiceTests(TestCase):
         self.assertIn("Nairobi", payload["recommendations"][0]["why_it_matters"])
         self.assertTrue(payload["competitors"])
         self.assertGreaterEqual(payload["benchmark_summary"]["available_competitors"], 1)
+        self.assertIn("used car dealership Nairobi", payload["benchmark_summary"]["discovery_queries"])
         self.assertTrue(SEOCompetitor.objects.filter(project=project, is_active=True).exists())
 
         opportunity_payload = build_seo_opportunity_payload(project, profile, audit_run)
@@ -249,9 +278,10 @@ class WorkspaceSEOViewTests(TestCase):
         self.assertContains(response, "Business and competitor context")
         self.assertContains(response, "Refresh SEO Intelligence")
 
+    @patch("apps.seo.services.discover_serp_competitors")
     @patch("apps.seo.services.fetch_many")
     @patch("apps.seo.services.safe_fetch")
-    def test_workspace_seo_post_creates_profile_and_snapshot(self, mocked_fetch, mocked_fetch_many):
+    def test_workspace_seo_post_creates_profile_and_snapshot(self, mocked_fetch, mocked_fetch_many, mocked_discovery):
         self.client.force_login(self.user)
         mocked_fetch.return_value = {
             "final_url": "https://competitor.com/",
@@ -260,6 +290,26 @@ class WorkspaceSEOViewTests(TestCase):
             "headers": {},
             "content_type": "text/html",
             "response_time_ms": 150,
+        }
+        mocked_discovery.return_value = {
+            "provider": "serpapi",
+            "enabled": True,
+            "queries": ["used car dealership Nairobi", "best used car dealership Nairobi"],
+            "competitors": [
+                {
+                    "homepage_url": "https://competitor.com/",
+                    "normalized_domain": "competitor.com",
+                    "label": "competitor.com",
+                    "queries": ["used car dealership Nairobi"],
+                    "query_count": 1,
+                    "best_position": 2,
+                    "average_position": 2.0,
+                    "sample_titles": ["Competitor Nairobi"],
+                    "sample_snippets": ["Competitor snippet"],
+                    "result_urls": ["https://competitor.com/"],
+                    "discovery_score": 33,
+                }
+            ],
         }
         mocked_fetch_many.return_value = {
             "https://competitor.com/": mocked_fetch.return_value,
@@ -288,4 +338,90 @@ class WorkspaceSEOViewTests(TestCase):
         self.assertContains(response, "Keyword Opportunity Queue")
         self.assertContains(response, "Execution Queue")
         self.assertContains(response, "used car dealership Nairobi")
+        self.assertContains(response, "SERP discovery queries used")
         self.assertContains(response, "No H1 tag detected.")
+
+
+class SEOCompetitorDiscoveryTests(TestCase):
+    def test_build_discovery_queries_uses_service_location_and_audience(self):
+        profile = SEOProjectProfile(
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified leads",
+            primary_service="used car dealership",
+            target_audience="price-sensitive car buyers",
+        )
+
+        queries = build_discovery_queries(profile)
+
+        self.assertIn("used car dealership Nairobi", queries)
+        self.assertIn("best used car dealership Nairobi", queries)
+        self.assertIn("used car dealership near me", queries)
+
+    @override_settings(
+        SERP_DISCOVERY_ENABLED=True,
+        SERP_DISCOVERY_PROVIDER="serpapi",
+        SERPAPI_API_KEY="test-key",
+        SERP_DISCOVERY_QUERY_LIMIT=2,
+        SERP_DISCOVERY_RESULTS_PER_QUERY=5,
+    )
+    @patch("apps.seo.discovery.fetch_serpapi_results")
+    def test_discover_serp_competitors_aggregates_real_result_domains(self, mocked_serp_fetch):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="ops@example.com",
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified leads",
+            primary_service="used car dealership",
+            target_audience="price-sensitive car buyers",
+        )
+        mocked_serp_fetch.side_effect = [
+            {
+                "organic_results": [
+                    {
+                        "position": 1,
+                        "title": "Best Used Cars Nairobi",
+                        "link": "https://competitor-a.com/used-cars/",
+                        "snippet": "Used cars in Nairobi",
+                    },
+                    {
+                        "position": 2,
+                        "title": "Competitor B Nairobi",
+                        "link": "https://competitor-b.com/",
+                        "snippet": "Another used car dealer",
+                    },
+                ],
+                "local_results": [],
+            },
+            {
+                "organic_results": [
+                    {
+                        "position": 3,
+                        "title": "Best Used Cars Nairobi",
+                        "link": "https://competitor-a.com/pricing/",
+                        "snippet": "Pricing for used cars",
+                    }
+                ],
+                "local_results": [],
+            },
+        ]
+
+        discovery = discover_serp_competitors(project, profile)
+
+        self.assertTrue(discovery["enabled"])
+        self.assertEqual(len(discovery["queries"]), 2)
+        self.assertEqual(discovery["competitors"][0]["normalized_domain"], "competitor-a.com")
+        self.assertEqual(discovery["competitors"][0]["query_count"], 2)
+        self.assertEqual(discovery["competitors"][0]["best_position"], 1)

@@ -3,6 +3,7 @@ from urllib.parse import urlparse
 
 import requests
 
+from .discovery import discover_serp_competitors
 from apps.tools.services import (
     ParsedPage,
     choose_urls_to_crawl,
@@ -245,14 +246,57 @@ def sync_project_competitors(project, raw_values=None):
         )
         competitor.normalized_domain = extract_domain(url)
         competitor.label = competitor.label or competitor.normalized_domain
+        competitor.source = SEOCompetitor.Source.PROFILE
         competitor.is_active = True
-        competitor.save(update_fields=["normalized_domain", "label", "is_active", "updated_at"])
+        competitor.save(update_fields=["normalized_domain", "label", "source", "is_active", "updated_at"])
         active_urls.add(url)
 
-    SEOCompetitor.objects.filter(project=project).exclude(homepage_url__in=active_urls).update(
+    SEOCompetitor.objects.filter(project=project, source=SEOCompetitor.Source.PROFILE).exclude(
+        homepage_url__in=active_urls
+    ).update(
         is_active=False,
     )
     return list(SEOCompetitor.objects.filter(project=project, is_active=True).order_by("homepage_url"))
+
+
+def sync_discovered_competitors(project, profile):
+    discovery = discover_serp_competitors(project, profile)
+    active_urls = set()
+    for item in discovery.get("competitors", []):
+        competitor, _created = SEOCompetitor.objects.get_or_create(
+            project=project,
+            homepage_url=item["homepage_url"],
+            defaults={
+                "normalized_domain": item["normalized_domain"],
+                "label": item["label"],
+                "source": SEOCompetitor.Source.SERP,
+                "metadata": {"serp": item},
+            },
+        )
+        metadata = competitor.metadata or {}
+        metadata["serp"] = item
+        competitor.normalized_domain = item["normalized_domain"]
+        competitor.label = item["label"]
+        if competitor.source != SEOCompetitor.Source.PROFILE:
+            competitor.source = SEOCompetitor.Source.SERP
+        competitor.is_active = True
+        competitor.metadata = metadata
+        competitor.save(
+            update_fields=[
+                "normalized_domain",
+                "label",
+                "source",
+                "is_active",
+                "metadata",
+                "updated_at",
+            ]
+        )
+        active_urls.add(item["homepage_url"])
+
+    SEOCompetitor.objects.filter(project=project, source=SEOCompetitor.Source.SERP).exclude(
+        homepage_url__in=active_urls
+    ).update(is_active=False)
+    return discovery
 
 
 def _fetch_competitor_pages(competitor_url, *, business_type="", location=""):
@@ -559,6 +603,7 @@ def build_benchmark_summary(site_structure, competitor_snapshots):
             "available_competitors": 0,
             "site_page_count": site_structure.get("summary", {}).get("page_count", 0),
             "common_page_types": [],
+            "discovery_queries": [],
         }
     page_type_counter = Counter()
     for snapshot in available:
@@ -570,10 +615,17 @@ def build_benchmark_summary(site_structure, competitor_snapshots):
         for page_type, count in page_type_counter.items()
         if count >= max(1, len(available) // 2 + len(available) % 2)
     ]
+    discovery_queries = []
+    for snapshot in available:
+        for query in (((snapshot.competitor.metadata or {}).get("serp") or {}).get("queries", [])):
+            if query not in discovery_queries:
+                discovery_queries.append(query)
+
     return {
         "available_competitors": len(available),
         "site_page_count": site_structure.get("summary", {}).get("page_count", 0),
         "common_page_types": common_page_types[:6],
+        "discovery_queries": discovery_queries[:8],
     }
 
 
@@ -804,8 +856,17 @@ def build_execution_queue(profile, recommendations, page_map, keyword_opportunit
 def build_value_summary(competitor_snapshots, keyword_opportunities, page_map, execution_queue):
     profiled_competitors = _competitor_summaries(competitor_snapshots)
     competitor_pages = sum(payload.get("summary", {}).get("page_count", 0) for payload in profiled_competitors)
+    auto_discovered = len(
+        [
+            snapshot
+            for snapshot in competitor_snapshots
+            if snapshot.competitor.source == SEOCompetitor.Source.SERP
+            and (snapshot.output_json or {}).get("status") == "ok"
+        ]
+    )
     return {
         "competitors_benchmarked": len(profiled_competitors),
+        "auto_discovered_competitors": auto_discovered,
         "competitor_pages_profiled": competitor_pages,
         "keyword_targets": len(keyword_opportunities),
         "page_actions": len([item for item in page_map if item["status"] in {"missing", "expand", "optimize"}]),
@@ -819,7 +880,11 @@ def build_seo_context_payload(project, profile, audit_run):
         audit_run=audit_run,
         profile=profile,
     )
-    competitors = sync_project_competitors(project)
+    sync_project_competitors(project)
+    discovery = sync_discovered_competitors(project, profile)
+    competitors = list(
+        SEOCompetitor.objects.filter(project=project, is_active=True).order_by("source", "homepage_url")
+    )
     competitor_snapshots = [
         get_or_build_competitor_snapshot(
             competitor=competitor,
@@ -861,10 +926,13 @@ def build_seo_context_payload(project, profile, audit_run):
         },
         "site_structure": site_structure,
         "benchmark_summary": benchmark_summary,
+        "discovery": discovery,
         "competitors": [
             {
                 "domain": snapshot.competitor.normalized_domain,
                 "url": snapshot.competitor.homepage_url,
+                "source": snapshot.competitor.source,
+                "metadata": snapshot.competitor.metadata or {},
                 **(snapshot.output_json or {}),
             }
             for snapshot in competitor_snapshots

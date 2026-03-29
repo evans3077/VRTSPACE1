@@ -25,7 +25,7 @@ class SEOProjectProfileForm(forms.ModelForm):
                 "placeholder": "https://competitor-one.com\nhttps://competitor-two.com",
             }
         ),
-        help_text="One competitor URL per line. These sites will be fetched and benchmarked directly.",
+        help_text="Optional manual competitors, one URL per line. The system will also auto-discover competitors from SERPs when search discovery is configured.",
     )
 
     class Meta:

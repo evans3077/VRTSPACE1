@@ -81,10 +81,29 @@
             </div>
             <div class="system-grid">
                 <article class="system-card"><p class="eyebrow">Competitors</p><h3>{{ seo_value_summary.competitors_benchmarked|default:0 }}</h3><p>Real competitor sites fetched and benchmarked</p></article>
+                <article class="system-card"><p class="eyebrow">Auto-Discovered</p><h3>{{ seo_value_summary.auto_discovered_competitors|default:0 }}</h3><p>Competitors found directly from localized SERPs</p></article>
                 <article class="system-card"><p class="eyebrow">Competitor Pages</p><h3>{{ seo_value_summary.competitor_pages_profiled|default:0 }}</h3><p>Pages profiled across those competitor sites</p></article>
                 <article class="system-card"><p class="eyebrow">Keyword Targets</p><h3>{{ seo_value_summary.keyword_targets|default:0 }}</h3><p>Search targets generated from structure and competitor evidence</p></article>
                 <article class="system-card"><p class="eyebrow">Execution Items</p><h3>{{ seo_value_summary.execution_items|default:0 }}</h3><p>Actionable tasks mapped from the benchmark output</p></article>
             </div>
+            {% if seo_discovery.queries %}
+            <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.6;">
+                <strong style="display: block; color: #0f172a; margin-bottom: 0.35rem;">SERP discovery queries used</strong>
+                {{ seo_discovery.queries|join:", " }}
+            </div>
+            {% if seo_discovery.errors %}
+            <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(220, 38, 38, 0.08); color: #991b1b; line-height: 1.6;">
+                <strong style="display: block; margin-bottom: 0.35rem;">SERP discovery warnings</strong>
+                {% for item in seo_discovery.errors %}
+                <div>{{ item.query }}: {{ item.message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            {% elif snapshot %}
+            <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.6;">
+                Automatic SERP discovery is not configured yet. Manual competitors are still benchmarked directly.
+            </div>
+            {% endif %}
         </article>
 
         <div style="display: grid; grid-template-columns: 1.05fr 1fr; gap: 2rem; align-items: start;">
@@ -322,12 +341,34 @@
                         <strong>{{ competitor.domain|default:competitor.url }}</strong>
                         <span class="score-pill {% if competitor.status == 'ok' %}score-high{% else %}score-low{% endif %}" style="font-size: 0.7rem;">{{ competitor.status|default:"unknown"|title }}</span>
                     </div>
+                    <div style="color: #475569; font-size: 0.82rem; line-height: 1.5;">
+                        Source:
+                        <strong style="color: #0f172a;">
+                            {% if competitor.source == "serp" %}
+                            Auto-discovered from SERPs
+                            {% elif competitor.source == "profile" %}
+                            Manual competitor input
+                            {% else %}
+                            Audit context
+                            {% endif %}
+                        </strong>
+                    </div>
                     {% if competitor.status == "ok" %}
                     <div style="color: #475569; font-size: 0.88rem; line-height: 1.5;">
                         {{ competitor.summary.page_count }} pages profiled |
                         FAQ schema pages: {{ competitor.summary.faq_schema_pages|default:0 }} |
                         Location-matched pages: {{ competitor.summary.location_match_pages|default:0 }}
                     </div>
+                    {% if competitor.metadata.serp %}
+                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
+                        Best SERP position: <strong style="color: #0f172a;">{{ competitor.metadata.serp.best_position }}</strong> |
+                        Seen in {{ competitor.metadata.serp.query_count }} quer{{ competitor.metadata.serp.query_count|pluralize:"y,ies" }}
+                    </div>
+                    <div style="margin-top: 0.35rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
+                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Queries</strong>
+                        {{ competitor.metadata.serp.queries|join:", " }}
+                    </div>
+                    {% endif %}
                     <div style="margin-top: 0.75rem; display: grid; gap: 0.35rem;">
                         {% for page_type, count in competitor.summary.counts_by_type.items %}
                         <div style="display: flex; justify-content: space-between; gap: 1rem; color: #475569; font-size: 0.82rem;">

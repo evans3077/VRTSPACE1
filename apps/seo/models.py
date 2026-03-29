@@ -60,6 +60,7 @@ class SEOCompetitor(TimestampedModel):
     class Source(models.TextChoices):
         AUDIT = "audit", "Audit"
         PROFILE = "profile", "Profile"
+        SERP = "serp", "SERP Discovery"
 
     project = models.ForeignKey(
         "leads.ClientProject",
@@ -71,6 +72,7 @@ class SEOCompetitor(TimestampedModel):
     label = models.CharField(max_length=160, blank=True)
     source = models.CharField(max_length=24, choices=Source.choices, default=Source.PROFILE)
     is_active = models.BooleanField(default=True)
+    metadata = models.JSONField(default=dict, blank=True)
 
     class Meta:
         ordering = ("project__name", "homepage_url")

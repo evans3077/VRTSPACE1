@@ -8,7 +8,7 @@ from apps.leads.billing import record_usage
 from apps.leads.models import UsageRecord
 
 from .forms import SEOProjectProfileForm
-from .models import SEOProjectProfile
+from .models import SEOCompetitor, SEOProjectProfile
 from .services import (
     can_generate_seo_snapshot,
     get_or_build_seo_opportunity_snapshot,
@@ -116,7 +116,10 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             return {}
         competitor_urls = [
             competitor.homepage_url
-            for competitor in project.seo_competitors.filter(is_active=True).order_by("homepage_url")
+            for competitor in project.seo_competitors.filter(
+                is_active=True,
+                source=SEOCompetitor.Source.PROFILE,
+            ).order_by("homepage_url")
         ]
         if not competitor_urls and getattr(project, "audit_request", None):
             competitor_urls = getattr(project.audit_request, "competitor_urls", [])
@@ -163,6 +166,7 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             "seo_audit_snapshot": payload.get("audit_snapshot", {}),
             "seo_site_structure": payload.get("site_structure", {}),
             "seo_benchmark_summary": payload.get("benchmark_summary", {}),
+            "seo_discovery": payload.get("discovery", {}),
             "seo_competitors": payload.get("competitors", []),
             "seo_value_summary": opportunity_payload.get("value_summary", {}),
             "seo_keyword_opportunities": opportunity_payload.get("keyword_opportunities", []),
