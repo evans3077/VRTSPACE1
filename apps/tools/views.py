@@ -488,6 +488,8 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
             generated_content_count = GeneratedContent.objects.filter(project=project).count()
         latest_audit = getattr(project, "latest_audit_run", None)
         latest_summary = latest_audit.summary if latest_audit and isinstance(latest_audit.summary, dict) else {}
+        latest_seo_snapshot = project.seo_snapshots.order_by("-created_at").first() if getattr(project, "pk", None) else None
+        latest_aeo_audit = project.aeo_audits.order_by("-created_at").first() if getattr(project, "pk", None) else None
         audit_history, locked_history_count = get_limited_audit_history(project, self.request.user)
         audit_history_list = list(audit_history)
         change_report_map = {
@@ -545,6 +547,8 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["audit_schedule"] = schedule
         context["latest_change_report"] = latest_change_report
         context["generated_content_count"] = generated_content_count
+        context["latest_seo_snapshot"] = latest_seo_snapshot
+        context["latest_aeo_audit"] = latest_aeo_audit
         context["latest_share_link"] = latest_share_link
         context["latest_share_url"] = build_absolute_app_url(f"/share/audits/{latest_share_link.token}/") if latest_share_link else ""
         context["share_reports_allowed"] = share_allowed

@@ -1,0 +1,107 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="padding-bottom: 2rem;">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">AEO Hub</p>
+            <h1 style="max-width: none;">{% if project %}{{ project.name }}{% else %}Workspace AEO{% endif %}</h1>
+            <p class="section-text" style="max-width: 780px;">
+                AI visibility and answer-readiness analysis built from the latest completed audit and the stored business context.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="packages-section" style="padding-top: 0;">
+    <div class="container" style="display: grid; gap: 2rem;">
+        <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: 2rem; align-items: start;">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Run Analysis</p>
+                    <h2 style="font-size: 2rem;">Generate AEO snapshot</h2>
+                </div>
+                {% if not project %}
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                    Create a workspace project from an audit first, then return here to run AEO analysis.
+                </div>
+                {% else %}
+                <form method="post" style="display: grid; gap: 1rem;">
+                    {% csrf_token %}
+                    <label style="display: grid; gap: 0.35rem;">
+                        <span style="font-weight: 700;">{{ form.target_keyword.label }}</span>
+                        {{ form.target_keyword }}
+                        {% if form.target_keyword.help_text %}
+                        <span style="color: #475569; font-size: 0.82rem;">{{ form.target_keyword.help_text }}</span>
+                        {% endif %}
+                        {% if form.target_keyword.errors %}
+                        <span style="color: #991b1b; font-size: 0.82rem;">{{ form.target_keyword.errors|join:", " }}</span>
+                        {% endif %}
+                    </label>
+                    <button type="submit" class="button button-primary">Run AEO Analysis</button>
+                </form>
+                {% endif %}
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Latest Snapshot</p>
+                    <h2 style="font-size: 2rem;">AI visibility scores</h2>
+                </div>
+                {% if latest_aeo_audit %}
+                <div class="system-grid">
+                    <article class="system-card"><p class="eyebrow">Visibility</p><h3>{{ latest_aeo_audit.visibility_score }}</h3><p>AI answer readiness</p></article>
+                    <article class="system-card"><p class="eyebrow">Entity</p><h3>{{ latest_aeo_audit.entity_score }}</h3><p>Business clarity</p></article>
+                    <article class="system-card"><p class="eyebrow">Structure</p><h3>{{ latest_aeo_audit.structure_score }}</h3><p>Answer formatting</p></article>
+                    <article class="system-card"><p class="eyebrow">Completeness</p><h3>{{ latest_aeo_audit.completeness_score }}</h3><p>Depth and support</p></article>
+                </div>
+                {% if aeo_payload.context.target_keyword %}
+                <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a;">
+                    Current query focus: <strong>{{ aeo_payload.context.target_keyword }}</strong>
+                </div>
+                {% endif %}
+                {% else %}
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                    No AEO snapshot has been generated yet for this workspace.
+                </div>
+                {% endif %}
+            </article>
+        </div>
+
+        {% if latest_aeo_audit %}
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">AEO Recommendations</p>
+                <h2 style="font-size: 2rem;">What AI systems need from this site</h2>
+            </div>
+            <div style="display: grid; gap: 1rem;">
+                {% for recommendation in latest_aeo_audit.recommendations.all %}
+                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
+                        <strong>{{ recommendation.issue }}</strong>
+                        <span class="score-pill score-high" style="font-size: 0.7rem;">{{ recommendation.category }}</span>
+                    </div>
+                    <div style="margin-top: 0.65rem; color: #475569; font-size: 0.88rem; line-height: 1.5;">
+                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Why AI ignores this</strong>
+                        {{ recommendation.why_ai_ignores_this }}
+                    </div>
+                    <div style="margin-top: 0.65rem; color: #475569; font-size: 0.88rem; line-height: 1.5;">
+                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Fix</strong>
+                        {{ recommendation.fix }}
+                    </div>
+                    <div style="margin-top: 0.65rem; color: #475569; font-size: 0.88rem; line-height: 1.5;">
+                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Example rewrite</strong>
+                        {{ recommendation.example_rewrite }}
+                    </div>
+                    <div style="margin-top: 0.65rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
+                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Expected impact</strong>
+                        {{ recommendation.expected_impact }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

@@ -24,6 +24,8 @@
                     <a href="{% url 'core:home' %}#audit">Audit</a>
                     {% if user.is_authenticated and not user.is_staff %}
                     <a href="{% url 'tools:workspace-dashboard' %}">Workspace</a>
+                    <a href="{% url 'seo:workspace-seo' %}">SEO</a>
+                    <a href="{% url 'aeo:workspace-aeo' %}">AEO</a>
                     <a href="{% url 'content:workspace-content' %}">Content</a>
                     {% endif %}
                     {% if user.is_staff %}

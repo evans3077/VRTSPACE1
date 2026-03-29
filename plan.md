@@ -88,10 +88,19 @@ Status: complete
 
 ## Phase 9: SEO Product Layer
 
-Status: next
+Status: in progress
 
-- [ ] Move from audit-system completion into the SEO product layer
-- [ ] Build the next SEO-specific workflows on top of the completed audit, billing, automation, export, and content foundations
+- [x] Move from audit-system completion into the SEO product layer
+- [x] Build the first SEO-specific workflow on top of the completed audit, billing, automation, export, and content foundations
+- [x] Reshape the workspace so Audits, SEO, and AEO sit beside each other as separate product areas
+- [x] Add visible usage and value reporting so users can see where workspace credits/activity are going
+- [x] Add a stored SEO business profile per workspace
+- [x] Add an industry and location-aware SEO context engine
+- [x] Add a workspace SEO hub for keyword opportunities, priority pages, and context-aware recommendations
+- [x] Add a workspace AEO hub for AI visibility, entity clarity, and answer-readiness analysis
+- [x] Extend the SEO layer into deeper keyword planning, page mapping, and execution workflows
+- [x] Turn real competitor benchmarks into a stored SEO opportunity snapshot with value reporting, keyword queue, page map, and execution queue
+- [ ] Connect SEO page-map and execution outputs directly into content generation and future SEO automation workflows
 
 ## Working Rule
 

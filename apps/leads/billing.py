@@ -153,12 +153,18 @@ def get_usage_summary(user):
     if not user or not getattr(user, "is_authenticated", False):
         return {}
     capabilities = get_effective_capabilities(user)
-    usage_record = get_usage_record(user, UsageRecord.Metric.AUDIT_RUN)
+    audit_usage = get_usage_record(user, UsageRecord.Metric.AUDIT_RUN)
+    seo_usage = get_usage_record(user, UsageRecord.Metric.SEO_SNAPSHOT)
+    aeo_usage = get_usage_record(user, UsageRecord.Metric.AEO_AUDIT)
+    export_usage = get_usage_record(user, UsageRecord.Metric.EXPORT)
     limit = capabilities["monthly_audits_limit"]
     return {
-        "audit_runs_used": usage_record.quantity,
+        "audit_runs_used": audit_usage.quantity,
         "audit_runs_limit": limit,
-        "audit_runs_remaining": None if limit is None else max(limit - usage_record.quantity, 0),
+        "audit_runs_remaining": None if limit is None else max(limit - audit_usage.quantity, 0),
+        "seo_snapshots_used": seo_usage.quantity,
+        "aeo_audits_used": aeo_usage.quantity,
+        "exports_used": export_usage.quantity,
     }
 
 

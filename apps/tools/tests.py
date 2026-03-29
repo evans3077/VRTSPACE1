@@ -16,6 +16,8 @@ from django.utils import timezone
 
 from apps.leads.billing import BillingError, create_checkout_session
 from apps.leads.models import AuditRequest, ClientProject, UsageRecord, WorkspacePlan, WorkspaceSubscription
+from apps.seo.models import SEOContextSnapshot, SEOProjectProfile
+from apps.aeo.models import AEOAudit
 from apps.tools.automation import process_due_workspace_schedules
 from apps.tools.jobs import enqueue_public_site_audit
 from apps.tools.notifications import deliver_workspace_audit_notifications
@@ -676,6 +678,71 @@ class ProjectDashboardTests(TestCase):
         self.assertContains(response, "https://example.com/about/")
         self.assertContains(response, "Unlock monitoring")
         self.assertContains(response, reverse("tools:workspace-billing-checkout"))
+
+    def test_workspace_dashboard_shows_audits_seo_aeo_and_usage_value_panel(self):
+        user = get_user_model().objects.create_user(
+            username="value@example.com",
+            email="value@example.com",
+            password="strongpass123",
+        )
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="value@example.com",
+            website="https://example.com",
+        )
+        latest_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=79,
+            status=AuditRun.Status.COMPLETED,
+            summary={},
+        )
+        project = ClientProject.objects.create(
+            owner=user,
+            audit_request=audit_request,
+            latest_audit_run=latest_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="value@example.com",
+            latest_score=79,
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified organic leads",
+        )
+        SEOContextSnapshot.objects.create(project=project, profile=profile, source_audit_run=latest_run, output_json={})
+        AEOAudit.objects.create(project=project, seo_profile=profile, source_audit_run=latest_run, visibility_score=67)
+        UsageRecord.objects.create(
+            user=user,
+            metric=UsageRecord.Metric.SEO_SNAPSHOT,
+            period_start=latest_run.created_at.date().replace(day=1),
+            period_end=latest_run.created_at.date().replace(
+                day=calendar.monthrange(latest_run.created_at.year, latest_run.created_at.month)[1]
+            ),
+            quantity=2,
+        )
+        UsageRecord.objects.create(
+            user=user,
+            metric=UsageRecord.Metric.AEO_AUDIT,
+            period_start=latest_run.created_at.date().replace(day=1),
+            period_end=latest_run.created_at.date().replace(
+                day=calendar.monthrange(latest_run.created_at.year, latest_run.created_at.month)[1]
+            ),
+            quantity=1,
+        )
+        self.client.force_login(user)
+
+        response = self.client.get(reverse("tools:workspace-dashboard"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Audits, SEO, and AEO")
+        self.assertContains(response, "Where your credits are going")
+        self.assertContains(response, "SEO context refreshes")
+        self.assertContains(response, "AEO analyses")
 
     def test_public_audit_result_shows_workspace_and_plan_ctas(self):
         audit_run = AuditRun.objects.create(

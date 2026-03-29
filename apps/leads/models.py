@@ -164,6 +164,8 @@ class WorkspaceSubscription(TimestampedModel):
 class UsageRecord(TimestampedModel):
     class Metric(models.TextChoices):
         AUDIT_RUN = "audit_run", "Audit Run"
+        SEO_SNAPSHOT = "seo_snapshot", "SEO Snapshot"
+        AEO_AUDIT = "aeo_audit", "AEO Audit"
         EXPORT = "export", "Export"
 
     user = models.ForeignKey(

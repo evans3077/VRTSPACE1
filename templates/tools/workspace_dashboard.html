@@ -14,6 +14,8 @@
                     {% csrf_token %}
                     <button type="submit" class="button button-primary">Run Workspace Audit</button>
                 </form>
+                <a class="button button-secondary" href="{% url 'seo:workspace-seo' %}">Open SEO Hub</a>
+                <a class="button button-secondary" href="{% url 'aeo:workspace-aeo' %}">Open AEO Hub</a>
                 <a class="button button-secondary" href="{% url 'content:workspace-content' %}">Open AI Content Engine</a>
                 {% if latest_audit %}
                 <a class="button button-secondary" href="{% url 'tools:audit-report-pdf' latest_audit.pk %}" target="_blank" rel="noopener">View Latest PDF</a>
@@ -48,6 +50,69 @@
             <article class="system-card"><p class="eyebrow">Pages</p><h3>{{ latest_audit.pages_crawled }}</h3><p>Pages crawled</p></article>
         </div>
         {% endif %}
+
+        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; align-items: start;">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Product Areas</p>
+                    <h2 style="font-size: 2rem;">Audits, SEO, and AEO</h2>
+                </div>
+                <div class="system-grid">
+                    <article class="system-card" style="border-top: 4px solid var(--signal);">
+                        <p class="eyebrow">Audits</p>
+                        <h3>{% if latest_audit %}{{ latest_audit.overall_score }}{% else %}-{% endif %}</h3>
+                        <p>Technical, on-page, content, and performance tracking.</p>
+                        <div style="margin-top: 1rem;">
+                            <a class="button button-secondary" href="{% url 'tools:workspace-dashboard' %}#audit-history">Open Audits</a>
+                        </div>
+                    </article>
+                    <article class="system-card" style="border-top: 4px solid #0f172a;">
+                        <p class="eyebrow">SEO</p>
+                        <h3>{% if latest_seo_snapshot %}Ready{% else %}Setup{% endif %}</h3>
+                        <p>Industry, location, keyword, and page-priority planning.</p>
+                        <div style="margin-top: 1rem;">
+                            <a class="button button-secondary" href="{% url 'seo:workspace-seo' %}">Open SEO</a>
+                        </div>
+                    </article>
+                    <article class="system-card" style="border-top: 4px solid #ea580c;">
+                        <p class="eyebrow">AEO</p>
+                        <h3>{% if latest_aeo_audit %}{{ latest_aeo_audit.visibility_score }}{% else %}Run{% endif %}</h3>
+                        <p>AI visibility, entity clarity, and answer-structure readiness.</p>
+                        <div style="margin-top: 1rem;">
+                            <a class="button button-secondary" href="{% url 'aeo:workspace-aeo' %}">Open AEO</a>
+                        </div>
+                    </article>
+                </div>
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Value and Usage</p>
+                    <h2 style="font-size: 2rem;">Where your credits are going</h2>
+                </div>
+                <div style="display: grid; gap: 0.75rem;">
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; gap: 1rem;">
+                        <span>Audit runs this month</span>
+                        <strong>{{ usage_summary.audit_runs_used|default:0 }}</strong>
+                    </div>
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; gap: 1rem;">
+                        <span>SEO context refreshes</span>
+                        <strong>{{ usage_summary.seo_snapshots_used|default:0 }}</strong>
+                    </div>
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; gap: 1rem;">
+                        <span>AEO analyses</span>
+                        <strong>{{ usage_summary.aeo_audits_used|default:0 }}</strong>
+                    </div>
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; gap: 1rem;">
+                        <span>Report exports</span>
+                        <strong>{{ usage_summary.exports_used|default:0 }}</strong>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; line-height: 1.6;">
+                    Your plan is not just storing audits. It is funding ongoing diagnostics, SEO planning, AI-visibility analysis, reporting, and workspace execution.
+                </div>
+            </article>
+        </div>
 
         <div class="system-grid">
             <article class="system-card" style="border-top: 4px solid var(--signal);">
@@ -238,7 +303,7 @@
         </div>
 
         {% if context_analysis %}
-        <article class="system-card">
+        <article id="audit-history" class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                 <p class="eyebrow">Competitor Context</p>
                 <h2 style="font-size: 2rem;">Market and benchmark signals</h2>
