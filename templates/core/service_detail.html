@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+    <div class="container hero-grid">
+        <div class="hero-copy">
+            <p class="eyebrow">{{ service.group_title }}</p>
+            <h1>{{ service.name }}</h1>
+            <p class="hero-text">{{ service.summary }}</p>
+            <div class="hero-actions">
+                <a class="button button-primary" href="{% url 'core:home' %}#contact">Book Strategy</a>
+                <a class="button button-secondary" href="{% url 'core:home' %}#audit">Run an Audit</a>
+            </div>
+            <p class="section-text">{{ service.value_statement }}</p>
+        </div>
+        <div class="signal-panel">
+            <p class="signal-kicker">System feature</p>
+            <h3>{{ service.system_feature }}</h3>
+            <p>This service is sold as part of a wider operating system that should create measurable and repeatable value.</p>
+        </div>
+    </div>
+</section>
+
+<section class="experience-section">
+    <div class="container section-heading">
+        <p class="eyebrow">What clients buy here</p>
+        <h2>Outcomes, not a checklist.</h2>
+    </div>
+    <div class="container experience-grid">
+        {% for point in service.experience_points %}
+        <article class="experience-card">
+            <p>{{ point }}</p>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="services-section tone-{{ service.tone }}">
+    <div class="container section-heading">
+        <p class="eyebrow">Core scope</p>
+        <h2>{{ service.name }} delivery areas</h2>
+    </div>
+    <div class="container faq-grid">
+        {% for bullet in service.bullets %}
+        <article class="faq-card">
+            <h3>{{ bullet }}</h3>
+            <p>Implemented inside a system that should improve discoverability, clarity, trust, or conversion.</p>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="contact-section">
+    <div class="container section-heading">
+        <p class="eyebrow">Next action</p>
+        <h2>Move from interest to a scoped opportunity.</h2>
+        <p class="section-text">Use the audit to surface the problem, then use strategy to shape the right service path.</p>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="padding-bottom: 3rem;">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Site Intelligence Snapshot</p>
+            <h1 style="max-width: none;">Audit Analysis: {{ audit_run.normalized_domain }}</h1>
+            {% if user.is_staff %}
+            <div style="margin-bottom: 1.5rem;">
+                <a href="{% url 'tools:agency-audit' audit_run.pk %}" class="button button-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
+                    View Agency Intelligence
+                </a>
+            </div>
+            {% endif %}
+            <p class="section-text" style="opacity: 0.7;">
+                Combined signals from public infrastructure and crawler heuristics. For deep-tissue diagnostics including Private Search Console data, 
+                consider a <a href="#upsell" style="color: var(--signal); font-weight: 600;">Full Concierge Audit</a>.
+            </p>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 320px 1fr; gap: 3rem; align-items: center; margin-top: 3rem;">
+            <!-- Master Gauge -->
+            <div class="audit-gauge-card" style="padding: 3rem; background: rgba(255, 255, 255, 0.6); border: 2px solid var(--signal);">
+                <div class="gauge-circle" style="width: 180px; height: 180px;">
+                    <svg class="gauge-svg" width="180" height="180">
+                        <circle class="gauge-bg" cx="90" cy="90" r="82" style="stroke-width: 12;"></circle>
+                        <circle class="gauge-fill" cx="90" cy="90" r="82" 
+                                style="stroke-width: 12; stroke: var(--signal);
+                                       stroke-dasharray: 515.22;
+                                       stroke-dashoffset: {{ audit_run.summary.gauge_offsets.overall|default:515 }};">
+                        </circle>
+                    </svg>
+                    <div class="gauge-value" style="font-size: 3rem;">{{ audit_run.overall_score|default:"-" }}</div>
+                </div>
+                <div class="gauge-label" style="font-size: 1.1rem; color: var(--ink);">Overall Intelligence</div>
+            </div>
+
+            <!-- Sub-Metrics Grid -->
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+                {% for gauge in gauge_list %}
+                <div class="audit-gauge-card" style="padding: 1.25rem 1rem; flex-direction: row; gap: 1rem; justify-content: flex-start;">
+                    <div class="gauge-circle" style="width: 50px; height: 50px; margin-bottom: 0;">
+                        <svg class="gauge-svg" width="50" height="50">
+                            <circle class="gauge-bg" cx="25" cy="25" r="22" style="stroke-width: 4;"></circle>
+                            <circle class="gauge-fill" cx="25" cy="25" r="22" 
+                                    style="stroke-width: 4; stroke: {{ gauge.color }};
+                                           stroke-dasharray: 138.23;
+                                           stroke-dashoffset: {{ gauge.offset }};">
+                            </circle>
+                        </svg>
+                        <div class="gauge-value" style="font-size: 0.9rem;">{{ gauge.score }}</div>
+                    </div>
+                    <div class="gauge-label" style="font-size: 0.75rem; text-align: left;">{{ gauge.label }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if audit_run.summary.has_vitals_failure %}
+<section class="container" style="margin-bottom: 2rem;">
+    <div style="background: #fef2f2; border: 2px solid #ef4444; padding: 2rem; border-radius: 20px; box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.1);">
+        <div style="display: flex; gap: 1.5rem; align-items: center;">
+            <div style="font-size: 3rem;">⚠️</div>
+            <div>
+                <h2 style="color: #991b1b; margin-bottom: 0.5rem; font-size: 1.5rem;">Critical Web Vitals Failure Detected</h2>
+                <p style="color: #b91c1c; margin-bottom: 1rem; font-weight: 500;">Our engine has identified performance bottlenecks that are actively damaging your search rankings and user conversion rate.</p>
+            </div>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
+            {% for failure in audit_run.summary.vitals_failures %}
+            <div style="background: white; padding: 1.25rem; border-radius: 12px; border-left: 4px solid #ef4444;">
+                <div style="font-weight: 800; color: #1e293b; font-size: 0.9rem; margin-bottom: 0.25rem;">{{ failure.metric }}</div>
+                <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 0.5rem;">
+                    <span style="color: #dc2626; font-weight: 900; font-size: 1.25rem;">{{ failure.value }}</span>
+                    <span style="color: #64748b; font-size: 0.75rem;">(Limit: {{ failure.threshold }})</span>
+                </div>
+                <p style="font-size: 0.8rem; color: #475569; margin: 0; line-height: 1.4;">{{ failure.impact }}</p>
+            </div>
+            {% endfor %}
+        </div>
+        
+        <div style="margin-top: 2rem; text-align: center;">
+            <a href="#leads" style="display: inline-flex; align-items: center; gap: 10px; background: #ef4444; color: white; padding: 0.75rem 1.5rem; border-radius: 50px; text-decoration: none; font-weight: 700; transition: transform 0.2s;">
+                Resolve Vital Failures Now <span>→</span>
+            </a>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="packages-section" style="background: rgba(255,255,255,0.4); border-top: 1px solid rgba(15,23,42,0.05);">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Service Fit Analysis</p>
+            <h2>Where we create the most value</h2>
+            <p class="section-text">Our engine identified these specific areas where a VRT SPACE intervention will drive the highest growth.</p>
+        </div>
+
+        <div class="system-grid">
+            {% for fit in audit_run.summary.service_fit %}
+            <article class="system-card" style="border-top: 4px solid var(--signal);">
+                <div class="advice-icon" style="margin-bottom: 1rem;">{{ fit.icon|default:"🚀" }}</div>
+                <h3>{{ fit.title }}</h3>
+                <p style="font-weight: 600; color: var(--ink); margin-bottom: 0.5rem; line-height: 1.4;">
+                    {{ fit.reason }}
+                </p>
+                <div style="background: rgba(16, 185, 129, 0.08); padding: 1rem; border-radius: 12px; font-size: 0.85rem; border-left: 3px solid #10b981;">
+                    <strong style="display: block; color: #059669; margin-bottom: 4px; font-size: 0.75rem; text-transform: uppercase;">Expected Growth Impact:</strong>
+                    {{ fit.impact }}
+                </div>
+                <div style="margin-top: 1.5rem;">
+                    <a href="{% url 'core:services' %}#{{ fit.anchor|default:'revenue' }}" style="font-size: 0.85rem; color: var(--signal); font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+                        Explore Service Details <span>→</span>
+                    </a>
+                </div>
+            </article>
+            {% empty %}
+            <article class="system-card">
+                <h3>High baseline stability</h3>
+                <p>Your current infrastructure is in a healthy range. We would focus on scale rather than repair.</p>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="experience-section">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Quick Wins</p>
+            <h2>What to fix first</h2>
+        </div>
+        <div class="advice-grid" style="margin-top: 2rem;">
+            {% for win in quick_wins %}
+            <article class="advice-card severity-MEDIUM" style="padding: 1.5rem;">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1rem;">
+                    <span class="score-pill score-medium" style="font-size: 0.65rem;">{{ win.category }}</span>
+                    <span style="font-size: 1.2rem;">⚡</span>
+                </div>
+                <h4 style="margin-bottom: 0.75rem; font-size: 1rem; color: var(--ink);">{{ win.problem }}</h4>
+                <div style="background: rgba(14, 165, 233, 0.05); padding: 1rem; border-radius: 12px; font-size: 0.85rem; border-left: 3px solid var(--signal);">
+                    <strong style="display: block; color: var(--signal); margin-bottom: 4px; font-size: 0.75rem; text-transform: uppercase;">Strategic Fix:</strong>
+                    {{ win.fix }}
+                </div>
+                {% if win.url %}
+                <div style="margin-top: 1rem; font-size: 0.7rem; color: #64748b; font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                    Reference: {{ win.url }}
+                </div>
+                {% endif %}
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section class="faq-section" style="background: var(--panel);">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Detailed Findings</p>
+            <h2>Top Issues Detected</h2>
+        </div>
+        <div class="advice-grid">
+            {% for issue in top_issues %}
+            <article class="advice-card severity-{{ issue.severity }}">
+                <p class="eyebrow" style="font-size: 0.65rem; margin-bottom: 0.5rem; color: var(--signal);">{{ issue.category }}</p>
+                <h3 style="margin-bottom: 1rem; font-size: 1.15rem;">{{ issue.message }}</h3>
+                <div style="background: rgba(15, 23, 42, 0.03); padding: 1rem; border-radius: 12px; font-size: 0.9rem; line-height: 1.6;">
+                    <strong style="display: block; opacity: 0.6; margin-bottom: 4px;">Resolution Recommendation:</strong>
+                    {{ issue.recommendation }}
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+<section id="upsell" class="insight-section">
+    <div class="container">
+        <div class="upsell-panel">
+            <div class="upsell-grid">
+                <div>
+                    <p class="eyebrow" style="color: rgba(255,255,255,0.6);">Going Beyond the Snapshot</p>
+                    <h2 style="color: white; margin-top: 0.5rem;">Unlock the Full Intelligence Engine</h2>
+                    <p style="opacity: 0.8; margin-bottom: 2rem;">
+                        This free scan is a high-level diagnostic. Our concierge audit reveals the "Hidden Inventory" of your 
+                        search performance that public tools can't access.
+                    </p>
+                    <div class="locked-feature-list">
+                        {% for teaser in audit_run.summary.full_audit_teasers %}
+                        <div class="locked-feature">
+                            <span style="color: var(--signal);">✓</span>
+                            <span>{{ teaser }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                <div style="text-align: center; background: rgba(255,255,255,0.05); padding: 3rem; border-radius: 32px; backdrop-filter: blur(8px);">
+                    <h3 style="color: white; margin-bottom: 1.5rem;">Ready for the full report?</h3>
+                    <p style="font-size: 1.1rem; margin-bottom: 2.5rem; opacity: 0.9;">Secure a strategic walkthrough of your domain health.</p>
+                    <a href="{% url 'core:home' %}#contact" class="button button-primary" style="width: 100%; font-size: 1.1rem;">
+                        Schedule Strategic Review
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="contact-section">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Technical Footprint</p>
+            <h2>What we actually inspected</h2>
+        </div>
+        <div style="background: white; border-radius: 24px; padding: 2rem; border: 1px solid rgba(15, 23, 42, 0.06); overflow-x: auto;">
+            <table style="width: 100%; border-collapse: collapse; min-width: 800px;">
+                <thead>
+                    <tr style="border-bottom: 2px solid #f1f5f9; text-align: left;">
+                        <th style="padding: 1rem;" class="eyebrow">URL Inspected</th>
+                        <th style="padding: 1rem;" class="eyebrow">Load Time</th>
+                        <th style="padding: 1rem;" class="eyebrow">Words</th>
+                        <th style="padding: 1rem;" class="eyebrow">Links</th>
+                        <th style="padding: 1rem;" class="eyebrow">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for page in pages %}
+                    <tr style="border-bottom: 1px solid #f1f5f9;">
+                        <td style="padding: 1rem;">
+                            <div style="font-weight: 600; font-size: 0.95rem;">{{ page.url }}</div>
+                            <div style="font-size: 0.75rem; color: #64748b;">Title: {{ page.title|truncatechars:70|default:"Missing" }}</div>
+                        </td>
+                        <td style="padding: 1rem; font-size: 0.9rem;">{{ page.response_time_ms }}ms</td>
+                        <td style="padding: 1rem; font-size: 0.9rem;">{{ page.word_count|default:0 }}</td>
+                        <td style="padding: 1rem; font-size: 0.9rem;">{{ page.internal_link_count|default:0 }}</td>
+                        <td style="padding: 1rem;">
+                            <span class="score-pill {% if page.status_code == 200 %}score-high{% else %}score-low{% endif %}" style="font-size: 0.75rem;">
+                                {{ page.status_code }}
+                            </span>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</section>
+{% endblock %}

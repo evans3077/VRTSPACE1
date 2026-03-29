@@ -1,0 +1,302 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+    <div class="container hero-grid">
+        <div class="hero-copy">
+            <p class="eyebrow">Complete SEO, AEO, web, and AI service stack</p>
+            <h1>Build the kind of authority clients can feel before the first call.</h1>
+            <p class="hero-text">
+                VRT SPACE AGENCY is not selling isolated tactics. It is selling a growth experience where the
+                website ranks, earns trust, captures demand, and turns delivery into long-term value.
+            </p>
+            <div class="hero-actions">
+                <a class="button button-primary" href="#audit">Request a Free AEO Audit</a>
+                <a class="button button-secondary" href="#packages">See the Value Tiers</a>
+            </div>
+            <div class="trust-bar">
+                {% for signal in trust_signals %}
+                <span>{{ signal }}</span>
+                {% endfor %}
+            </div>
+            <div class="audience-row">
+                {% for audience in audiences %}
+                <span>{{ audience }}</span>
+                {% endfor %}
+            </div>
+            <div class="hero-proof-grid">
+                {% for item in results %}
+                <article class="hero-proof-card">
+                    <strong>{{ item.value }}</strong>
+                    <span>{{ item.label }}</span>
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="hero-side">
+            <div class="audit-panel" id="audit">
+                <h2>Start with an AI visibility audit</h2>
+                <p>Open with a high-value tool, show the opportunity, and turn that insight into the first strategic conversation.</p>
+                <form method="post" action="{% url 'tools:free-seo-audit' %}">
+                    {% csrf_token %}
+                {{ audit_form.non_field_errors }}
+                    <label>
+                        Company
+                        {{ audit_form.company_name }}
+                        {{ audit_form.company_name.errors }}
+                    </label>
+                    <label>
+                        Email
+                        {{ audit_form.email }}
+                        {{ audit_form.email.errors }}
+                    </label>
+                    <label>
+                        Website
+                        {{ audit_form.website }}
+                        {{ audit_form.website.errors }}
+                    </label>
+                    <label>
+                        Monthly lead goal
+                        {{ audit_form.monthly_leads_goal }}
+                        {{ audit_form.monthly_leads_goal.errors }}
+                    </label>
+                    <label>
+                        Notes
+                        {{ audit_form.notes }}
+                        {{ audit_form.notes.errors }}
+                    </label>
+                    <button class="button button-primary" type="submit">Get the audit</button>
+                </form>
+                <p class="form-note">Useful for brands that want a faster view of SEO gaps, AI visibility, and rebuild opportunities.</p>
+            </div>
+            <div class="signal-panel">
+                <p class="signal-kicker">Experience promise</p>
+                <h3>Clients should leave every interaction with more clarity, more confidence, and a clearer next move.</h3>
+                <p>That is the difference between a service list and a premium agency experience.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="insight-section">
+    <div class="container section-heading">
+        <p class="eyebrow">Critical insight</p>
+        <h2>The site is not a brochure. It is the sales machine.</h2>
+        <p class="section-text">{{ critical_insight }}</p>
+    </div>
+</section>
+
+<section class="experience-section">
+    <div class="container section-heading">
+        <p class="eyebrow">Client experience</p>
+        <h2>Sell outcomes and confidence, not just deliverables.</h2>
+    </div>
+    <div class="container experience-grid">
+        {% for pillar in value_pillars %}
+        <article class="experience-card">
+            <h3>{{ pillar.title }}</h3>
+            <p>{{ pillar.body }}</p>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+{% for group in service_groups %}
+<section class="services-section tone-{{ group.tone }}" id="{{ group.anchor }}">
+    <div class="container service-band-head">
+        <div>
+            <p class="eyebrow">{{ group.title }}</p>
+            <h2>{{ group.lead }}</h2>
+        </div>
+    </div>
+    <div class="container service-grid expanded-grid">
+        {% for service in group.services %}
+        <article class="service-card">
+            <p class="service-tag">{{ forloop.counter|stringformat:"02d" }}</p>
+            <h3>{{ service.name }}</h3>
+            <p>{{ service.summary }}</p>
+            <ul class="bullet-list">
+                {% for bullet in service.bullets %}
+                <li>{{ bullet }}</li>
+                {% endfor %}
+            </ul>
+            <div class="system-feature">
+                <span>System feature</span>
+                <strong>{{ service.system_feature }}</strong>
+            </div>
+            <a class="package-link" href="{% url 'core:service-detail' slug=service.name|slugify %}">Explore service</a>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endfor %}
+
+<section class="packages-section" id="packages">
+    <div class="container section-heading">
+        <p class="eyebrow">Recommended packaging</p>
+        <h2>Make the buying decision feel simple, progressive, and high-value.</h2>
+        <p class="section-text">The packages should create a path from quick win to long-term strategic partnership.</p>
+    </div>
+    <div class="container package-grid">
+        {% for package in packages %}
+        <article class="package-card {% if package.name == 'Authority' %}package-card-featured{% endif %}">
+            <div>
+                <p class="package-label">{{ package.label }}</p>
+                <h3>{{ package.name }}</h3>
+                <strong class="package-price">{{ package.price }}</strong>
+            </div>
+            <ul class="bullet-list">
+                {% for feature in package.features %}
+                <li>{{ feature }}</li>
+                {% endfor %}
+            </ul>
+            <a class="package-link" href="#contact">Talk about {{ package.name }}</a>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="journey-section">
+    <div class="container section-heading">
+        <p class="eyebrow">Engagement journey</p>
+        <h2>Show clients how the experience unfolds after they say yes.</h2>
+    </div>
+    <div class="container journey-grid">
+        {% for step in engagement_steps %}
+        <article class="journey-card">
+            <p class="journey-phase">{{ step.phase }}</p>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.body }}</p>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="systems-section" id="systems">
+    <div class="container section-heading">
+        <p class="eyebrow">System architecture</p>
+        <h2>What the platform should manage beyond the public pages.</h2>
+    </div>
+    <div class="container system-grid">
+        {% for block in system_blocks %}
+        <article class="system-card">
+            <h3>{{ block.title }}</h3>
+            <p>{{ block.body }}</p>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="method-section" id="method">
+    <div class="container method-grid">
+        <div>
+            <p class="eyebrow">Proprietary method</p>
+            <h2>VRT Authority Engine</h2>
+            <p>
+                The operating model behind the offer stack. Each layer should help the site teach the market,
+                qualify the lead, prove authority, and create the next upsell.
+            </p>
+        </div>
+        <ol class="method-list">
+            {% for step in method_steps %}
+            <li>{{ step }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+</section>
+
+<section class="case-study-section">
+    <div class="container case-study-card">
+        <div>
+            <p class="eyebrow">Proof section</p>
+            <h2>{{ case_study.title }}</h2>
+            <p class="case-meta">{{ case_study.client_name }} - {{ case_study.industry }}</p>
+        </div>
+        <div class="case-study-body">
+            <div>
+                <h3>Challenge</h3>
+                <p>{{ case_study.challenge }}</p>
+            </div>
+            <div>
+                <h3>Solution</h3>
+                <p>{{ case_study.solution }}</p>
+            </div>
+            <div>
+                <h3>Results</h3>
+                <p>{{ case_study.results }}</p>
+            </div>
+            <div class="metric-chip">{{ case_study.key_metric }}</div>
+        </div>
+    </div>
+</section>
+
+<section class="faq-section">
+    <div class="container section-heading">
+        <p class="eyebrow">Value objections</p>
+        <h2>Handle the questions that stop premium buyers from moving.</h2>
+    </div>
+    <div class="container faq-grid">
+        {% for faq in faqs %}
+        <article class="faq-card">
+            <h3>{{ faq.question }}</h3>
+            <p>{{ faq.answer }}</p>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="contact-section" id="contact">
+    <div class="container contact-grid">
+        <div>
+            <p class="eyebrow">Strategy request</p>
+            <h2>Convert the website visitor into the next qualified opportunity.</h2>
+            <p>
+                This form is the handoff from content and tools into the scoring and follow-up layer. The site
+                should not stop at education. It should route demand.
+            </p>
+            <p class="form-note">Best for clients who already know they want help and need the right growth path, package, and timeline.</p>
+        </div>
+        <form method="post" action="{% url 'leads:contact' %}" class="contact-form">
+            {% csrf_token %}
+            <input type="hidden" name="source_page" value="{{ request.path }}">
+            {{ lead_form.non_field_errors }}
+            <label>
+                Name
+                {{ lead_form.name }}
+                {{ lead_form.name.errors }}
+            </label>
+            <label>
+                Email
+                {{ lead_form.email }}
+                {{ lead_form.email.errors }}
+            </label>
+            <label>
+                Company
+                {{ lead_form.company }}
+                {{ lead_form.company.errors }}
+            </label>
+            <label>
+                Website
+                {{ lead_form.website }}
+                {{ lead_form.website.errors }}
+            </label>
+            <label>
+                Interest
+                {{ lead_form.interest_area }}
+                {{ lead_form.interest_area.errors }}
+            </label>
+            <label>
+                What needs to change?
+                {{ lead_form.message }}
+                {{ lead_form.message.errors }}
+            </label>
+            <label class="checkbox-row">
+                {{ lead_form.consent_to_contact }}
+                <span>I agree to be contacted about this request.</span>
+                {{ lead_form.consent_to_contact.errors }}
+            </label>
+            <button class="button button-primary" type="submit">Request strategy session</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

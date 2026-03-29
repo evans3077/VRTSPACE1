@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRT Space Automation"
+  short_description: "Build recurring audits, alerts, and retention workflows for VRT Space"
+  default_prompt: "Use $vrt-space-automation to design or implement VRT SPACE background jobs, alerts, or recurring reports."

@@ -1,0 +1,55 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ page_title|default:"VRT SPACE AGENCY" }}</title>
+    <meta name="description" content="{{ meta_description|default:'VRT SPACE AGENCY builds SEO and AEO growth systems.' }}">
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+    {% if schema_json %}
+    <script type="application/ld+json">{{ schema_json|safe }}</script>
+    {% endif %}
+</head>
+<body>
+    <header class="site-header">
+        <div class="container nav-shell">
+            <a class="brand" href="/">VRT SPACE AGENCY</a>
+            <div class="nav-actions">
+                <nav class="nav-links" aria-label="Primary">
+                    <a href="{% url 'core:services' %}">Services</a>
+                    <a href="{% url 'core:home' %}#packages">Packages</a>
+                    <a href="{% url 'core:home' %}#systems">Systems</a>
+                    <a href="{% url 'core:home' %}#method">Method</a>
+                    <a href="{% url 'core:home' %}#audit">Audit</a>
+                </nav>
+                <a class="button button-primary nav-cta" href="{% url 'core:home' %}#contact">Book Strategy</a>
+            </div>
+        </div>
+    </header>
+    {% if messages %}
+    <div class="container flash-stack">
+        {% for message in messages %}
+        <div class="flash flash-{{ message.tags|default:'info' }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer">
+        <div class="container footer-shell">
+            <div>
+                <strong>VRT SPACE AGENCY</strong>
+                <p>SEO, AEO, websites, analytics, and AI visibility systems built to sell automatically.</p>
+            </div>
+            <div class="footer-links">
+                <a href="{% url 'core:services' %}">Services</a>
+                <a href="{% url 'core:home' %}#tools">Tools</a>
+                <a href="{% url 'core:home' %}#packages">Packages</a>
+                <a href="{% url 'core:home' %}#contact">Contact</a>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

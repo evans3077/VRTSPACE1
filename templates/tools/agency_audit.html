@@ -1,0 +1,409 @@
+{% extends "base.html" %}
+
+{% block content %}
+<style>
+    .agency-dashboard {
+        padding: 4rem 0;
+        background: #f8fafc;
+        min-height: 100vh;
+    }
+    .dashboard-grid {
+        display: grid;
+        grid-template-columns: 420px 1fr;
+        gap: 3rem;
+        align-items: start;
+        width: 100%;
+    }
+    .section-heading h1 {
+        max-width: none !important;
+        font-size: clamp(2.5rem, 4vw, 3.8rem) !important;
+        letter-spacing: -0.02em;
+    }
+    .section-text {
+        max-width: none !important;
+        opacity: 0.8;
+    }
+    .sidebar-panel {
+        position: sticky;
+        top: 100px;
+        display: grid;
+        gap: 1.5rem;
+    }
+    .card {
+        background: white;
+        border: 1px solid #e2e8f0;
+        border-radius: 20px;
+        padding: 1.5rem;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+    }
+    .card h2 {
+        font-size: 1.25rem;
+        margin-bottom: 1rem;
+        color: #1e293b;
+        border-bottom: 1px solid #f1f5f9;
+        padding-bottom: 0.5rem;
+    }
+    .score-pill {
+        display: inline-block;
+        padding: 4px 12px;
+        border-radius: 999px;
+        color: white;
+        font-weight: 700;
+        font-size: 0.85rem;
+    }
+    .score-high { background: #16a34a; }
+    .score-med { background: #ea580c; }
+    .score-low { background: #dc2626; }
+
+    .service-card {
+        border-left: 6px solid #2563eb;
+        margin-bottom: 1rem;
+        transition: transform 0.2s;
+    }
+    .service-card:hover { transform: translateX(5px); }
+
+    .page-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 1rem;
+    }
+    .page-table th {
+        text-align: left;
+        padding: 12px;
+        background: #f1f5f9;
+        font-size: 0.85rem;
+        text-transform: uppercase;
+        color: #64748b;
+    }
+    .page-table td {
+        padding: 12px;
+        border-bottom: 1px solid #f1f5f9;
+        font-size: 0.95rem;
+    }
+    .issue-tag {
+        font-size: 0.75rem;
+        padding: 2px 6px;
+        border-radius: 4px;
+        background: #f1f5f9;
+        margin-right: 4px;
+    }
+    .issue-item {
+        padding: 10px;
+        background: #fefefe;
+        border: 1px solid #f1f5f9;
+        border-radius: 8px;
+    }
+    .severity-border-high { border-left: 4px solid #ef4444; }
+    .severity-border-med { border-left: 4px solid #eab308; }
+    .severity-critical { border-left: 4px solid #ef4444; }
+    .severity-high { border-left: 4px solid #f97316; }
+
+    .gauge-container {
+        width: 100px;
+        height: 100px;
+        border-radius: 50%;
+        background: conic-gradient(var(--gauge-color) calc(var(--gauge-score) * 1%), #f1f5f9 0);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: relative;
+    }
+    .gauge-container::before {
+        content: "";
+        position: absolute;
+        width: 82px;
+        height: 82px;
+        background: white;
+        border-radius: 50%;
+    }
+    .gauge-value {
+        position: relative;
+        font-size: 1.5rem;
+        font-weight: 800;
+        color: var(--gauge-color);
+    }
+    .score-green { --gauge-color: #16a34a; }
+    .score-orange { --gauge-color: #ea580c; }
+    .score-red { --gauge-color: #dc2626; }
+    .score-gray { --gauge-color: #94a3b8; }
+    
+    .score-green-text { color: #16a34a; }
+    .score-orange-text { color: #ea580c; }
+    .score-red-text { color: #dc2626; }
+</style>
+
+<div class="agency-dashboard" style="width: 100%; padding: 0 2.5%; margin: 0 auto;">
+    <div style="width: 100%;">
+        <header class="section-heading">
+            <p class="eyebrow" style="color: var(--signal);">Agency Internal View</p>
+            <h1>Concierge Audit: {{ audit_run.normalized_domain }}</h1>
+            <p class="section-text">
+                Generated for <strong>{{ audit_run.audit_request.company_name|default:"Self-Service Lead" }}</strong>.
+                Goal: <em>{{ audit_run.audit_request.monthly_revenue_goal|default:"Not specified" }}</em>
+            </p>
+        </header>
+
+        <div class="dashboard-grid">
+            <aside class="sidebar-panel">
+                <article class="card">
+                    <h2>Site Vitality</h2>
+                    <ul style="list-style: none; padding: 0; display: grid; gap: 0.75rem;">
+                        <li style="display: flex; justify-content: space-between;">
+                            <span>Overall Health</span>
+                            <span class="score-pill {% if audit_run.overall_score >= 90 %}score-high{% elif audit_run.overall_score >= 50 %}score-med{% else %}score-low{% endif %}">
+                                {{ audit_run.overall_score }}
+                            </span>
+                        </li>
+                        <li style="display: flex; justify-content: space-between;">
+                            <span>AEO Readiness</span>
+                            <span class="score-pill {% if audit_run.aeo_score >= 90 %}score-high{% elif audit_run.aeo_score >= 50 %}score-med{% else %}score-low{% endif %}">
+                                {{ audit_run.aeo_score }}
+                            </span>
+                        </li>
+                    </ul>
+                    <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #f1f5f9;">
+                        <form method="POST" action="{% url 'tools:free-seo-audit' %}" style="margin: 0;">
+                            {% csrf_token %}
+                            <input type="hidden" name="website" value="{{ audit_run.start_url }}">
+                            <input type="hidden" name="company_name" value="{{ audit_run.audit_request.company_name }}">
+                            <button type="submit" class="btn" style="width: 100%; border-radius: 12px; font-weight: 700; background: #2563eb; color: white;">
+                                🔄 Run Expert Refresh
+                            </button>
+                        </form>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <h2>Lighthouse 360 Intelligence</h2>
+                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; text-align: center; padding: 0.5rem 0;">
+                        <!-- Performance -->
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                            <div class="gauge-container {% if audit_run.performance_score and audit_run.performance_score >= 90 %}score-green{% elif audit_run.performance_score and audit_run.performance_score >= 50 %}score-orange{% elif audit_run.performance_score and audit_run.performance_score > 0 %}score-red{% else %}score-gray{% endif %}" style="--gauge-score: {{ audit_run.performance_score|default:0 }};">
+                                <span class="gauge-value">{{ audit_run.performance_score|default:"-" }}</span>
+                            </div>
+                            <span style="font-size: 0.7rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Performance</span>
+                        </div>
+                        <!-- Accessibility -->
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                            <div class="gauge-container {% if audit_run.accessibility_score and audit_run.accessibility_score >= 90 %}score-green{% elif audit_run.accessibility_score and audit_run.accessibility_score >= 50 %}score-orange{% elif audit_run.accessibility_score and audit_run.accessibility_score > 0 %}score-red{% else %}score-gray{% endif %}" style="--gauge-score: {{ audit_run.accessibility_score|default:0 }};">
+                                <span class="gauge-value">{{ audit_run.accessibility_score|default:"-" }}</span>
+                            </div>
+                            <span style="font-size: 0.7rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Accessibility</span>
+                        </div>
+                        <!-- Best Practices -->
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                            <div class="gauge-container {% if audit_run.best_practices_score and audit_run.best_practices_score >= 90 %}score-green{% elif audit_run.best_practices_score and audit_run.best_practices_score >= 50 %}score-orange{% elif audit_run.best_practices_score and audit_run.best_practices_score > 0 %}score-red{% else %}score-gray{% endif %}" style="--gauge-score: {{ audit_run.best_practices_score|default:0 }};">
+                                <span class="gauge-value">{{ audit_run.best_practices_score|default:"-" }}</span>
+                            </div>
+                            <span style="font-size: 0.7rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Best Practices</span>
+                        </div>
+                        <!-- SEO -->
+                        <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
+                            <div class="gauge-container {% if audit_run.seo_score and audit_run.seo_score >= 90 %}score-green{% elif audit_run.seo_score and audit_run.seo_score >= 50 %}score-orange{% elif audit_run.seo_score and audit_run.seo_score > 0 %}score-red{% else %}score-gray{% endif %}" style="--gauge-score: {{ audit_run.seo_score|default:0 }};">
+                                <span class="gauge-value">{{ audit_run.seo_score|default:"-" }}</span>
+                            </div>
+                            <span style="font-size: 0.7rem; color: #64748b; font-weight: 700; text-transform: uppercase;">SEO</span>
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <h2>Expert Intelligence</h2>
+                    <div style="display: grid; gap: 1rem;">
+                        <div>
+                            <p style="font-size: 0.75rem; color: #64748b; text-transform: uppercase;">Tech Stack</p>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.25rem;">
+                                {% if audit_run.tech_summary.cms %}
+                                {% for cms in audit_run.tech_summary.cms %}<span class="issue-tag" style="background: #dbeafe; color: #1e40af;">CMS: {{ cms }}</span>{% endfor %}
+                                {% endif %}
+                                {% if audit_run.tech_summary.frameworks %}
+                                {% for fw in audit_run.tech_summary.frameworks %}<span class="issue-tag" style="background: #fdf2f8; color: #9d174d;">FW: {{ fw }}</span>{% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div>
+                            <p style="font-size: 0.75rem; color: #64748b; text-transform: uppercase;">Tracking & Marketing</p>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.25rem;">
+                                {% for tool in audit_run.tech_summary.analytics %}<span class="issue-tag" style="background: #f0fdf4; color: #166534;">{{ tool }}</span>{% endfor %}
+                                {% for tool in audit_run.tech_summary.marketing %}<span class="issue-tag" style="background: #fff7ed; color: #9a3412;">{{ tool }}</span>{% endfor %}
+                                {% if not audit_run.tech_summary.analytics and not audit_run.tech_summary.marketing %}
+                                <span style="font-size: 0.8rem; color: #94a3b8;">No major tracking scripts detected.</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div style="display: flex; justify-content: space-between; align-items: center; padding-top: 0.5rem; border-top: 1px solid #f1f5f9;">
+                            <span style="font-size: 0.85rem;">Security Headers</span>
+                            {% if audit_run.tech_summary.security %}
+                            <span style="color: #16a34a; font-size: 0.85rem; font-weight: 700;">✓ SECURE</span>
+                            {% else %}
+                            <span style="color: #dc2626; font-size: 0.85rem; font-weight: 700;">⚠ INCOMPLETE</span>
+                            {% endif %}
+                        </div>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <h2>Agency Next Steps</h2>
+                    <ul style="list-style: none; padding: 0; display: grid; gap: 0.8rem;">
+                        <li style="display: flex; gap: 10px; align-items: start;">
+                            <span style="display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: #dcfce7; color: #166534; border-radius: 50%; font-size: 0.75rem; font-weight: 800;">1</span>
+                            <div style="font-size: 0.8rem;">Review <strong>Technical Fixes</strong> and pitch a backend optimization sprint.</div>
+                        </li>
+                        <li style="display: flex; gap: 10px; align-items: start;">
+                            <span style="display: flex; align-items: center; justify-content: center; width: 22px; height: 22px; background: #fef9c3; color: #854d0e; border-radius: 50%; font-size: 0.75rem; font-weight: 800;">2</span>
+                            <div style="font-size: 0.8rem;">Check <strong>Missing Alt Text</strong> and pitch an SEO baseline update.</div>
+                        </li>
+                    </ul>
+                </article>
+            </aside>
+
+            <main class="main-content" style="display: grid; gap: 2rem;">
+                <div style="background: var(--deep); color: white; padding: 1.5rem; border-radius: 20px; box-shadow: 0 12px 30px rgba(0,0,0,0.15);">
+                    <h2 style="color: white; border-bottom: 0.5px solid rgba(255,255,255,0.1); margin-bottom: 1rem;">Site Command Center</h2>
+                    <p style="font-size: 0.95rem; opacity: 0.85; margin: 0;">Comprehensive technical, accessibility, and SEO intelligence for <strong>{{ audit_run.normalized_domain }}</strong>. Use these signals to drive high-value remediation sprints.</p>
+                </div>
+
+                {% if audit_run.summary.pagespeed.failed_audits %}
+                <article class="card" style="border-left: 6px solid #dc2626;">
+                    <h2>Critical Technical Fixes (Lighthouse)</h2>
+                    <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 1.25rem;">Specific audit failures requiring immediate attention:</p>
+                    <div style="display: grid; gap: 1rem;">
+                        {% for fail in audit_run.summary.pagespeed.failed_audits %}
+                        <div style="padding: 12px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 12px;">
+                            <div style="font-weight: 800; font-size: 0.95rem; color: #9f1239;">{{ fail.title }}</div>
+                            <div style="font-size: 0.85rem; color: #be123c; margin-top: 4px;">{{ fail.description|striptags }}</div>
+                            {% if fail.displayValue %}
+                            <div style="font-size: 0.75rem; font-family: monospace; color: #e11d48; margin-top: 6px; padding: 2px 6px; background: white; display: inline-block; border-radius: 4px;">
+                                Impact: {{ fail.displayValue }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </article>
+                {% endif %}
+                <article class="card">
+                    <h2>Technical Inventory (Granular Analysis)</h2>
+                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 1rem;">Direct signals extracted by the VRT SPACE diagnostic engine.</p>
+                    <div style="overflow-x: auto;">
+                        <table class="page-table">
+                            <thead>
+                                <tr>
+                                    <th>Page URL</th>
+                                    <th>Title / Meta</th>
+                                    <th>H1 Status</th>
+                                    <th>Content Depth</th>
+                                    <th>Technical</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for page in pages %}
+                                <tr>
+                                    <td style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                        <a href="{{ page.url }}" target="_blank" style="color: #2563eb; font-size: 0.8rem;">{{ page.url|truncatechars:30 }}</a>
+                                    </td>
+                                    <td>
+                                        <div style="font-size: 0.75rem;">
+                                            <span title="{{ page.title }}">Title: {{ page.title|length }} chars</span>
+                                            <br>
+                                            <span title="{{ page.meta_description }}">Meta: {{ page.meta_description|length }} chars</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        {% if page.h1 %}
+                                        <span style="font-size: 0.75rem; color: #16a34a;">✓ {{ page.h1|truncatechars:20 }}</span>
+                                        {% else %}
+                                        <span style="font-size: 0.75rem; color: #dc2626;">⚠ MISSING</span>
+                                        {% endif %}
+                                    </td>
+                                    <td>
+                                        <div style="font-size: 0.75rem;">
+                                            Words: {{ page.word_count }}
+                                            <br>
+                                            Alt Gaps: {{ page.images_missing_alt }}
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="font-size: 0.75rem;">
+                                            Schema: {{ page.schema_count }}
+                                            <br>
+                                            Canonical: {% if page.canonical_url %}✓{% else %}✗{% endif %}
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <h2>Site-Wide Intelligence ({{ pages|length }} Pages)</h2>
+                    <div style="overflow-x: auto;">
+                        <table class="page-table">
+                            <thead>
+                                <tr>
+                                    <th>URL Path</th>
+                                    <th>Status</th>
+                                    <th>Assets</th>
+                                    <th>Lighthouse (P/A/B/S)</th>
+                                    <th>Readability</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for page in pages %}
+                                <tr>
+                                    <td style="max-width: 250px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                        <a href="{{ page.url }}" target="_blank" style="color: #2563eb; font-weight: 600;">{{ page.url }}</a>
+                                    </td>
+                                    <td>{{ page.status_code }}</td>
+                                    <td>
+                                        <div style="display: flex; gap: 4px; font-weight: 800; font-size: 0.75rem;">
+                                            <span class="{% if page.pagespeed_score and page.pagespeed_score >= 90 %}score-green-text{% elif page.pagespeed_score and page.pagespeed_score >= 50 %}score-orange-text{% else %}score-gray{% endif %}">{{ page.pagespeed_score|default:"-" }}</span> /
+                                            <span class="{% if page.accessibility_score and page.accessibility_score >= 90 %}score-green-text{% elif page.accessibility_score and page.accessibility_score >= 50 %}score-orange-text{% else %}score-gray{% endif %}">{{ page.accessibility_score|default:"-" }}</span> /
+                                            <span class="{% if page.best_practices_score and page.best_practices_score >= 90 %}score-green-text{% elif page.best_practices_score and page.best_practices_score >= 50 %}score-orange-text{% else %}score-gray{% endif %}">{{ page.best_practices_score|default:"-" }}</span> /
+                                            <span class="{% if page.seo_score and page.seo_score >= 90 %}score-green-text{% elif page.seo_score and page.seo_score >= 50 %}score-orange-text{% else %}score-gray{% endif %}">{{ page.seo_score|default:"-" }}</span>
+                                        </div>
+                                    </td>
+                                    <td>
+                                        <div style="font-size: 0.85rem;">
+                                            {{ page.readability_score }}%
+                                        </div>
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+
+                <article class="card">
+                    <h2>Issues Grouped by Category</h2>
+                    {% for category, cat_issues in issues_by_category.items %}
+                    <div style="margin-bottom: 1.5rem;">
+                        <h3 style="text-transform: uppercase; font-size: 0.75rem; color: #64748b; letter-spacing: 0.05em; margin-bottom: 0.5rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 0.25rem;">
+                            {{ category|title }} ({{ cat_issues|length }} Issues)
+                        </h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
+                            {% for issue in cat_issues %}
+                            <div class="issue-item {% if issue.severity == 'critical' or issue.severity == 'high' %}severity-border-high{% else %}severity-border-med{% endif %}">
+                                <div style="font-weight: 700; font-size: 0.95rem;">{{ issue.message }}</div>
+                                <div style="font-size: 0.85rem; color: #475569; margin-top: 4px;">{{ issue.recommendation }}</div>
+                                {% if issue.page %}
+                                <div style="font-size: 0.75rem; color: #2563eb; margin-top: 4px; font-weight: 600;">
+                                    Page: <a href="{{ issue.page.url }}" target="_blank" style="color: inherit; text-decoration: underline;">{{ issue.page.url }}</a>
+                                </div>
+                                {% else %}
+                                <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px; font-style: italic;">Site-wide issue</div>
+                                {% endif %}
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </article>
+            </main>
+        </div>
+    </div>
+</div>
+{% endblock %}

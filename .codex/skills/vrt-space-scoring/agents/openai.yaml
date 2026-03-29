@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRT Space Scoring"
+  short_description: "Refine audit scores, priorities, and explanations for VRT Space"
+  default_prompt: "Use $vrt-space-scoring to design or refactor VRT SPACE scoring, weighting, or recommendation ranking."
