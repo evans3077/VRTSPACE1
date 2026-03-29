@@ -10,6 +10,7 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
+from apps.leads.billing import BillingError, create_checkout_session
 from apps.leads.models import AuditRequest, ClientProject, UsageRecord, WorkspacePlan, WorkspaceSubscription
 
 from .admin_utils import get_service_recommendations
@@ -622,6 +623,31 @@ class WorkspaceAuthTests(TestCase):
 
 
 class WorkspaceBillingTests(TestCase):
+    @override_settings(
+        STRIPE_PUBLISHABLE_KEY="pk_test_value",
+        STRIPE_SECRET_KEY="sk_test_value",
+        STRIPE_ENABLED=True,
+        STRIPE_PRICE_IDS={"starter": "200", "growth": "", "authority": "", "enterprise": ""},
+    )
+    def test_checkout_rejects_literal_amount_instead_of_price_id(self):
+        user = get_user_model().objects.create_user(
+            username="pricecheck@example.com",
+            email="pricecheck@example.com",
+            password="strongpass123",
+        )
+        plan = WorkspacePlan.objects.get(slug="starter")
+
+        with self.assertRaisesMessage(
+            BillingError,
+            "must be a Stripe Price ID starting with 'price_'",
+        ):
+            create_checkout_session(
+                user=user,
+                plan=plan,
+                success_url="https://example.com/success",
+                cancel_url="https://example.com/cancel",
+            )
+
     @override_settings(
         STRIPE_PUBLISHABLE_KEY="pk_test_value",
         STRIPE_SECRET_KEY="sk_test_value",

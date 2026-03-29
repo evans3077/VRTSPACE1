@@ -37,6 +37,7 @@ Status: complete
 - [x] Add plans, subscriptions, and usage tracking
 - [x] Gate audits, history, and premium recommendation features
 - [x] Add webhook-driven payment verification
+- [ ] Finish live Stripe setup on Render with real `price_...` IDs for `STRIPE_PRICE_STARTER`, `STRIPE_PRICE_GROWTH`, `STRIPE_PRICE_AUTHORITY`, and `STRIPE_PRICE_ENTERPRISE`
 
 ## Phase 4: Automation and Reporting
 

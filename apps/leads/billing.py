@@ -180,6 +180,16 @@ def get_stripe_price_id(plan):
     return settings.STRIPE_PRICE_IDS.get(plan.slug, "")
 
 
+def validate_stripe_price_id(price_id, *, plan_name):
+    if not price_id:
+        raise BillingError(f"No Stripe price is configured for the {plan_name} plan.")
+    if not price_id.startswith("price_"):
+        raise BillingError(
+            f"The Stripe price for the {plan_name} plan must be a Stripe Price ID starting with 'price_', not a literal amount or product ID."
+        )
+    return price_id
+
+
 def get_plan_by_slug(slug):
     return WorkspacePlan.objects.filter(slug=slug, is_active=True).first()
 
@@ -196,9 +206,7 @@ def create_checkout_session(*, user, plan, success_url, cancel_url):
     if not settings.STRIPE_ENABLED:
         raise BillingError("Stripe billing is not configured.")
 
-    price_id = get_stripe_price_id(plan)
-    if not price_id:
-        raise BillingError(f"No Stripe price is configured for the {plan.name} plan.")
+    price_id = validate_stripe_price_id(get_stripe_price_id(plan), plan_name=plan.name)
 
     subscription = get_workspace_subscription(user)
     customer_id = subscription.stripe_customer_id if subscription and subscription.stripe_customer_id else ""
