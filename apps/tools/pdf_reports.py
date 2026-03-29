@@ -2,6 +2,9 @@ from io import BytesIO
 from textwrap import wrap
 
 
+SECTION_DIVIDER = "-" * 76
+
+
 def _escape_pdf_text(value):
     return (
         str(value)
@@ -14,7 +17,7 @@ def _escape_pdf_text(value):
 def _build_report_lines(audit_run):
     summary = audit_run.summary or {}
     score_breakdown = summary.get("score_breakdown", {})
-    recommendations = summary.get("recommendations", [])
+    recommendations = summary.get("featured_recommendations") or summary.get("recommendations", [])
     issue_summary = summary.get("issue_summary", {})
     pagespeed = summary.get("pagespeed", {})
     product_modules = summary.get("product_modules", [])
@@ -24,6 +27,7 @@ def _build_report_lines(audit_run):
     lines = [
         "VRT SPACE AGENCY",
         "Stakeholder Audit Report",
+        SECTION_DIVIDER,
         f"Domain: {audit_run.normalized_domain}",
         f"Status: {audit_run.get_status_display()}",
         f"Overall score: {audit_run.overall_score}",
@@ -31,8 +35,22 @@ def _build_report_lines(audit_run):
         f"Completed at: {audit_run.completed_at or 'Pending'}",
         "",
         "Executive summary",
+        SECTION_DIVIDER,
         f"This report summarizes the saved audit state for {audit_run.normalized_domain}.",
     ]
+
+    if recommendations:
+        top_categories = ", ".join(
+            sorted(
+                {
+                    recommendation.get("category", "General")
+                    for recommendation in recommendations[:4]
+                    if recommendation.get("category")
+                }
+            )
+        )
+        if top_categories:
+            lines.append(f"Primary pressure areas: {top_categories}.")
 
     if change_report:
         lines.extend(
@@ -46,11 +64,7 @@ def _build_report_lines(audit_run):
     else:
         lines.append("")
 
-    lines.extend(
-        [
-        "Score breakdown",
-        ]
-    )
+    lines.extend(["", "Score breakdown", SECTION_DIVIDER])
 
     for key in ("technical", "on_page", "content", "aeo", "internal_linking", "performance"):
         item = score_breakdown.get(key)
@@ -69,6 +83,7 @@ def _build_report_lines(audit_run):
             [
                 "",
                 "PageSpeed summary",
+                SECTION_DIVIDER,
                 f"- Source: {pagespeed.get('source', 'Unknown')}",
                 f"- Strategy: {pagespeed.get('strategy', 'Unknown')}",
             ]
@@ -78,7 +93,7 @@ def _build_report_lines(audit_run):
             lines.append(f"- {label}: {value}")
 
     if context_analysis:
-        lines.extend(["", "Market and competitor context"])
+        lines.extend(["", "Market and competitor context", SECTION_DIVIDER])
         market_context = context_analysis.get("market_context")
         if market_context:
             lines.append(f"- Market context: {market_context}")
@@ -97,13 +112,14 @@ def _build_report_lines(audit_run):
         [
             "",
             "Issue summary",
+            SECTION_DIVIDER,
             f"- Total issues: {issue_summary.get('total', 0)}",
         ]
     )
     for category, count in sorted((issue_summary.get("by_category") or {}).items()):
         lines.append(f"- {category.replace('_', ' ').title()}: {count}")
 
-    lines.extend(["", "Priority recommendations"])
+    lines.extend(["", "Priority recommendations and solutions", SECTION_DIVIDER])
     for index, recommendation in enumerate(recommendations[:8], start=1):
         lines.append(
             f"{index}. {recommendation.get('title', 'Recommendation')} "
@@ -114,19 +130,33 @@ def _build_report_lines(audit_run):
             lines.append(f"   {description}")
         fix = recommendation.get("recommended_fix")
         if fix:
-            lines.append(f"   Fix: {fix}")
+            lines.append(f"   Strategic fix: {fix}")
+        if recommendation.get("page_examples"):
+            lines.append(
+                f"   Where found: {recommendation.get('affected_pages_count', len(recommendation.get('page_examples', [])))} pages including "
+                + ", ".join(recommendation.get("page_examples", [])[:3])
+            )
+        elif recommendation.get("page_url"):
+            lines.append(f"   Where found: {recommendation.get('page_url')}")
         impact = recommendation.get("estimated_impact")
         if impact:
-            lines.append(f"   Impact: {impact}")
+            lines.append(f"   Expected result: {impact}")
+        technical_steps = recommendation.get("technical_steps") or []
+        for step in technical_steps[:2]:
+            lines.append(f"   Action step: {step}")
+        lines.append("")
 
     if product_modules:
-        lines.extend(["", "Recommended product modules"])
+        lines.extend(["", "Recommended product modules", SECTION_DIVIDER])
         for module in product_modules[:5]:
             lines.append(f"- {module.get('title', 'Module')} ({module.get('plan', 'Plan')}): {module.get('reason', '')}")
+            if module.get("impact"):
+                lines.append(f"  Outcome: {module.get('impact')}")
 
     lines.extend(
         [
             "",
+            SECTION_DIVIDER,
             "Generated by VRT SPACE AGENCY",
             "This report is based on the stored audit result and can be shared with internal teams or stakeholders.",
         ]

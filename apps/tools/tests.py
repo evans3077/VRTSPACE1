@@ -96,6 +96,8 @@ class PublicAuditFlowTests(TestCase):
                         "description": "Important pages are missing titles.",
                         "recommended_fix": "Add unique titles.",
                         "estimated_impact": "Improves click-through rate.",
+                        "page_url": "https://example.com/about/",
+                        "technical_steps": ["Inspect the title tag on the affected page."],
                     }
                 ],
                 "issue_summary": {"total": 2, "by_category": {"on_page": 2}},
@@ -107,6 +109,8 @@ class PublicAuditFlowTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response["Content-Type"], "application/pdf")
         self.assertTrue(response.content.startswith(b"%PDF"))
+        self.assertIn(b"Strategic fix: Add unique titles.", response.content)
+        self.assertIn(b"Where found: https://example.com/about/", response.content)
 
     def test_pending_audit_report_pdf_returns_409(self):
         audit_run = AuditRun.objects.create(
@@ -607,6 +611,71 @@ class ProjectDashboardTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Saved reruns and score comparison")
         self.assertContains(response, "+13")
+
+    def test_workspace_dashboard_shows_fix_locations_and_module_upgrade_cta(self):
+        user = get_user_model().objects.create_user(
+            username="user3@example.com",
+            email="user3@example.com",
+            password="strongpass123",
+        )
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="user3@example.com",
+            website="https://example.com",
+        )
+        latest_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=74,
+            status=AuditRun.Status.COMPLETED,
+            pages_crawled=6,
+            summary={
+                "featured_recommendations": [
+                    {
+                        "title": "No H1 tag detected.",
+                        "category": "On-page",
+                        "description": "Detected on 3 pages. This is lowering the On-page score.",
+                        "recommended_fix": "Add a single H1 that clearly describes the page topic.",
+                        "affected_pages_count": 3,
+                        "page_examples": [
+                            "https://example.com/about/",
+                            "https://example.com/contact/",
+                        ],
+                        "category_issue_count": 3,
+                    }
+                ],
+                "recommendations": [],
+                "product_modules": [
+                    {
+                        "title": "Site Health Monitor",
+                        "reason": "Technical and on-page signals are under target.",
+                        "impact": "Continuously track crawl, metadata, indexation, and priority-page issues inside the workspace.",
+                        "plan": "Growth",
+                        "cta_label": "Unlock monitoring",
+                    }
+                ],
+            },
+        )
+        ClientProject.objects.create(
+            owner=user,
+            audit_request=audit_request,
+            latest_audit_run=latest_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="user3@example.com",
+            latest_score=74,
+        )
+
+        self.client.force_login(user)
+        response = self.client.get(reverse("tools:workspace-dashboard"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Where this appears")
+        self.assertContains(response, "https://example.com/about/")
+        self.assertContains(response, "Unlock monitoring")
+        self.assertContains(response, reverse("tools:workspace-billing-checkout"))
 
     def test_public_audit_result_shows_workspace_and_plan_ctas(self):
         audit_run = AuditRun.objects.create(
@@ -1409,6 +1478,56 @@ class AuditExportAndQueueTests(TestCase):
 
         self.assertEqual(html_response.status_code, 404)
         self.assertEqual(pdf_response.status_code, 404)
+
+    def test_shared_audit_report_shows_solution_and_location_details(self):
+        audit_run = AuditRun.objects.create(
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=82,
+            status=AuditRun.Status.COMPLETED,
+            pages_crawled=5,
+            completed_at=timezone.now(),
+            summary={
+                "issue_summary": {"total": 3, "by_category": {"on_page": 2, "technical": 1}},
+                "featured_recommendations": [
+                    {
+                        "title": "No H1 tag detected.",
+                        "category": "On-page",
+                        "description": "Detected on 2 pages. This is lowering the On-page score.",
+                        "recommended_fix": "Add a single H1 tag to each affected page.",
+                        "estimated_impact": "Improves ranking alignment and page clarity.",
+                        "affected_pages_count": 2,
+                        "page_examples": [
+                            "https://example.com/about/",
+                            "https://example.com/contact/",
+                        ],
+                    }
+                ],
+                "score_breakdown": {
+                    "on_page": {"label": "On-page", "score": 58, "issues": 2, "next_step": "Fix headings and metadata first."}
+                },
+                "product_modules": [
+                    {
+                        "title": "Site Health Monitor",
+                        "plan": "Growth",
+                        "reason": "Technical and on-page signals are under target.",
+                        "impact": "Track priority issues and reruns in one workflow.",
+                    }
+                ],
+            },
+        )
+        share_link = AuditShareLink.objects.create(
+            audit_run=audit_run,
+            token="completed-share-token",
+        )
+
+        response = self.client.get(reverse("tools:shared-audit-report", args=[share_link.token]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Where this appears")
+        self.assertContains(response, "Add a single H1 tag to each affected page.")
+        self.assertContains(response, "Improves ranking alignment and page clarity.")
+        self.assertContains(response, "Site Health Monitor")
 
     @override_settings(AUDIT_USE_CELERY=True)
     @patch("apps.tools.tasks.run_public_site_audit_task.delay")

@@ -8,6 +8,7 @@ from django.core.cache import cache
 from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
+from django.utils import timezone
 from django.views import View
 from django.views.generic import DetailView
 
@@ -42,6 +43,22 @@ from .jobs import enqueue_public_site_audit
 from .models import AuditRun, AuditShareLink
 from .pdf_reports import build_audit_report_pdf
 from .services import normalize_url
+
+
+def _decorate_product_modules(product_modules, billing_plans):
+    plan_map = {card["slug"]: card for card in billing_plans}
+    decorated = []
+    for module in product_modules or []:
+        plan_slug = str(module.get("plan", "")).strip().lower()
+        card = plan_map.get(plan_slug)
+        item = dict(module)
+        item["plan_slug"] = plan_slug
+        item["cta_label"] = module.get("cta_label") or f"Upgrade to {module.get('plan', 'Plan')}"
+        item["can_checkout"] = bool(card and not card.get("is_current") and not card.get("is_custom"))
+        item["is_current_plan"] = bool(card and card.get("is_current"))
+        item["is_custom_scope"] = bool(card and card.get("is_custom"))
+        decorated.append(item)
+    return decorated
 
 
 class PublicAuditCreateView(View):
@@ -495,6 +512,7 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         billing_state = get_billing_state(self.request.user)
         schedule = get_workspace_schedule(project)
         latest_change_report = getattr(latest_audit, "change_report", None) if latest_audit else None
+        fix_queue_recommendations = latest_summary.get("featured_recommendations") or recommendations[:6]
         latest_share_link = (
             AuditShareLink.objects.filter(audit_run=latest_audit).order_by("-created_at").first()
             if latest_audit
@@ -508,7 +526,11 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["audit_history_with_delta"] = audit_history_with_delta
         context["score_breakdown"] = latest_summary.get("score_breakdown", {})
         context["recommendations"] = recommendations
-        context["product_modules"] = latest_summary.get("product_modules", [])
+        context["fix_queue_recommendations"] = fix_queue_recommendations
+        context["product_modules"] = _decorate_product_modules(
+            latest_summary.get("product_modules", []),
+            billing_state["plans"],
+        )
         context["custom_work_items"] = latest_summary.get("custom_work_items", [])
         context["context_analysis"] = latest_summary.get("context_analysis", {})
         context["packages"] = PACKAGES
@@ -650,8 +672,11 @@ class SharedAuditReportView(DetailView):
         summary = audit_run.summary or {}
         context["audit_run"] = audit_run
         context["score_breakdown"] = summary.get("score_breakdown", {})
-        context["recommendations"] = summary.get("recommendations", [])[:6]
+        context["recommendations"] = (summary.get("featured_recommendations") or summary.get("recommendations", []))[:6]
         context["context_analysis"] = summary.get("context_analysis", {})
+        context["issue_summary"] = summary.get("issue_summary", {})
+        context["product_modules"] = summary.get("product_modules", [])[:4]
+        context["change_report"] = getattr(audit_run, "change_report", None)
         return context
 
 
