@@ -1,6 +1,13 @@
 from django.contrib import admin
 
-from .models import AuditRequest, ClientProject, Lead
+from .models import (
+    AuditRequest,
+    ClientProject,
+    Lead,
+    UsageRecord,
+    WorkspacePlan,
+    WorkspaceSubscription,
+)
 
 
 @admin.register(Lead)
@@ -23,5 +30,28 @@ class ClientProjectAdmin(admin.ModelAdmin):
     list_filter = ("stage",)
     search_fields = ("name", "normalized_domain", "contact_email")
     autocomplete_fields = ("audit_request", "latest_audit_run")
+
+
+@admin.register(WorkspacePlan)
+class WorkspacePlanAdmin(admin.ModelAdmin):
+    list_display = ("name", "slug", "price_label", "is_active", "sort_order")
+    list_filter = ("is_active", "recurring_audits_enabled", "export_reports_enabled")
+    search_fields = ("name", "slug", "stripe_price_id")
+
+
+@admin.register(WorkspaceSubscription)
+class WorkspaceSubscriptionAdmin(admin.ModelAdmin):
+    list_display = ("user", "plan", "status", "current_period_end", "updated_at")
+    list_filter = ("status", "plan")
+    search_fields = ("user__username", "user__email", "stripe_customer_id", "stripe_subscription_id")
+    autocomplete_fields = ("user", "plan")
+
+
+@admin.register(UsageRecord)
+class UsageRecordAdmin(admin.ModelAdmin):
+    list_display = ("user", "metric", "quantity", "period_start", "period_end", "updated_at")
+    list_filter = ("metric", "plan")
+    search_fields = ("user__username", "user__email")
+    autocomplete_fields = ("user", "plan")
 
 # Register your models here.

@@ -1,5 +1,13 @@
 from django.urls import path
 
+from .billing_views import (
+    StripeWebhookView,
+    WorkspaceAuditRerunView,
+    WorkspaceBillingCancelView,
+    WorkspaceBillingPortalView,
+    WorkspaceBillingSuccessView,
+    WorkspaceCheckoutCreateView,
+)
 from .views import (
     AgencyAuditDetailView,
     AuditResultDetailView,
@@ -23,7 +31,13 @@ urlpatterns = [
     path("workspace/start/", WorkspaceSignupView.as_view(), name="workspace-signup"),
     path("workspace/login/", WorkspaceLoginView.as_view(), name="workspace-login"),
     path("workspace/logout/", WorkspaceLogoutView.as_view(), name="workspace-logout"),
+    path("workspace/billing/checkout/", WorkspaceCheckoutCreateView.as_view(), name="workspace-billing-checkout"),
+    path("workspace/billing/portal/", WorkspaceBillingPortalView.as_view(), name="workspace-billing-portal"),
+    path("workspace/billing/success/", WorkspaceBillingSuccessView.as_view(), name="workspace-billing-success"),
+    path("workspace/billing/cancel/", WorkspaceBillingCancelView.as_view(), name="workspace-billing-cancel"),
+    path("workspace/audits/rerun/", WorkspaceAuditRerunView.as_view(), name="workspace-audit-rerun"),
     path("auth/google/start/", GoogleOAuthStartView.as_view(), name="google-oauth-start"),
     path("auth/google/callback/", GoogleOAuthCallbackView.as_view(), name="google-oauth-callback"),
+    path("billing/stripe/webhook/", StripeWebhookView.as_view(), name="stripe-webhook"),
     path("workspace/", WorkspaceDashboardView.as_view(), name="workspace-dashboard"),
 ]

@@ -320,6 +320,11 @@ setTimeout(function () {
             </article>
             {% endfor %}
         </div>
+        {% if locked_recommendation_count %}
+        <div style="margin-top: 1.5rem; padding: 1rem 1.25rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; font-size: 0.95rem;">
+            {{ locked_recommendation_count }} more detailed recommendation{{ locked_recommendation_count|pluralize }} unlock inside a higher workspace plan.
+        </div>
+        {% endif %}
     </div>
 </section>
 

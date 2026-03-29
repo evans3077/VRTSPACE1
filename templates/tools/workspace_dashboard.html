@@ -9,6 +9,18 @@
             <p class="section-text" style="max-width: 760px;">
                 User-facing dashboard for saved audits, recommended modules, and the current fix queue.
             </p>
+            <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button button-primary">Run Workspace Audit</button>
+                </form>
+                {% if current_subscription and current_subscription.stripe_customer_id %}
+                <form method="post" action="{% url 'tools:workspace-billing-portal' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button button-secondary">Manage Billing</button>
+                </form>
+                {% endif %}
+            </div>
             {% if not audit_tier_enforcement %}
             <div style="margin-top: 1rem; display: inline-flex; gap: 0.5rem; align-items: center; padding: 0.75rem 1rem; border-radius: 999px; background: rgba(14, 165, 233, 0.08); color: #0f172a; font-size: 0.85rem; font-weight: 700;">
                 Free-pass mode: plans are visible, but billing gates are not enforced yet.
@@ -27,6 +39,56 @@
             <article class="system-card"><p class="eyebrow">Pages</p><h3>{{ latest_audit.pages_crawled }}</h3><p>Pages crawled</p></article>
         </div>
         {% endif %}
+
+        <div class="system-grid">
+            <article class="system-card" style="border-top: 4px solid var(--signal);">
+                <p class="eyebrow">Current Plan</p>
+                <h3>
+                    {% if current_subscription and current_subscription.plan %}
+                    {{ current_subscription.plan.name }}
+                    {% else %}
+                    Free
+                    {% endif %}
+                </h3>
+                <p>
+                    {% if current_subscription and current_subscription.plan %}
+                    Status: {{ current_subscription.get_status_display }}
+                    {% else %}
+                    No paid subscription is attached yet.
+                    {% endif %}
+                </p>
+            </article>
+            <article class="system-card">
+                <p class="eyebrow">Monthly Audit Usage</p>
+                <h3>
+                    {{ usage_summary.audit_runs_used|default:0 }}
+                    {% if usage_summary.audit_runs_limit %}
+                    / {{ usage_summary.audit_runs_limit }}
+                    {% else %}
+                    / Unlimited
+                    {% endif %}
+                </h3>
+                <p>
+                    {% if usage_summary.audit_runs_remaining is not None %}
+                    {{ usage_summary.audit_runs_remaining }} remaining this month.
+                    {% else %}
+                    No monthly audit cap on the current plan.
+                    {% endif %}
+                </p>
+            </article>
+            <article class="system-card">
+                <p class="eyebrow">Feature Access</p>
+                <h3>{{ current_capabilities.name }}</h3>
+                <p>
+                    History:
+                    {% if current_capabilities.history_limit %}
+                    {{ current_capabilities.history_limit }} saved runs
+                    {% else %}
+                    Full history
+                    {% endif %}
+                </p>
+            </article>
+        </div>
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
             <article class="system-card">
@@ -63,6 +125,11 @@
                     {% empty %}
                     <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">No saved recommendations yet.</div>
                     {% endfor %}
+                    {% if locked_recommendation_count %}
+                    <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; font-size: 0.9rem;">
+                        {{ locked_recommendation_count }} more recommendation{{ locked_recommendation_count|pluralize }} unlock on a higher plan.
+                    </div>
+                    {% endif %}
                 </div>
             </article>
         </div>
@@ -110,24 +177,42 @@
                     </tbody>
                 </table>
             </div>
+            {% if locked_history_count %}
+            <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a;">
+                {{ locked_history_count }} older audit run{{ locked_history_count|pluralize }} are hidden by the current plan.
+            </div>
+            {% endif %}
         </article>
 
         <article class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                 <p class="eyebrow">Plans</p>
-                <h2 style="font-size: 2rem;">Visible tiers for testing</h2>
+                <h2 style="font-size: 2rem;">Billing-ready tiers</h2>
             </div>
             <div class="system-grid">
-                {% for package in packages %}
-                <div class="system-card" style="border-top: 4px solid {% if package.name == 'Authority' %}#0f172a{% else %}var(--signal){% endif %};">
+                {% for card in billing_plans %}
+                <div class="system-card" style="border-top: 4px solid {% if card.name == 'Authority' %}#0f172a{% else %}var(--signal){% endif %};">
                     <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 0.35rem;">
-                        <strong>{{ package.name }}</strong>
-                        <span style="font-weight: 900;">{{ package.price }}</span>
+                        <strong>{{ card.name }}</strong>
+                        <span style="font-weight: 900;">{{ card.price }}</span>
                     </div>
-                    <div style="color: #475569; font-size: 0.9rem; margin-bottom: 0.75rem;">{{ package.label }}</div>
-                    {% for feature in package.features %}
+                    <div style="color: #475569; font-size: 0.9rem; margin-bottom: 0.75rem;">{{ card.label }}</div>
+                    {% for feature in card.features %}
                     <div style="font-size: 0.85rem; color: #475569;">{{ feature }}</div>
                     {% endfor %}
+                    <div style="margin-top: 1rem;">
+                        {% if card.is_current %}
+                        <span class="score-pill score-high">Current plan</span>
+                        {% elif card.is_custom %}
+                        <a class="button button-secondary" href="{% url 'core:home' %}#contact">Request custom scope</a>
+                        {% else %}
+                        <form method="post" action="{% url 'tools:workspace-billing-checkout' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="plan" value="{{ card.slug }}">
+                            <button type="submit" class="button button-primary" style="width: 100%;">Upgrade to {{ card.name }}</button>
+                        </form>
+                        {% endif %}
+                    </div>
                 </div>
                 {% endfor %}
             </div>

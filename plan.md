@@ -31,12 +31,12 @@ Status: complete
 
 ## Phase 3: Billing and Plan Enforcement
 
-Status: pending
+Status: complete
 
 - [x] Keep audit plan visibility live under a temporary free-pass mode until testing and core product development are complete
-- [ ] Add plans, subscriptions, and usage tracking
-- [ ] Gate audits, history, and premium recommendation features
-- [ ] Add webhook-driven payment verification
+- [x] Add plans, subscriptions, and usage tracking
+- [x] Gate audits, history, and premium recommendation features
+- [x] Add webhook-driven payment verification
 
 ## Phase 4: Automation and Reporting
 

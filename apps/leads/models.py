@@ -95,4 +95,100 @@ class ClientProject(TimestampedModel):
     def __str__(self):
         return self.name
 
+
+class WorkspacePlan(TimestampedModel):
+    slug = models.SlugField(unique=True)
+    name = models.CharField(max_length=80)
+    price_label = models.CharField(max_length=80, blank=True)
+    stripe_price_id = models.CharField(max_length=120, blank=True)
+    description = models.TextField(blank=True)
+    is_active = models.BooleanField(default=True)
+    sort_order = models.PositiveSmallIntegerField(default=0)
+    monthly_audits_limit = models.PositiveSmallIntegerField(null=True, blank=True)
+    history_limit = models.PositiveSmallIntegerField(null=True, blank=True)
+    premium_recommendation_limit = models.PositiveSmallIntegerField(null=True, blank=True)
+    recurring_audits_enabled = models.BooleanField(default=False)
+    export_reports_enabled = models.BooleanField(default=False)
+    metadata = models.JSONField(default=dict, blank=True)
+
+    class Meta:
+        ordering = ("sort_order", "name")
+
+    def __str__(self):
+        return self.name
+
+
+class WorkspaceSubscription(TimestampedModel):
+    class Status(models.TextChoices):
+        INACTIVE = "inactive", "Inactive"
+        TRIALING = "trialing", "Trialing"
+        ACTIVE = "active", "Active"
+        PAST_DUE = "past_due", "Past Due"
+        CANCELED = "canceled", "Canceled"
+        UNPAID = "unpaid", "Unpaid"
+
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="workspace_subscription",
+    )
+    plan = models.ForeignKey(
+        WorkspacePlan,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="subscriptions",
+    )
+    status = models.CharField(max_length=24, choices=Status.choices, default=Status.INACTIVE)
+    stripe_customer_id = models.CharField(max_length=120, blank=True)
+    stripe_subscription_id = models.CharField(max_length=120, blank=True)
+    stripe_checkout_session_id = models.CharField(max_length=120, blank=True)
+    current_period_end = models.DateTimeField(null=True, blank=True)
+    cancel_at_period_end = models.BooleanField(default=False)
+    last_webhook_event_id = models.CharField(max_length=120, blank=True)
+    metadata = models.JSONField(default=dict, blank=True)
+
+    class Meta:
+        ordering = ("-updated_at",)
+
+    def __str__(self):
+        plan_name = self.plan.name if self.plan_id else "No plan"
+        return f"{self.user} - {plan_name}"
+
+
+class UsageRecord(TimestampedModel):
+    class Metric(models.TextChoices):
+        AUDIT_RUN = "audit_run", "Audit Run"
+        EXPORT = "export", "Export"
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="usage_records",
+    )
+    plan = models.ForeignKey(
+        WorkspacePlan,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="usage_records",
+    )
+    metric = models.CharField(max_length=32, choices=Metric.choices)
+    period_start = models.DateField()
+    period_end = models.DateField()
+    quantity = models.PositiveIntegerField(default=0)
+    metadata = models.JSONField(default=dict, blank=True)
+
+    class Meta:
+        ordering = ("-period_start", "-updated_at")
+        constraints = [
+            models.UniqueConstraint(
+                fields=("user", "metric", "period_start", "period_end"),
+                name="unique_usage_record_per_period",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.user} - {self.metric} ({self.period_start})"
+
 # Create your models here.

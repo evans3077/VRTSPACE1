@@ -1,12 +1,16 @@
 import os
+import json
+import time
+import hmac
+import hashlib
+import calendar
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
 from django.test import TestCase, override_settings
 from django.urls import reverse
 
-from apps.leads.models import ClientProject
-from apps.leads.models import AuditRequest
+from apps.leads.models import AuditRequest, ClientProject, UsageRecord, WorkspacePlan, WorkspaceSubscription
 
 from .admin_utils import get_service_recommendations
 from .models import AuditIssue, AuditPage, AuditRun
@@ -615,3 +619,180 @@ class WorkspaceAuthTests(TestCase):
         user = get_user_model().objects.get(email="googleuser@example.com")
         project = ClientProject.objects.get(audit_request=audit_request)
         self.assertEqual(project.owner, user)
+
+
+class WorkspaceBillingTests(TestCase):
+    @override_settings(
+        STRIPE_PUBLISHABLE_KEY="pk_test_value",
+        STRIPE_SECRET_KEY="sk_test_value",
+        STRIPE_ENABLED=True,
+        STRIPE_PRICE_IDS={"starter": "price_starter", "growth": "", "authority": "", "enterprise": ""},
+    )
+    @patch("apps.leads.billing.requests.post")
+    def test_workspace_checkout_redirects_to_stripe(self, mocked_post):
+        mocked_post.return_value.status_code = 200
+        mocked_post.return_value.json.return_value = {
+            "id": "cs_test_123",
+            "url": "https://checkout.stripe.test/session/123",
+        }
+        user = get_user_model().objects.create_user(
+            username="billing@example.com",
+            email="billing@example.com",
+            password="strongpass123",
+        )
+        self.client.force_login(user)
+
+        response = self.client.post(
+            reverse("tools:workspace-billing-checkout"),
+            {"plan": "starter"},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response["Location"], "https://checkout.stripe.test/session/123")
+        subscription = WorkspaceSubscription.objects.get(user=user)
+        self.assertEqual(subscription.plan.slug, "starter")
+        self.assertEqual(subscription.stripe_checkout_session_id, "cs_test_123")
+
+    @override_settings(
+        STRIPE_WEBHOOK_SECRET="whsec_test_value",
+    )
+    def test_stripe_webhook_activates_subscription(self):
+        user = get_user_model().objects.create_user(
+            username="webhook@example.com",
+            email="webhook@example.com",
+            password="strongpass123",
+        )
+        starter_plan = WorkspacePlan.objects.get(slug="starter")
+        WorkspaceSubscription.objects.create(user=user, plan=starter_plan)
+
+        payload = {
+            "id": "evt_123",
+            "type": "checkout.session.completed",
+            "data": {
+                "object": {
+                    "id": "cs_live_123",
+                    "client_reference_id": str(user.pk),
+                    "customer": "cus_123",
+                    "subscription": "sub_123",
+                    "metadata": {"plan_slug": "starter"},
+                }
+            },
+        }
+        encoded_payload = json.dumps(payload).encode("utf-8")
+        timestamp = str(int(time.time()))
+        signed_payload = f"{timestamp}.{encoded_payload.decode('utf-8')}".encode("utf-8")
+        signature = hmac.new(
+            b"whsec_test_value",
+            msg=signed_payload,
+            digestmod=hashlib.sha256,
+        ).hexdigest()
+
+        response = self.client.post(
+            reverse("tools:stripe-webhook"),
+            data=encoded_payload,
+            content_type="application/json",
+            HTTP_STRIPE_SIGNATURE=f"t={timestamp},v1={signature}",
+        )
+
+        self.assertEqual(response.status_code, 200)
+        subscription = WorkspaceSubscription.objects.get(user=user)
+        self.assertEqual(subscription.status, WorkspaceSubscription.Status.ACTIVE)
+        self.assertEqual(subscription.stripe_customer_id, "cus_123")
+        self.assertEqual(subscription.stripe_subscription_id, "sub_123")
+
+    @override_settings(AUDIT_TIER_ENFORCEMENT=True)
+    def test_workspace_dashboard_limits_history_for_free_users(self):
+        user = get_user_model().objects.create_user(
+            username="freeuser@example.com",
+            email="freeuser@example.com",
+            password="strongpass123",
+        )
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="freeuser@example.com",
+            website="https://example.com",
+        )
+        older_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=61,
+            status=AuditRun.Status.COMPLETED,
+            pages_crawled=5,
+            summary={},
+        )
+        latest_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=74,
+            status=AuditRun.Status.COMPLETED,
+            pages_crawled=6,
+            summary={},
+        )
+        ClientProject.objects.create(
+            owner=user,
+            audit_request=audit_request,
+            latest_audit_run=latest_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="freeuser@example.com",
+            latest_score=74,
+        )
+
+        self.client.force_login(user)
+        response = self.client.get(reverse("tools:workspace-dashboard"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "1 older audit run")
+        self.assertContains(response, "74")
+        self.assertNotContains(response, str(older_run.created_at))
+
+    @override_settings(AUDIT_TIER_ENFORCEMENT=True)
+    def test_workspace_rerun_blocks_when_monthly_audit_limit_is_reached(self):
+        user = get_user_model().objects.create_user(
+            username="limited@example.com",
+            email="limited@example.com",
+            password="strongpass123",
+        )
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="limited@example.com",
+            website="https://example.com",
+        )
+        latest_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=74,
+            status=AuditRun.Status.COMPLETED,
+            pages_crawled=6,
+            summary={},
+        )
+        ClientProject.objects.create(
+            owner=user,
+            audit_request=audit_request,
+            latest_audit_run=latest_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="limited@example.com",
+            latest_score=74,
+        )
+        usage_record = UsageRecord.objects.create(
+            user=user,
+            metric=UsageRecord.Metric.AUDIT_RUN,
+            period_start=latest_run.created_at.date().replace(day=1),
+            period_end=latest_run.created_at.date().replace(
+                day=calendar.monthrange(latest_run.created_at.year, latest_run.created_at.month)[1]
+            ),
+            quantity=1,
+        )
+        self.client.force_login(user)
+
+        response = self.client.post(reverse("tools:workspace-audit-rerun"))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response["Location"], reverse("tools:workspace-dashboard"))
+        self.assertEqual(AuditRun.objects.count(), 1)

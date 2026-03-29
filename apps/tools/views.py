@@ -11,6 +11,12 @@ from django.views import View
 from django.views.generic import DetailView
 
 from apps.core.site_content import PACKAGES
+from apps.leads.billing import (
+    get_billing_state,
+    get_effective_capabilities,
+    get_limited_audit_history,
+    get_limited_recommendations,
+)
 from apps.leads.auth import (
     GoogleOAuthError,
     build_google_authorize_url,
@@ -113,15 +119,23 @@ class AuditResultDetailView(DetailView):
             })
         context["gauge_list"] = gauge_list
         context["score_breakdown"] = score_breakdown
-        context["recommendations"] = recommendations
+        visible_recommendations, locked_recommendation_count = get_limited_recommendations(
+            recommendations,
+            self.request.user,
+        )
+        recommendation_limit = get_effective_capabilities(self.request.user)["premium_recommendation_limit"]
+        if settings.AUDIT_TIER_ENFORCEMENT and recommendation_limit is not None:
+            product_modules = product_modules[:recommendation_limit]
+        context["recommendations"] = visible_recommendations
         context["featured_recommendations"] = featured_recommendations
-        context["secondary_recommendations"] = [item for item in recommendations if item not in featured_recommendations]
+        context["secondary_recommendations"] = [item for item in visible_recommendations if item not in featured_recommendations]
         context["product_modules"] = product_modules
         context["custom_work_items"] = custom_work_items
         context["packages"] = PACKAGES
         context["audit_tier_enforcement"] = settings.AUDIT_TIER_ENFORCEMENT
         context["pages"] = audit_run.pages.all()
         context["is_processing"] = audit_run.status in {AuditRun.Status.PENDING, AuditRun.Status.RUNNING}
+        context["locked_recommendation_count"] = locked_recommendation_count
         return context
 from .admin_utils import get_service_recommendations
 
@@ -442,24 +456,32 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         project = self.object
         latest_audit = getattr(project, "latest_audit_run", None)
         latest_summary = latest_audit.summary if latest_audit and isinstance(latest_audit.summary, dict) else {}
-        audit_history = (
-            project.audit_request.audit_runs.order_by("-created_at")
-            if getattr(project, "audit_request_id", None)
-            else AuditRun.objects.none()
-        )
+        audit_history, locked_history_count = get_limited_audit_history(project, self.request.user)
         audit_history_list = list(audit_history)
         audit_history_with_delta = []
         for index, audit in enumerate(audit_history_list):
             next_older = audit_history_list[index + 1] if index + 1 < len(audit_history_list) else None
             delta = None if next_older is None else audit.overall_score - next_older.overall_score
             audit_history_with_delta.append({"audit": audit, "delta": delta})
+        recommendations, locked_recommendation_count = get_limited_recommendations(
+            latest_summary.get("recommendations", []),
+            self.request.user,
+        )
+        billing_state = get_billing_state(self.request.user)
         context["latest_audit"] = latest_audit
         context["audit_history"] = audit_history
         context["audit_history_with_delta"] = audit_history_with_delta
         context["score_breakdown"] = latest_summary.get("score_breakdown", {})
-        context["recommendations"] = latest_summary.get("recommendations", [])
+        context["recommendations"] = recommendations
         context["product_modules"] = latest_summary.get("product_modules", [])
         context["custom_work_items"] = latest_summary.get("custom_work_items", [])
         context["packages"] = PACKAGES
         context["audit_tier_enforcement"] = settings.AUDIT_TIER_ENFORCEMENT
+        context["locked_history_count"] = locked_history_count
+        context["locked_recommendation_count"] = locked_recommendation_count
+        context["billing_state"] = billing_state
+        context["current_subscription"] = billing_state["subscription"]
+        context["current_capabilities"] = billing_state["capabilities"]
+        context["usage_summary"] = billing_state["usage"]
+        context["billing_plans"] = billing_state["plans"]
         return context
