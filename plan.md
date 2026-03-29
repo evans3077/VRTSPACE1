@@ -107,6 +107,7 @@ Status: in progress
 - [x] Make the SEO execution queue action-based by attaching page-level edit targets, exact change scopes, and ordered implementation steps instead of generic advice only
 - [x] Add model-backed refinement adapters so briefs, titles, outlines, FAQs, and generated draft payloads can be upgraded by stronger models without losing the deterministic fallback path
 - [x] Keep deterministic briefs and payload validation as the canonical guardrail so model output can only override allowed sections after structural checks pass
+- [x] Move SEO refresh and first-time competitor profiling off the request thread so Render does not time out when benchmarking live competitor sites
 - [ ] Add a production-grade secondary discovery provider or fallback path so competitor discovery is not tied to a single SERP source
 
 ## Working Rule

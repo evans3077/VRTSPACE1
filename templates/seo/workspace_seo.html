@@ -54,6 +54,10 @@
                 <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
                     A completed audit is required before the SEO hub can benchmark structure and competitors.
                 </div>
+                {% elif seo_refresh_state.refresh_status == "queued" or seo_refresh_state.refresh_status == "running" %}
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                    A fresh SEO benchmark is running in the background. This panel will populate when competitor profiling completes.
+                </div>
                 {% elif not snapshot %}
                 <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
                     Save the business profile and competitor URLs to generate the first SEO intelligence snapshot.
@@ -72,6 +76,28 @@
                 {% endif %}
             </article>
         </div>
+
+        {% if seo_refresh_state.refresh_status == "queued" or seo_refresh_state.refresh_status == "running" %}
+        <article class="system-card" style="background: rgba(14, 165, 233, 0.08);">
+            <div class="section-heading" style="text-align: left; margin-bottom: 0.5rem;">
+                <p class="eyebrow">SEO Refresh Status</p>
+                <h2 style="font-size: 1.6rem;">Benchmark refresh in progress</h2>
+            </div>
+            <p style="margin: 0; color: #0f172a; line-height: 1.6;">
+                Competitor discovery and page profiling are running in the background. This page will show the latest completed SEO snapshot until the new refresh finishes.
+            </p>
+        </article>
+        {% elif seo_refresh_state.refresh_status == "failed" %}
+        <article class="system-card" style="background: rgba(220, 38, 38, 0.08);">
+            <div class="section-heading" style="text-align: left; margin-bottom: 0.5rem;">
+                <p class="eyebrow">SEO Refresh Status</p>
+                <h2 style="font-size: 1.6rem;">Latest refresh failed</h2>
+            </div>
+            <p style="margin: 0; color: #7f1d1d; line-height: 1.6;">
+                {{ seo_refresh_state.refresh_error|default:"The competitor refresh did not finish. Try again after checking the provider and network settings." }}
+            </p>
+        </article>
+        {% endif %}
 
         {% if snapshot %}
         <article class="system-card">

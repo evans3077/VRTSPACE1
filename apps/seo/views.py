@@ -1,18 +1,16 @@
 from django.contrib import messages
+from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
 from django.views import View
 
 from apps.leads.models import ClientProject
-from apps.leads.billing import record_usage
-from apps.leads.models import UsageRecord
 
 from .forms import SEOProjectProfileForm
 from .models import SEOCompetitor, SEOProjectProfile
+from .jobs import enqueue_project_seo_refresh
 from .services import (
     can_generate_seo_snapshot,
-    get_or_build_seo_opportunity_snapshot,
-    get_or_build_seo_snapshot,
     refresh_project_seo_intelligence,
     sync_project_competitors,
 )
@@ -25,8 +23,8 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
         project = self._get_project(request.user)
         profile = getattr(project, "seo_profile", None) if project else None
         form = SEOProjectProfileForm(instance=profile, initial=self._initial_form_data(project))
-        snapshot = self._get_snapshot(project, profile)
-        opportunity_snapshot = self._get_opportunity_snapshot(project, profile, snapshot)
+        snapshot = self._get_latest_snapshot(project, profile)
+        opportunity_snapshot = self._get_latest_opportunity_snapshot(project, profile)
         return render(
             request,
             self.template_name,
@@ -48,8 +46,8 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
         profile = getattr(project, "seo_profile", None)
         form = SEOProjectProfileForm(request.POST, instance=profile)
         if not form.is_valid():
-            snapshot = self._get_snapshot(project, profile)
-            opportunity_snapshot = self._get_opportunity_snapshot(project, profile, snapshot)
+            snapshot = self._get_latest_snapshot(project, profile)
+            opportunity_snapshot = self._get_latest_opportunity_snapshot(project, profile)
             return render(
                 request,
                 self.template_name,
@@ -67,15 +65,21 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
         profile.project = project
         profile.save()
         sync_project_competitors(project, form.cleaned_data.get("competitor_urls", ""))
-        snapshot, opportunity_snapshot = refresh_project_seo_intelligence(project)
-        try:
-            from apps.content.services import sync_project_editorial_tasks
-
-            sync_project_editorial_tasks(project)
-        except Exception:
-            pass
-        record_usage(request.user, UsageRecord.Metric.SEO_SNAPSHOT)
-        messages.success(request, "SEO context saved and refreshed for this workspace.")
+        snapshot = None
+        opportunity_snapshot = None
+        if settings.SEO_REFRESH_ASYNC:
+            metadata = dict(profile.metadata or {})
+            metadata["refresh_status"] = "queued"
+            metadata["refresh_error"] = ""
+            profile.metadata = metadata
+            profile.save(update_fields=["metadata", "updated_at"])
+            enqueue_project_seo_refresh(project.pk)
+            snapshot = self._get_latest_snapshot(project, profile)
+            opportunity_snapshot = self._get_latest_opportunity_snapshot(project, profile)
+            messages.success(request, "SEO refresh queued. The workspace will update when competitor profiling finishes.")
+        else:
+            snapshot, opportunity_snapshot = refresh_project_seo_intelligence(project)
+            messages.success(request, "SEO context saved and refreshed for this workspace.")
         return render(
             request,
             self.template_name,
@@ -96,13 +100,14 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             .first()
         )
 
-    def _get_snapshot(self, project, profile, force_refresh=False):
+    def _get_latest_snapshot(self, project, profile):
         if not profile or not can_generate_seo_snapshot(project):
             return None
-        if force_refresh:
-            snapshot, _opportunity_snapshot = refresh_project_seo_intelligence(project)
-            return snapshot
-        return get_or_build_seo_snapshot(project=project, profile=profile, audit_run=project.latest_audit_run)
+        return (
+            project.seo_snapshots.filter(profile=profile, source_audit_run=project.latest_audit_run)
+            .order_by("-created_at")
+            .first()
+        )
 
     def _initial_form_data(self, project):
         if not project:
@@ -118,22 +123,22 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             competitor_urls = getattr(project.audit_request, "competitor_urls", [])
         return {"competitor_urls": "\n".join(competitor_urls)}
 
-    def _get_opportunity_snapshot(self, project, profile, snapshot, force_refresh=False):
-        if not snapshot or not profile or not can_generate_seo_snapshot(project):
+    def _get_latest_opportunity_snapshot(self, project, profile):
+        if not profile or not can_generate_seo_snapshot(project):
             return None
-        if force_refresh:
-            _snapshot, opportunity_snapshot = refresh_project_seo_intelligence(project)
-            return opportunity_snapshot
-        return get_or_build_seo_opportunity_snapshot(
-            project=project,
-            profile=profile,
-            audit_run=project.latest_audit_run,
-            context_snapshot=snapshot,
+        return (
+            project.seo_opportunity_snapshots.filter(
+                profile=profile,
+                source_audit_run=project.latest_audit_run,
+            )
+            .order_by("-created_at")
+            .first()
         )
 
     def _build_context(self, *, project, form, profile, snapshot, opportunity_snapshot):
         payload = snapshot.output_json if snapshot else {}
         opportunity_payload = opportunity_snapshot.output_json if opportunity_snapshot else {}
+        refresh_state = (getattr(profile, "metadata", None) or {}) if profile else {}
         return {
             "project": project,
             "form": form,
@@ -153,4 +158,5 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             "seo_page_map": opportunity_payload.get("page_map", []),
             "seo_execution_queue": opportunity_payload.get("execution_queue", []),
             "can_generate_snapshot": can_generate_seo_snapshot(project),
+            "seo_refresh_state": refresh_state,
         }

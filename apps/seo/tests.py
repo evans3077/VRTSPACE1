@@ -441,6 +441,29 @@ class WorkspaceSEOViewTests(TestCase):
         self.assertContains(response, "SERP discovery queries used")
         self.assertContains(response, "No H1 tag detected.")
 
+    @override_settings(SEO_REFRESH_ASYNC=True)
+    @patch("apps.seo.views.enqueue_project_seo_refresh")
+    def test_workspace_seo_post_queues_refresh_when_async_enabled(self, mocked_enqueue):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("seo:workspace-seo"),
+            {
+                "business_type": "automotive",
+                "location": "Nairobi",
+                "target_goal": "Increase qualified organic leads",
+                "primary_service": "used car dealership",
+                "target_audience": "price-sensitive car buyers",
+                "competitor_urls": "https://competitor.com",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        profile = SEOProjectProfile.objects.get(project=self.project)
+        self.assertEqual(profile.metadata.get("refresh_status"), "queued")
+        mocked_enqueue.assert_called_once_with(self.project.pk)
+        self.assertContains(response, "Benchmark refresh in progress")
+
 
 class SEOCompetitorDiscoveryTests(TestCase):
     def test_build_discovery_queries_uses_service_location_and_audience(self):
