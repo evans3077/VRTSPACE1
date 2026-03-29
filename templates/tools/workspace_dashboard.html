@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="padding-bottom: 2rem;">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Workspace</p>
+            <h1 style="max-width: none;">{{ project.name|default:"Your workspace" }}</h1>
+            <p class="section-text" style="max-width: 760px;">
+                User-facing dashboard for saved audits, recommended modules, and the current fix queue.
+            </p>
+            {% if not audit_tier_enforcement %}
+            <div style="margin-top: 1rem; display: inline-flex; gap: 0.5rem; align-items: center; padding: 0.75rem 1rem; border-radius: 999px; background: rgba(14, 165, 233, 0.08); color: #0f172a; font-size: 0.85rem; font-weight: 700;">
+                Free-pass mode: plans are visible, but billing gates are not enforced yet.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+<section class="packages-section" style="padding-top: 0;">
+    <div class="container" style="display: grid; gap: 2rem;">
+        {% if latest_audit %}
+        <div class="system-grid">
+            <article class="system-card"><p class="eyebrow">Domain</p><h3>{{ latest_audit.normalized_domain }}</h3><p>Current tracked property</p></article>
+            <article class="system-card"><p class="eyebrow">Overall</p><h3>{{ latest_audit.overall_score }}</h3><p>Latest audit score</p></article>
+            <article class="system-card"><p class="eyebrow">Pages</p><h3>{{ latest_audit.pages_crawled }}</h3><p>Pages crawled</p></article>
+        </div>
+        {% endif %}
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Recommended Modules</p>
+                    <h2 style="font-size: 2rem;">What to unlock next</h2>
+                </div>
+                <div style="display: grid; gap: 0.75rem;">
+                    {% for module in product_modules %}
+                    <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03);">
+                        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 0.35rem;">
+                            <strong>{{ module.title }}</strong>
+                            <span class="score-pill score-high" style="font-size: 0.65rem;">{{ module.plan|default:"Plan" }}</span>
+                        </div>
+                        <div style="color: #475569; font-size: 0.9rem;">{{ module.reason }}</div>
+                    </div>
+                    {% empty %}
+                    <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">No module recommendations are available yet.</div>
+                    {% endfor %}
+                </div>
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Fix Queue</p>
+                    <h2 style="font-size: 2rem;">Priority recommendations</h2>
+                </div>
+                <div style="display: grid; gap: 0.75rem;">
+                    {% for recommendation in recommendations|slice:":6" %}
+                    <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03);">
+                        <strong style="display: block; margin-bottom: 0.35rem;">{{ recommendation.title }}</strong>
+                        <div style="color: #475569; font-size: 0.9rem;">{{ recommendation.recommended_fix }}</div>
+                    </div>
+                    {% empty %}
+                    <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">No saved recommendations yet.</div>
+                    {% endfor %}
+                </div>
+            </article>
+        </div>
+
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Audit History</p>
+                <h2 style="font-size: 2rem;">Saved reruns and score comparison</h2>
+            </div>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; min-width: 720px;">
+                    <thead>
+                        <tr style="text-align: left; border-bottom: 1px solid #e2e8f0;">
+                            <th style="padding: 0.8rem 0.4rem;">Created</th>
+                            <th style="padding: 0.8rem 0.4rem;">Overall</th>
+                            <th style="padding: 0.8rem 0.4rem;">Delta</th>
+                            <th style="padding: 0.8rem 0.4rem;">Pages</th>
+                            <th style="padding: 0.8rem 0.4rem;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in audit_history_with_delta %}
+                        <tr style="border-bottom: 1px solid #f1f5f9;">
+                            <td style="padding: 0.8rem 0.4rem;">{{ item.audit.created_at }}</td>
+                            <td style="padding: 0.8rem 0.4rem; font-weight: 700;">{{ item.audit.overall_score }}</td>
+                            <td style="padding: 0.8rem 0.4rem;">
+                                {% if item.delta is None %}
+                                -
+                                {% elif item.delta > 0 %}
+                                <span style="color: #16a34a; font-weight: 700;">+{{ item.delta }}</span>
+                                {% elif item.delta < 0 %}
+                                <span style="color: #dc2626; font-weight: 700;">{{ item.delta }}</span>
+                                {% else %}
+                                <span style="color: #64748b; font-weight: 700;">0</span>
+                                {% endif %}
+                            </td>
+                            <td style="padding: 0.8rem 0.4rem;">{{ item.audit.pages_crawled }}</td>
+                            <td style="padding: 0.8rem 0.4rem;">{{ item.audit.status|title }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="padding: 0.8rem 0.4rem; color: #475569;">No saved reruns yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Plans</p>
+                <h2 style="font-size: 2rem;">Visible tiers for testing</h2>
+            </div>
+            <div class="system-grid">
+                {% for package in packages %}
+                <div class="system-card" style="border-top: 4px solid {% if package.name == 'Authority' %}#0f172a{% else %}var(--signal){% endif %};">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 0.35rem;">
+                        <strong>{{ package.name }}</strong>
+                        <span style="font-weight: 900;">{{ package.price }}</span>
+                    </div>
+                    <div style="color: #475569; font-size: 0.9rem; margin-bottom: 0.75rem;">{{ package.label }}</div>
+                    {% for feature in package.features %}
+                    <div style="font-size: 0.85rem; color: #475569;">{{ feature }}</div>
+                    {% endfor %}
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+
+        {% if custom_work_items %}
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Custom Work Exceptions</p>
+                <h2 style="font-size: 2rem;">When direct support makes sense</h2>
+            </div>
+            <div class="system-grid">
+                {% for item in custom_work_items %}
+                <div class="system-card" style="border-top: 4px solid #0f172a;">
+                    <h3>{{ item.title }}</h3>
+                    <p>{{ item.reason }}</p>
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

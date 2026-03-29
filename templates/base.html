@@ -5,7 +5,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ page_title|default:"VRT SPACE AGENCY" }}</title>
-    <meta name="description" content="{{ meta_description|default:'VRT SPACE AGENCY builds SEO and AEO growth systems.' }}">
+    <meta name="description" content="{{ meta_description|default:'VRT SPACE AGENCY delivers SEO audits, AI visibility insights, and growth workspaces.' }}">
     <link rel="stylesheet" href="{% static 'css/site.css' %}">
     {% if schema_json %}
     <script type="application/ld+json">{{ schema_json|safe }}</script>
@@ -22,8 +22,23 @@
                     <a href="{% url 'core:home' %}#systems">Systems</a>
                     <a href="{% url 'core:home' %}#method">Method</a>
                     <a href="{% url 'core:home' %}#audit">Audit</a>
+                    {% if user.is_authenticated and not user.is_staff %}
+                    <a href="{% url 'tools:workspace-dashboard' %}">Workspace</a>
+                    {% endif %}
+                    {% if user.is_staff %}
+                    <a href="{% url 'analytics:operations-dashboard' %}">Ops</a>
+                    {% endif %}
+                    {% if user.is_authenticated %}
+                    <a href="{% url 'tools:workspace-logout' %}">Sign out</a>
+                    {% else %}
+                    <a href="{% url 'tools:workspace-login' %}">Sign in</a>
+                    {% endif %}
                 </nav>
-                <a class="button button-primary nav-cta" href="{% url 'core:home' %}#contact">Book Strategy</a>
+                {% if user.is_authenticated %}
+                <a class="button button-primary nav-cta" href="{% url 'tools:workspace-dashboard' %}">Open Workspace</a>
+                {% else %}
+                <a class="button button-primary nav-cta" href="{% url 'tools:workspace-signup' %}">Create Workspace</a>
+                {% endif %}
             </div>
         </div>
     </header>
@@ -41,13 +56,13 @@
         <div class="container footer-shell">
             <div>
                 <strong>VRT SPACE AGENCY</strong>
-                <p>SEO, AEO, websites, analytics, and AI visibility systems built to sell automatically.</p>
+                <p>SEO, AEO, audits, workspaces, analytics, and custom build paths designed as one product system.</p>
             </div>
             <div class="footer-links">
-                <a href="{% url 'core:services' %}">Services</a>
+                <a href="{% url 'core:services' %}">Solutions</a>
                 <a href="{% url 'core:home' %}#tools">Tools</a>
                 <a href="{% url 'core:home' %}#packages">Packages</a>
-                <a href="{% url 'core:home' %}#contact">Contact</a>
+                <a href="{% url 'core:home' %}#contact">Custom Work</a>
             </div>
         </div>
     </footer>

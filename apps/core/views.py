@@ -37,17 +37,17 @@ def build_home_context(request, **extra):
         }
 
     context = {
-        "page_title": "VRT SPACE AGENCY | SEO, AEO, Web Development, and AI Visibility",
+        "page_title": "VRT SPACE AGENCY | SEO Audits, AI Visibility, and Growth Workspace",
         "meta_description": (
-            "VRT SPACE AGENCY offers SEO, AEO, web development, content, CRO, local SEO, "
-            "analytics, authority building, and AI visibility systems designed to sell automatically."
+            "VRT SPACE AGENCY provides SEO audits, AI visibility diagnostics, growth workspaces, "
+            "and custom implementation paths for websites, apps, and advanced search systems."
         ),
         "schema_json": json.dumps(
             {
                 "@context": "https://schema.org",
-                "@type": "ProfessionalService",
+                "@type": "Organization",
                 "name": "VRT SPACE AGENCY",
-                "description": "SEO, AEO, web development, analytics, and AI visibility agency.",
+                "description": "SEO audit, AI visibility, workspace, analytics, and custom implementation platform.",
                 "url": request.build_absolute_uri("/"),
                 "areaServed": ["Kenya", "Global"],
                 "sameAs": [],
@@ -63,22 +63,22 @@ def build_home_context(request, **extra):
         "engagement_steps": ENGAGEMENT_STEPS,
         "faqs": FAQS,
         "results": [
-            {"value": "21", "label": "Service lines mapped to one sellable system"},
-            {"value": "4", "label": "Commercial packages from Starter to Enterprise"},
-            {"value": "3", "label": "Core internal systems for automation and retention"},
+            {"value": "21", "label": "Solution paths connected to one growth system"},
+            {"value": "4", "label": "Visible plans from Starter to Enterprise"},
+            {"value": "3", "label": "Core product surfaces for audits, workspaces, and ops"},
         ],
         "method_steps": [
-            "Map revenue services into a website that teaches, qualifies, and converts without manual selling.",
-            "Build SEO, AEO, development, content, and analytics into one delivery stack instead of disconnected offers.",
-            "Turn tools, audits, dashboards, and follow-up sequences into an always-on lead engine.",
-            "Use reporting, performance, and AI visibility monitoring to keep clients retained and upsell-ready.",
+            "Map audits, workspace flows, and package destinations into a website that teaches, qualifies, and converts without a manual sales dependency.",
+            "Build SEO, AEO, development, content, and analytics into one product stack instead of disconnected offers.",
+            "Turn tools, audit summaries, dashboards, and follow-up sequences into an always-on growth engine.",
+            "Use reporting, performance, and AI visibility monitoring to keep users informed and expand them into higher-value modules when needed.",
         ],
         "trust_signals": ["SEO foundation", "AI citation edge", "Kenya-ready local SEO", "Enterprise-capable delivery"],
         "audiences": ["Founders", "Growth teams", "Enterprise brands", "Local Kenyan businesses"],
         "case_study": case_study,
         "critical_insight": (
-            "Most agencies still sell services manually and depend on outreach. VRT SPACE is being built "
-            "as a system that sells, audits, converts, and upsells automatically."
+            "Most sites still stop at lead capture and manual follow-up. VRT SPACE is being built "
+            "as a product system that audits, groups fixes, routes users into workspaces, and only escalates to direct scoping when the request is custom."
         ),
     }
     context.update(extra)
@@ -97,8 +97,8 @@ class ServicesIndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         return {
-            "page_title": "VRT SPACE AGENCY Services",
-            "meta_description": "Browse the VRT SPACE service stack across SEO, AEO, web development, content, CRO, analytics, and AI visibility.",
+            "page_title": "VRT SPACE AGENCY Solutions",
+            "meta_description": "Browse the VRT SPACE growth system across SEO, AI visibility, reporting, workspaces, and custom implementation paths.",
             "service_groups": SERVICE_GROUPS,
             "service_page_list": SERVICE_PAGE_LIST,
         }

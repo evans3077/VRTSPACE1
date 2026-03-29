@@ -4,15 +4,16 @@
 <section class="hero">
     <div class="container hero-grid">
         <div class="hero-copy">
-            <p class="eyebrow">Complete SEO, AEO, web, and AI service stack</p>
-            <h1>Build the kind of authority clients can feel before the first call.</h1>
+            <p class="eyebrow">SEO audits, AI visibility, and growth workspaces</p>
+            <h1>Turn your website into a measurable growth system.</h1>
             <p class="hero-text">
-                VRT SPACE AGENCY is not selling isolated tactics. It is selling a growth experience where the
-                website ranks, earns trust, captures demand, and turns delivery into long-term value.
+                Run the audit, open a workspace, track what is broken, and decide when to unlock deeper
+                monitoring, automation, and content systems. Custom builds stay available when the product
+                path is not enough.
             </p>
             <div class="hero-actions">
-                <a class="button button-primary" href="#audit">Request a Free AEO Audit</a>
-                <a class="button button-secondary" href="#packages">See the Value Tiers</a>
+                <a class="button button-primary" href="#audit">Run Free Audit</a>
+                <a class="button button-secondary" href="{% url 'tools:workspace-signup' %}">Create Free Workspace</a>
             </div>
             <div class="trust-bar">
                 {% for signal in trust_signals %}
@@ -35,8 +36,8 @@
         </div>
         <div class="hero-side">
             <div class="audit-panel" id="audit">
-                <h2>Start with an AI visibility audit</h2>
-                <p>Open with a high-value tool, show the opportunity, and turn that insight into the first strategic conversation.</p>
+                <h2>Start with a live website audit</h2>
+                <p>Scan the site, see the score, group the highest-impact fixes, and route the result into a user workspace instead of a sales handoff.</p>
                 <form method="post" action="{% url 'tools:free-seo-audit' %}">
                     {% csrf_token %}
                 {{ audit_form.non_field_errors }}
@@ -65,14 +66,14 @@
                         {{ audit_form.notes }}
                         {{ audit_form.notes.errors }}
                     </label>
-                    <button class="button button-primary" type="submit">Get the audit</button>
+                    <button class="button button-primary" type="submit">Run audit now</button>
                 </form>
-                <p class="form-note">Useful for brands that want a faster view of SEO gaps, AI visibility, and rebuild opportunities.</p>
+                <p class="form-note">Use this for SEO, AI visibility, performance, and conversion diagnostics before choosing a plan or a custom build.</p>
             </div>
             <div class="signal-panel">
-                <p class="signal-kicker">Experience promise</p>
-                <h3>Clients should leave every interaction with more clarity, more confidence, and a clearer next move.</h3>
-                <p>That is the difference between a service list and a premium agency experience.</p>
+                <p class="signal-kicker">Product rule</p>
+                <h3>Every public action should end in a score, a workspace, or a clear package decision.</h3>
+                <p>Direct inquiry is reserved for website builds, app builds, and custom implementations that do not fit the standard product flow.</p>
             </div>
         </div>
     </div>
@@ -88,8 +89,8 @@
 
 <section class="experience-section">
     <div class="container section-heading">
-        <p class="eyebrow">Client experience</p>
-        <h2>Sell outcomes and confidence, not just deliverables.</h2>
+        <p class="eyebrow">Product experience</p>
+        <h2>Show users what to fix, why it matters, and what to unlock next.</h2>
     </div>
     <div class="container experience-grid">
         {% for pillar in value_pillars %}
@@ -133,9 +134,9 @@
 
 <section class="packages-section" id="packages">
     <div class="container section-heading">
-        <p class="eyebrow">Recommended packaging</p>
-        <h2>Make the buying decision feel simple, progressive, and high-value.</h2>
-        <p class="section-text">The packages should create a path from quick win to long-term strategic partnership.</p>
+        <p class="eyebrow">Plans and packaging</p>
+        <h2>Keep the upgrade path visible while testing stays frictionless.</h2>
+        <p class="section-text">Free access stays open for now. The visible tiers show where monitoring, automation, and advanced guidance will live once enforcement starts.</p>
     </div>
     <div class="container package-grid">
         {% for package in packages %}
@@ -150,7 +151,11 @@
                 <li>{{ feature }}</li>
                 {% endfor %}
             </ul>
-            <a class="package-link" href="#contact">Talk about {{ package.name }}</a>
+            {% if package.name == "Enterprise" %}
+            <a class="package-link" href="#contact">Request {{ package.name }} custom scope</a>
+            {% else %}
+            <a class="package-link" href="{% url 'tools:workspace-signup' %}?package={{ package.name|lower }}">Start {{ package.name }}</a>
+            {% endif %}
         </article>
         {% endfor %}
     </div>
@@ -158,8 +163,8 @@
 
 <section class="journey-section">
     <div class="container section-heading">
-        <p class="eyebrow">Engagement journey</p>
-        <h2>Show clients how the experience unfolds after they say yes.</h2>
+        <p class="eyebrow">User journey</p>
+        <h2>Show how the product moves from scan to ongoing improvement.</h2>
     </div>
     <div class="container journey-grid">
         {% for step in engagement_steps %}
@@ -174,8 +179,8 @@
 
 <section class="systems-section" id="systems">
     <div class="container section-heading">
-        <p class="eyebrow">System architecture</p>
-        <h2>What the platform should manage beyond the public pages.</h2>
+        <p class="eyebrow">Platform architecture</p>
+        <h2>What the product manages after the first scan.</h2>
     </div>
     <div class="container system-grid">
         {% for block in system_blocks %}
@@ -193,8 +198,8 @@
             <p class="eyebrow">Proprietary method</p>
             <h2>VRT Authority Engine</h2>
             <p>
-                The operating model behind the offer stack. Each layer should help the site teach the market,
-                qualify the lead, prove authority, and create the next upsell.
+                The operating model behind the audit, workspace, recommendation, and reporting stack. Each layer
+                should help the product diagnose issues, teach the market, and expose the next valuable unlock.
             </p>
         </div>
         <ol class="method-list">
@@ -232,8 +237,8 @@
 
 <section class="faq-section">
     <div class="container section-heading">
-        <p class="eyebrow">Value objections</p>
-        <h2>Handle the questions that stop premium buyers from moving.</h2>
+        <p class="eyebrow">Buyer questions</p>
+        <h2>Answer the objections that stop self-serve upgrades.</h2>
     </div>
     <div class="container faq-grid">
         {% for faq in faqs %}
@@ -248,13 +253,13 @@
 <section class="contact-section" id="contact">
     <div class="container contact-grid">
         <div>
-            <p class="eyebrow">Strategy request</p>
-            <h2>Convert the website visitor into the next qualified opportunity.</h2>
+            <p class="eyebrow">Custom work request</p>
+            <h2>Use direct inquiry only for website builds, app builds, and custom implementations.</h2>
             <p>
-                This form is the handoff from content and tools into the scoring and follow-up layer. The site
-                should not stop at education. It should route demand.
+                The default route is audit to workspace to plan selection. This form is for work that needs direct scoping,
+                custom architecture, or delivery outside the standard SaaS modules.
             </p>
-            <p class="form-note">Best for clients who already know they want help and need the right growth path, package, and timeline.</p>
+            <p class="form-note">Best for rebuilds, app development, enterprise customizations, or implementation requests that need direct review.</p>
         </div>
         <form method="post" action="{% url 'leads:contact' %}" class="contact-form">
             {% csrf_token %}
@@ -295,7 +300,7 @@
                 <span>I agree to be contacted about this request.</span>
                 {{ lead_form.consent_to_contact.errors }}
             </label>
-            <button class="button button-primary" type="submit">Request strategy session</button>
+            <button class="button button-primary" type="submit">Request custom build</button>
         </form>
     </div>
 </section>

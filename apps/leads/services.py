@@ -1,22 +1,9 @@
-from django.db import connection
+from urllib.parse import urlparse
+
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 
-from apps.core.runtime import ensure_runtime_database
-
-from .models import AuditRequest, Lead
-
-
-def _ensure_model_table(model):
-    table_name = model._meta.db_table
-
-    with connection.cursor() as cursor:
-        existing_tables = set(connection.introspection.table_names(cursor))
-
-    if table_name in existing_tables:
-        return
-
-    with connection.schema_editor() as schema_editor:
-        schema_editor.create_model(model)
+from .models import AuditRequest, ClientProject, Lead
 
 
 def score_lead(*, company, website, message, interest_area):
@@ -43,11 +30,35 @@ def score_audit_request(*, website, monthly_leads_goal, notes):
     return min(score, 100)
 
 
-def create_lead_from_form(form, source_page):
-    ensure_runtime_database(required_tables=("leads_lead",))
-    _ensure_model_table(Lead)
+def extract_submission_context(request, *, source_page=""):
+    if request is None:
+        return {}
+
+    meta = request.META
+    context = {
+        "source_page": source_page or "",
+        "referrer": meta.get("HTTP_REFERER", "")[:255],
+        "host": meta.get("HTTP_HOST", "")[:120],
+        "country": meta.get("HTTP_CF_IPCOUNTRY", "")[:8],
+        "region": (
+            meta.get("HTTP_CF_REGION")
+            or meta.get("HTTP_X_REGION")
+            or meta.get("HTTP_X_APPENGINE_REGION")
+            or ""
+        )[:120],
+        "city": (
+            meta.get("HTTP_CF_IPCITY")
+            or meta.get("HTTP_X_CITY")
+            or ""
+        )[:120],
+    }
+    return {key: value for key, value in context.items() if value}
+
+
+def create_lead_from_form(form, source_page, *, request=None):
     lead = form.save(commit=False)
     lead.source_page = source_page
+    lead.submission_context = extract_submission_context(request, source_page=source_page)
     lead.score = score_lead(
         company=lead.company,
         website=lead.website,
@@ -60,10 +71,9 @@ def create_lead_from_form(form, source_page):
     return lead
 
 
-def create_audit_request_from_form(form):
-    ensure_runtime_database(required_tables=("leads_auditrequest",))
-    _ensure_model_table(AuditRequest)
+def create_audit_request_from_form(form, *, request=None):
     audit_request = form.save(commit=False)
+    audit_request.submission_context = extract_submission_context(request)
     audit_request.score = score_audit_request(
         website=audit_request.website,
         monthly_leads_goal=audit_request.monthly_leads_goal,
@@ -73,3 +83,49 @@ def create_audit_request_from_form(form):
         audit_request.status = AuditRequest.Status.QUALIFIED
     audit_request.save()
     return audit_request
+
+
+def sync_client_project_from_audit_run(audit_run):
+    audit_request = audit_run.audit_request
+    normalized_domain = audit_run.normalized_domain or urlparse(audit_run.start_url).netloc.lower()
+    website = audit_run.start_url or (audit_request.website if audit_request else "")
+    email = audit_request.email if audit_request else ""
+    name = (audit_request.company_name if audit_request and audit_request.company_name else normalized_domain or website)
+
+    if audit_request:
+        project, _created = ClientProject.objects.get_or_create(
+            audit_request=audit_request,
+            defaults={
+                "name": name,
+                "website": website,
+                "normalized_domain": normalized_domain,
+                "contact_email": email,
+            },
+        )
+    else:
+        project = ClientProject.objects.filter(
+            normalized_domain=normalized_domain,
+            contact_email=email,
+        ).first()
+        if not project:
+            project = ClientProject.objects.create(
+                name=name,
+                website=website,
+                normalized_domain=normalized_domain,
+                contact_email=email,
+            )
+
+    project.name = name or project.name
+    project.website = website or project.website
+    project.normalized_domain = normalized_domain
+    project.contact_email = email or project.contact_email
+    project.latest_audit_run = audit_run
+    project.latest_score = audit_run.overall_score or 0
+    if email:
+        user = get_user_model().objects.filter(email__iexact=email).first()
+        if user:
+            project.owner = user
+    if audit_request and audit_request.status == AuditRequest.Status.QUALIFIED:
+        project.stage = ClientProject.Stage.PROPOSAL
+    project.save()
+    return project

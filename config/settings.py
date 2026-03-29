@@ -1,5 +1,6 @@
 import os
 import shutil
+import sys
 import tempfile
 from pathlib import Path
 
@@ -46,6 +47,15 @@ def csv_env(name, default=""):
         for value in os.environ.get(name, default).split(",")
         if value.strip()
     ]
+
+
+def first_env(*names, default=""):
+    normalized_env = {key.upper(): value for key, value in os.environ.items()}
+    for name in names:
+        value = normalized_env.get(name.upper(), "").strip()
+        if value:
+            return value
+    return default
 
 SECRET_KEY = os.environ.get(
     "DJANGO_SECRET_KEY",
@@ -176,7 +186,9 @@ AUTH_PASSWORD_VALIDATORS = [
     {"NAME": "django.contrib.auth.password_validation.NumericPasswordValidator"},
 ]
 
-LOGIN_URL = "admin:login"
+LOGIN_URL = "tools:workspace-login"
+LOGIN_REDIRECT_URL = "tools:workspace-dashboard"
+LOGOUT_REDIRECT_URL = "core:home"
 
 LANGUAGE_CODE = "en-us"
 TIME_ZONE = "UTC"
@@ -188,12 +200,15 @@ STATIC_URL = "/static/"
 STATIC_ROOT = BASE_DIR / "staticfiles"
 STATICFILES_DIRS = [BASE_DIR / "public" / "static"]
 
+IS_TEST = "test" in sys.argv
+
 STATICFILES_STORAGE_BACKEND = "django.contrib.staticfiles.storage.StaticFilesStorage"
-try:
-    import whitenoise
-    STATICFILES_STORAGE_BACKEND = "whitenoise.storage.CompressedManifestStaticFilesStorage"
-except ImportError:
-    pass
+if not IS_TEST:
+    try:
+        import whitenoise
+        STATICFILES_STORAGE_BACKEND = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+    except ImportError:
+        pass
 
 STORAGES = {
     "default": {
@@ -227,6 +242,22 @@ EMAIL_BACKEND = os.environ.get(
     "django.core.mail.backends.console.EmailBackend",
 )
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "hello@vrtspace.agency")
+
+GOOGLE_OAUTH_CLIENT_ID = first_env(
+    "GOOGLE_OAUTH_CLIENT_ID",
+    "GOOGLE_CLIENT_ID",
+    "GOOGLE_AUTH_CLIENT_ID",
+    "GOOGLE_PUBLISHABLE_KEY",
+)
+GOOGLE_OAUTH_CLIENT_SECRET = first_env(
+    "GOOGLE_OAUTH_CLIENT_SECRET",
+    "GOOGLE_CLIENT_SECRET",
+    "GOOGLE_AUTH_CLIENT_SECRET",
+    "GOOGLE_SECRET_KEY",
+)
+GOOGLE_OAUTH_ENABLED = bool(GOOGLE_OAUTH_CLIENT_ID and GOOGLE_OAUTH_CLIENT_SECRET)
+
+AUDIT_TIER_ENFORCEMENT = os.environ.get("AUDIT_TIER_ENFORCEMENT", "0") == "1"
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = not DEBUG

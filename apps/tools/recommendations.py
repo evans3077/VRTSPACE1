@@ -55,6 +55,15 @@ CATEGORY_TECHNICAL_STEPS = {
     ],
 }
 
+CATEGORY_PLAN_MAP = {
+    AuditIssue.Category.TECHNICAL: "Growth",
+    AuditIssue.Category.ON_PAGE: "Growth",
+    AuditIssue.Category.CONTENT: "Authority",
+    AuditIssue.Category.AEO: "Authority",
+    AuditIssue.Category.INTERNAL_LINKING: "Growth",
+    AuditIssue.Category.PERFORMANCE: "Growth",
+}
+
 
 def _issue_context(issue):
     if issue.page_id and issue.page:
@@ -81,6 +90,7 @@ def build_ranked_recommendations(audit_run, *, issues=None, score_breakdown=None
         issues=issue_list,
         has_pagespeed=bool((audit_run.summary or {}).get("pagespeed")),
     )
+    duplicate_counts = Counter((issue.category, issue.code, issue.message) for issue in issue_list)
 
     recommendations = []
     for issue in issue_list:
@@ -102,6 +112,9 @@ def build_ranked_recommendations(audit_run, *, issues=None, score_breakdown=None
                 "estimated_impact": CATEGORY_IMPACT.get(issue.category, "Improves audit health and recommendation clarity."),
                 "category": issue.get_category_display(),
                 "category_key": issue.category,
+                "category_issue_count": score_info.get("issues", 0),
+                "duplicate_issue_count": duplicate_counts[(issue.category, issue.code, issue.message)],
+                "suggested_plan": CATEGORY_PLAN_MAP.get(issue.category, "Growth"),
                 "severity": issue.severity,
                 "page_url": issue.page.url if issue.page_id and issue.page else None,
                 "cta": "Fix this for me" if issue.severity in {AuditIssue.Severity.CRITICAL, AuditIssue.Severity.HIGH} else "Review this fix",
@@ -112,6 +125,65 @@ def build_ranked_recommendations(audit_run, *, issues=None, score_breakdown=None
         recommendations,
         key=lambda item: (-item["priority_score"], SEVERITY_ORDER[item["severity"]], item["title"]),
     )
+
+
+def build_featured_recommendations(recommendations, limit=6):
+    grouped = {}
+    for recommendation in recommendations:
+        key = (
+            recommendation["category_key"],
+            recommendation["title"],
+            recommendation["recommended_fix"],
+        )
+        if key not in grouped:
+            grouped[key] = {
+                **recommendation,
+                "page_examples": [],
+            }
+        current = grouped[key]
+        if recommendation.get("page_url") and recommendation["page_url"] not in current["page_examples"]:
+            current["page_examples"].append(recommendation["page_url"])
+        current["duplicate_issue_count"] = max(
+            current.get("duplicate_issue_count", 1),
+            recommendation.get("duplicate_issue_count", 1),
+        )
+        current["priority_score"] = max(current["priority_score"], recommendation["priority_score"])
+
+    collapsed = []
+    for item in grouped.values():
+        page_examples = item["page_examples"][:3]
+        affected_pages = max(len(item["page_examples"]), item.get("duplicate_issue_count", 1))
+        if affected_pages > 1:
+            item["description"] = (
+                f"Detected on {affected_pages} pages. This is lowering the {item['category']} score."
+            )
+        item["page_examples"] = page_examples
+        item["affected_pages_count"] = affected_pages
+        collapsed.append(item)
+
+    collapsed.sort(
+        key=lambda item: (-item["priority_score"], SEVERITY_ORDER[item["severity"]], item["title"]),
+    )
+
+    featured = []
+    used_categories = set()
+
+    for recommendation in collapsed:
+        if recommendation["category_key"] in used_categories:
+            continue
+        featured.append(recommendation)
+        used_categories.add(recommendation["category_key"])
+        if len(featured) >= limit:
+            return featured
+
+    for recommendation in collapsed:
+        if recommendation in featured:
+            continue
+        featured.append(recommendation)
+        if len(featured) >= limit:
+            break
+
+    return featured
 
 
 def build_top_issues(recommendations):
@@ -212,55 +284,117 @@ def build_vitals_failures(pagespeed):
     return vitals_failures
 
 
-def build_service_fit(audit_run, score_breakdown):
-    fits = []
+def build_product_modules(audit_run, score_breakdown):
+    modules = []
 
     if audit_run.technical_score < 80 or audit_run.on_page_score < 80:
-        fits.append(
+        modules.append(
             {
-                "title": "SEO Foundation",
+                "title": "Site Health Monitor",
                 "reason": f"Technical and on-page signals are under target at {audit_run.technical_score}% and {audit_run.on_page_score}%.",
-                "impact": "Tightening crawl and on-page signals should improve ranking stability and page discoverability.",
-                "icon": "SEO",
-                "anchor": "revenue",
+                "impact": "Continuously track crawl, metadata, indexation, and priority-page issues inside the workspace.",
+                "icon": "Monitor",
+                "plan": "Growth",
+                "score_key": "technical",
+                "delivery_mode": "self_serve",
+                "cta_label": "Unlock monitoring",
             }
         )
 
     if audit_run.aeo_score < 85:
         aeo_issues = score_breakdown.get("aeo", {}).get("issues", 0)
-        fits.append(
+        modules.append(
             {
-                "title": "AEO / AI Search Optimization",
+                "title": "AI Visibility Tracker",
                 "reason": f"AEO readiness is at {audit_run.aeo_score}%, with {aeo_issues} AI-answer formatting or entity issues detected.",
-                "impact": "Improving direct answers and entity structure should increase citation readiness in answer engines.",
-                "icon": "AEO",
-                "anchor": "revenue",
+                "impact": "Turn citation readiness, entity coverage, and answer formatting into a tracked product workflow.",
+                "icon": "AI",
+                "plan": "Authority",
+                "score_key": "aeo",
+                "delivery_mode": "self_serve",
+                "cta_label": "Unlock AI tracking",
             }
         )
 
     if audit_run.performance_score < 85:
-        fits.append(
+        modules.append(
             {
-                "title": "Performance Optimization",
+                "title": "Performance Lab",
                 "reason": f"Performance is at {audit_run.performance_score}%, leaving measurable friction in mobile UX and conversion.",
-                "impact": "Reducing speed bottlenecks should improve conversion resilience and search quality signals.",
+                "impact": "Prioritize speed fixes, rerun audits, and track performance gains over time without leaving the platform.",
                 "icon": "Speed",
-                "anchor": "growth",
+                "plan": "Growth",
+                "score_key": "performance",
+                "delivery_mode": "self_serve",
+                "cta_label": "Unlock performance workflows",
             }
         )
 
     if audit_run.content_score < 85:
-        fits.append(
+        modules.append(
             {
-                "title": "Content Authority System",
+                "title": "Content Intelligence",
                 "reason": f"Content quality is at {audit_run.content_score}%, which suggests thin or weakly structured coverage.",
-                "impact": "Expanding coverage and answer depth should improve topical authority and assist both SEO and AEO.",
+                "impact": "Prioritize weak pages, content gaps, and answer-depth opportunities inside a single product workflow.",
                 "icon": "Content",
-                "anchor": "revenue",
+                "plan": "Authority",
+                "score_key": "content",
+                "delivery_mode": "self_serve",
+                "cta_label": "Unlock content workflows",
             }
         )
 
-    return fits[:4]
+    if audit_run.internal_linking_score < 80:
+        modules.append(
+            {
+                "title": "Internal Link Mapper",
+                "reason": f"Internal linking is at {audit_run.internal_linking_score}%, which means important pages are not getting enough path support.",
+                "impact": "Map weak link paths and strengthen discovery for revenue pages without manual spreadsheet work.",
+                "icon": "Links",
+                "plan": "Growth",
+                "score_key": "internal_linking",
+                "delivery_mode": "self_serve",
+                "cta_label": "Unlock link mapping",
+            }
+        )
+
+    return modules[:4]
+
+
+def build_custom_work_items(audit_run):
+    items = []
+
+    if audit_run.performance_score < 50 or audit_run.technical_score < 50:
+        items.append(
+            {
+                "title": "Website or app rebuild",
+                "reason": "Structural and performance signals are low enough that a platform-level rebuild may be faster than incremental patching.",
+                "impact": "Use this when the issue is architecture, not just optimization.",
+                "cta_label": "Request custom build",
+                "delivery_mode": "custom",
+            }
+        )
+
+    if (
+        audit_run.aeo_score < 60
+        and audit_run.content_score < 60
+        and audit_run.pages_crawled >= 3
+    ):
+        items.append(
+            {
+                "title": "Custom implementation",
+                "reason": "The current domain likely needs bespoke content, schema, or workflow customization that falls outside the standard product modules.",
+                "impact": "Use this for custom automations, integrations, or specialized rollout support.",
+                "cta_label": "Request customization",
+                "delivery_mode": "custom",
+            }
+        )
+
+    return items[:2]
+
+
+def build_service_fit(audit_run, score_breakdown):
+    return build_product_modules(audit_run, score_breakdown)
 
 
 def build_audit_summary(audit_run, *, issues=None):
@@ -276,26 +410,31 @@ def build_audit_summary(audit_run, *, issues=None):
         score_breakdown=score_breakdown,
     )
     vitals_failures = build_vitals_failures(pagespeed)
+    product_modules = build_product_modules(audit_run, score_breakdown)
+    custom_work_items = build_custom_work_items(audit_run)
 
     summary = {
         "top_issues": build_top_issues(recommendations),
         "quick_wins": build_quick_wins(recommendations),
+        "featured_recommendations": build_featured_recommendations(recommendations),
         "recommendations": recommendations[:12],
         "issue_summary": build_issue_summary(issue_list),
         "score_breakdown": score_breakdown,
         "vitals_failures": vitals_failures,
         "has_vitals_failure": len(vitals_failures) > 0,
-        "service_fit": build_service_fit(audit_run, score_breakdown),
+        "product_modules": product_modules,
+        "custom_work_items": custom_work_items,
+        "service_fit": product_modules,
         "pages_crawled": audit_run.pages_crawled,
         "scores": serialize_score_snapshot(audit_run),
         "gauge_offsets": build_gauge_offsets(audit_run),
         "full_audit_teasers": [
-            "Keyword Gap Analysis vs Top 3 Competitors",
-            "Deep Backlink Profile & Toxic Link Detection",
-            "Search Console Integration & Click-Through Optimization",
-            "Entity-Based Content Gap Map",
-            "Core Web Vitals Field Data (Real User Metrics)",
-            "Conversion Rate Optimization (CRO) Heuristics",
+            "Recurring audits and score history",
+            "Saved issue queue and fix tracking",
+            "AI visibility and answer-readiness workflows",
+            "Page-level content and internal-link opportunities",
+            "Workspace reporting and exports",
+            "Plan-based automation and monitoring",
         ],
         "performance_source": pagespeed["source"] if pagespeed else "heuristic crawler analysis",
     }

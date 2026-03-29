@@ -1,7 +1,10 @@
 from django.test import TestCase
 from django.urls import reverse
 
+from apps.tools.models import AuditRun
+
 from .models import AuditRequest, Lead
+from .services import sync_client_project_from_audit_run
 
 
 class LeadFlowTests(TestCase):
@@ -24,6 +27,30 @@ class LeadFlowTests(TestCase):
         self.assertEqual(Lead.objects.count(), 1)
         self.assertGreaterEqual(Lead.objects.get().score, 50)
         self.assertEqual(Lead.objects.get().source_page, "/")
+
+    def test_contact_form_captures_submission_context(self):
+        response = self.client.post(
+            reverse("leads:contact"),
+            {
+                "name": "Jordan",
+                "email": "jordan@example.com",
+                "company": "Northwind",
+                "website": "northwind.example.com",
+                "interest_area": "aeo",
+                "message": "We need a full rebuild of our service pages and AI visibility strategy.",
+                "consent_to_contact": "on",
+                "source_page": "/pricing",
+            },
+            HTTP_CF_IPCOUNTRY="KE",
+            HTTP_CF_REGION="Nairobi County",
+            HTTP_REFERER="https://vrtspace.agency/pricing",
+        )
+
+        self.assertEqual(response.status_code, 302)
+        lead = Lead.objects.get()
+        self.assertEqual(lead.submission_context["country"], "KE")
+        self.assertEqual(lead.submission_context["region"], "Nairobi County")
+        self.assertEqual(lead.submission_context["source_page"], "/pricing")
 
     def test_invalid_contact_form_renders_home_with_errors(self):
         response = self.client.post(
@@ -55,3 +82,26 @@ class LeadFlowTests(TestCase):
         audit_request = AuditRequest.objects.get()
         self.assertEqual(audit_request.website, "https://northwind.example.com")
         self.assertEqual(audit_request.status, AuditRequest.Status.QUALIFIED)
+        self.assertEqual(audit_request.submission_context, {})
+
+    def test_sync_client_project_from_audit_run_creates_project_snapshot(self):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://northwind.example.com",
+            monthly_leads_goal=60,
+            status=AuditRequest.Status.QUALIFIED,
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="northwind.example.com",
+            start_url="https://northwind.example.com",
+            overall_score=82,
+        )
+
+        project = sync_client_project_from_audit_run(audit_run)
+
+        self.assertEqual(project.audit_request, audit_request)
+        self.assertEqual(project.latest_audit_run, audit_run)
+        self.assertEqual(project.latest_score, 82)
+        self.assertEqual(project.stage, project.Stage.PROPOSAL)

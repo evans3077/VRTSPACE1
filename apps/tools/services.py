@@ -18,17 +18,18 @@ from .scoring import apply_audit_scores
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 
-ISSUE_WEIGHTS = {
-    AuditIssue.Severity.CRITICAL: 20,
-    AuditIssue.Severity.HIGH: 12,
-    AuditIssue.Severity.MEDIUM: 7,
-    AuditIssue.Severity.LOW: 3,
-}
-
 REQUEST_TIMEOUT = 10
 PAGE_LIMIT = 10
 PAGESPEED_TIMEOUT = 60
 PAGESPEED_API_URL = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
+
+
+def get_pagespeed_api_key():
+    for env_name in ("webspeed", "WEBSPEED", "PAGESPEED_API_KEY"):
+        value = os.environ.get(env_name, "").strip()
+        if value:
+            return value
+    return ""
 
 
 class ParsedPage:
@@ -295,7 +296,7 @@ def fetch_pagespeed_insights(url, strategy="mobile"):
     ]
     for cat in categories:
         params.append(("category", cat))
-    api_key = os.environ.get("PAGESPEED_API_KEY", "").strip()
+    api_key = get_pagespeed_api_key()
     if api_key:
         params.append(("key", api_key))
 
@@ -357,6 +358,24 @@ def fetch_pagespeed_insights(url, strategy="mobile"):
     return result
 
 
+def normalize_pagespeed_result(result):
+    if not result:
+        return None
+
+    normalized = dict(result)
+    if "performance_score" not in normalized and "score" in normalized:
+        normalized["performance_score"] = normalized["score"]
+    if "score" not in normalized and "performance_score" in normalized:
+        normalized["score"] = normalized["performance_score"]
+
+    normalized.setdefault("accessibility_score", None)
+    normalized.setdefault("best_practices_score", None)
+    normalized.setdefault("seo_score", None)
+    normalized.setdefault("metrics", {})
+    normalized.setdefault("failed_audits", [])
+    return normalized
+
+
 def fetch_pagespeed_many(urls):
     results = {}
     with concurrent.futures.ThreadPoolExecutor(max_workers=min(3, len(urls) or 1)) as executor:
@@ -364,7 +383,7 @@ def fetch_pagespeed_many(urls):
         for future in concurrent.futures.as_completed(future_map):
             url = future_map[future]
             try:
-                results[url] = future.result()
+                results[url] = normalize_pagespeed_result(future.result())
             except Exception:
                 results[url] = None
     return results
@@ -702,229 +721,13 @@ def apply_pagespeed_score(audit_run):
         )
 
     return pagespeed
-
-
-def get_intelligent_fit(audit_run):
-    """
-    Constructs a list of dictionaries with data-backed reasoning for each recommended service.
-    This demonstrates direct VALUE to the user based on their specific audit findings.
-    """
-    fits = []
-    
-    # 1. SEO Foundation
-    if audit_run.technical_score < 80 or audit_run.on_page_score < 80:
-        reason = f"With an on-page score of {audit_run.on_page_score or 0}%, your site is leaking authority."
-        if audit_run.technical_score < 70:
-            reason += " We detected structural infrastructure gaps that prevent search engines from trusting your domain."
-        else:
-            reason += " Your HTML signals (titles, headings, meta) are not currently optimized for ranking."
-            
-        fits.append({
-            "title": "SEO Foundation",
-            "reason": reason,
-            "impact": "Establishing this baseline typically results in a 15-25% increase in crawl efficiency and ranking stability.",
-            "icon": "🏗️",
-            "anchor": "revenue"
-        })
-
-    # 2. AEO Optimization 
-    if audit_run.aeo_score < 85:
-        issues = audit_run.issues.filter(category=AuditIssue.Category.AEO).count()
-        reason = f"Your AEO score is {audit_run.aeo_score or 0}%. Citations in AI answers require structured entity signals which are currently { 'missing' if issues > 0 else 'weak' } on your domain."
-        fits.append({
-            "title": "AEO / AI Search Optimization",
-            "reason": reason,
-            "impact": "Brands with optimized entity signals are 3x more likely to be cited by LLMs like ChatGPT and Google AI Overviews.",
-            "icon": "🤖",
-            "anchor": "revenue"
-        })
-
-    # 3. Website Rebuild / Performance
-    if audit_run.performance_score < 85:
-        reason = f"A performance score of {audit_run.performance_score or 0}% indicates significant user friction."
-        if audit_run.performance_score < 50:
-            reason += " Your current platform architecture is fundamentally slow, causing high bounce rates and lowering conversion."
-        else:
-            reason += " Specific bottleneck remediation is required to hit the critical sub-2s threshold for mobile users."
-            
-        fits.append({
-            "title": "Performance Optimization",
-            "reason": reason,
-            "impact": "Reducing load time below 2 seconds is proven to increase conversion rates by up to 27%.",
-            "icon": "⚡",
-            "anchor": "growth"
-        })
-
-    # 4. Content System
-    if audit_run.content_score < 85:
-        reason = f"Your content authority score is {audit_run.content_score or 0}%."
-        if audit_run.content_score < 60:
-            reason += " We detected 'thin content' signals that prevent you from being seen as a topical leader in your niche."
-        else:
-            reason += " Your content structure (headings and word density) isn't fully aligned with modern search intent."
-            
-        fits.append({
-            "title": "Content Authority System",
-            "reason": reason,
-            "impact": "A systematic content pillar approach compounding over 6 months typically drives a 300% increase in non-branded search traffic.",
-            "icon": "🖋️",
-            "anchor": "revenue"
-        })
-        
-    return fits[:4]
-
-
-def build_summary(audit_run):
-    issues = audit_run.issues.all() or []
-    
-    # Diversity selection for Top Issues
-    severity_order = {
-        AuditIssue.Severity.CRITICAL: 0,
-        AuditIssue.Severity.HIGH: 1,
-        AuditIssue.Severity.MEDIUM: 2,
-        AuditIssue.Severity.LOW: 3
-    }
-    
-    # Group by category to ensure we don't just show one type
-    from collections import defaultdict
-    cat_issues_map = defaultdict(list)
-    for issue in issues:
-        cat_issues_map[issue.category].append(issue)
-        
-    top_issues = []
-    # Pick 1-2 from each category
-    for cat in cat_issues_map:
-        sorted_cat = sorted(cat_issues_map[cat], key=lambda x: severity_order.get(x.severity, 99))
-        for issue in sorted_cat[:2]:
-            top_issues.append({
-                "category": issue.get_category_display(),
-                "severity": issue.severity,
-                "message": issue.message,
-                "recommendation": issue.recommendation
-            })
-            
-    # Sort top issues by severity
-    top_issues = sorted(top_issues, key=lambda x: severity_order.get(x["severity"], 99))[:8]
-
-    # Categorized Quick Wins
-    cat_wins = defaultdict(list)
-    for issue in issues:
-        if issue.severity in {AuditIssue.Severity.HIGH, AuditIssue.Severity.MEDIUM}:
-            cat_wins[issue.category].append(issue)
-    
-    quick_wins = []
-    for cat in cat_wins:
-        for issue in cat_wins[cat][:1]: # Just 1 per category for quick wins
-            quick_wins.append({
-                "category": issue.get_category_display(),
-                "problem": issue.message,
-                "fix": issue.recommendation,
-                "url": issue.page.url if issue.page else None
-            })
-    
-    quick_wins = quick_wins[:6]
-
-    # Web Vitals Failure Detection
-    vitals_failures = []
-    pagespeed = audit_run.summary.get("pagespeed") if isinstance(audit_run.summary, dict) else None
-    
-    if pagespeed:
-        metrics = pagespeed.get("metrics", {})
-        # LCP > 4s is 'Poor'
-        lcp_str = metrics.get("largest_contentful_paint", "0")
-        try:
-            lcp_val = float(re.findall(r"[\d.]+", lcp_str)[0])
-            if lcp_val > 4.0:
-                vitals_failures.append({
-                    "metric": "Largest Contentful Paint (LCP)",
-                    "value": lcp_str,
-                    "threshold": "4.0s",
-                    "impact": "Slow loading of main content causes high user abandonment."
-                })
-        except (IndexError, ValueError): pass
-
-        # CLS > 0.25 is 'Poor'
-        cls_str = metrics.get("cumulative_layout_shift", "0")
-        try:
-            cls_val = float(cls_str)
-            if cls_val > 0.25:
-                vitals_failures.append({
-                    "metric": "Cumulative Layout Shift (CLS)",
-                    "value": cls_str,
-                    "threshold": "0.25",
-                    "impact": "Jumping content causes frustration and accidental clicks."
-                })
-        except ValueError: pass
-
-        # TBT > 600ms is 'Poor' (Proxy for INP/FID)
-        tbt_str = metrics.get("total_blocking_time", "0")
-        try:
-            tbt_val = float(re.findall(r"[\d.]+", tbt_str)[0])
-            if tbt_val > 600:
-                vitals_failures.append({
-                    "metric": "Total Blocking Time (TBT)",
-                    "value": tbt_str,
-                    "threshold": "600ms",
-                    "impact": "Main thread blocking delays user interaction responsiveness."
-                })
-        except (IndexError, ValueError): pass
-
-    summary = {
-        "top_issues": top_issues,
-        "quick_wins": quick_wins,
-        "vitals_failures": vitals_failures,
-        "has_vitals_failure": len(vitals_failures) > 0,
-        "service_fit": get_intelligent_fit(audit_run),
-        "pages_crawled": audit_run.pages_crawled,
-        "scores": {
-            "overall": audit_run.overall_score,
-            "technical": audit_run.technical_score,
-            "on_page": audit_run.on_page_score,
-            "content": audit_run.content_score,
-            "aeo": audit_run.aeo_score,
-            "internal_linking": audit_run.internal_linking_score,
-            "performance": audit_run.performance_score,
-            "accessibility": audit_run.accessibility_score,
-            "best_practices": audit_run.best_practices_score,
-            "seo": audit_run.seo_score,
-        },
-        "gauge_offsets": {
-            "overall": round(515.22 * (1 - (audit_run.overall_score or 0) / 100)),
-            "technical": round(138.23 * (1 - (audit_run.technical_score or 0) / 100)),
-            "on_page": round(138.23 * (1 - (audit_run.on_page_score or 0) / 100)),
-            "content": round(138.23 * (1 - (audit_run.content_score or 0) / 100)),
-            "aeo": round(138.23 * (1 - (audit_run.aeo_score or 0) / 100)),
-            "internal_linking": round(138.23 * (1 - (audit_run.internal_linking_score or 0) / 100)),
-            "performance": round(138.23 * (1 - (audit_run.performance_score or 0) / 100)),
-            "accessibility": round(138.23 * (1 - (audit_run.accessibility_score or 0) / 100)),
-            "best_practices": round(138.23 * (1 - (audit_run.best_practices_score or 0) / 100)),
-            "seo": round(138.23 * (1 - (audit_run.seo_score or 0) / 100)),
-        },
-        "full_audit_teasers": [
-            "Keyword Gap Analysis vs Top 3 Competitors",
-            "Deep Backlink Profile & Toxic Link Detection",
-            "Search Console Integration & Click-Through Optimization",
-            "Entity-Based Content Gap Map",
-            "Core Web Vitals Field Data (Real User Metrics)",
-            "Conversion Rate Optimization (CRO) Heuristics"
-        ]
-    }
-    performance_source = "heuristic crawler analysis"
-    pagespeed = audit_run.summary.get("pagespeed") if isinstance(audit_run.summary, dict) else None
-    if pagespeed:
-        performance_source = pagespeed["source"]
-        summary["pagespeed"] = pagespeed
-    summary["performance_source"] = performance_source
-    audit_run.summary = summary
-
-
 def parse_page(url, response):
     return ParsedPage(
         url=url,
         status_code=response["status_code"],
         response_time_ms=response["response_time_ms"],
         html=response["body"],
-        headers=response["headers"],
+        headers=response.get("headers", {}),
     )
 
 

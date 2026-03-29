@@ -43,7 +43,7 @@ class ContactLeadCreateView(RateLimitedPostView):
                 or request.META.get("HTTP_REFERER")
                 or "/"
             )
-            create_lead_from_form(form, source_page=source_page)
+            create_lead_from_form(form, source_page=source_page, request=request)
             messages.success(request, "Strategy request received. We will follow up shortly.")
             return HttpResponseRedirect("/#contact")
 
@@ -64,7 +64,7 @@ class AuditRequestCreateView(RateLimitedPostView):
     def post(self, request, *args, **kwargs):
         form = AuditRequestForm(request.POST)
         if form.is_valid():
-            create_audit_request_from_form(form)
+            create_audit_request_from_form(form, request=request)
             messages.success(request, "Audit request received. A strategist will review it.")
             return HttpResponseRedirect("/#audit")
 

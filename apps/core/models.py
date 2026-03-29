@@ -22,17 +22,17 @@ class SiteSettings(TimestampedModel):
     brand_name = models.CharField(max_length=120, default="VRT SPACE AGENCY")
     hero_title = models.CharField(
         max_length=255,
-        default="Make your brand the source AI search trusts.",
+        default="Turn your website into a measurable growth system.",
     )
     hero_subtitle = models.TextField(
         default=(
-            "Build a high-performance SEO and AEO platform that ranks on Google, "
-            "wins citations in AI answers, and turns authority into inbound leads."
+            "Run the audit, open a workspace, track what is broken, and choose when "
+            "to unlock deeper monitoring, automation, and content systems."
         )
     )
     proprietary_method_name = models.CharField(max_length=120, default="VRT Authority Engine")
-    primary_cta_label = models.CharField(max_length=80, default="Request a Free AEO Audit")
-    secondary_cta_label = models.CharField(max_length=80, default="Talk to a Strategist")
+    primary_cta_label = models.CharField(max_length=80, default="Run Free Audit")
+    secondary_cta_label = models.CharField(max_length=80, default="Create Workspace")
 
     class Meta:
         verbose_name_plural = "site settings"

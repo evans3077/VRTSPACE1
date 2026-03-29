@@ -7,8 +7,8 @@ SERVICE_GROUPS = [
     {
         "anchor": "revenue",
         "tone": "signal",
-        "title": "Core Revenue Services",
-        "lead": "Primary offers built to drive revenue and anchor the platform.",
+        "title": "Core Growth Modules",
+        "lead": "The main product paths that diagnose demand, improve visibility, and anchor the platform.",
         "services": [
             {
                 "name": "SEO Services",
@@ -44,6 +44,7 @@ SERVICE_GROUPS = [
                     "Conversion-optimized builds",
                 ],
                 "system_feature": "Website audit upsell and template system",
+                "custom_inquiry": True,
             },
             {
                 "name": "Content Marketing",
@@ -61,8 +62,8 @@ SERVICE_GROUPS = [
     {
         "anchor": "growth",
         "tone": "mist",
-        "title": "Growth and Performance Services",
-        "lead": "Upsells that increase client lifetime value and make the stack stick.",
+        "title": "Growth and Performance Modules",
+        "lead": "Layers that improve existing traffic value and keep the stack useful over time.",
         "services": [
             {
                 "name": "Conversion Rate Optimization",
@@ -109,8 +110,8 @@ SERVICE_GROUPS = [
     {
         "anchor": "ai-services",
         "tone": "dark",
-        "title": "AI-Powered Services",
-        "lead": "This is where VRT SPACE wins against most agencies.",
+        "title": "AI Visibility Modules",
+        "lead": "The layer that makes the platform useful across answer engines and AI search surfaces.",
         "services": [
             {
                 "name": "AI Visibility Monitoring",
@@ -141,14 +142,15 @@ SERVICE_GROUPS = [
                     "FAQ bots",
                 ],
                 "system_feature": "Chatbot builder in a later phase",
+                "custom_inquiry": True,
             },
         ],
     },
     {
         "anchor": "tools",
         "tone": "signal",
-        "title": "Tools-as-a-Service",
-        "lead": "Lead magnets that bring traffic, require email, and trigger follow-up automatically.",
+        "title": "Tools and Workspaces",
+        "lead": "The self-serve entry points that turn a scan into a saved user workflow.",
         "services": [
             {
                 "name": "Free SEO Audit Tool",
@@ -195,8 +197,8 @@ SERVICE_GROUPS = [
     {
         "anchor": "enterprise",
         "tone": "mist",
-        "title": "Enterprise and High-Ticket Services",
-        "lead": "Designed for bigger clients with more complex search environments.",
+        "title": "Enterprise and Advisory Paths",
+        "lead": "Reserved for larger environments, higher complexity, or requests that need direct scope review.",
         "services": [
             {
                 "name": "Enterprise SEO",
@@ -233,8 +235,8 @@ SERVICE_GROUPS = [
     {
         "anchor": "retention",
         "tone": "dark",
-        "title": "Support and Retention Services",
-        "lead": "Monthly services that keep clients paying and the system improving.",
+        "title": "Retention and Reporting Modules",
+        "lead": "Ongoing layers that protect performance and keep decision-making visible after setup.",
         "services": [
             {
                 "name": "Website Maintenance",
@@ -274,17 +276,17 @@ PACKAGES = [
     {
         "name": "Starter",
         "price": "~$200",
-        "label": "Low-friction entry",
+        "label": "Self-serve entry",
         "features": [
             "Basic SEO setup",
             "Audit report",
-            "Fast recommendations",
+            "Grouped recommendations",
         ],
     },
     {
         "name": "Growth",
         "price": "~$500",
-        "label": "Most practical for growing brands",
+        "label": "Team plan",
         "features": [
             "SEO and content",
             "Basic AEO",
@@ -294,7 +296,7 @@ PACKAGES = [
     {
         "name": "Authority",
         "price": "$1000+",
-        "label": "Flagship offer",
+        "label": "Advanced visibility plan",
         "features": [
             "Full SEO and AEO",
             "AI visibility tracking",
@@ -304,7 +306,7 @@ PACKAGES = [
     {
         "name": "Enterprise",
         "price": "Custom",
-        "label": "Complex environments",
+        "label": "Custom environments",
         "features": [
             "Custom architecture",
             "Cross-market strategy",
@@ -316,68 +318,68 @@ PACKAGES = [
 SYSTEM_BLOCKS = [
     {
         "title": "What the platform really does",
-        "body": "Sell services, run audits, convert interest, and surface the next upsell without depending on cold outreach.",
+        "body": "Run audits, create workspaces, expose plan upgrades, and support custom delivery without depending on cold outreach.",
     },
     {
         "title": "Core system models",
-        "body": "Service, ServicePackage, Feature, Tool, Lead, AuditResult, ClientProject, and Report should remain first-class concepts.",
+        "body": "Service, plan, tool, lead, audit result, client project, and report should remain first-class concepts.",
     },
     {
         "title": "Internal systems",
-        "body": "Admin dashboard, client dashboard, and an automation engine for scoring, follow-up, and reporting.",
+        "body": "Operations dashboard, user workspace, and an automation engine for scoring, follow-up, and reporting.",
     },
 ]
 
 VALUE_PILLARS = [
     {
         "title": "Clarity from the first week",
-        "body": "Clients should know what is being fixed, why it matters, and what revenue signal it should move.",
+        "body": "Users should know what is being fixed, why it matters, and what metric it should move.",
     },
     {
-        "title": "A site that feels like a closer",
-        "body": "Every page should justify value, reduce doubt, and create the next logical action without hard-selling.",
+        "title": "A site that routes the next action",
+        "body": "Every page should reduce doubt and move the user toward an audit, a workspace, a plan, or a custom request.",
     },
     {
         "title": "Reporting that proves business value",
-        "body": "Traffic, citations, lead quality, and conversion movement should connect back to decisions that executives understand.",
+        "body": "Traffic, citations, lead quality, and conversion movement should connect back to decisions that teams can understand.",
     },
 ]
 
 ENGAGEMENT_STEPS = [
     {
         "phase": "01",
-        "title": "Discover the opportunity",
-        "body": "Start with technical, content, and AI-surface audits to expose what is blocking growth and where the easiest wins live.",
+        "title": "Run the first audit",
+        "body": "Start with technical, content, and AI-surface diagnostics to expose what is blocking growth and where the easiest wins live.",
     },
     {
         "phase": "02",
-        "title": "Design the growth system",
-        "body": "Package SEO, AEO, web, analytics, and CRO into a roadmap that fits the client's stage and budget.",
+        "title": "Open the workspace",
+        "body": "Save results, review grouped recommendations, and choose the right plan path for the current stage and budget.",
     },
     {
         "phase": "03",
-        "title": "Deploy authority assets",
-        "body": "Ship fast pages, direct-answer content, structured data, tools, and trust signals that improve both ranking and conversion.",
+        "title": "Unlock the right modules",
+        "body": "Add the monitoring, content, reporting, and performance layers that fit the diagnosed gaps and the growth target.",
     },
     {
         "phase": "04",
-        "title": "Compound and retain",
-        "body": "Use reporting, monitoring, and ongoing experiments to protect performance and naturally expand the engagement.",
+        "title": "Expand when complexity requires it",
+        "body": "Use reporting, monitoring, automation, and custom implementation support when self-serve modules are no longer enough.",
     },
 ]
 
 FAQS = [
     {
         "question": "Why combine SEO and AEO instead of selling them separately?",
-        "answer": "Because clients do not buy channels. They buy discoverability, trust, and pipeline. The site should present SEO and AEO as one commercial system with different execution layers.",
+        "answer": "Because buyers do not want disconnected channels. They want one system that improves discoverability, trust, and pipeline across both classic search and AI answers.",
     },
     {
-        "question": "How does VRT SPACE create more value than a normal agency site?",
-        "answer": "By using lead magnets, dashboards, scoring, and clear packaging so the website educates, qualifies, and upsells instead of waiting for a manual sales conversation.",
+        "question": "How does VRT SPACE work as a product instead of a brochure site?",
+        "answer": "By using audits, workspaces, scoring, and clear packages so the site can diagnose, educate, and route upgrades before a direct conversation is needed.",
     },
     {
         "question": "Who is the strongest fit for the flagship Authority package?",
-        "answer": "Brands that need traditional rankings, AI visibility, better conversion paths, and a reporting layer that can justify retained spend.",
+        "answer": "Brands that need traditional rankings, AI visibility, better conversion paths, and a reporting layer that can justify ongoing investment.",
     },
 ]
 
@@ -399,13 +401,14 @@ for group in SERVICE_GROUPS:
             "system_feature": service["system_feature"],
             "value_statement": (
                 f"{service['name']} is positioned as part of the VRT SPACE growth system, "
-                "not as a disconnected one-off service."
+                "not as a disconnected one-off deliverable."
             ),
             "experience_points": [
                 "Start with a clear diagnosis of what is blocking discovery, trust, or conversion.",
-                "Translate findings into a roadmap that clients can understand without technical guesswork.",
-                "Deliver implementation with measurable movement and obvious next-step opportunities.",
+                "Translate findings into a roadmap that users can understand without technical guesswork.",
+                "Connect implementation to measurable movement and the next logical product unlock.",
             ],
+            "custom_inquiry": service.get("custom_inquiry", False),
         }
 
 

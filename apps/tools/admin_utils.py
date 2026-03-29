@@ -1,5 +1,6 @@
 from django.utils.safestring import mark_safe
 
+
 def get_score_color(score):
     if score is None:
         return "#64748b"  # slate-500
@@ -48,10 +49,50 @@ SERVICE_ADVICE = {
     },
 }
 
+
 def get_service_recommendations(audit_run):
+    summary = audit_run.summary or {}
+    summary_fits = summary.get("product_modules") or summary.get("service_fit") or []
+    if summary_fits:
+        recommendations = []
+        for fit in summary_fits:
+            score = None
+            title = fit.get("title", "")
+            score_key = fit.get("score_key")
+            if score_key == "technical":
+                score = min(audit_run.technical_score, audit_run.on_page_score)
+            elif score_key == "aeo":
+                score = audit_run.aeo_score
+            elif score_key == "performance":
+                score = audit_run.performance_score
+            elif score_key == "content":
+                score = audit_run.content_score
+            elif score_key == "internal_linking":
+                score = audit_run.internal_linking_score
+            elif "SEO Foundation" in title or "Site Health" in title:
+                score = min(audit_run.technical_score, audit_run.on_page_score)
+            elif "AEO" in title or "AI Visibility" in title:
+                score = audit_run.aeo_score
+            elif "Performance" in title:
+                score = audit_run.performance_score
+            elif "Content" in title:
+                score = audit_run.content_score
+
+            recommendations.append(
+                {
+                    "category": fit.get("title", "Product Opportunity"),
+                    "score": score,
+                    "service": fit.get("title", "Workspace Upgrade"),
+                    "impact": fit.get("impact", ""),
+                    "reason": fit.get("reason", ""),
+                    "color": get_score_color(score),
+                }
+            )
+        return recommendations
+
     recommendations = []
     threshold = 85
-    
+
     scores = {
         "technical": audit_run.technical_score,
         "on_page": audit_run.on_page_score,
@@ -69,7 +110,8 @@ def get_service_recommendations(audit_run):
                 "score": score,
                 "service": advice["service"],
                 "impact": advice["impact"],
-                "color": get_score_color(score)
+                "reason": "",
+                "color": get_score_color(score),
             })
-            
+
     return recommendations

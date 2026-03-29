@@ -8,23 +8,23 @@
             <h1>{{ service.name }}</h1>
             <p class="hero-text">{{ service.summary }}</p>
             <div class="hero-actions">
-                <a class="button button-primary" href="{% url 'core:home' %}#contact">Book Strategy</a>
-                <a class="button button-secondary" href="{% url 'core:home' %}#audit">Run an Audit</a>
+                <a class="button button-primary" href="{% url 'core:home' %}#audit">Run Free Audit</a>
+                <a class="button button-secondary" href="{% url 'tools:workspace-signup' %}">Create Workspace</a>
             </div>
             <p class="section-text">{{ service.value_statement }}</p>
         </div>
         <div class="signal-panel">
             <p class="signal-kicker">System feature</p>
             <h3>{{ service.system_feature }}</h3>
-            <p>This service is sold as part of a wider operating system that should create measurable and repeatable value.</p>
+            <p>This module is designed to fit the audit-to-workspace flow first, then expand into plan-based monitoring, automation, or custom delivery when needed.</p>
         </div>
     </div>
 </section>
 
 <section class="experience-section">
     <div class="container section-heading">
-        <p class="eyebrow">What clients buy here</p>
-        <h2>Outcomes, not a checklist.</h2>
+        <p class="eyebrow">What this improves</p>
+        <h2>Resolve the blocking issue, then connect it to the wider product system.</h2>
     </div>
     <div class="container experience-grid">
         {% for point in service.experience_points %}
@@ -53,8 +53,14 @@
 <section class="contact-section">
     <div class="container section-heading">
         <p class="eyebrow">Next action</p>
-        <h2>Move from interest to a scoped opportunity.</h2>
-        <p class="section-text">Use the audit to surface the problem, then use strategy to shape the right service path.</p>
+        {% if service.custom_inquiry %}
+        <h2>This path can require a direct custom scope.</h2>
+        <p class="section-text">Start with the audit if you want baseline diagnostics, or use the custom work form when the request is a website build, app build, or bespoke implementation.</p>
+        <p><a class="button button-primary" href="{% url 'core:home' %}#contact">Request custom scope</a></p>
+        {% else %}
+        <h2>Start in the product before asking for help.</h2>
+        <p class="section-text">Run the audit, save the workspace, and use the visible plan ladder to decide whether you need a deeper package.</p>
+        {% endif %}
     </div>
 </section>
 {% endblock %}

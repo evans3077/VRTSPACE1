@@ -6,7 +6,11 @@ dotenv.load_dotenv(override=True)
 PAGESPEED_API_URL = "https://www.googleapis.com/pagespeedonline/v5/runPagespeed"
 
 def test_psi(url):
-    api_key = os.environ.get("PAGESPEED_API_KEY", "").strip()
+    api_key = (
+        os.environ.get("webspeed", "").strip()
+        or os.environ.get("WEBSPEED", "").strip()
+        or os.environ.get("PAGESPEED_API_KEY", "").strip()
+    )
     categories = ["performance", "accessibility", "best-practices", "seo"]
     params = [("url", url), ("strategy", "mobile")]
     for cat in categories:

@@ -84,15 +84,26 @@ class AuditRunAdmin(admin.ModelAdmin):
     def pretty_summary(self, obj):
         if not obj.summary:
             return "No summary data available."
-        
-        # Build a small dashboard table
+
+        score_breakdown = obj.summary.get("score_breakdown", {})
+        recommendations = obj.summary.get("recommendations", [])
         html = '<table style="width: 100%; border-collapse: collapse; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; font-family: sans-serif;">'
         html += '<tr style="background: #eef2f6;"><th style="padding: 10px; text-align: left; border-bottom: 1px solid #cbd5e1;">Metric</th><th style="padding: 10px; text-align: left; border-bottom: 1px solid #cbd5e1;">Value</th></tr>'
-        
-        # Overall
+
         html += f'<tr><td style="padding: 8px; border-bottom: 1px solid #f1f5f9;"><b>Overall Score</b></td><td style="padding: 8px; border-bottom: 1px solid #f1f5f9;">{format_score_pill(obj.overall_score)}</td></tr>'
-        
-        # Pagespeed if exists
+
+        for key in ("technical", "on_page", "content", "aeo", "internal_linking", "performance"):
+            item = score_breakdown.get(key)
+            if not item:
+                continue
+            html += (
+                f'<tr><td style="padding: 8px; border-bottom: 1px solid #f1f5f9;">{item["label"]}</td>'
+                f'<td style="padding: 8px; border-bottom: 1px solid #f1f5f9;">'
+                f'{format_score_pill(item["score"])}'
+                f' <span style="color: #64748b; font-size: 0.85em;">{item["status"]}</span>'
+                f'</td></tr>'
+            )
+
         pagespeed = obj.summary.get("pagespeed")
         if pagespeed:
             metrics = pagespeed.get("metrics", {})
@@ -100,14 +111,16 @@ class AuditRunAdmin(admin.ModelAdmin):
             for key, val in metrics.items():
                 label = key.replace("_", " ").title()
                 html += f'<tr><td style="padding: 8px; border-bottom: 1px solid #f1f5f9;">{label}</td><td style="padding: 8px; border-bottom: 1px solid #f1f5f9;">{val}</td></tr>'
-        
-        # Top Issues List
-        top_issues = obj.summary.get("top_issues", [])
-        if top_issues:
+
+        if recommendations:
             html += '<tr><td colspan="2" style="padding: 12px; background: #f1f5f9; font-weight: bold;">Priority Action Items</td></tr>'
-            for issue in top_issues:
-                html += f'<tr><td style="padding: 8px; border-bottom: 1px solid #f1f5f9;">{issue["message"]}</td><td style="padding: 8px; border-bottom: 1px solid #f1f5f9; color: #64748b; font-size: 0.9em;">{issue["recommendation"]}</td></tr>'
-                
+            for item in recommendations[:5]:
+                html += (
+                    f'<tr><td style="padding: 8px; border-bottom: 1px solid #f1f5f9;">{item["title"]}</td>'
+                    f'<td style="padding: 8px; border-bottom: 1px solid #f1f5f9; color: #64748b; font-size: 0.9em;">'
+                    f'{item["recommended_fix"]}</td></tr>'
+                )
+
         html += "</table>"
         return mark_safe(html)
 
@@ -127,6 +140,7 @@ class AuditRunAdmin(admin.ModelAdmin):
                 </div>
                 <div style="color: #2563eb; font-weight: bold; margin-bottom: 4px;">Recommended Service: {r['service']}</div>
                 <div style="font-size: 0.9em; color: #475569; line-height: 1.4;"><b>Impact:</b> {r['impact']}</div>
+                {f'<div style="font-size: 0.9em; color: #475569; line-height: 1.4; margin-top: 6px;"><b>Reason:</b> {r["reason"]}</div>' if r.get("reason") else ""}
             </div>
             """
         html += '</div>'

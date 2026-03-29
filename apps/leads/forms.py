@@ -1,4 +1,6 @@
 from django import forms
+from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth import get_user_model
 
 from .models import AuditRequest, Lead
 
@@ -52,3 +54,29 @@ class AuditRequestForm(forms.ModelForm):
         if not website.startswith(("http://", "https://")):
             website = f"https://{website}"
         return website
+
+
+class WorkspaceSignupForm(forms.Form):
+    email = forms.EmailField(widget=forms.EmailInput(attrs={"placeholder": "you@company.com"}))
+    password = forms.CharField(widget=forms.PasswordInput(attrs={"placeholder": "Create a password"}))
+
+    def clean_email(self):
+        email = self.cleaned_data["email"].strip().lower()
+        user_model = get_user_model()
+        if user_model.objects.filter(username=email).exists():
+            raise forms.ValidationError("An account with this email already exists. Sign in instead.")
+        return email
+
+
+class WorkspaceLoginForm(AuthenticationForm):
+    username = forms.EmailField(
+        label="Email",
+        widget=forms.EmailInput(attrs={"placeholder": "you@company.com", "autofocus": True}),
+    )
+    password = forms.CharField(
+        widget=forms.PasswordInput(attrs={"placeholder": "Enter your password"}),
+        strip=False,
+    )
+
+    def clean_username(self):
+        return self.cleaned_data["username"].strip().lower()
