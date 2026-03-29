@@ -108,6 +108,14 @@
                     <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
                         <strong style="color: #0f172a;">Title options:</strong> {{ brief.title_options|join:", " }}
                     </div>
+                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
+                        <strong style="color: #0f172a;">Brief refinement:</strong>
+                        {% if task.metadata.brief_refinement.applied %}
+                        {{ task.metadata.brief_refinement.provider|title }}{% if task.metadata.brief_refinement.model %} / {{ task.metadata.brief_refinement.model }}{% endif %}
+                        {% else %}
+                        Deterministic fallback
+                        {% endif %}
+                    </div>
                     {% if brief.target_urls %}
                     <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
                         <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Target URLs</strong>

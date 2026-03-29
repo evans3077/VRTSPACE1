@@ -1,6 +1,8 @@
+from unittest.mock import patch
+
 from django.contrib.auth import get_user_model
 from django.core.management import call_command
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from apps.leads.models import AuditRequest, ClientProject
@@ -241,6 +243,170 @@ class GeneratedContentServiceTests(TestCase):
         task = ContentEditorialTask.objects.get(project=project)
         self.assertEqual(task.status, ContentEditorialTask.Status.QUEUED)
         self.assertEqual(task.priority_score, 91)
+
+    @override_settings(
+        CONTENT_REFINEMENT_PROVIDER="ollama",
+        CONTENT_REFINEMENT_MODEL="llama3.1",
+        CONTENT_REFINEMENT_ENABLED=True,
+    )
+    @patch(
+        "apps.content.refinement._run_provider_prompt",
+        return_value={
+            "title_options": [
+                "Best used car dealership in Nairobi",
+                "Used car dealership Nairobi buying guide",
+            ],
+            "outline_sections": [
+                {
+                    "heading": "Buying criteria",
+                    "instruction": "Show how price-sensitive buyers should compare stock quality, financing, and dealer trust signals.",
+                }
+            ],
+            "faq_targets": [
+                "What should buyers compare before choosing a used car dealership in Nairobi?",
+                "How can buyers verify dealer trust signals in Nairobi?",
+            ],
+            "reason": "Competitors use dedicated commercial service pages with local buying criteria.",
+            "action": "Create a service page that explains buying criteria, trust signals, and financing paths for Nairobi buyers.",
+        },
+    )
+    def test_sync_project_editorial_tasks_applies_model_refinement_when_available(self, _provider_mock):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=68,
+            status=AuditRun.Status.COMPLETED,
+            summary={},
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            latest_audit_run=audit_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="ops@example.com",
+            latest_score=68,
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified leads",
+            primary_service="used car dealership",
+            target_audience="price-sensitive car buyers",
+        )
+        seo_snapshot = SEOContextSnapshot.objects.create(
+            project=project,
+            profile=profile,
+            source_audit_run=audit_run,
+            output_json={
+                "context": {
+                    "business_type": "automotive",
+                    "location": "Nairobi",
+                    "target_goal": "Increase qualified leads",
+                    "primary_service": "used car dealership",
+                    "target_audience": "price-sensitive car buyers",
+                },
+                "site_structure": {"pages": [{"url": "https://example.com/", "title": "Home", "page_type": "home"}]},
+            },
+        )
+        SEOOpportunitySnapshot.objects.create(
+            project=project,
+            profile=profile,
+            source_audit_run=audit_run,
+            source_context_snapshot=seo_snapshot,
+            output_json={
+                "keyword_opportunities": [
+                    {"keyword": "used car dealership Nairobi", "target_page_type": "service", "support_terms": ["buy used cars Nairobi"], "intent": "Service Page"}
+                ],
+                "page_map": [
+                    {
+                        "page_type": "service",
+                        "page_type_label": "Service",
+                        "status": "missing",
+                        "priority_score": 91,
+                        "target_keyword": "used car dealership Nairobi",
+                        "reason": "Competitors have dedicated service pages and this site does not.",
+                        "action": "Create a dedicated service page.",
+                        "target_urls": [],
+                        "competitor_evidence": [{"title": "Used Cars Nairobi", "url": "https://competitor.com/service/"}],
+                    }
+                ],
+            },
+        )
+
+        sync_project_editorial_tasks(project)
+
+        task = ContentEditorialTask.objects.get(project=project)
+        self.assertTrue(task.metadata["brief_refinement"]["applied"])
+        self.assertEqual(task.metadata["brief_refinement"]["provider"], "ollama")
+        self.assertIn("Best used car dealership in Nairobi", task.brief_json["title_options"])
+
+    @override_settings(
+        CONTENT_REFINEMENT_PROVIDER="ollama",
+        CONTENT_REFINEMENT_MODEL="llama3.1",
+        CONTENT_REFINEMENT_ENABLED=True,
+    )
+    @patch(
+        "apps.content.refinement._run_provider_prompt",
+        return_value={
+            "title": "Generic title",
+            "meta_title": "Generic title",
+            "meta_description": "Generic description",
+            "content": "# Generic title\n\n## Section\nThis copy drops all keyword grounding and answer-first structure.",
+            "faq_items": [{"question": "What now?", "answer": "Unknown."}],
+            "cta": "Contact us",
+        },
+    )
+    def test_generate_content_payload_falls_back_when_model_output_fails_validation(self, _provider_mock):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=68,
+            summary={
+                "recommendations": [{"title": "Fix missing title tags"}],
+                "score_breakdown": {"on_page": {"label": "On-page", "score": 59}},
+            },
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            latest_audit_run=audit_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="ops@example.com",
+            latest_score=68,
+        )
+
+        _, payload = generate_content_payload(
+            project=project,
+            output_type=GeneratedContent.OutputType.SERVICE_PAGE,
+            input_data={
+                "business_type": "auto dealership",
+                "location": "Nairobi",
+                "target_audience": "buyers comparing used vehicles",
+                "page_goal": "book a consultation",
+                "offer_summary": "used car sourcing support",
+                "target_keywords": ["used car dealership Nairobi", "buy second hand cars Nairobi"],
+                "search_intent": "commercial",
+            },
+        )
+
+        self.assertFalse(payload["refinement"]["applied"])
+        self.assertEqual(payload["refinement"]["fallback_reason"], "validation_failed")
+        self.assertIn("used car dealership Nairobi", payload["content"])
 
 
 class GeneratedContentViewTests(TestCase):

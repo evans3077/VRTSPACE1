@@ -50,6 +50,16 @@
                     {% endif %}
                 </p>
             </article>
+            <article class="system-card">
+                <p class="eyebrow">Refinement</p>
+                <p>
+                    {% if generated_content.output_json.refinement.applied %}
+                    {{ generated_content.output_json.refinement.provider|title }}{% if generated_content.output_json.refinement.model %} / {{ generated_content.output_json.refinement.model }}{% endif %}
+                    {% else %}
+                    Deterministic fallback
+                    {% endif %}
+                </p>
+            </article>
         </div>
 
         {% if generated_content.brief_json %}
@@ -127,6 +137,7 @@
                     <div>FAQ section: <strong>{{ generated_content.validation_json.has_faq_items|yesno:"Yes,No" }}</strong></div>
                     <div>CTA present: <strong>{{ generated_content.validation_json.has_cta|yesno:"Yes,No" }}</strong></div>
                     <div>Generic risk: <strong>{{ generated_content.validation_json.generic_risk|title }}</strong></div>
+                    <div>Refinement applied: <strong>{{ generated_content.output_json.refinement.applied|yesno:"Yes,No" }}</strong></div>
                 </div>
 
                 <div class="section-heading" style="text-align: left; margin: 1.5rem 0 1rem;">

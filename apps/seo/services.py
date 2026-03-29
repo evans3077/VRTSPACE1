@@ -389,7 +389,7 @@ def _competitor_title_phrases(competitor_snapshots, location):
     phrases = []
     for snapshot in competitor_snapshots:
         payload = snapshot.output_json or {}
-        for page in payload.get("pages", []):
+        for page in _normalized_competitor_pages(payload):
             title = (page.get("title") or page.get("h1") or "").strip()
             if not title:
                 continue
@@ -421,7 +421,7 @@ def build_keyword_clusters(profile, competitor_snapshots):
 
 def _page_evidence(snapshot_payload, page_type, limit=3):
     evidence = []
-    for page in snapshot_payload.get("pages", []):
+    for page in _normalized_competitor_pages(snapshot_payload):
         if page.get("page_type") != page_type:
             continue
         evidence.append(
@@ -434,6 +434,24 @@ def _page_evidence(snapshot_payload, page_type, limit=3):
         if len(evidence) >= limit:
             break
     return evidence
+
+
+def _normalized_competitor_pages(snapshot_payload):
+    normalized = []
+    for raw_page in snapshot_payload.get("pages", []):
+        if isinstance(raw_page, dict):
+            normalized.append(raw_page)
+            continue
+        if isinstance(raw_page, str) and raw_page.strip():
+            normalized.append(
+                {
+                    "url": raw_page.strip(),
+                    "title": "",
+                    "h1": "",
+                    "page_type": "general",
+                }
+            )
+    return normalized
 
 
 def _site_pages_for_type(site_structure, page_type):

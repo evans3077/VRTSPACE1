@@ -7,6 +7,7 @@ from django.utils.text import slugify
 from apps.leads.models import ClientProject
 
 from .models import Article, ContentEditorialTask, GeneratedContent, Service
+from .refinement import refine_brief, refine_payload
 
 
 OUTPUT_TYPE_LABELS = {
@@ -86,9 +87,15 @@ def _brief_title_options(*, page_type_label, primary_keyword, location, business
 def _brief_outline(*, primary_keyword, page_type_label, page_goal, competitor_evidence):
     competitor_line = ""
     if competitor_evidence:
-        competitor_line = (
-            f" Add the depth competitors show on pages like {competitor_evidence[0].get('title') or competitor_evidence[0].get('url')}."
-        )
+        first_evidence = competitor_evidence[0]
+        if isinstance(first_evidence, dict):
+            evidence_label = first_evidence.get("title") or first_evidence.get("url")
+        else:
+            evidence_label = str(first_evidence).strip()
+        if evidence_label:
+            competitor_line = (
+                f" Add the depth competitors show on pages like {evidence_label}."
+            )
     return [
         {
             "heading": "Direct answer",
@@ -182,7 +189,12 @@ def build_seo_content_briefs(project):
             location=context.get("location", ""),
             business_type=context.get("business_type", ""),
         )
-        competitor_evidence = item.get("competitor_evidence", [])[:3]
+        competitor_evidence = []
+        for evidence in item.get("competitor_evidence", [])[:3]:
+            if isinstance(evidence, dict):
+                competitor_evidence.append(evidence)
+            elif isinstance(evidence, str) and evidence.strip():
+                competitor_evidence.append({"url": evidence.strip(), "title": evidence.strip()})
         brief = {
             "brief_key": slugify(f"{page_type}-{primary_keyword}")[:80],
             "page_type": page_type,
@@ -244,17 +256,19 @@ def sync_project_editorial_tasks(project):
 
     for brief in briefs:
         active_keys.add(brief["brief_key"])
+        refined_brief, brief_refinement = refine_brief(brief)
         task, created = ContentEditorialTask.objects.get_or_create(
             project=project,
             brief_key=brief["brief_key"],
             defaults={
                 "source_seo_snapshot": seo_snapshot,
                 "source_seo_opportunity_snapshot": opportunity_snapshot,
-                "title": brief["title_options"][0] if brief.get("title_options") else brief["primary_keyword"],
-                "output_type": brief["output_type"],
-                "priority_score": brief.get("priority_score", 0),
+                "title": refined_brief["title_options"][0] if refined_brief.get("title_options") else refined_brief["primary_keyword"],
+                "output_type": refined_brief["output_type"],
+                "priority_score": refined_brief.get("priority_score", 0),
                 "brief_hash": _brief_hash(brief),
-                "brief_json": brief,
+                "brief_json": refined_brief,
+                "metadata": {"brief_refinement": brief_refinement},
                 "status": ContentEditorialTask.Status.QUEUED,
             },
         )
@@ -266,11 +280,15 @@ def sync_project_editorial_tasks(project):
         changed = task.brief_hash != current_hash
         task.source_seo_snapshot = seo_snapshot
         task.source_seo_opportunity_snapshot = opportunity_snapshot
-        task.title = brief["title_options"][0] if brief.get("title_options") else brief["primary_keyword"]
-        task.output_type = brief["output_type"]
-        task.priority_score = brief.get("priority_score", 0)
+        task.title = refined_brief["title_options"][0] if refined_brief.get("title_options") else refined_brief["primary_keyword"]
+        task.output_type = refined_brief["output_type"]
+        task.priority_score = refined_brief.get("priority_score", 0)
         task.brief_hash = current_hash
-        task.brief_json = brief
+        task.brief_json = refined_brief
+        task.metadata = {
+            **(task.metadata or {}),
+            "brief_refinement": brief_refinement,
+        }
         if changed:
             if task.status == ContentEditorialTask.Status.APPLIED:
                 task.status = ContentEditorialTask.Status.STALE
@@ -285,6 +303,7 @@ def sync_project_editorial_tasks(project):
                 "priority_score",
                 "brief_hash",
                 "brief_json",
+                "metadata",
                 "status",
                 "updated_at",
             ]
@@ -596,6 +615,12 @@ def generate_content_payload(*, project, output_type, input_data):
     }
     payload["schema_json"] = build_schema_json(payload)
     payload["validation"] = validate_generated_output(payload, context=context)
+    payload = refine_payload(
+        context=context,
+        payload=payload,
+        schema_builder=build_schema_json,
+        validator=validate_generated_output,
+    )
     return context, payload
 
 

@@ -105,7 +105,8 @@ Status: in progress
 - [x] Turn SEO queue items into structured content briefs with title options, outlines, FAQ targets, internal-link targets, and competitor evidence stored on each generated draft
 - [x] Turn SEO briefs into tracked editorial queue items so recurring SEO refreshes and audit completions can keep a live content operations queue in sync with the latest SEO opportunities
 - [x] Make the SEO execution queue action-based by attaching page-level edit targets, exact change scopes, and ordered implementation steps instead of generic advice only
-- [ ] Add model-backed refinement adapters so briefs, titles, outlines, and FAQs can be upgraded by stronger models without losing the deterministic fallback path
+- [x] Add model-backed refinement adapters so briefs, titles, outlines, FAQs, and generated draft payloads can be upgraded by stronger models without losing the deterministic fallback path
+- [x] Keep deterministic briefs and payload validation as the canonical guardrail so model output can only override allowed sections after structural checks pass
 - [ ] Add a production-grade secondary discovery provider or fallback path so competitor discovery is not tied to a single SERP source
 
 ## Working Rule

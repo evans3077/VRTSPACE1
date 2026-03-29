@@ -10,6 +10,7 @@ from apps.tools.models import AuditPage, AuditRun
 
 from .models import (
     SEOCompetitor,
+    SEOCompetitorSnapshot,
     SEOContextSnapshot,
     SEOOpportunitySnapshot,
     SEOProjectProfile,
@@ -215,6 +216,100 @@ class SEOContextServiceTests(TestCase):
         self.assertEqual(SEOContextSnapshot.objects.count(), 1)
         self.assertEqual(SEOSiteStructureSnapshot.objects.count(), 1)
         self.assertEqual(SEOOpportunitySnapshot.objects.count(), 0)
+
+    def test_build_seo_opportunity_payload_tolerates_legacy_string_competitor_pages(self):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=70,
+            status=AuditRun.Status.COMPLETED,
+            summary={},
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            latest_audit_run=audit_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="ops@example.com",
+            latest_score=70,
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="agency",
+            location="Nairobi",
+            target_goal="Increase proposal-qualified traffic",
+            primary_service="seo agency",
+            target_audience="marketing leaders",
+        )
+        competitor = SEOCompetitor.objects.create(
+            project=project,
+            homepage_url="https://competitor.com/",
+            normalized_domain="competitor.com",
+            label="competitor.com",
+            source=SEOCompetitor.Source.PROFILE,
+            is_active=True,
+        )
+        SEOCompetitorSnapshot.objects.create(
+            competitor=competitor,
+            source_audit_run=audit_run,
+            output_json={
+                "status": "ok",
+                "pages": ["https://competitor.com/services/seo/"],
+                "summary": {
+                    "counts_by_type": {"service": 1},
+                    "avg_word_count_by_type": {"service": 420},
+                    "faq_schema_pages": 0,
+                    "location_match_pages": 1,
+                    "page_count": 1,
+                },
+            },
+        )
+        context_snapshot = SEOContextSnapshot.objects.create(
+            project=project,
+            profile=profile,
+            source_audit_run=audit_run,
+            output_json={
+                "context": {
+                    "business_type": "agency",
+                    "industry_label": "Agency / Professional Services",
+                    "location": "Nairobi",
+                    "target_goal": "Increase proposal-qualified traffic",
+                    "primary_service": "seo agency",
+                    "target_audience": "marketing leaders",
+                },
+                "site_structure": {
+                    "pages": [{"url": "https://example.com/", "title": "Home", "page_type": "home"}],
+                    "summary": {
+                        "counts_by_type": {"home": 1},
+                        "avg_word_count_by_type": {"home": 250},
+                        "faq_schema_pages": 0,
+                        "location_match_pages": 0,
+                        "page_count": 1,
+                    },
+                },
+                "recommendations": [],
+                "competitors": [
+                    {"domain": "competitor.com", "status": "ok", "url": "https://competitor.com/"}
+                ],
+            },
+        )
+
+        payload = build_seo_opportunity_payload(
+            project,
+            profile,
+            audit_run,
+            context_snapshot=context_snapshot,
+        )
+
+        self.assertTrue(payload["page_map"])
+        self.assertTrue(payload["keyword_opportunities"])
 
 
 class WorkspaceSEOViewTests(TestCase):
