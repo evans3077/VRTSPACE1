@@ -40,6 +40,8 @@ class AuditRequest(TimestampedModel):
     email = models.EmailField()
     website = models.URLField()
     monthly_leads_goal = models.PositiveIntegerField(default=20)
+    market_context = models.TextField(blank=True)
+    competitor_urls = models.JSONField(default=list, blank=True)
     notes = models.TextField(blank=True)
     submission_context = models.JSONField(default=dict, blank=True)
     score = models.PositiveSmallIntegerField(default=0)
@@ -109,6 +111,9 @@ class WorkspacePlan(TimestampedModel):
     premium_recommendation_limit = models.PositiveSmallIntegerField(null=True, blank=True)
     recurring_audits_enabled = models.BooleanField(default=False)
     export_reports_enabled = models.BooleanField(default=False)
+    email_reports_enabled = models.BooleanField(default=False)
+    competitor_tracking_enabled = models.BooleanField(default=False)
+    stakeholder_sharing_enabled = models.BooleanField(default=False)
     metadata = models.JSONField(default=dict, blank=True)
 
     class Meta:

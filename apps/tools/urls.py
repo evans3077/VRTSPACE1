@@ -18,9 +18,14 @@ from .views import (
     ProjectDashboardDetailView,
     PublicAuditCreateView,
     WorkspaceDashboardView,
+    WorkspaceAuditExportCsvView,
+    WorkspaceAuditExportJsonView,
+    WorkspaceAuditShareCreateView,
     WorkspaceLoginView,
     WorkspaceLogoutView,
     WorkspaceSignupView,
+    SharedAuditReportPdfView,
+    SharedAuditReportView,
 )
 
 app_name = "tools"
@@ -40,8 +45,13 @@ urlpatterns = [
     path("workspace/billing/cancel/", WorkspaceBillingCancelView.as_view(), name="workspace-billing-cancel"),
     path("workspace/audits/rerun/", WorkspaceAuditRerunView.as_view(), name="workspace-audit-rerun"),
     path("workspace/audits/schedule/", WorkspaceAuditScheduleView.as_view(), name="workspace-audit-schedule"),
+    path("workspace/audits/<int:pk>/export.json", WorkspaceAuditExportJsonView.as_view(), name="workspace-audit-export-json"),
+    path("workspace/audits/<int:pk>/export.csv", WorkspaceAuditExportCsvView.as_view(), name="workspace-audit-export-csv"),
+    path("workspace/audits/<int:pk>/share/", WorkspaceAuditShareCreateView.as_view(), name="workspace-audit-share"),
     path("auth/google/start/", GoogleOAuthStartView.as_view(), name="google-oauth-start"),
     path("auth/google/callback/", GoogleOAuthCallbackView.as_view(), name="google-oauth-callback"),
     path("billing/stripe/webhook/", StripeWebhookView.as_view(), name="stripe-webhook"),
+    path("share/audits/<slug:token>/", SharedAuditReportView.as_view(), name="shared-audit-report"),
+    path("share/audits/<slug:token>/report.pdf", SharedAuditReportPdfView.as_view(), name="shared-audit-report-pdf"),
     path("workspace/", WorkspaceDashboardView.as_view(), name="workspace-dashboard"),
 ]

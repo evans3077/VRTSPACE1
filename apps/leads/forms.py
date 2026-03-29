@@ -38,14 +38,32 @@ class LeadCaptureForm(forms.ModelForm):
 
 class AuditRequestForm(forms.ModelForm):
     website = forms.CharField()
+    competitor_urls = forms.CharField(
+        required=False,
+        widget=forms.Textarea(
+            attrs={
+                "rows": 3,
+                "placeholder": "https://competitor-one.com, https://competitor-two.com",
+            }
+        ),
+    )
 
     class Meta:
         model = AuditRequest
-        fields = ["company_name", "email", "website", "monthly_leads_goal", "notes"]
+        fields = [
+            "company_name",
+            "email",
+            "website",
+            "monthly_leads_goal",
+            "market_context",
+            "competitor_urls",
+            "notes",
+        ]
         widgets = {
             "company_name": forms.TextInput(attrs={"placeholder": "Company or brand"}),
             "email": forms.EmailInput(attrs={"placeholder": "team@company.com"}),
             "website": forms.TextInput(attrs={"placeholder": "example.com"}),
+            "market_context": forms.Textarea(attrs={"rows": 3, "placeholder": "Market, audience, location, or commercial context that should shape the audit."}),
             "notes": forms.Textarea(attrs={"rows": 4, "placeholder": "Share the market, offer, or visibility problem you want the audit to surface."}),
         }
 
@@ -54,6 +72,22 @@ class AuditRequestForm(forms.ModelForm):
         if not website.startswith(("http://", "https://")):
             website = f"https://{website}"
         return website
+
+    def clean_competitor_urls(self):
+        raw_value = self.cleaned_data.get("competitor_urls", "")
+        urls = []
+        for part in raw_value.replace("\r", "\n").replace(",", "\n").split("\n"):
+            value = part.strip()
+            if not value:
+                continue
+            if not value.startswith(("http://", "https://")):
+                value = f"https://{value}"
+            urls.append(value)
+        deduped = []
+        for url in urls:
+            if url not in deduped:
+                deduped.append(url)
+        return deduped[:3]
 
 
 class WorkspaceSignupForm(forms.Form):

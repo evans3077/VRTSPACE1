@@ -18,6 +18,10 @@
                 {% if latest_audit %}
                 <a class="button button-secondary" href="{% url 'tools:audit-report-pdf' latest_audit.pk %}" target="_blank" rel="noopener">View Latest PDF</a>
                 <a class="button button-secondary" href="{% url 'tools:audit-report-pdf' latest_audit.pk %}?download=1">Download Latest PDF</a>
+                {% if export_reports_allowed %}
+                <a class="button button-secondary" href="{% url 'tools:workspace-audit-export-json' latest_audit.pk %}" target="_blank" rel="noopener">Export JSON</a>
+                <a class="button button-secondary" href="{% url 'tools:workspace-audit-export-csv' latest_audit.pk %}">Export CSV</a>
+                {% endif %}
                 {% endif %}
                 {% if current_subscription and current_subscription.stripe_customer_id %}
                 <form method="post" action="{% url 'tools:workspace-billing-portal' %}">
@@ -119,6 +123,22 @@
                         <input type="checkbox" name="is_active" value="1" {% if audit_schedule and audit_schedule.is_active %}checked{% endif %}>
                         <span>Enable recurring audits for this workspace</span>
                     </label>
+                    <label style="display: grid; gap: 0.35rem;">
+                        <span style="font-weight: 700;">Report recipients</span>
+                        <textarea name="report_recipients" class="form-control" rows="3" placeholder="stakeholder@example.com, team@example.com">{% if audit_schedule %}{{ audit_schedule.report_recipients|join:", " }}{% endif %}</textarea>
+                    </label>
+                    <label style="display: flex; gap: 0.65rem; align-items: center;">
+                        <input type="checkbox" name="email_reports_enabled" value="1" {% if audit_schedule and audit_schedule.email_reports_enabled %}checked{% endif %}>
+                        <span>Email the full report after each completed recurring audit</span>
+                    </label>
+                    <label style="display: flex; gap: 0.65rem; align-items: center;">
+                        <input type="checkbox" name="alert_on_score_drop" value="1" {% if audit_schedule and audit_schedule.alert_on_score_drop %}checked{% endif %}>
+                        <span>Alert when the overall score drops</span>
+                    </label>
+                    <label style="display: flex; gap: 0.65rem; align-items: center;">
+                        <input type="checkbox" name="alert_on_new_issues" value="1" {% if audit_schedule and audit_schedule.alert_on_new_issues %}checked{% endif %}>
+                        <span>Alert when new issues are detected</span>
+                    </label>
                     <button type="submit" class="button button-secondary">Save automation settings</button>
                 </form>
                 <div style="margin-top: 1rem; display: grid; gap: 0.5rem; color: #475569; font-size: 0.9rem;">
@@ -141,6 +161,18 @@
                         <strong style="color: #0f172a;">
                             {% if current_capabilities.recurring_audits_enabled %}
                             Included on current plan
+                            {% elif audit_tier_enforcement %}
+                            Upgrade required
+                            {% else %}
+                            Available during free-pass testing
+                            {% endif %}
+                        </strong>
+                    </div>
+                    <div>
+                        Email reporting:
+                        <strong style="color: #0f172a;">
+                            {% if email_reports_allowed %}
+                            Available
                             {% elif audit_tier_enforcement %}
                             Upgrade required
                             {% else %}
@@ -187,8 +219,55 @@
                     The first completed rerun will create a saved change report here.
                 </div>
                 {% endif %}
+                {% if latest_audit %}
+                <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                    {% if share_reports_allowed %}
+                    <form method="post" action="{% url 'tools:workspace-audit-share' latest_audit.pk %}">
+                        {% csrf_token %}
+                        <button type="submit" class="button button-secondary">Create Share Link</button>
+                    </form>
+                    {% endif %}
+                </div>
+                {% if latest_share_url %}
+                <div style="margin-top: 1rem; padding: 0.9rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; font-size: 0.9rem;">
+                    Share link: <span style="font-family: monospace;">{{ latest_share_url }}</span>
+                </div>
+                {% endif %}
+                {% endif %}
             </article>
         </div>
+
+        {% if context_analysis %}
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Competitor Context</p>
+                <h2 style="font-size: 2rem;">Market and benchmark signals</h2>
+            </div>
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+                <div style="display: grid; gap: 0.75rem;">
+                    {% for insight in context_analysis.insights %}
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); color: #475569;">{{ insight }}</div>
+                    {% empty %}
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); color: #475569;">No competitor insights are available for this audit yet.</div>
+                    {% endfor %}
+                </div>
+                <div style="display: grid; gap: 0.75rem;">
+                    {% for competitor in context_analysis.competitors %}
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03);">
+                        <strong>{{ competitor.url }}</strong>
+                        <div style="color: #475569; font-size: 0.9rem; margin-top: 0.35rem;">
+                            {% if competitor.status == "unavailable" %}
+                            Could not fetch this competitor during the benchmark pass.
+                            {% else %}
+                            {{ competitor.word_count }} words | {{ competitor.schema_count }} schema blocks | {{ competitor.response_time_ms }}ms
+                            {% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </article>
+        {% endif %}
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
             <article class="system-card">
@@ -273,6 +352,10 @@
                                 <div style="margin-top: 0.4rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
                                     <a href="{% url 'tools:audit-report-pdf' item.audit.pk %}" style="font-size: 0.8rem; color: var(--signal);">View PDF</a>
                                     <a href="{% url 'tools:audit-report-pdf' item.audit.pk %}?download=1" style="font-size: 0.8rem; color: var(--signal);">Download</a>
+                                    {% if export_reports_allowed %}
+                                    <a href="{% url 'tools:workspace-audit-export-json' item.audit.pk %}" style="font-size: 0.8rem; color: var(--signal);">JSON</a>
+                                    <a href="{% url 'tools:workspace-audit-export-csv' item.audit.pk %}" style="font-size: 0.8rem; color: var(--signal);">CSV</a>
+                                    {% endif %}
                                 </div>
                                 {% endif %}
                             </td>

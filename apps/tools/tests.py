@@ -8,6 +8,7 @@ from datetime import timedelta
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
+from django.core import mail
 from django.core.management import call_command
 from django.test import TestCase, override_settings
 from django.urls import reverse
@@ -16,10 +17,12 @@ from django.utils import timezone
 from apps.leads.billing import BillingError, create_checkout_session
 from apps.leads.models import AuditRequest, ClientProject, UsageRecord, WorkspacePlan, WorkspaceSubscription
 from apps.tools.automation import process_due_workspace_schedules
+from apps.tools.jobs import enqueue_public_site_audit
+from apps.tools.notifications import deliver_workspace_audit_notifications
 from apps.tools.reporting import create_audit_change_report
 
 from .admin_utils import get_service_recommendations
-from .models import AuditChangeReport, AuditIssue, AuditPage, AuditRun, WorkspaceAuditSchedule
+from .models import AuditChangeReport, AuditIssue, AuditPage, AuditRun, AuditShareLink, WorkspaceAuditSchedule
 from .recommendations import build_audit_summary
 from .scoring import apply_audit_scores
 from .services import get_pagespeed_api_key, run_public_site_audit
@@ -200,6 +203,64 @@ class PublicAuditFlowTests(TestCase):
         self.assertIn("product_modules", audit_run.summary)
         self.assertEqual(audit_run.performance_score, 84)
         self.assertEqual(audit_run.summary["pagespeed"]["source"], "Google PageSpeed Insights")
+
+    @patch("apps.tools.services.fetch_pagespeed_insights")
+    @patch("apps.tools.services.safe_fetch")
+    def test_public_site_audit_includes_context_analysis_when_competitors_are_supplied(self, mocked_fetch, mocked_pagespeed):
+        homepage_html = """
+        <html><head><title>Northwind</title></head><body><h1>Northwind</h1><p>Main homepage copy.</p></body></html>
+        """
+        competitor_html = """
+        <html><head><title>Competitor</title><meta name='description' content='Competing offer'></head><body><h1>Competitor headline</h1><p>This competitor page has more words than the target homepage. It is longer and more detailed for benchmark testing.</p><script type='application/ld+json'>{}</script></body></html>
+        """
+
+        def fake_fetch(url, session=None, timeout=8):
+            if url == "https://example.com/":
+                return {
+                    "final_url": url,
+                    "status_code": 200,
+                    "body": homepage_html,
+                    "content_type": "text/html",
+                    "response_time_ms": 900,
+                    "headers": {},
+                }
+            if url == "https://example.com/robots.txt":
+                return None
+            if url == "https://example.com/sitemap.xml":
+                return None
+            if url == "https://competitor.com/":
+                return {
+                    "final_url": url,
+                    "status_code": 200,
+                    "body": competitor_html,
+                    "content_type": "text/html",
+                    "response_time_ms": 600,
+                    "headers": {},
+                }
+            return None
+
+        mocked_fetch.side_effect = fake_fetch
+        mocked_pagespeed.return_value = None
+
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+            market_context="Used vehicle market in Nairobi with price-sensitive buyers.",
+            competitor_urls=["https://competitor.com"],
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+        )
+
+        run_public_site_audit(audit_run=audit_run, page_limit=1)
+        audit_run.refresh_from_db()
+
+        self.assertIn("context_analysis", audit_run.summary)
+        self.assertIn("market_context", audit_run.summary["context_analysis"])
+        self.assertEqual(audit_run.summary["context_analysis"]["competitors"][0]["url"], "https://competitor.com/")
 
 
 class AuditScoringTests(TestCase):
@@ -1032,6 +1093,117 @@ class WorkspaceAutomationTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertFalse(WorkspaceAuditSchedule.objects.exists())
 
+    @override_settings(EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend")
+    def test_deliver_workspace_audit_notifications_sends_email_with_pdf(self):
+        user = get_user_model().objects.create_user(
+            username="reports@example.com",
+            email="reports@example.com",
+            password="strongpass123",
+        )
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="reports@example.com",
+            website="https://example.com",
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=74,
+            status=AuditRun.Status.COMPLETED,
+            completed_at=timezone.now(),
+            summary={"score_breakdown": {}, "recommendations": [], "issue_summary": {}},
+        )
+        project = ClientProject.objects.create(
+            owner=user,
+            audit_request=audit_request,
+            latest_audit_run=audit_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="reports@example.com",
+            latest_score=74,
+        )
+        schedule = WorkspaceAuditSchedule.objects.create(
+            project=project,
+            cadence=WorkspaceAuditSchedule.Cadence.WEEKLY,
+            is_active=True,
+            email_reports_enabled=True,
+            alert_on_score_drop=True,
+            report_recipients=["stakeholder@example.com"],
+        )
+        change_report = create_audit_change_report(audit_run, project=project)
+
+        result = deliver_workspace_audit_notifications(
+            audit_run=audit_run,
+            project=project,
+            change_report=change_report,
+        )
+
+        schedule.refresh_from_db()
+        self.assertEqual(result["reports_sent"], 1)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertEqual(mail.outbox[0].to, ["stakeholder@example.com"])
+        self.assertEqual(mail.outbox[0].attachments[0][2], "application/pdf")
+
+    @override_settings(
+        EMAIL_BACKEND="django.core.mail.backends.locmem.EmailBackend",
+        AUDIT_TIER_ENFORCEMENT=True,
+    )
+    def test_email_reports_do_not_create_share_links_without_sharing_capability(self):
+        user = get_user_model().objects.create_user(
+            username="emailonly@example.com",
+            email="emailonly@example.com",
+            password="strongpass123",
+        )
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="emailonly@example.com",
+            website="https://example.com",
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=81,
+            status=AuditRun.Status.COMPLETED,
+            completed_at=timezone.now(),
+            summary={"score_breakdown": {}, "recommendations": [], "issue_summary": {}},
+        )
+        project = ClientProject.objects.create(
+            owner=user,
+            audit_request=audit_request,
+            latest_audit_run=audit_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="emailonly@example.com",
+            latest_score=81,
+        )
+        authority_plan = WorkspacePlan.objects.get(slug="authority")
+        authority_plan.email_reports_enabled = True
+        authority_plan.stakeholder_sharing_enabled = False
+        authority_plan.save(update_fields=["email_reports_enabled", "stakeholder_sharing_enabled", "updated_at"])
+        WorkspaceSubscription.objects.create(
+            user=user,
+            plan=authority_plan,
+            status=WorkspaceSubscription.Status.ACTIVE,
+        )
+        WorkspaceAuditSchedule.objects.create(
+            project=project,
+            cadence=WorkspaceAuditSchedule.Cadence.WEEKLY,
+            is_active=True,
+            email_reports_enabled=True,
+            report_recipients=["stakeholder@example.com"],
+        )
+
+        result = deliver_workspace_audit_notifications(audit_run=audit_run, project=project)
+
+        self.assertEqual(result["reports_sent"], 1)
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertFalse(AuditShareLink.objects.filter(audit_run=audit_run).exists())
+        self.assertNotIn("Shareable report link", mail.outbox[0].body)
+
 
 class AuditReportingTests(TestCase):
     def test_change_report_tracks_new_and_resolved_issues(self):
@@ -1117,3 +1289,129 @@ class AuditReportingTests(TestCase):
             call_command("process_workspace_schedules")
 
         mocked_process.assert_called_once()
+
+
+class AuditExportAndQueueTests(TestCase):
+    @override_settings(AUDIT_TIER_ENFORCEMENT=True)
+    def test_workspace_export_and_share_routes_require_supported_plan(self):
+        user = get_user_model().objects.create_user(
+            username="exports@example.com",
+            email="exports@example.com",
+            password="strongpass123",
+        )
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="exports@example.com",
+            website="https://example.com",
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=80,
+            status=AuditRun.Status.COMPLETED,
+            summary={"score_breakdown": {}, "recommendations": [], "issue_summary": {}},
+        )
+        ClientProject.objects.create(
+            owner=user,
+            audit_request=audit_request,
+            latest_audit_run=audit_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="exports@example.com",
+            latest_score=80,
+        )
+        growth_plan = WorkspacePlan.objects.get(slug="growth")
+        growth_plan.export_reports_enabled = True
+        growth_plan.stakeholder_sharing_enabled = True
+        growth_plan.email_reports_enabled = True
+        growth_plan.save()
+        WorkspaceSubscription.objects.create(
+            user=user,
+            plan=growth_plan,
+            status=WorkspaceSubscription.Status.ACTIVE,
+        )
+
+        self.client.force_login(user)
+        json_response = self.client.get(reverse("tools:workspace-audit-export-json", args=[audit_run.pk]))
+        csv_response = self.client.get(reverse("tools:workspace-audit-export-csv", args=[audit_run.pk]))
+        share_response = self.client.post(reverse("tools:workspace-audit-share", args=[audit_run.pk]))
+
+        self.assertEqual(json_response.status_code, 200)
+        self.assertEqual(csv_response.status_code, 200)
+        self.assertEqual(share_response.status_code, 302)
+        self.assertTrue(AuditShareLink.objects.filter(audit_run=audit_run).exists())
+
+    @override_settings(AUDIT_TIER_ENFORCEMENT=True)
+    def test_workspace_export_and_share_routes_block_incomplete_audits(self):
+        user = get_user_model().objects.create_user(
+            username="pendingexports@example.com",
+            email="pendingexports@example.com",
+            password="strongpass123",
+        )
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="pendingexports@example.com",
+            website="https://example.com",
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=0,
+            status=AuditRun.Status.RUNNING,
+            summary={},
+        )
+        ClientProject.objects.create(
+            owner=user,
+            audit_request=audit_request,
+            latest_audit_run=audit_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="pendingexports@example.com",
+            latest_score=0,
+        )
+        authority_plan = WorkspacePlan.objects.get(slug="authority")
+        authority_plan.export_reports_enabled = True
+        authority_plan.stakeholder_sharing_enabled = True
+        authority_plan.save(update_fields=["export_reports_enabled", "stakeholder_sharing_enabled", "updated_at"])
+        WorkspaceSubscription.objects.create(
+            user=user,
+            plan=authority_plan,
+            status=WorkspaceSubscription.Status.ACTIVE,
+        )
+
+        self.client.force_login(user)
+        json_response = self.client.get(reverse("tools:workspace-audit-export-json", args=[audit_run.pk]))
+        csv_response = self.client.get(reverse("tools:workspace-audit-export-csv", args=[audit_run.pk]))
+        share_response = self.client.post(reverse("tools:workspace-audit-share", args=[audit_run.pk]))
+
+        self.assertEqual(json_response.status_code, 409)
+        self.assertEqual(csv_response.status_code, 409)
+        self.assertEqual(share_response.status_code, 409)
+        self.assertFalse(AuditShareLink.objects.filter(audit_run=audit_run).exists())
+
+    def test_shared_audit_routes_return_404_for_incomplete_audits(self):
+        audit_run = AuditRun.objects.create(
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            status=AuditRun.Status.RUNNING,
+        )
+        share_link = AuditShareLink.objects.create(
+            audit_run=audit_run,
+            token="test-share-token",
+        )
+
+        html_response = self.client.get(reverse("tools:shared-audit-report", args=[share_link.token]))
+        pdf_response = self.client.get(reverse("tools:shared-audit-report-pdf", args=[share_link.token]))
+
+        self.assertEqual(html_response.status_code, 404)
+        self.assertEqual(pdf_response.status_code, 404)
+
+    @override_settings(AUDIT_USE_CELERY=True)
+    @patch("apps.tools.tasks.run_public_site_audit_task.delay")
+    def test_enqueue_public_site_audit_uses_celery_when_enabled(self, mocked_delay):
+        enqueue_public_site_audit(42)
+        mocked_delay.assert_called_once_with(42)

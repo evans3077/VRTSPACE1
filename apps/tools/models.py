@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 from apps.core.models import SEOFieldsMixin, TimestampedModel
@@ -154,6 +155,10 @@ class WorkspaceAuditSchedule(TimestampedModel):
         on_delete=models.SET_NULL,
         related_name="schedule_runs",
     )
+    report_recipients = models.JSONField(default=list, blank=True)
+    email_reports_enabled = models.BooleanField(default=False)
+    alert_on_score_drop = models.BooleanField(default=False)
+    alert_on_new_issues = models.BooleanField(default=False)
     last_error_message = models.CharField(max_length=255, blank=True)
     metadata = models.JSONField(default=dict, blank=True)
 
@@ -195,3 +200,28 @@ class AuditChangeReport(TimestampedModel):
 
     def __str__(self):
         return f"Change report for audit #{self.audit_run_id}"
+
+
+class AuditShareLink(TimestampedModel):
+    audit_run = models.ForeignKey(
+        AuditRun,
+        on_delete=models.CASCADE,
+        related_name="share_links",
+    )
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="audit_share_links",
+    )
+    token = models.CharField(max_length=64, unique=True)
+    expires_at = models.DateTimeField(null=True, blank=True)
+    access_count = models.PositiveIntegerField(default=0)
+    last_accessed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ("-created_at",)
+
+    def __str__(self):
+        return f"Share link for audit #{self.audit_run_id}"

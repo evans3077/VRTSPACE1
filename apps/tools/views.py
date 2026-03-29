@@ -5,7 +5,7 @@ from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.conf import settings
 from django.core.cache import cache
-from django.http import HttpResponse
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views import View
@@ -13,6 +13,7 @@ from django.views.generic import DetailView
 
 from apps.core.site_content import PACKAGES
 from apps.leads.billing import (
+    can_access_audit_feature,
     get_billing_state,
     get_effective_capabilities,
     get_limited_audit_history,
@@ -30,9 +31,15 @@ from apps.leads.forms import AuditRequestForm, WorkspaceLoginForm, WorkspaceSign
 from apps.leads.models import ClientProject
 from apps.leads.services import create_audit_request_from_form, sync_client_project_from_audit_run
 
+from .audit_exports import (
+    build_absolute_app_url,
+    build_audit_csv_export,
+    build_audit_export_payload,
+    get_or_create_audit_share_link,
+)
 from .automation import get_workspace_schedule
 from .jobs import enqueue_public_site_audit
-from .models import AuditRun
+from .models import AuditRun, AuditShareLink
 from .pdf_reports import build_audit_report_pdf
 from .services import normalize_url
 
@@ -488,6 +495,14 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         billing_state = get_billing_state(self.request.user)
         schedule = get_workspace_schedule(project)
         latest_change_report = getattr(latest_audit, "change_report", None) if latest_audit else None
+        latest_share_link = (
+            AuditShareLink.objects.filter(audit_run=latest_audit).order_by("-created_at").first()
+            if latest_audit
+            else None
+        )
+        share_allowed, _ = can_access_audit_feature(self.request.user, "stakeholder_sharing_enabled")
+        export_allowed, _ = can_access_audit_feature(self.request.user, "export_reports_enabled")
+        email_allowed, _ = can_access_audit_feature(self.request.user, "email_reports_enabled")
         context["latest_audit"] = latest_audit
         context["audit_history"] = audit_history
         context["audit_history_with_delta"] = audit_history_with_delta
@@ -495,6 +510,7 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["recommendations"] = recommendations
         context["product_modules"] = latest_summary.get("product_modules", [])
         context["custom_work_items"] = latest_summary.get("custom_work_items", [])
+        context["context_analysis"] = latest_summary.get("context_analysis", {})
         context["packages"] = PACKAGES
         context["audit_tier_enforcement"] = settings.AUDIT_TIER_ENFORCEMENT
         context["locked_history_count"] = locked_history_count
@@ -507,6 +523,11 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["audit_schedule"] = schedule
         context["latest_change_report"] = latest_change_report
         context["generated_content_count"] = generated_content_count
+        context["latest_share_link"] = latest_share_link
+        context["latest_share_url"] = build_absolute_app_url(f"/share/audits/{latest_share_link.token}/") if latest_share_link else ""
+        context["share_reports_allowed"] = share_allowed
+        context["export_reports_allowed"] = export_allowed
+        context["email_reports_allowed"] = email_allowed
         return context
 
 
@@ -526,4 +547,129 @@ class AuditReportPdfView(DetailView):
         filename = f"audit-report-{audit_run.normalized_domain or audit_run.pk}.pdf"
         response = HttpResponse(pdf_bytes, content_type="application/pdf")
         response["Content-Disposition"] = f'{disposition}; filename="{filename}"'
+        return response
+
+
+class WorkspaceAuditAccessMixin(LoginRequiredMixin):
+    def get_workspace_audit(self, pk):
+        audit_run = (
+            AuditRun.objects.select_related("audit_request", "audit_request__client_project")
+            .filter(pk=pk)
+            .first()
+        )
+        project = getattr(getattr(audit_run, "audit_request", None), "client_project", None)
+        if not audit_run or not project:
+            raise Http404
+        if self.request.user.is_staff or project.owner_id == self.request.user.id:
+            return audit_run
+        raise Http404
+
+    def ensure_completed_audit(self, audit_run):
+        if audit_run.status != AuditRun.Status.COMPLETED:
+            raise Http404
+        return audit_run
+
+
+class WorkspaceAuditExportJsonView(WorkspaceAuditAccessMixin, View):
+    def get(self, request, *args, **kwargs):
+        allowed, _ = can_access_audit_feature(request.user, "export_reports_enabled")
+        if not allowed:
+            return JsonResponse({"error": "JSON exports require a plan that supports advanced exports."}, status=403)
+
+        audit_run = self.get_workspace_audit(kwargs["pk"])
+        if audit_run.status != AuditRun.Status.COMPLETED:
+            return JsonResponse({"error": "Exports are only available after the audit completes."}, status=409)
+        self.ensure_completed_audit(audit_run)
+        return JsonResponse(build_audit_export_payload(audit_run), status=200)
+
+
+class WorkspaceAuditExportCsvView(WorkspaceAuditAccessMixin, View):
+    def get(self, request, *args, **kwargs):
+        allowed, _ = can_access_audit_feature(request.user, "export_reports_enabled")
+        if not allowed:
+            return HttpResponse("CSV exports require a plan that supports advanced exports.", status=403)
+
+        audit_run = self.get_workspace_audit(kwargs["pk"])
+        if audit_run.status != AuditRun.Status.COMPLETED:
+            return HttpResponse("Exports are only available after the audit completes.", status=409)
+        self.ensure_completed_audit(audit_run)
+        response = HttpResponse(build_audit_csv_export(audit_run), content_type="text/csv")
+        response["Content-Disposition"] = f'attachment; filename="audit-export-{audit_run.pk}.csv"'
+        return response
+
+
+class WorkspaceAuditShareCreateView(WorkspaceAuditAccessMixin, View):
+    def post(self, request, *args, **kwargs):
+        allowed, _ = can_access_audit_feature(request.user, "stakeholder_sharing_enabled")
+        if not allowed:
+            if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                return JsonResponse({"error": "Stakeholder sharing requires a plan that supports shared reports."}, status=403)
+            raise Http404
+
+        audit_run = self.get_workspace_audit(kwargs["pk"])
+        if audit_run.status != AuditRun.Status.COMPLETED:
+            return JsonResponse({"error": "Shared reports are only available after the audit completes."}, status=409)
+        self.ensure_completed_audit(audit_run)
+        share_link = get_or_create_audit_share_link(audit_run, created_by=request.user)
+        payload = {
+            "share_url": build_absolute_app_url(f"/share/audits/{share_link.token}/"),
+            "pdf_url": build_absolute_app_url(f"/share/audits/{share_link.token}/report.pdf"),
+            "expires_at": share_link.expires_at.isoformat() if share_link.expires_at else None,
+        }
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return JsonResponse(payload, status=200)
+
+        request.session["latest_share_url"] = payload["share_url"]
+        return redirect("tools:workspace-dashboard")
+
+
+class SharedAuditReportView(DetailView):
+    model = AuditShareLink
+    slug_field = "token"
+    slug_url_kwarg = "token"
+    template_name = "tools/shared_audit_report.html"
+    context_object_name = "share_link"
+
+    def get_queryset(self):
+        return AuditShareLink.objects.select_related("audit_run")
+
+    def get_object(self, queryset=None):
+        share_link = super().get_object(queryset=queryset)
+        if share_link.expires_at and share_link.expires_at <= timezone.now():
+            raise Http404
+        if share_link.audit_run.status != AuditRun.Status.COMPLETED:
+            raise Http404
+        share_link.access_count += 1
+        share_link.last_accessed_at = timezone.now()
+        share_link.save(update_fields=["access_count", "last_accessed_at", "updated_at"])
+        return share_link
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        audit_run = self.object.audit_run
+        summary = audit_run.summary or {}
+        context["audit_run"] = audit_run
+        context["score_breakdown"] = summary.get("score_breakdown", {})
+        context["recommendations"] = summary.get("recommendations", [])[:6]
+        context["context_analysis"] = summary.get("context_analysis", {})
+        return context
+
+
+class SharedAuditReportPdfView(DetailView):
+    model = AuditShareLink
+    slug_field = "token"
+    slug_url_kwarg = "token"
+
+    def get_queryset(self):
+        return AuditShareLink.objects.select_related("audit_run")
+
+    def get(self, request, *args, **kwargs):
+        share_link = self.get_object()
+        if share_link.expires_at and share_link.expires_at <= timezone.now():
+            raise Http404
+        if share_link.audit_run.status != AuditRun.Status.COMPLETED:
+            raise Http404
+        pdf_bytes = build_audit_report_pdf(share_link.audit_run)
+        response = HttpResponse(pdf_bytes, content_type="application/pdf")
+        response["Content-Disposition"] = f'inline; filename="shared-audit-report-{share_link.audit_run.pk}.pdf"'
         return response

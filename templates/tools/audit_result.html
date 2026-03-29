@@ -288,6 +288,39 @@ setTimeout(function () {
     </div>
 </section>
 
+{% if audit_run.summary.context_analysis %}
+<section class="packages-section" style="background: rgba(255,255,255,0.5); border-top: 1px solid rgba(15,23,42,0.05);">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Context Analysis</p>
+            <h2>Market and competitor benchmarks</h2>
+            <p class="section-text">This layer uses the submitted market context and competitor URLs to give the audit commercial framing.</p>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+            <div style="display: grid; gap: 0.75rem;">
+                {% for insight in audit_run.summary.context_analysis.insights %}
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">{{ insight }}</div>
+                {% endfor %}
+            </div>
+            <div style="display: grid; gap: 0.75rem;">
+                {% for competitor in audit_run.summary.context_analysis.competitors %}
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03);">
+                    <strong>{{ competitor.url }}</strong>
+                    <div style="margin-top: 0.35rem; color: #475569; font-size: 0.9rem;">
+                        {% if competitor.status == "unavailable" %}
+                        This competitor could not be fetched during the benchmark pass.
+                        {% else %}
+                        {{ competitor.word_count }} words | {{ competitor.schema_count }} schema blocks | {{ competitor.response_time_ms }}ms
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
 <section class="faq-section" style="background: var(--panel);">
     <div class="container">
         <div class="section-heading">

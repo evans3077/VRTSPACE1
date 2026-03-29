@@ -420,6 +420,78 @@ def choose_urls_to_crawl(start_url, homepage, sitemap_urls, limit=PAGE_LIMIT):
     return candidates[:limit]
 
 
+def normalize_competitor_urls(values, *, own_domain=""):
+    urls = []
+    for value in values or []:
+        normalized = normalize_url(value)
+        if not normalized:
+            continue
+        domain = extract_domain(normalized)
+        if own_domain and domain == own_domain:
+            continue
+        if normalized not in urls:
+            urls.append(normalized)
+    return urls[:3]
+
+
+def build_context_analysis(*, homepage, audit_request, session, own_domain):
+    competitor_urls = normalize_competitor_urls(
+        getattr(audit_request, "competitor_urls", []),
+        own_domain=own_domain,
+    ) if audit_request else []
+    market_context = getattr(audit_request, "market_context", "") if audit_request else ""
+    if not competitor_urls and not market_context:
+        return {}
+
+    competitor_snapshots = []
+    for competitor_url in competitor_urls:
+        response = safe_fetch(competitor_url, session=session, timeout=REQUEST_TIMEOUT)
+        if not response or response.get("status_code", 0) >= 400 or "html" not in response.get("content_type", "").lower():
+            competitor_snapshots.append(
+                {
+                    "url": competitor_url,
+                    "status": "unavailable",
+                }
+            )
+            continue
+        parsed = parse_page(competitor_url, response)
+        competitor_snapshots.append(
+            {
+                "url": competitor_url,
+                "title": parsed.title,
+                "h1": parsed.h1,
+                "word_count": parsed.word_count,
+                "schema_count": parsed.schema_count,
+                "response_time_ms": parsed.response_time_ms,
+                "meta_description": parsed.meta_description,
+            }
+        )
+
+    insights = []
+    available = [item for item in competitor_snapshots if item.get("status") != "unavailable"]
+    if available:
+        avg_competitor_words = sum(item.get("word_count", 0) for item in available) / max(len(available), 1)
+        if homepage.word_count < avg_competitor_words:
+            insights.append("Primary page copy is thinner than the average competitor homepage.")
+        avg_competitor_speed = sum(item.get("response_time_ms", 0) for item in available) / max(len(available), 1)
+        if homepage.response_time_ms > avg_competitor_speed:
+            insights.append("Homepage response time is slower than the sampled competitor average.")
+        competitor_with_schema = sum(1 for item in available if item.get("schema_count", 0) > 0)
+        if homepage.schema_count == 0 and competitor_with_schema:
+            insights.append("Competitors are using structured data where the audited site currently is not.")
+        if not homepage.h1 and any(item.get("h1") for item in available):
+            insights.append("Competitor pages have clear primary headings while the audited page does not.")
+
+    if market_context:
+        insights.insert(0, f"Submitted market context: {market_context}")
+
+    return {
+        "market_context": market_context,
+        "competitors": competitor_snapshots,
+        "insights": insights[:6],
+    }
+
+
 def create_issue(audit_run, page, code, category, severity, message, recommendation, details=None):
     AuditIssue.objects.create(
         audit_run=audit_run,
@@ -768,6 +840,12 @@ def run_public_site_audit(*, audit_run, page_limit=PAGE_LIMIT):
             return audit_run
 
         homepage = parse_page(start_url, homepage_response)
+        context_analysis = build_context_analysis(
+            homepage=homepage,
+            audit_request=audit_run.audit_request,
+            session=session,
+            own_domain=domain,
+        )
 
         robots_response = safe_fetch(urljoin(start_url, "/robots.txt"), session=session)
         if not robots_response or robots_response["status_code"] >= 400:
@@ -881,6 +959,8 @@ def run_public_site_audit(*, audit_run, page_limit=PAGE_LIMIT):
     audit_run.tech_summary = tech_summary
 
     audit_run.summary = build_audit_summary(audit_run)
+    if context_analysis:
+        audit_run.summary["context_analysis"] = context_analysis
     audit_run.status = AuditRun.Status.COMPLETED
     audit_run.completed_at = timezone.now()
     audit_run.save(update_fields=[

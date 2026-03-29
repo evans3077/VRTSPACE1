@@ -222,6 +222,15 @@ STORAGES = {
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 REDIS_URL = os.environ.get("REDIS_URL")
+CELERY_BROKER_URL = os.environ.get("CELERY_BROKER_URL", REDIS_URL or "")
+CELERY_RESULT_BACKEND = os.environ.get("CELERY_RESULT_BACKEND", CELERY_BROKER_URL)
+AUDIT_USE_CELERY = os.environ.get("AUDIT_USE_CELERY", "1" if CELERY_BROKER_URL else "0") == "1"
+APP_BASE_URL = (
+    os.environ.get("APP_BASE_URL", "").strip()
+    or (f"https://{RENDER_EXTERNAL_HOSTNAME}" if RENDER_EXTERNAL_HOSTNAME else "")
+    or ("http://127.0.0.1:8000" if DEBUG else "")
+)
+DEFAULT_AUDIT_SHARE_EXPIRY_DAYS = int(os.environ.get("DEFAULT_AUDIT_SHARE_EXPIRY_DAYS", "14"))
 if REDIS_URL:
     CACHES = {
         "default": {

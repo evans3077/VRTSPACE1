@@ -102,6 +102,10 @@ class WorkspaceAuditScheduleView(LoginRequiredMixin, View):
                 user=request.user,
                 cadence=cadence,
                 is_active=is_active,
+                report_recipients=request.POST.get("report_recipients", ""),
+                email_reports_enabled=request.POST.get("email_reports_enabled") == "1",
+                alert_on_score_drop=request.POST.get("alert_on_score_drop") == "1",
+                alert_on_new_issues=request.POST.get("alert_on_new_issues") == "1",
             )
         except BillingError as exc:
             messages.error(request, str(exc))

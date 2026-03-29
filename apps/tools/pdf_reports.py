@@ -17,17 +17,40 @@ def _build_report_lines(audit_run):
     recommendations = summary.get("recommendations", [])
     issue_summary = summary.get("issue_summary", {})
     pagespeed = summary.get("pagespeed", {})
+    product_modules = summary.get("product_modules", [])
+    context_analysis = summary.get("context_analysis", {})
+    change_report = getattr(audit_run, "change_report", None)
 
     lines = [
-        "VRT SPACE Audit Report",
+        "VRT SPACE AGENCY",
+        "Stakeholder Audit Report",
         f"Domain: {audit_run.normalized_domain}",
         f"Status: {audit_run.get_status_display()}",
         f"Overall score: {audit_run.overall_score}",
         f"Pages crawled: {audit_run.pages_crawled}",
         f"Completed at: {audit_run.completed_at or 'Pending'}",
         "",
-        "Score breakdown",
+        "Executive summary",
+        f"This report summarizes the saved audit state for {audit_run.normalized_domain}.",
     ]
+
+    if change_report:
+        lines.extend(
+            [
+                change_report.summary.get("headline", ""),
+                f"New issues: {change_report.new_issue_count}",
+                f"Resolved issues: {change_report.resolved_issue_count}",
+                "",
+            ]
+        )
+    else:
+        lines.append("")
+
+    lines.extend(
+        [
+        "Score breakdown",
+        ]
+    )
 
     for key in ("technical", "on_page", "content", "aeo", "internal_linking", "performance"):
         item = score_breakdown.get(key)
@@ -54,6 +77,22 @@ def _build_report_lines(audit_run):
             label = metric.replace("_", " ").title()
             lines.append(f"- {label}: {value}")
 
+    if context_analysis:
+        lines.extend(["", "Market and competitor context"])
+        market_context = context_analysis.get("market_context")
+        if market_context:
+            lines.append(f"- Market context: {market_context}")
+        for insight in context_analysis.get("insights", [])[:5]:
+            lines.append(f"- Insight: {insight}")
+        for competitor in context_analysis.get("competitors", [])[:3]:
+            if competitor.get("status") == "unavailable":
+                lines.append(f"- Competitor {competitor.get('url')}: unavailable during benchmark pass")
+            else:
+                lines.append(
+                    f"- Competitor {competitor.get('url')}: {competitor.get('word_count', 0)} words, "
+                    f"{competitor.get('schema_count', 0)} schema blocks, {competitor.get('response_time_ms', 0)}ms"
+                )
+
     lines.extend(
         [
             "",
@@ -79,6 +118,11 @@ def _build_report_lines(audit_run):
         impact = recommendation.get("estimated_impact")
         if impact:
             lines.append(f"   Impact: {impact}")
+
+    if product_modules:
+        lines.extend(["", "Recommended product modules"])
+        for module in product_modules[:5]:
+            lines.append(f"- {module.get('title', 'Module')} ({module.get('plan', 'Plan')}): {module.get('reason', '')}")
 
     lines.extend(
         [

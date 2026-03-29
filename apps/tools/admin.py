@@ -7,6 +7,7 @@ from .models import (
     AuditIssue,
     AuditPage,
     AuditRun,
+    AuditShareLink,
     ToolDefinition,
     WorkspaceAuditSchedule,
 )
@@ -178,7 +179,7 @@ class AuditRunAdmin(admin.ModelAdmin):
 
 @admin.register(WorkspaceAuditSchedule)
 class WorkspaceAuditScheduleAdmin(admin.ModelAdmin):
-    list_display = ("project", "cadence", "is_active", "next_run_at", "last_run_at")
+    list_display = ("project", "cadence", "is_active", "email_reports_enabled", "next_run_at", "last_run_at")
     list_filter = ("cadence", "is_active")
     search_fields = ("project__name", "project__website", "project__contact_email")
     readonly_fields = ("last_audit_run", "last_error_message", "metadata")
@@ -197,3 +198,10 @@ class AuditChangeReportAdmin(admin.ModelAdmin):
     list_filter = ("created_at",)
     search_fields = ("audit_run__normalized_domain", "project__name")
     readonly_fields = ("summary",)
+
+
+@admin.register(AuditShareLink)
+class AuditShareLinkAdmin(admin.ModelAdmin):
+    list_display = ("audit_run", "created_by", "expires_at", "access_count", "created_at")
+    search_fields = ("audit_run__normalized_domain", "token")
+    readonly_fields = ("token", "access_count", "last_accessed_at")

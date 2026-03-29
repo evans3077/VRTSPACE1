@@ -26,6 +26,9 @@ FREE_PLAN_CAPABILITIES = {
     "premium_recommendation_limit": 3,
     "recurring_audits_enabled": False,
     "export_reports_enabled": False,
+    "email_reports_enabled": False,
+    "competitor_tracking_enabled": False,
+    "stakeholder_sharing_enabled": False,
 }
 
 STRIPE_API_BASE = "https://api.stripe.com/v1"
@@ -75,6 +78,9 @@ def get_effective_capabilities(user):
         "premium_recommendation_limit": plan.premium_recommendation_limit,
         "recurring_audits_enabled": plan.recurring_audits_enabled,
         "export_reports_enabled": plan.export_reports_enabled,
+        "email_reports_enabled": plan.email_reports_enabled,
+        "competitor_tracking_enabled": plan.competitor_tracking_enabled,
+        "stakeholder_sharing_enabled": plan.stakeholder_sharing_enabled,
     }
 
 
@@ -172,6 +178,13 @@ def can_run_workspace_audit(user):
     if usage["audit_runs_used"] >= limit:
         return False, usage
     return True, usage
+
+
+def can_access_audit_feature(user, feature_name):
+    capabilities = get_effective_capabilities(user)
+    if not settings.AUDIT_TIER_ENFORCEMENT:
+        return True, capabilities
+    return bool(capabilities.get(feature_name)), capabilities
 
 
 def get_stripe_price_id(plan):

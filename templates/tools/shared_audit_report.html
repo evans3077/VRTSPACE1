@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="padding-bottom: 2rem;">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Shared Audit Report</p>
+            <h1 style="max-width: none;">{{ audit_run.normalized_domain }}</h1>
+            <p class="section-text" style="max-width: 760px;">
+                Stakeholder-ready summary shared from VRT SPACE. This link reflects the saved audit state at the time it was shared.
+            </p>
+            <div style="margin-top: 1rem;">
+                <a class="button button-secondary" href="{% url 'tools:shared-audit-report-pdf' share_link.token %}" target="_blank" rel="noopener">View PDF</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="packages-section" style="padding-top: 0;">
+    <div class="container" style="display: grid; gap: 2rem;">
+        <div class="system-grid">
+            <article class="system-card"><p class="eyebrow">Overall</p><h3>{{ audit_run.overall_score }}</h3><p>Saved audit score</p></article>
+            <article class="system-card"><p class="eyebrow">Pages</p><h3>{{ audit_run.pages_crawled }}</h3><p>Pages crawled</p></article>
+            <article class="system-card"><p class="eyebrow">Completed</p><h3>{{ audit_run.completed_at|date:"M d, Y" }}</h3><p>Report timestamp</p></article>
+        </div>
+
+        {% if context_analysis %}
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Market Context</p>
+                <h2 style="font-size: 2rem;">Competitive benchmark notes</h2>
+            </div>
+            <div style="display: grid; gap: 0.75rem;">
+                {% for insight in context_analysis.insights %}
+                <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); color: #475569;">{{ insight }}</div>
+                {% endfor %}
+            </div>
+        </article>
+        {% endif %}
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Score Breakdown</p>
+                    <h2 style="font-size: 2rem;">Where the site stands</h2>
+                </div>
+                <div style="display: grid; gap: 0.75rem;">
+                    {% for key, item in score_breakdown.items %}
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03);">
+                        <strong>{{ item.label }}</strong>
+                        <div style="color: #475569; font-size: 0.9rem;">Score {{ item.score }} | {{ item.issues }} issues</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Priority Recommendations</p>
+                    <h2 style="font-size: 2rem;">What to fix first</h2>
+                </div>
+                <div style="display: grid; gap: 0.75rem;">
+                    {% for recommendation in recommendations %}
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03);">
+                        <strong>{{ recommendation.title }}</strong>
+                        <div style="color: #475569; font-size: 0.9rem; margin-top: 0.35rem;">{{ recommendation.recommended_fix }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+{% endblock %}

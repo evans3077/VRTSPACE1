@@ -1,10 +1,16 @@
 import calendar
+import re
 from datetime import timedelta
 
 from django.conf import settings
 from django.utils import timezone
 
-from apps.leads.billing import BillingError, create_workspace_rerun_for_user, get_effective_capabilities
+from apps.leads.billing import (
+    BillingError,
+    can_access_audit_feature,
+    create_workspace_rerun_for_user,
+    get_effective_capabilities,
+)
 from apps.leads.models import ClientProject
 
 from .models import WorkspaceAuditSchedule
@@ -36,7 +42,25 @@ def can_manage_recurring_audits(user):
     return capabilities["recurring_audits_enabled"], capabilities
 
 
-def update_workspace_schedule(*, user, cadence, is_active):
+def parse_recipient_emails(value):
+    recipients = []
+    for item in re.split(r"[\n,;]+", value or ""):
+        email = item.strip().lower()
+        if email and email not in recipients:
+            recipients.append(email)
+    return recipients[:10]
+
+
+def update_workspace_schedule(
+    *,
+    user,
+    cadence,
+    is_active,
+    report_recipients="",
+    email_reports_enabled=False,
+    alert_on_score_drop=False,
+    alert_on_new_issues=False,
+):
     project = (
         ClientProject.objects.select_related("audit_request", "owner")
         .filter(owner=user)
@@ -50,9 +74,17 @@ def update_workspace_schedule(*, user, cadence, is_active):
     if is_active and not allowed:
         raise BillingError("Recurring audits require a plan that supports automation.")
 
+    email_allowed, _ = can_access_audit_feature(user, "email_reports_enabled")
+    if (email_reports_enabled or alert_on_score_drop or alert_on_new_issues) and not email_allowed:
+        raise BillingError("Email reports and alerts require a plan that supports email reporting.")
+
     schedule, _created = WorkspaceAuditSchedule.objects.get_or_create(project=project)
     schedule.cadence = cadence
     schedule.is_active = is_active
+    schedule.report_recipients = parse_recipient_emails(report_recipients)
+    schedule.email_reports_enabled = bool(email_reports_enabled)
+    schedule.alert_on_score_drop = bool(alert_on_score_drop)
+    schedule.alert_on_new_issues = bool(alert_on_new_issues)
     if is_active:
         schedule.next_run_at = calculate_next_run_at(cadence, from_time=timezone.now())
         schedule.last_error_message = ""

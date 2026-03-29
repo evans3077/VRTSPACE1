@@ -72,6 +72,27 @@ Status: complete
 - [x] Add inline view and download routes for audit PDF reports
 - [x] Expose PDF report actions from public audit results and the workspace dashboard
 
+## Phase 8: Audit Hardening and Delivery
+
+Status: complete
+
+- [x] Add competitor and market-context inputs to audit requests
+- [x] Add richer context-analysis output to completed audit summaries
+- [x] Add stakeholder sharing controls with expiring share links and public shared-report routes
+- [x] Add JSON and CSV export routes for completed audits
+- [x] Add scheduled email delivery for audit reports and alerts with attached PDFs
+- [x] Enforce report-sharing separately from email delivery so plans can allow one without the other
+- [x] Add Celery-backed worker support for audit execution with the in-process queue kept only as a fallback
+- [x] Strengthen completed-audit guards on export and shared-report routes
+- [x] Re-run migrations and the relevant Django test suites after the hardening pass
+
+## Phase 9: SEO Product Layer
+
+Status: next
+
+- [ ] Move from audit-system completion into the SEO product layer
+- [ ] Build the next SEO-specific workflows on top of the completed audit, billing, automation, export, and content foundations
+
 ## Working Rule
 
 When a phase step is completed, update this file before starting the next step.
