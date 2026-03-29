@@ -264,20 +264,27 @@ def sync_discovered_competitors(project, profile):
     discovery = discover_serp_competitors(project, profile)
     active_urls = set()
     for item in discovery.get("competitors", []):
+        if not isinstance(item, dict):
+            continue
+        homepage_url = item.get("homepage_url")
+        normalized_domain = item.get("normalized_domain")
+        label = item.get("label") or normalized_domain or extract_domain(homepage_url or "")
+        if not homepage_url or not normalized_domain:
+            continue
         competitor, _created = SEOCompetitor.objects.get_or_create(
             project=project,
-            homepage_url=item["homepage_url"],
+            homepage_url=homepage_url,
             defaults={
-                "normalized_domain": item["normalized_domain"],
-                "label": item["label"],
+                "normalized_domain": normalized_domain,
+                "label": label,
                 "source": SEOCompetitor.Source.SERP,
                 "metadata": {"serp": item},
             },
         )
         metadata = competitor.metadata or {}
         metadata["serp"] = item
-        competitor.normalized_domain = item["normalized_domain"]
-        competitor.label = item["label"]
+        competitor.normalized_domain = normalized_domain
+        competitor.label = label
         if competitor.source != SEOCompetitor.Source.PROFILE:
             competitor.source = SEOCompetitor.Source.SERP
         competitor.is_active = True
@@ -292,7 +299,7 @@ def sync_discovered_competitors(project, profile):
                 "updated_at",
             ]
         )
-        active_urls.add(item["homepage_url"])
+        active_urls.add(homepage_url)
 
     SEOCompetitor.objects.filter(project=project, source=SEOCompetitor.Source.SERP).exclude(
         homepage_url__in=active_urls

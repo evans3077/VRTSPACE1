@@ -131,6 +131,8 @@ def _parse_result(result, *, query, own_domain):
 
 
 def _result_items(payload, key):
+    if not isinstance(payload, dict):
+        return []
     items = payload.get(key, [])
     if isinstance(items, dict):
         for nested_key in ("places", "results"):
@@ -216,14 +218,18 @@ def discover_serp_competitors(project, profile):
         except requests.RequestException as exc:
             errors.append({"query": query, "message": str(exc)})
             continue
-        for result in _result_items(payload, "organic_results"):
-            parsed = _parse_result(result, query=query, own_domain=own_domain)
-            if parsed:
-                raw_candidates.append(parsed)
-        for result in _result_items(payload, "local_results"):
-            parsed = _parse_result(result, query=query, own_domain=own_domain)
-            if parsed:
-                raw_candidates.append(parsed)
+        try:
+            for result in _result_items(payload, "organic_results"):
+                parsed = _parse_result(result, query=query, own_domain=own_domain)
+                if parsed:
+                    raw_candidates.append(parsed)
+            for result in _result_items(payload, "local_results"):
+                parsed = _parse_result(result, query=query, own_domain=own_domain)
+                if parsed:
+                    raw_candidates.append(parsed)
+        except Exception as exc:
+            errors.append({"query": query, "message": f"SERP parsing error: {exc}"})
+            continue
 
     competitors = _aggregate_candidates(raw_candidates)
     return {

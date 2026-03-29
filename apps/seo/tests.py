@@ -583,3 +583,39 @@ class SEOCompetitorDiscoveryTests(TestCase):
         self.assertIn("competitor-a.com", domains)
         self.assertIn("competitor-b.com", domains)
         self.assertIn("competitor-c.com", domains)
+
+    @override_settings(
+        SERP_DISCOVERY_ENABLED=True,
+        SERP_DISCOVERY_PROVIDER="serpapi",
+        SERPAPI_API_KEY="test-key",
+        SERP_DISCOVERY_QUERY_LIMIT=1,
+        SERP_DISCOVERY_RESULTS_PER_QUERY=5,
+    )
+    @patch("apps.seo.discovery.fetch_serpapi_results", return_value="unexpected-payload")
+    def test_discover_serp_competitors_degrades_when_provider_payload_is_invalid(self, mocked_serp_fetch):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="ops@example.com",
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified leads",
+            primary_service="used car dealership",
+            target_audience="price-sensitive car buyers",
+        )
+
+        discovery = discover_serp_competitors(project, profile)
+
+        self.assertTrue(discovery["enabled"])
+        self.assertEqual(discovery["competitors"], [])
+        self.assertEqual(discovery["errors"], [])
