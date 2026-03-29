@@ -26,3 +26,25 @@ class GeneratedContentRequestForm(forms.Form):
         if not keywords:
             raise forms.ValidationError("Add at least one target keyword.")
         return keywords
+
+
+class GeneratedContentEditForm(forms.ModelForm):
+    class Meta:
+        model = GeneratedContent
+        fields = (
+            "title",
+            "meta_title",
+            "meta_description",
+            "body",
+            "cta",
+            "status",
+        )
+        widgets = {
+            "meta_description": forms.Textarea(attrs={"rows": 3}),
+            "body": forms.Textarea(attrs={"rows": 18}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        for field in self.fields.values():
+            field.widget.attrs.setdefault("class", "form-control")

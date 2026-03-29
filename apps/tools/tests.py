@@ -59,6 +59,63 @@ class PublicAuditFlowTests(TestCase):
         self.assertContains(response, "Audit In Progress")
         self.assertContains(response, "This page refreshes automatically")
 
+    def test_completed_audit_result_exposes_pdf_actions(self):
+        audit_run = AuditRun.objects.create(
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            status=AuditRun.Status.COMPLETED,
+            overall_score=78,
+            summary={"score_breakdown": {}, "recommendations": []},
+        )
+
+        response = self.client.get(reverse("tools:audit-result", args=[audit_run.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "View PDF Report")
+        self.assertContains(response, reverse("tools:audit-report-pdf", args=[audit_run.pk]))
+
+    def test_completed_audit_report_pdf_returns_pdf_response(self):
+        audit_run = AuditRun.objects.create(
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            status=AuditRun.Status.COMPLETED,
+            overall_score=78,
+            pages_crawled=4,
+            summary={
+                "score_breakdown": {
+                    "technical": {"label": "Technical", "score": 70, "status": "weak", "issues": 2}
+                },
+                "recommendations": [
+                    {
+                        "title": "Fix missing title tags",
+                        "category": "On-page",
+                        "priority_score": 84,
+                        "description": "Important pages are missing titles.",
+                        "recommended_fix": "Add unique titles.",
+                        "estimated_impact": "Improves click-through rate.",
+                    }
+                ],
+                "issue_summary": {"total": 2, "by_category": {"on_page": 2}},
+            },
+        )
+
+        response = self.client.get(reverse("tools:audit-report-pdf", args=[audit_run.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "application/pdf")
+        self.assertTrue(response.content.startswith(b"%PDF"))
+
+    def test_pending_audit_report_pdf_returns_409(self):
+        audit_run = AuditRun.objects.create(
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            status=AuditRun.Status.PENDING,
+        )
+
+        response = self.client.get(reverse("tools:audit-report-pdf", args=[audit_run.pk]))
+
+        self.assertEqual(response.status_code, 409)
+
     @patch("apps.tools.services.fetch_pagespeed_insights")
     @patch("apps.tools.services.safe_fetch")
     def test_public_site_audit_generates_scores_and_issues(self, mocked_fetch, mocked_pagespeed):
@@ -779,6 +836,7 @@ class WorkspaceBillingTests(TestCase):
         self.assertContains(response, "1 older audit run")
         self.assertContains(response, "74")
         self.assertNotContains(response, str(older_run.created_at))
+        self.assertContains(response, "View Latest PDF")
 
     @override_settings(AUDIT_TIER_ENFORCEMENT=True)
     def test_workspace_rerun_blocks_when_monthly_audit_limit_is_reached(self):

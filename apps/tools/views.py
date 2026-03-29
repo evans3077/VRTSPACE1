@@ -5,6 +5,7 @@ from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.conf import settings
 from django.core.cache import cache
+from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views import View
@@ -32,6 +33,7 @@ from apps.leads.services import create_audit_request_from_form, sync_client_proj
 from .automation import get_workspace_schedule
 from .jobs import enqueue_public_site_audit
 from .models import AuditRun
+from .pdf_reports import build_audit_report_pdf
 from .services import normalize_url
 
 
@@ -506,3 +508,22 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["latest_change_report"] = latest_change_report
         context["generated_content_count"] = generated_content_count
         return context
+
+
+class AuditReportPdfView(DetailView):
+    model = AuditRun
+
+    def get_queryset(self):
+        return AuditRun.objects.prefetch_related("pages", "issues")
+
+    def get(self, request, *args, **kwargs):
+        audit_run = self.get_object()
+        if audit_run.status != AuditRun.Status.COMPLETED:
+            return HttpResponse("Audit report is not available until the audit completes.", status=409)
+
+        pdf_bytes = build_audit_report_pdf(audit_run)
+        disposition = "attachment" if request.GET.get("download") == "1" else "inline"
+        filename = f"audit-report-{audit_run.normalized_domain or audit_run.pk}.pdf"
+        response = HttpResponse(pdf_bytes, content_type="application/pdf")
+        response["Content-Disposition"] = f'{disposition}; filename="{filename}"'
+        return response

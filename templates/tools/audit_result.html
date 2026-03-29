@@ -55,13 +55,19 @@ setTimeout(function () {
         <div class="section-heading">
             <p class="eyebrow">Site Intelligence Snapshot</p>
             <h1 style="max-width: none;">Audit Analysis: {{ audit_run.normalized_domain }}</h1>
+            <div style="margin-bottom: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <a href="{% url 'tools:audit-report-pdf' audit_run.pk %}" class="button button-secondary" target="_blank" rel="noopener">
+                    View PDF Report
+                </a>
+                <a href="{% url 'tools:audit-report-pdf' audit_run.pk %}?download=1" class="button button-secondary">
+                    Download PDF
+                </a>
             {% if user.is_staff %}
-            <div style="margin-bottom: 1.5rem;">
                 <a href="{% url 'tools:agency-audit' audit_run.pk %}" class="button button-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
                     View Agency Intelligence
                 </a>
-            </div>
             {% endif %}
+            </div>
             <p class="section-text" style="opacity: 0.7;">
                 Combined signals from public infrastructure and crawler heuristics. For deeper workflows, compare the
                 <a href="#upsell" style="color: var(--signal); font-weight: 600;">workspace upgrades</a> matched to this audit.

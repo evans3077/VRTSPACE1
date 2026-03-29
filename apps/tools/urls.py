@@ -12,6 +12,7 @@ from .billing_views import (
 from .views import (
     AgencyAuditDetailView,
     AuditResultDetailView,
+    AuditReportPdfView,
     GoogleOAuthCallbackView,
     GoogleOAuthStartView,
     ProjectDashboardDetailView,
@@ -27,6 +28,7 @@ app_name = "tools"
 urlpatterns = [
     path("tools/free-seo-audit/", PublicAuditCreateView.as_view(), name="free-seo-audit"),
     path("tools/audits/<int:pk>/", AuditResultDetailView.as_view(), name="audit-result"),
+    path("tools/audits/<int:pk>/report.pdf", AuditReportPdfView.as_view(), name="audit-report-pdf"),
     path("tools/agency/audits/<int:pk>/", AgencyAuditDetailView.as_view(), name="agency-audit"),
     path("tools/agency/projects/<int:pk>/", ProjectDashboardDetailView.as_view(), name="project-dashboard"),
     path("workspace/start/", WorkspaceSignupView.as_view(), name="workspace-signup"),

@@ -1,8 +1,10 @@
 from urllib.parse import urlparse
 
+from django.utils.text import slugify
+
 from apps.leads.models import ClientProject
 
-from .models import GeneratedContent
+from .models import Article, GeneratedContent, Service
 
 
 OUTPUT_TYPE_LABELS = {
@@ -287,3 +289,81 @@ def create_generated_content(*, user, project, output_type, input_data):
         output_json=payload,
         validation_json=payload["validation"],
     )
+
+
+def refresh_generated_content_validation(draft):
+    validation = validate_generated_output(
+        {
+            "title": draft.title,
+            "meta_description": draft.meta_description,
+            "content": draft.body,
+            "faq_items": draft.faq_items,
+            "cta": draft.cta,
+        },
+        context=draft.prompt_context or {},
+    )
+    draft.validation_json = validation
+    draft.output_json = {
+        **(draft.output_json or {}),
+        "title": draft.title,
+        "meta_title": draft.meta_title,
+        "meta_description": draft.meta_description,
+        "content": draft.body,
+        "faq_items": draft.faq_items,
+        "keywords_used": draft.keywords_used,
+        "suggested_internal_links": draft.suggested_internal_links,
+        "cta": draft.cta,
+        "schema_json": draft.schema_json,
+        "validation": validation,
+    }
+    draft.save(update_fields=["validation_json", "output_json", "updated_at"])
+    return draft
+
+
+def _build_unique_slug(model_class, value, *, instance=None):
+    base_slug = slugify(value)[:45] or "generated-content"
+    slug = base_slug
+    index = 2
+    queryset = model_class.objects.all()
+    if instance and instance.pk:
+        queryset = queryset.exclude(pk=instance.pk)
+    while queryset.filter(slug=slug).exists():
+        slug = f"{base_slug[:40]}-{index}"
+        index += 1
+    return slug
+
+
+def apply_generated_content(draft):
+    if draft.output_type in {
+        GeneratedContent.OutputType.SERVICE_PAGE,
+        GeneratedContent.OutputType.LANDING_PAGE,
+    }:
+        service = draft.applied_service or Service()
+        service.title = draft.title
+        if not service.slug:
+            service.slug = _build_unique_slug(Service, draft.title, instance=service)
+        service.summary = draft.meta_description
+        service.value_proposition = draft.cta[:255]
+        service.body = draft.body
+        service.meta_title = draft.meta_title
+        service.meta_description = draft.meta_description
+        service.schema_json = draft.schema_json
+        service.save()
+        draft.applied_service = service
+    else:
+        article = draft.applied_article or Article()
+        article.title = draft.title
+        if not article.slug:
+            article.slug = _build_unique_slug(Article, draft.title, instance=article)
+        article.excerpt = draft.meta_description
+        article.content = draft.body
+        article.meta_title = draft.meta_title
+        article.meta_description = draft.meta_description
+        article.schema_json = draft.schema_json
+        article.status = Article.Status.DRAFT
+        article.save()
+        draft.applied_article = article
+
+    draft.status = GeneratedContent.Status.APPLIED
+    draft.save(update_fields=["applied_service", "applied_article", "status", "updated_at"])
+    return draft

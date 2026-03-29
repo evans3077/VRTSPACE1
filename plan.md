@@ -56,6 +56,22 @@ Status: complete
 - [x] Connect generator inputs to audit and SEO context
 - [x] Support reusable page, article, and answer-block outputs
 
+## Phase 6: Editorial Workflow and API Contract
+
+Status: complete
+
+- [x] Add review and edit workflow for generated drafts before publication
+- [x] Add a structured JSON endpoint for generated-content output
+- [x] Add apply-to-library actions so drafts can create or update `Article` and `Service` content records
+
+## Phase 7: Stakeholder PDF Reporting
+
+Status: complete
+
+- [x] Add a reusable audit PDF rendering service for completed audit runs
+- [x] Add inline view and download routes for audit PDF reports
+- [x] Expose PDF report actions from public audit results and the workspace dashboard
+
 ## Working Rule
 
 When a phase step is completed, update this file before starting the next step.

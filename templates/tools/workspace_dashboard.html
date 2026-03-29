@@ -15,6 +15,10 @@
                     <button type="submit" class="button button-primary">Run Workspace Audit</button>
                 </form>
                 <a class="button button-secondary" href="{% url 'content:workspace-content' %}">Open AI Content Engine</a>
+                {% if latest_audit %}
+                <a class="button button-secondary" href="{% url 'tools:audit-report-pdf' latest_audit.pk %}" target="_blank" rel="noopener">View Latest PDF</a>
+                <a class="button button-secondary" href="{% url 'tools:audit-report-pdf' latest_audit.pk %}?download=1">Download Latest PDF</a>
+                {% endif %}
                 {% if current_subscription and current_subscription.stripe_customer_id %}
                 <form method="post" action="{% url 'tools:workspace-billing-portal' %}">
                     {% csrf_token %}
@@ -263,7 +267,15 @@
                                 {% endif %}
                             </td>
                             <td style="padding: 0.8rem 0.4rem;">{{ item.audit.pages_crawled }}</td>
-                            <td style="padding: 0.8rem 0.4rem;">{{ item.audit.status|title }}</td>
+                            <td style="padding: 0.8rem 0.4rem;">
+                                {{ item.audit.status|title }}
+                                {% if item.audit.status == "completed" %}
+                                <div style="margin-top: 0.4rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                    <a href="{% url 'tools:audit-report-pdf' item.audit.pk %}" style="font-size: 0.8rem; color: var(--signal);">View PDF</a>
+                                    <a href="{% url 'tools:audit-report-pdf' item.audit.pk %}?download=1" style="font-size: 0.8rem; color: var(--signal);">Download</a>
+                                </div>
+                                {% endif %}
+                            </td>
                         </tr>
                         {% if item.change_report %}
                         <tr style="border-bottom: 1px solid #f1f5f9; background: rgba(15, 23, 42, 0.02);">

@@ -5,8 +5,8 @@ from django.urls import reverse
 from apps.leads.models import AuditRequest, ClientProject
 from apps.tools.models import AuditRun
 
-from .models import GeneratedContent
-from .services import create_generated_content, generate_content_payload
+from .models import Article, GeneratedContent, Service
+from .services import apply_generated_content, create_generated_content, generate_content_payload
 
 
 class GeneratedContentServiceTests(TestCase):
@@ -162,3 +162,101 @@ class GeneratedContentViewTests(TestCase):
         response = self.client.get(reverse("content:workspace-content-detail", args=[draft.pk]))
 
         self.assertEqual(response.status_code, 404)
+
+    def test_generated_content_update_saves_editor_changes(self):
+        draft = create_generated_content(
+            user=self.user,
+            project=self.project,
+            output_type=GeneratedContent.OutputType.ANSWER_BLOCK,
+            input_data={
+                "business_type": "auto dealership",
+                "location": "Nairobi",
+                "target_audience": "buyers comparing used vehicles",
+                "page_goal": "book a consultation",
+                "offer_summary": "used car sourcing support",
+                "target_keywords": ["used car dealership Nairobi"],
+                "search_intent": "commercial",
+            },
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("content:workspace-content-update", args=[draft.pk]),
+            {
+                "title": "Updated draft title",
+                "meta_title": "Updated meta title",
+                "meta_description": "Updated meta description",
+                "body": "auto dealership teams need a focused answer block.\n\nThis update is more specific.",
+                "cta": "Review the implementation plan",
+                "status": GeneratedContent.Status.REVIEWED,
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        draft.refresh_from_db()
+        self.assertEqual(draft.title, "Updated draft title")
+        self.assertEqual(draft.status, GeneratedContent.Status.REVIEWED)
+        self.assertIn("Review the implementation plan", draft.output_json["cta"])
+
+    def test_apply_generated_content_creates_article_or_service(self):
+        article_draft = create_generated_content(
+            user=self.user,
+            project=self.project,
+            output_type=GeneratedContent.OutputType.ARTICLE,
+            input_data={
+                "business_type": "auto dealership",
+                "location": "Nairobi",
+                "target_audience": "buyers comparing used vehicles",
+                "page_goal": "book a consultation",
+                "offer_summary": "used car sourcing support",
+                "target_keywords": ["used car dealership Nairobi"],
+                "search_intent": "commercial",
+            },
+        )
+        service_draft = create_generated_content(
+            user=self.user,
+            project=self.project,
+            output_type=GeneratedContent.OutputType.SERVICE_PAGE,
+            input_data={
+                "business_type": "auto dealership",
+                "location": "Nairobi",
+                "target_audience": "buyers comparing used vehicles",
+                "page_goal": "book a consultation",
+                "offer_summary": "used car sourcing support",
+                "target_keywords": ["used car dealership Nairobi"],
+                "search_intent": "commercial",
+            },
+        )
+
+        apply_generated_content(article_draft)
+        apply_generated_content(service_draft)
+
+        article_draft.refresh_from_db()
+        service_draft.refresh_from_db()
+        self.assertEqual(article_draft.status, GeneratedContent.Status.APPLIED)
+        self.assertIsInstance(article_draft.applied_article, Article)
+        self.assertEqual(service_draft.status, GeneratedContent.Status.APPLIED)
+        self.assertIsInstance(service_draft.applied_service, Service)
+
+    def test_generated_content_json_endpoint_returns_output_contract(self):
+        draft = create_generated_content(
+            user=self.user,
+            project=self.project,
+            output_type=GeneratedContent.OutputType.ARTICLE,
+            input_data={
+                "business_type": "auto dealership",
+                "location": "Nairobi",
+                "target_audience": "buyers comparing used vehicles",
+                "page_goal": "book a consultation",
+                "offer_summary": "used car sourcing support",
+                "target_keywords": ["used car dealership Nairobi"],
+                "search_intent": "commercial",
+            },
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("content:workspace-content-json", args=[draft.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertIn("title", response.json())
+        self.assertIn("faq_items", response.json())

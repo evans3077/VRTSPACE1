@@ -78,6 +78,20 @@ class GeneratedContent(TimestampedModel, SEOFieldsMixin):
         on_delete=models.SET_NULL,
         related_name="generated_content",
     )
+    applied_service = models.ForeignKey(
+        "content.Service",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="generated_drafts",
+    )
+    applied_article = models.ForeignKey(
+        "content.Article",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="generated_drafts",
+    )
     created_by = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         null=True,
