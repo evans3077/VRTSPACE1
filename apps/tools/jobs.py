@@ -31,10 +31,15 @@ def run_public_site_audit_job(audit_run_id):
         project = None
         if audit_run.audit_request_id and audit_run.status == AuditRun.Status.COMPLETED:
             from apps.leads.services import sync_client_project_from_audit_run
+            from apps.content.services import sync_project_editorial_tasks
+            from apps.seo.services import refresh_project_seo_intelligence
             from .notifications import deliver_workspace_audit_notifications
             from .reporting import create_audit_change_report
 
             project = sync_client_project_from_audit_run(audit_run)
+            if project and getattr(project, "seo_profile", None):
+                refresh_project_seo_intelligence(project)
+                sync_project_editorial_tasks(project)
             change_report = create_audit_change_report(audit_run, project=project)
             deliver_workspace_audit_notifications(
                 audit_run=audit_run,

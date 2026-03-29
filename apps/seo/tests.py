@@ -173,7 +173,11 @@ class SEOContextServiceTests(TestCase):
         self.assertTrue(opportunity_payload["page_map"])
         self.assertTrue(opportunity_payload["execution_queue"])
         self.assertGreaterEqual(opportunity_payload["value_summary"]["competitors_benchmarked"], 1)
+        first_task = opportunity_payload["execution_queue"][0]
+        self.assertTrue(first_task["edit_targets"])
+        self.assertTrue(first_task["edit_targets"][0]["changes"])
 
+    @override_settings(SERP_DISCOVERY_ENABLED=False)
     def test_get_or_build_seo_snapshot_reuses_existing_snapshot_for_same_inputs(self):
         audit_request = AuditRequest.objects.create(
             company_name="Northwind",
@@ -337,6 +341,7 @@ class WorkspaceSEOViewTests(TestCase):
         self.assertContains(response, "SEO Opportunity Roadmap")
         self.assertContains(response, "Keyword Opportunity Queue")
         self.assertContains(response, "Execution Queue")
+        self.assertContains(response, "Exact page edits")
         self.assertContains(response, "used car dealership Nairobi")
         self.assertContains(response, "SERP discovery queries used")
         self.assertContains(response, "No H1 tag detected.")

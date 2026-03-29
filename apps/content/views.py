@@ -11,8 +11,11 @@ from .models import GeneratedContent
 from .services import (
     apply_generated_content,
     create_generated_content,
+    get_editorial_task,
+    get_editorial_tasks,
     get_workspace_content_project,
     refresh_generated_content_validation,
+    sync_project_editorial_tasks,
 )
 
 
@@ -22,6 +25,8 @@ class WorkspaceGeneratedContentAccessMixin(LoginRequiredMixin):
             GeneratedContent.objects.select_related(
                 "project",
                 "source_audit_run",
+                "source_seo_snapshot",
+                "source_seo_opportunity_snapshot",
                 "created_by",
                 "applied_article",
                 "applied_service",
@@ -43,15 +48,22 @@ class WorkspaceGeneratedContentListView(LoginRequiredMixin, ListView):
         if not project:
             return GeneratedContent.objects.none()
         return (
-            GeneratedContent.objects.select_related("project", "source_audit_run")
+            GeneratedContent.objects.select_related(
+                "project",
+                "source_audit_run",
+                "source_seo_snapshot",
+                "source_seo_opportunity_snapshot",
+            )
             .filter(project=project)
             .order_by("-created_at")
         )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["project"] = get_workspace_content_project(self.request.user)
+        project = get_workspace_content_project(self.request.user)
+        context["project"] = project
         context["form"] = GeneratedContentRequestForm()
+        context["editorial_tasks"] = get_editorial_tasks(project)
         return context
 
 
@@ -66,6 +78,7 @@ class WorkspaceGeneratedContentCreateView(LoginRequiredMixin, View):
         if not form.is_valid():
             queryset = (
                 GeneratedContent.objects.select_related("project", "source_audit_run")
+                .select_related("source_seo_snapshot", "source_seo_opportunity_snapshot")
                 .filter(project=project)
                 .order_by("-created_at")
             )
@@ -76,6 +89,7 @@ class WorkspaceGeneratedContentCreateView(LoginRequiredMixin, View):
                     "project": project,
                     "generated_content_list": queryset,
                     "form": form,
+                    "editorial_tasks": get_editorial_tasks(project),
                 },
                 status=400,
             )
@@ -90,6 +104,51 @@ class WorkspaceGeneratedContentCreateView(LoginRequiredMixin, View):
         return redirect("content:workspace-content-detail", pk=draft.pk)
 
 
+class WorkspaceGeneratedContentFromSEOView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        project = get_workspace_content_project(request.user)
+        if not project:
+            messages.error(request, "Create or connect a workspace project before generating drafts.")
+            return redirect("tools:workspace-dashboard")
+
+        brief_key = request.POST.get("brief_key", "").strip()
+        task = get_editorial_task(project, brief_key)
+        if not task:
+            messages.error(request, "That SEO brief is no longer available. Refresh the SEO hub and try again.")
+            return redirect("content:workspace-content")
+        brief = task.brief_json or {}
+
+        draft = create_generated_content(
+            user=request.user,
+            project=project,
+            output_type=brief["output_type"],
+            input_data={
+                "business_type": brief["business_type"],
+                "location": brief["location"],
+                "target_audience": brief["target_audience"],
+                "page_goal": brief["page_goal"],
+                "offer_summary": brief["offer_summary"],
+                "target_keywords": [brief["primary_keyword"], *brief.get("secondary_keywords", [])],
+                "search_intent": brief["search_intent"],
+                "seo_brief": brief,
+                "source_editorial_task": task,
+            },
+        )
+        messages.success(request, "SEO-driven content brief converted into a draft.")
+        return redirect("content:workspace-content-detail", pk=draft.pk)
+
+
+class WorkspaceEditorialQueueSyncView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        project = get_workspace_content_project(request.user)
+        if not project:
+            messages.error(request, "Create or connect a workspace project before syncing the editorial queue.")
+            return redirect("tools:workspace-dashboard")
+        tasks = sync_project_editorial_tasks(project)
+        messages.success(request, f"Editorial queue synced. {len(tasks)} active item(s) are now tracked.")
+        return redirect("content:workspace-content")
+
+
 class WorkspaceGeneratedContentDetailView(WorkspaceGeneratedContentAccessMixin, DetailView):
     model = GeneratedContent
     template_name = "content/generated_content_detail.html"
@@ -99,6 +158,8 @@ class WorkspaceGeneratedContentDetailView(WorkspaceGeneratedContentAccessMixin, 
         return GeneratedContent.objects.select_related(
             "project",
             "source_audit_run",
+            "source_seo_snapshot",
+            "source_seo_opportunity_snapshot",
             "created_by",
             "applied_article",
             "applied_service",

@@ -101,7 +101,11 @@ Status: in progress
 - [x] Extend the SEO layer into deeper keyword planning, page mapping, and execution workflows
 - [x] Turn real competitor benchmarks into a stored SEO opportunity snapshot with value reporting, keyword queue, page map, and execution queue
 - [x] Add localized SERP-backed competitor discovery with persisted query/ranking evidence and merge it into the SEO benchmark flow
-- [ ] Connect SEO page-map and execution outputs directly into content generation and future SEO automation workflows
+- [x] Connect SEO page-map and execution outputs directly into content generation so the content workspace can generate drafts from SEO-backed briefs instead of manual prompts alone
+- [x] Turn SEO queue items into structured content briefs with title options, outlines, FAQ targets, internal-link targets, and competitor evidence stored on each generated draft
+- [x] Turn SEO briefs into tracked editorial queue items so recurring SEO refreshes and audit completions can keep a live content operations queue in sync with the latest SEO opportunities
+- [x] Make the SEO execution queue action-based by attaching page-level edit targets, exact change scopes, and ordered implementation steps instead of generic advice only
+- [ ] Add model-backed refinement adapters so briefs, titles, outlines, and FAQs can be upgraded by stronger models without losing the deterministic fallback path
 - [ ] Add a production-grade secondary discovery provider or fallback path so competitor discovery is not tied to a single SERP source
 
 ## Working Rule

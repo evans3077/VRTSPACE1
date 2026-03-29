@@ -2,6 +2,7 @@ from collections import Counter, defaultdict
 from urllib.parse import urlparse
 
 import requests
+from django.utils.text import slugify
 
 from .discovery import discover_serp_competitors
 from apps.tools.services import (
@@ -439,6 +440,127 @@ def _site_pages_for_type(site_structure, page_type):
     return [page for page in site_structure.get("pages", []) if page.get("page_type") == page_type]
 
 
+def _page_lookup(site_structure):
+    return {
+        page.get("url"): page
+        for page in site_structure.get("pages", [])
+        if page.get("url")
+    }
+
+
+def _link_source_candidates(site_structure, *, exclude_urls=None, preferred_types=None, limit=2):
+    exclude_urls = set(exclude_urls or [])
+    preferred_types = preferred_types or ("home", "service", "location")
+    candidates = []
+    for page in site_structure.get("pages", []):
+        if page.get("url") in exclude_urls:
+            continue
+        if page.get("page_type") in preferred_types:
+            candidates.append(page.get("url"))
+        if len(candidates) >= limit:
+            break
+    return candidates
+
+
+def _suggested_url(profile, page_type, keyword):
+    domain = (profile.project.normalized_domain or "").strip("/")
+    slug = slugify(keyword or f"{profile.primary_service or page_type} {profile.location}")
+    if not domain:
+        return f"/{slug}/"
+    return f"https://{domain}/{slug}/"
+
+
+def _build_issue_changes(*, page_type, keyword, issue_title, recommended_fix, link_sources):
+    page_type_label = _page_type_label(page_type)
+    lower_title = (issue_title or "").lower()
+    changes = []
+
+    if "h1" in lower_title:
+        changes.extend(
+            [
+                f"Replace or add the main H1 so it clearly targets '{keyword}' and matches the page purpose.",
+                "Update the opening paragraph so the first 2-3 sentences reinforce the same search intent.",
+                "Check the template renders only one H1 on the page.",
+            ]
+        )
+    elif "title tag" in lower_title or "meta title" in lower_title:
+        changes.extend(
+            [
+                f"Rewrite the <title> tag to include '{keyword}' closer to the front.",
+                "Make sure the meta description supports the same commercial or local intent.",
+                "Keep the title, H1, and CTA aligned to the same promise.",
+            ]
+        )
+    elif "response time" in lower_title or "slow" in lower_title or "performance" in lower_title:
+        changes.extend(
+            [
+                "Audit the page template and assets serving this URL, starting with large images, scripts, and server response time.",
+                "Enable or tighten caching, compress media, and defer non-critical scripts for this page template.",
+                "Re-test this exact URL after deployment to confirm the response-time improvement.",
+            ]
+        )
+    else:
+        changes.extend(
+            [
+                f"Update the {page_type_label} page so the title tag, H1, and intro explicitly target '{keyword}'.",
+                f"Apply the recommendation directly on the affected {page_type_label} content instead of a site-wide generic update.",
+                recommended_fix or f"Improve the page so it better supports {keyword}.",
+            ]
+        )
+
+    if page_type == "faq":
+        changes.append("Add 4-6 FAQ blocks with direct answers and validate FAQ schema on the page.")
+    if page_type in {"service", "location", "pricing", "inventory"}:
+        changes.append("Add proof blocks, CTA placement above the fold, and a local modifier where relevant.")
+    if link_sources:
+        changes.append(f"Add internal links to this page from {', '.join(link_sources)}.")
+    return changes[:5]
+
+
+def _build_edit_targets(*, profile, site_structure, urls, page_type, keyword, issue_title="", recommended_fix="", missing=False):
+    lookup = _page_lookup(site_structure)
+    targets = []
+    if not urls and missing:
+        suggested = _suggested_url(profile, page_type, keyword)
+        link_sources = _link_source_candidates(site_structure)
+        targets.append(
+            {
+                "url": suggested,
+                "page_title": f"New {_page_type_label(page_type).title()} page",
+                "page_type": page_type,
+                "change_scope": "new_page",
+                "changes": _build_issue_changes(
+                    page_type=page_type,
+                    keyword=keyword,
+                    issue_title=issue_title or f"Missing {page_type} page",
+                    recommended_fix=recommended_fix,
+                    link_sources=link_sources,
+                ),
+            }
+        )
+        return targets
+
+    for url in urls[:3]:
+        page = lookup.get(url, {})
+        link_sources = _link_source_candidates(site_structure, exclude_urls={url})
+        targets.append(
+            {
+                "url": url,
+                "page_title": page.get("title") or page.get("h1") or url,
+                "page_type": page.get("page_type") or page_type or "page",
+                "change_scope": "existing_page",
+                "changes": _build_issue_changes(
+                    page_type=page.get("page_type") or page_type or "page",
+                    keyword=keyword,
+                    issue_title=issue_title,
+                    recommended_fix=recommended_fix,
+                    link_sources=link_sources,
+                ),
+            }
+        )
+    return targets
+
+
 def build_structural_recommendations(*, profile, site_structure, competitor_snapshots):
     rule = get_industry_rule(profile.business_type)
     site_summary = site_structure.get("summary", {})
@@ -793,7 +915,7 @@ def build_keyword_opportunities(profile, site_structure, competitor_snapshots, p
     return deduped[:10]
 
 
-def build_execution_queue(profile, recommendations, page_map, keyword_opportunities):
+def build_execution_queue(profile, site_structure, recommendations, page_map, keyword_opportunities):
     tasks = []
     keyword_by_type = defaultdict(list)
     for item in keyword_opportunities:
@@ -818,10 +940,20 @@ def build_execution_queue(profile, recommendations, page_map, keyword_opportunit
                 "target_urls": item["target_urls"],
                 "linked_keywords": keyword_by_type.get(item["page_type"], [])[:3],
                 "why_now": item["reason"],
+                "edit_targets": _build_edit_targets(
+                    profile=profile,
+                    site_structure=site_structure,
+                    urls=item["target_urls"],
+                    page_type=item["page_type"],
+                    keyword=item["target_keyword"],
+                    issue_title=item["title"] if item.get("title") else f"{item['page_type_label']} coverage",
+                    recommended_fix=item["action"],
+                    missing=item["status"] == "missing",
+                ),
                 "action_steps": [
                     item["action"],
-                    "Use a direct answer intro, proof blocks, FAQ coverage, and clear internal links.",
-                    "Align the title, H1, and CTA with the target keyword and business goal.",
+                    "Edit the listed page elements directly on each target URL instead of applying a generic site-wide change.",
+                    "Re-run the audit and SEO refresh after publishing the update so the queue can verify the result.",
                 ],
                 "competitor_evidence": item["competitor_evidence"][:2],
             }
@@ -840,9 +972,19 @@ def build_execution_queue(profile, recommendations, page_map, keyword_opportunit
                 "target_urls": recommendation.get("where_to_apply", []),
                 "linked_keywords": recommendation.get("example_keywords", [])[:2],
                 "why_now": recommendation.get("why_it_matters", ""),
+                "edit_targets": _build_edit_targets(
+                    profile=profile,
+                    site_structure=site_structure,
+                    urls=recommendation.get("where_to_apply", []),
+                    page_type=recommendation.get("category_key") or recommendation.get("category", "page").lower().replace("-", "_").replace(" ", "_"),
+                    keyword=(recommendation.get("example_keywords") or build_local_keyword_set(profile))[0],
+                    issue_title=recommendation.get("title", "SEO optimization task"),
+                    recommended_fix=recommendation.get("recommended_fix", ""),
+                    missing=False,
+                ),
                 "action_steps": [
                     recommendation.get("recommended_fix", ""),
-                    "Apply the change to every affected page in the fix scope.",
+                    "Update the exact fields called out under each page target: title, H1, intro, schema, media, or internal links as relevant.",
                     "Re-run the audit and SEO refresh to validate the improvement.",
                 ],
                 "competitor_evidence": recommendation.get("competitor_evidence", [])[:2],
@@ -960,7 +1102,7 @@ def build_seo_opportunity_payload(project, profile, audit_run, context_snapshot=
     recommendations = context_payload.get("recommendations", [])
     page_map = build_page_map(profile, site_structure, competitor_snapshots)
     keyword_opportunities = build_keyword_opportunities(profile, site_structure, competitor_snapshots, page_map)
-    execution_queue = build_execution_queue(profile, recommendations, page_map, keyword_opportunities)
+    execution_queue = build_execution_queue(profile, site_structure, recommendations, page_map, keyword_opportunities)
     return {
         "value_summary": build_value_summary(competitor_snapshots, keyword_opportunities, page_map, execution_queue),
         "keyword_opportunities": keyword_opportunities,
@@ -1014,6 +1156,33 @@ def get_or_build_seo_opportunity_snapshot(*, project, profile, audit_run, contex
             context_snapshot=context_snapshot,
         ),
     )
+
+
+def refresh_project_seo_intelligence(project):
+    profile = getattr(project, "seo_profile", None)
+    if not profile or not can_generate_seo_snapshot(project):
+        return None, None
+
+    latest_audit = project.latest_audit_run
+    context_snapshot = SEOContextSnapshot.objects.create(
+        project=project,
+        profile=profile,
+        source_audit_run=latest_audit,
+        output_json=build_seo_context_payload(project, profile, latest_audit),
+    )
+    opportunity_snapshot = SEOOpportunitySnapshot.objects.create(
+        project=project,
+        profile=profile,
+        source_audit_run=latest_audit,
+        source_context_snapshot=context_snapshot,
+        output_json=build_seo_opportunity_payload(
+            project,
+            profile,
+            latest_audit,
+            context_snapshot=context_snapshot,
+        ),
+    )
+    return context_snapshot, opportunity_snapshot
 
 
 def can_generate_seo_snapshot(project):

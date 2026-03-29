@@ -31,6 +31,11 @@
                 <h3>{{ generated_content_list|length }}</h3>
                 <p>Stored drafts stay editable and separate from published content.</p>
             </article>
+            <article class="system-card">
+                <p class="eyebrow">Editorial Queue</p>
+                <h3>{{ editorial_tasks|length }}</h3>
+                <p>Tracked SEO-driven content operations with queue status and draft progress.</p>
+            </article>
         </div>
 
         <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2rem; align-items: start;">
@@ -66,10 +71,87 @@
                     <div>SEO fields: title, meta title, meta description, schema JSON</div>
                     <div>Body structure: answer-first intro, section layout, FAQ, CTA</div>
                     <div>Workspace context: audit recommendations, score gaps, internal links</div>
+                    <div>SEO briefing: title options, outline, FAQ targets, keyword targets, competitor evidence</div>
                     <div>Validation: keyword coverage, CTA presence, FAQ count, generic-risk check</div>
                 </div>
             </article>
         </div>
+
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Editorial Queue</p>
+                <h2 style="font-size: 2rem;">Generate from the SEO roadmap</h2>
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <form method="post" action="{% url 'content:workspace-content-editorial-sync' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button button-secondary">Sync editorial queue</button>
+                </form>
+            </div>
+            <div style="display: grid; gap: 1rem;">
+                {% for task in editorial_tasks %}
+                {% with brief=task.brief_json %}
+                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
+                        <strong>{{ brief.primary_keyword }}</strong>
+                        <span class="score-pill score-high">{{ task.get_status_display }}</span>
+                    </div>
+                    <div style="margin-top: 0.35rem; color: #475569; font-size: 0.82rem;">
+                        Output: {{ brief.output_type_label|title }} | Priority {{ task.priority_score }}
+                    </div>
+                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.9rem; line-height: 1.5;">
+                        {{ brief.reason }}
+                    </div>
+                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
+                        <strong style="color: #0f172a;">Recommended action:</strong> {{ brief.action }}
+                    </div>
+                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
+                        <strong style="color: #0f172a;">Title options:</strong> {{ brief.title_options|join:", " }}
+                    </div>
+                    {% if brief.target_urls %}
+                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
+                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Target URLs</strong>
+                        {% for url in brief.target_urls %}
+                        <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if brief.competitor_evidence %}
+                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
+                        <strong style="color: #0f172a;">Competitor evidence:</strong>
+                        {{ brief.competitor_evidence.0.title|default:brief.competitor_evidence.0.url }}
+                    </div>
+                    {% endif %}
+                    {% if task.latest_generated_content %}
+                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
+                        Latest draft:
+                        <a href="{% url 'content:workspace-content-detail' task.latest_generated_content.pk %}" style="color: var(--signal);">
+                            {{ task.latest_generated_content.title }}
+                        </a>
+                    </div>
+                    {% endif %}
+                    <div style="margin-top: 1rem;">
+                        <form method="post" action="{% url 'content:workspace-content-generate-from-seo' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="brief_key" value="{{ task.brief_key }}">
+                            <button type="submit" class="button button-primary">
+                                {% if task.status == "queued" or task.status == "stale" %}
+                                Generate draft from SEO brief
+                                {% else %}
+                                Regenerate draft from SEO brief
+                                {% endif %}
+                            </button>
+                        </form>
+                    </div>
+                </div>
+                {% endwith %}
+                {% empty %}
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                    Refresh the SEO hub first to build the content brief queue from the current page map and keyword opportunities.
+                </div>
+                {% endfor %}
+            </div>
+        </article>
 
         <article class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">

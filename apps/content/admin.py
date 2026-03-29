@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Article, GeneratedContent, Service
+from .models import Article, ContentEditorialTask, GeneratedContent, Service
 
 
 @admin.register(Service)
@@ -27,5 +27,13 @@ class GeneratedContentAdmin(admin.ModelAdmin):
     @admin.display(description="Applied Target")
     def applied_target(self, obj):
         return obj.applied_service or obj.applied_article or "-"
+
+
+@admin.register(ContentEditorialTask)
+class ContentEditorialTaskAdmin(admin.ModelAdmin):
+    list_display = ("title", "project", "status", "output_type", "priority_score", "updated_at")
+    list_filter = ("status", "output_type")
+    search_fields = ("title", "project__name", "brief_key")
+    readonly_fields = ("brief_json", "metadata")
 
 # Register your models here.
