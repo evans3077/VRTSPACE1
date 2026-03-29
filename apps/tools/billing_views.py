@@ -17,6 +17,8 @@ from apps.leads.billing import (
     handle_stripe_webhook_event,
     verify_stripe_signature,
 )
+from apps.tools.automation import update_workspace_schedule
+from apps.tools.models import WorkspaceAuditSchedule
 
 from .jobs import enqueue_public_site_audit
 
@@ -84,6 +86,32 @@ class WorkspaceAuditRerunView(LoginRequiredMixin, View):
         enqueue_public_site_audit(audit_run.pk)
         messages.success(request, "Workspace rerun started.")
         return redirect("tools:audit-result", pk=audit_run.pk)
+
+
+class WorkspaceAuditScheduleView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        cadence = request.POST.get("cadence", WorkspaceAuditSchedule.Cadence.WEEKLY)
+        valid_cadences = {choice[0] for choice in WorkspaceAuditSchedule.Cadence.choices}
+        if cadence not in valid_cadences:
+            messages.error(request, "That recurring audit cadence is not available.")
+            return redirect("tools:workspace-dashboard")
+
+        is_active = request.POST.get("is_active") == "1"
+        try:
+            schedule = update_workspace_schedule(
+                user=request.user,
+                cadence=cadence,
+                is_active=is_active,
+            )
+        except BillingError as exc:
+            messages.error(request, str(exc))
+            return redirect("tools:workspace-dashboard")
+
+        if schedule.is_active:
+            messages.success(request, f"Recurring audits are active on a {schedule.get_cadence_display().lower()} cadence.")
+        else:
+            messages.info(request, "Recurring audits are paused for this workspace.")
+        return redirect("tools:workspace-dashboard")
 
 
 @method_decorator(csrf_exempt, name="dispatch")

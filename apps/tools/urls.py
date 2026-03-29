@@ -3,6 +3,7 @@ from django.urls import path
 from .billing_views import (
     StripeWebhookView,
     WorkspaceAuditRerunView,
+    WorkspaceAuditScheduleView,
     WorkspaceBillingCancelView,
     WorkspaceBillingPortalView,
     WorkspaceBillingSuccessView,
@@ -36,6 +37,7 @@ urlpatterns = [
     path("workspace/billing/success/", WorkspaceBillingSuccessView.as_view(), name="workspace-billing-success"),
     path("workspace/billing/cancel/", WorkspaceBillingCancelView.as_view(), name="workspace-billing-cancel"),
     path("workspace/audits/rerun/", WorkspaceAuditRerunView.as_view(), name="workspace-audit-rerun"),
+    path("workspace/audits/schedule/", WorkspaceAuditScheduleView.as_view(), name="workspace-audit-schedule"),
     path("auth/google/start/", GoogleOAuthStartView.as_view(), name="google-oauth-start"),
     path("auth/google/callback/", GoogleOAuthCallbackView.as_view(), name="google-oauth-callback"),
     path("billing/stripe/webhook/", StripeWebhookView.as_view(), name="stripe-webhook"),

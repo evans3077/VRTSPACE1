@@ -1,0 +1,99 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="padding-bottom: 2rem;">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">AI Content Engine</p>
+            <h1 style="max-width: none;">Generate draft content from your workspace context</h1>
+            <p class="section-text" style="max-width: 760px;">
+                Create structured drafts for service pages, landing pages, articles, and answer blocks using your current audit data and business inputs.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="packages-section" style="padding-top: 0;">
+    <div class="container" style="display: grid; gap: 2rem;">
+        <div class="system-grid">
+            <article class="system-card">
+                <p class="eyebrow">Workspace</p>
+                <h3>{{ project.name|default:"No linked project" }}</h3>
+                <p>{{ project.normalized_domain|default:"Connect an audit-backed project to generate content." }}</p>
+            </article>
+            <article class="system-card">
+                <p class="eyebrow">Latest Audit</p>
+                <h3>{% if project and project.latest_audit_run %}{{ project.latest_audit_run.overall_score }}{% else %}-{% endif %}</h3>
+                <p>Generation uses the latest saved recommendations and score breakdown.</p>
+            </article>
+            <article class="system-card">
+                <p class="eyebrow">Drafts</p>
+                <h3>{{ generated_content_list|length }}</h3>
+                <p>Stored drafts stay editable and separate from published content.</p>
+            </article>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2rem; align-items: start;">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Generate Draft</p>
+                    <h2 style="font-size: 2rem;">Build a new structured output</h2>
+                </div>
+                <form method="post" action="{% url 'content:workspace-content-generate' %}" style="display: grid; gap: 1rem;">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <label style="display: grid; gap: 0.35rem;">
+                        <span style="font-weight: 700;">{{ field.label }}</span>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <span style="font-size: 0.85rem; color: #475569;">{{ field.help_text }}</span>
+                        {% endif %}
+                        {% for error in field.errors %}
+                        <span style="font-size: 0.85rem; color: #b91c1c;">{{ error }}</span>
+                        {% endfor %}
+                    </label>
+                    {% endfor %}
+                    <button type="submit" class="button button-primary">Generate draft</button>
+                </form>
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Output Contract</p>
+                    <h2 style="font-size: 2rem;">What the generator stores</h2>
+                </div>
+                <div style="display: grid; gap: 0.75rem; color: #475569;">
+                    <div>SEO fields: title, meta title, meta description, schema JSON</div>
+                    <div>Body structure: answer-first intro, section layout, FAQ, CTA</div>
+                    <div>Workspace context: audit recommendations, score gaps, internal links</div>
+                    <div>Validation: keyword coverage, CTA presence, FAQ count, generic-risk check</div>
+                </div>
+            </article>
+        </div>
+
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Saved Drafts</p>
+                <h2 style="font-size: 2rem;">Generated content history</h2>
+            </div>
+            <div style="display: grid; gap: 0.75rem;">
+                {% for item in generated_content_list %}
+                <a href="{% url 'content:workspace-content-detail' item.pk %}" style="display: block; padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); text-decoration: none; color: inherit;">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
+                        <strong>{{ item.title }}</strong>
+                        <span class="score-pill score-high">{{ item.get_output_type_display }}</span>
+                    </div>
+                    <div style="margin-top: 0.35rem; color: #475569; font-size: 0.9rem;">
+                        {{ item.business_type }}{% if item.location %} in {{ item.location }}{% endif %} | Status: {{ item.get_status_display }}
+                    </div>
+                </a>
+                {% empty %}
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                    No generated drafts yet.
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+    </div>
+</section>
+{% endblock %}

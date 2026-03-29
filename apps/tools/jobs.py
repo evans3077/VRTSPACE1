@@ -22,10 +22,13 @@ def _run_public_site_audit_job(audit_run_id):
         audit_run = AuditRun.objects.select_related("audit_request").get(pk=audit_run_id)
         run_public_site_audit(audit_run=audit_run)
 
+        project = None
         if audit_run.audit_request_id and audit_run.status == AuditRun.Status.COMPLETED:
             from apps.leads.services import sync_client_project_from_audit_run
+            from .reporting import create_audit_change_report
 
-            sync_client_project_from_audit_run(audit_run)
+            project = sync_client_project_from_audit_run(audit_run)
+            create_audit_change_report(audit_run, project=project)
     except Exception as exc:
         try:
             audit_run = AuditRun.objects.get(pk=audit_run_id)

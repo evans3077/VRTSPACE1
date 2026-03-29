@@ -4,17 +4,22 @@ import time
 import hmac
 import hashlib
 import calendar
+from datetime import timedelta
 from unittest.mock import patch
 
 from django.contrib.auth import get_user_model
+from django.core.management import call_command
 from django.test import TestCase, override_settings
 from django.urls import reverse
+from django.utils import timezone
 
 from apps.leads.billing import BillingError, create_checkout_session
 from apps.leads.models import AuditRequest, ClientProject, UsageRecord, WorkspacePlan, WorkspaceSubscription
+from apps.tools.automation import process_due_workspace_schedules
+from apps.tools.reporting import create_audit_change_report
 
 from .admin_utils import get_service_recommendations
-from .models import AuditIssue, AuditPage, AuditRun
+from .models import AuditChangeReport, AuditIssue, AuditPage, AuditRun, WorkspaceAuditSchedule
 from .recommendations import build_audit_summary
 from .scoring import apply_audit_scores
 from .services import get_pagespeed_api_key, run_public_site_audit
@@ -822,3 +827,235 @@ class WorkspaceBillingTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response["Location"], reverse("tools:workspace-dashboard"))
         self.assertEqual(AuditRun.objects.count(), 1)
+
+
+class WorkspaceAutomationTests(TestCase):
+    @override_settings(AUDIT_TIER_ENFORCEMENT=True)
+    def test_workspace_can_enable_recurring_schedule_on_supported_plan(self):
+        user = get_user_model().objects.create_user(
+            username="automation@example.com",
+            email="automation@example.com",
+            password="strongpass123",
+        )
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="automation@example.com",
+            website="https://example.com",
+        )
+        latest_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=70,
+            status=AuditRun.Status.COMPLETED,
+        )
+        ClientProject.objects.create(
+            owner=user,
+            audit_request=audit_request,
+            latest_audit_run=latest_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="automation@example.com",
+            latest_score=70,
+        )
+        growth_plan = WorkspacePlan.objects.get(slug="growth")
+        WorkspaceSubscription.objects.create(
+            user=user,
+            plan=growth_plan,
+            status=WorkspaceSubscription.Status.ACTIVE,
+        )
+
+        self.client.force_login(user)
+        response = self.client.post(
+            reverse("tools:workspace-audit-schedule"),
+            {"cadence": "weekly", "is_active": "1"},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        schedule = WorkspaceAuditSchedule.objects.get()
+        self.assertTrue(schedule.is_active)
+        self.assertEqual(schedule.cadence, WorkspaceAuditSchedule.Cadence.WEEKLY)
+        self.assertIsNotNone(schedule.next_run_at)
+
+    @override_settings(AUDIT_TIER_ENFORCEMENT=True)
+    def test_due_schedule_processing_queues_workspace_rerun(self):
+        user = get_user_model().objects.create_user(
+            username="scheduled@example.com",
+            email="scheduled@example.com",
+            password="strongpass123",
+        )
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="scheduled@example.com",
+            website="https://example.com",
+        )
+        previous_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=72,
+            status=AuditRun.Status.COMPLETED,
+        )
+        project = ClientProject.objects.create(
+            owner=user,
+            audit_request=audit_request,
+            latest_audit_run=previous_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="scheduled@example.com",
+            latest_score=72,
+        )
+        growth_plan = WorkspacePlan.objects.get(slug="growth")
+        WorkspaceSubscription.objects.create(
+            user=user,
+            plan=growth_plan,
+            status=WorkspaceSubscription.Status.ACTIVE,
+        )
+        schedule = WorkspaceAuditSchedule.objects.create(
+            project=project,
+            cadence=WorkspaceAuditSchedule.Cadence.WEEKLY,
+            is_active=True,
+            next_run_at=timezone.now() - timedelta(minutes=5),
+        )
+
+        queued_ids = []
+        summary = process_due_workspace_schedules(
+            now=timezone.now(),
+            enqueue_fn=queued_ids.append,
+        )
+
+        schedule.refresh_from_db()
+        self.assertEqual(summary["queued"], 1)
+        self.assertEqual(summary["failed"], 0)
+        self.assertEqual(len(queued_ids), 1)
+        self.assertEqual(schedule.last_audit_run_id, queued_ids[0])
+        self.assertIsNotNone(schedule.last_run_at)
+        self.assertGreater(AuditRun.objects.count(), 1)
+        self.assertEqual(UsageRecord.objects.get(user=user, metric=UsageRecord.Metric.AUDIT_RUN).quantity, 1)
+
+    @override_settings(AUDIT_TIER_ENFORCEMENT=True)
+    def test_free_plan_cannot_enable_recurring_schedule(self):
+        user = get_user_model().objects.create_user(
+            username="freeautomation@example.com",
+            email="freeautomation@example.com",
+            password="strongpass123",
+        )
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="freeautomation@example.com",
+            website="https://example.com",
+        )
+        latest_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=70,
+            status=AuditRun.Status.COMPLETED,
+        )
+        ClientProject.objects.create(
+            owner=user,
+            audit_request=audit_request,
+            latest_audit_run=latest_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="freeautomation@example.com",
+            latest_score=70,
+        )
+
+        self.client.force_login(user)
+        response = self.client.post(
+            reverse("tools:workspace-audit-schedule"),
+            {"cadence": "weekly", "is_active": "1"},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertFalse(WorkspaceAuditSchedule.objects.exists())
+
+
+class AuditReportingTests(TestCase):
+    def test_change_report_tracks_new_and_resolved_issues(self):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="reporting@example.com",
+            website="https://example.com",
+        )
+        previous_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=60,
+            technical_score=58,
+            on_page_score=62,
+            status=AuditRun.Status.COMPLETED,
+            pages_crawled=4,
+        )
+        latest_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=75,
+            technical_score=76,
+            on_page_score=70,
+            status=AuditRun.Status.COMPLETED,
+            pages_crawled=6,
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            latest_audit_run=latest_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="reporting@example.com",
+            latest_score=75,
+        )
+        previous_page = AuditPage.objects.create(audit_run=previous_run, url="https://example.com/about/", status_code=200)
+        latest_page = AuditPage.objects.create(audit_run=latest_run, url="https://example.com/about/", status_code=200)
+        new_page = AuditPage.objects.create(audit_run=latest_run, url="https://example.com/contact/", status_code=200)
+
+        AuditIssue.objects.create(
+            audit_run=previous_run,
+            page=previous_page,
+            code="missing_title",
+            category=AuditIssue.Category.ON_PAGE,
+            severity=AuditIssue.Severity.HIGH,
+            message="Page title is missing.",
+            recommendation="Add a unique page title.",
+        )
+        AuditIssue.objects.create(
+            audit_run=latest_run,
+            page=latest_page,
+            code="slow_response",
+            category=AuditIssue.Category.PERFORMANCE,
+            severity=AuditIssue.Severity.MEDIUM,
+            message="Page response time appears slow.",
+            recommendation="Improve response time.",
+        )
+        AuditIssue.objects.create(
+            audit_run=latest_run,
+            page=new_page,
+            code="missing_h1",
+            category=AuditIssue.Category.ON_PAGE,
+            severity=AuditIssue.Severity.HIGH,
+            message="No H1 tag detected.",
+            recommendation="Add a single H1.",
+        )
+
+        report = create_audit_change_report(latest_run, project=project, previous_audit_run=previous_run)
+
+        self.assertEqual(report.overall_score_delta, 15)
+        self.assertEqual(report.pages_crawled_delta, 2)
+        self.assertEqual(report.new_issue_count, 2)
+        self.assertEqual(report.resolved_issue_count, 1)
+        self.assertIn("improved by 15 points", report.summary["headline"])
+        self.assertEqual(report.summary["new_issue_categories"]["on_page"], 1)
+        self.assertEqual(report.summary["resolved_issue_categories"]["on_page"], 1)
+
+    def test_schedule_command_uses_processing_service(self):
+        with patch("apps.tools.management.commands.process_workspace_schedules.process_due_workspace_schedules") as mocked_process:
+            mocked_process.return_value = {"processed": 1, "queued": 1, "skipped": 0, "failed": 0}
+            call_command("process_workspace_schedules")
+
+        mocked_process.assert_called_once()

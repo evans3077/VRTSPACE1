@@ -37,23 +37,24 @@ Status: complete
 - [x] Add plans, subscriptions, and usage tracking
 - [x] Gate audits, history, and premium recommendation features
 - [x] Add webhook-driven payment verification
-- [ ] Finish live Stripe setup on Render with real `price_...` IDs for `STRIPE_PRICE_STARTER`, `STRIPE_PRICE_GROWTH`, `STRIPE_PRICE_AUTHORITY`, and `STRIPE_PRICE_ENTERPRISE`
+- [x] Finish live Stripe setup on Render with real `price_...` IDs for `STRIPE_PRICE_STARTER`, `STRIPE_PRICE_GROWTH`, `STRIPE_PRICE_AUTHORITY`, and `STRIPE_PRICE_ENTERPRISE`
 
 ## Phase 4: Automation and Reporting
 
-Status: pending
+Status: complete
 
-- [ ] Add async audit reruns and recurring reports
-- [ ] Add notification and change-detection logic
-- [ ] Make automation plan-aware
+- [x] Add async audit reruns and recurring reports
+- [x] Add notification and change-detection logic
+- [x] Make automation plan-aware
+- [x] Add a Render-friendly management command for recurring audit processing: `python manage.py process_workspace_schedules`
 
 ## Phase 5: AI Content Generation
 
-Status: pending
+Status: complete
 
-- [ ] Add generated-content models and service layer
-- [ ] Connect generator inputs to audit and SEO context
-- [ ] Support reusable page, article, and answer-block outputs
+- [x] Add generated-content models and service layer
+- [x] Connect generator inputs to audit and SEO context
+- [x] Support reusable page, article, and answer-block outputs
 
 ## Working Rule
 

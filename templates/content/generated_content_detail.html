@@ -1,0 +1,89 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="padding-bottom: 2rem;">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Generated Draft</p>
+            <h1 style="max-width: none;">{{ generated_content.title }}</h1>
+            <p class="section-text" style="max-width: 760px;">
+                {{ generated_content.get_output_type_display }} for {{ generated_content.business_type }}{% if generated_content.location %} in {{ generated_content.location }}{% endif %}.
+            </p>
+            <div style="margin-top: 1rem;">
+                <a class="button button-secondary" href="{{ back_url }}">Back to drafts</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="packages-section" style="padding-top: 0;">
+    <div class="container" style="display: grid; gap: 2rem;">
+        <div class="system-grid">
+            <article class="system-card">
+                <p class="eyebrow">Meta Title</p>
+                <h3>{{ generated_content.meta_title }}</h3>
+            </article>
+            <article class="system-card">
+                <p class="eyebrow">Meta Description</p>
+                <p>{{ generated_content.meta_description }}</p>
+            </article>
+            <article class="system-card">
+                <p class="eyebrow">CTA</p>
+                <p>{{ generated_content.cta }}</p>
+            </article>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2rem; align-items: start;">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Draft Body</p>
+                    <h2 style="font-size: 2rem;">Structured output</h2>
+                </div>
+                <pre style="white-space: pre-wrap; font-family: inherit; line-height: 1.6; margin: 0;">{{ generated_content.body }}</pre>
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Validation</p>
+                    <h2 style="font-size: 2rem;">Quality checks</h2>
+                </div>
+                <div style="display: grid; gap: 0.65rem;">
+                    <div>Passes checks: <strong>{{ generated_content.validation_json.passes|yesno:"Yes,No" }}</strong></div>
+                    <div>Keyword coverage: <strong>{{ generated_content.validation_json.keyword_coverage }}/{{ generated_content.validation_json.keyword_target }}</strong></div>
+                    <div>FAQ section: <strong>{{ generated_content.validation_json.has_faq_items|yesno:"Yes,No" }}</strong></div>
+                    <div>CTA present: <strong>{{ generated_content.validation_json.has_cta|yesno:"Yes,No" }}</strong></div>
+                    <div>Generic risk: <strong>{{ generated_content.validation_json.generic_risk|title }}</strong></div>
+                </div>
+
+                <div class="section-heading" style="text-align: left; margin: 1.5rem 0 1rem;">
+                    <p class="eyebrow">Internal Links</p>
+                    <h2 style="font-size: 1.4rem;">Suggested link targets</h2>
+                </div>
+                <div style="display: grid; gap: 0.65rem;">
+                    {% for item in generated_content.suggested_internal_links %}
+                    <div style="padding: 0.8rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03);">
+                        <strong>{{ item.label }}</strong>
+                        <div style="color: #475569; font-size: 0.9rem;">{{ item.url }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </article>
+        </div>
+
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">FAQ Set</p>
+                <h2 style="font-size: 2rem;">Schema-ready answers</h2>
+            </div>
+            <div style="display: grid; gap: 0.75rem;">
+                {% for item in generated_content.faq_items %}
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03);">
+                    <strong style="display: block; margin-bottom: 0.35rem;">{{ item.question }}</strong>
+                    <div style="color: #475569;">{{ item.answer }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+    </div>
+</section>
+{% endblock %}

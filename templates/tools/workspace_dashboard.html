@@ -14,6 +14,7 @@
                     {% csrf_token %}
                     <button type="submit" class="button button-primary">Run Workspace Audit</button>
                 </form>
+                <a class="button button-secondary" href="{% url 'content:workspace-content' %}">Open AI Content Engine</a>
                 {% if current_subscription and current_subscription.stripe_customer_id %}
                 <form method="post" action="{% url 'tools:workspace-billing-portal' %}">
                     {% csrf_token %}
@@ -87,6 +88,101 @@
                     Full history
                     {% endif %}
                 </p>
+            </article>
+            <article class="system-card">
+                <p class="eyebrow">AI Content</p>
+                <h3>{{ generated_content_count|default:0 }}</h3>
+                <p>Saved drafts generated from your workspace and audit context.</p>
+            </article>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Recurring Audits</p>
+                    <h2 style="font-size: 2rem;">Automation control</h2>
+                </div>
+                <form method="post" action="{% url 'tools:workspace-audit-schedule' %}" style="display: grid; gap: 1rem;">
+                    {% csrf_token %}
+                    <label style="display: grid; gap: 0.35rem;">
+                        <span style="font-weight: 700;">Cadence</span>
+                        <select name="cadence" class="form-control">
+                            <option value="weekly" {% if audit_schedule and audit_schedule.cadence == "weekly" %}selected{% endif %}>Weekly</option>
+                            <option value="monthly" {% if audit_schedule and audit_schedule.cadence == "monthly" %}selected{% endif %}>Monthly</option>
+                        </select>
+                    </label>
+                    <label style="display: flex; gap: 0.65rem; align-items: center;">
+                        <input type="checkbox" name="is_active" value="1" {% if audit_schedule and audit_schedule.is_active %}checked{% endif %}>
+                        <span>Enable recurring audits for this workspace</span>
+                    </label>
+                    <button type="submit" class="button button-secondary">Save automation settings</button>
+                </form>
+                <div style="margin-top: 1rem; display: grid; gap: 0.5rem; color: #475569; font-size: 0.9rem;">
+                    <div>
+                        Status:
+                        <strong style="color: #0f172a;">
+                            {% if audit_schedule and audit_schedule.is_active %}
+                            Active
+                            {% else %}
+                            Paused
+                            {% endif %}
+                        </strong>
+                    </div>
+                    <div>
+                        Next run:
+                        <strong style="color: #0f172a;">{{ audit_schedule.next_run_at|default:"Not scheduled" }}</strong>
+                    </div>
+                    <div>
+                        Automation access:
+                        <strong style="color: #0f172a;">
+                            {% if current_capabilities.recurring_audits_enabled %}
+                            Included on current plan
+                            {% elif audit_tier_enforcement %}
+                            Upgrade required
+                            {% else %}
+                            Available during free-pass testing
+                            {% endif %}
+                        </strong>
+                    </div>
+                    {% if audit_schedule and audit_schedule.last_error_message %}
+                    <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(220, 38, 38, 0.08); color: #991b1b;">
+                        {{ audit_schedule.last_error_message }}
+                    </div>
+                    {% endif %}
+                </div>
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Latest Change Report</p>
+                    <h2 style="font-size: 2rem;">What moved since the last run</h2>
+                </div>
+                {% if latest_change_report %}
+                <div style="display: grid; gap: 0.85rem;">
+                    <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03);">
+                        <strong style="display: block; margin-bottom: 0.35rem;">{{ latest_change_report.summary.headline }}</strong>
+                        <div style="color: #475569; font-size: 0.9rem;">
+                            New issues: {{ latest_change_report.new_issue_count }} | Resolved issues: {{ latest_change_report.resolved_issue_count }}
+                        </div>
+                    </div>
+                    {% for delta in latest_change_report.summary.score_deltas %}
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.75rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03);">
+                        <span style="text-transform: capitalize;">{{ delta.metric|cut:"_" }}</span>
+                        <strong>
+                            {% if delta.delta > 0 %}+{% endif %}{{ delta.delta }}
+                        </strong>
+                    </div>
+                    {% empty %}
+                    <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                        No metric deltas are available yet for this audit pair.
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                    The first completed rerun will create a saved change report here.
+                </div>
+                {% endif %}
             </article>
         </div>
 
@@ -169,6 +265,15 @@
                             <td style="padding: 0.8rem 0.4rem;">{{ item.audit.pages_crawled }}</td>
                             <td style="padding: 0.8rem 0.4rem;">{{ item.audit.status|title }}</td>
                         </tr>
+                        {% if item.change_report %}
+                        <tr style="border-bottom: 1px solid #f1f5f9; background: rgba(15, 23, 42, 0.02);">
+                            <td colspan="5" style="padding: 0.75rem 0.4rem; color: #475569; font-size: 0.9rem;">
+                                {{ item.change_report.summary.headline }}
+                                New: {{ item.change_report.new_issue_count }} |
+                                Resolved: {{ item.change_report.resolved_issue_count }}
+                            </td>
+                        </tr>
+                        {% endif %}
                         {% empty %}
                         <tr>
                             <td colspan="5" style="padding: 0.8rem 0.4rem; color: #475569;">No saved reruns yet.</td>

@@ -29,6 +29,7 @@ from apps.leads.forms import AuditRequestForm, WorkspaceLoginForm, WorkspaceSign
 from apps.leads.models import ClientProject
 from apps.leads.services import create_audit_request_from_form, sync_client_project_from_audit_run
 
+from .automation import get_workspace_schedule
 from .jobs import enqueue_public_site_audit
 from .models import AuditRun
 from .services import normalize_url
@@ -454,20 +455,37 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         project = self.object
+        generated_content_count = 0
+        if getattr(project, "pk", None):
+            from apps.content.models import GeneratedContent
+
+            generated_content_count = GeneratedContent.objects.filter(project=project).count()
         latest_audit = getattr(project, "latest_audit_run", None)
         latest_summary = latest_audit.summary if latest_audit and isinstance(latest_audit.summary, dict) else {}
         audit_history, locked_history_count = get_limited_audit_history(project, self.request.user)
         audit_history_list = list(audit_history)
+        change_report_map = {
+            report.audit_run_id: report
+            for report in project.change_reports.select_related("audit_run", "previous_audit_run")[:5]
+        } if getattr(project, "pk", None) else {}
         audit_history_with_delta = []
         for index, audit in enumerate(audit_history_list):
             next_older = audit_history_list[index + 1] if index + 1 < len(audit_history_list) else None
             delta = None if next_older is None else audit.overall_score - next_older.overall_score
-            audit_history_with_delta.append({"audit": audit, "delta": delta})
+            audit_history_with_delta.append(
+                {
+                    "audit": audit,
+                    "delta": delta,
+                    "change_report": change_report_map.get(audit.pk),
+                }
+            )
         recommendations, locked_recommendation_count = get_limited_recommendations(
             latest_summary.get("recommendations", []),
             self.request.user,
         )
         billing_state = get_billing_state(self.request.user)
+        schedule = get_workspace_schedule(project)
+        latest_change_report = getattr(latest_audit, "change_report", None) if latest_audit else None
         context["latest_audit"] = latest_audit
         context["audit_history"] = audit_history
         context["audit_history_with_delta"] = audit_history_with_delta
@@ -484,4 +502,7 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["current_capabilities"] = billing_state["capabilities"]
         context["usage_summary"] = billing_state["usage"]
         context["billing_plans"] = billing_state["plans"]
+        context["audit_schedule"] = schedule
+        context["latest_change_report"] = latest_change_report
+        context["generated_content_count"] = generated_content_count
         return context

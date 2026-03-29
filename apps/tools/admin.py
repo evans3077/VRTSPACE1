@@ -2,7 +2,14 @@ from django.contrib import admin
 from django.utils.safestring import mark_safe
 
 from .admin_utils import format_score_pill, get_service_recommendations, get_score_color
-from .models import AuditIssue, AuditPage, AuditRun, ToolDefinition
+from .models import (
+    AuditChangeReport,
+    AuditIssue,
+    AuditPage,
+    AuditRun,
+    ToolDefinition,
+    WorkspaceAuditSchedule,
+)
 
 
 @admin.register(ToolDefinition)
@@ -167,3 +174,26 @@ class AuditRunAdmin(admin.ModelAdmin):
     
     @admin.display(description="Performance")
     def performance_score_pill(self, obj): return format_score_pill(obj.performance_score)
+
+
+@admin.register(WorkspaceAuditSchedule)
+class WorkspaceAuditScheduleAdmin(admin.ModelAdmin):
+    list_display = ("project", "cadence", "is_active", "next_run_at", "last_run_at")
+    list_filter = ("cadence", "is_active")
+    search_fields = ("project__name", "project__website", "project__contact_email")
+    readonly_fields = ("last_audit_run", "last_error_message", "metadata")
+
+
+@admin.register(AuditChangeReport)
+class AuditChangeReportAdmin(admin.ModelAdmin):
+    list_display = (
+        "audit_run",
+        "project",
+        "overall_score_delta",
+        "new_issue_count",
+        "resolved_issue_count",
+        "created_at",
+    )
+    list_filter = ("created_at",)
+    search_fields = ("audit_run__normalized_domain", "project__name")
+    readonly_fields = ("summary",)

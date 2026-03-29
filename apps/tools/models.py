@@ -131,3 +131,67 @@ class AuditIssue(TimestampedModel):
 
     def __str__(self):
         return f"{self.code} ({self.severity})"
+
+
+class WorkspaceAuditSchedule(TimestampedModel):
+    class Cadence(models.TextChoices):
+        WEEKLY = "weekly", "Weekly"
+        MONTHLY = "monthly", "Monthly"
+
+    project = models.OneToOneField(
+        "leads.ClientProject",
+        on_delete=models.CASCADE,
+        related_name="audit_schedule",
+    )
+    cadence = models.CharField(max_length=16, choices=Cadence.choices, default=Cadence.WEEKLY)
+    is_active = models.BooleanField(default=False)
+    next_run_at = models.DateTimeField(null=True, blank=True)
+    last_run_at = models.DateTimeField(null=True, blank=True)
+    last_audit_run = models.ForeignKey(
+        AuditRun,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="schedule_runs",
+    )
+    last_error_message = models.CharField(max_length=255, blank=True)
+    metadata = models.JSONField(default=dict, blank=True)
+
+    class Meta:
+        ordering = ("project__name",)
+
+    def __str__(self):
+        return f"{self.project} ({self.cadence})"
+
+
+class AuditChangeReport(TimestampedModel):
+    audit_run = models.OneToOneField(
+        AuditRun,
+        on_delete=models.CASCADE,
+        related_name="change_report",
+    )
+    project = models.ForeignKey(
+        "leads.ClientProject",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="change_reports",
+    )
+    previous_audit_run = models.ForeignKey(
+        AuditRun,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="followup_change_reports",
+    )
+    overall_score_delta = models.IntegerField(default=0)
+    pages_crawled_delta = models.IntegerField(default=0)
+    new_issue_count = models.PositiveIntegerField(default=0)
+    resolved_issue_count = models.PositiveIntegerField(default=0)
+    summary = models.JSONField(default=dict, blank=True)
+
+    class Meta:
+        ordering = ("-created_at",)
+
+    def __str__(self):
+        return f"Change report for audit #{self.audit_run_id}"

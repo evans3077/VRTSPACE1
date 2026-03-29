@@ -397,13 +397,17 @@ def get_limited_recommendations(recommendations, user):
     return visible, locked_count
 
 
-def create_workspace_rerun_for_user(user):
-    project = (
-        ClientProject.objects.select_related("audit_request", "latest_audit_run")
-        .filter(owner=user)
-        .order_by("-updated_at")
-        .first()
-    )
+def create_workspace_rerun_for_user(user, *, project=None):
+    if project is None:
+        project = (
+            ClientProject.objects.select_related("audit_request", "latest_audit_run")
+            .filter(owner=user)
+            .order_by("-updated_at")
+            .first()
+        )
+    elif project.owner_id != user.id:
+        raise BillingError("That workspace project does not belong to this account.")
+
     if not project:
         raise BillingError("No workspace project is attached to this account yet.")
 
