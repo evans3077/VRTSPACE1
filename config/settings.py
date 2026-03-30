@@ -296,8 +296,11 @@ CONTENT_REFINEMENT_ENABLED = bool(
     CONTENT_REFINEMENT_PROVIDER == "ollama" and CONTENT_REFINEMENT_MODEL
 )
 
-SEO_REFRESH_ASYNC = False if IS_TEST else os.environ.get("SEO_REFRESH_ASYNC", "1") == "1"
+SEO_REFRESH_ASYNC = False if (IS_TEST or (DEBUG and not IS_RENDER)) else os.environ.get("SEO_REFRESH_ASYNC", "1") == "1"
 SEO_BACKGROUND_WORKERS = max(1, int(os.environ.get("SEO_BACKGROUND_WORKERS", "2")))
+SEO_COMPETITOR_LIMIT = max(1, int(os.environ.get("SEO_COMPETITOR_LIMIT", "4")))
+SEO_COMPETITOR_PAGE_LIMIT = max(1, int(os.environ.get("SEO_COMPETITOR_PAGE_LIMIT", "4")))
+SEO_BACKLINK_ASYNC = os.environ.get("SEO_BACKLINK_ASYNC", "1") == "1"
 
 AUDIT_TIER_ENFORCEMENT = os.environ.get("AUDIT_TIER_ENFORCEMENT", "0") == "1"
 

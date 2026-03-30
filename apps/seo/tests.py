@@ -22,7 +22,12 @@ from .models import (
     SEOSiteStructureSnapshot,
 )
 from .discovery import build_discovery_queries, discover_serp_competitors, fetch_search_results
-from .services import build_seo_context_payload, build_seo_opportunity_payload, get_or_build_seo_snapshot
+from .services import (
+    build_local_keyword_set,
+    build_seo_context_payload,
+    build_seo_opportunity_payload,
+    get_or_build_seo_snapshot,
+)
 
 
 class SEOContextServiceTests(TestCase):
@@ -463,11 +468,11 @@ class WorkspaceSEOViewTests(TestCase):
             },
         )
 
-        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response["Location"], reverse("seo:workspace-seo"))
         profile = SEOProjectProfile.objects.get(project=self.project)
         self.assertEqual(profile.metadata.get("refresh_status"), "queued")
         mocked_enqueue.assert_called_once_with(self.project.pk)
-        self.assertContains(response, "Benchmark refresh in progress")
 
     def test_workspace_seo_post_infers_business_type_when_left_blank(self):
         self.client.force_login(self.user)
@@ -712,6 +717,21 @@ class BacklinkIntelligenceTests(TestCase):
 
 
 class SEOCompetitorDiscoveryTests(TestCase):
+    def test_build_local_keyword_set_uses_business_specific_terms(self):
+        profile = SEOProjectProfile(
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified leads",
+            primary_service="used car sales",
+            target_audience="price-sensitive car buyers",
+        )
+
+        keywords = build_local_keyword_set(profile)
+
+        self.assertIn("used cars for sale Nairobi", keywords)
+        self.assertIn("car dealer Nairobi", keywords)
+        self.assertNotIn("service Nairobi", keywords)
+
     def test_build_discovery_queries_uses_service_location_and_audience(self):
         profile = SEOProjectProfile(
             business_type="automotive",
@@ -906,6 +926,66 @@ class SEOCompetitorDiscoveryTests(TestCase):
         domains = [item["normalized_domain"] for item in discovery["competitors"]]
         self.assertIn("competitor-a.com", domains)
         self.assertNotIn("random-blog.com", domains)
+
+    @override_settings(
+        SERP_DISCOVERY_ENABLED=True,
+        SERP_DISCOVERY_PROVIDER="serpapi",
+        SERPAPI_API_KEY="test-key",
+        SERP_DISCOVERY_QUERY_LIMIT=1,
+        SERP_DISCOVERY_RESULTS_PER_QUERY=5,
+    )
+    @patch("apps.seo.discovery.fetch_serpapi_results")
+    def test_discover_serp_competitors_filters_foreign_and_non_competitor_results(self, mocked_serp_fetch):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="ops@example.com",
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified leads",
+            primary_service="used car dealership",
+            target_audience="price-sensitive car buyers",
+        )
+        mocked_serp_fetch.return_value = {
+            "organic_results": [
+                {
+                    "position": 1,
+                    "title": "Used Cars Nairobi | Car Dealer in Kenya",
+                    "link": "https://relevant-cars.co.ke/",
+                    "snippet": "Buy used cars in Nairobi from a trusted car dealer.",
+                },
+                {
+                    "position": 2,
+                    "title": "Top 10 Cleaning Companies in Austin TX",
+                    "link": "https://nairobionlineblog.wordpress.com/2026/03/21/top-10-cleaning-companies-in-austin-tx/",
+                    "snippet": "A list of cleaning companies in Austin.",
+                },
+                {
+                    "position": 3,
+                    "title": "D7 Lead Finder - Find Free Business Leads In Any Industry",
+                    "link": "https://d7leadfinder.com/",
+                    "snippet": "Lead generation software for any business.",
+                },
+            ],
+            "local_results": [],
+        }
+
+        discovery = discover_serp_competitors(project, profile)
+
+        domains = [item["normalized_domain"] for item in discovery["competitors"]]
+        self.assertIn("relevant-cars.co.ke", domains)
+        self.assertNotIn("nairobionlineblog.wordpress.com", domains)
+        self.assertNotIn("d7leadfinder.com", domains)
 
     @override_settings(
         SERP_DISCOVERY_ENABLED=True,

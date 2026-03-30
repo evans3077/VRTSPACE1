@@ -93,10 +93,8 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             profile.metadata = metadata
             profile.save(update_fields=["metadata", "updated_at"])
             enqueue_project_seo_refresh(project.pk)
-            snapshot = self._get_latest_snapshot(project, profile)
-            opportunity_snapshot = self._get_latest_opportunity_snapshot(project, profile)
-            backlink_snapshot = self._get_latest_backlink_snapshot(project, profile)
             messages.success(request, "SEO refresh queued. The workspace will update when competitor profiling finishes.")
+            return redirect("seo:workspace-seo")
         else:
             snapshot, opportunity_snapshot = refresh_project_seo_intelligence(project)
             backlink_snapshot = refresh_project_backlink_intelligence(

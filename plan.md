@@ -113,6 +113,7 @@ Status: in progress
 - [x] Expand competitor profiling so fetched pages now carry asset and tech-stack signals that the SEO engine can use in page-map, execution, and future model reasoning
 - [x] Auto-detect business category from the website and audit signals when the user does not explicitly set one in the SEO workflow
 - [x] Add a production-grade secondary discovery provider fallback so competitor discovery can fall back from SerpApi to DuckDuckGo HTML search instead of depending on a single source
+- [x] Tighten SEO refresh runtime and precision by capping competitor crawl scope, redirecting async form submissions cleanly, and filtering low-fit SERP competitors more aggressively
 
 ## Phase 10: Backlink Acquisition Engine
 

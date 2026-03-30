@@ -2,6 +2,7 @@ from collections import Counter, defaultdict
 from urllib.parse import urlparse
 
 import requests
+from django.conf import settings
 from django.utils.text import slugify
 
 from .discovery import discover_serp_competitors
@@ -83,6 +84,67 @@ BUSINESS_TYPE_KEYWORDS = {
     "local_service": ["service", "services", "repair", "installation", "pricing", "quote", "booking"],
 }
 
+NON_COMPETITOR_PAGE_HINTS = {
+    "directory",
+    "directories",
+    "listing",
+    "listings",
+    "blog",
+    "wordpress",
+    "top 10",
+    "lead finder",
+    "lead generation",
+    "classifieds",
+    "document",
+    "pdf",
+    "resource",
+}
+
+NON_COMPETITOR_HOST_HINTS = {
+    "wordpress.com",
+    "blogspot.com",
+    "scribd.com",
+}
+
+FOREIGN_GEO_HINTS = {
+    "austin",
+    "texas",
+    "tx",
+    "fort worth",
+    "dallas",
+    "houston",
+    "united states",
+    "usa",
+    "uk",
+    "united kingdom",
+    "london",
+    "canada",
+    "toronto",
+    "australia",
+    "india",
+    "dubai",
+}
+
+BUSINESS_TYPE_KEYWORD_TEMPLATES = {
+    "automotive": {
+        "core": [
+            "{service} in {location}",
+            "{service} {location}",
+            "used cars for sale {location}",
+            "car dealer {location}",
+            "buy used cars {location}",
+        ],
+        "page_types": {
+            "inventory": "used cars for sale {location}",
+            "service": "car dealer {location}",
+            "faq": "{service} {location} faq",
+            "finance": "car financing {location}",
+            "location": "used cars in {location}",
+            "comparison": "best used car dealer {location}",
+        },
+    },
+}
+
 DEFAULT_RULE = {
     "label": "General",
     "priority_page_types": ["service", "faq", "pricing", "article"],
@@ -143,6 +205,44 @@ def infer_business_type_for_project(project, *, audit_run=None, primary_service=
     if scores.get(inferred, 0) <= 0:
         return "local_service"
     return inferred
+
+
+def _tokenize_phrase(text):
+    tokens = []
+    for raw in str(text or "").replace("/", " ").replace("-", " ").split():
+        token = raw.strip(" ,.:;!?()[]{}\"'").lower()
+        if len(token) < 3:
+            continue
+        if token not in tokens:
+            tokens.append(token)
+    return tokens
+
+
+def _service_seed(profile):
+    return (profile.primary_service or profile.business_type.replace("_", " ") or "service").strip()
+
+
+def _keyword_template_group(profile):
+    return BUSINESS_TYPE_KEYWORD_TEMPLATES.get(profile.business_type, {})
+
+
+def _profile_topic_terms(profile):
+    terms = []
+    raw_terms = [_service_seed(profile), profile.business_type.replace("_", " ")]
+    raw_terms.extend(BUSINESS_TYPE_KEYWORDS.get(profile.business_type, []))
+    for raw in raw_terms:
+        value = " ".join(str(raw or "").replace("/", " ").replace("-", " ").split()).strip().lower()
+        if len(value) < 3 or value in terms:
+            continue
+        terms.append(value)
+    return terms
+
+
+def _has_foreign_geo_conflict(haystack, location):
+    location_tokens = _tokenize_phrase(location)
+    if any(token in haystack for token in location_tokens):
+        return False
+    return any(token in haystack for token in FOREIGN_GEO_HINTS)
 
 
 def _candidate_text(parsed_page):
@@ -242,6 +342,79 @@ def _summarize_pages(pages):
         "top_cms": cms_counter.most_common(3),
         "top_frameworks": framework_counter.most_common(3),
     }
+
+
+def _score_competitor_page_fit(page, profile):
+    haystack = " ".join(
+        [
+            page.get("url", ""),
+            page.get("title", ""),
+            page.get("h1", ""),
+            page.get("meta_description", ""),
+        ]
+    ).lower()
+    topic_score = 0
+    local_score = 0
+    penalty = 0
+    signals = []
+
+    for term in _profile_topic_terms(profile):
+        if term and term in haystack:
+            topic_score += 3 if " " in term else 1
+            signals.append(f"topic:{term}")
+    for token in _tokenize_phrase(profile.location):
+        if token in haystack:
+            local_score += 2
+            signals.append(f"location:{token}")
+    if any(hint in haystack for hint in NON_COMPETITOR_PAGE_HINTS):
+        penalty += 5
+        signals.append("non_competitor_pattern")
+    if _has_foreign_geo_conflict(haystack, profile.location):
+        penalty += 6
+        signals.append("foreign_location_conflict")
+    return {
+        "score": topic_score + local_score - penalty,
+        "topic_score": topic_score,
+        "local_score": local_score,
+        "penalty": penalty,
+        "signals": signals[:8],
+    }
+
+
+def _score_competitor_payload_fit(payload, profile):
+    pages = _normalized_competitor_pages(payload)
+    domain = extract_domain(payload.get("url", ""))
+    page_scores = [_score_competitor_page_fit(page, profile) for page in pages]
+    matching_pages = [item for item in page_scores if item["score"] >= 4]
+    best_score = max((item["score"] for item in page_scores), default=0)
+    total_topic = sum(item["topic_score"] for item in page_scores)
+    total_local = sum(item["local_score"] for item in page_scores)
+    total_penalty = sum(item["penalty"] for item in page_scores)
+    accepted = bool(
+        best_score >= 6
+        and matching_pages
+        and total_topic > total_penalty
+        and not any(domain == hint or domain.endswith(f".{hint}") for hint in NON_COMPETITOR_HOST_HINTS)
+    )
+    return {
+        "accepted": accepted,
+        "best_page_score": best_score,
+        "matching_pages": len(matching_pages),
+        "topic_score": total_topic,
+        "local_score": total_local,
+        "penalty": total_penalty,
+        "reason": "" if accepted else "Low topic and local relevance for the declared business niche.",
+    }
+
+
+def _accepted_competitor_snapshots(competitor_snapshots, profile):
+    accepted = []
+    for snapshot in competitor_snapshots:
+        payload = snapshot.output_json or {}
+        fit_summary = ((payload.get("summary") or {}).get("fit")) or _score_competitor_payload_fit(payload, profile)
+        if fit_summary.get("accepted"):
+            accepted.append(snapshot)
+    return accepted
 
 
 def _build_site_pages_from_audit(audit_run, *, business_type="", location=""):
@@ -378,6 +551,17 @@ def sync_discovered_competitors(project, profile):
     return discovery
 
 
+def _competitor_priority(competitor):
+    serp_metadata = (competitor.metadata or {}).get("serp", {})
+    source_priority = 0 if competitor.source == SEOCompetitor.Source.PROFILE else 1
+    return (
+        source_priority,
+        -float(serp_metadata.get("discovery_score", 0) or 0),
+        float(serp_metadata.get("best_position", 999) or 999),
+        competitor.homepage_url,
+    )
+
+
 def _fetch_competitor_pages(competitor_url, *, business_type="", location=""):
     session = requests.Session()
     homepage_response = safe_fetch(competitor_url, session=session)
@@ -403,7 +587,7 @@ def _fetch_competitor_pages(competitor_url, *, business_type="", location=""):
         homepage.url,
         homepage,
         sitemap_urls,
-        limit=6,
+        limit=settings.SEO_COMPETITOR_PAGE_LIMIT,
     )
     fetched = fetch_many(crawl_urls, session)
     pages = []
@@ -445,16 +629,24 @@ def get_or_build_competitor_snapshot(*, competitor, audit_run, profile):
 
 
 def build_local_keyword_set(profile):
-    service = profile.primary_service or "service"
+    service = _service_seed(profile)
     location = profile.location or "target area"
     audience = profile.target_audience or "buyers"
+    templates = _keyword_template_group(profile).get("core") or [
+        "{service} in {location}",
+        "{service} {location}",
+        "best {service} {location}",
+        "{service} near me",
+        "{service} for {audience}",
+    ]
 
     keywords = [
-        f"{service} in {location}",
-        f"{service} {location}",
-        f"best {service} {location}",
-        f"{service} near me",
-        f"{service} for {audience}",
+        template.format(
+            service=service,
+            location=location,
+            audience=audience,
+        ).strip()
+        for template in templates
     ]
     unique = []
     for keyword in keywords:
@@ -863,8 +1055,9 @@ def _page_type_label(page_type):
 
 
 def _build_target_keyword(profile, page_type):
-    service = (profile.primary_service or profile.business_type.replace("_", " ") or "service").strip()
+    service = _service_seed(profile)
     location = (profile.location or "").strip()
+    custom_templates = _keyword_template_group(profile).get("page_types", {})
     templates = {
         "service": f"{service} {location}".strip(),
         "location": f"{service} in {location}".strip(),
@@ -879,6 +1072,12 @@ def _build_target_keyword(profile, page_type):
         "review": f"{service} reviews {location}".strip(),
         "finance": f"{service} financing {location}".strip(),
     }
+    if page_type in custom_templates:
+        return custom_templates[page_type].format(
+            service=service,
+            location=location,
+            audience=profile.target_audience or "buyers",
+        ).strip()
     return templates.get(page_type, f"{service} {location}".strip())
 
 
@@ -1146,9 +1345,10 @@ def build_seo_context_payload(project, profile, audit_run):
     )
     sync_project_competitors(project)
     discovery = sync_discovered_competitors(project, profile)
-    competitors = list(
-        SEOCompetitor.objects.filter(project=project, is_active=True).order_by("source", "homepage_url")
-    )
+    competitors = sorted(
+        SEOCompetitor.objects.filter(project=project, is_active=True),
+        key=_competitor_priority,
+    )[: settings.SEO_COMPETITOR_LIMIT]
     competitor_snapshots = [
         get_or_build_competitor_snapshot(
             competitor=competitor,

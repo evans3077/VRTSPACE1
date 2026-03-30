@@ -57,8 +57,51 @@ GENERIC_RESULT_HINTS = {
     "forum",
 }
 
+NON_COMPETITOR_RESULT_HINTS = {
+    "lead finder",
+    "lead generation",
+    "directory",
+    "directories",
+    "listing",
+    "listings",
+    "blog",
+    "wordpress",
+    "blogspot",
+    "top 10",
+    "document",
+    "pdf",
+    "resource",
+    "resources",
+    "classifieds",
+}
+
+NON_COMPETITOR_DOMAIN_HINTS = {
+    "wordpress.com",
+    "blogspot.com",
+    "scribd.com",
+}
+
+FOREIGN_GEO_HINTS = {
+    "austin",
+    "texas",
+    "tx",
+    "fort worth",
+    "dallas",
+    "houston",
+    "united states",
+    "usa",
+    "uk",
+    "united kingdom",
+    "london",
+    "canada",
+    "toronto",
+    "australia",
+    "india",
+    "dubai",
+}
+
 INDUSTRY_DISCOVERY_TERMS = {
-    "automotive": ["used cars", "vehicles", "dealership", "financing"],
+    "automotive": ["used car dealership", "used cars for sale", "car dealer", "vehicle financing"],
     "agency": ["services", "pricing", "case study", "consulting"],
     "saas": ["software", "platform", "pricing", "features"],
     "hotel": ["rooms", "booking", "amenities", "events"],
@@ -66,6 +109,17 @@ INDUSTRY_DISCOVERY_TERMS = {
     "healthcare": ["clinic", "appointment", "care", "service"],
     "real_estate": ["property", "listing", "homes", "real estate"],
     "local_service": ["services", "near me", "pricing", "reviews"],
+}
+
+INDUSTRY_MUST_HAVE_TERMS = {
+    "automotive": ["car", "cars", "vehicle", "vehicles", "dealer", "dealership", "used car", "auto"],
+    "agency": ["agency", "marketing", "seo", "design", "consulting"],
+    "saas": ["software", "platform", "app", "tool", "dashboard"],
+    "hotel": ["hotel", "room", "booking", "stay"],
+    "ecommerce": ["shop", "store", "product", "products"],
+    "healthcare": ["clinic", "doctor", "medical", "care"],
+    "real_estate": ["property", "real estate", "home", "homes"],
+    "local_service": ["service", "services", "repair", "installation"],
 }
 
 
@@ -104,6 +158,30 @@ def _audit_query_hints(project):
             if len(hints) >= 4:
                 return hints
     return hints
+
+
+def _profile_service_terms(profile):
+    terms = []
+    raw_terms = [
+        profile.primary_service or "",
+        profile.business_type.replace("_", " ") if getattr(profile, "business_type", "") else "",
+    ]
+    raw_terms.extend(INDUSTRY_DISCOVERY_TERMS.get(getattr(profile, "business_type", ""), [])[:4])
+    raw_terms.extend(INDUSTRY_MUST_HAVE_TERMS.get(getattr(profile, "business_type", ""), [])[:5])
+
+    for raw in raw_terms:
+        value = " ".join(str(raw or "").replace("/", " ").replace("-", " ").split()).strip().lower()
+        if len(value) < 3 or value in terms:
+            continue
+        terms.append(value)
+    return terms
+
+
+def _has_foreign_geo_conflict(haystack, location):
+    location_tokens = _tokenize_terms(location)
+    if any(token in haystack for token in location_tokens):
+        return False
+    return any(token in haystack for token in FOREIGN_GEO_HINTS)
 
 
 def build_discovery_queries(profile, project=None):
@@ -213,6 +291,8 @@ def _candidate_link(result):
 
 def _is_blocked_domain(domain, own_domain):
     if not domain or domain == own_domain:
+        return True
+    if any(domain == blocked or domain.endswith(f".{blocked}") for blocked in NON_COMPETITOR_DOMAIN_HINTS):
         return True
     return any(domain == blocked or domain.endswith(f".{blocked}") for blocked in BLOCKED_COMPETITOR_DOMAINS)
 
@@ -327,7 +407,19 @@ def _aggregate_candidates(raw_candidates):
     discovered = [
         item
         for item in discovered
-        if item["average_relevance"] >= 4 or item["query_count"] >= 2
+        if (
+            item["average_relevance"] >= 7
+            or (
+                item["query_count"] >= 2
+                and item["average_relevance"] >= 5
+                and any(
+                    signal.startswith("service:")
+                    or signal.startswith("industry:")
+                    or signal.startswith("location:")
+                    for signal in item["match_signals"]
+                )
+            )
+        )
     ]
     discovered.sort(key=lambda item: (-item["discovery_score"], item["average_position"]))
     return discovered
@@ -369,25 +461,36 @@ def _relevance_signals(result, profile):
     ).lower()
     signals = []
     score = 0
-    for token in _tokenize_terms(profile.primary_service or profile.business_type.replace("_", " ")):
-        if token in haystack:
-            score += 3
-            signals.append(f"service:{token}")
+    for term in _profile_service_terms(profile)[:8]:
+        if term in haystack:
+            score += 4 if " " in term else 2
+            signals.append(f"service:{term}")
     for token in _tokenize_terms(profile.location):
         if token in haystack:
-            score += 2
+            score += 3
             signals.append(f"location:{token}")
     for token in _tokenize_terms(profile.target_audience)[:2]:
         if token in haystack:
             score += 1
             signals.append(f"audience:{token}")
-    for token in INDUSTRY_DISCOVERY_TERMS.get(profile.business_type, [])[:3]:
+    for token in INDUSTRY_MUST_HAVE_TERMS.get(profile.business_type, [])[:4]:
         if token.lower() in haystack:
             score += 2
             signals.append(f"industry:{token.lower()}")
     if any(hint in haystack for hint in GENERIC_RESULT_HINTS):
         score -= 4
         signals.append("generic_noise")
+    if any(hint in haystack for hint in NON_COMPETITOR_RESULT_HINTS):
+        score -= 7
+        signals.append("non_competitor_pattern")
+    if _has_foreign_geo_conflict(haystack, profile.location):
+        score -= 8
+        signals.append("foreign_location_conflict")
+    if profile.business_type in INDUSTRY_MUST_HAVE_TERMS and not any(
+        hint in haystack for hint in INDUSTRY_MUST_HAVE_TERMS[profile.business_type]
+    ):
+        score -= 5
+        signals.append("missing_industry_match")
     return score, signals
 
 
