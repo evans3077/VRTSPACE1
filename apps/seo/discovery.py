@@ -122,6 +122,51 @@ INDUSTRY_MUST_HAVE_TERMS = {
     "local_service": ["service", "services", "repair", "installation"],
 }
 
+DISCOVERY_QUERY_TEMPLATES = {
+    "default": [
+        "{service} {location}",
+        "best {service} {location}",
+        "{service} pricing {location}",
+        "{service} faq {location}",
+        "{service} contact {location}",
+        "{service} near me",
+    ],
+    "automotive": [
+        "{service} {location}",
+        "best {service} {location}",
+        "{service} near me",
+        "used cars for sale {location}",
+        "car dealer {location}",
+        "car financing {location}",
+        "sell your car {location}",
+        "best used car dealer {location}",
+    ],
+    "agency": [
+        "{service} {location}",
+        "seo agency {location}",
+        "digital marketing agency {location}",
+        "{service} pricing {location}",
+        "best {service} {location}",
+        "{service} case study {location}",
+    ],
+    "hotel": [
+        "{service} {location}",
+        "hotel {location}",
+        "rooms in {location}",
+        "best hotel {location}",
+        "{service} amenities {location}",
+        "{service} booking {location}",
+    ],
+    "real_estate": [
+        "{service} {location}",
+        "property for sale {location}",
+        "real estate agent {location}",
+        "homes for sale {location}",
+        "{service} pricing {location}",
+        "best {service} {location}",
+    ],
+}
+
 
 def _provider_order():
     providers = [
@@ -190,15 +235,18 @@ def build_discovery_queries(profile, project=None):
     audience = (profile.target_audience or "").strip()
     goal = (profile.target_goal or "").strip().lower()
     industry_terms = INDUSTRY_DISCOVERY_TERMS.get(profile.business_type, [])
-
+    templates = DISCOVERY_QUERY_TEMPLATES.get(profile.business_type, DISCOVERY_QUERY_TEMPLATES["default"])
     queries = [
-        f"{service} {location}".strip(),
-        f"best {service} {location}".strip(),
-        f"{service} near me".strip(),
+        template.format(
+            service=service,
+            location=location,
+            audience=audience or "buyers",
+        ).strip()
+        for template in templates
     ]
     if audience:
-        queries.append(f"{service} for {audience}".strip())
-    if "lead" in goal or "inquiry" in goal or "book" in goal:
+        queries.append(f"{service} for {audience} {location}".strip())
+    if "lead" in goal or "inquiry" in goal or "book" in goal or "sales" in goal:
         queries.append(f"{service} {location} contact".strip())
     for term in industry_terms[:2]:
         queries.append(f"{term} {location}".strip())

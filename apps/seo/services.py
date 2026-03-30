@@ -1,4 +1,5 @@
 from collections import Counter, defaultdict
+from types import SimpleNamespace
 from urllib.parse import urlparse
 
 import requests
@@ -384,6 +385,7 @@ def _score_competitor_page_fit(page, profile):
 def _score_competitor_payload_fit(payload, profile):
     pages = _normalized_competitor_pages(payload)
     domain = extract_domain(payload.get("url", ""))
+    summary = payload.get("summary", {}) or {}
     page_scores = [_score_competitor_page_fit(page, profile) for page in pages]
     matching_pages = [item for item in page_scores if item["score"] >= 4]
     best_score = max((item["score"] for item in page_scores), default=0)
@@ -396,6 +398,8 @@ def _score_competitor_payload_fit(payload, profile):
         and total_topic > total_penalty
         and not any(domain == hint or domain.endswith(f".{hint}") for hint in NON_COMPETITOR_HOST_HINTS)
     )
+    if not accepted and summary.get("page_count", 0) and summary.get("location_match_pages", 0):
+        accepted = True
     return {
         "accepted": accepted,
         "best_page_score": best_score,
@@ -408,9 +412,13 @@ def _score_competitor_payload_fit(payload, profile):
 
 
 def _accepted_competitor_snapshots(competitor_snapshots, profile):
+    if not profile:
+        return [snapshot for snapshot in competitor_snapshots if (snapshot.output_json or {}).get("status") == "ok"]
     accepted = []
     for snapshot in competitor_snapshots:
         payload = snapshot.output_json or {}
+        if payload.get("status") != "ok":
+            continue
         fit_summary = ((payload.get("summary") or {}).get("fit")) or _score_competitor_payload_fit(payload, profile)
         if fit_summary.get("accepted"):
             accepted.append(snapshot)
@@ -600,12 +608,24 @@ def _fetch_competitor_pages(competitor_url, *, business_type="", location=""):
     if not pages:
         pages.append(_serialize_page(homepage, business_type=business_type, location=location))
 
-    return {
+    summary = _summarize_pages(pages)
+    payload = {
         "status": "ok",
         "url": competitor_url,
         "pages": pages,
-        "summary": _summarize_pages(pages),
+        "summary": summary,
     }
+    payload["summary"]["fit"] = _score_competitor_payload_fit(
+        payload,
+        SimpleNamespace(
+            business_type=business_type or "local_service",
+            location=location or "",
+            target_goal="",
+            primary_service="",
+            target_audience="",
+        ),
+    )
+    return payload
 
 
 def get_or_build_competitor_snapshot(*, competitor, audit_run, profile):
@@ -655,26 +675,59 @@ def build_local_keyword_set(profile):
     return unique[:8]
 
 
-def _competitor_title_phrases(competitor_snapshots, location):
+def _competitor_title_phrases(profile, competitor_snapshots, location):
     phrases = []
-    for snapshot in competitor_snapshots:
+    for snapshot in _accepted_competitor_snapshots(competitor_snapshots, profile):
         payload = snapshot.output_json or {}
         for page in _normalized_competitor_pages(payload):
             title = (page.get("title") or page.get("h1") or "").strip()
             if not title:
                 continue
-            if location and location.lower() not in title.lower() and len(phrases) >= 3:
+            title_lower = title.lower()
+            if any(hint in title_lower for hint in NON_COMPETITOR_PAGE_HINTS):
+                continue
+            if _has_foreign_geo_conflict(title_lower, location):
+                continue
+            if location and location.lower() not in title_lower and len(phrases) >= 2:
                 continue
             if title not in phrases:
                 phrases.append(title)
-            if len(phrases) >= 6:
+            if len(phrases) >= 4:
+                return phrases
+    return phrases
+
+
+def _competitor_language_patterns(profile, competitor_snapshots):
+    phrases = []
+    topic_terms = _profile_topic_terms(profile)
+    location_tokens = _tokenize_phrase(profile.location)
+    for snapshot in _accepted_competitor_snapshots(competitor_snapshots, profile):
+        payload = snapshot.output_json or {}
+        for page in _normalized_competitor_pages(payload):
+            title = (page.get("title") or page.get("h1") or "").strip()
+            if not title:
+                continue
+            title_lower = title.lower()
+            if any(hint in title_lower for hint in NON_COMPETITOR_PAGE_HINTS):
+                continue
+            if _has_foreign_geo_conflict(title_lower, profile.location):
+                continue
+            if not any(term in title_lower for term in topic_terms[:8]):
+                continue
+            if location_tokens and not any(token in title_lower for token in location_tokens):
+                continue
+            if len(title) > 80:
+                continue
+            if title not in phrases:
+                phrases.append(title)
+            if len(phrases) >= 3:
                 return phrases
     return phrases
 
 
 def build_keyword_clusters(profile, competitor_snapshots):
     base_keywords = build_local_keyword_set(profile)
-    competitor_titles = _competitor_title_phrases(competitor_snapshots, profile.location)
+    competitor_titles = _competitor_title_phrases(profile, competitor_snapshots, profile.location)
     clusters = defaultdict(list)
     for keyword in base_keywords:
         if "near me" in keyword:
@@ -853,7 +906,7 @@ def build_structural_recommendations(*, profile, site_structure, competitor_snap
     rule = get_industry_rule(profile.business_type)
     site_summary = site_structure.get("summary", {})
     recommendations = []
-    available_competitors = [snapshot for snapshot in competitor_snapshots if (snapshot.output_json or {}).get("status") == "ok"]
+    available_competitors = _accepted_competitor_snapshots(competitor_snapshots, profile)
     if not available_competitors:
         return recommendations
 
@@ -960,6 +1013,76 @@ def build_structural_recommendations(*, profile, site_structure, competitor_snap
     return recommendations[:8]
 
 
+def _recommendation_cluster_key(item):
+    title = (item.get("title") or "").lower()
+    category = (item.get("category") or "").lower()
+    if title.startswith("deepen "):
+        return "content-depth"
+    if "page layer" in title or title.startswith("add a "):
+        return "page-coverage"
+    if "faq" in title or "answer-block" in title or "schema" in category:
+        return "answer-readiness"
+    if "h1" in title or "title" in title or "meta" in title:
+        return "on-page-structure"
+    if "slow" in title or "response time" in title or "performance" in category:
+        return "performance"
+    if "sitemap" in title or "technical" in category:
+        return "technical"
+    return f"default:{category or title}"
+
+
+def _merge_cluster_items(cluster_key, items):
+    primary = max(items, key=lambda item: item.get("priority_score", 0))
+    merged = dict(primary)
+    where_to_apply = []
+    for item in items:
+        for url in item.get("where_to_apply", []):
+            if url and url not in where_to_apply:
+                where_to_apply.append(url)
+    merged["where_to_apply"] = where_to_apply[:6]
+
+    evidence_seen = set()
+    merged_evidence = []
+    for item in items:
+        for evidence in item.get("competitor_evidence", []):
+            key = (evidence.get("url", ""), evidence.get("title", ""))
+            if key in evidence_seen:
+                continue
+            evidence_seen.add(key)
+            merged_evidence.append(evidence)
+    merged["competitor_evidence"] = merged_evidence[:4]
+
+    keyword_seen = []
+    for item in items:
+        for keyword in item.get("example_keywords", []):
+            if keyword and keyword not in keyword_seen:
+                keyword_seen.append(keyword)
+    merged["example_keywords"] = keyword_seen[:3]
+
+    if len(items) > 1 and cluster_key == "content-depth":
+        focus_areas = []
+        for item in items:
+            label = (item.get("title") or "").replace("Deepen ", "").replace(" pages", "").strip().lower()
+            if label and label not in focus_areas:
+                focus_areas.append(label)
+        merged["title"] = "Deepen thin high-intent pages"
+        merged["why_it_matters"] = "Several high-intent page types are thinner than the accepted competitor set, which weakens topic depth, local trust, and conversion readiness."
+        merged["recommended_fix"] = "Expand the thinnest high-intent pages with stronger local modifiers, proof, FAQs, and clearer conversion sections."
+        merged["focus_areas"] = focus_areas[:5]
+    elif len(items) > 1 and cluster_key == "page-coverage":
+        focus_areas = []
+        for item in items:
+            label = (item.get("title") or "").replace("Add a ", "").replace(" page layer", "").strip().lower()
+            if label and label not in focus_areas:
+                focus_areas.append(label)
+        merged["title"] = "Close missing page coverage gaps"
+        merged["why_it_matters"] = "The site is missing multiple page layers that accepted competitors use to capture demand across the buyer journey."
+        merged["recommended_fix"] = "Add the missing page types competitors consistently publish for this niche, then connect them with internal links from your core revenue pages."
+        merged["focus_areas"] = focus_areas[:5]
+
+    return merged
+
+
 def build_context_recommendations(audit_run, profile, site_structure, competitor_snapshots):
     summary = audit_run.summary or {}
     score_breakdown = summary.get("score_breakdown") or {}
@@ -990,9 +1113,12 @@ def build_context_recommendations(audit_run, profile, site_structure, competitor
         site_structure=site_structure,
         competitor_snapshots=competitor_snapshots,
     )
-    combined = structural + audit_recommendations
+    clustered = defaultdict(list)
+    for item in structural + audit_recommendations:
+        clustered[_recommendation_cluster_key(item)].append(item)
+    combined = [_merge_cluster_items(cluster_key, items) for cluster_key, items in clustered.items()]
     combined.sort(key=lambda item: -item["priority_score"])
-    return combined[:10]
+    return combined[:8]
 
 
 def build_priority_pages(profile, site_structure):
@@ -1007,7 +1133,11 @@ def build_priority_pages(profile, site_structure):
 
 
 def build_benchmark_summary(site_structure, competitor_snapshots):
-    available = [snapshot for snapshot in competitor_snapshots if (snapshot.output_json or {}).get("status") == "ok"]
+    profile = None
+    if competitor_snapshots:
+        project = getattr(competitor_snapshots[0].competitor, "project", None)
+        profile = getattr(project, "seo_profile", None)
+    available = _accepted_competitor_snapshots(competitor_snapshots, profile)
     if not available:
         return {
             "available_competitors": 0,
@@ -1042,6 +1172,7 @@ def build_benchmark_summary(site_structure, competitor_snapshots):
 
     return {
         "available_competitors": len(available),
+        "filtered_out_competitors": max(0, len(competitor_snapshots) - len(available)),
         "site_page_count": site_structure.get("summary", {}).get("page_count", 0),
         "common_page_types": common_page_types[:6],
         "discovery_queries": discovery_queries[:8],
@@ -1094,7 +1225,7 @@ def build_page_map(profile, site_structure, competitor_snapshots):
     site_summary = site_structure.get("summary", {})
     site_counts = site_summary.get("counts_by_type", {})
     site_word_counts = site_summary.get("avg_word_count_by_type", {})
-    available_competitors = _competitor_summaries(competitor_snapshots)
+    available_competitors = _competitor_summaries(_accepted_competitor_snapshots(competitor_snapshots, profile))
     competitor_count = len(available_competitors)
     competitor_counts = defaultdict(list)
     competitor_word_counts = defaultdict(list)
@@ -1188,7 +1319,7 @@ def build_keyword_opportunities(profile, site_structure, competitor_snapshots, p
             }
         )
 
-    for phrase in _competitor_title_phrases(competitor_snapshots, profile.location):
+    for phrase in _competitor_language_patterns(profile, competitor_snapshots):
         normalized = phrase.strip().lower()
         if not normalized or normalized in site_titles:
             continue
@@ -1302,7 +1433,12 @@ def build_execution_queue(profile, site_structure, recommendations, page_map, ke
 
 
 def build_value_summary(competitor_snapshots, keyword_opportunities, page_map, execution_queue):
-    profiled_competitors = _competitor_summaries(competitor_snapshots)
+    profile = None
+    if competitor_snapshots:
+        project = getattr(competitor_snapshots[0].competitor, "project", None)
+        profile = getattr(project, "seo_profile", None)
+    accepted_competitors = _accepted_competitor_snapshots(competitor_snapshots, profile)
+    profiled_competitors = _competitor_summaries(accepted_competitors)
     competitor_pages = sum(payload.get("summary", {}).get("page_count", 0) for payload in profiled_competitors)
     competitor_images = sum(
         payload.get("summary", {}).get("asset_totals", {}).get("images", 0)
@@ -1315,7 +1451,7 @@ def build_value_summary(competitor_snapshots, keyword_opportunities, page_map, e
     auto_discovered = len(
         [
             snapshot
-            for snapshot in competitor_snapshots
+            for snapshot in accepted_competitors
             if snapshot.competitor.source == SEOCompetitor.Source.SERP
             and (snapshot.output_json or {}).get("status") == "ok"
         ]
@@ -1323,6 +1459,7 @@ def build_value_summary(competitor_snapshots, keyword_opportunities, page_map, e
     return {
         "competitors_benchmarked": len(profiled_competitors),
         "auto_discovered_competitors": auto_discovered,
+        "filtered_out_competitors": max(0, len(competitor_snapshots) - len(accepted_competitors)),
         "competitor_pages_profiled": competitor_pages,
         "competitor_images_profiled": competitor_images,
         "competitor_scripts_profiled": competitor_scripts,
@@ -1357,13 +1494,14 @@ def build_seo_context_payload(project, profile, audit_run):
         )
         for competitor in competitors
     ]
+    accepted_competitor_snapshots = _accepted_competitor_snapshots(competitor_snapshots, profile)
     site_structure = site_structure_snapshot.output_json
     benchmark_summary = build_benchmark_summary(site_structure, competitor_snapshots)
     recommendations = build_context_recommendations(
         audit_run,
         profile,
         site_structure,
-        competitor_snapshots,
+        accepted_competitor_snapshots,
     )
     industry_rule = get_industry_rule(effective_business_type)
     return {
@@ -1380,7 +1518,7 @@ def build_seo_context_payload(project, profile, audit_run):
             "goal_focus": industry_rule["goal_focus"],
             "priority_pages": build_priority_pages(profile, site_structure),
         },
-        "keyword_clusters": build_keyword_clusters(profile, competitor_snapshots),
+        "keyword_clusters": build_keyword_clusters(profile, accepted_competitor_snapshots),
         "recommendations": recommendations,
         "audit_snapshot": {
             "overall_score": audit_run.overall_score,
@@ -1401,7 +1539,7 @@ def build_seo_context_payload(project, profile, audit_run):
                 "metadata": snapshot.competitor.metadata or {},
                 **(snapshot.output_json or {}),
             }
-            for snapshot in competitor_snapshots
+            for snapshot in accepted_competitor_snapshots
         ],
     }
 
