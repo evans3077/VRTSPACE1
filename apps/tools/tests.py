@@ -125,6 +125,25 @@ class PublicAuditFlowTests(TestCase):
 
         self.assertEqual(response.status_code, 409)
 
+    def test_missing_audit_result_redirects_public_user_to_home(self):
+        response = self.client.get(reverse("tools:audit-result", args=[999999]))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response["Location"], reverse("core:home"))
+
+    def test_missing_audit_result_redirects_authenticated_user_to_workspace(self):
+        user = get_user_model().objects.create_user(
+            username="workspace-user",
+            email="workspace@example.com",
+            password="testpass123",
+        )
+        self.client.force_login(user)
+
+        response = self.client.get(reverse("tools:audit-result", args=[999999]))
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response["Location"], reverse("tools:workspace-dashboard"))
+
     @patch("apps.tools.services.fetch_pagespeed_insights")
     @patch("apps.tools.services.safe_fetch")
     def test_public_site_audit_generates_scores_and_issues(self, mocked_fetch, mocked_pagespeed):

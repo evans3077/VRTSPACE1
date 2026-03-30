@@ -109,6 +109,19 @@ class AuditResultDetailView(DetailView):
     def get_queryset(self):
         return AuditRun.objects.prefetch_related("pages", "issues")
 
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_queryset().filter(pk=kwargs.get("pk")).first()
+        if not self.object:
+            messages.warning(
+                request,
+                "That audit report is no longer available. Run a new audit or open your workspace for the latest saved results.",
+            )
+            if request.user.is_authenticated:
+                return redirect("tools:workspace-dashboard")
+            return redirect("core:home")
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         audit_run = self.object
