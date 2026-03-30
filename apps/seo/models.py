@@ -194,3 +194,106 @@ class SEOOpportunitySnapshot(TimestampedModel):
 
     def __str__(self):
         return f"SEO opportunity snapshot for {self.project}"
+
+
+class BacklinkSnapshot(TimestampedModel):
+    project = models.ForeignKey(
+        "leads.ClientProject",
+        on_delete=models.CASCADE,
+        related_name="backlink_snapshots",
+    )
+    profile = models.ForeignKey(
+        SEOProjectProfile,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="backlink_snapshots",
+    )
+    source_audit_run = models.ForeignKey(
+        "tools.AuditRun",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="backlink_snapshots",
+    )
+    source_context_snapshot = models.ForeignKey(
+        SEOContextSnapshot,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="backlink_snapshots",
+    )
+    source_opportunity_snapshot = models.ForeignKey(
+        SEOOpportunitySnapshot,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="backlink_snapshots",
+    )
+    output_json = models.JSONField(default=dict, blank=True)
+
+    class Meta:
+        ordering = ("-created_at",)
+
+    def __str__(self):
+        return f"Backlink snapshot for {self.project}"
+
+
+class BacklinkProspect(TimestampedModel):
+    class ProspectType(models.TextChoices):
+        RESOURCE = "resource", "Resource Page"
+        DIRECTORY = "directory", "Directory / Citation"
+        ASSOCIATION = "association", "Association"
+        BLOG = "blog", "Blog / Publication"
+        MEDIA = "media", "Media / Press"
+        PARTNER = "partner", "Partner"
+
+    class Status(models.TextChoices):
+        SUGGESTED = "suggested", "Suggested"
+        SHORTLISTED = "shortlisted", "Shortlisted"
+        OUTREACHED = "outreached", "Outreached"
+        REPLIED = "replied", "Replied"
+        ACQUIRED = "acquired", "Acquired"
+        REJECTED = "rejected", "Rejected"
+
+    project = models.ForeignKey(
+        "leads.ClientProject",
+        on_delete=models.CASCADE,
+        related_name="backlink_prospects",
+    )
+    snapshot = models.ForeignKey(
+        BacklinkSnapshot,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="prospects",
+    )
+    domain = models.CharField(max_length=255)
+    homepage_url = models.URLField(blank=True)
+    prospect_url = models.URLField()
+    title = models.CharField(max_length=255, blank=True)
+    prospect_type = models.CharField(max_length=24, choices=ProspectType.choices, default=ProspectType.RESOURCE)
+    status = models.CharField(max_length=24, choices=Status.choices, default=Status.SUGGESTED)
+    relevance_score = models.PositiveSmallIntegerField(default=0)
+    authority_fit_score = models.PositiveSmallIntegerField(default=0)
+    local_fit_score = models.PositiveSmallIntegerField(default=0)
+    outreach_likelihood_score = models.PositiveSmallIntegerField(default=0)
+    total_score = models.PositiveSmallIntegerField(default=0)
+    target_asset_title = models.CharField(max_length=255, blank=True)
+    target_asset_type = models.CharField(max_length=120, blank=True)
+    target_asset_url = models.URLField(blank=True)
+    suggested_anchor_text = models.CharField(max_length=255, blank=True)
+    outreach_packet = models.JSONField(default=dict, blank=True)
+    metadata = models.JSONField(default=dict, blank=True)
+
+    class Meta:
+        ordering = ("-total_score", "-updated_at")
+        constraints = [
+            models.UniqueConstraint(
+                fields=("project", "prospect_url", "target_asset_url"),
+                name="unique_backlink_prospect_per_target",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.domain} -> {self.target_asset_title or self.target_asset_url or self.prospect_url}"

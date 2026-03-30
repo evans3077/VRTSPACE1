@@ -108,7 +108,21 @@ Status: in progress
 - [x] Add model-backed refinement adapters so briefs, titles, outlines, FAQs, and generated draft payloads can be upgraded by stronger models without losing the deterministic fallback path
 - [x] Keep deterministic briefs and payload validation as the canonical guardrail so model output can only override allowed sections after structural checks pass
 - [x] Move SEO refresh and first-time competitor profiling off the request thread so Render does not time out when benchmarking live competitor sites
-- [ ] Add a production-grade secondary discovery provider or fallback path so competitor discovery is not tied to a single SERP source
+- [x] Replace static queued text with an animated SEO refresh state so users can see the workspace is actively benchmarking competitors in the background
+- [x] Tighten competitor discovery precision with richer audit-informed query generation, relevance scoring, and noise filtering so weak SERP matches do not dilute the benchmark set
+- [x] Expand competitor profiling so fetched pages now carry asset and tech-stack signals that the SEO engine can use in page-map, execution, and future model reasoning
+- [x] Auto-detect business category from the website and audit signals when the user does not explicitly set one in the SEO workflow
+- [x] Add a production-grade secondary discovery provider fallback so competitor discovery can fall back from SerpApi to DuckDuckGo HTML search instead of depending on a single source
+
+## Phase 10: Backlink Acquisition Engine
+
+Status: complete
+
+- [x] Turn competitor and page-gap intelligence into linkable-asset recommendations such as comparison pages, data pages, city pages, and FAQ assets that deserve outreach
+- [x] Add a prospecting layer that finds likely backlink targets by topic, niche, location, citation source, and competitor-link patterns
+- [x] Score backlink prospects by relevance, authority fit, local fit, and outreach likelihood instead of raw volume
+- [x] Build outreach-ready packets from the content engine so users can generate asset summaries, subject lines, pitch angles, and proof snippets from live workspace data
+- [x] Add backlink tracking so the workspace can show target status, acquired links, anchor patterns, and the pages each link is meant to support
 
 ## Working Rule
 

@@ -8,6 +8,7 @@ from apps.content.services import sync_project_editorial_tasks
 from apps.leads.billing import record_usage
 from apps.leads.models import UsageRecord
 
+from .backlinks import refresh_project_backlink_intelligence
 from .services import refresh_project_seo_intelligence
 
 
@@ -42,7 +43,12 @@ def _run_project_seo_refresh_job(project_id):
         if not project or not getattr(project, "seo_profile", None):
             return
         _set_profile_refresh_state(project.seo_profile, status="running")
-        refresh_project_seo_intelligence(project)
+        context_snapshot, opportunity_snapshot = refresh_project_seo_intelligence(project)
+        refresh_project_backlink_intelligence(
+            project,
+            context_snapshot=context_snapshot,
+            opportunity_snapshot=opportunity_snapshot,
+        )
         sync_project_editorial_tasks(project)
         if project.owner_id:
             record_usage(project.owner, UsageRecord.Metric.SEO_SNAPSHOT)

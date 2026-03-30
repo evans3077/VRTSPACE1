@@ -7,7 +7,9 @@ from django.utils.text import slugify
 from .discovery import discover_serp_competitors
 from apps.tools.services import (
     ParsedPage,
+    analyze_assets,
     choose_urls_to_crawl,
+    detect_tech_stack,
     extract_domain,
     fetch_many,
     normalize_competitor_urls,
@@ -70,6 +72,17 @@ INDUSTRY_RULES = {
     },
 }
 
+BUSINESS_TYPE_KEYWORDS = {
+    "automotive": ["car", "cars", "vehicle", "vehicles", "dealership", "dealer", "auto", "automotive", "financing"],
+    "agency": ["agency", "marketing", "seo", "design", "branding", "consulting", "strategy", "case study"],
+    "saas": ["software", "platform", "dashboard", "product", "features", "subscription", "app"],
+    "hotel": ["hotel", "stay", "room", "rooms", "booking", "suite", "amenity", "resort"],
+    "ecommerce": ["shop", "store", "product", "products", "checkout", "cart", "collection", "buy"],
+    "healthcare": ["clinic", "care", "doctor", "patient", "appointment", "medical", "health"],
+    "real_estate": ["property", "properties", "real estate", "home", "homes", "listing", "apartment"],
+    "local_service": ["service", "services", "repair", "installation", "pricing", "quote", "booking"],
+}
+
 DEFAULT_RULE = {
     "label": "General",
     "priority_page_types": ["service", "faq", "pricing", "article"],
@@ -101,6 +114,35 @@ PAGE_TYPE_PATTERNS = {
 
 def get_industry_rule(business_type):
     return INDUSTRY_RULES.get((business_type or "").strip().lower(), DEFAULT_RULE)
+
+
+def infer_business_type_for_project(project, *, audit_run=None, primary_service=""):
+    audit_run = audit_run or getattr(project, "latest_audit_run", None)
+    text_parts = [primary_service or ""]
+    audit_request = getattr(project, "audit_request", None)
+    if audit_request:
+        text_parts.extend(
+            [
+                getattr(audit_request, "company_name", "") or "",
+                getattr(audit_request, "website", "") or "",
+            ]
+        )
+    if audit_run:
+        for page in audit_run.pages.order_by("-word_count", "url")[:8]:
+            text_parts.extend([page.url or "", page.title or "", page.h1 or "", page.meta_description or ""])
+
+    haystack = " ".join(text_parts).lower()
+    scores = {}
+    for business_type, keywords in BUSINESS_TYPE_KEYWORDS.items():
+        score = 0
+        for keyword in keywords:
+            if keyword in haystack:
+                score += 2 if " " in keyword else 1
+        scores[business_type] = score
+    inferred = max(scores, key=scores.get) if scores else "local_service"
+    if scores.get(inferred, 0) <= 0:
+        return "local_service"
+    return inferred
 
 
 def _candidate_text(parsed_page):
@@ -145,6 +187,16 @@ def _page_location_match(parsed_page, location):
 
 def _serialize_page(parsed_page, *, business_type="", location=""):
     page_type = classify_page_type(parsed_page.url, parsed_page, business_type=business_type)
+    assets = analyze_assets(parsed_page)
+    tech_stack = detect_tech_stack(parsed_page)
+    parsed_domain = extract_domain(parsed_page.url)
+    internal_links = 0
+    for link in parsed_page.links:
+        normalized = normalize_url(link)
+        if not normalized:
+            continue
+        if extract_domain(normalized) == parsed_domain:
+            internal_links += 1
     return {
         "url": parsed_page.url,
         "title": parsed_page.title,
@@ -156,21 +208,39 @@ def _serialize_page(parsed_page, *, business_type="", location=""):
         "response_time_ms": parsed_page.response_time_ms,
         "page_type": page_type,
         "location_match": _page_location_match(parsed_page, location),
+        "asset_summary": assets,
+        "tech_stack": tech_stack,
+        "internal_link_count": internal_links,
     }
 
 
 def _summarize_pages(pages):
     counts_by_type = Counter(page["page_type"] for page in pages)
     avg_word_count_by_type = {}
+    asset_totals = Counter()
+    cms_counter = Counter()
+    framework_counter = Counter()
     for page_type in counts_by_type:
         relevant = [page["word_count"] for page in pages if page["page_type"] == page_type]
         avg_word_count_by_type[page_type] = round(sum(relevant) / max(len(relevant), 1))
+    for page in pages:
+        for asset_name, asset_value in (page.get("asset_summary") or {}).items():
+            asset_totals[asset_name] += asset_value
+        cms = ((page.get("tech_stack") or {}).get("cms") or "").strip()
+        framework = ((page.get("tech_stack") or {}).get("framework") or "").strip()
+        if cms:
+            cms_counter[cms] += 1
+        if framework:
+            framework_counter[framework] += 1
     return {
         "counts_by_type": dict(counts_by_type),
         "avg_word_count_by_type": avg_word_count_by_type,
         "faq_schema_pages": len([page for page in pages if page["has_faq_schema"]]),
         "location_match_pages": len([page for page in pages if page["location_match"]]),
         "page_count": len(pages),
+        "asset_totals": dict(asset_totals),
+        "top_cms": cms_counter.most_common(3),
+        "top_frameworks": framework_counter.most_common(3),
     }
 
 
@@ -194,9 +264,10 @@ def _build_site_pages_from_audit(audit_run, *, business_type="", location=""):
 
 
 def build_site_structure_snapshot(*, project, audit_run, profile):
+    effective_business_type = profile.business_type or infer_business_type_for_project(project, audit_run=audit_run)
     pages = _build_site_pages_from_audit(
         audit_run,
-        business_type=profile.business_type,
+        business_type=effective_business_type,
         location=profile.location,
     )
     return {
@@ -751,12 +822,21 @@ def build_benchmark_summary(site_structure, competitor_snapshots):
             "site_page_count": site_structure.get("summary", {}).get("page_count", 0),
             "common_page_types": [],
             "discovery_queries": [],
+            "average_relevance": 0,
+            "top_match_signals": [],
         }
     page_type_counter = Counter()
+    match_signal_counter = Counter()
+    relevance_values = []
     for snapshot in available:
         for page_type, count in (snapshot.output_json.get("summary", {}).get("counts_by_type", {}) or {}).items():
             if count > 0:
                 page_type_counter[page_type] += 1
+        serp_metadata = ((snapshot.competitor.metadata or {}).get("serp") or {})
+        if serp_metadata.get("average_relevance") is not None:
+            relevance_values.append(serp_metadata.get("average_relevance", 0))
+        for signal in serp_metadata.get("match_signals", []):
+            match_signal_counter[signal] += 1
     common_page_types = [
         page_type.replace("_", " ")
         for page_type, count in page_type_counter.items()
@@ -773,6 +853,8 @@ def build_benchmark_summary(site_structure, competitor_snapshots):
         "site_page_count": site_structure.get("summary", {}).get("page_count", 0),
         "common_page_types": common_page_types[:6],
         "discovery_queries": discovery_queries[:8],
+        "average_relevance": round(sum(relevance_values) / max(len(relevance_values), 1), 1) if relevance_values else 0,
+        "top_match_signals": [signal for signal, _count in match_signal_counter.most_common(6)],
     }
 
 
@@ -1023,6 +1105,14 @@ def build_execution_queue(profile, site_structure, recommendations, page_map, ke
 def build_value_summary(competitor_snapshots, keyword_opportunities, page_map, execution_queue):
     profiled_competitors = _competitor_summaries(competitor_snapshots)
     competitor_pages = sum(payload.get("summary", {}).get("page_count", 0) for payload in profiled_competitors)
+    competitor_images = sum(
+        payload.get("summary", {}).get("asset_totals", {}).get("images", 0)
+        for payload in profiled_competitors
+    )
+    competitor_scripts = sum(
+        payload.get("summary", {}).get("asset_totals", {}).get("scripts", 0)
+        for payload in profiled_competitors
+    )
     auto_discovered = len(
         [
             snapshot
@@ -1035,6 +1125,8 @@ def build_value_summary(competitor_snapshots, keyword_opportunities, page_map, e
         "competitors_benchmarked": len(profiled_competitors),
         "auto_discovered_competitors": auto_discovered,
         "competitor_pages_profiled": competitor_pages,
+        "competitor_images_profiled": competitor_images,
+        "competitor_scripts_profiled": competitor_scripts,
         "keyword_targets": len(keyword_opportunities),
         "page_actions": len([item for item in page_map if item["status"] in {"missing", "expand", "optimize"}]),
         "execution_items": len(execution_queue),
@@ -1042,6 +1134,11 @@ def build_value_summary(competitor_snapshots, keyword_opportunities, page_map, e
 
 
 def build_seo_context_payload(project, profile, audit_run):
+    effective_business_type = profile.business_type or infer_business_type_for_project(
+        project,
+        audit_run=audit_run,
+        primary_service=profile.primary_service,
+    )
     site_structure_snapshot = get_or_build_site_structure_snapshot(
         project=project,
         audit_run=audit_run,
@@ -1068,17 +1165,19 @@ def build_seo_context_payload(project, profile, audit_run):
         site_structure,
         competitor_snapshots,
     )
+    industry_rule = get_industry_rule(effective_business_type)
     return {
         "context": {
             "project": project.name,
             "domain": project.normalized_domain,
-            "business_type": profile.business_type,
-            "industry_label": get_industry_rule(profile.business_type)["label"],
+            "business_type": effective_business_type,
+            "industry_label": industry_rule["label"],
+            "business_type_source": "manual" if profile.business_type else "inferred",
             "location": profile.location,
             "target_goal": profile.target_goal,
             "primary_service": profile.primary_service,
             "target_audience": profile.target_audience,
-            "goal_focus": get_industry_rule(profile.business_type)["goal_focus"],
+            "goal_focus": industry_rule["goal_focus"],
             "priority_pages": build_priority_pages(profile, site_structure),
         },
         "keyword_clusters": build_keyword_clusters(profile, competitor_snapshots),

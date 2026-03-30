@@ -1,14 +1,19 @@
 from unittest.mock import patch
 
+import requests
 from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 from django.test.utils import override_settings
 
 from apps.leads.models import AuditRequest, ClientProject
+from apps.content.models import GeneratedContent
 from apps.tools.models import AuditPage, AuditRun
 
+from .backlinks import build_backlink_snapshot_payload, refresh_project_backlink_intelligence
 from .models import (
+    BacklinkProspect,
+    BacklinkSnapshot,
     SEOCompetitor,
     SEOCompetitorSnapshot,
     SEOContextSnapshot,
@@ -16,7 +21,7 @@ from .models import (
     SEOProjectProfile,
     SEOSiteStructureSnapshot,
 )
-from .discovery import build_discovery_queries, discover_serp_competitors
+from .discovery import build_discovery_queries, discover_serp_competitors, fetch_search_results
 from .services import build_seo_context_payload, build_seo_opportunity_payload, get_or_build_seo_snapshot
 
 
@@ -464,6 +469,247 @@ class WorkspaceSEOViewTests(TestCase):
         mocked_enqueue.assert_called_once_with(self.project.pk)
         self.assertContains(response, "Benchmark refresh in progress")
 
+    def test_workspace_seo_post_infers_business_type_when_left_blank(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("seo:workspace-seo"),
+            {
+                "business_type": "",
+                "location": "Nairobi",
+                "target_goal": "Increase qualified organic leads",
+                "primary_service": "used car dealership",
+                "target_audience": "price-sensitive car buyers",
+                "competitor_urls": "",
+            },
+        )
+
+        self.assertEqual(response.status_code, 200)
+        profile = SEOProjectProfile.objects.get(project=self.project)
+        self.assertEqual(profile.business_type, "automotive")
+        self.assertEqual(profile.metadata.get("business_type_source"), "inferred")
+
+    def test_workspace_backlink_prospect_update_persists_status_and_notes(self):
+        snapshot = BacklinkSnapshot.objects.create(
+            project=self.project,
+            profile=SEOProjectProfile.objects.create(
+                project=self.project,
+                business_type="automotive",
+                location="Nairobi",
+                target_goal="Increase qualified organic leads",
+                primary_service="used car dealership",
+                target_audience="price-sensitive car buyers",
+            ),
+            source_audit_run=self.audit_run,
+            output_json={},
+        )
+        prospect = BacklinkProspect.objects.create(
+            project=self.project,
+            snapshot=snapshot,
+            domain="example.org",
+            homepage_url="https://example.org/",
+            prospect_url="https://example.org/resources/",
+            title="Example resource page",
+            target_asset_title="FAQ asset",
+            target_asset_type="faq",
+            target_asset_url="https://example.com/faq/",
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("seo:workspace-backlink-prospect-update", args=[prospect.pk]),
+            {
+                "status": BacklinkProspect.Status.SHORTLISTED,
+                "suggested_anchor_text": "used car dealership Nairobi",
+                "notes": "Good local association target",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        prospect.refresh_from_db()
+        self.assertEqual(prospect.status, BacklinkProspect.Status.SHORTLISTED)
+        self.assertEqual(prospect.suggested_anchor_text, "used car dealership Nairobi")
+        self.assertEqual(prospect.metadata.get("notes"), "Good local association target")
+
+
+class BacklinkIntelligenceTests(TestCase):
+    @patch("apps.seo.backlinks.fetch_search_results")
+    def test_build_backlink_snapshot_payload_generates_assets_and_scored_prospects(self, mocked_fetch):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=72,
+            status=AuditRun.Status.COMPLETED,
+            summary={},
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            latest_audit_run=audit_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="ops@example.com",
+            latest_score=72,
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified leads",
+            primary_service="used car dealership",
+            target_audience="price-sensitive car buyers",
+        )
+        GeneratedContent.objects.create(
+            project=project,
+            output_type=GeneratedContent.OutputType.ARTICLE,
+            title="Used Car Buying Guide Nairobi",
+            business_type="automotive",
+            location="Nairobi",
+            target_audience="price-sensitive car buyers",
+            page_goal="Generate citations",
+            offer_summary="used car dealership",
+            target_keywords=["used car dealership Nairobi"],
+            body="Guide body",
+            cta="CTA",
+            brief_json={"summary": "Useful guide asset", "action": "Publish and pitch this guide."},
+        )
+        mocked_fetch.return_value = {
+            "provider": "duckduckgo",
+            "payload": {
+                "organic_results": [
+                    {
+                        "position": 1,
+                        "title": "Nairobi automotive association resources",
+                        "link": "https://association.or.ke/resources/used-cars/",
+                        "snippet": "Resources for used car buyers in Nairobi",
+                    },
+                    {
+                        "position": 2,
+                        "title": "Unrelated travel blog",
+                        "link": "https://travelblog.example.com/nairobi/",
+                        "snippet": "Things to do in Nairobi",
+                    },
+                ],
+                "local_results": [],
+            },
+            "errors": [],
+        }
+
+        payload = build_backlink_snapshot_payload(
+            project,
+            profile,
+            {"context": {"priority_pages": ["Build service pages"]}},
+            {
+                "page_map": [
+                    {
+                        "page_type": "faq",
+                        "page_type_label": "FAQ",
+                        "status": "optimize",
+                        "priority_score": 85,
+                        "target_keyword": "used car sales nairobi faq",
+                        "target_urls": ["https://example.com/faq/"],
+                        "reason": "FAQ coverage is weak.",
+                        "action": "Improve the FAQ page and make it more citeable.",
+                    }
+                ]
+            },
+        )
+
+        self.assertTrue(payload["linkable_assets"])
+        self.assertTrue(payload["prospects"])
+        self.assertEqual(payload["prospects"][0]["domain"], "association.or.ke")
+        self.assertGreater(payload["prospects"][0]["total_score"], 0)
+
+    @patch("apps.seo.backlinks.fetch_search_results")
+    def test_refresh_project_backlink_intelligence_creates_snapshot_and_prospects(self, mocked_fetch):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=72,
+            status=AuditRun.Status.COMPLETED,
+            summary={},
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            latest_audit_run=audit_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="ops@example.com",
+            latest_score=72,
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified leads",
+            primary_service="used car dealership",
+            target_audience="price-sensitive car buyers",
+        )
+        context_snapshot = SEOContextSnapshot.objects.create(
+            project=project,
+            profile=profile,
+            source_audit_run=audit_run,
+            output_json={"context": {"priority_pages": ["Build service pages"]}},
+        )
+        opportunity_snapshot = SEOOpportunitySnapshot.objects.create(
+            project=project,
+            profile=profile,
+            source_audit_run=audit_run,
+            source_context_snapshot=context_snapshot,
+            output_json={
+                "page_map": [
+                    {
+                        "page_type": "service",
+                        "page_type_label": "Service",
+                        "status": "missing",
+                        "priority_score": 92,
+                        "target_keyword": "used car dealership Nairobi",
+                        "target_urls": [],
+                        "reason": "Missing service page.",
+                        "action": "Create a dedicated service page.",
+                    }
+                ]
+            },
+        )
+        mocked_fetch.return_value = {
+            "provider": "duckduckgo",
+            "payload": {
+                "organic_results": [
+                    {
+                        "position": 1,
+                        "title": "Used car dealership Nairobi association",
+                        "link": "https://association.or.ke/members/",
+                        "snippet": "Directory of used car dealership businesses in Nairobi",
+                    }
+                ],
+                "local_results": [],
+            },
+            "errors": [],
+        }
+
+        snapshot = refresh_project_backlink_intelligence(
+            project,
+            context_snapshot=context_snapshot,
+            opportunity_snapshot=opportunity_snapshot,
+        )
+
+        self.assertIsNotNone(snapshot)
+        self.assertEqual(BacklinkSnapshot.objects.count(), 1)
+        self.assertTrue(BacklinkProspect.objects.filter(project=project).exists())
+
 
 class SEOCompetitorDiscoveryTests(TestCase):
     def test_build_discovery_queries_uses_service_location_and_audience(self):
@@ -548,6 +794,7 @@ class SEOCompetitorDiscoveryTests(TestCase):
         self.assertEqual(discovery["competitors"][0]["normalized_domain"], "competitor-a.com")
         self.assertEqual(discovery["competitors"][0]["query_count"], 2)
         self.assertEqual(discovery["competitors"][0]["best_position"], 1)
+        self.assertTrue(discovery["competitors"][0]["average_relevance"] >= 4)
 
     @override_settings(
         SERP_DISCOVERY_ENABLED=True,
@@ -605,7 +852,60 @@ class SEOCompetitorDiscoveryTests(TestCase):
         domains = [item["normalized_domain"] for item in discovery["competitors"]]
         self.assertIn("competitor-a.com", domains)
         self.assertIn("competitor-b.com", domains)
-        self.assertIn("competitor-c.com", domains)
+        self.assertNotIn("competitor-c.com", domains)
+
+    @override_settings(
+        SERP_DISCOVERY_ENABLED=True,
+        SERP_DISCOVERY_PROVIDER="serpapi",
+        SERPAPI_API_KEY="test-key",
+        SERP_DISCOVERY_QUERY_LIMIT=1,
+        SERP_DISCOVERY_RESULTS_PER_QUERY=5,
+    )
+    @patch("apps.seo.discovery.fetch_serpapi_results")
+    def test_discover_serp_competitors_filters_low_relevance_noise(self, mocked_serp_fetch):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="ops@example.com",
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified leads",
+            primary_service="used car dealership",
+            target_audience="price-sensitive car buyers",
+        )
+        mocked_serp_fetch.return_value = {
+            "organic_results": [
+                {
+                    "position": 1,
+                    "title": "Used Car Dealership Nairobi",
+                    "link": "https://competitor-a.com/",
+                    "snippet": "Buy used cars in Nairobi",
+                },
+                {
+                    "position": 2,
+                    "title": "Nairobi travel guide",
+                    "link": "https://random-blog.com/",
+                    "snippet": "Things to do in Nairobi",
+                },
+            ],
+            "local_results": [],
+        }
+
+        discovery = discover_serp_competitors(project, profile)
+
+        domains = [item["normalized_domain"] for item in discovery["competitors"]]
+        self.assertIn("competitor-a.com", domains)
+        self.assertNotIn("random-blog.com", domains)
 
     @override_settings(
         SERP_DISCOVERY_ENABLED=True,
@@ -642,3 +942,29 @@ class SEOCompetitorDiscoveryTests(TestCase):
         self.assertTrue(discovery["enabled"])
         self.assertEqual(discovery["competitors"], [])
         self.assertEqual(discovery["errors"], [])
+
+    @override_settings(
+        SERP_DISCOVERY_ENABLED=True,
+        SERP_DISCOVERY_PROVIDER="serpapi,duckduckgo",
+        SERPAPI_API_KEY="test-key",
+    )
+    @patch("apps.seo.discovery.fetch_duckduckgo_results")
+    @patch("apps.seo.discovery.fetch_serpapi_results", side_effect=requests.RequestException("serpapi unavailable"))
+    def test_fetch_search_results_falls_back_to_duckduckgo(self, mocked_serpapi, mocked_duckduckgo):
+        mocked_duckduckgo.return_value = {
+            "organic_results": [
+                {
+                    "position": 1,
+                    "title": "Fallback result",
+                    "link": "https://fallback.example.com/",
+                    "snippet": "Fallback snippet",
+                }
+            ],
+            "local_results": [],
+        }
+
+        result = fetch_search_results("used car dealership Nairobi", location="Nairobi")
+
+        self.assertEqual(result["provider"], "duckduckgo")
+        self.assertTrue(result["payload"]["organic_results"])
+        self.assertEqual(result["errors"][0]["provider"], "serpapi")

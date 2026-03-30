@@ -1,14 +1,17 @@
 from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import Http404
 from django.shortcuts import redirect, render
 from django.views import View
 
 from apps.leads.models import ClientProject
 
+from .backlinks import refresh_project_backlink_intelligence
 from .forms import SEOProjectProfileForm
-from .models import SEOCompetitor, SEOProjectProfile
+from .models import BacklinkProspect, SEOCompetitor, SEOProjectProfile
 from .jobs import enqueue_project_seo_refresh
+from .services import infer_business_type_for_project
 from .services import (
     can_generate_seo_snapshot,
     refresh_project_seo_intelligence,
@@ -22,9 +25,10 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         project = self._get_project(request.user)
         profile = getattr(project, "seo_profile", None) if project else None
-        form = SEOProjectProfileForm(instance=profile, initial=self._initial_form_data(project))
+        form = SEOProjectProfileForm(instance=profile, initial=self._initial_form_data(project, profile))
         snapshot = self._get_latest_snapshot(project, profile)
         opportunity_snapshot = self._get_latest_opportunity_snapshot(project, profile)
+        backlink_snapshot = self._get_latest_backlink_snapshot(project, profile)
         return render(
             request,
             self.template_name,
@@ -34,6 +38,7 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
                 profile=profile,
                 snapshot=snapshot,
                 opportunity_snapshot=opportunity_snapshot,
+                backlink_snapshot=backlink_snapshot,
             ),
         )
 
@@ -48,6 +53,7 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
         if not form.is_valid():
             snapshot = self._get_latest_snapshot(project, profile)
             opportunity_snapshot = self._get_latest_opportunity_snapshot(project, profile)
+            backlink_snapshot = self._get_latest_backlink_snapshot(project, profile)
             return render(
                 request,
                 self.template_name,
@@ -57,16 +63,29 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
                     profile=profile,
                     snapshot=snapshot,
                     opportunity_snapshot=opportunity_snapshot,
+                    backlink_snapshot=backlink_snapshot,
                 ),
                 status=400,
             )
 
         profile = form.save(commit=False)
         profile.project = project
+        inferred_business_type = infer_business_type_for_project(
+            project,
+            audit_run=project.latest_audit_run,
+            primary_service=form.cleaned_data.get("primary_service", ""),
+        )
+        metadata = dict(profile.metadata or {})
+        metadata["inferred_business_type"] = inferred_business_type
+        metadata["business_type_source"] = "manual" if form.cleaned_data.get("business_type") else "inferred"
+        profile.metadata = metadata
+        if not form.cleaned_data.get("business_type"):
+            profile.business_type = inferred_business_type
         profile.save()
         sync_project_competitors(project, form.cleaned_data.get("competitor_urls", ""))
         snapshot = None
         opportunity_snapshot = None
+        backlink_snapshot = None
         if settings.SEO_REFRESH_ASYNC:
             metadata = dict(profile.metadata or {})
             metadata["refresh_status"] = "queued"
@@ -76,19 +95,26 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             enqueue_project_seo_refresh(project.pk)
             snapshot = self._get_latest_snapshot(project, profile)
             opportunity_snapshot = self._get_latest_opportunity_snapshot(project, profile)
+            backlink_snapshot = self._get_latest_backlink_snapshot(project, profile)
             messages.success(request, "SEO refresh queued. The workspace will update when competitor profiling finishes.")
         else:
             snapshot, opportunity_snapshot = refresh_project_seo_intelligence(project)
+            backlink_snapshot = refresh_project_backlink_intelligence(
+                project,
+                context_snapshot=snapshot,
+                opportunity_snapshot=opportunity_snapshot,
+            )
             messages.success(request, "SEO context saved and refreshed for this workspace.")
         return render(
             request,
             self.template_name,
             self._build_context(
                 project=project,
-                form=SEOProjectProfileForm(instance=profile, initial=self._initial_form_data(project)),
+                form=SEOProjectProfileForm(instance=profile, initial=self._initial_form_data(project, profile)),
                 profile=profile,
                 snapshot=snapshot,
                 opportunity_snapshot=opportunity_snapshot,
+                backlink_snapshot=backlink_snapshot,
             ),
         )
 
@@ -109,7 +135,7 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             .first()
         )
 
-    def _initial_form_data(self, project):
+    def _initial_form_data(self, project, profile=None):
         if not project:
             return {}
         competitor_urls = [
@@ -121,7 +147,10 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
         ]
         if not competitor_urls and getattr(project, "audit_request", None):
             competitor_urls = getattr(project.audit_request, "competitor_urls", [])
-        return {"competitor_urls": "\n".join(competitor_urls)}
+        initial = {"competitor_urls": "\n".join(competitor_urls)}
+        if not getattr(profile, "business_type", ""):
+            initial["business_type"] = infer_business_type_for_project(project)
+        return initial
 
     def _get_latest_opportunity_snapshot(self, project, profile):
         if not profile or not can_generate_seo_snapshot(project):
@@ -135,9 +164,22 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             .first()
         )
 
-    def _build_context(self, *, project, form, profile, snapshot, opportunity_snapshot):
+    def _get_latest_backlink_snapshot(self, project, profile):
+        if not profile or not can_generate_seo_snapshot(project):
+            return None
+        return (
+            project.backlink_snapshots.filter(
+                profile=profile,
+                source_audit_run=project.latest_audit_run,
+            )
+            .order_by("-created_at")
+            .first()
+        )
+
+    def _build_context(self, *, project, form, profile, snapshot, opportunity_snapshot, backlink_snapshot):
         payload = snapshot.output_json if snapshot else {}
         opportunity_payload = opportunity_snapshot.output_json if opportunity_snapshot else {}
+        backlink_payload = backlink_snapshot.output_json if backlink_snapshot else {}
         refresh_state = (getattr(profile, "metadata", None) or {}) if profile else {}
         return {
             "project": project,
@@ -157,6 +199,39 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             "seo_keyword_opportunities": opportunity_payload.get("keyword_opportunities", []),
             "seo_page_map": opportunity_payload.get("page_map", []),
             "seo_execution_queue": opportunity_payload.get("execution_queue", []),
+            "backlink_snapshot": backlink_snapshot,
+            "backlink_summary": backlink_payload.get("summary", {}),
+            "backlink_linkable_assets": backlink_payload.get("linkable_assets", []),
+            "backlink_errors": backlink_payload.get("errors", []),
+            "backlink_prospects": list(project.backlink_prospects.order_by("-total_score", "-updated_at")[:20]) if project else [],
+            "backlink_status_choices": BacklinkProspect.Status.choices,
             "can_generate_snapshot": can_generate_seo_snapshot(project),
             "seo_refresh_state": refresh_state,
         }
+
+
+class WorkspaceBacklinkProspectUpdateView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        project = (
+            ClientProject.objects.filter(owner=request.user)
+            .order_by("-updated_at")
+            .first()
+        )
+        if not project:
+            raise Http404
+        prospect = project.backlink_prospects.filter(pk=kwargs["pk"]).first()
+        if not prospect:
+            raise Http404
+
+        status = request.POST.get("status", "").strip()
+        anchor_text = request.POST.get("suggested_anchor_text", "").strip()
+        notes = request.POST.get("notes", "").strip()
+        if status in BacklinkProspect.Status.values:
+            prospect.status = status
+        prospect.suggested_anchor_text = anchor_text[:255]
+        metadata = dict(prospect.metadata or {})
+        metadata["notes"] = notes[:1000]
+        prospect.metadata = metadata
+        prospect.save(update_fields=["status", "suggested_anchor_text", "metadata", "updated_at"])
+        messages.success(request, "Backlink prospect updated.")
+        return redirect("seo:workspace-seo")

@@ -4,6 +4,7 @@ from .models import SEOProjectProfile
 
 
 BUSINESS_TYPE_CHOICES = (
+    ("", "Auto-detect from website"),
     ("automotive", "Automotive"),
     ("agency", "Agency / Professional Services"),
     ("saas", "SaaS"),
@@ -16,7 +17,7 @@ BUSINESS_TYPE_CHOICES = (
 
 
 class SEOProjectProfileForm(forms.ModelForm):
-    business_type = forms.ChoiceField(choices=BUSINESS_TYPE_CHOICES)
+    business_type = forms.ChoiceField(choices=BUSINESS_TYPE_CHOICES, required=False)
     competitor_urls = forms.CharField(
         required=False,
         widget=forms.Textarea(

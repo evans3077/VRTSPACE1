@@ -1,6 +1,8 @@
 from django.contrib import admin
 
 from .models import (
+    BacklinkProspect,
+    BacklinkSnapshot,
     FAQ,
     SEOCompetitor,
     SEOCompetitorSnapshot,
@@ -51,3 +53,18 @@ class SEOCompetitorSnapshotAdmin(admin.ModelAdmin):
 class SEOSiteStructureSnapshotAdmin(admin.ModelAdmin):
     list_display = ("project", "source_audit_run", "created_at")
     search_fields = ("project__name", "project__normalized_domain")
+
+
+@admin.register(BacklinkSnapshot)
+class BacklinkSnapshotAdmin(admin.ModelAdmin):
+    list_display = ("project", "source_audit_run", "created_at")
+    search_fields = ("project__name", "project__normalized_domain")
+    readonly_fields = ("output_json",)
+
+
+@admin.register(BacklinkProspect)
+class BacklinkProspectAdmin(admin.ModelAdmin):
+    list_display = ("domain", "project", "prospect_type", "status", "total_score", "target_asset_title", "updated_at")
+    search_fields = ("domain", "title", "project__name", "target_asset_title", "prospect_url")
+    list_filter = ("prospect_type", "status")
+    readonly_fields = ("outreach_packet", "metadata")

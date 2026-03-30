@@ -2,6 +2,7 @@ from collections import defaultdict
 from urllib.parse import urlparse
 
 import requests
+from bs4 import BeautifulSoup
 from django.conf import settings
 
 from apps.tools.services import extract_domain, normalize_url
@@ -26,12 +27,91 @@ BLOCKED_COMPETITOR_DOMAINS = {
     "google.com",
 }
 
+DISCOVERY_STOPWORDS = {
+    "the",
+    "and",
+    "for",
+    "with",
+    "from",
+    "that",
+    "your",
+    "you",
+    "into",
+    "near",
+    "best",
+    "top",
+    "home",
+    "about",
+    "contact",
+    "page",
+}
 
-def build_discovery_queries(profile):
+GENERIC_RESULT_HINTS = {
+    "jobs",
+    "career",
+    "careers",
+    "wikipedia",
+    "reddit",
+    "directory",
+    "listing",
+    "forum",
+}
+
+INDUSTRY_DISCOVERY_TERMS = {
+    "automotive": ["used cars", "vehicles", "dealership", "financing"],
+    "agency": ["services", "pricing", "case study", "consulting"],
+    "saas": ["software", "platform", "pricing", "features"],
+    "hotel": ["rooms", "booking", "amenities", "events"],
+    "ecommerce": ["shop", "products", "category", "pricing"],
+    "healthcare": ["clinic", "appointment", "care", "service"],
+    "real_estate": ["property", "listing", "homes", "real estate"],
+    "local_service": ["services", "near me", "pricing", "reviews"],
+}
+
+
+def _provider_order():
+    providers = [
+        value.strip().lower()
+        for value in (settings.SERP_DISCOVERY_PROVIDER or "").split(",")
+        if value.strip()
+    ]
+    return providers or ["duckduckgo"]
+
+
+def _tokenize_terms(text):
+    tokens = []
+    for raw in (text or "").replace("/", " ").replace("-", " ").split():
+        token = raw.strip(" ,.:;!?()[]{}\"'").lower()
+        if len(token) < 3 or token in DISCOVERY_STOPWORDS:
+            continue
+        if token not in tokens:
+            tokens.append(token)
+    return tokens
+
+
+def _audit_query_hints(project):
+    audit_run = getattr(project, "latest_audit_run", None)
+    if not audit_run:
+        return []
+    hints = []
+    for page in audit_run.pages.order_by("-word_count", "url")[:6]:
+        for source in (page.title, page.h1, page.meta_description):
+            if not source:
+                continue
+            words = [token for token in _tokenize_terms(source) if token not in hints]
+            if words:
+                hints.append(" ".join(words[:4]))
+            if len(hints) >= 4:
+                return hints
+    return hints
+
+
+def build_discovery_queries(profile, project=None):
     service = (profile.primary_service or profile.business_type.replace("_", " ") or "service").strip()
     location = (profile.location or "").strip()
     audience = (profile.target_audience or "").strip()
     goal = (profile.target_goal or "").strip().lower()
+    industry_terms = INDUSTRY_DISCOVERY_TERMS.get(profile.business_type, [])
 
     queries = [
         f"{service} {location}".strip(),
@@ -42,6 +122,10 @@ def build_discovery_queries(profile):
         queries.append(f"{service} for {audience}".strip())
     if "lead" in goal or "inquiry" in goal or "book" in goal:
         queries.append(f"{service} {location} contact".strip())
+    for term in industry_terms[:2]:
+        queries.append(f"{term} {location}".strip())
+    for hint in _audit_query_hints(project)[:2]:
+        queries.append(f"{hint} {location}".strip())
 
     unique = []
     for query in queries:
@@ -71,6 +155,40 @@ def fetch_serpapi_results(query, location=""):
     )
     response.raise_for_status()
     return response.json()
+
+
+def fetch_duckduckgo_results(query, location=""):
+    search_query = " ".join(part for part in [query, location] if part).strip()
+    response = requests.get(
+        "https://html.duckduckgo.com/html/",
+        params={"q": search_query},
+        timeout=20,
+        headers={
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
+        },
+    )
+    response.raise_for_status()
+    soup = BeautifulSoup(response.text, "lxml")
+    results = []
+    for index, block in enumerate(soup.select(".result"), start=1):
+        link_tag = block.select_one(".result__a")
+        snippet_tag = block.select_one(".result__snippet")
+        link = link_tag.get("href", "").strip() if link_tag else ""
+        title = link_tag.get_text(" ", strip=True) if link_tag else ""
+        snippet = snippet_tag.get_text(" ", strip=True) if snippet_tag else ""
+        if not link:
+            continue
+        results.append(
+            {
+                "position": index,
+                "title": title,
+                "link": link,
+                "snippet": snippet,
+            }
+        )
+        if len(results) >= settings.SERP_DISCOVERY_RESULTS_PER_QUERY:
+            break
+    return {"organic_results": results, "local_results": []}
 
 
 def _candidate_link(result):
@@ -155,6 +273,8 @@ def _aggregate_candidates(raw_candidates):
             "titles": [],
             "snippets": [],
             "result_urls": [],
+            "relevance_scores": [],
+            "match_signals": [],
         }
     )
     for item in raw_candidates:
@@ -170,13 +290,22 @@ def _aggregate_candidates(raw_candidates):
             entry["snippets"].append(item["snippet"])
         if item["result_url"] and item["result_url"] not in entry["result_urls"]:
             entry["result_urls"].append(item["result_url"])
+        if item.get("relevance_score") is not None:
+            entry["relevance_scores"].append(item["relevance_score"])
+        for signal in item.get("match_signals", []):
+            if signal not in entry["match_signals"]:
+                entry["match_signals"].append(signal)
 
     discovered = []
     for domain, item in aggregated.items():
         appearances = len(item["positions"])
         average_position = round(sum(item["positions"]) / max(appearances, 1), 1)
         best_position = min(item["positions"]) if item["positions"] else 99
-        discovery_score = appearances * 20 + max(0, 15 - best_position)
+        average_relevance = round(
+            sum(item["relevance_scores"]) / max(len(item["relevance_scores"]), 1),
+            1,
+        ) if item["relevance_scores"] else 0
+        discovery_score = appearances * 20 + max(0, 15 - best_position) + average_relevance
         discovered.append(
             {
                 "homepage_url": item["homepage_url"],
@@ -190,11 +319,76 @@ def _aggregate_candidates(raw_candidates):
                 "sample_snippets": item["snippets"][:3],
                 "result_urls": item["result_urls"][:6],
                 "discovery_score": discovery_score,
+                "average_relevance": average_relevance,
+                "match_signals": item["match_signals"][:8],
             }
         )
 
+    discovered = [
+        item
+        for item in discovered
+        if item["average_relevance"] >= 4 or item["query_count"] >= 2
+    ]
     discovered.sort(key=lambda item: (-item["discovery_score"], item["average_position"]))
     return discovered
+
+
+def fetch_search_results(query, location=""):
+    providers = _provider_order()
+    errors = []
+    for provider in providers:
+        if provider == "serpapi":
+            if not settings.SERPAPI_API_KEY:
+                errors.append({"provider": provider, "message": "SERPAPI_API_KEY is not configured."})
+                continue
+            try:
+                payload = fetch_serpapi_results(query, location=location)
+                return {"provider": provider, "payload": payload, "errors": errors}
+            except requests.RequestException as exc:
+                errors.append({"provider": provider, "message": str(exc)})
+                continue
+        if provider == "duckduckgo":
+            try:
+                payload = fetch_duckduckgo_results(query, location=location)
+                return {"provider": provider, "payload": payload, "errors": errors}
+            except requests.RequestException as exc:
+                errors.append({"provider": provider, "message": str(exc)})
+                continue
+    return {"provider": "", "payload": {}, "errors": errors}
+
+
+def _relevance_signals(result, profile):
+    result_dict = result if isinstance(result, dict) else {}
+    haystack = " ".join(
+        [
+            result_dict.get("title", ""),
+            result_dict.get("snippet", ""),
+            result_dict.get("description", ""),
+            _candidate_link(result),
+        ]
+    ).lower()
+    signals = []
+    score = 0
+    for token in _tokenize_terms(profile.primary_service or profile.business_type.replace("_", " ")):
+        if token in haystack:
+            score += 3
+            signals.append(f"service:{token}")
+    for token in _tokenize_terms(profile.location):
+        if token in haystack:
+            score += 2
+            signals.append(f"location:{token}")
+    for token in _tokenize_terms(profile.target_audience)[:2]:
+        if token in haystack:
+            score += 1
+            signals.append(f"audience:{token}")
+    for token in INDUSTRY_DISCOVERY_TERMS.get(profile.business_type, [])[:3]:
+        if token.lower() in haystack:
+            score += 2
+            signals.append(f"industry:{token.lower()}")
+    if any(hint in haystack for hint in GENERIC_RESULT_HINTS):
+        score -= 4
+        signals.append("generic_noise")
+    return score, signals
 
 
 def discover_serp_competitors(project, profile):
@@ -208,24 +402,38 @@ def discover_serp_competitors(project, profile):
         }
 
     own_domain = project.normalized_domain or extract_domain(project.website or "")
-    queries = build_discovery_queries(profile)
+    queries = build_discovery_queries(profile, project=project)
     raw_candidates = []
     errors = []
 
     for query in queries:
-        try:
-            payload = fetch_serpapi_results(query, location=profile.location)
-        except requests.RequestException as exc:
-            errors.append({"query": query, "message": str(exc)})
+        search_response = fetch_search_results(query, location=profile.location)
+        payload = search_response.get("payload") or {}
+        if search_response.get("errors"):
+            for item in search_response["errors"]:
+                errors.append(
+                    {
+                        "query": query,
+                        "provider": item.get("provider", ""),
+                        "message": item.get("message", ""),
+                    }
+                )
+        if not payload:
             continue
         try:
             for result in _result_items(payload, "organic_results"):
                 parsed = _parse_result(result, query=query, own_domain=own_domain)
                 if parsed:
+                    relevance_score, match_signals = _relevance_signals(result, profile)
+                    parsed["relevance_score"] = relevance_score
+                    parsed["match_signals"] = match_signals
                     raw_candidates.append(parsed)
             for result in _result_items(payload, "local_results"):
                 parsed = _parse_result(result, query=query, own_domain=own_domain)
                 if parsed:
+                    relevance_score, match_signals = _relevance_signals(result, profile)
+                    parsed["relevance_score"] = relevance_score
+                    parsed["match_signals"] = match_signals
                     raw_candidates.append(parsed)
         except Exception as exc:
             errors.append({"query": query, "message": f"SERP parsing error: {exc}"})
@@ -233,7 +441,7 @@ def discover_serp_competitors(project, profile):
 
     competitors = _aggregate_candidates(raw_candidates)
     return {
-        "provider": settings.SERP_DISCOVERY_PROVIDER,
+        "provider": ",".join(_provider_order()),
         "enabled": True,
         "queries": queries,
         "competitors": competitors,

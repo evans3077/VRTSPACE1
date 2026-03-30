@@ -64,28 +64,67 @@
                 </div>
                 {% else %}
                 <div class="system-grid">
-                    <article class="system-card"><p class="eyebrow">Business Type</p><h3>{{ seo_context.industry_label }}</h3><p>{{ seo_context.location }}</p></article>
+                    <article class="system-card"><p class="eyebrow">Business Type</p><h3>{{ seo_context.industry_label }}</h3><p>{{ seo_context.location }} | {{ seo_context.business_type_source|default:"manual"|title }}</p></article>
                     <article class="system-card"><p class="eyebrow">Primary Goal</p><h3 style="font-size: 1.15rem;">{{ seo_context.target_goal }}</h3><p>Goal-driven benchmark direction</p></article>
                     <article class="system-card"><p class="eyebrow">Competitors Benchmarked</p><h3>{{ seo_benchmark_summary.available_competitors|default:0 }}</h3><p>Fetched and profiled directly</p></article>
-                    <article class="system-card"><p class="eyebrow">Common Page Types</p><h3 style="font-size: 1.1rem;">{{ seo_benchmark_summary.common_page_types|length }}</h3><p>Shared structures competitors publish</p></article>
+                    <article class="system-card"><p class="eyebrow">Discovery Precision</p><h3 style="font-size: 1.1rem;">{{ seo_benchmark_summary.average_relevance|default:0 }}</h3><p>Average relevance across discovered competitors</p></article>
                 </div>
                 <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; line-height: 1.6;">
                     <strong style="display: block; margin-bottom: 0.35rem;">Goal focus</strong>
                     {{ seo_context.goal_focus }}
                 </div>
+                {% if seo_benchmark_summary.top_match_signals %}
+                <div class="seo-inline-tags" style="margin-top: 1rem;">
+                    {% for signal in seo_benchmark_summary.top_match_signals %}
+                    <span class="seo-inline-tag">{{ signal }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
                 {% endif %}
             </article>
         </div>
 
         {% if seo_refresh_state.refresh_status == "queued" or seo_refresh_state.refresh_status == "running" %}
-        <article class="system-card" style="background: rgba(14, 165, 233, 0.08);">
+        <article class="system-card seo-refresh-shell" style="background: rgba(14, 165, 233, 0.08);" data-seo-refresh-state="{{ seo_refresh_state.refresh_status }}">
             <div class="section-heading" style="text-align: left; margin-bottom: 0.5rem;">
                 <p class="eyebrow">SEO Refresh Status</p>
                 <h2 style="font-size: 1.6rem;">Benchmark refresh in progress</h2>
             </div>
-            <p style="margin: 0; color: #0f172a; line-height: 1.6;">
-                Competitor discovery and page profiling are running in the background. This page will show the latest completed SEO snapshot until the new refresh finishes.
-            </p>
+            <div class="seo-refresh-visual">
+                <div class="seo-orbit" aria-hidden="true">
+                    <div class="seo-orbit-ring"></div>
+                    <div class="seo-orbit-ring ring-two"></div>
+                    <div class="seo-orbit-core"></div>
+                    <div class="seo-orbit-dot"></div>
+                    <div class="seo-orbit-dot dot-two"></div>
+                </div>
+                <div class="seo-status-stack">
+                    <div class="seo-status-live">
+                        <span class="seo-live-dot"></span>
+                        Live benchmark running
+                    </div>
+                    <p class="seo-status-message" data-seo-status-copy>
+                        Competitor discovery and page profiling are running in the background. This page will show the latest completed SEO snapshot until the new refresh finishes.
+                    </p>
+                    <div class="seo-loading-grid" aria-hidden="true">
+                        <div class="seo-loading-card">
+                            <div class="seo-line-lg seo-shimmer"></div>
+                            <div class="seo-line-md seo-shimmer"></div>
+                            <div class="seo-line-sm seo-shimmer"></div>
+                        </div>
+                        <div class="seo-loading-card">
+                            <div class="seo-line-lg seo-shimmer"></div>
+                            <div class="seo-line-md seo-shimmer"></div>
+                            <div class="seo-line-sm seo-shimmer"></div>
+                        </div>
+                        <div class="seo-loading-card">
+                            <div class="seo-line-lg seo-shimmer"></div>
+                            <div class="seo-line-md seo-shimmer"></div>
+                            <div class="seo-line-sm seo-shimmer"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </article>
         {% elif seo_refresh_state.refresh_status == "failed" %}
         <article class="system-card" style="background: rgba(220, 38, 38, 0.08);">
@@ -109,6 +148,8 @@
                 <article class="system-card"><p class="eyebrow">Competitors</p><h3>{{ seo_value_summary.competitors_benchmarked|default:0 }}</h3><p>Real competitor sites fetched and benchmarked</p></article>
                 <article class="system-card"><p class="eyebrow">Auto-Discovered</p><h3>{{ seo_value_summary.auto_discovered_competitors|default:0 }}</h3><p>Competitors found directly from localized SERPs</p></article>
                 <article class="system-card"><p class="eyebrow">Competitor Pages</p><h3>{{ seo_value_summary.competitor_pages_profiled|default:0 }}</h3><p>Pages profiled across those competitor sites</p></article>
+                <article class="system-card"><p class="eyebrow">Images Profiled</p><h3>{{ seo_value_summary.competitor_images_profiled|default:0 }}</h3><p>Competitor visual assets captured for analysis</p></article>
+                <article class="system-card"><p class="eyebrow">Scripts Profiled</p><h3>{{ seo_value_summary.competitor_scripts_profiled|default:0 }}</h3><p>Third-party and app stack signals captured</p></article>
                 <article class="system-card"><p class="eyebrow">Keyword Targets</p><h3>{{ seo_value_summary.keyword_targets|default:0 }}</h3><p>Search targets generated from structure and competitor evidence</p></article>
                 <article class="system-card"><p class="eyebrow">Execution Items</p><h3>{{ seo_value_summary.execution_items|default:0 }}</h3><p>Actionable tasks mapped from the benchmark output</p></article>
             </div>
@@ -405,11 +446,35 @@
                     {% if competitor.metadata.serp %}
                     <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
                         Best SERP position: <strong style="color: #0f172a;">{{ competitor.metadata.serp.best_position }}</strong> |
-                        Seen in {{ competitor.metadata.serp.query_count }} quer{{ competitor.metadata.serp.query_count|pluralize:"y,ies" }}
+                        Seen in {{ competitor.metadata.serp.query_count }} quer{{ competitor.metadata.serp.query_count|pluralize:"y,ies" }} |
+                        Relevance {{ competitor.metadata.serp.average_relevance|default:0 }}
                     </div>
                     <div style="margin-top: 0.35rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
                         <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Queries</strong>
                         {{ competitor.metadata.serp.queries|join:", " }}
+                    </div>
+                    {% if competitor.metadata.serp.match_signals %}
+                    <div class="seo-inline-tags" style="margin-top: 0.55rem;">
+                        {% for signal in competitor.metadata.serp.match_signals %}
+                        <span class="seo-inline-tag">{{ signal }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% endif %}
+                    {% if competitor.summary.asset_totals %}
+                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
+                        Assets: <strong style="color: #0f172a;">{{ competitor.summary.asset_totals.images|default:0 }} images</strong>,
+                        {{ competitor.summary.asset_totals.scripts|default:0 }} scripts,
+                        {{ competitor.summary.asset_totals.webp_count|default:0 }} webp assets
+                    </div>
+                    {% endif %}
+                    {% if competitor.summary.top_cms %}
+                    <div style="margin-top: 0.35rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
+                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Tech stack signals</strong>
+                        CMS: {% for item in competitor.summary.top_cms %}{{ item.0 }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                        {% if competitor.summary.top_frameworks %}
+                        <br>Frameworks: {% for item in competitor.summary.top_frameworks %}{{ item.0 }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                        {% endif %}
                     </div>
                     {% endif %}
                     <div style="margin-top: 0.75rem; display: grid; gap: 0.35rem;">
@@ -433,7 +498,152 @@
                 {% endfor %}
             </div>
         </article>
+
+        <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 2rem; align-items: start;">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Linkable Assets</p>
+                    <h2 style="font-size: 2rem;">Pages worth promoting for backlinks</h2>
+                </div>
+                {% if backlink_summary %}
+                <div class="system-grid" style="margin-bottom: 1rem;">
+                    <article class="system-card"><p class="eyebrow">Assets</p><h3>{{ backlink_summary.linkable_asset_count|default:0 }}</h3><p>Pages or drafts worth promoting</p></article>
+                    <article class="system-card"><p class="eyebrow">Prospects</p><h3>{{ backlink_summary.prospect_count|default:0 }}</h3><p>Targets scored from live discovery</p></article>
+                    <article class="system-card"><p class="eyebrow">Avg Score</p><h3>{{ backlink_summary.average_total_score|default:0 }}</h3><p>Average fit across current prospects</p></article>
+                </div>
+                {% endif %}
+                <div style="display: grid; gap: 1rem;">
+                    {% for asset in backlink_linkable_assets %}
+                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
+                            <strong>{{ asset.asset_title }}</strong>
+                            <span class="score-pill score-high" style="font-size: 0.7rem;">Priority {{ asset.priority_score }}</span>
+                        </div>
+                        <div style="margin-top: 0.45rem; color: #475569; font-size: 0.82rem;">
+                            <strong style="color: #0f172a;">Type:</strong> {{ asset.asset_type|cut:"_"|title }} | {{ asset.asset_kind|title }}
+                        </div>
+                        {% if asset.asset_url %}
+                        <div style="margin-top: 0.45rem; color: #64748b; font-family: monospace; font-size: 0.76rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            {{ asset.asset_url }}
+                        </div>
+                        {% endif %}
+                        <div style="margin-top: 0.55rem; color: #475569; font-size: 0.88rem; line-height: 1.5;">
+                            {{ asset.pitch_hook }}
+                        </div>
+                        <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
+                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Why this asset matters</strong>
+                            {{ asset.reason }}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                        Complete the SEO refresh first. Linkable asset recommendations are generated from the live page map and draft inventory.
+                    </div>
+                    {% endfor %}
+                </div>
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Backlink Prospects</p>
+                    <h2 style="font-size: 2rem;">Who should link to what</h2>
+                </div>
+                {% if backlink_errors %}
+                <div style="margin-bottom: 1rem; padding: 1rem; border-radius: 16px; background: rgba(220, 38, 38, 0.08); color: #991b1b; line-height: 1.6;">
+                    <strong style="display: block; margin-bottom: 0.35rem;">Backlink discovery warnings</strong>
+                    {% for item in backlink_errors %}
+                    <div>{{ item.query }}{% if item.provider %} ({{ item.provider }}){% endif %}: {{ item.message }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                <div style="display: grid; gap: 1rem;">
+                    {% for prospect in backlink_prospects %}
+                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
+                            <strong>{{ prospect.domain }}</strong>
+                            <span class="score-pill score-high" style="font-size: 0.7rem;">Score {{ prospect.total_score }}</span>
+                        </div>
+                        <div style="margin-top: 0.35rem; color: #475569; font-size: 0.82rem;">
+                            {{ prospect.get_prospect_type_display }} | Target asset: <strong style="color: #0f172a;">{{ prospect.target_asset_title }}</strong>
+                        </div>
+                        <div style="margin-top: 0.35rem; color: #64748b; font-family: monospace; font-size: 0.76rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                            {{ prospect.prospect_url }}
+                        </div>
+                        {% if prospect.title %}
+                        <div style="margin-top: 0.55rem; color: #475569; font-size: 0.88rem; line-height: 1.5;">
+                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Page title</strong>
+                            {{ prospect.title }}
+                        </div>
+                        {% endif %}
+                        <div class="seo-inline-tags" style="margin-top: 0.55rem;">
+                            <span class="seo-inline-tag">Relevance {{ prospect.relevance_score }}</span>
+                            <span class="seo-inline-tag">Authority fit {{ prospect.authority_fit_score }}</span>
+                            <span class="seo-inline-tag">Local fit {{ prospect.local_fit_score }}</span>
+                            <span class="seo-inline-tag">Outreach {{ prospect.outreach_likelihood_score }}</span>
+                        </div>
+                        {% if prospect.outreach_packet %}
+                        <div style="margin-top: 0.75rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
+                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Pitch angle</strong>
+                            {{ prospect.outreach_packet.pitch_angle }}
+                        </div>
+                        {% if prospect.outreach_packet.subject_lines %}
+                        <div style="margin-top: 0.45rem; color: #475569; font-size: 0.82rem;">
+                            <strong style="color: #0f172a;">Subject lines:</strong> {{ prospect.outreach_packet.subject_lines|join:", " }}
+                        </div>
+                        {% endif %}
+                        {% endif %}
+                        <form method="post" action="{% url 'seo:workspace-backlink-prospect-update' prospect.pk %}" style="margin-top: 0.9rem; display: grid; gap: 0.65rem;">
+                            {% csrf_token %}
+                            <div style="display: grid; grid-template-columns: 0.8fr 1fr; gap: 0.75rem;">
+                                <label style="display: grid; gap: 0.25rem;">
+                                    <span style="font-size: 0.78rem; font-weight: 700; color: #0f172a;">Status</span>
+                                    <select name="status">
+                                        {% for value, label in backlink_status_choices %}
+                                        <option value="{{ value }}"{% if prospect.status == value %} selected{% endif %}>{{ label }}</option>
+                                        {% endfor %}
+                                    </select>
+                                </label>
+                                <label style="display: grid; gap: 0.25rem;">
+                                    <span style="font-size: 0.78rem; font-weight: 700; color: #0f172a;">Anchor text</span>
+                                    <input type="text" name="suggested_anchor_text" value="{{ prospect.suggested_anchor_text }}">
+                                </label>
+                            </div>
+                            <label style="display: grid; gap: 0.25rem;">
+                                <span style="font-size: 0.78rem; font-weight: 700; color: #0f172a;">Notes</span>
+                                <textarea name="notes" rows="2">{{ prospect.metadata.notes }}</textarea>
+                            </label>
+                            <button type="submit" class="button button-secondary">Update prospect</button>
+                        </form>
+                    </div>
+                    {% empty %}
+                    <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                        No backlink prospects yet. Run the SEO refresh to generate scored outreach targets from the current linkable assets.
+                    </div>
+                    {% endfor %}
+                </div>
+            </article>
+        </div>
         {% endif %}
     </div>
 </section>
+{% if seo_refresh_state.refresh_status == "queued" or seo_refresh_state.refresh_status == "running" %}
+<script>
+(() => {
+    const messages = [
+        "Scanning localized SERPs and filtering out low-fit competitors.",
+        "Profiling competitor structure, tech stack, and asset mixes.",
+        "Building the keyword queue, page map, and execution roadmap.",
+    ];
+    const target = document.querySelector("[data-seo-status-copy]");
+    if (target) {
+        let index = 0;
+        setInterval(() => {
+            index = (index + 1) % messages.length;
+            target.textContent = messages[index];
+        }, 2400);
+    }
+    setTimeout(() => window.location.reload(), 12000);
+})();
+</script>
+{% endif %}
 {% endblock %}

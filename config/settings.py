@@ -277,12 +277,15 @@ STRIPE_PRICE_IDS = {
     "enterprise": first_env("STRIPE_PRICE_ENTERPRISE"),
 }
 
-SERP_DISCOVERY_PROVIDER = first_env("SERP_DISCOVERY_PROVIDER", default="serpapi")
+SERP_DISCOVERY_PROVIDER = first_env("SERP_DISCOVERY_PROVIDER", default="serpapi,duckduckgo")
 SERPAPI_API_KEY = first_env("SERPAPI_API_KEY", "SERP_API_KEY")
 SERP_DISCOVERY_QUERY_LIMIT = int(os.environ.get("SERP_DISCOVERY_QUERY_LIMIT", "4"))
 SERP_DISCOVERY_RESULTS_PER_QUERY = int(os.environ.get("SERP_DISCOVERY_RESULTS_PER_QUERY", "8"))
 SERP_DISCOVERY_ENABLED = bool(
-    SERP_DISCOVERY_PROVIDER == "serpapi" and SERPAPI_API_KEY
+    SERP_DISCOVERY_PROVIDER and (
+        "duckduckgo" in SERP_DISCOVERY_PROVIDER.lower()
+        or ("serpapi" in SERP_DISCOVERY_PROVIDER.lower() and SERPAPI_API_KEY)
+    )
 )
 
 CONTENT_REFINEMENT_PROVIDER = first_env("CONTENT_REFINEMENT_PROVIDER", default="deterministic")
