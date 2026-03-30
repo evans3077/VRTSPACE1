@@ -79,7 +79,7 @@ setTimeout(function () {
             {% endif %}
         </div>
 
-        <div style="display: grid; grid-template-columns: 320px 1fr; gap: 3rem; align-items: center; margin-top: 3rem;">
+        <div class="layout-split-sidebar" style="margin-top: 3rem; align-items: center;">
             <div class="audit-gauge-card" style="padding: 3rem; background: rgba(255, 255, 255, 0.6); border: 2px solid var(--signal);">
                 <div class="gauge-circle" style="width: 180px; height: 180px;">
                     <svg class="gauge-svg" width="180" height="180">
@@ -95,7 +95,7 @@ setTimeout(function () {
                 <div class="gauge-label" style="font-size: 1.1rem; color: var(--ink);">Overall Intelligence</div>
             </div>
 
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem;">
+            <div class="metric-strip">
                 {% for gauge in gauge_list %}
                 <div class="audit-gauge-card" style="padding: 1.25rem 1rem; flex-direction: row; gap: 1rem; justify-content: flex-start;">
                     <div class="gauge-circle" style="width: 50px; height: 50px; margin-bottom: 0;">
@@ -116,6 +116,38 @@ setTimeout(function () {
         </div>
     </div>
 </section>
+
+{% if audit_run.summary.performance_metrics %}
+<section class="container" style="margin-bottom: 2rem;">
+    <div class="section-heading" style="margin-bottom: 1.5rem;">
+        <p class="eyebrow">Performance Signals</p>
+        <h2 style="max-width: none;">Trust and rendering diagnostics</h2>
+        <p class="section-text" style="max-width: 760px;">
+            These are the first performance indicators users feel. LCP shows when the main content appears. TTFB shows when the server starts responding.
+        </p>
+    </div>
+    <div class="system-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
+        {% for metric in audit_run.summary.performance_metrics %}
+        <article class="system-card" style="border-top: 4px solid {% if metric.status == 'critical' %}#dc2626{% elif metric.status == 'warning' %}#ea580c{% else %}#16a34a{% endif %};">
+            <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 0.5rem;">
+                <p class="eyebrow" style="margin: 0;">{{ metric.short_label }}</p>
+                <span class="score-pill {% if metric.status == 'critical' %}score-low{% elif metric.status == 'warning' %}score-med{% else %}score-high{% endif %}" style="font-size: 0.65rem;">
+                    {{ metric.status|title }}
+                </span>
+            </div>
+            <h3 style="margin-bottom: 0.35rem;">{{ metric.value }}</h3>
+            <div style="font-weight: 700; color: var(--ink); margin-bottom: 0.5rem;">{{ metric.label }}</div>
+            <div style="font-size: 0.82rem; color: #64748b; margin-bottom: 0.75rem;">Target: {{ metric.target_label }}</div>
+            <p style="font-size: 0.85rem; color: #475569; margin-bottom: 0.5rem; line-height: 1.5;">{{ metric.description }}</p>
+            <div style="font-size: 0.82rem; color: #475569; line-height: 1.5;">
+                <strong style="display: block; color: var(--ink); margin-bottom: 0.2rem;">Why it matters</strong>
+                {{ metric.impact }}
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
 
 {% if audit_run.summary.has_vitals_failure %}
 <section class="container" style="margin-bottom: 2rem;">
@@ -296,7 +328,7 @@ setTimeout(function () {
             <h2>Market and competitor benchmarks</h2>
             <p class="section-text">This layer uses the submitted market context and competitor URLs to give the audit commercial framing.</p>
         </div>
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+        <div class="layout-split">
             <div style="display: grid; gap: 0.75rem;">
                 {% for insight in audit_run.summary.context_analysis.insights %}
                 <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">{{ insight }}</div>
@@ -463,8 +495,8 @@ setTimeout(function () {
             <p class="eyebrow">Technical Footprint</p>
             <h2>What we actually inspected</h2>
         </div>
-        <div style="background: white; border-radius: 24px; padding: 2rem; border: 1px solid rgba(15, 23, 42, 0.06); overflow-x: auto;">
-            <table style="width: 100%; border-collapse: collapse; min-width: 800px;">
+        <div class="responsive-table-shell">
+            <table class="responsive-table">
                 <thead>
                     <tr style="border-bottom: 2px solid #f1f5f9; text-align: left;">
                         <th style="padding: 1rem;" class="eyebrow">URL Inspected</th>
@@ -478,7 +510,7 @@ setTimeout(function () {
                     {% for page in pages %}
                     <tr style="border-bottom: 1px solid #f1f5f9;">
                         <td style="padding: 1rem;">
-                            <div style="font-weight: 600; font-size: 0.95rem;">{{ page.url }}</div>
+                            <div class="url-wrap-mono" style="font-weight: 600; font-size: 0.95rem;">{{ page.url }}</div>
                             <div style="font-size: 0.75rem; color: #64748b;">Title: {{ page.title|truncatechars:70|default:"Missing" }}</div>
                         </td>
                         <td style="padding: 1rem; font-size: 0.9rem;">{{ page.response_time_ms }}ms</td>

@@ -64,6 +64,57 @@ CATEGORY_PLAN_MAP = {
     AuditIssue.Category.PERFORMANCE: "Growth",
 }
 
+PERFORMANCE_METRIC_CONFIG = [
+    {
+        "key": "largest_contentful_paint",
+        "label": "Largest Contentful Paint (LCP)",
+        "short_label": "LCP",
+        "unit": "s",
+        "target_label": "<= 2.5s",
+        "warning_threshold": 2.5,
+        "critical_threshold": 4.0,
+        "description": "Shows how quickly the main content becomes visible.",
+        "warning_impact": "Main content feels slow to load, which weakens trust and conversion.",
+        "critical_impact": "Main content loads late enough to cause abandonment and ranking pressure.",
+    },
+    {
+        "key": "server_response_time",
+        "label": "Time to First Byte (TTFB)",
+        "short_label": "TTFB",
+        "unit": "ms",
+        "target_label": "<= 800ms",
+        "warning_threshold": 800,
+        "critical_threshold": 1800,
+        "description": "Shows how quickly the server starts responding to the first request.",
+        "warning_impact": "The server is slow to respond, which delays rendering and undermines trust.",
+        "critical_impact": "Server response is slow enough to drag down the full page experience and follow-on metrics.",
+    },
+    {
+        "key": "total_blocking_time",
+        "label": "Total Blocking Time (TBT)",
+        "short_label": "TBT",
+        "unit": "ms",
+        "target_label": "<= 200ms",
+        "warning_threshold": 200,
+        "critical_threshold": 600,
+        "description": "Shows how long the main thread is blocked from responding.",
+        "warning_impact": "Users feel delayed interactions while the page is busy.",
+        "critical_impact": "Main thread blocking is high enough to make the page feel unresponsive.",
+    },
+    {
+        "key": "cumulative_layout_shift",
+        "label": "Cumulative Layout Shift (CLS)",
+        "short_label": "CLS",
+        "unit": "score",
+        "target_label": "<= 0.10",
+        "warning_threshold": 0.10,
+        "critical_threshold": 0.25,
+        "description": "Shows how much the page layout jumps while loading.",
+        "warning_impact": "Layout movement makes the experience feel unstable.",
+        "critical_impact": "Large layout shifts create a visibly poor experience and accidental clicks.",
+    },
+]
+
 
 def _issue_context(issue):
     if issue.page_id and issue.page:
@@ -229,58 +280,91 @@ def build_issue_summary(issues):
     }
 
 
-def build_vitals_failures(pagespeed):
-    vitals_failures = []
+def _parse_metric_value(raw_value):
+    if raw_value in (None, ""):
+        return None
+    if isinstance(raw_value, (int, float)):
+        return float(raw_value)
+
+    match = re.findall(r"[\d.]+", str(raw_value))
+    if not match:
+        return None
+    try:
+        return float(match[0])
+    except ValueError:
+        return None
+
+
+def _normalize_metric_value(raw_value, *, unit):
+    parsed = _parse_metric_value(raw_value)
+    if parsed is None:
+        return None
+
+    normalized = parsed
+    value_text = str(raw_value).lower()
+
+    if unit == "ms":
+        if " s" in value_text and "ms" not in value_text:
+            normalized = parsed * 1000
+    elif unit == "s":
+        if "ms" in value_text:
+            normalized = parsed / 1000
+
+    return normalized
+
+
+def build_performance_metrics(pagespeed):
     if not pagespeed:
-        return vitals_failures
+        return []
 
     metrics = pagespeed.get("metrics", {})
+    performance_metrics = []
 
-    lcp_str = metrics.get("largest_contentful_paint", "0")
-    try:
-        lcp_val = float(re.findall(r"[\d.]+", lcp_str)[0])
-        if lcp_val > 4.0:
-            vitals_failures.append(
-                {
-                    "metric": "Largest Contentful Paint (LCP)",
-                    "value": lcp_str,
-                    "threshold": "4.0s",
-                    "impact": "Slow loading of main content causes high user abandonment.",
-                }
-            )
-    except (IndexError, ValueError):
-        pass
+    for config in PERFORMANCE_METRIC_CONFIG:
+        raw_value = metrics.get(config["key"])
+        normalized = _normalize_metric_value(raw_value, unit=config["unit"])
+        if raw_value in (None, "") or normalized is None:
+            continue
 
-    cls_str = metrics.get("cumulative_layout_shift", "0")
-    try:
-        cls_val = float(cls_str)
-        if cls_val > 0.25:
-            vitals_failures.append(
-                {
-                    "metric": "Cumulative Layout Shift (CLS)",
-                    "value": cls_str,
-                    "threshold": "0.25",
-                    "impact": "Jumping content causes frustration and accidental clicks.",
-                }
-            )
-    except ValueError:
-        pass
+        status = "strong"
+        impact = config["description"]
+        if normalized > config["critical_threshold"]:
+            status = "critical"
+            impact = config["critical_impact"]
+        elif normalized > config["warning_threshold"]:
+            status = "warning"
+            impact = config["warning_impact"]
 
-    tbt_str = metrics.get("total_blocking_time", "0")
-    try:
-        tbt_val = float(re.findall(r"[\d.]+", tbt_str)[0])
-        if tbt_val > 600:
-            vitals_failures.append(
-                {
-                    "metric": "Total Blocking Time (TBT)",
-                    "value": tbt_str,
-                    "threshold": "600ms",
-                    "impact": "Main thread blocking delays user interaction responsiveness.",
-                }
-            )
-    except (IndexError, ValueError):
-        pass
+        performance_metrics.append(
+            {
+                "key": config["key"],
+                "label": config["label"],
+                "short_label": config["short_label"],
+                "value": str(raw_value),
+                "normalized_value": normalized,
+                "status": status,
+                "target_label": config["target_label"],
+                "description": config["description"],
+                "impact": impact,
+            }
+        )
 
+    return performance_metrics
+
+
+def build_vitals_failures(pagespeed):
+    vitals_failures = []
+    for metric in build_performance_metrics(pagespeed):
+        if metric["status"] != "critical":
+            continue
+        vitals_failures.append(
+            {
+                "metric": metric["label"],
+                "value": metric["value"],
+                "threshold": metric["target_label"].replace("<=", "").strip(),
+                "impact": metric["impact"],
+            }
+        )
     return vitals_failures
 
 
@@ -422,6 +506,7 @@ def build_audit_summary(audit_run, *, issues=None):
         "score_breakdown": score_breakdown,
         "vitals_failures": vitals_failures,
         "has_vitals_failure": len(vitals_failures) > 0,
+        "performance_metrics": build_performance_metrics(pagespeed),
         "product_modules": product_modules,
         "custom_work_items": custom_work_items,
         "service_fit": product_modules,

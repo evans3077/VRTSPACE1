@@ -70,7 +70,30 @@ class PublicAuditFlowTests(TestCase):
             start_url="https://example.com/",
             status=AuditRun.Status.COMPLETED,
             overall_score=78,
-            summary={"score_breakdown": {}, "recommendations": []},
+            summary={
+                "score_breakdown": {},
+                "recommendations": [],
+                "performance_metrics": [
+                    {
+                        "short_label": "LCP",
+                        "label": "Largest Contentful Paint (LCP)",
+                        "value": "2.4 s",
+                        "target_label": "<= 2.5s",
+                        "status": "strong",
+                        "description": "Shows how quickly the main content becomes visible.",
+                        "impact": "Main content renders in an acceptable range.",
+                    },
+                    {
+                        "short_label": "TTFB",
+                        "label": "Time to First Byte (TTFB)",
+                        "value": "920 ms",
+                        "target_label": "<= 800ms",
+                        "status": "warning",
+                        "description": "Shows how quickly the server starts responding to the first request.",
+                        "impact": "The server is slow to respond, which delays rendering and undermines trust.",
+                    },
+                ],
+            },
         )
 
         response = self.client.get(reverse("tools:audit-result", args=[audit_run.pk]))
@@ -78,6 +101,8 @@ class PublicAuditFlowTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "View PDF Report")
         self.assertContains(response, reverse("tools:audit-report-pdf", args=[audit_run.pk]))
+        self.assertContains(response, "Time to First Byte (TTFB)")
+        self.assertContains(response, "Largest Contentful Paint (LCP)")
 
     def test_completed_audit_report_pdf_returns_pdf_response(self):
         audit_run = AuditRun.objects.create(
@@ -103,6 +128,24 @@ class PublicAuditFlowTests(TestCase):
                     }
                 ],
                 "issue_summary": {"total": 2, "by_category": {"on_page": 2}},
+                "performance_metrics": [
+                    {
+                        "key": "largest_contentful_paint",
+                        "label": "Largest Contentful Paint (LCP)",
+                        "value": "4.2 s",
+                        "target_label": "<= 2.5s",
+                        "status": "critical",
+                        "impact": "Main content loads late enough to cause abandonment and ranking pressure.",
+                    },
+                    {
+                        "key": "server_response_time",
+                        "label": "Time to First Byte (TTFB)",
+                        "value": "1.9 s",
+                        "target_label": "<= 800ms",
+                        "status": "critical",
+                        "impact": "Server response is slow enough to drag down the full page experience and follow-on metrics.",
+                    },
+                ],
             },
         )
 
@@ -113,6 +156,7 @@ class PublicAuditFlowTests(TestCase):
         self.assertTrue(response.content.startswith(b"%PDF"))
         self.assertIn(b"Strategic fix: Add unique titles.", response.content)
         self.assertIn(b"Where found: https://example.com/about/", response.content)
+        self.assertIn(b"Time to First Byte \\(TTFB\\)", response.content)
 
     def test_pending_audit_report_pdf_returns_409(self):
         audit_run = AuditRun.objects.create(
@@ -365,6 +409,31 @@ class AuditScoringTests(TestCase):
             summary["recommendations"][1]["priority_score"],
         )
         self.assertEqual(summary["product_modules"], [])
+
+    def test_summary_builds_performance_metrics_and_flags_critical_ttfb(self):
+        audit_run = AuditRun.objects.create(
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            summary={
+                "pagespeed": {
+                    "source": "Google PageSpeed Insights",
+                    "strategy": "mobile",
+                    "metrics": {
+                        "largest_contentful_paint": "4.2 s",
+                        "server_response_time": "1.9 s",
+                        "total_blocking_time": "120 ms",
+                    },
+                }
+            },
+        )
+
+        summary = build_audit_summary(audit_run, issues=[])
+
+        metric_labels = [item["label"] for item in summary["performance_metrics"]]
+        self.assertIn("Largest Contentful Paint (LCP)", metric_labels)
+        self.assertIn("Time to First Byte (TTFB)", metric_labels)
+        failure_metrics = [item["metric"] for item in summary["vitals_failures"]]
+        self.assertIn("Time to First Byte (TTFB)", failure_metrics)
 
     def test_featured_recommendations_prioritize_category_diversity(self):
         audit_run = AuditRun.objects.create(

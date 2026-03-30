@@ -390,6 +390,94 @@ textarea:focus {
     line-height: 1.8;
 }
 
+.page-stack {
+    display: grid;
+    gap: 2rem;
+}
+
+.layout-split,
+.layout-split-wide,
+.layout-split-sidebar {
+    display: grid;
+    gap: 2rem;
+    align-items: start;
+}
+
+.layout-split {
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+}
+
+.layout-split-wide {
+    grid-template-columns: minmax(320px, 1.05fr) minmax(320px, 1fr);
+}
+
+.layout-split-sidebar {
+    grid-template-columns: minmax(300px, 0.9fr) minmax(360px, 1.1fr);
+}
+
+.metric-strip {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+}
+
+.metric-strip-wide {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.compact-grid {
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+
+.panel-scroll {
+    display: grid;
+    gap: 1rem;
+    max-height: 44rem;
+    overflow-y: auto;
+    padding-right: 0.35rem;
+}
+
+.panel-scroll-tall {
+    max-height: 58rem;
+}
+
+.panel-scroll::-webkit-scrollbar {
+    width: 10px;
+}
+
+.panel-scroll::-webkit-scrollbar-thumb {
+    background: rgba(15, 23, 42, 0.16);
+    border-radius: 999px;
+}
+
+.responsive-table-shell {
+    background: white;
+    border-radius: 24px;
+    padding: 1.25rem;
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    overflow: auto;
+}
+
+.responsive-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 720px;
+}
+
+.url-wrap,
+.url-wrap-mono {
+    overflow-wrap: anywhere;
+    word-break: break-word;
+}
+
+.url-wrap-mono {
+    font-family: monospace;
+}
+
 .service-tag,
 .package-label,
 .journey-phase {
@@ -543,6 +631,22 @@ textarea:focus {
     .seo-refresh-visual,
     .seo-loading-grid {
         grid-template-columns: 1fr;
+    }
+
+    .layout-split,
+    .layout-split-wide,
+    .layout-split-sidebar,
+    .metric-strip,
+    .metric-strip-wide,
+    .compact-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .panel-scroll,
+    .panel-scroll-tall {
+        max-height: none;
+        overflow: visible;
+        padding-right: 0;
     }
 }
 /* Severity Colors for Audit Results */

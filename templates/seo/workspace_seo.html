@@ -14,8 +14,8 @@
 </section>
 
 <section class="packages-section" style="padding-top: 0;">
-    <div class="container" style="display: grid; gap: 2rem;">
-        <div style="display: grid; grid-template-columns: 1fr 1.4fr; gap: 2rem; align-items: start;">
+    <div class="container page-stack">
+        <div class="layout-split-sidebar">
             <article class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                     <p class="eyebrow">SEO Inputs</p>
@@ -63,7 +63,7 @@
                     Save the business profile and competitor URLs to generate the first SEO intelligence snapshot.
                 </div>
                 {% else %}
-                <div class="system-grid">
+                <div class="metric-strip">
                     <article class="system-card"><p class="eyebrow">Business Type</p><h3>{{ seo_context.industry_label }}</h3><p>{{ seo_context.location }} | {{ seo_context.business_type_source|default:"manual"|title }}</p></article>
                     <article class="system-card"><p class="eyebrow">Primary Goal</p><h3 style="font-size: 1.15rem;">{{ seo_context.target_goal }}</h3><p>Goal-driven benchmark direction</p></article>
                     <article class="system-card"><p class="eyebrow">Competitors Benchmarked</p><h3>{{ seo_benchmark_summary.available_competitors|default:0 }}</h3><p>Fetched and profiled directly</p></article>
@@ -173,13 +173,13 @@
             {% endif %}
         </article>
 
-        <div style="display: grid; grid-template-columns: 1.05fr 1fr; gap: 2rem; align-items: start;">
+        <div class="layout-split-wide">
             <article class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                     <p class="eyebrow">SEO Opportunity Roadmap</p>
                     <h2 style="font-size: 2rem;">What to do next and why</h2>
                 </div>
-                <div style="display: grid; gap: 1rem;">
+                <div class="panel-scroll panel-scroll-tall">
                     {% for item in seo_recommendations %}
                     <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
                         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
@@ -230,13 +230,13 @@
                 </div>
             </article>
 
-            <div style="display: grid; gap: 2rem;">
+            <div class="page-stack">
                 <article class="system-card">
                     <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                         <p class="eyebrow">Your Site Structure</p>
                         <h2 style="font-size: 2rem;">What the current audit shows</h2>
                     </div>
-                    <div style="display: grid; gap: 0.75rem;">
+                    <div class="panel-scroll">
                         {% for page_type, count in seo_site_structure.summary.counts_by_type.items %}
                         <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; gap: 1rem;">
                             <span style="text-transform: capitalize;">{{ page_type|cut:"_" }}</span>
@@ -251,7 +251,7 @@
                         <p class="eyebrow">Keyword Clusters</p>
                         <h2 style="font-size: 2rem;">Demand and language signals</h2>
                     </div>
-                    <div style="display: grid; gap: 1rem;">
+                    <div class="panel-scroll">
                         {% for label, keywords in seo_keyword_clusters.items %}
                         <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03);">
                             <strong style="display: block; margin-bottom: 0.45rem; text-transform: capitalize;">{{ label }}</strong>
@@ -265,13 +265,13 @@
             </div>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+        <div class="layout-split">
             <article class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                     <p class="eyebrow">Keyword Opportunity Queue</p>
                     <h2 style="font-size: 2rem;">Where search demand should go next</h2>
                 </div>
-                <div style="display: grid; gap: 1rem;">
+                <div class="panel-scroll">
                     {% for item in seo_keyword_opportunities %}
                     <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
                         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
@@ -312,7 +312,7 @@
                     <p class="eyebrow">Page Map</p>
                     <h2 style="font-size: 2rem;">Which page types need work</h2>
                 </div>
-                <div style="display: grid; gap: 1rem;">
+                <div class="panel-scroll">
                     {% for item in seo_page_map %}
                     <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
                         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
@@ -418,7 +418,7 @@
                 <p class="eyebrow">Competitor Benchmarks</p>
                 <h2 style="font-size: 2rem;">What competitors actually publish</h2>
             </div>
-            <div class="system-grid">
+            <div class="compact-grid panel-scroll panel-scroll-tall">
                 {% for competitor in seo_competitors %}
                 <div class="system-card" style="border-top: 4px solid var(--signal);">
                     <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 0.35rem;">
@@ -499,7 +499,7 @@
             </div>
         </article>
 
-        <div style="display: grid; grid-template-columns: 1fr 1.2fr; gap: 2rem; align-items: start;">
+        <div class="layout-split-wide">
             <article class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                     <p class="eyebrow">Linkable Assets</p>
@@ -512,7 +512,7 @@
                     <article class="system-card"><p class="eyebrow">Avg Score</p><h3>{{ backlink_summary.average_total_score|default:0 }}</h3><p>Average fit across current prospects</p></article>
                 </div>
                 {% endif %}
-                <div style="display: grid; gap: 1rem;">
+                <div class="panel-scroll">
                     {% for asset in backlink_linkable_assets %}
                     <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
                         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
@@ -556,7 +556,7 @@
                     {% endfor %}
                 </div>
                 {% endif %}
-                <div style="display: grid; gap: 1rem;">
+                <div class="panel-scroll panel-scroll-tall">
                     {% for prospect in backlink_prospects %}
                     <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
                         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">

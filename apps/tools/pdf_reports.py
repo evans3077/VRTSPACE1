@@ -20,6 +20,7 @@ def _build_report_lines(audit_run):
     recommendations = summary.get("featured_recommendations") or summary.get("recommendations", [])
     issue_summary = summary.get("issue_summary", {})
     pagespeed = summary.get("pagespeed", {})
+    performance_metrics = summary.get("performance_metrics", [])
     product_modules = summary.get("product_modules", [])
     context_analysis = summary.get("context_analysis", {})
     change_report = getattr(audit_run, "change_report", None)
@@ -78,19 +79,32 @@ def _build_report_lines(audit_run):
         if next_step:
             lines.append(f"  Next step: {next_step}")
 
-    if pagespeed:
+    if pagespeed or performance_metrics:
         lines.extend(
             [
                 "",
                 "PageSpeed summary",
                 SECTION_DIVIDER,
-                f"- Source: {pagespeed.get('source', 'Unknown')}",
-                f"- Strategy: {pagespeed.get('strategy', 'Unknown')}",
             ]
         )
-        for metric, value in (pagespeed.get("metrics") or {}).items():
-            label = metric.replace("_", " ").title()
-            lines.append(f"- {label}: {value}")
+        if pagespeed:
+            lines.extend(
+                [
+                    f"- Source: {pagespeed.get('source', 'Unknown')}",
+                    f"- Strategy: {pagespeed.get('strategy', 'Unknown')}",
+                ]
+            )
+        for metric in performance_metrics:
+            lines.append(
+                f"- {metric.get('label')}: {metric.get('value')} | Target: {metric.get('target_label')} | Status: {metric.get('status', 'n/a')}"
+            )
+            lines.append(f"  Why it matters: {metric.get('impact')}")
+        if pagespeed:
+            for metric, value in (pagespeed.get("metrics") or {}).items():
+                if metric in {item.get("key") for item in performance_metrics}:
+                    continue
+                label = metric.replace("_", " ").title()
+                lines.append(f"- {label}: {value}")
 
     if context_analysis:
         lines.extend(["", "Market and competitor context", SECTION_DIVIDER])
