@@ -4,6 +4,8 @@ from urllib.parse import urlparse
 
 import requests
 from django.conf import settings
+from django.utils.dateparse import parse_datetime
+from django.utils import timezone
 from django.utils.text import slugify
 
 from .discovery import discover_serp_competitors
@@ -1898,6 +1900,10 @@ def _campaign_key(item):
     )[:140]
 
 
+def build_campaign_key(*, page_type="", target_keyword="", title="", deliverable=""):
+    return slugify(f"{page_type}-{target_keyword or title or deliverable or 'campaign'}")[:140]
+
+
 def _campaign_success_criteria(item):
     criteria = []
     target_keyword = item.get("target_keyword")
@@ -2001,6 +2007,167 @@ def sync_project_seo_campaigns(project, *, context_snapshot=None, opportunity_sn
             campaign.save(update_fields=["metadata", "updated_at"])
 
     return list(project.seo_campaigns.select_related("owner").order_by("status", "-priority_score", "-updated_at"))
+
+
+def sync_project_campaign_chain(project):
+    if not project:
+        return []
+    latest_audit = getattr(project, "latest_audit_run", None)
+    campaigns = list(
+        project.seo_campaigns.select_related("owner", "latest_validation_audit_run")
+        .order_by("status", "-priority_score", "-updated_at")
+    )
+    campaign_by_key = {campaign.campaign_key: campaign for campaign in campaigns}
+    campaign_by_keyword = {
+        campaign.target_keyword.lower(): campaign
+        for campaign in campaigns
+        if campaign.target_keyword
+    }
+    campaign_by_url = {}
+    for campaign in campaigns:
+        for url in campaign.related_page_urls or []:
+            if url:
+                campaign_by_url[url] = campaign
+
+    for task in project.editorial_tasks.select_related("latest_generated_content", "seo_campaign").all():
+        campaign = campaign_by_key.get(task.brief_key)
+        if campaign and task.seo_campaign_id != campaign.pk:
+            task.seo_campaign = campaign
+            task.save(update_fields=["seo_campaign", "updated_at"])
+
+    for draft in project.generated_content.select_related("source_editorial_task", "source_seo_campaign").all():
+        campaign = None
+        if getattr(draft, "source_editorial_task", None) and draft.source_editorial_task.seo_campaign_id:
+            campaign = draft.source_editorial_task.seo_campaign
+        elif draft.target_keywords:
+            primary_keyword = str(draft.target_keywords[0]).lower()
+            campaign = campaign_by_keyword.get(primary_keyword)
+        if campaign and draft.source_seo_campaign_id != campaign.pk:
+            draft.source_seo_campaign = campaign
+            draft.save(update_fields=["source_seo_campaign", "updated_at"])
+
+    for prospect in project.backlink_prospects.select_related("seo_campaign").all():
+        campaign = None
+        if prospect.target_asset_url:
+            campaign = campaign_by_url.get(prospect.target_asset_url)
+        if not campaign and prospect.suggested_anchor_text:
+            campaign = campaign_by_keyword.get(prospect.suggested_anchor_text.lower())
+        if campaign and prospect.seo_campaign_id != campaign.pk:
+            prospect.seo_campaign = campaign
+            prospect.save(update_fields=["seo_campaign", "updated_at"])
+
+    refreshed = []
+    for campaign in campaigns:
+        metadata = dict(campaign.metadata or {})
+        completed_at_raw = metadata.get("completed_at", "")
+        completed_at = parse_datetime(completed_at_raw) if completed_at_raw else None
+        if completed_at and timezone.is_naive(completed_at):
+            completed_at = timezone.make_aware(completed_at, timezone.get_current_timezone())
+        if (
+            campaign.status == SEOCampaign.Status.COMPLETED
+            and latest_audit
+            and completed_at
+            and latest_audit.created_at >= completed_at
+        ):
+            campaign.validation_status = SEOCampaign.ValidationStatus.VALIDATED
+            campaign.latest_validation_audit_run = latest_audit
+        else:
+            campaign.validation_status = SEOCampaign.ValidationStatus.PENDING
+            if campaign.status != SEOCampaign.Status.COMPLETED:
+                campaign.latest_validation_audit_run = None
+
+        task = project.editorial_tasks.filter(seo_campaign=campaign).order_by("-updated_at").first()
+        draft = project.generated_content.filter(source_seo_campaign=campaign).order_by("-updated_at").first()
+        prospect_count = project.backlink_prospects.filter(seo_campaign=campaign).count()
+        acquired_count = project.backlink_prospects.filter(
+            seo_campaign=campaign,
+            status="acquired",
+        ).count()
+        metadata["chain_summary"] = {
+            "editorial_task_id": getattr(task, "pk", None),
+            "latest_draft_id": getattr(draft, "pk", None),
+            "backlink_prospect_count": prospect_count,
+            "acquired_backlink_count": acquired_count,
+        }
+        campaign.metadata = metadata
+        campaign.save(
+            update_fields=[
+                "validation_status",
+                "latest_validation_audit_run",
+                "metadata",
+                "updated_at",
+            ]
+        )
+        refreshed.append(campaign)
+    return refreshed
+
+
+def build_campaign_workspace_items(project, campaigns=None):
+    if not project:
+        return []
+    campaigns = campaigns or sync_project_campaign_chain(project)
+    tasks = {
+        task.seo_campaign_id: task
+        for task in project.editorial_tasks.select_related("latest_generated_content").filter(
+            seo_campaign__in=campaigns
+        )
+    }
+    drafts = {
+        draft.source_seo_campaign_id: draft
+        for draft in project.generated_content.filter(source_seo_campaign__in=campaigns).order_by("-updated_at")
+    }
+    prospect_buckets = defaultdict(list)
+    for prospect in project.backlink_prospects.filter(seo_campaign__in=campaigns).order_by("-total_score", "-updated_at"):
+        prospect_buckets[prospect.seo_campaign_id].append(prospect)
+
+    items = []
+    for campaign in campaigns:
+        task = tasks.get(campaign.pk)
+        draft = drafts.get(campaign.pk) or getattr(task, "latest_generated_content", None)
+        prospects = prospect_buckets.get(campaign.pk, [])
+        items.append(
+            {
+                "campaign": campaign,
+                "editorial_task": task,
+                "latest_draft": draft,
+                "backlink_prospects": prospects[:3],
+                "backlink_prospect_count": len(prospects),
+                "acquired_backlink_count": len([item for item in prospects if item.status == "acquired"]),
+                "latest_validation_audit_run": campaign.latest_validation_audit_run,
+            }
+        )
+    return items
+
+
+def build_campaign_value_summary(project, campaign_items=None):
+    if not project:
+        return {}
+    campaign_items = campaign_items or build_campaign_workspace_items(project)
+    return {
+        "campaign_count": len(campaign_items),
+        "brief_count": len([item for item in campaign_items if item.get("editorial_task")]),
+        "draft_count": len([item for item in campaign_items if item.get("latest_draft")]),
+        "validated_campaigns": len(
+            [
+                item
+                for item in campaign_items
+                if item["campaign"].validation_status == SEOCampaign.ValidationStatus.VALIDATED
+            ]
+        ),
+        "completed_campaigns": len(
+            [
+                item
+                for item in campaign_items
+                if item["campaign"].status == SEOCampaign.Status.COMPLETED
+            ]
+        ),
+        "content_applied_count": project.generated_content.filter(
+            source_seo_campaign__isnull=False,
+            status="applied",
+        ).count(),
+        "outreach_target_count": sum(item.get("backlink_prospect_count", 0) for item in campaign_items),
+        "acquired_link_count": sum(item.get("acquired_backlink_count", 0) for item in campaign_items),
+    }
 
 
 def get_or_build_seo_snapshot(*, project, profile, audit_run):

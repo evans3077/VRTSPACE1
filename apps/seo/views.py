@@ -4,6 +4,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import redirect, render
 from django.utils.dateparse import parse_date
+from django.utils import timezone
 from django.views import View
 
 from apps.leads.services import get_workspace_projects, resolve_workspace_project
@@ -15,10 +16,13 @@ from .models import BacklinkProspect, SEOCampaign, SEOCompetitor, SEOProjectProf
 from .jobs import enqueue_project_seo_refresh
 from .services import infer_business_type_for_project
 from .services import (
+    build_campaign_value_summary,
+    build_campaign_workspace_items,
     build_competitor_trend_summary,
     build_serp_evidence_history,
     can_generate_seo_snapshot,
     refresh_project_seo_intelligence,
+    sync_project_campaign_chain,
     sync_project_seo_campaigns,
     sync_project_competitors,
 )
@@ -191,6 +195,14 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
         opportunity_payload = opportunity_snapshot.output_json if opportunity_snapshot else {}
         backlink_payload = backlink_snapshot.output_json if backlink_snapshot else {}
         refresh_state = (getattr(profile, "metadata", None) or {}) if profile else {}
+        campaign_items = (
+            build_campaign_workspace_items(
+                project,
+                campaigns=sync_project_campaign_chain(project),
+            )
+            if project and opportunity_snapshot
+            else []
+        )
         return {
             "project": project,
             "workspace_projects": get_workspace_projects(self.request.user),
@@ -211,7 +223,8 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             "seo_page_comparisons": payload.get("page_comparisons", []),
             "seo_serp_history": build_serp_evidence_history(project) if project else [],
             "seo_competitor_trends": build_competitor_trend_summary(project) if project else [],
-            "seo_campaigns": sync_project_seo_campaigns(project, context_snapshot=snapshot, opportunity_snapshot=opportunity_snapshot) if project and opportunity_snapshot else [],
+            "seo_campaigns": campaign_items,
+            "seo_chain_value_summary": build_campaign_value_summary(project, campaign_items=campaign_items) if project else {},
             "seo_campaign_status_choices": SEOCampaign.Status.choices,
             "seo_value_summary": opportunity_payload.get("value_summary", {}),
             "seo_keyword_opportunities": opportunity_payload.get("keyword_opportunities", []),
@@ -290,6 +303,7 @@ class WorkspaceSEOCampaignUpdateView(LoginRequiredMixin, View):
             raise Http404
 
         status = request.POST.get("status", "").strip()
+        previous_status = campaign.status
         if status in SEOCampaign.Status.values:
             campaign.status = status
         due_date = request.POST.get("due_date", "").strip()
@@ -299,6 +313,10 @@ class WorkspaceSEOCampaignUpdateView(LoginRequiredMixin, View):
         note = request.POST.get("note", "").strip()
         metadata = dict(campaign.metadata or {})
         metadata["note"] = note[:500]
+        if campaign.status == SEOCampaign.Status.COMPLETED and previous_status != SEOCampaign.Status.COMPLETED:
+            metadata["completed_at"] = timezone.now().isoformat()
+        elif campaign.status != SEOCampaign.Status.COMPLETED:
+            metadata.pop("completed_at", None)
         campaign.metadata = metadata
         campaign.save(update_fields=["status", "due_date", "owner", "metadata", "updated_at"])
         messages.success(request, "Campaign updated.")

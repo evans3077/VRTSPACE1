@@ -153,6 +153,15 @@
                 <article class="system-card"><p class="eyebrow">Keyword Targets</p><h3>{{ seo_value_summary.keyword_targets|default:0 }}</h3><p>Search targets generated from structure and competitor evidence</p></article>
                 <article class="system-card"><p class="eyebrow">Execution Items</p><h3>{{ seo_value_summary.execution_items|default:0 }}</h3><p>Actionable tasks mapped from the benchmark output</p></article>
             </div>
+            <div class="system-grid" style="margin-top: 1rem;">
+                <article class="system-card"><p class="eyebrow">Campaigns Advanced</p><h3>{{ seo_chain_value_summary.campaign_count|default:0 }}</h3><p>Execution items carried into tracked campaigns</p></article>
+                <article class="system-card"><p class="eyebrow">Briefs Linked</p><h3>{{ seo_chain_value_summary.brief_count|default:0 }}</h3><p>Campaigns with a live editorial brief</p></article>
+                <article class="system-card"><p class="eyebrow">Drafts Created</p><h3>{{ seo_chain_value_summary.draft_count|default:0 }}</h3><p>Campaigns that already produced a content draft</p></article>
+                <article class="system-card"><p class="eyebrow">Content Applied</p><h3>{{ seo_chain_value_summary.content_applied_count|default:0 }}</h3><p>SEO-driven drafts already pushed into the content library</p></article>
+                <article class="system-card"><p class="eyebrow">Outreach Targets</p><h3>{{ seo_chain_value_summary.outreach_target_count|default:0 }}</h3><p>Backlink prospects linked to active campaigns</p></article>
+                <article class="system-card"><p class="eyebrow">Validated Campaigns</p><h3>{{ seo_chain_value_summary.validated_campaigns|default:0 }}</h3><p>Completed campaigns confirmed by a later audit rerun</p></article>
+                <article class="system-card"><p class="eyebrow">Acquired Links</p><h3>{{ seo_chain_value_summary.acquired_link_count|default:0 }}</h3><p>Linked campaigns that already converted into acquired backlinks</p></article>
+            </div>
             {% if seo_discovery.queries %}
             <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.6;">
                 <strong style="display: block; color: #0f172a; margin-bottom: 0.35rem;">SERP discovery queries used</strong>
@@ -490,7 +499,8 @@
             </div>
             {% if seo_campaigns %}
             <div class="panel-scroll panel-scroll-tall">
-                {% for campaign in seo_campaigns %}
+                {% for item in seo_campaigns %}
+                {% with campaign=item.campaign %}
                 <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
                     <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
                         <div>
@@ -502,6 +512,7 @@
                         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                             <span class="score-pill score-medium" style="font-size: 0.7rem;">{{ campaign.get_status_display }}</span>
                             <span class="score-pill score-high" style="font-size: 0.7rem;">Priority {{ campaign.priority_score }}</span>
+                            <span class="score-pill {% if campaign.validation_status == 'validated' %}score-high{% else %}score-medium{% endif %}" style="font-size: 0.7rem;">{{ campaign.get_validation_status_display }}</span>
                         </div>
                     </div>
 
@@ -511,6 +522,9 @@
                         {% endif %}
                         <span class="seo-inline-tag">Owner: {{ campaign.owner|default:"Unassigned" }}</span>
                         <span class="seo-inline-tag">Due: {{ campaign.due_date|default:"Not set" }}</span>
+                        <span class="seo-inline-tag">Brief: {% if item.editorial_task %}{{ item.editorial_task.get_status_display }}{% else %}Not linked{% endif %}</span>
+                        <span class="seo-inline-tag">Draft: {% if item.latest_draft %}Ready{% else %}Not generated{% endif %}</span>
+                        <span class="seo-inline-tag">Prospects: {{ item.backlink_prospect_count }}</span>
                     </div>
 
                     {% if campaign.related_page_urls %}
@@ -536,6 +550,36 @@
                         {% endfor %}
                     </div>
                     {% endif %}
+
+                    <div class="compact-grid" style="margin-top: 0.75rem;">
+                        <div style="padding: 0.85rem; border-radius: 14px; background: rgba(255,255,255,0.7);">
+                            <strong style="display: block; margin-bottom: 0.25rem;">Editorial brief</strong>
+                            {% if item.editorial_task %}
+                            <div style="color: #475569; font-size: 0.84rem;">{{ item.editorial_task.title }}</div>
+                            {% if item.editorial_task.latest_generated_content %}
+                            <div style="margin-top: 0.25rem;">
+                                <a href="{% url 'content:workspace-content-detail' item.editorial_task.latest_generated_content.pk %}" style="color: var(--signal);">Open linked draft</a>
+                            </div>
+                            {% endif %}
+                            {% else %}
+                            <div style="color: #475569; font-size: 0.84rem;">No editorial task linked yet.</div>
+                            {% endif %}
+                        </div>
+                        <div style="padding: 0.85rem; border-radius: 14px; background: rgba(255,255,255,0.7);">
+                            <strong style="display: block; margin-bottom: 0.25rem;">Outreach chain</strong>
+                            <div style="color: #475569; font-size: 0.84rem;">Prospects linked: {{ item.backlink_prospect_count }}</div>
+                            <div style="color: #475569; font-size: 0.84rem;">Acquired: {{ item.acquired_backlink_count }}</div>
+                        </div>
+                        <div style="padding: 0.85rem; border-radius: 14px; background: rgba(255,255,255,0.7);">
+                            <strong style="display: block; margin-bottom: 0.25rem;">Validation</strong>
+                            {% if item.latest_validation_audit_run %}
+                            <div style="color: #475569; font-size: 0.84rem;">Latest audit score: {{ item.latest_validation_audit_run.overall_score }}</div>
+                            <div style="color: #475569; font-size: 0.84rem;">Run: {{ item.latest_validation_audit_run.created_at|date:"M d, Y" }}</div>
+                            {% else %}
+                            <div style="color: #475569; font-size: 0.84rem;">No validating rerun attached yet.</div>
+                            {% endif %}
+                        </div>
+                    </div>
 
                     <form method="post" action="{% url 'seo:workspace-seo-campaign-update' campaign.pk %}" style="margin-top: 0.9rem; display: grid; gap: 0.75rem;">
                         {% csrf_token %}
@@ -566,6 +610,7 @@
                         </div>
                     </form>
                 </div>
+                {% endwith %}
                 {% endfor %}
             </div>
             {% else %}

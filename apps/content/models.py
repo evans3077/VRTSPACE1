@@ -92,6 +92,13 @@ class GeneratedContent(TimestampedModel, SEOFieldsMixin):
         on_delete=models.SET_NULL,
         related_name="generated_content",
     )
+    source_seo_campaign = models.ForeignKey(
+        "seo.SEOCampaign",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="generated_content",
+    )
     source_editorial_task = models.ForeignKey(
         "content.ContentEditorialTask",
         null=True,
@@ -169,6 +176,13 @@ class ContentEditorialTask(TimestampedModel):
     )
     source_seo_opportunity_snapshot = models.ForeignKey(
         "seo.SEOOpportunitySnapshot",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="editorial_tasks",
+    )
+    seo_campaign = models.ForeignKey(
+        "seo.SEOCampaign",
         null=True,
         blank=True,
         on_delete=models.SET_NULL,

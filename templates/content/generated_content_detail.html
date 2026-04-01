@@ -51,6 +51,16 @@
                 </p>
             </article>
             <article class="system-card">
+                <p class="eyebrow">SEO Campaign</p>
+                <p>
+                    {% if generated_content.source_seo_campaign %}
+                    {{ generated_content.source_seo_campaign.title }} | {{ generated_content.source_seo_campaign.get_status_display }}
+                    {% else %}
+                    Not linked to an SEO campaign
+                    {% endif %}
+                </p>
+            </article>
+            <article class="system-card">
                 <p class="eyebrow">Refinement</p>
                 <p>
                     {% if generated_content.output_json.refinement.applied %}
@@ -61,6 +71,46 @@
                 </p>
             </article>
         </div>
+
+        {% if generated_content.source_seo_campaign %}
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Execution Chain</p>
+                <h2 style="font-size: 2rem;">Campaign lineage</h2>
+            </div>
+            <div class="system-grid">
+                <div>
+                    <strong style="display: block; margin-bottom: 0.25rem;">Campaign</strong>
+                    <div style="color: #475569;">{{ generated_content.source_seo_campaign.title }}</div>
+                    <div style="color: #64748b; font-size: 0.85rem;">
+                        {{ generated_content.source_seo_campaign.get_status_display }} | {{ generated_content.source_seo_campaign.get_validation_status_display }}
+                    </div>
+                </div>
+                <div>
+                    <strong style="display: block; margin-bottom: 0.25rem;">Target keyword</strong>
+                    <div style="color: #475569;">{{ generated_content.source_seo_campaign.target_keyword|default:"Not specified" }}</div>
+                </div>
+                <div>
+                    <strong style="display: block; margin-bottom: 0.25rem;">Related pages</strong>
+                    {% for url in generated_content.source_seo_campaign.related_page_urls %}
+                    <div class="url-wrap-mono" style="font-size: 0.8rem; color: #64748b;">{{ url }}</div>
+                    {% empty %}
+                    <div style="color: #64748b;">No related pages recorded.</div>
+                    {% endfor %}
+                </div>
+                <div>
+                    <strong style="display: block; margin-bottom: 0.25rem;">Validation</strong>
+                    {% if generated_content.source_seo_campaign.latest_validation_audit_run %}
+                    <div style="color: #475569;">
+                        Audit score {{ generated_content.source_seo_campaign.latest_validation_audit_run.overall_score }}
+                    </div>
+                    {% else %}
+                    <div style="color: #64748b;">Awaiting rerun validation.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </article>
+        {% endif %}
 
         {% if generated_content.brief_json %}
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">

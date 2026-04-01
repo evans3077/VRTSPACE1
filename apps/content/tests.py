@@ -6,7 +6,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from apps.leads.models import AuditRequest, ClientProject
-from apps.seo.models import SEOContextSnapshot, SEOOpportunitySnapshot, SEOProjectProfile
+from apps.seo.models import SEOCampaign, SEOContextSnapshot, SEOOpportunitySnapshot, SEOProjectProfile
 from apps.tools.models import AuditRun
 
 from .models import Article, ContentEditorialTask, GeneratedContent, Service
@@ -536,11 +536,23 @@ class GeneratedContentViewTests(TestCase):
 
     def test_workspace_content_generate_from_seo_brief(self):
         self.client.force_login(self.user)
-        brief_key = build_seo_content_briefs(self.project)[0]["brief_key"]
+        brief = build_seo_content_briefs(self.project)[0]
+        campaign = SEOCampaign.objects.create(
+            project=self.project,
+            source_context_snapshot=self.seo_snapshot,
+            source_opportunity_snapshot=self.seo_opportunity_snapshot,
+            campaign_key=brief["brief_key"],
+            title="Upgrade service page coverage",
+            page_type="service",
+            target_keyword=brief["primary_keyword"],
+            related_page_urls=brief.get("target_urls", []),
+            success_criteria=["Publish the page and rerun SEO validation."],
+            priority_score=88,
+        )
 
         response = self.client.post(
             reverse("content:workspace-content-generate-from-seo"),
-            {"brief_key": brief_key},
+            {"brief_key": brief["brief_key"]},
         )
 
         self.assertEqual(response.status_code, 302)
@@ -548,6 +560,8 @@ class GeneratedContentViewTests(TestCase):
         self.assertEqual(draft.source_seo_snapshot, self.seo_snapshot)
         self.assertEqual(draft.source_seo_opportunity_snapshot, self.seo_opportunity_snapshot)
         self.assertIsNotNone(draft.source_editorial_task)
+        self.assertEqual(draft.source_editorial_task.seo_campaign, campaign)
+        self.assertEqual(draft.source_seo_campaign, campaign)
         self.assertEqual(draft.source_editorial_task.status, ContentEditorialTask.Status.DRAFTED)
         self.assertTrue(draft.brief_json["title_options"])
         self.assertIn("used car dealership Nairobi", draft.body)
@@ -702,6 +716,86 @@ class GeneratedContentViewTests(TestCase):
         self.assertIsInstance(article_draft.applied_article, Article)
         self.assertEqual(service_draft.status, GeneratedContent.Status.APPLIED)
         self.assertIsInstance(service_draft.applied_service, Service)
+
+    def test_apply_generated_content_advances_linked_campaign(self):
+        brief = build_seo_content_briefs(self.project)[0]
+        campaign = SEOCampaign.objects.create(
+            project=self.project,
+            source_context_snapshot=self.seo_snapshot,
+            source_opportunity_snapshot=self.seo_opportunity_snapshot,
+            campaign_key=brief["brief_key"],
+            title="Upgrade service page coverage",
+            page_type="service",
+            target_keyword=brief["primary_keyword"],
+            related_page_urls=brief.get("target_urls", []),
+            success_criteria=["Publish the page and rerun SEO validation."],
+            priority_score=88,
+            status=SEOCampaign.Status.QUEUED,
+        )
+        task = sync_project_editorial_tasks(self.project)[0]
+        draft = create_generated_content(
+            user=self.user,
+            project=self.project,
+            output_type=GeneratedContent.OutputType.SERVICE_PAGE,
+            input_data={
+                "business_type": "auto dealership",
+                "location": "Nairobi",
+                "target_audience": "buyers comparing used vehicles",
+                "page_goal": "book a consultation",
+                "offer_summary": "used car sourcing support",
+                "target_keywords": [brief["primary_keyword"]],
+                "search_intent": "commercial",
+                "seo_brief": task.brief_json,
+                "source_editorial_task": task,
+            },
+        )
+
+        apply_generated_content(draft)
+
+        draft.refresh_from_db()
+        campaign.refresh_from_db()
+        self.assertEqual(draft.source_seo_campaign, campaign)
+        self.assertEqual(campaign.status, SEOCampaign.Status.IN_PROGRESS)
+        self.assertIn("content_applied_at", campaign.metadata)
+
+    def test_generated_content_detail_renders_campaign_lineage(self):
+        brief = build_seo_content_briefs(self.project)[0]
+        SEOCampaign.objects.create(
+            project=self.project,
+            source_context_snapshot=self.seo_snapshot,
+            source_opportunity_snapshot=self.seo_opportunity_snapshot,
+            campaign_key=brief["brief_key"],
+            title="Upgrade service page coverage",
+            page_type="service",
+            target_keyword=brief["primary_keyword"],
+            related_page_urls=["https://example.com/services/used-cars/"],
+            success_criteria=["Publish the page and rerun SEO validation."],
+            priority_score=88,
+        )
+        task = sync_project_editorial_tasks(self.project)[0]
+        draft = create_generated_content(
+            user=self.user,
+            project=self.project,
+            output_type=GeneratedContent.OutputType.ARTICLE,
+            input_data={
+                "business_type": "auto dealership",
+                "location": "Nairobi",
+                "target_audience": "buyers comparing used vehicles",
+                "page_goal": "book a consultation",
+                "offer_summary": "used car sourcing support",
+                "target_keywords": [brief["primary_keyword"]],
+                "search_intent": "commercial",
+                "seo_brief": task.brief_json,
+                "source_editorial_task": task,
+            },
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("content:workspace-content-detail", args=[draft.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Campaign lineage")
+        self.assertContains(response, "Upgrade service page coverage")
 
     def test_sync_editorial_queues_command_runs_for_projects_with_seo_profiles(self):
         call_command("sync_editorial_queues")

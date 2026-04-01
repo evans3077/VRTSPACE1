@@ -5,6 +5,7 @@ from urllib.parse import urlparse
 from django.utils.text import slugify
 
 from apps.leads.services import resolve_workspace_project
+from apps.seo.models import SEOCampaign
 
 from .models import Article, ContentEditorialTask, GeneratedContent, Service
 from .refinement import refine_brief, refine_payload
@@ -250,12 +251,14 @@ def sync_project_editorial_tasks(project):
     for brief in briefs:
         active_keys.add(brief["brief_key"])
         refined_brief, brief_refinement = refine_brief(brief)
+        linked_campaign = project.seo_campaigns.filter(campaign_key=brief["brief_key"]).first()
         task, created = ContentEditorialTask.objects.get_or_create(
             project=project,
             brief_key=brief["brief_key"],
             defaults={
                 "source_seo_snapshot": seo_snapshot,
                 "source_seo_opportunity_snapshot": opportunity_snapshot,
+                "seo_campaign": linked_campaign,
                 "title": refined_brief["title_options"][0] if refined_brief.get("title_options") else refined_brief["primary_keyword"],
                 "output_type": refined_brief["output_type"],
                 "priority_score": refined_brief.get("priority_score", 0),
@@ -273,6 +276,7 @@ def sync_project_editorial_tasks(project):
         changed = task.brief_hash != current_hash
         task.source_seo_snapshot = seo_snapshot
         task.source_seo_opportunity_snapshot = opportunity_snapshot
+        task.seo_campaign = linked_campaign
         task.title = refined_brief["title_options"][0] if refined_brief.get("title_options") else refined_brief["primary_keyword"]
         task.output_type = refined_brief["output_type"]
         task.priority_score = refined_brief.get("priority_score", 0)
@@ -291,6 +295,7 @@ def sync_project_editorial_tasks(project):
             update_fields=[
                 "source_seo_snapshot",
                 "source_seo_opportunity_snapshot",
+                "seo_campaign",
                 "title",
                 "output_type",
                 "priority_score",
@@ -314,7 +319,7 @@ def get_editorial_tasks(project):
     if not project:
         return []
     tasks = list(
-        project.editorial_tasks.select_related("latest_generated_content")
+        project.editorial_tasks.select_related("latest_generated_content", "seo_campaign")
         .exclude(status=ContentEditorialTask.Status.ARCHIVED)
         .order_by("-priority_score", "-updated_at")
     )
@@ -327,7 +332,7 @@ def get_editorial_task(project, brief_key):
     if not project:
         return None
     task = (
-        project.editorial_tasks.select_related("latest_generated_content")
+        project.editorial_tasks.select_related("latest_generated_content", "seo_campaign")
         .filter(brief_key=brief_key)
         .first()
     )
@@ -335,7 +340,7 @@ def get_editorial_task(project, brief_key):
         return task
     sync_project_editorial_tasks(project)
     return (
-        project.editorial_tasks.select_related("latest_generated_content")
+        project.editorial_tasks.select_related("latest_generated_content", "seo_campaign")
         .filter(brief_key=brief_key)
         .first()
     )
@@ -626,11 +631,13 @@ def create_generated_content(*, user, project, output_type, input_data):
     latest_audit = getattr(project, "latest_audit_run", None)
     source_seo_snapshot, source_seo_opportunity_snapshot = get_latest_seo_context(project)
     source_editorial_task = input_data.get("source_editorial_task")
+    source_seo_campaign = input_data.get("source_seo_campaign") or getattr(source_editorial_task, "seo_campaign", None)
     draft = GeneratedContent.objects.create(
         project=project,
         source_audit_run=latest_audit,
         source_seo_snapshot=source_seo_snapshot,
         source_seo_opportunity_snapshot=source_seo_opportunity_snapshot,
+        source_seo_campaign=source_seo_campaign,
         source_editorial_task=source_editorial_task,
         created_by=user,
         output_type=output_type,
@@ -739,6 +746,17 @@ def apply_generated_content(draft):
 
     draft.status = GeneratedContent.Status.APPLIED
     draft.save(update_fields=["applied_service", "applied_article", "status", "updated_at"])
+    if draft.source_seo_campaign_id:
+        campaign = draft.source_seo_campaign
+        metadata = dict(campaign.metadata or {})
+        metadata["content_applied_at"] = draft.updated_at.isoformat()
+        metadata["applied_content_type"] = draft.get_output_type_display()
+        campaign.metadata = metadata
+        if campaign.status == SEOCampaign.Status.QUEUED:
+            campaign.status = SEOCampaign.Status.IN_PROGRESS
+            campaign.save(update_fields=["metadata", "status", "updated_at"])
+        else:
+            campaign.save(update_fields=["metadata", "updated_at"])
     if draft.source_editorial_task_id:
         task = draft.source_editorial_task
         task.latest_generated_content = draft

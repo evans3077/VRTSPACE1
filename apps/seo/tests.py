@@ -1,3 +1,4 @@
+from datetime import timedelta
 from unittest.mock import patch
 
 import requests
@@ -5,9 +6,10 @@ from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 from django.test.utils import override_settings
+from django.utils import timezone
 
 from apps.leads.models import AuditRequest, ClientProject
-from apps.content.models import GeneratedContent
+from apps.content.models import ContentEditorialTask, GeneratedContent
 from apps.tools.models import AuditPage, AuditRun
 
 from .backlinks import build_backlink_snapshot_payload, refresh_project_backlink_intelligence
@@ -24,12 +26,14 @@ from .models import (
 )
 from .discovery import build_discovery_queries, discover_serp_competitors, fetch_search_results
 from .services import (
+    build_campaign_workspace_items,
     build_competitor_trend_summary,
     build_local_keyword_set,
     build_serp_evidence_history,
     build_seo_context_payload,
     build_seo_opportunity_payload,
     get_or_build_seo_snapshot,
+    sync_project_campaign_chain,
     sync_project_seo_campaigns,
 )
 
@@ -603,6 +607,124 @@ class SEOContextServiceTests(TestCase):
         self.assertEqual(campaign.related_page_urls, ["https://example.com/faq/"])
         self.assertEqual(campaign.status, SEOCampaign.Status.QUEUED)
 
+    def test_sync_project_campaign_chain_links_editorial_drafts_backlinks_and_validation(self):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=70,
+            status=AuditRun.Status.COMPLETED,
+            summary={},
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            latest_audit_run=audit_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="ops@example.com",
+            latest_score=70,
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified organic leads",
+            primary_service="used car dealership",
+        )
+        context_snapshot = SEOContextSnapshot.objects.create(
+            project=project,
+            profile=profile,
+            source_audit_run=audit_run,
+            output_json={"context": {}, "benchmark_summary": {}},
+        )
+        opportunity_snapshot = SEOOpportunitySnapshot.objects.create(
+            project=project,
+            profile=profile,
+            source_audit_run=audit_run,
+            source_context_snapshot=context_snapshot,
+            output_json={
+                "execution_queue": [
+                    {
+                        "title": "Upgrade FAQ coverage",
+                        "page_type": "faq",
+                        "target_keyword": "used car dealership Nairobi faq",
+                        "keywords": ["used car dealership Nairobi faq"],
+                        "target_urls": ["https://example.com/faq/"],
+                        "action_steps": ["Expand FAQ coverage."],
+                        "priority_score": 91,
+                        "deliverable": "Improve the current FAQ pages",
+                        "where_to_apply": ["https://example.com/faq/"],
+                        "edit_targets": [{"url": "https://example.com/faq/", "changes": ["Expand FAQ coverage"]}],
+                    }
+                ]
+            },
+        )
+        campaign = sync_project_seo_campaigns(
+            project,
+            context_snapshot=context_snapshot,
+            opportunity_snapshot=opportunity_snapshot,
+        )[0]
+        campaign.status = SEOCampaign.Status.COMPLETED
+        campaign.metadata = {
+            **(campaign.metadata or {}),
+            "completed_at": (timezone.now() - timedelta(hours=1)).isoformat(),
+        }
+        campaign.save(update_fields=["status", "metadata", "updated_at"])
+        task = ContentEditorialTask.objects.create(
+            project=project,
+            source_seo_snapshot=context_snapshot,
+            source_seo_opportunity_snapshot=opportunity_snapshot,
+            brief_key=campaign.campaign_key,
+            title="FAQ brief",
+            output_type=GeneratedContent.OutputType.ARTICLE,
+            priority_score=90,
+            brief_json={"primary_keyword": "used car dealership Nairobi faq"},
+        )
+        draft = GeneratedContent.objects.create(
+            project=project,
+            source_audit_run=audit_run,
+            source_seo_snapshot=context_snapshot,
+            source_seo_opportunity_snapshot=opportunity_snapshot,
+            source_editorial_task=task,
+            output_type=GeneratedContent.OutputType.ARTICLE,
+            title="FAQ draft",
+            target_keywords=["used car dealership Nairobi faq"],
+            body="FAQ body",
+            cta="CTA",
+        )
+        BacklinkProspect.objects.create(
+            project=project,
+            domain="example.org",
+            homepage_url="https://example.org/",
+            prospect_url="https://example.org/resources/faq/",
+            title="FAQ resource",
+            target_asset_title="FAQ asset",
+            target_asset_type="faq",
+            target_asset_url="https://example.com/faq/",
+            suggested_anchor_text="used car dealership Nairobi faq",
+        )
+
+        campaigns = sync_project_campaign_chain(project)
+        items = build_campaign_workspace_items(project, campaigns=campaigns)
+
+        task.refresh_from_db()
+        draft.refresh_from_db()
+        campaign.refresh_from_db()
+        prospect = BacklinkProspect.objects.get(project=project)
+        self.assertEqual(task.seo_campaign, campaign)
+        self.assertEqual(draft.source_seo_campaign, campaign)
+        self.assertEqual(prospect.seo_campaign, campaign)
+        self.assertEqual(campaign.validation_status, SEOCampaign.ValidationStatus.VALIDATED)
+        self.assertEqual(campaign.latest_validation_audit_run, audit_run)
+        self.assertEqual(campaign.metadata["chain_summary"]["backlink_prospect_count"], 1)
+        self.assertEqual(items[0]["latest_draft"], draft)
+
 
 class WorkspaceSEOViewTests(TestCase):
     def setUp(self):
@@ -991,6 +1113,104 @@ class WorkspaceSEOViewTests(TestCase):
         self.assertEqual(str(campaign.due_date), "2026-04-15")
         self.assertEqual(campaign.owner, self.user)
         self.assertEqual(campaign.metadata.get("note"), "FAQ rewrite in progress")
+
+    def test_workspace_seo_view_renders_campaign_chain_context(self):
+        profile = SEOProjectProfile.objects.create(
+            project=self.project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified organic leads",
+            primary_service="used car dealership",
+            target_audience="price-sensitive car buyers",
+        )
+        context_snapshot = SEOContextSnapshot.objects.create(
+            project=self.project,
+            profile=profile,
+            source_audit_run=self.audit_run,
+            output_json={
+                "context": {"project": "Northwind"},
+                "benchmark_summary": {},
+                "competitor_trace": [],
+                "competitor_patterns": [],
+                "page_comparisons": [],
+                "competitors": [],
+                "discovery": {},
+                "audit_snapshot": {},
+                "site_structure": {},
+                "keyword_clusters": {},
+                "recommendations": [],
+            },
+        )
+        opportunity_snapshot = SEOOpportunitySnapshot.objects.create(
+            project=self.project,
+            profile=profile,
+            source_audit_run=self.audit_run,
+            source_context_snapshot=context_snapshot,
+            output_json={
+                "execution_queue": [],
+                "value_summary": {},
+                "keyword_opportunities": [],
+                "page_map": [],
+            },
+        )
+        campaign = SEOCampaign.objects.create(
+            project=self.project,
+            source_context_snapshot=context_snapshot,
+            source_opportunity_snapshot=opportunity_snapshot,
+            campaign_key="faq-used-car-dealership-nairobi-faq",
+            title="Upgrade FAQ coverage",
+            page_type="faq",
+            target_keyword="used car dealership Nairobi faq",
+            related_page_urls=["https://example.com/faq/"],
+            success_criteria=["Re-run the audit after publishing the changes."],
+            status=SEOCampaign.Status.IN_PROGRESS,
+        )
+        task = ContentEditorialTask.objects.create(
+            project=self.project,
+            source_seo_snapshot=context_snapshot,
+            source_seo_opportunity_snapshot=opportunity_snapshot,
+            seo_campaign=campaign,
+            brief_key=campaign.campaign_key,
+            title="FAQ brief",
+            output_type=GeneratedContent.OutputType.ARTICLE,
+            priority_score=80,
+            brief_json={"primary_keyword": "used car dealership Nairobi faq"},
+        )
+        draft = GeneratedContent.objects.create(
+            project=self.project,
+            source_audit_run=self.audit_run,
+            source_seo_snapshot=context_snapshot,
+            source_seo_opportunity_snapshot=opportunity_snapshot,
+            source_seo_campaign=campaign,
+            source_editorial_task=task,
+            output_type=GeneratedContent.OutputType.ARTICLE,
+            title="FAQ draft",
+            target_keywords=["used car dealership Nairobi faq"],
+            body="FAQ body",
+            cta="CTA",
+        )
+        task.latest_generated_content = draft
+        task.save(update_fields=["latest_generated_content", "updated_at"])
+        BacklinkProspect.objects.create(
+            project=self.project,
+            seo_campaign=campaign,
+            domain="example.org",
+            homepage_url="https://example.org/",
+            prospect_url="https://example.org/resources/faq/",
+            title="FAQ resource",
+            target_asset_title="FAQ asset",
+            target_asset_type="faq",
+            target_asset_url="https://example.com/faq/",
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("seo:workspace-seo"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Campaigns Advanced")
+        self.assertContains(response, "Editorial brief")
+        self.assertContains(response, "Open linked draft")
+        self.assertContains(response, "Outreach chain")
 
     def test_workspace_seo_competitor_review_updates_metadata(self):
         competitor = SEOCompetitor.objects.create(

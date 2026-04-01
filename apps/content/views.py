@@ -29,7 +29,9 @@ class WorkspaceGeneratedContentAccessMixin(LoginRequiredMixin):
                 "source_audit_run",
                 "source_seo_snapshot",
                 "source_seo_opportunity_snapshot",
+                "source_seo_campaign",
                 "source_editorial_task",
+                "source_editorial_task__seo_campaign",
                 "created_by",
                 "applied_article",
                 "applied_service",
@@ -56,6 +58,7 @@ class WorkspaceGeneratedContentListView(LoginRequiredMixin, ListView):
                 "source_audit_run",
                 "source_seo_snapshot",
                 "source_seo_opportunity_snapshot",
+                "source_seo_campaign",
             )
             .filter(project=project)
             .order_by("-created_at")
@@ -82,7 +85,11 @@ class WorkspaceGeneratedContentCreateView(LoginRequiredMixin, View):
         if not form.is_valid():
             queryset = (
                 GeneratedContent.objects.select_related("project", "source_audit_run")
-                .select_related("source_seo_snapshot", "source_seo_opportunity_snapshot")
+                .select_related(
+                    "source_seo_snapshot",
+                    "source_seo_opportunity_snapshot",
+                    "source_seo_campaign",
+                )
                 .filter(project=project)
                 .order_by("-created_at")
             )
@@ -165,7 +172,9 @@ class WorkspaceGeneratedContentDetailView(WorkspaceGeneratedContentAccessMixin, 
             "source_audit_run",
             "source_seo_snapshot",
             "source_seo_opportunity_snapshot",
+            "source_seo_campaign",
             "source_editorial_task",
+            "source_editorial_task__seo_campaign",
             "created_by",
             "applied_article",
             "applied_service",

@@ -351,13 +351,31 @@ def refresh_project_backlink_intelligence(project, *, context_snapshot=None, opp
 def sync_backlink_prospects(project, snapshot):
     rows = (snapshot.output_json or {}).get("prospects", [])
     prospect_ids = []
+    campaigns = list(project.seo_campaigns.all())
+    campaign_by_url = {}
+    campaign_by_keyword = {}
+    for campaign in campaigns:
+        for url in campaign.related_page_urls or []:
+            if url:
+                campaign_by_url[url] = campaign
+        if campaign.target_keyword:
+            campaign_by_keyword[campaign.target_keyword.lower()] = campaign
     for row in rows:
+        campaign = None
+        target_asset_url = row.get("target_asset_url", "")
+        if target_asset_url:
+            campaign = campaign_by_url.get(target_asset_url)
+        if not campaign:
+            anchor_text = str(row.get("suggested_anchor_text", "")).strip().lower()
+            if anchor_text:
+                campaign = campaign_by_keyword.get(anchor_text)
         prospect, _created = BacklinkProspect.objects.update_or_create(
             project=project,
             prospect_url=row.get("prospect_url", ""),
             target_asset_url=row.get("target_asset_url", ""),
             defaults={
                 "snapshot": snapshot,
+                "seo_campaign": campaign,
                 "domain": row.get("domain", ""),
                 "homepage_url": row.get("homepage_url", ""),
                 "title": row.get("title", ""),

@@ -233,12 +233,13 @@ Turn the current SEO workspace from a strong analysis tool into a decision syste
   Needed result:
   Each execution item can have status, owner, due date, related pages, related keywords, and success criteria.
 - [ ] Tie SEO execution, generated content, and backlink prospects together
+- [x] Tie SEO execution, generated content, and backlink prospects together
   Why:
   The system should move one opportunity through the full chain.
   Needed result:
   A single accepted opportunity can flow:
   benchmark -> page brief -> draft -> publish target -> outreach target -> rerun validation
-- [ ] Add clearer value reporting
+- [x] Add clearer value reporting
   Why:
   Users should see where their time, credits, and money are going.
   Needed result:

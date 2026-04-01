@@ -205,6 +205,10 @@ class SEOCampaign(TimestampedModel):
         COMPLETED = "completed", "Completed"
         ARCHIVED = "archived", "Archived"
 
+    class ValidationStatus(models.TextChoices):
+        PENDING = "pending", "Pending Validation"
+        VALIDATED = "validated", "Validated"
+
     project = models.ForeignKey(
         "leads.ClientProject",
         on_delete=models.CASCADE,
@@ -239,8 +243,20 @@ class SEOCampaign(TimestampedModel):
     related_page_urls = models.JSONField(default=list, blank=True)
     success_criteria = models.JSONField(default=list, blank=True)
     status = models.CharField(max_length=20, choices=Status.choices, default=Status.QUEUED)
+    validation_status = models.CharField(
+        max_length=20,
+        choices=ValidationStatus.choices,
+        default=ValidationStatus.PENDING,
+    )
     priority_score = models.PositiveSmallIntegerField(default=0)
     due_date = models.DateField(null=True, blank=True)
+    latest_validation_audit_run = models.ForeignKey(
+        "tools.AuditRun",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="validated_seo_campaigns",
+    )
     metadata = models.JSONField(default=dict, blank=True)
 
     class Meta:
@@ -327,6 +343,13 @@ class BacklinkProspect(TimestampedModel):
         blank=True,
         on_delete=models.SET_NULL,
         related_name="prospects",
+    )
+    seo_campaign = models.ForeignKey(
+        "seo.SEOCampaign",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="backlink_prospects",
     )
     domain = models.CharField(max_length=255)
     homepage_url = models.URLField(blank=True)
