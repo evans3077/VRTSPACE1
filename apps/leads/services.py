@@ -19,12 +19,20 @@ def score_lead(*, company, website, message, interest_area):
     return min(score, 100)
 
 
-def score_audit_request(*, website, monthly_leads_goal, notes):
+def score_audit_request(*, website, monthly_leads_goal, notes, business_type="", location="", target_goal="", primary_service=""):
     score = 30 if website else 0
     if monthly_leads_goal >= 50:
         score += 30
     elif monthly_leads_goal >= 20:
         score += 20
+    if business_type:
+        score += 10
+    if location:
+        score += 10
+    if target_goal:
+        score += 10
+    if primary_service:
+        score += 10
     if notes and len(notes.strip()) >= 60:
         score += 20
     return min(score, 100)
@@ -78,6 +86,10 @@ def create_audit_request_from_form(form, *, request=None):
         website=audit_request.website,
         monthly_leads_goal=audit_request.monthly_leads_goal,
         notes=audit_request.notes,
+        business_type=audit_request.business_type,
+        location=audit_request.location,
+        target_goal=audit_request.target_goal,
+        primary_service=audit_request.primary_service,
     )
     if audit_request.score >= 75:
         audit_request.status = AuditRequest.Status.QUALIFIED
@@ -91,6 +103,10 @@ def sync_client_project_from_audit_run(audit_run):
     website = audit_run.start_url or (audit_request.website if audit_request else "")
     email = audit_request.email if audit_request else ""
     name = (audit_request.company_name if audit_request and audit_request.company_name else normalized_domain or website)
+    business_type = audit_request.business_type if audit_request else ""
+    location = audit_request.location if audit_request else ""
+    target_goal = audit_request.target_goal if audit_request else ""
+    primary_service = audit_request.primary_service if audit_request else ""
 
     if audit_request:
         project, _created = ClientProject.objects.get_or_create(
@@ -100,6 +116,10 @@ def sync_client_project_from_audit_run(audit_run):
                 "website": website,
                 "normalized_domain": normalized_domain,
                 "contact_email": email,
+                "business_type": business_type,
+                "location": location,
+                "target_goal": target_goal,
+                "primary_service": primary_service,
             },
         )
     else:
@@ -113,12 +133,24 @@ def sync_client_project_from_audit_run(audit_run):
                 website=website,
                 normalized_domain=normalized_domain,
                 contact_email=email,
+                business_type=business_type,
+                location=location,
+                target_goal=target_goal,
+                primary_service=primary_service,
             )
 
     project.name = name or project.name
     project.website = website or project.website
     project.normalized_domain = normalized_domain
     project.contact_email = email or project.contact_email
+    if business_type:
+        project.business_type = business_type
+    if location:
+        project.location = location
+    if target_goal:
+        project.target_goal = target_goal
+    if primary_service:
+        project.primary_service = primary_service
     project.latest_audit_run = audit_run
     project.latest_score = audit_run.overall_score or 0
     if email:

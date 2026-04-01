@@ -5,6 +5,22 @@ from django.contrib.auth import get_user_model
 from .models import AuditRequest, Lead
 
 
+BUSINESS_TYPE_CHOICES = (
+    ("", "Select business type"),
+    ("automotive", "Automotive"),
+    ("agency", "Agency / Professional Services"),
+    ("saas", "SaaS"),
+    ("hotel", "Hotel / Hospitality"),
+    ("ecommerce", "Ecommerce"),
+    ("healthcare", "Healthcare"),
+    ("real_estate", "Real Estate"),
+    ("local_service", "Local Service Business"),
+    ("education", "Education"),
+    ("finance", "Finance / Fintech"),
+    ("other", "Other"),
+)
+
+
 class LeadCaptureForm(forms.ModelForm):
     website = forms.CharField(required=False)
     consent_to_contact = forms.BooleanField(required=False)
@@ -38,6 +54,7 @@ class LeadCaptureForm(forms.ModelForm):
 
 class AuditRequestForm(forms.ModelForm):
     website = forms.CharField()
+    business_type = forms.ChoiceField(choices=BUSINESS_TYPE_CHOICES, required=False)
     competitor_urls = forms.CharField(
         required=False,
         widget=forms.Textarea(
@@ -54,6 +71,10 @@ class AuditRequestForm(forms.ModelForm):
             "company_name",
             "email",
             "website",
+            "business_type",
+            "location",
+            "target_goal",
+            "primary_service",
             "monthly_leads_goal",
             "market_context",
             "competitor_urls",
@@ -63,6 +84,9 @@ class AuditRequestForm(forms.ModelForm):
             "company_name": forms.TextInput(attrs={"placeholder": "Company or brand"}),
             "email": forms.EmailInput(attrs={"placeholder": "team@company.com"}),
             "website": forms.TextInput(attrs={"placeholder": "example.com"}),
+            "location": forms.TextInput(attrs={"placeholder": "Nairobi, Kenya"}),
+            "target_goal": forms.TextInput(attrs={"placeholder": "Increase qualified leads from search"}),
+            "primary_service": forms.TextInput(attrs={"placeholder": "Used car sales"}),
             "market_context": forms.Textarea(attrs={"rows": 3, "placeholder": "Market, audience, location, or commercial context that should shape the audit."}),
             "notes": forms.Textarea(attrs={"rows": 4, "placeholder": "Share the market, offer, or visibility problem you want the audit to surface."}),
         }
@@ -72,6 +96,15 @@ class AuditRequestForm(forms.ModelForm):
         if not website.startswith(("http://", "https://")):
             website = f"https://{website}"
         return website
+
+    def clean_location(self):
+        return self.cleaned_data.get("location", "").strip()
+
+    def clean_target_goal(self):
+        return self.cleaned_data.get("target_goal", "").strip()
+
+    def clean_primary_service(self):
+        return self.cleaned_data.get("primary_service", "").strip()
 
     def clean_competitor_urls(self):
         raw_value = self.cleaned_data.get("competitor_urls", "")

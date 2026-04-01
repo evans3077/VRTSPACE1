@@ -176,12 +176,12 @@ Turn the current SEO workspace from a strong analysis tool into a decision syste
 #### Track A: Foundation fixes before more intelligence
 
 - [x] Harden the dense product screens so audit, SEO, and content pages remain readable without dropping information, using responsive grid and contained-scroll layout patterns instead of long horizontal or vertical sprawl
-- [ ] Rebuild the audit intake step into a structured project-onboarding flow
+- [x] Rebuild the audit intake step into a structured project-onboarding flow
   Why:
   The first step still captures too much context as free text.
   Needed result:
   Business type, location, target goal, and primary offer become first-class fields from the start.
-- [ ] Add audit-entry preflight and continuity rules
+- [x] Add audit-entry preflight and continuity rules
   Why:
   The intake still behaves like isolated submissions.
   Needed result:
@@ -255,23 +255,19 @@ Turn the current SEO workspace from a strong analysis tool into a decision syste
 
 Start here, in this exact order:
 
-1. Structured audit intake and project onboarding
-   Reason:
-   This fixes the first user step and gives the SEO engine better structured input.
-
-2. Multi-project workspace selection
+1. Multi-project workspace selection
    Reason:
    Once onboarding improves, the system must stop assuming one implicit project.
 
-3. Competitor traceability and manual controls
+2. Competitor traceability and manual controls
    Reason:
    This is the next trust layer for the SEO workspace.
 
-4. Competitor pattern extraction and page-to-page comparison
+3. Competitor pattern extraction and page-to-page comparison
    Reason:
    This is where the SEO engine becomes meaningfully harder to compete with.
 
-5. Campaign objects and full-chain execution continuity
+4. Campaign objects and full-chain execution continuity
    Reason:
    This turns intelligence into managed work instead of static advice.
 
@@ -279,31 +275,7 @@ Start here, in this exact order:
 
 ## Tomorrow First Slice
 
-The first work block tomorrow should be:
-
-### Block 1: Audit Intake Rebuild
-
-Target:
-
-- Extend the audit request model and form to collect:
-  - business type
-  - location
-  - target goal
-  - primary offer/service
-- Update the public audit form and onboarding copy
-- Feed those fields into project creation and downstream SEO defaults
-- Add duplicate-run preflight for same normalized domain when an audit is already pending/running
-- Add tests for:
-  - form validation
-  - structured field persistence
-  - duplicate audit prevention or graceful reroute
-
-Definition of done:
-
-- The homepage audit form captures structured business context
-- A new audit creates or updates a project-ready path cleanly
-- Duplicate running audits do not create noisy repeat submissions
-- Relevant tests pass
+The next work block should be:
 
 ### Block 2: Project Selection Foundation
 
@@ -317,8 +289,6 @@ Definition of done:
 - A user with multiple projects can switch context safely
 - Core workspace areas all resolve against the chosen project
 - Tests cover the selection logic
-
-If Block 1 is not complete, do not start Block 2.
 
 ---
 

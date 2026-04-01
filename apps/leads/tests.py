@@ -3,7 +3,7 @@ from django.urls import reverse
 
 from apps.tools.models import AuditRun
 
-from .models import AuditRequest, Lead
+from .models import AuditRequest, ClientProject, Lead
 from .services import sync_client_project_from_audit_run
 
 
@@ -72,6 +72,10 @@ class LeadFlowTests(TestCase):
                 "company_name": "Northwind",
                 "email": "ops@example.com",
                 "website": "northwind.example.com",
+                "business_type": "automotive",
+                "location": "Nairobi, Kenya",
+                "target_goal": "Increase qualified leads",
+                "primary_service": "Used car sales",
                 "monthly_leads_goal": 60,
                 "notes": "We want better rankings and AI citations across enterprise pages.",
             },
@@ -81,6 +85,10 @@ class LeadFlowTests(TestCase):
         self.assertEqual(AuditRequest.objects.count(), 1)
         audit_request = AuditRequest.objects.get()
         self.assertEqual(audit_request.website, "https://northwind.example.com")
+        self.assertEqual(audit_request.business_type, "automotive")
+        self.assertEqual(audit_request.location, "Nairobi, Kenya")
+        self.assertEqual(audit_request.target_goal, "Increase qualified leads")
+        self.assertEqual(audit_request.primary_service, "Used car sales")
         self.assertEqual(audit_request.status, AuditRequest.Status.QUALIFIED)
         self.assertEqual(audit_request.submission_context, {})
 
@@ -89,6 +97,10 @@ class LeadFlowTests(TestCase):
             company_name="Northwind",
             email="ops@example.com",
             website="https://northwind.example.com",
+            business_type="automotive",
+            location="Nairobi, Kenya",
+            target_goal="Increase qualified leads",
+            primary_service="Used car sales",
             monthly_leads_goal=60,
             status=AuditRequest.Status.QUALIFIED,
         )
@@ -105,3 +117,41 @@ class LeadFlowTests(TestCase):
         self.assertEqual(project.latest_audit_run, audit_run)
         self.assertEqual(project.latest_score, 82)
         self.assertEqual(project.stage, project.Stage.PROPOSAL)
+        self.assertEqual(project.business_type, "automotive")
+        self.assertEqual(project.location, "Nairobi, Kenya")
+        self.assertEqual(project.target_goal, "Increase qualified leads")
+        self.assertEqual(project.primary_service, "Used car sales")
+
+    def test_sync_client_project_updates_existing_project_context_from_new_audit(self):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://northwind.example.com",
+            business_type="automotive",
+            location="Nairobi, Kenya",
+            target_goal="Increase qualified leads",
+            primary_service="Used car sales",
+            monthly_leads_goal=60,
+            status=AuditRequest.Status.NEW,
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            name="Northwind",
+            website="https://northwind.example.com",
+            normalized_domain="northwind.example.com",
+            contact_email="ops@example.com",
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="northwind.example.com",
+            start_url="https://northwind.example.com",
+            overall_score=74,
+        )
+
+        refreshed_project = sync_client_project_from_audit_run(audit_run)
+
+        self.assertEqual(refreshed_project.pk, project.pk)
+        self.assertEqual(refreshed_project.business_type, "automotive")
+        self.assertEqual(refreshed_project.location, "Nairobi, Kenya")
+        self.assertEqual(refreshed_project.target_goal, "Increase qualified leads")
+        self.assertEqual(refreshed_project.primary_service, "Used car sales")

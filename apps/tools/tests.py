@@ -40,6 +40,10 @@ class PublicAuditFlowTests(TestCase):
                 "company_name": "Northwind",
                 "email": "ops@example.com",
                 "website": "example.com",
+                "business_type": "saas",
+                "location": "Nairobi, Kenya",
+                "target_goal": "Increase demo requests",
+                "primary_service": "Revenue operations platform",
                 "monthly_leads_goal": 40,
                 "notes": "Run a first-pass audit.",
             },
@@ -48,8 +52,45 @@ class PublicAuditFlowTests(TestCase):
         self.assertEqual(response.status_code, 302)
         self.assertEqual(AuditRequest.objects.count(), 1)
         self.assertEqual(AuditRun.objects.count(), 1)
+        self.assertEqual(ClientProject.objects.count(), 1)
+        self.assertEqual(ClientProject.objects.get().business_type, "saas")
         self.assertIn("/tools/audits/", response["Location"])
         mocked_enqueue.assert_called_once()
+
+    @patch("apps.tools.views.enqueue_public_site_audit")
+    def test_public_audit_submission_reuses_existing_inflight_run_for_same_domain(self, mocked_enqueue):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+        )
+        existing_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            status=AuditRun.Status.RUNNING,
+        )
+
+        response = self.client.post(
+            reverse("tools:free-seo-audit"),
+            {
+                "company_name": "Northwind",
+                "email": "ops@example.com",
+                "website": "example.com",
+                "business_type": "agency",
+                "location": "Nairobi, Kenya",
+                "target_goal": "Increase qualified leads",
+                "primary_service": "SEO consulting",
+                "monthly_leads_goal": 40,
+                "notes": "Run a first-pass audit.",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response["Location"], reverse("tools:audit-result", args=[existing_run.pk]))
+        self.assertEqual(AuditRun.objects.count(), 1)
+        self.assertEqual(AuditRequest.objects.count(), 1)
+        mocked_enqueue.assert_not_called()
 
     def test_pending_audit_result_shows_processing_state(self):
         audit_run = AuditRun.objects.create(

@@ -145,9 +145,14 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
         ]
         if not competitor_urls and getattr(project, "audit_request", None):
             competitor_urls = getattr(project.audit_request, "competitor_urls", [])
-        initial = {"competitor_urls": "\n".join(competitor_urls)}
+        initial = {
+            "competitor_urls": "\n".join(competitor_urls),
+            "location": getattr(project, "location", ""),
+            "target_goal": getattr(project, "target_goal", ""),
+            "primary_service": getattr(project, "primary_service", ""),
+        }
         if not getattr(profile, "business_type", ""):
-            initial["business_type"] = infer_business_type_for_project(project)
+            initial["business_type"] = getattr(project, "business_type", "") or infer_business_type_for_project(project)
         return initial
 
     def _get_latest_opportunity_snapshot(self, project, profile):

@@ -42,7 +42,7 @@ from .automation import get_workspace_schedule
 from .jobs import enqueue_public_site_audit
 from .models import AuditRun, AuditShareLink
 from .pdf_reports import build_audit_report_pdf
-from .services import normalize_url
+from .services import extract_domain, normalize_url
 
 
 def _decorate_product_modules(product_modules, billing_plans):
@@ -89,13 +89,31 @@ class PublicAuditCreateView(View):
             )
             return render(request, HomePageView.template_name, context, status=400)
 
+        normalized_start_url = normalize_url(form.cleaned_data["website"])
+        normalized_domain = extract_domain(normalized_start_url)
+        existing_run = (
+            AuditRun.objects.filter(
+                normalized_domain=normalized_domain,
+                status__in={AuditRun.Status.PENDING, AuditRun.Status.RUNNING},
+            )
+            .order_by("-created_at")
+            .first()
+        )
+        if existing_run:
+            messages.info(
+                request,
+                "An audit for this website is already in progress. Opening the current result instead of creating a duplicate run.",
+            )
+            return redirect("tools:audit-result", pk=existing_run.pk)
+
         audit_request = create_audit_request_from_form(form, request=request)
         audit_run = AuditRun.objects.create(
             audit_request=audit_request,
-            normalized_domain="pending",
-            start_url=normalize_url(audit_request.website),
+            normalized_domain=normalized_domain or "pending",
+            start_url=normalized_start_url,
         )
 
+        sync_client_project_from_audit_run(audit_run)
         enqueue_public_site_audit(audit_run.pk)
         messages.success(request, "Audit started. We are analyzing the site now.")
         return redirect("tools:audit-result", pk=audit_run.pk)

@@ -494,6 +494,25 @@ class WorkspaceSEOViewTests(TestCase):
         self.assertEqual(profile.business_type, "automotive")
         self.assertEqual(profile.metadata.get("business_type_source"), "inferred")
 
+    def test_workspace_seo_get_prefills_from_project_onboarding_fields(self):
+        self.project.business_type = "automotive"
+        self.project.location = "Nairobi, Kenya"
+        self.project.target_goal = "Increase qualified leads"
+        self.project.primary_service = "Used car sales"
+        self.project.save(
+            update_fields=["business_type", "location", "target_goal", "primary_service", "updated_at"]
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("seo:workspace-seo"))
+
+        self.assertEqual(response.status_code, 200)
+        form = response.context["form"]
+        self.assertEqual(form.initial["business_type"], "automotive")
+        self.assertEqual(form.initial["location"], "Nairobi, Kenya")
+        self.assertEqual(form.initial["target_goal"], "Increase qualified leads")
+        self.assertEqual(form.initial["primary_service"], "Used car sales")
+
     def test_workspace_backlink_prospect_update_persists_status_and_notes(self):
         snapshot = BacklinkSnapshot.objects.create(
             project=self.project,
