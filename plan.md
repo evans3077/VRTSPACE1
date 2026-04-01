@@ -28,8 +28,16 @@ Current product reality:
 
 - Audit is usable and strong
 - SEO is promising and differentiated
-- Workspace structure is still too implicit for multi-site users
-- Decision explainability and execution traceability are the next major gap
+- The product wedge is now visible:
+  - direct recommendations
+  - tighter page-level actioning
+  - one flow across audits, SEO, AEO, content, backlinks, and reporting
+  - stakeholder-ready outputs that do not force the user to interpret raw data
+- The main risks are now:
+  - noisy recommendations
+  - long processing times
+  - generic output
+  - pricing that gets ahead of precision
 
 ---
 
@@ -163,150 +171,322 @@ Status: complete
 
 ---
 
+## Strategic Continuity
+
+The first ten phases were foundation-building phases. They were not separate products.
+
+They built one connected system in this order:
+
+1. Audit foundation
+   Result:
+   The platform can inspect a site, score it, explain it, and save the result.
+
+2. Workspace and project foundation
+   Result:
+   The user can keep work inside the system instead of treating the audit as a one-off report.
+
+3. Billing and plan foundation
+   Result:
+   The product can eventually enforce value and monetize workflows cleanly.
+
+4. Automation and reporting foundation
+   Result:
+   The system can rerun, notify, export, and report instead of stopping at one scan.
+
+5. Content and editorial foundation
+   Result:
+   SEO and audit intelligence can become briefs, drafts, edits, and publishable assets.
+
+6. SEO and AEO intelligence foundation
+   Result:
+   The platform can benchmark competitors, reason over SERPs, understand niche and location context, and generate execution opportunities.
+
+7. Backlink and campaign foundation
+   Result:
+   The system can carry an opportunity beyond diagnosis into authority-building and tracked execution.
+
+Phase 11 is not a new direction. It is the refinement phase that makes the first ten phases work together as one production-grade decision system.
+
+The purpose of Phase 11 is to do four things:
+
+- make the existing outputs more precise
+- make the existing workflows faster and more durable
+- make the value of each paid tier explicit
+- make the full chain easier to understand for both operators and stakeholders
+
+That is the bridge between the original build plan and the current strategy plan.
+
+---
+
 ## Active Phase
 
-### Phase 11: SEO Decision Engine and Campaign Execution
+### Phase 11: Product Precision, Packaging, and Decision Quality
 
 Status: in progress
 
 Goal:
 
-Turn the current SEO workspace from a strong analysis tool into a decision system that can explain why it chose a benchmark, compare pages directly, and carry a winning opportunity through execution.
+Turn the current platform into a production-grade decision system that is clearly more actionable than traditional SEO tools, while making plan value, limits, and upgrade logic explicit before marketing or affiliate expansion begins.
 
-#### Track A: Foundation fixes before more intelligence
+#### Track A: Precision and runtime hardening
 
-- [x] Harden the dense product screens so audit, SEO, and content pages remain readable without dropping information, using responsive grid and contained-scroll layout patterns instead of long horizontal or vertical sprawl
-- [x] Rebuild the audit intake step into a structured project-onboarding flow
+- [ ] Add recommendation root-cause clustering across Audit, SEO, and AEO
   Why:
-  The first step still captures too much context as free text.
+  Users still see advice that can feel too similar even when the evidence differs.
   Needed result:
-  Business type, location, target goal, and primary offer become first-class fields from the start.
-- [x] Add audit-entry preflight and continuity rules
+  Repeated issue variants collapse into a smaller number of strategic actions with grouped evidence, affected URLs, and clear implementation order.
+- [ ] Add stronger evidence scoring before any recommendation is shown
   Why:
-  The intake still behaves like isolated submissions.
+  Weak competitor or crawl evidence should not leak into visible advice.
   Needed result:
-  Normalize domains early, catch duplicate in-flight runs, show expected processing state clearly, and attach the run cleanly to a durable project path.
-- [x] Harden audit-result rendering against incomplete or legacy score payloads
+  Every recommendation must pass fit, confidence, and page-target checks before entering the queue.
+- [ ] Add cross-module decision summaries
   Why:
-  Public audit pages must not crash when live summaries contain `None` or partial score values.
+  Audit, SEO, AEO, content, and backlink work now exist, but the user still has to join the dots across separate screens.
   Needed result:
-  The result view normalizes missing values safely and keeps public links stable across old and new audit records.
-- [x] Add true multi-project workspace support
+  The platform explains what to do first, what supports that decision, and what can wait.
+- [ ] Reduce heavy-job runtime with explicit stage budgets
   Why:
-  Most workspace flows still assume “latest project” instead of “selected project.”
+  Long runs damage trust even when the output is good.
   Needed result:
-  Users can own multiple sites and switch the active project explicitly across Audits, SEO, AEO, Content, and Backlinks.
+  Discovery, crawl, pattern extraction, backlink prospecting, and report generation each run with bounded scope, visible stage state, and safe fallback behavior.
+- [ ] Add cache and reuse rules for expensive benchmark artifacts
+  Why:
+  The system should not refetch or recompute everything on every refresh.
+  Needed result:
+  Competitor fetches, page-pattern extractions, and SERP evidence are reused when fresh enough, with explicit invalidation rules.
 
-#### Track B: SEO decision explainability
+#### Track B: Decision explainability and action quality
 
 - [x] Add competitor acceptance and rejection traceability
-  Why:
-  The engine now filters better, but users still cannot see why a competitor was accepted or rejected.
-  Needed result:
-  The SEO hub shows fit signals, penalty signals, source, and the reason each discovered site was kept, down-ranked, or filtered out.
 - [x] Add manual competitor controls
-  Why:
-  Even a strong engine needs a correction path.
-  Needed result:
-  Users can approve, reject, pin, or suppress competitors without losing the automated pipeline.
 - [x] Extract repeatable competitor page patterns from accepted benchmarks
-  Why:
-  We need more than counts and generic evidence.
-  Needed result:
-  The system identifies title formulas, H1 patterns, FAQ blocks, schema patterns, asset usage, local proof elements, and internal-link placement.
 - [x] Build a page-to-page comparison layer
-  Why:
-  Recommendations become more credible when users can compare their page directly against winning competitors.
-  Needed result:
-  Show what the user page has, what accepted competitor pages include, what is missing, and the exact structural delta to close.
 - [x] Add SERP evidence history
+- [ ] Add page-level action packs
   Why:
-  A single snapshot is not enough for a recurring SEO product.
+  Users need exact changes, not just diagnosis.
   Needed result:
-  Track query evidence, competitor appearances, and ranking signals over time.
+  For a chosen page, the system outputs title, H1, meta, heading structure, schema, internal-link targets, FAQ additions, proof blocks, and CTA improvements in one implementation pack.
+- [ ] Add recommendation evidence cards
+  Why:
+  Advice is more credible when the system shows why it believes the change is worth doing.
+  Needed result:
+  Each major recommendation shows source evidence, accepted competitor examples, user-page gaps, and expected impact in one compact card.
+- [ ] Add success-criteria contracts for execution items
+  Why:
+  A task should have a visible definition of success before it is considered complete.
+  Needed result:
+  Campaigns and action packs carry measurable validation checks tied to reruns or page-state verification.
 
-#### Track C: Execution and campaign continuity
+#### Track C: Packaging, limits, and plan discipline
+
+- [ ] Produce a plan-by-plan packaging sheet in code and plan docs
+  Why:
+  Pricing without exact feature ownership creates confusion and weak upgrade logic.
+  Needed result:
+  Define what stays free, what belongs to Starter, Growth, Authority, and what moves to Enterprise only.
+- [ ] Define exact usage limits per plan
+  Why:
+  A SaaS plan is not complete until limits are explicit.
+  Needed result:
+  Set monthly audit limits, SEO refresh limits, AEO refresh limits, export/share limits, historical depth, competitor depth, content-generation allowances, backlink prospecting allowances, and automation allowances per tier.
+- [ ] Map every expensive workflow to a single plan-check path
+  Why:
+  Costly features should not be gated inconsistently.
+  Needed result:
+  Audits, competitor benchmarking, content generation, backlink prospecting, scheduled runs, share links, and exports all consult the same policy layer.
+- [ ] Rework upgrade prompts around earned value
+  Why:
+  Upgrade prompts should follow visible work and visible limits, not generic sales language.
+  Needed result:
+  The UI explains what was used, what limit was reached, and what the next plan unlocks in operational terms.
+- [ ] Keep Enterprise reserved for true complexity
+  Why:
+  Enterprise should not become a dumping ground for ordinary paid features.
+  Needed result:
+  Enterprise is limited to multi-market, custom workflows, custom integrations, higher support, and bespoke implementation.
+
+#### Track D: Execution continuity and reporting
 
 - [x] Turn execution items into campaign objects
-  Why:
-  The current execution queue is actionable, but not yet managed like an ongoing campaign.
-  Needed result:
-  Each execution item can have status, owner, due date, related pages, related keywords, and success criteria.
 - [x] Tie SEO execution, generated content, and backlink prospects together
-  Why:
-  The system should move one opportunity through the full chain.
-  Needed result:
-  A single accepted opportunity can flow:
-  benchmark -> page brief -> draft -> publish target -> outreach target -> rerun validation
 - [x] Add clearer value reporting
-  Why:
-  Users should see where their time, credits, and money are going.
-  Needed result:
-  Report how many benchmarks ran, competitor pages were processed, briefs were generated, drafts were created, outreach targets were discovered, and campaigns advanced.
 - [x] Add SEO-specific stakeholder reporting
-  Why:
-  Audit PDF reporting exists, but SEO strategy still needs its own shareable layer.
-  Needed result:
-  Users can export or share competitor-backed SEO plans in a stakeholder-friendly format.
 - [ ] Add operational safeguards for production
   Why:
   Heavy SEO work must stay durable under real usage.
   Needed result:
   Queue heavy jobs correctly, rate-limit discovery and crawl depth, and make fallback behavior explicit when providers return partial or weak data.
+- [ ] Add executive-level outcome summaries
+  Why:
+  Stakeholders should not have to read the entire workspace to understand value.
+  Needed result:
+  Reports and dashboards summarize work completed, evidence gathered, pages improved, assets created, links pursued, and validation status in plain business terms.
 
 ---
 
-## Tomorrow Start Order
+## Next Start Order
 
 Start here, in this exact order:
 
-1. Multi-project workspace selection
+1. Plan-by-plan packaging sheet and exact limits
    Reason:
-   Once onboarding improves, the system must stop assuming one implicit project.
+   Pricing, feature ownership, and enforcement need to be explicit before more surface area is added.
 
-2. Competitor traceability and manual controls
+2. Recommendation clustering and evidence scoring
    Reason:
-   This is the next trust layer for the SEO workspace.
+   This directly reduces noisy output and makes the system feel more deliberate.
 
-3. Competitor pattern extraction and page-to-page comparison
+3. Page-level action packs
    Reason:
-   This is where the SEO engine becomes meaningfully harder to compete with.
+   This strengthens the real wedge: exact, implementable actioning.
 
-4. Campaign objects and full-chain execution continuity
+4. Runtime stage budgets and caching
    Reason:
-   This turns intelligence into managed work instead of static advice.
+   This reduces long wait times without weakening output quality.
+
+5. Cross-module decision summaries
+   Reason:
+   This makes the combined value of audit, SEO, AEO, content, and backlinks easier to understand.
+
+6. Executive-level outcome summaries
+   Reason:
+   Once the decision system is tighter internally, stakeholder reporting should summarize it in plain business language.
 
 ---
 
-## Tomorrow First Slice
+## Next First Slice
 
 The next work block should be:
 
-### Block 2: Project Selection Foundation
+### Block 1: Packaging and Plan Contract
 
 Target:
 
-- Add explicit project selection in the workspace
-- Make Audit, SEO, AEO, Content, and Backlinks use the selected project instead of the latest-updated project
+- Produce a clear packaging sheet for Free, Starter, Growth, Authority, and Enterprise
+- Assign exact feature ownership and usage limits to each tier
+- Map all expensive workflows to one plan-policy contract
 
 Definition of done:
 
-- A user with multiple projects can switch context safely
-- Core workspace areas all resolve against the chosen project
-- Tests cover the selection logic
+- The repo has one authoritative plan matrix for product, billing, and UI usage
+- Every major workflow has a named plan owner
+- Free vs paid vs enterprise-only boundaries are explicit
+- The next implementation steps can enforce those limits without ambiguity
 
 ---
 
 ## Follow-Through Rules
 
-- Do not add more SEO surface area before the onboarding and project-selection foundation is corrected.
-- Do not add more competitor intelligence before explainability exists.
-- Do not add more campaigns or automation before execution items have a durable object model.
+- Do not add more market-facing feature copy before the packaging sheet and tier limits are explicit.
+- Do not let weak evidence create visible recommendations.
+- Do not let heavy jobs run without bounded stage budgets, status, and fallback behavior.
+- Do not price a feature above the current precision it can defend.
 - Every heavy async workflow must have:
   - a visible status
   - a failure state
   - a retry path
   - a bounded scope
+
+---
+
+## Packaging Direction
+
+This is the pricing and packaging direction to implement in code and UI next.
+
+### Free
+
+- Public audit entry layer
+- Limited history
+- Limited exports
+- No deep recurring workflows
+- Purpose:
+  acquisition and proof of value
+
+### Starter
+
+- Solo operators and small local businesses
+- Core audit workspace
+- SEO and AEO basics
+- Limited competitor-backed benchmarking
+- Limited reports and action packs
+
+### Growth
+
+- Serious SMBs and lean teams
+- Recurring audits
+- Deeper competitor benchmarking
+- Content briefs and editorial queue
+- Stakeholder reporting and sharing
+- More automation and historical depth
+
+### Authority
+
+- Agencies, multi-location businesses, and execution-heavy teams
+- Full audit, SEO, AEO, content, and backlink workflow
+- Advanced reporting
+- Larger limits
+- Full campaign continuity and stronger collaboration paths
+
+### Enterprise
+
+- Multi-market and multi-site complexity
+- Custom integrations
+- Custom workflows
+- Bespoke support and implementation
+- Reserved for real complexity, not ordinary feature gating
+
+---
+
+## Implementation Logic
+
+This is the order the product should continue to follow so the earlier plan and the newer precision work stay aligned.
+
+### Layer 1: Foundation already built
+
+- Audit
+- Workspace
+- Billing
+- Automation
+- Reporting
+- SEO
+- AEO
+- Content
+- Backlinks
+
+Rule:
+Do not rebuild these primitives. Extend them.
+
+### Layer 2: Precision and packaging now
+
+- Reduce noisy output
+- Improve action specificity
+- Bound runtime
+- Make tier ownership explicit
+- Align product value with pricing
+
+Rule:
+Every new improvement should either increase decision quality, reduce ambiguity, or clarify plan value.
+
+### Layer 3: Growth systems later
+
+- Marketing engine
+- Affiliate system
+- Broader distribution loops
+- Go-to-market scaling
+
+Rule:
+Do not prioritize acquisition systems ahead of core precision and packaging discipline.
+
+---
+
+## Market Position Rule
+
+- We are not trying to become Ahrefs by copying breadth first.
+- We learn from the strongest tools in the market, study their movements, and capitalize on where they are weaker.
+- The product advantage must come from decision quality, action quality, workflow continuity, and stakeholder clarity.
+- Marketing and affiliate systems come after the core functionality, plan discipline, and product precision are strong enough to defend the pricing.
 
 ---
 
