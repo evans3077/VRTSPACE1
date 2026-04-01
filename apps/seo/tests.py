@@ -14,6 +14,7 @@ from .backlinks import build_backlink_snapshot_payload, refresh_project_backlink
 from .models import (
     BacklinkProspect,
     BacklinkSnapshot,
+    SEOCampaign,
     SEOCompetitor,
     SEOCompetitorSnapshot,
     SEOContextSnapshot,
@@ -23,10 +24,13 @@ from .models import (
 )
 from .discovery import build_discovery_queries, discover_serp_competitors, fetch_search_results
 from .services import (
+    build_competitor_trend_summary,
     build_local_keyword_set,
+    build_serp_evidence_history,
     build_seo_context_payload,
     build_seo_opportunity_payload,
     get_or_build_seo_snapshot,
+    sync_project_seo_campaigns,
 )
 
 
@@ -411,6 +415,194 @@ class SEOContextServiceTests(TestCase):
         self.assertTrue(payload["page_map"])
         self.assertTrue(payload["keyword_opportunities"])
 
+    def test_build_serp_evidence_history_and_competitor_trends_from_snapshots(self):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=70,
+            status=AuditRun.Status.COMPLETED,
+            summary={},
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            latest_audit_run=audit_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="ops@example.com",
+            latest_score=70,
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified organic leads",
+            primary_service="used car dealership",
+        )
+        first = SEOContextSnapshot.objects.create(
+            project=project,
+            profile=profile,
+            source_audit_run=audit_run,
+            output_json={
+                "benchmark_summary": {
+                    "included_competitors": 2,
+                    "filtered_out_competitors": 3,
+                    "average_relevance": 7.2,
+                },
+                "discovery": {"queries": ["used car dealership Nairobi", "car financing Nairobi"]},
+                "competitor_trace": [
+                    {
+                        "domain": "competitor-a.com",
+                        "url": "https://competitor-a.com/",
+                        "included": True,
+                        "status": "ok",
+                        "best_position": 3,
+                        "average_relevance": 7.0,
+                        "final_decision_label": "Accepted",
+                        "queries": ["used car dealership Nairobi"],
+                    },
+                    {
+                        "domain": "competitor-b.com",
+                        "url": "https://competitor-b.com/",
+                        "included": True,
+                        "status": "ok",
+                        "best_position": 4,
+                        "average_relevance": 7.4,
+                        "final_decision_label": "Accepted",
+                        "queries": ["car financing Nairobi"],
+                    },
+                ],
+            },
+        )
+        second = SEOContextSnapshot.objects.create(
+            project=project,
+            profile=profile,
+            source_audit_run=audit_run,
+            output_json={
+                "benchmark_summary": {
+                    "included_competitors": 3,
+                    "filtered_out_competitors": 1,
+                    "average_relevance": 8.4,
+                },
+                "discovery": {"queries": ["used cars for sale Nairobi", "best used car dealer Nairobi"]},
+                "competitor_trace": [
+                    {
+                        "domain": "competitor-a.com",
+                        "url": "https://competitor-a.com/",
+                        "included": True,
+                        "status": "ok",
+                        "best_position": 2,
+                        "average_relevance": 8.6,
+                        "final_decision_label": "Accepted",
+                        "queries": ["used cars for sale Nairobi"],
+                    },
+                    {
+                        "domain": "competitor-c.com",
+                        "url": "https://competitor-c.com/",
+                        "included": True,
+                        "status": "ok",
+                        "best_position": 5,
+                        "average_relevance": 8.1,
+                        "final_decision_label": "Accepted",
+                        "queries": ["best used car dealer Nairobi"],
+                    },
+                ],
+            },
+        )
+
+        history = build_serp_evidence_history(project)
+        trends = build_competitor_trend_summary(project)
+
+        self.assertEqual(len(history), 2)
+        self.assertEqual(history[0]["snapshot_id"], first.pk)
+        self.assertEqual(history[1]["snapshot_id"], second.pk)
+        self.assertEqual(history[1]["relevance_delta"], 1.2)
+        self.assertIn("competitor-a.com", history[1]["included_domains"])
+        self.assertEqual(trends[0]["domain"], "competitor-a.com")
+        self.assertEqual(trends[0]["appearances"], 2)
+        self.assertEqual(trends[0]["best_position"], 2)
+
+    def test_sync_project_seo_campaigns_creates_campaigns_from_execution_queue(self):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=70,
+            status=AuditRun.Status.COMPLETED,
+            summary={},
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            latest_audit_run=audit_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="ops@example.com",
+            latest_score=70,
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified organic leads",
+            primary_service="used car dealership",
+        )
+        context_snapshot = SEOContextSnapshot.objects.create(
+            project=project,
+            profile=profile,
+            source_audit_run=audit_run,
+            output_json={"context": {}, "benchmark_summary": {}},
+        )
+        opportunity_snapshot = SEOOpportunitySnapshot.objects.create(
+            project=project,
+            profile=profile,
+            source_audit_run=audit_run,
+            source_context_snapshot=context_snapshot,
+            output_json={
+                "execution_queue": [
+                    {
+                        "title": "Upgrade FAQ coverage",
+                        "page_type": "faq",
+                        "target_keyword": "used car dealership Nairobi faq",
+                        "keywords": ["used car dealership Nairobi faq", "used car dealer faqs Nairobi"],
+                        "target_urls": ["https://example.com/faq/"],
+                        "action_steps": [
+                            "Tighten titles, headings, internal links, and local modifiers on faq pages.",
+                            "Re-run SEO refresh and audit validation.",
+                        ],
+                        "priority_score": 91,
+                        "deliverable": "Improve the current FAQ pages",
+                        "where_to_apply": ["https://example.com/faq/"],
+                        "edit_targets": [{"url": "https://example.com/faq/", "changes": ["Update title", "Expand FAQ coverage"]}],
+                    }
+                ]
+            },
+        )
+
+        campaigns = sync_project_seo_campaigns(
+            project,
+            context_snapshot=context_snapshot,
+            opportunity_snapshot=opportunity_snapshot,
+        )
+
+        self.assertEqual(len(campaigns), 1)
+        campaign = campaigns[0]
+        self.assertEqual(campaign.title, "Upgrade FAQ coverage")
+        self.assertEqual(campaign.target_keyword, "used car dealership Nairobi faq")
+        self.assertEqual(campaign.related_page_urls, ["https://example.com/faq/"])
+        self.assertEqual(campaign.status, SEOCampaign.Status.QUEUED)
+
 
 class WorkspaceSEOViewTests(TestCase):
     def setUp(self):
@@ -704,6 +896,101 @@ class WorkspaceSEOViewTests(TestCase):
         self.assertContains(response, "competitor.com")
         self.assertContains(response, "Wrong location")
         self.assertContains(response, "Page-to-Page Comparison")
+
+    def test_workspace_seo_renders_history_sections(self):
+        profile = SEOProjectProfile.objects.create(
+            project=self.project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified organic leads",
+            primary_service="used car dealership",
+        )
+        SEOContextSnapshot.objects.create(
+            project=self.project,
+            profile=profile,
+            source_audit_run=self.audit_run,
+            output_json={
+                "context": {
+                    "industry_label": "Automotive",
+                    "location": "Nairobi",
+                    "target_goal": "Increase qualified organic leads",
+                    "goal_focus": "commercial and local intent queries",
+                },
+                "benchmark_summary": {
+                    "available_competitors": 1,
+                    "included_competitors": 1,
+                    "filtered_out_competitors": 1,
+                    "average_relevance": 8.1,
+                },
+                "discovery": {"queries": ["used car dealership Nairobi"]},
+                "competitor_trace": [
+                    {
+                        "competitor_id": 11,
+                        "domain": "competitor.com",
+                        "url": "https://competitor.com/",
+                        "source_label": "SERP Discovery",
+                        "final_decision_label": "Accepted",
+                        "included": True,
+                        "review_decision": "auto",
+                        "review_label": "Automatic",
+                        "review_note": "",
+                        "fit": {
+                            "best_page_score": 8,
+                            "matching_pages": 2,
+                            "reason": "2 page(s) matched the declared niche and location.",
+                            "match_signals": ["topic:cars"],
+                            "penalty_signals": [],
+                        },
+                        "queries": ["used car dealership Nairobi"],
+                        "average_relevance": 8.1,
+                        "page_count": 3,
+                        "sample_titles": ["Used Cars Nairobi"],
+                    }
+                ],
+                "competitor_patterns": [],
+                "page_comparisons": [],
+                "competitors": [],
+            },
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("seo:workspace-seo"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "SERP Evidence History")
+        self.assertContains(response, "Competitor Trend Watch")
+        self.assertContains(response, "competitor.com")
+
+    def test_workspace_seo_campaign_update_persists_status_due_date_and_owner(self):
+        campaign = SEOCampaign.objects.create(
+            project=self.project,
+            campaign_key="faq-used-car-dealership-nairobi-faq",
+            title="Upgrade FAQ coverage",
+            page_type="faq",
+            target_keyword="used car dealership Nairobi faq",
+            related_page_urls=["https://example.com/faq/"],
+            success_criteria=["Re-run SEO refresh and audit validation after implementation."],
+            priority_score=88,
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("seo:workspace-seo-campaign-update", args=[campaign.pk]),
+            {
+                "status": SEOCampaign.Status.IN_PROGRESS,
+                "due_date": "2026-04-15",
+                "note": "FAQ rewrite in progress",
+                "assign_to_me": "1",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response["Location"], reverse("seo:workspace-seo"))
+        campaign.refresh_from_db()
+        self.assertEqual(campaign.status, SEOCampaign.Status.IN_PROGRESS)
+        self.assertEqual(str(campaign.due_date), "2026-04-15")
+        self.assertEqual(campaign.owner, self.user)
+        self.assertEqual(campaign.metadata.get("note"), "FAQ rewrite in progress")
 
     def test_workspace_seo_competitor_review_updates_metadata(self):
         competitor = SEOCompetitor.objects.create(

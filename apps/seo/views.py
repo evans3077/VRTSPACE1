@@ -3,6 +3,7 @@ from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
 from django.shortcuts import redirect, render
+from django.utils.dateparse import parse_date
 from django.views import View
 
 from apps.leads.services import get_workspace_projects, resolve_workspace_project
@@ -10,12 +11,15 @@ from apps.leads.models import ClientProject
 
 from .backlinks import refresh_project_backlink_intelligence
 from .forms import SEOProjectProfileForm
-from .models import BacklinkProspect, SEOCompetitor, SEOProjectProfile
+from .models import BacklinkProspect, SEOCampaign, SEOCompetitor, SEOProjectProfile
 from .jobs import enqueue_project_seo_refresh
 from .services import infer_business_type_for_project
 from .services import (
+    build_competitor_trend_summary,
+    build_serp_evidence_history,
     can_generate_seo_snapshot,
     refresh_project_seo_intelligence,
+    sync_project_seo_campaigns,
     sync_project_competitors,
 )
 
@@ -205,6 +209,10 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             "seo_competitor_trace": payload.get("competitor_trace", []),
             "seo_competitor_patterns": payload.get("competitor_patterns", []),
             "seo_page_comparisons": payload.get("page_comparisons", []),
+            "seo_serp_history": build_serp_evidence_history(project) if project else [],
+            "seo_competitor_trends": build_competitor_trend_summary(project) if project else [],
+            "seo_campaigns": sync_project_seo_campaigns(project, context_snapshot=snapshot, opportunity_snapshot=opportunity_snapshot) if project and opportunity_snapshot else [],
+            "seo_campaign_status_choices": SEOCampaign.Status.choices,
             "seo_value_summary": opportunity_payload.get("value_summary", {}),
             "seo_keyword_opportunities": opportunity_payload.get("keyword_opportunities", []),
             "seo_page_map": opportunity_payload.get("page_map", []),
@@ -269,4 +277,29 @@ class WorkspaceSEOCompetitorReviewView(LoginRequiredMixin, View):
         competitor.metadata = metadata
         competitor.save(update_fields=["metadata", "updated_at"])
         messages.success(request, "Competitor review updated.")
+        return redirect("seo:workspace-seo")
+
+
+class WorkspaceSEOCampaignUpdateView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        project = resolve_workspace_project(request, request.user)
+        if not project:
+            raise Http404
+        campaign = project.seo_campaigns.filter(pk=kwargs["pk"]).first()
+        if not campaign:
+            raise Http404
+
+        status = request.POST.get("status", "").strip()
+        if status in SEOCampaign.Status.values:
+            campaign.status = status
+        due_date = request.POST.get("due_date", "").strip()
+        campaign.due_date = parse_date(due_date) if due_date else None
+        if request.POST.get("assign_to_me") == "1":
+            campaign.owner = request.user
+        note = request.POST.get("note", "").strip()
+        metadata = dict(campaign.metadata or {})
+        metadata["note"] = note[:500]
+        campaign.metadata = metadata
+        campaign.save(update_fields=["status", "due_date", "owner", "metadata", "updated_at"])
+        messages.success(request, "Campaign updated.")
         return redirect("seo:workspace-seo")

@@ -22,6 +22,7 @@ from apps.tools.services import (
 )
 
 from .models import (
+    SEOCampaign,
     SEOCompetitor,
     SEOCompetitorSnapshot,
     SEOContextSnapshot,
@@ -1305,6 +1306,87 @@ def build_benchmark_summary(site_structure, competitor_snapshots):
     }
 
 
+def build_serp_evidence_history(project, limit=6):
+    snapshots = list(
+        SEOContextSnapshot.objects.filter(project=project)
+        .order_by("-created_at")[:limit]
+    )
+    snapshots.reverse()
+    history = []
+    previous_relevance = None
+    for snapshot in snapshots:
+        payload = snapshot.output_json or {}
+        summary = payload.get("benchmark_summary", {}) or {}
+        discovery = payload.get("discovery", {}) or {}
+        trace = payload.get("competitor_trace") or []
+        included_domains = [item.get("domain", "") for item in trace if item.get("included") and item.get("domain")]
+        average_relevance = float(summary.get("average_relevance") or 0)
+        history.append(
+            {
+                "snapshot_id": snapshot.pk,
+                "created_at": snapshot.created_at,
+                "label": snapshot.created_at.strftime("%b %d"),
+                "included_competitors": summary.get("included_competitors", summary.get("available_competitors", 0)),
+                "filtered_out_competitors": summary.get("filtered_out_competitors", 0),
+                "average_relevance": average_relevance,
+                "relevance_delta": None if previous_relevance is None else round(average_relevance - previous_relevance, 1),
+                "query_count": len(discovery.get("queries", []) or []),
+                "top_queries": (discovery.get("queries", []) or [])[:3],
+                "included_domains": included_domains[:4],
+            }
+        )
+        previous_relevance = average_relevance
+    return history
+
+
+def build_competitor_trend_summary(project, limit=8):
+    snapshots = list(
+        SEOContextSnapshot.objects.filter(project=project)
+        .order_by("-created_at")[:limit]
+    )
+    snapshots.reverse()
+    aggregated = {}
+    for snapshot in snapshots:
+        for item in (snapshot.output_json or {}).get("competitor_trace", []):
+            domain = item.get("domain", "").strip()
+            if not domain:
+                continue
+            entry = aggregated.setdefault(
+                domain,
+                {
+                    "domain": domain,
+                    "url": item.get("url", ""),
+                    "appearances": 0,
+                    "included_runs": 0,
+                    "best_position": None,
+                    "latest_position": None,
+                    "latest_relevance": 0,
+                    "last_decision": "",
+                    "last_seen_label": "",
+                    "queries": [],
+                },
+            )
+            entry["appearances"] += 1
+            if item.get("included"):
+                entry["included_runs"] += 1
+            best_position = item.get("best_position")
+            if isinstance(best_position, (int, float)):
+                if entry["best_position"] is None or best_position < entry["best_position"]:
+                    entry["best_position"] = best_position
+                entry["latest_position"] = best_position
+            entry["latest_relevance"] = item.get("average_relevance") or entry["latest_relevance"]
+            entry["last_decision"] = item.get("final_decision_label", "")
+            entry["last_seen_label"] = snapshot.created_at.strftime("%b %d")
+            for query in item.get("queries", [])[:3]:
+                if query not in entry["queries"]:
+                    entry["queries"].append(query)
+    ranked = sorted(
+        aggregated.values(),
+        key=lambda item: (-item["included_runs"], -item["appearances"], item["best_position"] or 999),
+    )
+    return ranked[:8]
+
+
 def _page_type_label(page_type):
     return page_type.replace("_", " ")
 
@@ -1808,6 +1890,117 @@ def build_seo_opportunity_payload(project, profile, audit_run, context_snapshot=
         "page_map": page_map,
         "execution_queue": execution_queue,
     }
+
+
+def _campaign_key(item):
+    return slugify(
+        f"{item.get('page_type', '')}-{item.get('target_keyword') or item.get('title') or item.get('deliverable') or 'campaign'}"
+    )[:140]
+
+
+def _campaign_success_criteria(item):
+    criteria = []
+    target_keyword = item.get("target_keyword")
+    if target_keyword:
+        criteria.append(f"Target page is aligned to the keyword '{target_keyword}'.")
+    for step in item.get("action_steps", [])[:2]:
+        if step and step not in criteria:
+            criteria.append(step)
+    criteria.append("Re-run SEO refresh and audit validation after the implementation is live.")
+    return criteria[:4]
+
+
+def sync_project_seo_campaigns(project, *, context_snapshot=None, opportunity_snapshot=None):
+    if not project:
+        return []
+    if opportunity_snapshot is None:
+        opportunity_snapshot = project.seo_opportunity_snapshots.order_by("-created_at").first()
+    if context_snapshot is None:
+        context_snapshot = project.seo_snapshots.order_by("-created_at").first()
+    if not opportunity_snapshot:
+        return []
+
+    payload = opportunity_snapshot.output_json or {}
+    queue = payload.get("execution_queue", []) or []
+    active_keys = set()
+    campaigns = []
+
+    for item in queue:
+        campaign_key = _campaign_key(item)
+        if not campaign_key:
+            continue
+        active_keys.add(campaign_key)
+        defaults = {
+            "source_context_snapshot": context_snapshot,
+            "source_opportunity_snapshot": opportunity_snapshot,
+            "title": item.get("title") or item.get("deliverable") or "SEO campaign",
+            "page_type": item.get("page_type", ""),
+            "target_keyword": item.get("target_keyword", ""),
+            "related_keywords": item.get("keywords", [])[:6],
+            "related_page_urls": item.get("target_urls", [])[:6],
+            "success_criteria": _campaign_success_criteria(item),
+            "priority_score": item.get("priority_score", 0),
+            "metadata": {
+                "deliverable": item.get("deliverable", ""),
+                "where_to_apply": item.get("where_to_apply", []),
+                "edit_targets": item.get("edit_targets", []),
+                "action_steps": item.get("action_steps", []),
+            },
+        }
+        campaign, created = SEOCampaign.objects.get_or_create(
+            project=project,
+            campaign_key=campaign_key,
+            defaults=defaults,
+        )
+        if not created:
+            campaign.source_context_snapshot = context_snapshot
+            campaign.source_opportunity_snapshot = opportunity_snapshot
+            campaign.title = defaults["title"]
+            campaign.page_type = defaults["page_type"]
+            campaign.target_keyword = defaults["target_keyword"]
+            campaign.related_keywords = defaults["related_keywords"]
+            campaign.related_page_urls = defaults["related_page_urls"]
+            campaign.success_criteria = defaults["success_criteria"]
+            campaign.priority_score = defaults["priority_score"]
+            campaign.metadata = {
+                **(campaign.metadata or {}),
+                **defaults["metadata"],
+                "is_current": True,
+            }
+            if campaign.status not in {SEOCampaign.Status.COMPLETED, SEOCampaign.Status.ARCHIVED}:
+                campaign.status = SEOCampaign.Status.QUEUED
+            campaign.save(
+                update_fields=[
+                    "source_context_snapshot",
+                    "source_opportunity_snapshot",
+                    "title",
+                    "page_type",
+                    "target_keyword",
+                    "related_keywords",
+                    "related_page_urls",
+                    "success_criteria",
+                    "priority_score",
+                    "metadata",
+                    "status",
+                    "updated_at",
+                ]
+            )
+        else:
+            campaign.metadata = {**campaign.metadata, "is_current": True}
+            campaign.save(update_fields=["metadata", "updated_at"])
+        campaigns.append(campaign)
+
+    for campaign in project.seo_campaigns.exclude(campaign_key__in=active_keys):
+        metadata = dict(campaign.metadata or {})
+        metadata["is_current"] = False
+        campaign.metadata = metadata
+        if campaign.status == SEOCampaign.Status.QUEUED:
+            campaign.status = SEOCampaign.Status.BLOCKED
+            campaign.save(update_fields=["metadata", "status", "updated_at"])
+        else:
+            campaign.save(update_fields=["metadata", "updated_at"])
+
+    return list(project.seo_campaigns.select_related("owner").order_by("status", "-priority_score", "-updated_at"))
 
 
 def get_or_build_seo_snapshot(*, project, profile, audit_run):

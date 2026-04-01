@@ -173,6 +173,101 @@
             {% endif %}
         </article>
 
+        <div class="layout-split-wide">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">SERP Evidence History</p>
+                    <h2 style="font-size: 2rem;">How benchmark quality is trending over time</h2>
+                </div>
+                {% if seo_serp_history %}
+                <div class="panel-scroll">
+                    {% for item in seo_serp_history %}
+                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
+                            <strong>{{ item.label }}</strong>
+                            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                <span class="score-pill score-high" style="font-size: 0.7rem;">{{ item.included_competitors }} included</span>
+                                <span class="score-pill score-medium" style="font-size: 0.7rem;">{{ item.average_relevance }} relevance</span>
+                            </div>
+                        </div>
+                        <div class="seo-inline-tags" style="margin-top: 0.75rem;">
+                            <span class="seo-inline-tag">Filtered out: {{ item.filtered_out_competitors }}</span>
+                            <span class="seo-inline-tag">Queries: {{ item.query_count }}</span>
+                            {% if item.relevance_delta is not None %}
+                            <span class="seo-inline-tag">
+                                Relevance delta:
+                                {% if item.relevance_delta > 0 %}+{% endif %}{{ item.relevance_delta }}
+                            </span>
+                            {% endif %}
+                        </div>
+                        {% if item.top_queries %}
+                        <div style="margin-top: 0.75rem; color: #475569; font-size: 0.84rem;">
+                            <strong style="color: #0f172a;">Queries:</strong> {{ item.top_queries|join:", " }}
+                        </div>
+                        {% endif %}
+                        {% if item.included_domains %}
+                        <div style="margin-top: 0.55rem; color: #475569; font-size: 0.84rem;">
+                            <strong style="color: #0f172a;">Included domains:</strong> {{ item.included_domains|join:", " }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                    Run SEO refreshes over time to build benchmark history.
+                </div>
+                {% endif %}
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Competitor Trend Watch</p>
+                    <h2 style="font-size: 2rem;">Which competitors keep showing up in the benchmark set</h2>
+                </div>
+                {% if seo_competitor_trends %}
+                <div class="panel-scroll">
+                    {% for item in seo_competitor_trends %}
+                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
+                            <div>
+                                <strong>{{ item.domain }}</strong>
+                                {% if item.url %}
+                                <div style="font-size: 0.78rem; color: #64748b; margin-top: 0.2rem; word-break: break-word;">{{ item.url }}</div>
+                                {% endif %}
+                            </div>
+                            <span class="score-pill score-medium" style="font-size: 0.7rem;">{{ item.last_decision|default:"Observed" }}</span>
+                        </div>
+                        <div class="seo-inline-tags" style="margin-top: 0.75rem;">
+                            <span class="seo-inline-tag">Seen in runs: {{ item.appearances }}</span>
+                            <span class="seo-inline-tag">Included runs: {{ item.included_runs }}</span>
+                            {% if item.best_position %}
+                            <span class="seo-inline-tag">Best SERP position: {{ item.best_position }}</span>
+                            {% endif %}
+                            {% if item.latest_position %}
+                            <span class="seo-inline-tag">Latest position: {{ item.latest_position }}</span>
+                            {% endif %}
+                            <span class="seo-inline-tag">Latest relevance: {{ item.latest_relevance|default:0 }}</span>
+                        </div>
+                        {% if item.queries %}
+                        <div style="margin-top: 0.75rem; color: #475569; font-size: 0.84rem;">
+                            <strong style="color: #0f172a;">Observed queries:</strong> {{ item.queries|join:", " }}
+                        </div>
+                        {% endif %}
+                        <div style="margin-top: 0.55rem; color: #475569; font-size: 0.84rem;">
+                            <strong style="color: #0f172a;">Last seen:</strong> {{ item.last_seen_label }}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                    Competitor trend tracking will populate after multiple SEO refreshes.
+                </div>
+                {% endif %}
+            </article>
+        </div>
+
         <article class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                 <p class="eyebrow">Benchmark Decision Trace</p>
@@ -387,6 +482,98 @@
                 </div>
             </article>
         </div>
+
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Campaign Pipeline</p>
+                <h2 style="font-size: 2rem;">Execution items with real status and ownership</h2>
+            </div>
+            {% if seo_campaigns %}
+            <div class="panel-scroll panel-scroll-tall">
+                {% for campaign in seo_campaigns %}
+                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
+                        <div>
+                            <strong>{{ campaign.title }}</strong>
+                            <div style="font-size: 0.82rem; color: #475569; margin-top: 0.25rem;">
+                                {% if campaign.target_keyword %}Keyword: {{ campaign.target_keyword }}{% endif %}
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                            <span class="score-pill score-medium" style="font-size: 0.7rem;">{{ campaign.get_status_display }}</span>
+                            <span class="score-pill score-high" style="font-size: 0.7rem;">Priority {{ campaign.priority_score }}</span>
+                        </div>
+                    </div>
+
+                    <div class="seo-inline-tags" style="margin-top: 0.75rem;">
+                        {% if campaign.page_type %}
+                        <span class="seo-inline-tag">Page type: {{ campaign.page_type|cut:"_"|title }}</span>
+                        {% endif %}
+                        <span class="seo-inline-tag">Owner: {{ campaign.owner|default:"Unassigned" }}</span>
+                        <span class="seo-inline-tag">Due: {{ campaign.due_date|default:"Not set" }}</span>
+                    </div>
+
+                    {% if campaign.related_page_urls %}
+                    <div style="margin-top: 0.75rem; color: #475569; font-size: 0.84rem; line-height: 1.5;">
+                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Related pages</strong>
+                        {% for url in campaign.related_page_urls %}
+                        <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; word-break: break-word;">{{ url }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    {% if campaign.related_keywords %}
+                    <div style="margin-top: 0.75rem; color: #475569; font-size: 0.84rem;">
+                        <strong style="color: #0f172a;">Related keywords:</strong> {{ campaign.related_keywords|join:", " }}
+                    </div>
+                    {% endif %}
+
+                    {% if campaign.success_criteria %}
+                    <div style="margin-top: 0.75rem; color: #475569; font-size: 0.84rem; line-height: 1.55;">
+                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Success criteria</strong>
+                        {% for item in campaign.success_criteria %}
+                        <div>{{ item }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+
+                    <form method="post" action="{% url 'seo:workspace-seo-campaign-update' campaign.pk %}" style="margin-top: 0.9rem; display: grid; gap: 0.75rem;">
+                        {% csrf_token %}
+                        <div class="compact-grid">
+                            <label style="display: grid; gap: 0.35rem;">
+                                <span style="font-weight: 700; font-size: 0.82rem;">Status</span>
+                                <select name="status">
+                                    {% for value, label in seo_campaign_status_choices %}
+                                    <option value="{{ value }}" {% if campaign.status == value %}selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                            <label style="display: grid; gap: 0.35rem;">
+                                <span style="font-weight: 700; font-size: 0.82rem;">Due date</span>
+                                <input type="date" name="due_date" value="{% if campaign.due_date %}{{ campaign.due_date|date:'Y-m-d' }}{% endif %}">
+                            </label>
+                        </div>
+                        <label style="display: grid; gap: 0.35rem;">
+                            <span style="font-weight: 700; font-size: 0.82rem;">Campaign note</span>
+                            <input type="text" name="note" value="{{ campaign.metadata.note|default:'' }}" maxlength="500" placeholder="Implementation note or blocker">
+                        </label>
+                        <label style="display: inline-flex; gap: 0.5rem; align-items: center; font-size: 0.84rem; color: #475569;">
+                            <input type="checkbox" name="assign_to_me" value="1" {% if campaign.owner_id == request.user.id %}checked{% endif %}>
+                            Assign to me
+                        </label>
+                        <div>
+                            <button type="submit" class="button button-secondary">Update campaign</button>
+                        </div>
+                    </form>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                Campaign objects will appear here once the execution queue is available for this project.
+            </div>
+            {% endif %}
+        </article>
 
         <div class="layout-split-wide">
             <article class="system-card">

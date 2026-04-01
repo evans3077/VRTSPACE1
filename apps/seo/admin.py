@@ -4,6 +4,7 @@ from .models import (
     BacklinkProspect,
     BacklinkSnapshot,
     FAQ,
+    SEOCampaign,
     SEOCompetitor,
     SEOCompetitorSnapshot,
     SEOContextSnapshot,
@@ -41,6 +42,13 @@ class SEOCompetitorAdmin(admin.ModelAdmin):
     list_display = ("project", "normalized_domain", "source", "is_active", "updated_at")
     search_fields = ("project__name", "normalized_domain", "homepage_url")
     list_filter = ("source", "is_active")
+
+
+@admin.register(SEOCampaign)
+class SEOCampaignAdmin(admin.ModelAdmin):
+    list_display = ("title", "project", "status", "owner", "priority_score", "due_date", "updated_at")
+    search_fields = ("title", "project__name", "target_keyword")
+    list_filter = ("status", "page_type")
 
 
 @admin.register(SEOCompetitorSnapshot)

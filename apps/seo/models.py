@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.db import models
 
 from apps.core.models import TimestampedModel
@@ -194,6 +195,65 @@ class SEOOpportunitySnapshot(TimestampedModel):
 
     def __str__(self):
         return f"SEO opportunity snapshot for {self.project}"
+
+
+class SEOCampaign(TimestampedModel):
+    class Status(models.TextChoices):
+        QUEUED = "queued", "Queued"
+        IN_PROGRESS = "in_progress", "In Progress"
+        BLOCKED = "blocked", "Blocked"
+        COMPLETED = "completed", "Completed"
+        ARCHIVED = "archived", "Archived"
+
+    project = models.ForeignKey(
+        "leads.ClientProject",
+        on_delete=models.CASCADE,
+        related_name="seo_campaigns",
+    )
+    source_context_snapshot = models.ForeignKey(
+        SEOContextSnapshot,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="campaigns",
+    )
+    source_opportunity_snapshot = models.ForeignKey(
+        SEOOpportunitySnapshot,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="campaigns",
+    )
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="seo_campaigns",
+    )
+    campaign_key = models.CharField(max_length=140)
+    title = models.CharField(max_length=255)
+    page_type = models.CharField(max_length=80, blank=True)
+    target_keyword = models.CharField(max_length=255, blank=True)
+    related_keywords = models.JSONField(default=list, blank=True)
+    related_page_urls = models.JSONField(default=list, blank=True)
+    success_criteria = models.JSONField(default=list, blank=True)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.QUEUED)
+    priority_score = models.PositiveSmallIntegerField(default=0)
+    due_date = models.DateField(null=True, blank=True)
+    metadata = models.JSONField(default=dict, blank=True)
+
+    class Meta:
+        ordering = ("status", "-priority_score", "-updated_at")
+        constraints = [
+            models.UniqueConstraint(
+                fields=("project", "campaign_key"),
+                name="unique_seo_campaign_per_project_key",
+            )
+        ]
+
+    def __str__(self):
+        return f"{self.project} - {self.title}"
 
 
 class BacklinkSnapshot(TimestampedModel):

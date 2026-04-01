@@ -9,7 +9,7 @@ from apps.leads.billing import record_usage
 from apps.leads.models import UsageRecord
 
 from .backlinks import refresh_project_backlink_intelligence
-from .services import refresh_project_seo_intelligence
+from .services import refresh_project_seo_intelligence, sync_project_seo_campaigns
 
 
 seo_executor = ThreadPoolExecutor(max_workers=settings.SEO_BACKGROUND_WORKERS)
@@ -63,6 +63,11 @@ def _run_project_seo_refresh_job(project_id):
         _set_profile_refresh_state(project.seo_profile, status="running")
         _set_profile_backlink_state(project.seo_profile, status="queued")
         context_snapshot, opportunity_snapshot = refresh_project_seo_intelligence(project)
+        sync_project_seo_campaigns(
+            project,
+            context_snapshot=context_snapshot,
+            opportunity_snapshot=opportunity_snapshot,
+        )
         sync_project_editorial_tasks(project)
         if project.owner_id:
             record_usage(project.owner, UsageRecord.Metric.SEO_SNAPSHOT)

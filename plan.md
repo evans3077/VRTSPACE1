@@ -219,7 +219,7 @@ Turn the current SEO workspace from a strong analysis tool into a decision syste
   Recommendations become more credible when users can compare their page directly against winning competitors.
   Needed result:
   Show what the user page has, what accepted competitor pages include, what is missing, and the exact structural delta to close.
-- [ ] Add SERP evidence history
+- [x] Add SERP evidence history
   Why:
   A single snapshot is not enough for a recurring SEO product.
   Needed result:
@@ -227,7 +227,7 @@ Turn the current SEO workspace from a strong analysis tool into a decision syste
 
 #### Track C: Execution and campaign continuity
 
-- [ ] Turn execution items into campaign objects
+- [x] Turn execution items into campaign objects
   Why:
   The current execution queue is actionable, but not yet managed like an ongoing campaign.
   Needed result:
