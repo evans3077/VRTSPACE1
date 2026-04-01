@@ -175,6 +175,8 @@ class SEOContextServiceTests(TestCase):
         self.assertTrue(payload["recommendations"])
         self.assertIn("Nairobi", payload["recommendations"][0]["why_it_matters"])
         self.assertTrue(payload["competitors"])
+        self.assertTrue(payload["competitor_patterns"])
+        self.assertTrue(payload["page_comparisons"])
         self.assertGreaterEqual(payload["benchmark_summary"]["available_competitors"], 1)
         self.assertIn("used car dealership Nairobi", payload["benchmark_summary"]["discovery_queries"])
         self.assertTrue(SEOCompetitor.objects.filter(project=project, is_active=True).exists())
@@ -187,6 +189,94 @@ class SEOContextServiceTests(TestCase):
         first_task = opportunity_payload["execution_queue"][0]
         self.assertTrue(first_task["edit_targets"])
         self.assertTrue(first_task["edit_targets"][0]["changes"])
+
+    @override_settings(SERP_DISCOVERY_ENABLED=False)
+    @patch("apps.seo.services.fetch_many")
+    @patch("apps.seo.services.safe_fetch")
+    def test_build_seo_context_payload_respects_manual_competitor_suppression(
+        self,
+        mocked_fetch,
+        mocked_fetch_many,
+    ):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+            competitor_urls=["https://competitor.com"],
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=68,
+            status=AuditRun.Status.COMPLETED,
+            summary={},
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            latest_audit_run=audit_run,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="ops@example.com",
+            latest_score=68,
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified organic leads",
+            primary_service="used car dealership",
+            target_audience="price-sensitive car buyers",
+        )
+        competitor = SEOCompetitor.objects.create(
+            project=project,
+            homepage_url="https://competitor.com",
+            normalized_domain="competitor.com",
+            label="competitor.com",
+            source=SEOCompetitor.Source.PROFILE,
+            is_active=True,
+            metadata={"review": {"decision": "suppressed", "note": "Wrong business class"}},
+        )
+
+        def fake_fetch(url, session=None, timeout=10):
+            if "sitemap.xml" in url:
+                return {
+                    "final_url": url,
+                    "status_code": 200,
+                    "body": "<urlset xmlns='http://www.sitemaps.org/schemas/sitemap/0.9'><url><loc>https://competitor.com/pricing/</loc></url></urlset>",
+                    "headers": {},
+                    "content_type": "application/xml",
+                    "response_time_ms": 120,
+                }
+            return {
+                "final_url": "https://competitor.com/",
+                "status_code": 200,
+                "body": "<html><head><title>Best Used Car Dealership Nairobi</title></head><body><h1>Used Cars Nairobi</h1><a href='/pricing/'>Pricing</a></body></html>",
+                "headers": {},
+                "content_type": "text/html",
+                "response_time_ms": 180,
+            }
+
+        mocked_fetch.side_effect = fake_fetch
+        mocked_fetch_many.return_value = {
+            "https://competitor.com/": fake_fetch("https://competitor.com/"),
+            "https://competitor.com/pricing/": {
+                "final_url": "https://competitor.com/pricing/",
+                "status_code": 200,
+                "body": "<html><head><title>Used Car Pricing Nairobi</title></head><body><h1>Pricing</h1></body></html>",
+                "headers": {},
+                "content_type": "text/html",
+                "response_time_ms": 200,
+            },
+        }
+
+        payload = build_seo_context_payload(project, profile, audit_run)
+
+        self.assertEqual(payload["competitors"], [])
+        self.assertEqual(payload["competitor_trace"][0]["final_decision"], "suppressed")
+        self.assertEqual(payload["competitor_trace"][0]["review_note"], "Wrong business class")
+        self.assertFalse(payload["competitor_trace"][0]["included"])
 
     @override_settings(SERP_DISCOVERY_ENABLED=False)
     def test_get_or_build_seo_snapshot_reuses_existing_snapshot_for_same_inputs(self):
@@ -494,6 +584,51 @@ class WorkspaceSEOViewTests(TestCase):
         self.assertEqual(profile.business_type, "automotive")
         self.assertEqual(profile.metadata.get("business_type_source"), "inferred")
 
+    def test_workspace_seo_uses_selected_project(self):
+        second_request = AuditRequest.objects.create(
+            company_name="Second Project",
+            email="seo@example.com",
+            website="https://second-example.com",
+        )
+        second_run = AuditRun.objects.create(
+            audit_request=second_request,
+            normalized_domain="second-example.com",
+            start_url="https://second-example.com/",
+            overall_score=69,
+            status=AuditRun.Status.COMPLETED,
+            summary={},
+        )
+        second_project = ClientProject.objects.create(
+            owner=self.user,
+            audit_request=second_request,
+            latest_audit_run=second_run,
+            name="Second Project",
+            website="https://second-example.com",
+            normalized_domain="second-example.com",
+            contact_email="seo@example.com",
+            latest_score=69,
+            location="Mombasa, Kenya",
+            target_goal="Increase bookings",
+            primary_service="Airport transfers",
+        )
+        SEOProjectProfile.objects.create(
+            project=second_project,
+            business_type="local_service",
+            location="Mombasa, Kenya",
+            target_goal="Increase bookings",
+            primary_service="Airport transfers",
+        )
+        self.client.force_login(self.user)
+        session = self.client.session
+        session["active_workspace_project_id"] = second_project.pk
+        session.save()
+
+        response = self.client.get(reverse("seo:workspace-seo"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Second Project")
+        self.assertEqual(response.context["project"].pk, second_project.pk)
+
     def test_workspace_seo_get_prefills_from_project_onboarding_fields(self):
         self.project.business_type = "automotive"
         self.project.location = "Nairobi, Kenya"
@@ -512,6 +647,85 @@ class WorkspaceSEOViewTests(TestCase):
         self.assertEqual(form.initial["location"], "Nairobi, Kenya")
         self.assertEqual(form.initial["target_goal"], "Increase qualified leads")
         self.assertEqual(form.initial["primary_service"], "Used car sales")
+
+    def test_workspace_seo_renders_competitor_trace(self):
+        profile = SEOProjectProfile.objects.create(
+            project=self.project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified organic leads",
+            primary_service="used car dealership",
+        )
+        SEOContextSnapshot.objects.create(
+            project=self.project,
+            profile=profile,
+            source_audit_run=self.audit_run,
+            output_json={
+                "context": {
+                    "industry_label": "Automotive",
+                    "location": "Nairobi",
+                    "target_goal": "Increase qualified organic leads",
+                    "goal_focus": "commercial and local intent queries",
+                },
+                "benchmark_summary": {"available_competitors": 1, "average_relevance": 8.6},
+                "competitor_trace": [
+                    {
+                        "competitor_id": 99,
+                        "domain": "competitor.com",
+                        "url": "https://competitor.com/",
+                        "source_label": "SERP Discovery",
+                        "final_decision_label": "Suppressed",
+                        "included": False,
+                        "review_decision": "suppressed",
+                        "review_label": "Suppressed",
+                        "review_note": "Wrong location",
+                        "fit": {
+                            "best_page_score": 3,
+                            "matching_pages": 0,
+                            "reason": "Low topic and local relevance for the declared business niche.",
+                            "match_signals": ["topic:cars"],
+                            "penalty_signals": ["foreign_location_conflict"],
+                        },
+                        "queries": ["used car dealership Nairobi"],
+                        "average_relevance": 4.2,
+                        "page_count": 2,
+                        "sample_titles": ["Used Cars Austin"],
+                    }
+                ],
+                "competitors": [],
+            },
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("seo:workspace-seo"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Benchmark Decision Trace")
+        self.assertContains(response, "competitor.com")
+        self.assertContains(response, "Wrong location")
+        self.assertContains(response, "Page-to-Page Comparison")
+
+    def test_workspace_seo_competitor_review_updates_metadata(self):
+        competitor = SEOCompetitor.objects.create(
+            project=self.project,
+            homepage_url="https://competitor.com/",
+            normalized_domain="competitor.com",
+            label="competitor.com",
+            source=SEOCompetitor.Source.SERP,
+            is_active=True,
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("seo:workspace-seo-competitor-review", args=[competitor.pk]),
+            {"decision": "pinned", "note": "Exact Nairobi market competitor"},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response["Location"], reverse("seo:workspace-seo"))
+        competitor.refresh_from_db()
+        self.assertEqual(competitor.metadata["review"]["decision"], "pinned")
+        self.assertEqual(competitor.metadata["review"]["note"], "Exact Nairobi market competitor")
 
     def test_workspace_backlink_prospect_update_persists_status_and_notes(self):
         snapshot = BacklinkSnapshot.objects.create(

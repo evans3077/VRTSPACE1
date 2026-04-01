@@ -5,6 +5,7 @@ from django.http import Http404
 from django.shortcuts import redirect, render
 from django.views import View
 
+from apps.leads.services import get_workspace_projects, resolve_workspace_project
 from apps.leads.models import ClientProject
 
 from .backlinks import refresh_project_backlink_intelligence
@@ -117,10 +118,12 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
         )
 
     def _get_project(self, user):
+        selected_project = resolve_workspace_project(self.request, user)
+        if not selected_project:
+            return None
         return (
             ClientProject.objects.select_related("latest_audit_run", "seo_profile")
-            .filter(owner=user)
-            .order_by("-updated_at")
+            .filter(pk=selected_project.pk)
             .first()
         )
 
@@ -186,6 +189,7 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
         refresh_state = (getattr(profile, "metadata", None) or {}) if profile else {}
         return {
             "project": project,
+            "workspace_projects": get_workspace_projects(self.request.user),
             "form": form,
             "profile": profile,
             "snapshot": snapshot,
@@ -198,6 +202,9 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             "seo_benchmark_summary": payload.get("benchmark_summary", {}),
             "seo_discovery": payload.get("discovery", {}),
             "seo_competitors": payload.get("competitors", []),
+            "seo_competitor_trace": payload.get("competitor_trace", []),
+            "seo_competitor_patterns": payload.get("competitor_patterns", []),
+            "seo_page_comparisons": payload.get("page_comparisons", []),
             "seo_value_summary": opportunity_payload.get("value_summary", {}),
             "seo_keyword_opportunities": opportunity_payload.get("keyword_opportunities", []),
             "seo_page_map": opportunity_payload.get("page_map", []),
@@ -215,11 +222,7 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
 
 class WorkspaceBacklinkProspectUpdateView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
-        project = (
-            ClientProject.objects.filter(owner=request.user)
-            .order_by("-updated_at")
-            .first()
-        )
+        project = resolve_workspace_project(request, request.user)
         if not project:
             raise Http404
         prospect = project.backlink_prospects.filter(pk=kwargs["pk"]).first()
@@ -237,4 +240,33 @@ class WorkspaceBacklinkProspectUpdateView(LoginRequiredMixin, View):
         prospect.metadata = metadata
         prospect.save(update_fields=["status", "suggested_anchor_text", "metadata", "updated_at"])
         messages.success(request, "Backlink prospect updated.")
+        return redirect("seo:workspace-seo")
+
+
+class WorkspaceSEOCompetitorReviewView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        project = resolve_workspace_project(request, request.user)
+        if not project:
+            raise Http404
+        competitor = project.seo_competitors.filter(pk=kwargs["pk"]).first()
+        if not competitor:
+            raise Http404
+
+        decision = request.POST.get("decision", "auto").strip().lower()
+        note = request.POST.get("note", "").strip()
+        if decision not in {"auto", "approved", "pinned", "suppressed", "rejected"}:
+            messages.error(request, "Invalid competitor review decision.")
+            return redirect("seo:workspace-seo")
+
+        metadata = dict(competitor.metadata or {})
+        if decision == "auto" and not note:
+            metadata.pop("review", None)
+        else:
+            metadata["review"] = {
+                "decision": decision,
+                "note": note[:500],
+            }
+        competitor.metadata = metadata
+        competitor.save(update_fields=["metadata", "updated_at"])
+        messages.success(request, "Competitor review updated.")
         return redirect("seo:workspace-seo")

@@ -37,6 +37,17 @@
                     <a href="{% url 'tools:workspace-login' %}">Sign in</a>
                     {% endif %}
                 </nav>
+                {% if user.is_authenticated and workspace_projects|length > 1 %}
+                <form method="post" action="{% url 'tools:workspace-project-select' %}" style="display: flex; align-items: center; gap: 0.5rem;">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <select name="project_id" onchange="this.form.submit()" style="min-width: 220px;">
+                        {% for item in workspace_projects %}
+                        <option value="{{ item.pk }}"{% if active_workspace_project and active_workspace_project.pk == item.pk %} selected{% endif %}>{{ item.name }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+                {% endif %}
                 {% if user.is_authenticated %}
                 <a class="button button-primary nav-cta" href="{% url 'tools:workspace-dashboard' %}">Open Workspace</a>
                 {% else %}

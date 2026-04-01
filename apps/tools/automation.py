@@ -54,6 +54,7 @@ def parse_recipient_emails(value):
 def update_workspace_schedule(
     *,
     user,
+    project=None,
     cadence,
     is_active,
     report_recipients="",
@@ -61,12 +62,13 @@ def update_workspace_schedule(
     alert_on_score_drop=False,
     alert_on_new_issues=False,
 ):
-    project = (
-        ClientProject.objects.select_related("audit_request", "owner")
-        .filter(owner=user)
-        .order_by("-updated_at")
-        .first()
-    )
+    if project is None:
+        project = (
+            ClientProject.objects.select_related("audit_request", "owner")
+            .filter(owner=user)
+            .order_by("-updated_at")
+            .first()
+        )
     if not project:
         raise BillingError("No workspace project is attached to this account yet.")
 

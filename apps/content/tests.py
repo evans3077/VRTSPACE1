@@ -552,6 +552,56 @@ class GeneratedContentViewTests(TestCase):
         self.assertTrue(draft.brief_json["title_options"])
         self.assertIn("used car dealership Nairobi", draft.body)
 
+    def test_workspace_content_uses_selected_project(self):
+        second_request = AuditRequest.objects.create(
+            company_name="Second Project",
+            email="content@example.com",
+            website="https://second-example.com",
+        )
+        second_run = AuditRun.objects.create(
+            audit_request=second_request,
+            normalized_domain="second-example.com",
+            start_url="https://second-example.com/",
+            overall_score=75,
+            status=AuditRun.Status.COMPLETED,
+            summary={},
+        )
+        second_project = ClientProject.objects.create(
+            owner=self.user,
+            audit_request=second_request,
+            latest_audit_run=second_run,
+            name="Second Project",
+            website="https://second-example.com",
+            normalized_domain="second-example.com",
+            contact_email="content@example.com",
+            latest_score=75,
+        )
+        create_generated_content(
+            user=self.user,
+            project=second_project,
+            output_type=GeneratedContent.OutputType.ARTICLE,
+            input_data={
+                "business_type": "local service",
+                "location": "Mombasa",
+                "target_audience": "travelers",
+                "page_goal": "Increase bookings",
+                "offer_summary": "Airport transfers",
+                "target_keywords": ["airport transfer mombasa"],
+                "search_intent": "commercial",
+            },
+        )
+        self.client.force_login(self.user)
+        session = self.client.session
+        session["active_workspace_project_id"] = second_project.pk
+        session.save()
+
+        response = self.client.get(reverse("content:workspace-content"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Second Project")
+        self.assertEqual(response.context["project"].pk, second_project.pk)
+        self.assertContains(response, "local service airport transfer mombasa in Mombasa: what to fix first")
+
     def test_generated_content_detail_requires_owner(self):
         draft = create_generated_content(
             user=self.user,

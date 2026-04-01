@@ -4,7 +4,7 @@ from urllib.parse import urlparse
 
 from django.utils.text import slugify
 
-from apps.leads.models import ClientProject
+from apps.leads.services import resolve_workspace_project
 
 from .models import Article, ContentEditorialTask, GeneratedContent, Service
 from .refinement import refine_brief, refine_payload
@@ -33,15 +33,8 @@ PAGE_TYPE_OUTPUT_MAP = {
 }
 
 
-def get_workspace_content_project(user):
-    if not user or not getattr(user, "is_authenticated", False):
-        return None
-    return (
-        ClientProject.objects.select_related("latest_audit_run", "audit_request")
-        .filter(owner=user)
-        .order_by("-updated_at")
-        .first()
-    )
+def get_workspace_content_project(user=None, request=None):
+    return resolve_workspace_project(request=request, user=user)
 
 
 def _normalized_domain(project):

@@ -186,7 +186,12 @@ Turn the current SEO workspace from a strong analysis tool into a decision syste
   The intake still behaves like isolated submissions.
   Needed result:
   Normalize domains early, catch duplicate in-flight runs, show expected processing state clearly, and attach the run cleanly to a durable project path.
-- [ ] Add true multi-project workspace support
+- [x] Harden audit-result rendering against incomplete or legacy score payloads
+  Why:
+  Public audit pages must not crash when live summaries contain `None` or partial score values.
+  Needed result:
+  The result view normalizes missing values safely and keeps public links stable across old and new audit records.
+- [x] Add true multi-project workspace support
   Why:
   Most workspace flows still assume “latest project” instead of “selected project.”
   Needed result:
@@ -194,22 +199,22 @@ Turn the current SEO workspace from a strong analysis tool into a decision syste
 
 #### Track B: SEO decision explainability
 
-- [ ] Add competitor acceptance and rejection traceability
+- [x] Add competitor acceptance and rejection traceability
   Why:
   The engine now filters better, but users still cannot see why a competitor was accepted or rejected.
   Needed result:
   The SEO hub shows fit signals, penalty signals, source, and the reason each discovered site was kept, down-ranked, or filtered out.
-- [ ] Add manual competitor controls
+- [x] Add manual competitor controls
   Why:
   Even a strong engine needs a correction path.
   Needed result:
   Users can approve, reject, pin, or suppress competitors without losing the automated pipeline.
-- [ ] Extract repeatable competitor page patterns from accepted benchmarks
+- [x] Extract repeatable competitor page patterns from accepted benchmarks
   Why:
   We need more than counts and generic evidence.
   Needed result:
   The system identifies title formulas, H1 patterns, FAQ blocks, schema patterns, asset usage, local proof elements, and internal-link placement.
-- [ ] Build a page-to-page comparison layer
+- [x] Build a page-to-page comparison layer
   Why:
   Recommendations become more credible when users can compare their page directly against winning competitors.
   Needed result:

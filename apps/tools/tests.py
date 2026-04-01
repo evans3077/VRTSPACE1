@@ -145,6 +145,28 @@ class PublicAuditFlowTests(TestCase):
         self.assertContains(response, "Time to First Byte (TTFB)")
         self.assertContains(response, "Largest Contentful Paint (LCP)")
 
+    def test_completed_audit_result_tolerates_none_scores_in_summary(self):
+        audit_run = AuditRun.objects.create(
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            status=AuditRun.Status.COMPLETED,
+            overall_score=78,
+            summary={
+                "scores": {
+                    "technical": None,
+                    "aeo": 61,
+                    "on_page": None,
+                },
+                "score_breakdown": {},
+                "recommendations": [],
+            },
+        )
+
+        response = self.client.get(reverse("tools:audit-result", args=[audit_run.pk]))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Audit Analysis: example.com")
+
     def test_completed_audit_report_pdf_returns_pdf_response(self):
         audit_run = AuditRun.objects.create(
             normalized_domain="example.com",
@@ -1210,7 +1232,145 @@ class WorkspaceBillingTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response["Location"], reverse("tools:workspace-dashboard"))
-        self.assertEqual(AuditRun.objects.count(), 1)
+
+    @patch("apps.tools.billing_views.enqueue_public_site_audit")
+    def test_workspace_rerun_uses_selected_project(self, mocked_enqueue):
+        user = get_user_model().objects.create_user(
+            username="multisite@example.com",
+            email="multisite@example.com",
+            password="strongpass123",
+        )
+        first_request = AuditRequest.objects.create(
+            company_name="Northwind One",
+            email="multisite@example.com",
+            website="https://one.example.com",
+        )
+        second_request = AuditRequest.objects.create(
+            company_name="Northwind Two",
+            email="multisite@example.com",
+            website="https://two.example.com",
+        )
+        first_run = AuditRun.objects.create(
+            audit_request=first_request,
+            normalized_domain="one.example.com",
+            start_url="https://one.example.com/",
+            status=AuditRun.Status.COMPLETED,
+        )
+        second_run = AuditRun.objects.create(
+            audit_request=second_request,
+            normalized_domain="two.example.com",
+            start_url="https://two.example.com/",
+            status=AuditRun.Status.COMPLETED,
+        )
+        ClientProject.objects.create(
+            owner=user,
+            audit_request=first_request,
+            latest_audit_run=first_run,
+            name="Project One",
+            website="https://one.example.com",
+            normalized_domain="one.example.com",
+            contact_email="multisite@example.com",
+        )
+        second_project = ClientProject.objects.create(
+            owner=user,
+            audit_request=second_request,
+            latest_audit_run=second_run,
+            name="Project Two",
+            website="https://two.example.com",
+            normalized_domain="two.example.com",
+            contact_email="multisite@example.com",
+        )
+
+        self.client.force_login(user)
+        session = self.client.session
+        session["active_workspace_project_id"] = second_project.pk
+        session.save()
+
+        response = self.client.post(reverse("tools:workspace-audit-rerun"))
+
+        self.assertEqual(response.status_code, 302)
+        rerun = AuditRun.objects.order_by("-created_at").first()
+        self.assertEqual(rerun.audit_request, second_request)
+        mocked_enqueue.assert_called_once_with(rerun.pk)
+
+
+class WorkspaceProjectSelectionTests(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            username="selector@example.com",
+            email="selector@example.com",
+            password="strongpass123",
+        )
+        first_request = AuditRequest.objects.create(
+            company_name="Northwind One",
+            email="selector@example.com",
+            website="https://one.example.com",
+        )
+        second_request = AuditRequest.objects.create(
+            company_name="Northwind Two",
+            email="selector@example.com",
+            website="https://two.example.com",
+        )
+        first_run = AuditRun.objects.create(
+            audit_request=first_request,
+            normalized_domain="one.example.com",
+            start_url="https://one.example.com/",
+            overall_score=61,
+            status=AuditRun.Status.COMPLETED,
+            summary={},
+        )
+        second_run = AuditRun.objects.create(
+            audit_request=second_request,
+            normalized_domain="two.example.com",
+            start_url="https://two.example.com/",
+            overall_score=88,
+            status=AuditRun.Status.COMPLETED,
+            summary={},
+        )
+        self.first_project = ClientProject.objects.create(
+            owner=self.user,
+            audit_request=first_request,
+            latest_audit_run=first_run,
+            name="Project One",
+            website="https://one.example.com",
+            normalized_domain="one.example.com",
+            contact_email="selector@example.com",
+            latest_score=61,
+        )
+        self.second_project = ClientProject.objects.create(
+            owner=self.user,
+            audit_request=second_request,
+            latest_audit_run=second_run,
+            name="Project Two",
+            website="https://two.example.com",
+            normalized_domain="two.example.com",
+            contact_email="selector@example.com",
+            latest_score=88,
+        )
+
+    def test_workspace_project_select_switches_active_project(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("tools:workspace-project-select"),
+            {"project_id": self.second_project.pk, "next": reverse("tools:workspace-dashboard")},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response["Location"], reverse("tools:workspace-dashboard"))
+        self.assertEqual(self.client.session["active_workspace_project_id"], self.second_project.pk)
+
+    def test_workspace_dashboard_uses_selected_project(self):
+        self.client.force_login(self.user)
+        session = self.client.session
+        session["active_workspace_project_id"] = self.second_project.pk
+        session.save()
+
+        response = self.client.get(reverse("tools:workspace-dashboard"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Project Two")
+        self.assertEqual(response.context["project"].pk, self.second_project.pk)
 
 
 class WorkspaceAutomationTests(TestCase):

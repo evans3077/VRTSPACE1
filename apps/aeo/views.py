@@ -5,6 +5,7 @@ from django.views import View
 
 from apps.content.services import get_workspace_content_project
 from apps.leads.billing import record_usage
+from apps.leads.services import get_workspace_projects
 from apps.leads.models import UsageRecord
 
 from .forms import AEOAuditRequestForm
@@ -15,13 +16,14 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
     template_name = "aeo/workspace_aeo.html"
 
     def get(self, request, *args, **kwargs):
-        project = get_workspace_content_project(request.user)
+        project = get_workspace_content_project(user=request.user, request=request)
         latest_aeo_audit = get_latest_aeo_audit(project)
         return render(
             request,
             self.template_name,
             {
                 "project": project,
+                "workspace_projects": get_workspace_projects(request.user),
                 "form": AEOAuditRequestForm(initial={"target_keyword": getattr(latest_aeo_audit, "target_keyword", "")}),
                 "latest_aeo_audit": latest_aeo_audit,
                 "aeo_payload": latest_aeo_audit.output_json if latest_aeo_audit else {},
@@ -29,7 +31,7 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
         )
 
     def post(self, request, *args, **kwargs):
-        project = get_workspace_content_project(request.user)
+        project = get_workspace_content_project(user=request.user, request=request)
         if not project:
             messages.error(request, "Create or connect a workspace project before running AEO analysis.")
             return redirect("tools:workspace-dashboard")
@@ -42,6 +44,7 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 self.template_name,
                 {
                     "project": project,
+                    "workspace_projects": get_workspace_projects(request.user),
                     "form": form,
                     "latest_aeo_audit": latest_aeo_audit,
                     "aeo_payload": latest_aeo_audit.output_json if latest_aeo_audit else {},
@@ -65,6 +68,7 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
             self.template_name,
             {
                 "project": project,
+                "workspace_projects": get_workspace_projects(request.user),
                 "form": AEOAuditRequestForm(initial={"target_keyword": aeo_audit.target_keyword}),
                 "latest_aeo_audit": aeo_audit,
                 "aeo_payload": aeo_audit.output_json,

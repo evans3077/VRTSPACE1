@@ -126,6 +126,14 @@ FOREIGN_GEO_HINTS = {
     "dubai",
 }
 
+COMPETITOR_REVIEW_DECISIONS = {
+    "auto": "Automatic",
+    "approved": "Approved",
+    "pinned": "Pinned",
+    "suppressed": "Suppressed",
+    "rejected": "Rejected",
+}
+
 BUSINESS_TYPE_KEYWORD_TEMPLATES = {
     "automotive": {
         "core": [
@@ -392,6 +400,14 @@ def _score_competitor_payload_fit(payload, profile):
     total_topic = sum(item["topic_score"] for item in page_scores)
     total_local = sum(item["local_score"] for item in page_scores)
     total_penalty = sum(item["penalty"] for item in page_scores)
+    signal_counter = Counter()
+    penalty_counter = Counter()
+    for item in page_scores:
+        for signal in item.get("signals", []):
+            if signal in {"non_competitor_pattern", "foreign_location_conflict"}:
+                penalty_counter[signal] += 1
+            else:
+                signal_counter[signal] += 1
     accepted = bool(
         best_score >= 6
         and matching_pages
@@ -400,6 +416,13 @@ def _score_competitor_payload_fit(payload, profile):
     )
     if not accepted and summary.get("page_count", 0) and summary.get("location_match_pages", 0):
         accepted = True
+    reason_parts = []
+    if matching_pages:
+        reason_parts.append(f"{len(matching_pages)} page(s) matched the declared niche and location.")
+    if total_penalty:
+        reason_parts.append("Some pages showed non-competitor or foreign-location signals.")
+    if not accepted and not reason_parts:
+        reason_parts.append("Low topic and local relevance for the declared business niche.")
     return {
         "accepted": accepted,
         "best_page_score": best_score,
@@ -407,20 +430,85 @@ def _score_competitor_payload_fit(payload, profile):
         "topic_score": total_topic,
         "local_score": total_local,
         "penalty": total_penalty,
-        "reason": "" if accepted else "Low topic and local relevance for the declared business niche.",
+        "match_signals": [signal for signal, _count in signal_counter.most_common(6)],
+        "penalty_signals": [signal for signal, _count in penalty_counter.most_common(4)],
+        "reason": " ".join(reason_parts).strip(),
+    }
+
+
+def _competitor_review(competitor):
+    review = (competitor.metadata or {}).get("review")
+    if not isinstance(review, dict):
+        return {"decision": "auto", "label": COMPETITOR_REVIEW_DECISIONS["auto"], "note": ""}
+    decision = str(review.get("decision") or "auto").strip().lower()
+    if decision not in COMPETITOR_REVIEW_DECISIONS:
+        decision = "auto"
+    return {
+        "decision": decision,
+        "label": COMPETITOR_REVIEW_DECISIONS[decision],
+        "note": str(review.get("note") or "").strip(),
+    }
+
+
+def _competitor_is_included(competitor, fit_summary):
+    decision = _competitor_review(competitor)["decision"]
+    if decision in {"approved", "pinned"}:
+        return True
+    if decision in {"suppressed", "rejected"}:
+        return False
+    return bool(fit_summary.get("accepted"))
+
+
+def _competitor_final_decision(competitor, fit_summary):
+    decision = _competitor_review(competitor)["decision"]
+    if decision in {"approved", "pinned", "suppressed", "rejected"}:
+        return decision
+    return "accepted" if fit_summary.get("accepted") else "filtered_out"
+
+
+def _build_competitor_trace(snapshot, profile):
+    payload = snapshot.output_json or {}
+    competitor = snapshot.competitor
+    fit_summary = ((payload.get("summary") or {}).get("fit")) or _score_competitor_payload_fit(payload, profile)
+    review = _competitor_review(competitor)
+    serp_metadata = ((competitor.metadata or {}).get("serp") or {})
+    final_decision = _competitor_final_decision(competitor, fit_summary)
+    return {
+        "competitor_id": competitor.pk,
+        "domain": competitor.normalized_domain,
+        "url": competitor.homepage_url,
+        "source": competitor.source,
+        "source_label": competitor.get_source_display(),
+        "status": payload.get("status", "unknown"),
+        "final_decision": final_decision,
+        "final_decision_label": COMPETITOR_REVIEW_DECISIONS.get(final_decision, final_decision.replace("_", " ").title()),
+        "included": payload.get("status") == "ok" and _competitor_is_included(competitor, fit_summary),
+        "review_decision": review["decision"],
+        "review_label": review["label"],
+        "review_note": review["note"],
+        "fit": fit_summary,
+        "queries": serp_metadata.get("queries", []),
+        "best_position": serp_metadata.get("best_position"),
+        "average_relevance": serp_metadata.get("average_relevance"),
+        "discovery_score": serp_metadata.get("discovery_score"),
+        "match_signals": serp_metadata.get("match_signals", []),
+        "sample_titles": serp_metadata.get("sample_titles", []),
+        "sample_snippets": serp_metadata.get("sample_snippets", []),
+        "page_count": (payload.get("summary") or {}).get("page_count", 0),
     }
 
 
 def _accepted_competitor_snapshots(competitor_snapshots, profile):
-    if not profile:
-        return [snapshot for snapshot in competitor_snapshots if (snapshot.output_json or {}).get("status") == "ok"]
     accepted = []
     for snapshot in competitor_snapshots:
         payload = snapshot.output_json or {}
         if payload.get("status") != "ok":
             continue
+        if not profile:
+            accepted.append(snapshot)
+            continue
         fit_summary = ((payload.get("summary") or {}).get("fit")) or _score_competitor_payload_fit(payload, profile)
-        if fit_summary.get("accepted"):
+        if _competitor_is_included(snapshot.competitor, fit_summary):
             accepted.append(snapshot)
     return accepted
 
@@ -488,20 +576,30 @@ def sync_project_competitors(project, raw_values=None):
 
     active_urls = set()
     for url in urls:
-        competitor, _created = SEOCompetitor.objects.get_or_create(
-            project=project,
-            homepage_url=url,
-            defaults={
-                "normalized_domain": extract_domain(url),
-                "label": extract_domain(url),
-                "source": SEOCompetitor.Source.PROFILE,
-            },
+        normalized_domain = extract_domain(url)
+        competitor = (
+            SEOCompetitor.objects.filter(
+                project=project,
+                normalized_domain=normalized_domain,
+                source=SEOCompetitor.Source.PROFILE,
+            )
+            .order_by("-is_active", "-updated_at")
+            .first()
         )
+        if not competitor:
+            competitor = SEOCompetitor.objects.create(
+                project=project,
+                homepage_url=url,
+                normalized_domain=normalized_domain,
+                label=normalized_domain,
+                source=SEOCompetitor.Source.PROFILE,
+            )
+        competitor.homepage_url = url
         competitor.normalized_domain = extract_domain(url)
         competitor.label = competitor.label or competitor.normalized_domain
         competitor.source = SEOCompetitor.Source.PROFILE
         competitor.is_active = True
-        competitor.save(update_fields=["normalized_domain", "label", "source", "is_active", "updated_at"])
+        competitor.save(update_fields=["homepage_url", "normalized_domain", "label", "source", "is_active", "updated_at"])
         active_urls.add(url)
 
     SEOCompetitor.objects.filter(project=project, source=SEOCompetitor.Source.PROFILE).exclude(
@@ -523,18 +621,26 @@ def sync_discovered_competitors(project, profile):
         label = item.get("label") or normalized_domain or extract_domain(homepage_url or "")
         if not homepage_url or not normalized_domain:
             continue
-        competitor, _created = SEOCompetitor.objects.get_or_create(
-            project=project,
-            homepage_url=homepage_url,
-            defaults={
-                "normalized_domain": normalized_domain,
-                "label": label,
-                "source": SEOCompetitor.Source.SERP,
-                "metadata": {"serp": item},
-            },
+        competitor = (
+            SEOCompetitor.objects.filter(
+                project=project,
+                normalized_domain=normalized_domain,
+            )
+            .order_by("source", "-is_active", "-updated_at")
+            .first()
         )
+        if not competitor:
+            competitor = SEOCompetitor.objects.create(
+                project=project,
+                homepage_url=homepage_url,
+                normalized_domain=normalized_domain,
+                label=label,
+                source=SEOCompetitor.Source.SERP,
+                metadata={"serp": item},
+            )
         metadata = competitor.metadata or {}
         metadata["serp"] = item
+        competitor.homepage_url = homepage_url
         competitor.normalized_domain = normalized_domain
         competitor.label = label
         if competitor.source != SEOCompetitor.Source.PROFILE:
@@ -543,6 +649,7 @@ def sync_discovered_competitors(project, profile):
         competitor.metadata = metadata
         competitor.save(
             update_fields=[
+                "homepage_url",
                 "normalized_domain",
                 "label",
                 "source",
@@ -553,16 +660,28 @@ def sync_discovered_competitors(project, profile):
         )
         active_urls.add(homepage_url)
 
-    SEOCompetitor.objects.filter(project=project, source=SEOCompetitor.Source.SERP).exclude(
+    for competitor in SEOCompetitor.objects.filter(project=project, source=SEOCompetitor.Source.SERP).exclude(
         homepage_url__in=active_urls
-    ).update(is_active=False)
+    ):
+        if _competitor_review(competitor)["decision"] in {"approved", "pinned"}:
+            continue
+        competitor.is_active = False
+        competitor.save(update_fields=["is_active", "updated_at"])
     return discovery
 
 
 def _competitor_priority(competitor):
     serp_metadata = (competitor.metadata or {}).get("serp", {})
+    review_priority = {
+        "pinned": -2,
+        "approved": -1,
+        "auto": 0,
+        "suppressed": 1,
+        "rejected": 2,
+    }.get(_competitor_review(competitor)["decision"], 0)
     source_priority = 0 if competitor.source == SEOCompetitor.Source.PROFILE else 1
     return (
+        review_priority,
         source_priority,
         -float(serp_metadata.get("discovery_score", 0) or 0),
         float(serp_metadata.get("best_position", 999) or 999),
@@ -1138,14 +1257,17 @@ def build_benchmark_summary(site_structure, competitor_snapshots):
         project = getattr(competitor_snapshots[0].competitor, "project", None)
         profile = getattr(project, "seo_profile", None)
     available = _accepted_competitor_snapshots(competitor_snapshots, profile)
+    traces = [_build_competitor_trace(snapshot, profile) for snapshot in competitor_snapshots] if profile else []
     if not available:
         return {
             "available_competitors": 0,
+            "included_competitors": 0,
             "site_page_count": site_structure.get("summary", {}).get("page_count", 0),
             "common_page_types": [],
             "discovery_queries": [],
             "average_relevance": 0,
             "top_match_signals": [],
+            "manual_overrides": 0,
         }
     page_type_counter = Counter()
     match_signal_counter = Counter()
@@ -1172,12 +1294,14 @@ def build_benchmark_summary(site_structure, competitor_snapshots):
 
     return {
         "available_competitors": len(available),
+        "included_competitors": len([item for item in traces if item.get("included")]),
         "filtered_out_competitors": max(0, len(competitor_snapshots) - len(available)),
         "site_page_count": site_structure.get("summary", {}).get("page_count", 0),
         "common_page_types": common_page_types[:6],
         "discovery_queries": discovery_queries[:8],
         "average_relevance": round(sum(relevance_values) / max(len(relevance_values), 1), 1) if relevance_values else 0,
         "top_match_signals": [signal for signal, _count in match_signal_counter.most_common(6)],
+        "manual_overrides": len([item for item in traces if item.get("review_decision") != "auto"]),
     }
 
 
@@ -1218,6 +1342,105 @@ def _majority_threshold(size):
 
 def _competitor_summaries(competitor_snapshots):
     return [snapshot.output_json for snapshot in competitor_snapshots if (snapshot.output_json or {}).get("status") == "ok"]
+
+
+def _pattern_title_terms(pages, location=""):
+    counter = Counter()
+    location_tokens = set(_tokenize_phrase(location))
+    for page in pages:
+        text = " ".join([page.get("title", ""), page.get("h1", "")]).strip().lower()
+        for token in _tokenize_phrase(text):
+            if token in location_tokens:
+                continue
+            counter[token] += 1
+    return [token for token, count in counter.most_common(6) if count >= 2][:5]
+
+
+def build_competitor_patterns(profile, competitor_snapshots):
+    available_competitors = _competitor_summaries(_accepted_competitor_snapshots(competitor_snapshots, profile))
+    items = []
+    for page_type in get_industry_rule(profile.business_type)["priority_page_types"]:
+        pages = [
+            page
+            for payload in available_competitors
+            for page in _normalized_competitor_pages(payload)
+            if page.get("page_type") == page_type
+        ]
+        if not pages:
+            continue
+        title_samples = []
+        for page in pages:
+            title = (page.get("title") or page.get("h1") or "").strip()
+            if title and title not in title_samples:
+                title_samples.append(title)
+        faq_pages = [page for page in pages if page.get("has_faq_schema")]
+        schema_pages = [page for page in pages if page.get("schema_count", 0) > 0]
+        location_pages = [page for page in pages if page.get("location_match")]
+        avg_word_count = round(sum(page.get("word_count", 0) for page in pages) / max(len(pages), 1))
+        avg_internal_links = round(sum(page.get("internal_link_count", 0) for page in pages) / max(len(pages), 1), 1)
+        items.append(
+            {
+                "page_type": page_type,
+                "page_type_label": _page_type_label(page_type).title(),
+                "competitor_page_count": len(pages),
+                "avg_word_count": avg_word_count,
+                "faq_rate": round((len(faq_pages) / max(len(pages), 1)) * 100),
+                "schema_rate": round((len(schema_pages) / max(len(pages), 1)) * 100),
+                "location_rate": round((len(location_pages) / max(len(pages), 1)) * 100),
+                "avg_internal_links": avg_internal_links,
+                "title_samples": title_samples[:3],
+                "common_terms": _pattern_title_terms(pages, location=profile.location),
+            }
+        )
+    return items
+
+
+def build_page_comparisons(profile, site_structure, competitor_snapshots):
+    patterns = build_competitor_patterns(profile, competitor_snapshots)
+    comparisons = []
+    for pattern in patterns:
+        site_pages = _site_pages_for_type(site_structure, pattern["page_type"])
+        site_page = max(site_pages, key=lambda item: item.get("word_count", 0), default=None)
+        missing_elements = []
+        if not site_page:
+            missing_elements.append(f"No {_page_type_label(pattern['page_type'])} page exists on the current site.")
+            status = "missing"
+        else:
+            if pattern["faq_rate"] >= 50 and not site_page.get("has_faq_schema"):
+                missing_elements.append("Add FAQ coverage and FAQ schema to match common competitor structure.")
+            if pattern["schema_rate"] >= 50 and site_page.get("schema_count", 0) == 0:
+                missing_elements.append("Add structured data blocks that clarify page purpose and entity context.")
+            if pattern["location_rate"] >= 50 and not site_page.get("location_match"):
+                missing_elements.append(f"Add explicit {profile.location} modifiers in the title, H1, and proof sections.")
+            if pattern["avg_word_count"] - site_page.get("word_count", 0) >= 150:
+                missing_elements.append(f"Expand content depth by about {pattern['avg_word_count'] - site_page.get('word_count', 0)} words to match competitor coverage.")
+            if pattern["avg_internal_links"] - site_page.get("internal_link_count", 0) >= 2:
+                missing_elements.append("Add more internal links from core pages so this page is not isolated.")
+            status = "gap" if missing_elements else "aligned"
+
+        comparisons.append(
+            {
+                "page_type": pattern["page_type"],
+                "page_type_label": pattern["page_type_label"],
+                "status": status,
+                "site_page_url": site_page.get("url", "") if site_page else "",
+                "site_page_title": (site_page.get("title") or site_page.get("h1") or "") if site_page else "",
+                "site_word_count": site_page.get("word_count", 0) if site_page else 0,
+                "site_internal_links": site_page.get("internal_link_count", 0) if site_page else 0,
+                "competitor_page_count": pattern["competitor_page_count"],
+                "competitor_avg_word_count": pattern["avg_word_count"],
+                "competitor_avg_internal_links": pattern["avg_internal_links"],
+                "competitor_title_samples": pattern["title_samples"],
+                "competitor_common_terms": pattern["common_terms"],
+                "missing_elements": missing_elements,
+                "recommended_action": (
+                    f"Create the missing {_page_type_label(pattern['page_type'])} page using the accepted competitor pattern as the baseline."
+                    if not site_page
+                    else "Apply the missing structural elements on the current page, then rerun SEO and audit validation."
+                ),
+            }
+        )
+    return comparisons
 
 
 def build_page_map(profile, site_structure, competitor_snapshots):
@@ -1494,9 +1717,12 @@ def build_seo_context_payload(project, profile, audit_run):
         )
         for competitor in competitors
     ]
+    competitor_trace = [_build_competitor_trace(snapshot, profile) for snapshot in competitor_snapshots]
     accepted_competitor_snapshots = _accepted_competitor_snapshots(competitor_snapshots, profile)
     site_structure = site_structure_snapshot.output_json
     benchmark_summary = build_benchmark_summary(site_structure, competitor_snapshots)
+    competitor_patterns = build_competitor_patterns(profile, accepted_competitor_snapshots)
+    page_comparisons = build_page_comparisons(profile, site_structure, accepted_competitor_snapshots)
     recommendations = build_context_recommendations(
         audit_run,
         profile,
@@ -1531,6 +1757,9 @@ def build_seo_context_payload(project, profile, audit_run):
         "site_structure": site_structure,
         "benchmark_summary": benchmark_summary,
         "discovery": discovery,
+        "competitor_trace": competitor_trace,
+        "competitor_patterns": competitor_patterns,
+        "page_comparisons": page_comparisons,
         "competitors": [
             {
                 "domain": snapshot.competitor.normalized_domain,
@@ -1548,10 +1777,18 @@ def build_seo_opportunity_payload(project, profile, audit_run, context_snapshot=
     if context_snapshot is None:
         context_snapshot = get_or_build_seo_snapshot(project=project, profile=profile, audit_run=audit_run)
     context_payload = context_snapshot.output_json or {}
+    competitor_trace = context_payload.get("competitor_trace") or [
+        {
+            "domain": item.get("domain", ""),
+            "status": item.get("status", ""),
+            "included": item.get("status") == "ok",
+        }
+        for item in context_payload.get("competitors", [])
+    ]
     competitor_domains = {
         item.get("domain", "")
-        for item in context_payload.get("competitors", [])
-        if item.get("status") == "ok" and item.get("domain")
+        for item in competitor_trace
+        if item.get("included") and item.get("status") == "ok" and item.get("domain")
     }
     competitor_snapshots = list(
         SEOCompetitorSnapshot.objects.filter(

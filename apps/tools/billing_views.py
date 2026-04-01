@@ -17,6 +17,7 @@ from apps.leads.billing import (
     handle_stripe_webhook_event,
     verify_stripe_signature,
 )
+from apps.leads.services import resolve_workspace_project
 from apps.tools.automation import update_workspace_schedule
 from apps.tools.models import WorkspaceAuditSchedule
 
@@ -77,8 +78,9 @@ class WorkspaceBillingCancelView(LoginRequiredMixin, View):
 
 class WorkspaceAuditRerunView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
+        project = resolve_workspace_project(request, request.user)
         try:
-            audit_run = create_workspace_rerun_for_user(request.user)
+            audit_run = create_workspace_rerun_for_user(request.user, project=project)
         except BillingError as exc:
             messages.error(request, str(exc))
             return redirect("tools:workspace-dashboard")
@@ -97,9 +99,11 @@ class WorkspaceAuditScheduleView(LoginRequiredMixin, View):
             return redirect("tools:workspace-dashboard")
 
         is_active = request.POST.get("is_active") == "1"
+        project = resolve_workspace_project(request, request.user)
         try:
             schedule = update_workspace_schedule(
                 user=request.user,
+                project=project,
                 cadence=cadence,
                 is_active=is_active,
                 report_recipients=request.POST.get("report_recipients", ""),

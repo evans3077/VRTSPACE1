@@ -30,7 +30,13 @@ from apps.leads.auth import (
 )
 from apps.leads.forms import AuditRequestForm, WorkspaceLoginForm, WorkspaceSignupForm
 from apps.leads.models import ClientProject
-from apps.leads.services import create_audit_request_from_form, sync_client_project_from_audit_run
+from apps.leads.services import (
+    create_audit_request_from_form,
+    get_workspace_projects,
+    resolve_workspace_project,
+    set_active_workspace_project,
+    sync_client_project_from_audit_run,
+)
 
 from .audit_exports import (
     build_absolute_app_url,
@@ -165,7 +171,8 @@ class AuditResultDetailView(DetailView):
         ]
 
         for label, key in metric_map:
-            score = scores.get(key, 0)
+            raw_score = scores.get(key, 0)
+            score = raw_score if isinstance(raw_score, (int, float)) else 0
             # Normalize offset for smaller 50px gauges (circumference ~138.23)
             small_offset = round(138.23 * (1 - score / 100))
             
@@ -494,12 +501,7 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
     context_object_name = "project"
 
     def get_object(self, queryset=None):
-        project = (
-            ClientProject.objects.select_related("latest_audit_run", "audit_request")
-            .filter(owner=self.request.user)
-            .order_by("-updated_at")
-            .first()
-        )
+        project = resolve_workspace_project(self.request, self.request.user)
         if project:
             return project
         return ClientProject(
@@ -585,7 +587,28 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["share_reports_allowed"] = share_allowed
         context["export_reports_allowed"] = export_allowed
         context["email_reports_allowed"] = email_allowed
+        context["workspace_projects"] = get_workspace_projects(self.request.user)
         return context
+
+
+class WorkspaceProjectSelectView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        project = resolve_workspace_project(
+            request,
+            request.user,
+            project_id=request.POST.get("project_id"),
+            fallback=False,
+        )
+        if project is None:
+            messages.error(request, "That workspace project is not available for this account.")
+            return redirect("tools:workspace-dashboard")
+
+        set_active_workspace_project(request, project)
+        messages.success(request, f"Workspace switched to {project.name}.")
+        next_url = request.POST.get("next", "").strip()
+        if next_url.startswith("/"):
+            return redirect(next_url)
+        return redirect("tools:workspace-dashboard")
 
 
 class AuditReportPdfView(DetailView):

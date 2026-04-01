@@ -164,3 +164,56 @@ class WorkspaceAEOViewTests(TestCase):
             1,
         )
         self.assertContains(response, "What AI systems need from this site")
+
+    def test_workspace_aeo_uses_selected_project(self):
+        second_request = AuditRequest.objects.create(
+            company_name="Second Project",
+            email="aeo@example.com",
+            website="https://second-example.com",
+        )
+        second_run = AuditRun.objects.create(
+            audit_request=second_request,
+            normalized_domain="second-example.com",
+            start_url="https://second-example.com/",
+            overall_score=71,
+            on_page_score=60,
+            content_score=65,
+            aeo_score=54,
+            status=AuditRun.Status.COMPLETED,
+            summary={},
+        )
+        AuditPage.objects.create(
+            audit_run=second_run,
+            url="https://second-example.com/",
+            status_code=200,
+            h1="Second heading",
+            meta_description="Second description",
+            word_count=180,
+        )
+        second_project = ClientProject.objects.create(
+            owner=self.user,
+            audit_request=second_request,
+            latest_audit_run=second_run,
+            name="Second Project",
+            website="https://second-example.com",
+            normalized_domain="second-example.com",
+            contact_email="aeo@example.com",
+            latest_score=71,
+        )
+        SEOProjectProfile.objects.create(
+            project=second_project,
+            business_type="local_service",
+            location="Mombasa, Kenya",
+            target_goal="Increase bookings",
+            primary_service="Airport transfers",
+        )
+        self.client.force_login(self.user)
+        session = self.client.session
+        session["active_workspace_project_id"] = second_project.pk
+        session.save()
+
+        response = self.client.get(reverse("aeo:workspace-aeo"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Second Project")
+        self.assertEqual(response.context["project"].pk, second_project.pk)

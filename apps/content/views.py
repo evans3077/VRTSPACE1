@@ -6,6 +6,8 @@ from django.urls import reverse
 from django.views import View
 from django.views.generic import DetailView, ListView
 
+from apps.leads.services import get_workspace_projects
+
 from .forms import GeneratedContentEditForm, GeneratedContentRequestForm
 from .models import GeneratedContent
 from .services import (
@@ -45,7 +47,7 @@ class WorkspaceGeneratedContentListView(LoginRequiredMixin, ListView):
     context_object_name = "generated_content_list"
 
     def get_queryset(self):
-        project = get_workspace_content_project(self.request.user)
+        project = get_workspace_content_project(user=self.request.user, request=self.request)
         if not project:
             return GeneratedContent.objects.none()
         return (
@@ -61,8 +63,9 @@ class WorkspaceGeneratedContentListView(LoginRequiredMixin, ListView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        project = get_workspace_content_project(self.request.user)
+        project = get_workspace_content_project(user=self.request.user, request=self.request)
         context["project"] = project
+        context["workspace_projects"] = get_workspace_projects(self.request.user)
         context["form"] = GeneratedContentRequestForm()
         context["editorial_tasks"] = get_editorial_tasks(project)
         return context
@@ -70,7 +73,7 @@ class WorkspaceGeneratedContentListView(LoginRequiredMixin, ListView):
 
 class WorkspaceGeneratedContentCreateView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
-        project = get_workspace_content_project(request.user)
+        project = get_workspace_content_project(user=request.user, request=request)
         if not project:
             messages.error(request, "Create or connect a workspace project before generating drafts.")
             return redirect("tools:workspace-dashboard")
@@ -88,6 +91,7 @@ class WorkspaceGeneratedContentCreateView(LoginRequiredMixin, View):
                 "content/workspace_content.html",
                 {
                     "project": project,
+                    "workspace_projects": get_workspace_projects(request.user),
                     "generated_content_list": queryset,
                     "form": form,
                     "editorial_tasks": get_editorial_tasks(project),
@@ -107,7 +111,7 @@ class WorkspaceGeneratedContentCreateView(LoginRequiredMixin, View):
 
 class WorkspaceGeneratedContentFromSEOView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
-        project = get_workspace_content_project(request.user)
+        project = get_workspace_content_project(user=request.user, request=request)
         if not project:
             messages.error(request, "Create or connect a workspace project before generating drafts.")
             return redirect("tools:workspace-dashboard")
@@ -141,7 +145,7 @@ class WorkspaceGeneratedContentFromSEOView(LoginRequiredMixin, View):
 
 class WorkspaceEditorialQueueSyncView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
-        project = get_workspace_content_project(request.user)
+        project = get_workspace_content_project(user=request.user, request=request)
         if not project:
             messages.error(request, "Create or connect a workspace project before syncing the editorial queue.")
             return redirect("tools:workspace-dashboard")

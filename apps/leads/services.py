@@ -5,6 +5,8 @@ from django.utils import timezone
 
 from .models import AuditRequest, ClientProject, Lead
 
+ACTIVE_WORKSPACE_PROJECT_SESSION_KEY = "active_workspace_project_id"
+
 
 def score_lead(*, company, website, message, interest_area):
     score = 10
@@ -95,6 +97,52 @@ def create_audit_request_from_form(form, *, request=None):
         audit_request.status = AuditRequest.Status.QUALIFIED
     audit_request.save()
     return audit_request
+
+
+def get_workspace_project_queryset(user):
+    if not user or not getattr(user, "is_authenticated", False):
+        return ClientProject.objects.none()
+    return (
+        ClientProject.objects.select_related("latest_audit_run", "audit_request")
+        .filter(owner=user)
+        .order_by("name", "created_at")
+    )
+
+
+def get_workspace_projects(user):
+    return list(get_workspace_project_queryset(user))
+
+
+def resolve_workspace_project(request=None, user=None, *, project_id=None, fallback=True):
+    user = user or getattr(request, "user", None)
+    if not user or not getattr(user, "is_authenticated", False):
+        return None
+
+    queryset = get_workspace_project_queryset(user)
+    if project_id is None and request is not None:
+        project_id = request.GET.get("project") or request.POST.get("project")
+    if project_id is None and request is not None:
+        project_id = request.session.get(ACTIVE_WORKSPACE_PROJECT_SESSION_KEY)
+
+    project = None
+    if project_id:
+        project = queryset.filter(pk=project_id).first()
+    if project is None and fallback:
+        project = queryset.order_by("-updated_at", "-created_at").first()
+
+    if request is not None:
+        if project is not None:
+            request.session[ACTIVE_WORKSPACE_PROJECT_SESSION_KEY] = project.pk
+        else:
+            request.session.pop(ACTIVE_WORKSPACE_PROJECT_SESSION_KEY, None)
+    return project
+
+
+def set_active_workspace_project(request, project):
+    if project is None:
+        request.session.pop(ACTIVE_WORKSPACE_PROJECT_SESSION_KEY, None)
+        return
+    request.session[ACTIVE_WORKSPACE_PROJECT_SESSION_KEY] = project.pk
 
 
 def sync_client_project_from_audit_run(audit_run):
