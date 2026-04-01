@@ -1,19 +1,27 @@
+import json
+
 from django.contrib import messages
 from django.conf import settings
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import Http404
+from django.http import Http404, HttpResponse, JsonResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils.dateparse import parse_date
 from django.utils import timezone
 from django.views import View
+from django.views.generic import DetailView
 
+from apps.leads.billing import can_access_audit_feature
 from apps.leads.services import get_workspace_projects, resolve_workspace_project
 from apps.leads.models import ClientProject
+from apps.tools.audit_exports import build_absolute_app_url
 
 from .backlinks import refresh_project_backlink_intelligence
 from .forms import SEOProjectProfileForm
-from .models import BacklinkProspect, SEOCampaign, SEOCompetitor, SEOProjectProfile
+from .models import BacklinkProspect, SEOCampaign, SEOCompetitor, SEOProjectProfile, SEOShareLink
 from .jobs import enqueue_project_seo_refresh
+from .pdf_reports import build_seo_report_pdf
+from .reporting import build_seo_export_payload, build_seo_share_urls, get_or_create_seo_share_link, get_seo_reporting_bundle
 from .services import infer_business_type_for_project
 from .services import (
     build_campaign_value_summary,
@@ -238,7 +246,51 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             "backlink_status_choices": BacklinkProspect.Status.choices,
             "can_generate_snapshot": can_generate_seo_snapshot(project),
             "seo_refresh_state": refresh_state,
+            "latest_seo_share_link": self._get_latest_share_link(project, campaign_items=campaign_items),
+            "latest_seo_share_url": self._get_latest_share_url(project, campaign_items=campaign_items),
+            "page_title": f"{project.name if project else 'Workspace'} SEO Workspace | VRT SPACE AGENCY",
+            "meta_description": "Private SEO workspace for competitor-backed benchmark decisions, campaign execution, and stakeholder reporting.",
+            "canonical_url": self.request.build_absolute_uri(self.request.path),
+            "meta_robots": "noindex, nofollow",
+            "og_title": f"{project.name if project else 'Workspace'} SEO Workspace",
+            "og_description": "Private SEO workspace for benchmarked competitor intelligence and execution planning.",
+            "og_type": "website",
+            "twitter_card": "summary",
+            "schema_json": json.dumps(
+                {
+                    "@context": "https://schema.org",
+                    "@type": "WebPage",
+                    "name": f"{project.name if project else 'Workspace'} SEO Workspace",
+                    "description": "Private SEO workspace for competitor-backed benchmark decisions and execution planning.",
+                }
+            ),
         }
+
+    def _get_latest_share_link(self, project, *, campaign_items=None):
+        if not project:
+            return None
+        bundle = get_seo_reporting_bundle(project)
+        context_snapshot = bundle.get("context_snapshot")
+        opportunity_snapshot = bundle.get("opportunity_snapshot")
+        backlink_snapshot = bundle.get("backlink_snapshot")
+        if not context_snapshot or not opportunity_snapshot:
+            return None
+        return (
+            SEOShareLink.objects.filter(
+                project=project,
+                source_context_snapshot=context_snapshot,
+                source_opportunity_snapshot=opportunity_snapshot,
+                source_backlink_snapshot=backlink_snapshot,
+            )
+            .order_by("-created_at")
+            .first()
+        )
+
+    def _get_latest_share_url(self, project, *, campaign_items=None):
+        share_link = self._get_latest_share_link(project, campaign_items=campaign_items)
+        if not share_link:
+            return ""
+        return build_seo_share_urls(share_link)["share_url"]
 
 
 class WorkspaceBacklinkProspectUpdateView(LoginRequiredMixin, View):
@@ -321,3 +373,153 @@ class WorkspaceSEOCampaignUpdateView(LoginRequiredMixin, View):
         campaign.save(update_fields=["status", "due_date", "owner", "metadata", "updated_at"])
         messages.success(request, "Campaign updated.")
         return redirect("seo:workspace-seo")
+
+
+class WorkspaceSEOExportJsonView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        allowed, _ = can_access_audit_feature(request.user, "export_reports_enabled")
+        if not allowed:
+            return JsonResponse({"error": "SEO exports require a plan that supports advanced exports."}, status=403)
+        project = resolve_workspace_project(request, request.user)
+        if not project:
+            raise Http404
+        bundle = get_seo_reporting_bundle(project)
+        if not bundle.get("context_snapshot") or not bundle.get("opportunity_snapshot"):
+            return JsonResponse({"error": "Run the SEO workspace first to generate a reportable snapshot."}, status=409)
+        return JsonResponse(build_seo_export_payload(project, bundle=bundle), status=200)
+
+
+class WorkspaceSEOReportPdfView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        allowed, _ = can_access_audit_feature(request.user, "export_reports_enabled")
+        if not allowed:
+            return HttpResponse("SEO PDF exports require a plan that supports advanced exports.", status=403)
+        project = resolve_workspace_project(request, request.user)
+        if not project:
+            raise Http404
+        bundle = get_seo_reporting_bundle(project)
+        if not bundle.get("context_snapshot") or not bundle.get("opportunity_snapshot"):
+            return HttpResponse("Run the SEO workspace first to generate a reportable snapshot.", status=409)
+        pdf_bytes = build_seo_report_pdf(build_seo_export_payload(project, bundle=bundle))
+        disposition = "attachment" if request.GET.get("download") == "1" else "inline"
+        filename = f"seo-report-{project.normalized_domain or project.pk}.pdf"
+        response = HttpResponse(pdf_bytes, content_type="application/pdf")
+        response["Content-Disposition"] = f'{disposition}; filename="{filename}"'
+        return response
+
+
+class WorkspaceSEOShareCreateView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        allowed, _ = can_access_audit_feature(request.user, "stakeholder_sharing_enabled")
+        if not allowed:
+            messages.error(request, "Stakeholder sharing requires a plan that supports shared reports.")
+            return redirect("seo:workspace-seo")
+        project = resolve_workspace_project(request, request.user)
+        if not project:
+            raise Http404
+        bundle = get_seo_reporting_bundle(project)
+        if not bundle.get("context_snapshot") or not bundle.get("opportunity_snapshot"):
+            messages.error(request, "Run the SEO workspace first to generate a shareable report.")
+            return redirect("seo:workspace-seo")
+        share_link = get_or_create_seo_share_link(project, bundle=bundle, created_by=request.user)
+        payload = build_seo_share_urls(share_link)
+        request.session["latest_seo_share_url"] = payload["share_url"]
+        messages.success(request, "SEO stakeholder report link created.")
+        return redirect("seo:workspace-seo")
+
+
+class SharedSEOReportView(DetailView):
+    model = SEOShareLink
+    slug_field = "token"
+    slug_url_kwarg = "token"
+    template_name = "seo/shared_seo_report.html"
+    context_object_name = "share_link"
+
+    def get_queryset(self):
+        return SEOShareLink.objects.select_related(
+            "project",
+            "profile",
+            "source_context_snapshot",
+            "source_opportunity_snapshot",
+            "source_backlink_snapshot",
+        )
+
+    def get_object(self, queryset=None):
+        share_link = super().get_object(queryset=queryset)
+        if share_link.expires_at and share_link.expires_at <= timezone.now():
+            raise Http404
+        share_link.access_count += 1
+        share_link.last_accessed_at = timezone.now()
+        share_link.save(update_fields=["access_count", "last_accessed_at", "updated_at"])
+        return share_link
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        share_link = self.object
+        bundle = get_seo_reporting_bundle(
+            share_link.project,
+            profile=share_link.profile,
+            context_snapshot=share_link.source_context_snapshot,
+            opportunity_snapshot=share_link.source_opportunity_snapshot,
+            backlink_snapshot=share_link.source_backlink_snapshot,
+        )
+        payload = build_seo_export_payload(share_link.project, bundle=bundle)
+        canonical_url = self.request.build_absolute_uri(
+            reverse("seo:shared-seo-report", args=[share_link.token])
+        )
+        context.update(
+            {
+                "report_payload": payload,
+                "project": share_link.project,
+                "canonical_url": canonical_url,
+                "page_title": f"{share_link.project.name} SEO Strategy Report | VRT SPACE AGENCY",
+                "meta_description": f"Stakeholder SEO strategy report for {share_link.project.normalized_domain} with benchmark evidence, execution priorities, and campaign progress.",
+                "meta_robots": "noindex, nofollow",
+                "og_title": f"{share_link.project.name} SEO Strategy Report",
+                "og_description": f"Stakeholder SEO strategy report for {share_link.project.normalized_domain}.",
+                "og_type": "article",
+                "twitter_card": "summary",
+                "schema_json": json.dumps(
+                    {
+                        "@context": "https://schema.org",
+                        "@type": "Report",
+                        "name": f"{share_link.project.name} SEO Strategy Report",
+                        "description": f"Stakeholder SEO strategy report for {share_link.project.normalized_domain}.",
+                        "url": canonical_url,
+                    }
+                ),
+            }
+        )
+        return context
+
+
+class SharedSEOReportPdfView(DetailView):
+    model = SEOShareLink
+    slug_field = "token"
+    slug_url_kwarg = "token"
+
+    def get_queryset(self):
+        return SEOShareLink.objects.select_related(
+            "project",
+            "profile",
+            "source_context_snapshot",
+            "source_opportunity_snapshot",
+            "source_backlink_snapshot",
+        )
+
+    def get(self, request, *args, **kwargs):
+        share_link = self.get_object()
+        if share_link.expires_at and share_link.expires_at <= timezone.now():
+            raise Http404
+        bundle = get_seo_reporting_bundle(
+            share_link.project,
+            profile=share_link.profile,
+            context_snapshot=share_link.source_context_snapshot,
+            opportunity_snapshot=share_link.source_opportunity_snapshot,
+            backlink_snapshot=share_link.source_backlink_snapshot,
+        )
+        pdf_bytes = build_seo_report_pdf(build_seo_export_payload(share_link.project, bundle=bundle))
+        disposition = "attachment" if request.GET.get("download") == "1" else "inline"
+        response = HttpResponse(pdf_bytes, content_type="application/pdf")
+        response["Content-Disposition"] = f'{disposition}; filename="shared-seo-report-{share_link.project.pk}.pdf"'
+        return response

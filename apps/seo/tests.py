@@ -22,6 +22,7 @@ from .models import (
     SEOContextSnapshot,
     SEOOpportunitySnapshot,
     SEOProjectProfile,
+    SEOShareLink,
     SEOSiteStructureSnapshot,
 )
 from .discovery import build_discovery_queries, discover_serp_competitors, fetch_search_results
@@ -1211,6 +1212,120 @@ class WorkspaceSEOViewTests(TestCase):
         self.assertContains(response, "Editorial brief")
         self.assertContains(response, "Open linked draft")
         self.assertContains(response, "Outreach chain")
+
+    def test_workspace_seo_export_json_returns_stakeholder_payload(self):
+        profile = SEOProjectProfile.objects.create(
+            project=self.project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified organic leads",
+            primary_service="used car dealership",
+            target_audience="price-sensitive car buyers",
+        )
+        context_snapshot = SEOContextSnapshot.objects.create(
+            project=self.project,
+            profile=profile,
+            source_audit_run=self.audit_run,
+            output_json={
+                "context": {"industry_label": "Automotive", "location": "Nairobi"},
+                "benchmark_summary": {"available_competitors": 2, "average_relevance": 8.4},
+                "competitor_trace": [],
+                "competitor_patterns": [],
+                "page_comparisons": [],
+                "competitors": [],
+                "discovery": {"queries": ["used car dealership Nairobi"]},
+                "audit_snapshot": {},
+                "site_structure": {},
+                "keyword_clusters": {},
+                "recommendations": [],
+            },
+        )
+        opportunity_snapshot = SEOOpportunitySnapshot.objects.create(
+            project=self.project,
+            profile=profile,
+            source_audit_run=self.audit_run,
+            source_context_snapshot=context_snapshot,
+            output_json={
+                "value_summary": {"execution_items": 1},
+                "keyword_opportunities": [{"keyword": "used car dealership Nairobi"}],
+                "page_map": [],
+                "execution_queue": [{"title": "Upgrade FAQ coverage"}],
+            },
+        )
+        SEOCampaign.objects.create(
+            project=self.project,
+            source_context_snapshot=context_snapshot,
+            source_opportunity_snapshot=opportunity_snapshot,
+            campaign_key="faq-used-car-dealership-nairobi-faq",
+            title="Upgrade FAQ coverage",
+            page_type="faq",
+            target_keyword="used car dealership Nairobi faq",
+            related_page_urls=["https://example.com/faq/"],
+            success_criteria=["Re-run the audit after publishing the changes."],
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("seo:workspace-seo-export-json"))
+
+        self.assertEqual(response.status_code, 200)
+        payload = response.json()
+        self.assertEqual(payload["project"]["domain"], "example.com")
+        self.assertEqual(payload["benchmark_summary"]["available_competitors"], 2)
+        self.assertEqual(payload["campaigns"][0]["title"], "Upgrade FAQ coverage")
+
+    def test_workspace_seo_share_create_and_shared_report_render(self):
+        profile = SEOProjectProfile.objects.create(
+            project=self.project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified organic leads",
+            primary_service="used car dealership",
+            target_audience="price-sensitive car buyers",
+        )
+        context_snapshot = SEOContextSnapshot.objects.create(
+            project=self.project,
+            profile=profile,
+            source_audit_run=self.audit_run,
+            output_json={
+                "context": {"industry_label": "Automotive", "location": "Nairobi"},
+                "benchmark_summary": {"available_competitors": 2, "average_relevance": 8.4},
+                "competitor_trace": [],
+                "competitor_patterns": [],
+                "page_comparisons": [],
+                "competitors": [],
+                "discovery": {"queries": ["used car dealership Nairobi"]},
+                "audit_snapshot": {},
+                "site_structure": {},
+                "keyword_clusters": {},
+                "recommendations": [],
+            },
+        )
+        opportunity_snapshot = SEOOpportunitySnapshot.objects.create(
+            project=self.project,
+            profile=profile,
+            source_audit_run=self.audit_run,
+            source_context_snapshot=context_snapshot,
+            output_json={
+                "value_summary": {"execution_items": 1},
+                "keyword_opportunities": [{"keyword": "used car dealership Nairobi"}],
+                "page_map": [],
+                "execution_queue": [{"title": "Upgrade FAQ coverage"}],
+            },
+        )
+        self.client.force_login(self.user)
+
+        response = self.client.post(reverse("seo:workspace-seo-share-create"))
+
+        self.assertEqual(response.status_code, 302)
+        share_link = SEOShareLink.objects.get(project=self.project)
+        shared_response = self.client.get(reverse("seo:shared-seo-report", args=[share_link.token]))
+        self.assertEqual(shared_response.status_code, 200)
+        self.assertContains(shared_response, "Shared SEO Report")
+        self.assertContains(shared_response, 'content="noindex, nofollow"', html=False)
+
+        pdf_response = self.client.get(reverse("seo:shared-seo-report-pdf", args=[share_link.token]))
+        self.assertEqual(pdf_response.status_code, 200)
+        self.assertEqual(pdf_response["Content-Type"], "application/pdf")
 
     def test_workspace_seo_competitor_review_updates_metadata(self):
         competitor = SEOCompetitor.objects.create(

@@ -10,6 +10,7 @@ from .models import (
     SEOContextSnapshot,
     SEOOpportunitySnapshot,
     SEOProjectProfile,
+    SEOShareLink,
     SEOSiteStructureSnapshot,
 )
 
@@ -76,3 +77,10 @@ class BacklinkProspectAdmin(admin.ModelAdmin):
     search_fields = ("domain", "title", "project__name", "target_asset_title", "prospect_url")
     list_filter = ("prospect_type", "status")
     readonly_fields = ("outreach_packet", "metadata")
+
+
+@admin.register(SEOShareLink)
+class SEOShareLinkAdmin(admin.ModelAdmin):
+    list_display = ("project", "token", "expires_at", "access_count", "last_accessed_at", "created_at")
+    search_fields = ("project__name", "project__normalized_domain", "token")
+    readonly_fields = ("token", "access_count", "last_accessed_at")

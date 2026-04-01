@@ -232,7 +232,6 @@ Turn the current SEO workspace from a strong analysis tool into a decision syste
   The current execution queue is actionable, but not yet managed like an ongoing campaign.
   Needed result:
   Each execution item can have status, owner, due date, related pages, related keywords, and success criteria.
-- [ ] Tie SEO execution, generated content, and backlink prospects together
 - [x] Tie SEO execution, generated content, and backlink prospects together
   Why:
   The system should move one opportunity through the full chain.
@@ -244,7 +243,7 @@ Turn the current SEO workspace from a strong analysis tool into a decision syste
   Users should see where their time, credits, and money are going.
   Needed result:
   Report how many benchmarks ran, competitor pages were processed, briefs were generated, drafts were created, outreach targets were discovered, and campaigns advanced.
-- [ ] Add SEO-specific stakeholder reporting
+- [x] Add SEO-specific stakeholder reporting
   Why:
   Audit PDF reporting exists, but SEO strategy still needs its own shareable layer.
   Needed result:

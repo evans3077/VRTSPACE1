@@ -2,10 +2,31 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% firstof page_title "VRT SPACE AGENCY" as resolved_page_title %}
+    {% firstof meta_description "VRT SPACE AGENCY delivers SEO audits, AI visibility insights, and growth workspaces." as resolved_meta_description %}
+    {% firstof og_title resolved_page_title as resolved_og_title %}
+    {% firstof og_description resolved_meta_description as resolved_og_description %}
+    {% firstof og_type "website" as resolved_og_type %}
+    {% firstof twitter_card "summary" as resolved_twitter_card %}
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>{{ page_title|default:"VRT SPACE AGENCY" }}</title>
-    <meta name="description" content="{{ meta_description|default:'VRT SPACE AGENCY delivers SEO audits, AI visibility insights, and growth workspaces.' }}">
+    <title>{{ resolved_page_title }}</title>
+    <meta name="description" content="{{ resolved_meta_description }}">
+    {% if canonical_url %}
+    <link rel="canonical" href="{{ canonical_url }}">
+    {% endif %}
+    {% if meta_robots %}
+    <meta name="robots" content="{{ meta_robots }}">
+    {% endif %}
+    <meta property="og:title" content="{{ resolved_og_title }}">
+    <meta property="og:description" content="{{ resolved_og_description }}">
+    <meta property="og:type" content="{{ resolved_og_type }}">
+    {% if canonical_url %}
+    <meta property="og:url" content="{{ canonical_url }}">
+    {% endif %}
+    <meta name="twitter:card" content="{{ resolved_twitter_card }}">
+    <meta name="twitter:title" content="{{ resolved_og_title }}">
+    <meta name="twitter:description" content="{{ resolved_og_description }}">
     <link rel="stylesheet" href="{% static 'css/site.css' %}">
     {% if schema_json %}
     <script type="application/ld+json">{{ schema_json|safe }}</script>

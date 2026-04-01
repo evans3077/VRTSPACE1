@@ -144,6 +144,24 @@
                 <p class="eyebrow">Value From This Refresh</p>
                 <h2 style="font-size: 2rem;">What the system actually processed</h2>
             </div>
+            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                <a class="button button-secondary" href="{% url 'seo:workspace-seo-report-pdf' %}" target="_blank" rel="noopener">View SEO PDF</a>
+                <a class="button button-secondary" href="{% url 'seo:workspace-seo-report-pdf' %}?download=1">Download PDF</a>
+                <a class="button button-secondary" href="{% url 'seo:workspace-seo-export-json' %}">Export JSON</a>
+                <form method="post" action="{% url 'seo:workspace-seo-share-create' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button button-primary">Create Share Link</button>
+                </form>
+            </div>
+            {% if latest_seo_share_url %}
+            <div style="margin-bottom: 1rem; padding: 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; line-height: 1.6;">
+                <strong style="display: block; margin-bottom: 0.25rem;">Latest stakeholder link</strong>
+                <div class="url-wrap-mono" style="font-size: 0.82rem;">{{ latest_seo_share_url }}</div>
+                <div style="margin-top: 0.45rem;">
+                    <a href="{{ latest_seo_share_url }}" target="_blank" rel="noopener" style="color: var(--signal);">Open shared SEO report</a>
+                </div>
+            </div>
+            {% endif %}
             <div class="system-grid">
                 <article class="system-card"><p class="eyebrow">Competitors</p><h3>{{ seo_value_summary.competitors_benchmarked|default:0 }}</h3><p>Real competitor sites fetched and benchmarked</p></article>
                 <article class="system-card"><p class="eyebrow">Auto-Discovered</p><h3>{{ seo_value_summary.auto_discovered_competitors|default:0 }}</h3><p>Competitors found directly from localized SERPs</p></article>

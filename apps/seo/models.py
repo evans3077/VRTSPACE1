@@ -380,3 +380,56 @@ class BacklinkProspect(TimestampedModel):
 
     def __str__(self):
         return f"{self.domain} -> {self.target_asset_title or self.target_asset_url or self.prospect_url}"
+
+
+class SEOShareLink(TimestampedModel):
+    project = models.ForeignKey(
+        "leads.ClientProject",
+        on_delete=models.CASCADE,
+        related_name="seo_share_links",
+    )
+    profile = models.ForeignKey(
+        SEOProjectProfile,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="share_links",
+    )
+    source_context_snapshot = models.ForeignKey(
+        SEOContextSnapshot,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="share_links",
+    )
+    source_opportunity_snapshot = models.ForeignKey(
+        SEOOpportunitySnapshot,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="share_links",
+    )
+    source_backlink_snapshot = models.ForeignKey(
+        BacklinkSnapshot,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="share_links",
+    )
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="seo_share_links",
+    )
+    token = models.CharField(max_length=64, unique=True)
+    expires_at = models.DateTimeField(null=True, blank=True)
+    access_count = models.PositiveIntegerField(default=0)
+    last_accessed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ("-created_at",)
+
+    def __str__(self):
+        return f"SEO share link for {self.project}"
