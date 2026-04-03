@@ -14,12 +14,16 @@ from django.views.generic import DetailView
 
 from apps.core.site_content import PACKAGES
 from apps.leads.billing import (
+    BillingError,
+    build_action_access_context,
     build_credit_action_guide,
     can_access_audit_feature,
     get_billing_state,
     get_effective_capabilities,
     get_limited_audit_history,
     get_limited_recommendations,
+    record_usage,
+    spend_action_credits,
 )
 from apps.leads.auth import (
     GoogleOAuthError,
@@ -30,7 +34,7 @@ from apps.leads.auth import (
     is_google_oauth_enabled,
 )
 from apps.leads.forms import AuditRequestForm, WorkspaceLoginForm, WorkspaceSignupForm
-from apps.leads.models import ClientProject
+from apps.leads.models import ClientProject, UsageRecord
 from apps.leads.services import (
     create_audit_request_from_form,
     get_workspace_projects,
@@ -582,7 +586,33 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["credit_overview"] = billing_state["credit_overview"]
         context["credit_activity"] = billing_state["credit_activity"]
         context["recent_credit_entries"] = billing_state["recent_credit_entries"]
-        context["credit_action_guide"] = build_credit_action_guide(project) if getattr(project, "pk", None) else []
+        context["credit_action_guide"] = (
+            build_credit_action_guide(project, self.request.user)
+            if getattr(project, "pk", None)
+            else []
+        )
+        context["audit_export_action"] = (
+            build_action_access_context(
+                self.request.user,
+                "export",
+                project=project,
+                feature_name="export_reports_enabled",
+                label="Audit exports",
+            )
+            if getattr(project, "pk", None)
+            else {}
+        )
+        context["audit_share_action"] = (
+            build_action_access_context(
+                self.request.user,
+                "share",
+                project=project,
+                feature_name="stakeholder_sharing_enabled",
+                label="Stakeholder sharing",
+            )
+            if getattr(project, "pk", None)
+            else {}
+        )
         context["billing_plans"] = billing_state["plans"]
         context["audit_schedule"] = schedule
         context["latest_change_report"] = latest_change_report
@@ -660,27 +690,65 @@ class WorkspaceAuditAccessMixin(LoginRequiredMixin):
 
 class WorkspaceAuditExportJsonView(WorkspaceAuditAccessMixin, View):
     def get(self, request, *args, **kwargs):
-        allowed, _ = can_access_audit_feature(request.user, "export_reports_enabled")
-        if not allowed:
-            return JsonResponse({"error": "JSON exports require a plan that supports advanced exports."}, status=403)
-
         audit_run = self.get_workspace_audit(kwargs["pk"])
+        action = build_action_access_context(
+            request.user,
+            "export",
+            project=getattr(getattr(audit_run, "audit_request", None), "client_project", None),
+            feature_name="export_reports_enabled",
+            label="Audit exports",
+        )
+        if settings.AUDIT_TIER_ENFORCEMENT and not action["available"]:
+            return JsonResponse({"error": action["blocked_message"] or action["next_unlock_message"]}, status=403)
         if audit_run.status != AuditRun.Status.COMPLETED:
             return JsonResponse({"error": "Exports are only available after the audit completes."}, status=409)
         self.ensure_completed_audit(audit_run)
+        try:
+            _entry, estimate = spend_action_credits(
+                request.user,
+                "export",
+                project=getattr(getattr(audit_run, "audit_request", None), "client_project", None),
+                note="Audit JSON export",
+                reference_key=f"audit-export-json:{audit_run.pk}",
+                metadata={"audit_run_id": audit_run.pk, "format": "json"},
+                reuse_reference=True,
+            )
+            if not estimate.get("reused_existing_charge"):
+                record_usage(request.user, UsageRecord.Metric.EXPORT)
+        except BillingError as exc:
+            return JsonResponse({"error": str(exc)}, status=403)
         return JsonResponse(build_audit_export_payload(audit_run), status=200)
 
 
 class WorkspaceAuditExportCsvView(WorkspaceAuditAccessMixin, View):
     def get(self, request, *args, **kwargs):
-        allowed, _ = can_access_audit_feature(request.user, "export_reports_enabled")
-        if not allowed:
-            return HttpResponse("CSV exports require a plan that supports advanced exports.", status=403)
-
         audit_run = self.get_workspace_audit(kwargs["pk"])
+        action = build_action_access_context(
+            request.user,
+            "export",
+            project=getattr(getattr(audit_run, "audit_request", None), "client_project", None),
+            feature_name="export_reports_enabled",
+            label="Audit exports",
+        )
+        if settings.AUDIT_TIER_ENFORCEMENT and not action["available"]:
+            return HttpResponse(action["blocked_message"] or action["next_unlock_message"], status=403)
         if audit_run.status != AuditRun.Status.COMPLETED:
             return HttpResponse("Exports are only available after the audit completes.", status=409)
         self.ensure_completed_audit(audit_run)
+        try:
+            _entry, estimate = spend_action_credits(
+                request.user,
+                "export",
+                project=getattr(getattr(audit_run, "audit_request", None), "client_project", None),
+                note="Audit CSV export",
+                reference_key=f"audit-export-csv:{audit_run.pk}",
+                metadata={"audit_run_id": audit_run.pk, "format": "csv"},
+                reuse_reference=True,
+            )
+            if not estimate.get("reused_existing_charge"):
+                record_usage(request.user, UsageRecord.Metric.EXPORT)
+        except BillingError as exc:
+            return HttpResponse(str(exc), status=403)
         response = HttpResponse(build_audit_csv_export(audit_run), content_type="text/csv")
         response["Content-Disposition"] = f'attachment; filename="audit-export-{audit_run.pk}.csv"'
         return response
@@ -688,16 +756,37 @@ class WorkspaceAuditExportCsvView(WorkspaceAuditAccessMixin, View):
 
 class WorkspaceAuditShareCreateView(WorkspaceAuditAccessMixin, View):
     def post(self, request, *args, **kwargs):
-        allowed, _ = can_access_audit_feature(request.user, "stakeholder_sharing_enabled")
-        if not allowed:
+        audit_run = self.get_workspace_audit(kwargs["pk"])
+        action = build_action_access_context(
+            request.user,
+            "share",
+            project=getattr(getattr(audit_run, "audit_request", None), "client_project", None),
+            feature_name="stakeholder_sharing_enabled",
+            label="Stakeholder sharing",
+        )
+        if settings.AUDIT_TIER_ENFORCEMENT and not action["available"]:
             if request.headers.get("X-Requested-With") == "XMLHttpRequest":
-                return JsonResponse({"error": "Stakeholder sharing requires a plan that supports shared reports."}, status=403)
+                return JsonResponse({"error": action["blocked_message"] or action["next_unlock_message"]}, status=403)
             raise Http404
 
-        audit_run = self.get_workspace_audit(kwargs["pk"])
         if audit_run.status != AuditRun.Status.COMPLETED:
             return JsonResponse({"error": "Shared reports are only available after the audit completes."}, status=409)
         self.ensure_completed_audit(audit_run)
+        try:
+            spend_action_credits(
+                request.user,
+                "share",
+                project=getattr(getattr(audit_run, "audit_request", None), "client_project", None),
+                note="Audit stakeholder share link",
+                reference_key=f"audit-share:{audit_run.pk}",
+                metadata={"audit_run_id": audit_run.pk},
+                reuse_reference=True,
+            )
+        except BillingError as exc:
+            if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                return JsonResponse({"error": str(exc)}, status=403)
+            messages.error(request, str(exc))
+            return redirect("tools:workspace-dashboard")
         share_link = get_or_create_audit_share_link(audit_run, created_by=request.user)
         payload = {
             "share_url": build_absolute_app_url(f"/share/audits/{share_link.token}/"),

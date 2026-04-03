@@ -73,7 +73,7 @@ class WorkspaceGeneratedContentListView(LoginRequiredMixin, ListView):
         context["workspace_projects"] = get_workspace_projects(self.request.user)
         context["form"] = GeneratedContentRequestForm()
         context["editorial_tasks"] = get_editorial_tasks(project)
-        context["workspace_credit_actions"] = build_credit_action_guide(project) if project else []
+        context["workspace_credit_actions"] = build_credit_action_guide(project, self.request.user) if project else []
         return context
 
 

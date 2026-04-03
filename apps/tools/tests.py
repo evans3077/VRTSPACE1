@@ -15,7 +15,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from apps.leads.billing import BillingError, create_checkout_session
-from apps.leads.models import AuditRequest, ClientProject, UsageRecord, WorkspacePlan, WorkspaceSubscription
+from apps.leads.models import AuditRequest, ClientProject, UsageRecord, WorkspaceCreditLedger, WorkspacePlan, WorkspaceSubscription
 from apps.seo.models import SEOContextSnapshot, SEOProjectProfile
 from apps.aeo.models import AEOAudit
 from apps.tools.automation import process_due_workspace_schedules
@@ -1770,13 +1770,29 @@ class AuditExportAndQueueTests(TestCase):
 
         self.client.force_login(user)
         json_response = self.client.get(reverse("tools:workspace-audit-export-json", args=[audit_run.pk]))
+        repeat_json_response = self.client.get(reverse("tools:workspace-audit-export-json", args=[audit_run.pk]))
         csv_response = self.client.get(reverse("tools:workspace-audit-export-csv", args=[audit_run.pk]))
         share_response = self.client.post(reverse("tools:workspace-audit-share", args=[audit_run.pk]))
+        repeat_share_response = self.client.post(reverse("tools:workspace-audit-share", args=[audit_run.pk]))
 
         self.assertEqual(json_response.status_code, 200)
+        self.assertEqual(repeat_json_response.status_code, 200)
         self.assertEqual(csv_response.status_code, 200)
         self.assertEqual(share_response.status_code, 302)
+        self.assertEqual(repeat_share_response.status_code, 302)
         self.assertTrue(AuditShareLink.objects.filter(audit_run=audit_run).exists())
+        self.assertEqual(
+            WorkspaceCreditLedger.objects.filter(user=user, category=WorkspaceCreditLedger.Category.EXPORT).count(),
+            2,
+        )
+        self.assertEqual(
+            WorkspaceCreditLedger.objects.filter(user=user, category=WorkspaceCreditLedger.Category.SHARE).count(),
+            1,
+        )
+        self.assertEqual(
+            UsageRecord.objects.get(user=user, metric=UsageRecord.Metric.EXPORT).quantity,
+            2,
+        )
 
     @override_settings(AUDIT_TIER_ENFORCEMENT=True)
     def test_workspace_export_and_share_routes_block_incomplete_audits(self):

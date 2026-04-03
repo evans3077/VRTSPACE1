@@ -40,6 +40,13 @@
             <div class="workspace-flow-note" style="margin-top: 1rem;">
                 The latest audit feeds the next steps. You only spend fresh audit credits when you need a new crawl or want to validate changes.
             </div>
+            {% if latest_audit and audit_export_action and not export_reports_allowed %}
+            <div style="margin-top: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.6;">
+                <strong style="display: block; color: #0f172a; margin-bottom: 0.25rem;">Audit exports</strong>
+                JSON and CSV exports usually spend {{ audit_export_action.credits }} workspace credit{{ audit_export_action.credits|pluralize }}.
+                {{ audit_export_action.next_unlock_message|default:audit_export_action.blocked_message }}
+            </div>
+            {% endif %}
         </div>
     </div>
 </section>
@@ -182,6 +189,28 @@
                 <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; line-height: 1.6;">
                     Credits are one visible workspace balance. Heavier work spends more credits, lighter work spends less, and SEO or AEO can keep building on the latest audit until you decide to run another one.
                 </div>
+                {% if audit_export_action or audit_share_action %}
+                <div style="margin-top: 1rem; display: grid; gap: 0.75rem;">
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03);">
+                        <strong style="display: block; margin-bottom: 0.25rem;">Audit exports</strong>
+                        <div style="color: #475569; font-size: 0.84rem; line-height: 1.5;">
+                            {{ audit_export_action.credits }} credits when you need JSON or CSV delivery from this project.
+                            {% if audit_export_action.next_unlock_message %}
+                            {{ audit_export_action.next_unlock_message }}
+                            {% endif %}
+                        </div>
+                    </div>
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03);">
+                        <strong style="display: block; margin-bottom: 0.25rem;">Stakeholder sharing</strong>
+                        <div style="color: #475569; font-size: 0.84rem; line-height: 1.5;">
+                            {{ audit_share_action.credits }} credits when you create or refresh a shareable stakeholder link.
+                            {% if audit_share_action.next_unlock_message %}
+                            {{ audit_share_action.next_unlock_message }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
             </article>
         </div>
 
@@ -202,6 +231,11 @@
                     {% if item.uses_existing_audit %}
                     <div style="margin-top: 0.75rem; padding: 0.75rem 0.9rem; border-radius: 14px; background: rgba(34, 197, 94, 0.1); color: #166534; font-size: 0.82rem;">
                         Uses the latest audit instead of charging for another crawl.
+                    </div>
+                    {% endif %}
+                    {% if item.state and not item.state.available and item.state.next_unlock_message %}
+                    <div style="margin-top: 0.75rem; padding: 0.75rem 0.9rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); color: #475569; font-size: 0.82rem;">
+                        {{ item.state.next_unlock_message }}
                     </div>
                     {% endif %}
                 </article>
@@ -408,6 +442,11 @@
                         {% csrf_token %}
                         <button type="submit" class="button button-secondary">Create Share Link</button>
                     </form>
+                    {% elif audit_share_action %}
+                    <div style="padding: 0.85rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.5;">
+                        Share links spend {{ audit_share_action.credits }} credits.
+                        {{ audit_share_action.next_unlock_message|default:audit_share_action.blocked_message }}
+                    </div>
                     {% endif %}
                 </div>
                 {% if latest_share_url %}

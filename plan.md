@@ -316,12 +316,12 @@ Turn the current platform into a production-grade decision system that is clearl
   Higher-tier users should not be told to "upgrade" into lower tiers, and specialists need to see separate projects as distinct units of work.
   Needed result:
   Plan cards use correct movement language, and the dashboard shows independent projects with their own focus, state, and quick project switching.
-- [ ] Map every expensive workflow to a single plan-check path
+- [x] Map every expensive workflow to a single plan-check path
   Why:
   Costly features should not be gated inconsistently.
   Needed result:
   Audits, competitor benchmarking, content generation, backlink prospecting, scheduled runs, share links, and exports all consult the same policy and credit layer.
-- [ ] Rework upgrade prompts around earned value
+- [x] Rework upgrade prompts around earned value
   Why:
   Upgrade prompts should follow visible work and visible limits, not generic sales language.
   Needed result:
@@ -355,31 +355,23 @@ Turn the current platform into a production-grade decision system that is clearl
 
 Start here, in this exact order:
 
-1. Roll the credit policy through every expensive workflow
-   Reason:
-   The contract now supports one visible balance and weighted spend, but exports, shares, backlink work, and remaining automation paths still need to spend and validate credits through one path.
-
-2. Rework upgrade prompts around earned value
-   Reason:
-   Once weighted credits are real, the UI should explain why a task costs what it costs, what the next plan unlocks, and whether a plan move is an upgrade or a lower-capacity switch.
-
-3. Recommendation clustering and evidence scoring
+1. Recommendation clustering and evidence scoring
    Reason:
    This directly reduces noisy output and makes the system feel more deliberate.
 
-4. Page-level action packs
+2. Page-level action packs
    Reason:
    This strengthens the real wedge: exact, implementable actioning.
 
-5. Runtime stage budgets and caching
+3. Runtime stage budgets and caching
    Reason:
    This reduces long wait times without weakening output quality.
 
-6. Cross-module decision summaries
+4. Cross-module decision summaries
    Reason:
    This makes the combined value of audit, SEO, AEO, content, and backlinks easier to understand.
 
-7. Executive-level outcome summaries
+5. Executive-level outcome summaries
    Reason:
    Once the decision system is tighter internally, stakeholder reporting should summarize it in plain business language.
 
@@ -389,22 +381,33 @@ Start here, in this exact order:
 
 The next work block should be:
 
-### Block 2: Credit Policy Rollout and Upgrade Messaging
+### Block 3: Recommendation Clustering and Evidence Scoring
 
 Target:
 
-- Route remaining expensive workflows through the credit policy layer
-- Add earned-value upgrade prompts tied to depleted credits and locked workflows
-- Keep the workspace explaining credits as the operating budget for recurring actions, not just a billing detail
-- Keep the workspace flow linear: audit first, then SEO or AEO, then execution layers only when the user chooses them
-- Keep multi-project users able to distinguish independent projects clearly from the dashboard and project selector
+- Reduce repetitive recommendation variants across audit, SEO, and AEO
+- Add confidence thresholds before weak benchmark evidence reaches visible advice
+- Preserve page-level specificity while clustering duplicate root causes
+- Keep the workspace decision flow simple enough that users can see what to do first without reading every panel
 
 Definition of done:
 
-- Exports, shares, backlink work, and recurring duties all use the same credit/policy checks
-- Upgrade prompts explain what the current action costs, why it costs that amount, and what the next plan unlocks
-- The workspace explains current credits, recent spend, and the next unlock in operational terms
-- Multi-project users can see project focus and switch context without losing clarity about which project owns which SEO, AEO, and content work
+- Root-cause clustering is visible in audit and SEO outputs
+- Recommendations carry evidence scores or confidence thresholds before they render
+- Duplicate advice across modules is collapsed into a smaller number of strategic actions
+- Users still see exact URLs, page targets, and implementation steps where they need them
+
+### Block 2: Credit Policy Rollout and Upgrade Messaging
+
+Status: complete
+
+Delivered:
+
+- Export, share, and stakeholder-report actions now spend through the same weighted credit policy as audit, SEO, AEO, and content work
+- Repeated export/share requests reuse the same charge reference so the user is not charged twice for the same artifact in the same cycle
+- SEO refresh now decides whether backlink intelligence should run based on plan access and remaining workspace credits, instead of treating backlink discovery as silently free
+- Workspace and SEO screens now explain action cost, current plan fit, and the next plan unlock in operational terms rather than generic upgrade copy
+- Project-level credit value is visible in the dashboard through current balance, recent spend, action costs, and per-project work context
 
 ---
 

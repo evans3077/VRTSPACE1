@@ -59,6 +59,19 @@ CREDIT_ACTIVITY_LABELS = {
     "export": "Report exports",
     "share": "Stakeholder shares",
 }
+ACTION_FEATURE_LABELS = {
+    "recurring_audits_enabled": "Recurring audits",
+    "export_reports_enabled": "Advanced exports",
+    "email_reports_enabled": "Email delivery",
+    "stakeholder_sharing_enabled": "Stakeholder sharing",
+    "seo_workspace_enabled": "SEO workspace",
+    "aeo_workspace_enabled": "AEO workspace",
+    "content_workspace_enabled": "Content workspace",
+    "backlink_workspace_enabled": "Backlink workspace",
+    "action_packs_enabled": "Action packs",
+    "campaign_tracking_enabled": "Campaign tracking",
+    "cross_module_summary_enabled": "Cross-module summaries",
+}
 
 
 def _definition_to_capabilities(definition):
@@ -93,6 +106,41 @@ def _definition_to_capabilities(definition):
         "campaign_tracking_enabled": features.get("campaign_tracking_enabled", False),
         "cross_module_summary_enabled": features.get("cross_module_summary_enabled", False),
     }
+
+
+def _get_current_plan_slug(user):
+    subscription = get_workspace_subscription(user)
+    if not is_active_subscription(subscription):
+        return "free"
+    return subscription.plan.slug
+
+
+def _get_current_plan_sort_order(user):
+    definition = get_plan_definition(_get_current_plan_slug(user)) or {}
+    return definition.get("sort_order", 0)
+
+
+def _plan_supports_requirements(definition, *, feature_name=None, required_credits=0):
+    if feature_name and not definition.get("feature_flags", {}).get(feature_name, False):
+        return False
+    allowance = definition.get("credits", {}).get(WORKSPACE_CREDIT_CATEGORY)
+    if required_credits and allowance is not None and allowance < required_credits:
+        return False
+    return True
+
+
+def get_next_plan_for_action(user, *, feature_name=None, required_credits=0):
+    current_sort_order = _get_current_plan_sort_order(user)
+    for definition in get_plan_definitions(include_free=True):
+        if definition.get("sort_order", 0) <= current_sort_order:
+            continue
+        if _plan_supports_requirements(
+            definition,
+            feature_name=feature_name,
+            required_credits=required_credits,
+        ):
+            return definition
+    return None
 
 
 FREE_PLAN_CAPABILITIES = _definition_to_capabilities(get_plan_definition("free"))
@@ -446,6 +494,24 @@ def get_recent_credit_entries(user, limit=8, now=None):
     return recent
 
 
+def get_existing_credit_entry(user, category, reference_key, *, now=None):
+    if not reference_key:
+        return None
+    period_start, period_end = get_credit_record_window(now=now)
+    return (
+        WorkspaceCreditLedger.objects.filter(
+            user=user,
+            category=category,
+            kind=WorkspaceCreditLedger.Kind.DEBIT,
+            reference_key=reference_key,
+            period_start=period_start,
+            period_end=period_end,
+        )
+        .order_by("-created_at")
+        .first()
+    )
+
+
 def get_usage_record(user, metric, now=None):
     period_start, period_end = get_month_period_window(now=now)
     subscription = get_workspace_subscription(user)
@@ -600,8 +666,20 @@ def spend_action_credits(
     reference_key="",
     metadata=None,
     now=None,
+    reuse_reference=False,
 ):
     estimate = estimate_credit_cost(category, project=project, payload=payload)
+    existing_entry = None
+    if reuse_reference and reference_key:
+        existing_entry = get_existing_credit_entry(
+            user,
+            category,
+            reference_key,
+            now=now,
+        )
+        if existing_entry:
+            estimate["reused_existing_charge"] = True
+            return existing_entry, estimate
     metadata = {
         **(metadata or {}),
         "estimated_cost": estimate["amount"],
@@ -623,7 +701,7 @@ def spend_action_credits(
     return entry, estimate
 
 
-def build_credit_action_guide(project):
+def build_credit_action_guide(project, user=None):
     actions = [
         {
             "slug": "audit",
@@ -649,15 +727,103 @@ def build_credit_action_guide(project):
     guide = []
     for item in actions:
         estimate = estimate_credit_cost(item["slug"], project=project)
+        action_state = (
+            build_action_access_context(user, item["slug"], project=project)
+            if user
+            else {}
+        )
         guide.append(
             {
                 **item,
                 "credits": estimate["amount"],
                 "reason": estimate["reason"],
                 "uses_existing_audit": estimate["uses_existing_audit"],
+                "state": action_state,
             }
         )
     return guide
+
+
+def build_action_access_context(user, category, *, project=None, feature_name=None, label=None, payload=None):
+    estimate = estimate_credit_cost(category, project=project, payload=payload)
+    balance = get_total_credit_balance_summary(user)
+    required_credits = estimate["amount"]
+    included_in_plan = True
+    if feature_name:
+        capabilities = get_effective_capabilities(user)
+        included_in_plan = bool(capabilities.get("features", {}).get(feature_name, False))
+    feature_allowed, _capabilities = (
+        can_access_workspace_feature(user, feature_name)
+        if feature_name
+        else (True, get_effective_capabilities(user))
+    )
+    credit_allowed, _ = can_spend_credits(user, category, amount=required_credits)
+    current_plan_slug = _get_current_plan_slug(user)
+    current_plan_definition = get_plan_definition(current_plan_slug) or {}
+    next_plan = None
+    blocked_message = ""
+    if settings.AUDIT_TIER_ENFORCEMENT:
+        if feature_name and not feature_allowed:
+            next_plan = get_next_plan_for_action(
+                user,
+                feature_name=feature_name,
+                required_credits=required_credits,
+            )
+            feature_label = ACTION_FEATURE_LABELS.get(feature_name, label or category.title())
+            blocked_message = f"{feature_label} is not included on the current plan."
+        elif not credit_allowed:
+            next_plan = get_next_plan_for_action(user, required_credits=required_credits)
+            remaining_label = "Unlimited" if balance["unlimited"] else balance["remaining"]
+            blocked_message = (
+                f"This action usually needs {required_credits} workspace credits. "
+                f"The current balance is {remaining_label}."
+            )
+    next_unlock_message = ""
+    if next_plan:
+        unlock_parts = [f"{next_plan['name']} unlocks this workflow"]
+        if feature_name and not included_in_plan:
+            unlock_parts.append(f"and adds {ACTION_FEATURE_LABELS.get(feature_name, 'the required workflow').lower()}")
+        if next_plan.get("credits", {}).get(WORKSPACE_CREDIT_CATEGORY) is None:
+            unlock_parts.append("with unlimited workspace credits")
+        else:
+            unlock_parts.append(
+                f"with {next_plan.get('credits', {}).get(WORKSPACE_CREDIT_CATEGORY, 0)} workspace credits each cycle"
+            )
+        next_unlock_message = " ".join(unlock_parts) + "."
+    elif not settings.AUDIT_TIER_ENFORCEMENT and feature_name and not included_in_plan:
+        future_plan = get_next_plan_for_action(
+            user,
+            feature_name=feature_name,
+            required_credits=required_credits,
+        )
+        if future_plan:
+            next_unlock_message = (
+                f"Visible in free-pass mode. {future_plan['name']} is the first plan that officially includes this workflow."
+            )
+
+    return {
+        "category": category,
+        "label": label or CREDIT_ACTIVITY_LABELS.get(category, category.title()),
+        "feature_name": feature_name or "",
+        "feature_allowed": feature_allowed,
+        "included_in_plan": included_in_plan,
+        "credit_allowed": credit_allowed,
+        "available": (feature_allowed and credit_allowed) or not settings.AUDIT_TIER_ENFORCEMENT,
+        "credits": required_credits,
+        "reason": estimate["reason"],
+        "uses_existing_audit": estimate["uses_existing_audit"],
+        "remaining": balance["remaining"],
+        "granted": balance["granted"],
+        "used": balance["used"],
+        "unlimited": balance["unlimited"],
+        "blocked_message": blocked_message,
+        "next_unlock_message": next_unlock_message,
+        "current_plan_slug": current_plan_slug,
+        "current_plan_name": current_plan_definition.get("name", "Free"),
+        "next_plan_slug": next_plan.get("slug", "") if next_plan else "",
+        "next_plan_name": next_plan.get("name", "") if next_plan else "",
+        "next_plan_price": next_plan.get("price_label", "") if next_plan else "",
+    }
 
 
 def can_run_workspace_audit(user, *, project=None):

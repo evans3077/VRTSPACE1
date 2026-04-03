@@ -13,13 +13,16 @@ from django.views.generic import DetailView
 
 from apps.leads.billing import (
     BillingError,
+    build_action_access_context,
     build_credit_action_guide,
-    can_access_audit_feature,
     can_access_workspace_feature,
+    estimate_credit_cost,
+    get_total_credit_balance_summary,
+    record_usage,
     spend_action_credits,
 )
 from apps.leads.services import get_workspace_projects, resolve_workspace_project
-from apps.leads.models import ClientProject
+from apps.leads.models import ClientProject, UsageRecord
 from apps.tools.audit_exports import build_absolute_app_url
 
 from .backlinks import refresh_project_backlink_intelligence
@@ -110,6 +113,7 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             profile.business_type = inferred_business_type
         profile.save()
         sync_project_competitors(project, form.cleaned_data.get("competitor_urls", ""))
+        balance_before = get_total_credit_balance_summary(request.user)
         try:
             _entry, estimate = spend_action_credits(
                 request.user,
@@ -121,6 +125,55 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
         except BillingError as exc:
             messages.error(request, str(exc))
             return redirect("seo:workspace-seo")
+        backlink_action = build_action_access_context(
+            request.user,
+            "backlink",
+            project=project,
+            feature_name="backlink_workspace_enabled",
+            label="Backlink intelligence",
+        )
+        backlink_estimate = estimate_credit_cost("backlink", project=project)
+        run_backlink_refresh = True
+        backlink_cost_estimate = 0
+        backlink_message = ""
+        if settings.AUDIT_TIER_ENFORCEMENT:
+            run_backlink_refresh = False
+            if backlink_action["feature_allowed"]:
+                enough_for_combined_run = balance_before["unlimited"] or (
+                    (balance_before["remaining"] or 0) >= estimate["amount"] + backlink_estimate["amount"]
+                )
+                if enough_for_combined_run:
+                    try:
+                        _backlink_entry, backlink_spend = spend_action_credits(
+                            request.user,
+                            "backlink",
+                            project=project,
+                            note="Backlink intelligence refresh",
+                            reference_key=f"backlink-refresh:{project.pk}:{timezone.now().isoformat()}",
+                            metadata={"paired_with": "seo-refresh"},
+                        )
+                        backlink_cost_estimate = backlink_spend["amount"]
+                        run_backlink_refresh = True
+                    except BillingError:
+                        run_backlink_refresh = False
+                        backlink_message = "Backlink discovery was skipped because the current balance cannot cover the backlink stage after the SEO refresh."
+                else:
+                    backlink_message = (
+                        f"Backlink discovery was skipped because this refresh needs "
+                        f"{backlink_estimate['amount']} extra workspace credits after the SEO run."
+                    )
+            else:
+                backlink_message = backlink_action["next_unlock_message"] or backlink_action["blocked_message"]
+        metadata = dict(profile.metadata or {})
+        metadata["backlink_refresh_requested"] = run_backlink_refresh
+        if run_backlink_refresh:
+            metadata["backlink_refresh_status"] = "queued" if settings.SEO_REFRESH_ASYNC else "running"
+            metadata["backlink_refresh_error"] = ""
+        else:
+            metadata["backlink_refresh_status"] = "skipped"
+            metadata["backlink_refresh_error"] = backlink_message[:500]
+        profile.metadata = metadata
+        profile.save(update_fields=["metadata", "updated_at"])
         snapshot = None
         opportunity_snapshot = None
         backlink_snapshot = None
@@ -131,22 +184,36 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             profile.metadata = metadata
             profile.save(update_fields=["metadata", "updated_at"])
             enqueue_project_seo_refresh(project.pk)
-            messages.success(
-                request,
-                f"SEO refresh queued. This run uses {estimate['amount']} credits and reuses your latest audit instead of requiring a new crawl.",
+            success_message = (
+                f"SEO refresh queued. This run uses {estimate['amount']} credits and reuses your latest audit instead of requiring a new crawl."
             )
+            if backlink_cost_estimate:
+                success_message += f" Backlink discovery is queued too and uses {backlink_cost_estimate} credits."
+            messages.success(request, success_message)
+            if backlink_message:
+                messages.info(request, backlink_message)
             return redirect("seo:workspace-seo")
         else:
             snapshot, opportunity_snapshot = refresh_project_seo_intelligence(project)
-            backlink_snapshot = refresh_project_backlink_intelligence(
-                project,
-                context_snapshot=snapshot,
-                opportunity_snapshot=opportunity_snapshot,
+            if run_backlink_refresh:
+                backlink_snapshot = refresh_project_backlink_intelligence(
+                    project,
+                    context_snapshot=snapshot,
+                    opportunity_snapshot=opportunity_snapshot,
+                )
+                metadata = dict(profile.metadata or {})
+                metadata["backlink_refresh_status"] = "completed"
+                metadata["backlink_refresh_error"] = ""
+                profile.metadata = metadata
+                profile.save(update_fields=["metadata", "updated_at"])
+            success_message = (
+                f"SEO context saved and refreshed. This run used {estimate['amount']} credits from the workspace balance."
             )
-            messages.success(
-                request,
-                f"SEO context saved and refreshed. This run used {estimate['amount']} credits from the workspace balance.",
-            )
+            if backlink_cost_estimate:
+                success_message += f" Backlink discovery used {backlink_cost_estimate} additional credits."
+            messages.success(request, success_message)
+            if backlink_message:
+                messages.info(request, backlink_message)
         return render(
             request,
             self.template_name,
@@ -260,7 +327,28 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             "seo_competitor_trends": build_competitor_trend_summary(project) if project else [],
             "seo_campaigns": campaign_items,
             "seo_chain_value_summary": build_campaign_value_summary(project, campaign_items=campaign_items) if project else {},
-            "workspace_credit_actions": build_credit_action_guide(project) if project else [],
+            "workspace_credit_actions": build_credit_action_guide(project, self.request.user) if project else [],
+            "seo_export_action": build_action_access_context(
+                self.request.user,
+                "export",
+                project=project,
+                feature_name="export_reports_enabled",
+                label="SEO exports",
+            ) if project else {},
+            "seo_share_action": build_action_access_context(
+                self.request.user,
+                "share",
+                project=project,
+                feature_name="stakeholder_sharing_enabled",
+                label="SEO stakeholder sharing",
+            ) if project else {},
+            "backlink_action": build_action_access_context(
+                self.request.user,
+                "backlink",
+                project=project,
+                feature_name="backlink_workspace_enabled",
+                label="Backlink intelligence",
+            ) if project else {},
             "seo_campaign_status_choices": SEOCampaign.Status.choices,
             "seo_value_summary": opportunity_payload.get("value_summary", {}),
             "seo_keyword_opportunities": opportunity_payload.get("keyword_opportunities", []),
@@ -405,29 +493,69 @@ class WorkspaceSEOCampaignUpdateView(LoginRequiredMixin, View):
 
 class WorkspaceSEOExportJsonView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        allowed, _ = can_access_audit_feature(request.user, "export_reports_enabled")
-        if not allowed:
-            return JsonResponse({"error": "SEO exports require a plan that supports advanced exports."}, status=403)
         project = resolve_workspace_project(request, request.user)
         if not project:
             raise Http404
+        action = build_action_access_context(
+            request.user,
+            "export",
+            project=project,
+            feature_name="export_reports_enabled",
+            label="SEO exports",
+        )
+        if settings.AUDIT_TIER_ENFORCEMENT and not action["available"]:
+            return JsonResponse({"error": action["blocked_message"] or action["next_unlock_message"]}, status=403)
         bundle = get_seo_reporting_bundle(project)
         if not bundle.get("context_snapshot") or not bundle.get("opportunity_snapshot"):
             return JsonResponse({"error": "Run the SEO workspace first to generate a reportable snapshot."}, status=409)
+        try:
+            _entry, estimate = spend_action_credits(
+                request.user,
+                "export",
+                project=project,
+                note="SEO JSON export",
+                reference_key=f"seo-export-json:{project.pk}:{bundle['context_snapshot'].pk}:{bundle['opportunity_snapshot'].pk}",
+                metadata={"project_id": project.pk, "format": "json"},
+                reuse_reference=True,
+            )
+            if not estimate.get("reused_existing_charge"):
+                record_usage(request.user, UsageRecord.Metric.EXPORT)
+        except BillingError as exc:
+            return JsonResponse({"error": str(exc)}, status=403)
         return JsonResponse(build_seo_export_payload(project, bundle=bundle), status=200)
 
 
 class WorkspaceSEOReportPdfView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        allowed, _ = can_access_audit_feature(request.user, "export_reports_enabled")
-        if not allowed:
-            return HttpResponse("SEO PDF exports require a plan that supports advanced exports.", status=403)
         project = resolve_workspace_project(request, request.user)
         if not project:
             raise Http404
+        action = build_action_access_context(
+            request.user,
+            "export",
+            project=project,
+            feature_name="export_reports_enabled",
+            label="SEO exports",
+        )
+        if settings.AUDIT_TIER_ENFORCEMENT and not action["available"]:
+            return HttpResponse(action["blocked_message"] or action["next_unlock_message"], status=403)
         bundle = get_seo_reporting_bundle(project)
         if not bundle.get("context_snapshot") or not bundle.get("opportunity_snapshot"):
             return HttpResponse("Run the SEO workspace first to generate a reportable snapshot.", status=409)
+        try:
+            _entry, estimate = spend_action_credits(
+                request.user,
+                "export",
+                project=project,
+                note="SEO PDF export",
+                reference_key=f"seo-export-pdf:{project.pk}:{bundle['context_snapshot'].pk}:{bundle['opportunity_snapshot'].pk}",
+                metadata={"project_id": project.pk, "format": "pdf"},
+                reuse_reference=True,
+            )
+            if not estimate.get("reused_existing_charge"):
+                record_usage(request.user, UsageRecord.Metric.EXPORT)
+        except BillingError as exc:
+            return HttpResponse(str(exc), status=403)
         pdf_bytes = build_seo_report_pdf(build_seo_export_payload(project, bundle=bundle))
         disposition = "attachment" if request.GET.get("download") == "1" else "inline"
         filename = f"seo-report-{project.normalized_domain or project.pk}.pdf"
@@ -438,16 +566,35 @@ class WorkspaceSEOReportPdfView(LoginRequiredMixin, View):
 
 class WorkspaceSEOShareCreateView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
-        allowed, _ = can_access_audit_feature(request.user, "stakeholder_sharing_enabled")
-        if not allowed:
-            messages.error(request, "Stakeholder sharing requires a plan that supports shared reports.")
-            return redirect("seo:workspace-seo")
         project = resolve_workspace_project(request, request.user)
         if not project:
             raise Http404
+        action = build_action_access_context(
+            request.user,
+            "share",
+            project=project,
+            feature_name="stakeholder_sharing_enabled",
+            label="SEO stakeholder sharing",
+        )
+        if settings.AUDIT_TIER_ENFORCEMENT and not action["available"]:
+            messages.error(request, action["blocked_message"] or action["next_unlock_message"])
+            return redirect("seo:workspace-seo")
         bundle = get_seo_reporting_bundle(project)
         if not bundle.get("context_snapshot") or not bundle.get("opportunity_snapshot"):
             messages.error(request, "Run the SEO workspace first to generate a shareable report.")
+            return redirect("seo:workspace-seo")
+        try:
+            spend_action_credits(
+                request.user,
+                "share",
+                project=project,
+                note="SEO stakeholder share link",
+                reference_key=f"seo-share:{project.pk}:{bundle['context_snapshot'].pk}:{bundle['opportunity_snapshot'].pk}",
+                metadata={"project_id": project.pk},
+                reuse_reference=True,
+            )
+        except BillingError as exc:
+            messages.error(request, str(exc))
             return redirect("seo:workspace-seo")
         share_link = get_or_create_seo_share_link(project, bundle=bundle, created_by=request.user)
         payload = build_seo_share_urls(share_link)

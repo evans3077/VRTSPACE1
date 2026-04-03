@@ -27,7 +27,7 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 "form": AEOAuditRequestForm(initial={"target_keyword": getattr(latest_aeo_audit, "target_keyword", "")}),
                 "latest_aeo_audit": latest_aeo_audit,
                 "aeo_payload": latest_aeo_audit.output_json if latest_aeo_audit else {},
-                "workspace_credit_actions": build_credit_action_guide(project) if project else [],
+                "workspace_credit_actions": build_credit_action_guide(project, request.user) if project else [],
             },
         )
 
@@ -90,6 +90,6 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 "form": AEOAuditRequestForm(initial={"target_keyword": aeo_audit.target_keyword}),
                 "latest_aeo_audit": aeo_audit,
                 "aeo_payload": aeo_audit.output_json,
-                "workspace_credit_actions": build_credit_action_guide(project),
+                "workspace_credit_actions": build_credit_action_guide(project, request.user),
             },
         )

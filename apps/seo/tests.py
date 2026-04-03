@@ -8,7 +8,7 @@ from django.urls import reverse
 from django.test.utils import override_settings
 from django.utils import timezone
 
-from apps.leads.models import AuditRequest, ClientProject
+from apps.leads.models import AuditRequest, ClientProject, UsageRecord, WorkspaceCreditLedger, WorkspacePlan, WorkspaceSubscription
 from apps.content.models import ContentEditorialTask, GeneratedContent
 from apps.tools.models import AuditPage, AuditRun
 
@@ -1272,6 +1272,78 @@ class WorkspaceSEOViewTests(TestCase):
         self.assertEqual(payload["project"]["domain"], "example.com")
         self.assertEqual(payload["benchmark_summary"]["available_competitors"], 2)
         self.assertEqual(payload["campaigns"][0]["title"], "Upgrade FAQ coverage")
+
+    @override_settings(AUDIT_TIER_ENFORCEMENT=True)
+    def test_workspace_seo_exports_and_share_spend_credits_once_per_artifact(self):
+        authority_plan = WorkspacePlan.objects.get(slug="authority")
+        WorkspaceSubscription.objects.create(
+            user=self.user,
+            plan=authority_plan,
+            status=WorkspaceSubscription.Status.ACTIVE,
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=self.project,
+            business_type="automotive",
+            location="Nairobi",
+            target_goal="Increase qualified organic leads",
+            primary_service="used car dealership",
+            target_audience="price-sensitive car buyers",
+        )
+        context_snapshot = SEOContextSnapshot.objects.create(
+            project=self.project,
+            profile=profile,
+            source_audit_run=self.audit_run,
+            output_json={
+                "context": {"industry_label": "Automotive", "location": "Nairobi"},
+                "benchmark_summary": {"available_competitors": 2, "average_relevance": 8.4},
+                "competitor_trace": [],
+                "competitor_patterns": [],
+                "page_comparisons": [],
+                "competitors": [],
+                "discovery": {"queries": ["used car dealership Nairobi"]},
+                "audit_snapshot": {},
+                "site_structure": {},
+                "keyword_clusters": {},
+                "recommendations": [],
+            },
+        )
+        opportunity_snapshot = SEOOpportunitySnapshot.objects.create(
+            project=self.project,
+            profile=profile,
+            source_audit_run=self.audit_run,
+            source_context_snapshot=context_snapshot,
+            output_json={
+                "value_summary": {"execution_items": 1},
+                "keyword_opportunities": [{"keyword": "used car dealership Nairobi"}],
+                "page_map": [],
+                "execution_queue": [{"title": "Upgrade FAQ coverage"}],
+            },
+        )
+        self.client.force_login(self.user)
+
+        json_response = self.client.get(reverse("seo:workspace-seo-export-json"))
+        repeat_json_response = self.client.get(reverse("seo:workspace-seo-export-json"))
+        pdf_response = self.client.get(reverse("seo:workspace-seo-report-pdf"))
+        share_response = self.client.post(reverse("seo:workspace-seo-share-create"))
+        repeat_share_response = self.client.post(reverse("seo:workspace-seo-share-create"))
+
+        self.assertEqual(json_response.status_code, 200)
+        self.assertEqual(repeat_json_response.status_code, 200)
+        self.assertEqual(pdf_response.status_code, 200)
+        self.assertEqual(share_response.status_code, 302)
+        self.assertEqual(repeat_share_response.status_code, 302)
+        self.assertEqual(
+            WorkspaceCreditLedger.objects.filter(user=self.user, category=WorkspaceCreditLedger.Category.EXPORT).count(),
+            2,
+        )
+        self.assertEqual(
+            WorkspaceCreditLedger.objects.filter(user=self.user, category=WorkspaceCreditLedger.Category.SHARE).count(),
+            1,
+        )
+        self.assertEqual(
+            UsageRecord.objects.get(user=self.user, metric=UsageRecord.Metric.EXPORT).quantity,
+            2,
+        )
 
     def test_workspace_seo_share_create_and_shared_report_render(self):
         profile = SEOProjectProfile.objects.create(

@@ -35,6 +35,11 @@ def _set_profile_backlink_state(profile, *, status, error_message=""):
     profile.save(update_fields=["metadata", "updated_at"])
 
 
+def _backlink_refresh_requested(profile):
+    metadata = dict(profile.metadata or {})
+    return metadata.get("backlink_refresh_requested", True)
+
+
 def enqueue_project_seo_refresh(project_id):
     seo_executor.submit(_run_project_seo_refresh_job, project_id)
 
@@ -61,7 +66,10 @@ def _run_project_seo_refresh_job(project_id):
         if not project or not getattr(project, "seo_profile", None):
             return
         _set_profile_refresh_state(project.seo_profile, status="running")
-        _set_profile_backlink_state(project.seo_profile, status="queued")
+        if _backlink_refresh_requested(project.seo_profile):
+            _set_profile_backlink_state(project.seo_profile, status="queued")
+        else:
+            _set_profile_backlink_state(project.seo_profile, status="skipped")
         context_snapshot, opportunity_snapshot = refresh_project_seo_intelligence(project)
         sync_project_seo_campaigns(
             project,
@@ -72,6 +80,8 @@ def _run_project_seo_refresh_job(project_id):
         if project.owner_id:
             record_usage(project.owner, UsageRecord.Metric.SEO_SNAPSHOT)
         _set_profile_refresh_state(project.seo_profile, status="completed")
+        if not _backlink_refresh_requested(project.seo_profile):
+            return
         if settings.SEO_BACKLINK_ASYNC:
             enqueue_project_backlink_refresh(
                 project.pk,
@@ -117,6 +127,9 @@ def _run_project_backlink_refresh_job(project_id, context_snapshot_id=None, oppo
             .first()
         )
         if not project or not getattr(project, "seo_profile", None):
+            return
+        if not _backlink_refresh_requested(project.seo_profile):
+            _set_profile_backlink_state(project.seo_profile, status="skipped")
             return
         _set_profile_backlink_state(project.seo_profile, status="running")
         context_snapshot = None
