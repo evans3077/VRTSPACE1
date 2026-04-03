@@ -40,26 +40,28 @@
                 <nav class="nav-links" aria-label="Primary">
                     <a href="{% url 'core:services' %}">Services</a>
                     <a href="{% url 'core:home' %}#packages">Packages</a>
-                    <a href="{% url 'core:home' %}#systems">Systems</a>
-                    <a href="{% url 'core:home' %}#method">Method</a>
                     <a href="{% url 'core:home' %}#audit">Audit</a>
-                    {% if user.is_authenticated and not user.is_staff %}
-                    <a href="{% url 'tools:workspace-dashboard' %}">Workspace</a>
-                    <a href="{% url 'seo:workspace-seo' %}">SEO</a>
-                    <a href="{% url 'aeo:workspace-aeo' %}">AEO</a>
-                    <a href="{% url 'content:workspace-content' %}">Content</a>
-                    {% endif %}
+                    <a href="{% url 'core:home' %}#method">Method</a>
                     {% if user.is_staff %}
                     <a href="{% url 'analytics:operations-dashboard' %}">Ops</a>
                     {% endif %}
-                    {% if user.is_authenticated %}
-                    <a href="{% url 'tools:workspace-logout' %}">Sign out</a>
-                    {% else %}
-                    <a href="{% url 'tools:workspace-login' %}">Sign in</a>
-                    {% endif %}
                 </nav>
+                {% if user.is_authenticated and not user.is_staff %}
+                <details class="workspace-menu">
+                    <summary class="workspace-menu-trigger">
+                        Workspace
+                    </summary>
+                    <div class="workspace-menu-panel">
+                        <a href="{% url 'tools:workspace-dashboard' %}">Overview</a>
+                        <a href="{% url 'seo:workspace-seo' %}">SEO</a>
+                        <a href="{% url 'aeo:workspace-aeo' %}">AEO</a>
+                        <a href="{% url 'content:workspace-content' %}">Content</a>
+                        <a href="{% url 'tools:workspace-dashboard' %}#audit-history">Audit History</a>
+                    </div>
+                </details>
+                {% endif %}
                 {% if user.is_authenticated and workspace_projects|length > 1 %}
-                <form method="post" action="{% url 'tools:workspace-project-select' %}" style="display: flex; align-items: center; gap: 0.5rem;">
+                <form method="post" action="{% url 'tools:workspace-project-select' %}" class="workspace-project-switch">
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ request.get_full_path }}">
                     <select name="project_id" onchange="this.form.submit()" style="min-width: 220px;">
@@ -70,8 +72,10 @@
                 </form>
                 {% endif %}
                 {% if user.is_authenticated %}
+                <a class="button button-secondary nav-auth-link" href="{% url 'tools:workspace-logout' %}">Sign out</a>
                 <a class="button button-primary nav-cta" href="{% url 'tools:workspace-dashboard' %}">Open Workspace</a>
                 {% else %}
+                <a class="button button-secondary nav-auth-link" href="{% url 'tools:workspace-login' %}">Sign in</a>
                 <a class="button button-primary nav-cta" href="{% url 'tools:workspace-signup' %}">Create Workspace</a>
                 {% endif %}
             </div>

@@ -1,0 +1,58 @@
+{% if user.is_authenticated and not user.is_staff %}
+<section class="workspace-nav-shell">
+    <div class="container">
+        <div class="workspace-nav-panel">
+            <div class="workspace-nav-head">
+                <div>
+                    <p class="eyebrow">Workspace Navigation</p>
+                    <h2 class="workspace-nav-title">{{ active_workspace_project.name|default:"Workspace" }}</h2>
+                    <p class="workspace-nav-text">
+                        {% if workspace_billing_state.capabilities.name %}
+                        {{ workspace_billing_state.capabilities.name }} plan
+                        {% else %}
+                        Free plan
+                        {% endif %}
+                        {% if active_workspace_project.normalized_domain %}
+                        | {{ active_workspace_project.normalized_domain }}
+                        {% endif %}
+                    </p>
+                </div>
+                {% if workspace_billing_state.credits %}
+                <div class="workspace-credit-strip">
+                    {% for credit in workspace_billing_state.credits %}
+                    <div class="workspace-credit-chip">
+                        <span>{{ credit.label }}</span>
+                        <strong>
+                            {% if credit.unlimited %}
+                            Unlimited
+                            {% else %}
+                            {{ credit.remaining }}
+                            {% endif %}
+                        </strong>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+
+            <nav class="workspace-subnav" aria-label="Workspace">
+                <a class="workspace-subnav-link {% if workspace_nav_current == 'workspace' %}is-active{% endif %}" href="{% url 'tools:workspace-dashboard' %}">
+                    Overview
+                </a>
+                <a class="workspace-subnav-link {% if workspace_nav_current == 'audits' %}is-active{% endif %}" href="{% url 'tools:workspace-dashboard' %}#audit-history">
+                    Audits
+                </a>
+                <a class="workspace-subnav-link {% if workspace_nav_current == 'seo' %}is-active{% endif %}" href="{% url 'seo:workspace-seo' %}">
+                    SEO
+                </a>
+                <a class="workspace-subnav-link {% if workspace_nav_current == 'aeo' %}is-active{% endif %}" href="{% url 'aeo:workspace-aeo' %}">
+                    AEO
+                </a>
+                <a class="workspace-subnav-link {% if workspace_nav_current == 'content' %}is-active{% endif %}" href="{% url 'content:workspace-content' %}">
+                    Content
+                </a>
+            </nav>
+        </div>
+    </div>
+</section>
+{% endif %}

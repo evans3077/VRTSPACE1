@@ -296,6 +296,11 @@ Turn the current platform into a production-grade decision system that is clearl
   A SaaS plan is not complete until limits are explicit.
   Needed result:
   Set monthly credits, workflow access, historical depth, competitor depth, content-generation allowances, backlink prospecting allowances, and automation allowances per tier.
+- [x] Add organized workspace navigation and credit visibility
+  Why:
+  The product menu and credit model were becoming hard to read in day-to-day use.
+  Needed result:
+  The global header stays simple, the workspace gets its own clear sub-navigation, and users can see plan and credit state without hunting through dense sections.
 - [ ] Map every expensive workflow to a single plan-check path
   Why:
   Costly features should not be gated inconsistently.
@@ -375,7 +380,7 @@ Target:
 
 - Route remaining expensive workflows through the credit policy layer
 - Add earned-value upgrade prompts tied to depleted credits and locked workflows
-- Make the workspace explain credits as the operating budget for recurring actions
+- Keep the workspace explaining credits as the operating budget for recurring actions, not just a billing detail
 
 Definition of done:
 
