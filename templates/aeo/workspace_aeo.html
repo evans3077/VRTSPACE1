@@ -7,7 +7,7 @@
             <p class="eyebrow">AEO Hub</p>
             <h1 style="max-width: none;">{% if project %}{{ project.name }}{% else %}Workspace AEO{% endif %}</h1>
             <p class="section-text" style="max-width: 780px;">
-                AI visibility and answer-readiness analysis built from the latest completed audit and the stored business context.
+                AI visibility and answer-readiness analysis built from the latest completed audit and the stored business context. No extra crawl is needed unless you want a fresh audit first.
             </p>
         </div>
     </div>
@@ -28,6 +28,15 @@
                     Create a workspace project from an audit first, then return here to run AEO analysis.
                 </div>
                 {% else %}
+                {% if workspace_credit_actions %}
+                {% for item in workspace_credit_actions %}
+                {% if item.slug == "aeo" %}
+                <div style="margin-bottom: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; line-height: 1.5;">
+                    This AEO run is currently estimated at <strong>{{ item.credits }} credits</strong>. {{ item.next_step }}
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
                 <form method="post" style="display: grid; gap: 1rem;">
                     {% csrf_token %}
                     <label style="display: grid; gap: 0.35rem;">

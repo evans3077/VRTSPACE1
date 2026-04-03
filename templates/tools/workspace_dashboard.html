@@ -7,16 +7,16 @@
             <p class="eyebrow">Workspace</p>
             <h1 style="max-width: none;">{{ project.name|default:"Your workspace" }}</h1>
             <p class="section-text" style="max-width: 760px;">
-                User-facing dashboard for saved audits, recommended modules, and the current fix queue.
+                Simple operating flow: run the audit, then move into SEO or AEO from the same result, then generate content only when you need execution.
             </p>
             <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
                 <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
                     {% csrf_token %}
-                    <button type="submit" class="button button-primary">Run Workspace Audit</button>
+                    <button type="submit" class="button button-primary">Run Audit</button>
                 </form>
-                <a class="button button-secondary" href="{% url 'seo:workspace-seo' %}">Open SEO Hub</a>
-                <a class="button button-secondary" href="{% url 'aeo:workspace-aeo' %}">Open AEO Hub</a>
-                <a class="button button-secondary" href="{% url 'content:workspace-content' %}">Open AI Content Engine</a>
+                <a class="button button-secondary" href="{% url 'seo:workspace-seo' %}">Go to SEO</a>
+                <a class="button button-secondary" href="{% url 'aeo:workspace-aeo' %}">Go to AEO</a>
+                <a class="button button-secondary" href="{% url 'content:workspace-content' %}">Go to Content</a>
                 {% if latest_audit %}
                 <a class="button button-secondary" href="{% url 'tools:audit-report-pdf' latest_audit.pk %}" target="_blank" rel="noopener">View Latest PDF</a>
                 <a class="button button-secondary" href="{% url 'tools:audit-report-pdf' latest_audit.pk %}?download=1">Download Latest PDF</a>
@@ -37,6 +37,9 @@
                 Free-pass mode: plans are visible, but billing gates are not enforced yet.
             </div>
             {% endif %}
+            <div class="workspace-flow-note" style="margin-top: 1rem;">
+                The latest audit feeds the next steps. You only spend fresh audit credits when you need a new crawl or want to validate changes.
+            </div>
         </div>
     </div>
 </section>
@@ -89,52 +92,68 @@
 
             <article class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                    <p class="eyebrow">Value and Usage</p>
-                    <h2 style="font-size: 2rem;">Where your credits are going</h2>
+                    <p class="eyebrow">Where your credits are going</p>
+                    <h2 style="font-size: 2rem;">Visible balance and spend</h2>
                 </div>
-                <div style="display: grid; gap: 0.75rem;">
-                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; gap: 1rem;">
-                        <span>Audit runs this month</span>
-                        <strong>{{ usage_summary.audit_runs_used|default:0 }}</strong>
-                    </div>
-                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; gap: 1rem;">
-                        <span>SEO context refreshes</span>
-                        <strong>{{ usage_summary.seo_snapshots_used|default:0 }}</strong>
-                    </div>
-                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; gap: 1rem;">
-                        <span>AEO analyses</span>
-                        <strong>{{ usage_summary.aeo_audits_used|default:0 }}</strong>
-                    </div>
-                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; gap: 1rem;">
-                        <span>Report exports</span>
-                        <strong>{{ usage_summary.exports_used|default:0 }}</strong>
-                    </div>
-                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; gap: 1rem;">
-                        <span>Content drafts</span>
-                        <strong>{{ usage_summary.content_drafts_used|default:0 }}</strong>
-                    </div>
-                </div>
-                {% if credit_summary %}
-                <div style="margin-top: 1rem; display: grid; gap: 0.65rem;">
-                    {% for credit in credit_summary %}
-                    <div style="padding: 0.85rem 1rem; border-radius: 14px; background: rgba(14, 165, 233, 0.08); display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
-                        <span>{{ credit.label }}</span>
-                        <strong>
-                            {% if credit.unlimited %}
+                <div class="workspace-credit-balance-card">
+                    <div>
+                        <p class="eyebrow" style="margin-bottom: 0.35rem;">Current Balance</p>
+                        <h3 style="margin: 0; font-size: 2.4rem;">
+                            {% if credit_overview.unlimited %}
                             Unlimited
                             {% else %}
-                            {{ credit.remaining }} left / {{ credit.granted }}
+                            {{ credit_overview.remaining|default:0 }}
                             {% endif %}
-                        </strong>
+                        </h3>
+                    </div>
+                    <div class="workspace-credit-balance-meta">
+                        <div><strong>{{ credit_overview.used|default:0 }}</strong> used this cycle</div>
+                        <div>
+                            {% if credit_overview.unlimited %}
+                            No workspace cap
+                            {% else %}
+                            <strong>{{ credit_overview.granted|default:0 }}</strong> granted this cycle
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; display: grid; gap: 0.75rem;">
+                    {% for item in credit_activity %}
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; gap: 1rem;">
+                        <span>{{ item.label }}</span>
+                        <strong>{{ item.used }}</strong>
                     </div>
                     {% endfor %}
                 </div>
-                {% endif %}
                 <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; line-height: 1.6;">
-                    Your plan funds a credit budget for audits, SEO, AEO, content, exports, and other recurring actions. Those credits are the operating layer for automation and later affiliate rewards.
+                    Credits are one visible workspace balance. Heavier work spends more credits, lighter work spends less, and SEO or AEO can keep building on the latest audit until you decide to run another one.
                 </div>
             </article>
         </div>
+
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Flow</p>
+                <h2 style="font-size: 2rem;">What each next step costs</h2>
+            </div>
+            <div class="system-grid">
+                {% for item in credit_action_guide %}
+                <article class="system-card" style="border-top: 4px solid {% if item.slug == 'audit' %}var(--signal){% elif item.slug == 'seo' %}#0f172a{% elif item.slug == 'aeo' %}#ea580c{% else %}#0ea5e9{% endif %};">
+                    <p class="eyebrow">{{ item.label }}</p>
+                    <h3>{{ item.credits }} credits</h3>
+                    <p>{{ item.next_step }}</p>
+                    <div style="margin-top: 0.75rem; font-size: 0.82rem; color: #475569; line-height: 1.5;">
+                        {{ item.reason }}
+                    </div>
+                    {% if item.uses_existing_audit %}
+                    <div style="margin-top: 0.75rem; padding: 0.75rem 0.9rem; border-radius: 14px; background: rgba(34, 197, 94, 0.1); color: #166534; font-size: 0.82rem;">
+                        Uses the latest audit instead of charging for another crawl.
+                    </div>
+                    {% endif %}
+                </article>
+                {% endfor %}
+            </div>
+        </article>
 
         <div class="system-grid">
             <article class="system-card" style="border-top: 4px solid var(--signal);">
@@ -166,9 +185,9 @@
                 </h3>
                 <p>
                     {% if usage_summary.audit_runs_remaining is not None %}
-                    {{ usage_summary.audit_runs_remaining }} audit credits remaining this month.
+                    {{ usage_summary.audit_runs_remaining }} audit rerun{{ usage_summary.audit_runs_remaining|pluralize }} still available under the current plan policy.
                     {% else %}
-                    No audit-credit cap on the current plan.
+                    No audit-rerun cap on the current plan.
                     {% endif %}
                 </p>
             </article>
@@ -190,6 +209,28 @@
                 <p>Saved drafts generated from your workspace and audit context.</p>
             </article>
         </div>
+
+        {% if recent_credit_entries %}
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Credit Ledger</p>
+                <h2 style="font-size: 2rem;">Recent credit activity</h2>
+            </div>
+            <div class="panel-scroll">
+                {% for entry in recent_credit_entries %}
+                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03); display: grid; gap: 0.35rem;">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
+                        <strong>{{ entry.note }}</strong>
+                        <span class="score-pill score-medium">{{ entry.amount }} credits</span>
+                    </div>
+                    <div style="font-size: 0.84rem; color: #475569;">
+                        {{ entry.label }}{% if entry.project_name %} | {{ entry.project_name }}{% endif %} | {{ entry.created_at }}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+        {% endif %}
 
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
             <article class="system-card">
@@ -540,7 +581,7 @@
                     <div style="margin-top: 0.85rem; display: grid; gap: 0.25rem; font-size: 0.8rem; color: #475569;">
                         {% for key, value in card.credits.items %}
                         <div style="display: flex; justify-content: space-between; gap: 1rem;">
-                            <span style="text-transform: capitalize;">{{ key }} credits</span>
+                            <span>{% if key == "workspace" %}Workspace credits{% else %}{{ key|title }} credits{% endif %}</span>
                             <strong style="color: #0f172a;">{% if value is None %}Unlimited{% else %}{{ value }}{% endif %}</strong>
                         </div>
                         {% endfor %}

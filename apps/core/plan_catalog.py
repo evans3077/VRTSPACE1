@@ -17,13 +17,7 @@ PLAN_DEFINITIONS = [
             "Entry-level visibility into the fix queue",
         ],
         "credits": {
-            "audit": 1,
-            "seo": 0,
-            "aeo": 0,
-            "content": 0,
-            "backlink": 0,
-            "export": 0,
-            "share": 0,
+            "workspace": 1,
         },
         "limits": {
             "audit_runs": 1,
@@ -74,13 +68,7 @@ PLAN_DEFINITIONS = [
             "Limited competitor-backed SEO benchmarking",
         ],
         "credits": {
-            "audit": 5,
-            "seo": 4,
-            "aeo": 4,
-            "content": 0,
-            "backlink": 0,
-            "export": 2,
-            "share": 0,
+            "workspace": 50,
         },
         "limits": {
             "audit_runs": 5,
@@ -131,13 +119,7 @@ PLAN_DEFINITIONS = [
             "Stakeholder-ready reporting and sharing",
         ],
         "credits": {
-            "audit": 20,
-            "seo": 12,
-            "aeo": 10,
-            "content": 16,
-            "backlink": 0,
-            "export": 12,
-            "share": 5,
+            "workspace": 150,
         },
         "limits": {
             "audit_runs": 20,
@@ -188,13 +170,7 @@ PLAN_DEFINITIONS = [
             "Advanced stakeholder reporting",
         ],
         "credits": {
-            "audit": 100,
-            "seo": 40,
-            "aeo": 30,
-            "content": 60,
-            "backlink": 250,
-            "export": None,
-            "share": 25,
+            "workspace": 400,
         },
         "limits": {
             "audit_runs": 100,
@@ -245,13 +221,7 @@ PLAN_DEFINITIONS = [
             "Bespoke implementation support",
         ],
         "credits": {
-            "audit": None,
-            "seo": None,
-            "aeo": None,
-            "content": None,
-            "backlink": None,
-            "export": None,
-            "share": None,
+            "workspace": None,
         },
         "limits": {
             "audit_runs": None,

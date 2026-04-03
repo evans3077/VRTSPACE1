@@ -49,6 +49,16 @@ USAGE_LIMIT_MAP = {
 }
 
 USAGE_METRIC_BY_CREDIT_CATEGORY = {value: key for key, value in USAGE_LIMIT_MAP.items()}
+WORKSPACE_CREDIT_CATEGORY = "workspace"
+CREDIT_ACTIVITY_LABELS = {
+    "audit": "Audit runs this month",
+    "seo": "SEO context refreshes",
+    "aeo": "AEO analyses",
+    "content": "Content drafts",
+    "backlink": "Backlink work",
+    "export": "Report exports",
+    "share": "Stakeholder shares",
+}
 
 
 def _definition_to_capabilities(definition):
@@ -174,6 +184,9 @@ def get_billing_state(user):
         "capabilities": capabilities,
         "usage": usage,
         "credits": credit_summary,
+        "credit_overview": get_total_credit_balance_summary(user),
+        "credit_activity": get_credit_activity_summary(user),
+        "recent_credit_entries": get_recent_credit_entries(user),
         "plans": plans,
         "stripe_enabled": settings.STRIPE_ENABLED,
         "publishable_key": settings.STRIPE_PUBLISHABLE_KEY,
@@ -226,37 +239,80 @@ def _get_credit_allowances(user):
     return dict(get_effective_capabilities(user).get("credits", {}))
 
 
+def _get_workspace_credit_allowance(user):
+    allowances = _get_credit_allowances(user)
+    if WORKSPACE_CREDIT_CATEGORY in allowances:
+        return allowances.get(WORKSPACE_CREDIT_CATEGORY)
+
+    if not allowances:
+        return 0
+
+    if any(value is None for value in allowances.values()):
+        return None
+
+    return sum(value for value in allowances.values() if isinstance(value, (int, float)))
+
+
 def ensure_plan_credit_grants(user, now=None):
     if not user or not getattr(user, "is_authenticated", False):
         return
     period_start, period_end = get_credit_record_window(now=now)
     subscription = get_workspace_subscription(user)
     plan = subscription.plan if is_active_subscription(subscription) else None
-    for category, amount in _get_credit_allowances(user).items():
-        if amount in (0, None):
-            continue
-        existing = WorkspaceCreditLedger.objects.filter(
-            user=user,
-            category=category,
-            kind=WorkspaceCreditLedger.Kind.GRANT,
-            period_start=period_start,
-            period_end=period_end,
-        ).exists()
-        if existing:
-            continue
-        WorkspaceCreditLedger.objects.create(
-            user=user,
-            plan=plan,
-            subscription=subscription,
-            category=category,
-            kind=WorkspaceCreditLedger.Kind.GRANT,
-            delta=amount,
-            period_start=period_start,
-            period_end=period_end,
-            note="Monthly plan credit allocation",
-            reference_key=f"plan-credit:{category}:{period_start.isoformat()}",
-            metadata={"source": "monthly_plan_credit"},
-        )
+    amount = _get_workspace_credit_allowance(user)
+    if amount in (0, None):
+        return
+    existing = WorkspaceCreditLedger.objects.filter(
+        user=user,
+        category=WORKSPACE_CREDIT_CATEGORY,
+        kind=WorkspaceCreditLedger.Kind.GRANT,
+        period_start=period_start,
+        period_end=period_end,
+    ).exists()
+    if existing:
+        return
+    WorkspaceCreditLedger.objects.create(
+        user=user,
+        plan=plan,
+        subscription=subscription,
+        category=WORKSPACE_CREDIT_CATEGORY,
+        kind=WorkspaceCreditLedger.Kind.GRANT,
+        delta=amount,
+        period_start=period_start,
+        period_end=period_end,
+        note="Monthly workspace credit allocation",
+        reference_key=f"plan-credit:{WORKSPACE_CREDIT_CATEGORY}:{period_start.isoformat()}",
+        metadata={"source": "monthly_plan_credit"},
+    )
+
+
+def get_total_credit_balance_summary(user, now=None):
+    period_start, period_end = get_credit_record_window(now=now)
+    if not user or not getattr(user, "is_authenticated", False):
+        return {"granted": 0, "used": 0, "remaining": 0, "unlimited": False}
+
+    ensure_plan_credit_grants(user, now=now)
+    allowance = _get_workspace_credit_allowance(user)
+    queryset = WorkspaceCreditLedger.objects.filter(
+        user=user,
+        period_start=period_start,
+        period_end=period_end,
+    )
+    granted = queryset.filter(delta__gt=0).aggregate(total=Sum("delta")).get("total") or 0
+    used = abs(queryset.filter(delta__lt=0).aggregate(total=Sum("delta")).get("total") or 0)
+    if allowance is None:
+        return {
+            "granted": None,
+            "used": used,
+            "remaining": None,
+            "unlimited": True,
+        }
+    return {
+        "granted": granted,
+        "used": used,
+        "remaining": granted - used,
+        "unlimited": False,
+    }
 
 
 def get_credit_balance_summary(user, category, now=None):
@@ -265,6 +321,9 @@ def get_credit_balance_summary(user, category, now=None):
         return {"granted": 0, "used": 0, "remaining": 0, "unlimited": False}
 
     ensure_plan_credit_grants(user, now=now)
+    if category == WORKSPACE_CREDIT_CATEGORY:
+        return get_total_credit_balance_summary(user, now=now)
+
     allowance = _get_credit_allowances(user).get(category)
     queryset = WorkspaceCreditLedger.objects.filter(
         user=user,
@@ -297,29 +356,71 @@ def get_credit_balance_summary(user, category, now=None):
 
 
 def get_credit_summary(user, now=None):
-    labels = {
-        "audit": "Audit credits",
-        "seo": "SEO credits",
-        "aeo": "AEO credits",
-        "content": "Content credits",
-        "backlink": "Backlink credits",
-        "export": "Export credits",
-        "share": "Share credits",
+    balance = get_total_credit_balance_summary(user, now=now)
+    return [
+        {
+            "category": WORKSPACE_CREDIT_CATEGORY,
+            "label": "Workspace credits",
+            **balance,
+        }
+    ]
+
+
+def get_credit_activity_summary(user, now=None):
+    period_start, period_end = get_credit_record_window(now=now)
+    if not user or not getattr(user, "is_authenticated", False):
+        return []
+
+    queryset = WorkspaceCreditLedger.objects.filter(
+        user=user,
+        delta__lt=0,
+        period_start=period_start,
+        period_end=period_end,
+    )
+    used_by_category = {
+        item["category"]: abs(item["total"] or 0)
+        for item in queryset.values("category").annotate(total=Sum("delta"))
+        if item["category"] != WORKSPACE_CREDIT_CATEGORY
     }
     summary = []
-    for category, label in labels.items():
-        allowance = _get_credit_allowances(user).get(category)
-        if allowance is None and category not in _get_credit_allowances(user):
-            continue
-        balance = get_credit_balance_summary(user, category, now=now)
+    for category, label in CREDIT_ACTIVITY_LABELS.items():
         summary.append(
             {
                 "category": category,
                 "label": label,
-                **balance,
+                "used": used_by_category.get(category, 0),
             }
         )
     return summary
+
+
+def get_recent_credit_entries(user, limit=8, now=None):
+    period_start, period_end = get_credit_record_window(now=now)
+    if not user or not getattr(user, "is_authenticated", False):
+        return []
+    entries = (
+        WorkspaceCreditLedger.objects.filter(
+            user=user,
+            delta__lt=0,
+            period_start=period_start,
+            period_end=period_end,
+        )
+        .select_related("project")
+        .order_by("-created_at")[:limit]
+    )
+    recent = []
+    for entry in entries:
+        recent.append(
+            {
+                "category": entry.category,
+                "label": CREDIT_ACTIVITY_LABELS.get(entry.category, entry.category.title()),
+                "amount": abs(entry.delta),
+                "note": entry.note,
+                "project_name": entry.project.name if entry.project_id else "",
+                "created_at": entry.created_at,
+            }
+        )
+    return recent
 
 
 def get_usage_record(user, metric, now=None):
@@ -348,11 +449,12 @@ def get_usage_summary(user):
     aeo_usage = get_usage_record(user, UsageRecord.Metric.AEO_AUDIT)
     content_usage = get_usage_record(user, UsageRecord.Metric.CONTENT_DRAFT)
     export_usage = get_usage_record(user, UsageRecord.Metric.EXPORT)
-    audit_limit = capabilities.get("credits", {}).get("audit")
-    seo_limit = capabilities.get("credits", {}).get("seo")
-    aeo_limit = capabilities.get("credits", {}).get("aeo")
-    content_limit = capabilities.get("credits", {}).get("content")
-    export_limit = capabilities.get("credits", {}).get("export")
+    limits = capabilities.get("limits", {})
+    audit_limit = limits.get("audit_runs")
+    seo_limit = limits.get("seo_refreshes")
+    aeo_limit = limits.get("aeo_analyses")
+    content_limit = limits.get("content_drafts")
+    export_limit = limits.get("exports")
     return {
         "audit_runs_used": audit_usage.quantity,
         "audit_runs_limit": audit_limit,
@@ -376,7 +478,7 @@ def record_usage(user, metric, quantity=1):
 
 
 def can_spend_credits(user, category, *, amount=1, now=None):
-    balance = get_credit_balance_summary(user, category, now=now)
+    balance = get_total_credit_balance_summary(user, now=now)
     if balance["unlimited"]:
         return True, balance
     return balance["remaining"] >= amount, balance
@@ -410,8 +512,135 @@ def spend_credits(user, category, *, amount=1, project=None, note="", reference_
     return entry
 
 
-def can_run_workspace_audit(user):
-    return can_spend_credits(user, "audit", amount=1)
+def _get_project_complexity_band(project):
+    latest_audit = getattr(project, "latest_audit_run", None) if project else None
+    pages_crawled = getattr(latest_audit, "pages_crawled", 0) or 0
+    if pages_crawled <= 10:
+        return 1, pages_crawled or 10
+    if pages_crawled <= 35:
+        return 2, pages_crawled
+    if pages_crawled <= 75:
+        return 3, pages_crawled
+    return 4, pages_crawled
+
+
+def estimate_credit_cost(category, *, project=None, payload=None):
+    payload = payload or {}
+    band, page_count = _get_project_complexity_band(project)
+    competitor_count = 0
+    if getattr(project, "pk", None):
+        competitor_count = project.seo_competitors.filter(is_active=True).count()
+
+    if category == "audit":
+        amount = min(8, 2 + band)
+        reason = f"Site size and crawl depth around {page_count} pages."
+    elif category == "seo":
+        amount = min(10, 3 + band + (1 if competitor_count >= 3 else 0) + (1 if competitor_count >= 6 else 0))
+        reason = f"Uses the latest audit plus competitor benchmarking depth across {competitor_count or 0} tracked competitors."
+    elif category == "aeo":
+        amount = min(6, 1 + band)
+        reason = "Runs on the current audit and business context without requiring another crawl."
+    elif category == "content":
+        output_type = str(payload.get("output_type", "")).strip().lower()
+        output_weights = {
+            "answer_block": 1,
+            "service_page": 2,
+            "landing_page": 2,
+            "article": 3,
+        }
+        amount = min(7, output_weights.get(output_type, 2) + max(band - 1, 0))
+        reason = f"Depends on draft type ({output_type or 'standard'}) and the audit-backed context size."
+    elif category == "backlink":
+        amount = min(10, 3 + band)
+        reason = "Prospecting cost scales with benchmark depth and supporting asset discovery."
+    else:
+        amount = 1
+        reason = "Lightweight action against existing workspace data."
+
+    return {
+        "category": category,
+        "amount": amount,
+        "band": band,
+        "page_count": page_count,
+        "reason": reason,
+        "uses_existing_audit": category in {"seo", "aeo", "content", "backlink"},
+    }
+
+
+def spend_action_credits(
+    user,
+    category,
+    *,
+    project=None,
+    payload=None,
+    note="",
+    reference_key="",
+    metadata=None,
+    now=None,
+):
+    estimate = estimate_credit_cost(category, project=project, payload=payload)
+    metadata = {
+        **(metadata or {}),
+        "estimated_cost": estimate["amount"],
+        "complexity_band": estimate["band"],
+        "page_count": estimate["page_count"],
+        "cost_reason": estimate["reason"],
+        "uses_existing_audit": estimate["uses_existing_audit"],
+    }
+    entry = spend_credits(
+        user,
+        category,
+        amount=estimate["amount"],
+        project=project,
+        note=note,
+        reference_key=reference_key,
+        metadata=metadata,
+        now=now,
+    )
+    return entry, estimate
+
+
+def build_credit_action_guide(project):
+    actions = [
+        {
+            "slug": "audit",
+            "label": "Run another audit",
+            "next_step": "Use this only when you need a fresh crawl or want to validate improvements.",
+        },
+        {
+            "slug": "seo",
+            "label": "Go deeper with SEO",
+            "next_step": "Reuses the latest audit and adds competitor-backed search intelligence.",
+        },
+        {
+            "slug": "aeo",
+            "label": "Check AEO",
+            "next_step": "Reuses the same audit and business context for answer-engine visibility.",
+        },
+        {
+            "slug": "content",
+            "label": "Create content from the findings",
+            "next_step": "Turns the current audit and SEO context into a draft or editorial task.",
+        },
+    ]
+    guide = []
+    for item in actions:
+        estimate = estimate_credit_cost(item["slug"], project=project)
+        guide.append(
+            {
+                **item,
+                "credits": estimate["amount"],
+                "reason": estimate["reason"],
+                "uses_existing_audit": estimate["uses_existing_audit"],
+            }
+        )
+    return guide
+
+
+def can_run_workspace_audit(user, *, project=None):
+    estimate = estimate_credit_cost("audit", project=project)
+    allowed, balance = can_spend_credits(user, "audit", amount=estimate["amount"])
+    return allowed, balance, estimate
 
 
 def can_access_audit_feature(user, feature_name):
@@ -664,19 +893,21 @@ def create_workspace_rerun_for_user(user, *, project=None):
     if not project:
         raise BillingError("No workspace project is attached to this account yet.")
 
-    allowed, balance = can_run_workspace_audit(user)
+    allowed, balance, estimate = can_run_workspace_audit(user, project=project)
     if settings.AUDIT_TIER_ENFORCEMENT and not allowed:
-        raise BillingError("Your current plan does not have enough audit credits remaining.")
+        raise BillingError(
+            f"Your current plan does not have enough credits remaining for this audit rerun. "
+            f"This rerun needs {estimate['amount']} credits based on the current site size."
+        )
 
     audit_run = AuditRun.objects.create(
         audit_request=project.audit_request,
         normalized_domain="pending",
         start_url=project.website,
     )
-    spend_credits(
+    spend_action_credits(
         user,
         "audit",
-        amount=1,
         project=project,
         note="Workspace audit rerun",
         reference_key=f"audit-run:{audit_run.pk}",

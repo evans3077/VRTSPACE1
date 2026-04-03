@@ -5,7 +5,15 @@ from django.urls import reverse
 from apps.core.plan_catalog import get_plan_definition
 from apps.tools.models import AuditRun
 
-from .billing import build_plan_cards, get_credit_balance_summary, spend_credits, sync_workspace_plan_catalog
+from .billing import (
+    build_plan_cards,
+    estimate_credit_cost,
+    get_credit_balance_summary,
+    get_total_credit_balance_summary,
+    spend_action_credits,
+    spend_credits,
+    sync_workspace_plan_catalog,
+)
 from .models import AuditRequest, ClientProject, Lead, WorkspaceCreditLedger, WorkspacePlan, WorkspaceSubscription
 from .services import sync_client_project_from_audit_run
 
@@ -174,10 +182,9 @@ class WorkspaceCreditSystemTests(TestCase):
 
         self.assertTrue(any(card["slug"] == "free" for card in cards))
         starter = next(card for card in cards if card["slug"] == "starter")
-        self.assertEqual(starter["credits"]["audit"], 5)
-        self.assertEqual(starter["credits"]["seo"], 4)
+        self.assertEqual(starter["credits"]["workspace"], 50)
 
-    def test_spend_credits_creates_grant_and_debit_entries(self):
+    def test_spend_credits_creates_workspace_grant_and_action_debit_entries(self):
         starter = WorkspacePlan.objects.get(slug="starter")
         WorkspaceSubscription.objects.create(
             user=self.user,
@@ -188,13 +195,78 @@ class WorkspaceCreditSystemTests(TestCase):
         spend_credits(self.user, "seo", amount=1, note="SEO refresh")
 
         self.assertEqual(
-            WorkspaceCreditLedger.objects.filter(
-                user=self.user,
-                category=WorkspaceCreditLedger.Category.SEO,
-            ).count(),
+            WorkspaceCreditLedger.objects.filter(user=self.user).count(),
             2,
         )
-        balance = get_credit_balance_summary(self.user, "seo")
-        self.assertEqual(balance["granted"], get_plan_definition("starter")["credits"]["seo"])
+        balance = get_total_credit_balance_summary(self.user)
+        self.assertEqual(balance["granted"], get_plan_definition("starter")["credits"]["workspace"])
         self.assertEqual(balance["used"], 1)
-        self.assertEqual(balance["remaining"], 3)
+        self.assertEqual(balance["remaining"], 49)
+
+    def test_estimate_credit_cost_scales_with_project_complexity(self):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://northwind.example.com",
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="northwind.example.com",
+            start_url="https://northwind.example.com",
+            pages_crawled=60,
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            latest_audit_run=audit_run,
+            name="Northwind",
+            website="https://northwind.example.com",
+            normalized_domain="northwind.example.com",
+            contact_email="ops@example.com",
+        )
+
+        audit_cost = estimate_credit_cost("audit", project=project)
+        seo_cost = estimate_credit_cost("seo", project=project)
+
+        self.assertGreaterEqual(audit_cost["amount"], 5)
+        self.assertGreater(seo_cost["amount"], audit_cost["amount"])
+        self.assertTrue(seo_cost["uses_existing_audit"])
+
+    def test_spend_action_credits_persists_complexity_metadata(self):
+        starter = WorkspacePlan.objects.get(slug="starter")
+        subscription = WorkspaceSubscription.objects.create(
+            user=self.user,
+            plan=starter,
+            status=WorkspaceSubscription.Status.ACTIVE,
+        )
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://northwind.example.com",
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="northwind.example.com",
+            start_url="https://northwind.example.com",
+            pages_crawled=18,
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            latest_audit_run=audit_run,
+            owner=self.user,
+            name="Northwind",
+            website="https://northwind.example.com",
+            normalized_domain="northwind.example.com",
+            contact_email="ops@example.com",
+        )
+
+        entry, estimate = spend_action_credits(
+            self.user,
+            "seo",
+            project=project,
+            note="SEO refresh",
+            reference_key="test-seo-refresh",
+        )
+
+        self.assertEqual(entry.subscription, subscription)
+        self.assertEqual(entry.metadata["estimated_cost"], estimate["amount"])
+        self.assertIn("cost_reason", entry.metadata)

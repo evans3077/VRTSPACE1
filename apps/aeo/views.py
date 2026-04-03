@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from django.views import View
 
 from apps.content.services import get_workspace_content_project
-from apps.leads.billing import BillingError, can_access_workspace_feature, record_usage, spend_credits
+from apps.leads.billing import BillingError, build_credit_action_guide, can_access_workspace_feature, record_usage, spend_action_credits
 from apps.leads.services import get_workspace_projects
 from apps.leads.models import UsageRecord
 
@@ -27,6 +27,7 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 "form": AEOAuditRequestForm(initial={"target_keyword": getattr(latest_aeo_audit, "target_keyword", "")}),
                 "latest_aeo_audit": latest_aeo_audit,
                 "aeo_payload": latest_aeo_audit.output_json if latest_aeo_audit else {},
+                "workspace_credit_actions": build_credit_action_guide(project) if project else [],
             },
         )
 
@@ -57,10 +58,9 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
             )
 
         try:
-            spend_credits(
+            _entry, estimate = spend_action_credits(
                 request.user,
                 "aeo",
-                amount=1,
                 project=project,
                 note="AEO analysis",
                 reference_key=f"aeo:{project.pk}:{form.cleaned_data['target_keyword'][:60]}",
@@ -77,7 +77,10 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
             return redirect("aeo:workspace-aeo")
 
         record_usage(request.user, UsageRecord.Metric.AEO_AUDIT)
-        messages.success(request, "AEO analysis created from the latest workspace audit.")
+        messages.success(
+            request,
+            f"AEO analysis created from the latest workspace audit. This run used {estimate['amount']} workspace credits.",
+        )
         return render(
             request,
             self.template_name,
@@ -87,5 +90,6 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 "form": AEOAuditRequestForm(initial={"target_keyword": aeo_audit.target_keyword}),
                 "latest_aeo_audit": aeo_audit,
                 "aeo_payload": aeo_audit.output_json,
+                "workspace_credit_actions": build_credit_action_guide(project),
             },
         )

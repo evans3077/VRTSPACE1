@@ -214,6 +214,44 @@ a {
     color: var(--ink);
 }
 
+.workspace-credit-chip-total {
+    min-width: 160px;
+    background: rgba(249, 115, 22, 0.1);
+    border-color: rgba(249, 115, 22, 0.18);
+}
+
+.workspace-flow-note {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1rem;
+    border-radius: 18px;
+    background: rgba(15, 23, 42, 0.05);
+    color: rgba(15, 23, 42, 0.76);
+    line-height: 1.5;
+}
+
+.workspace-credit-balance-card {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: flex-start;
+    padding: 1.1rem 1.2rem;
+    border-radius: 20px;
+    background:
+        linear-gradient(135deg, rgba(249, 115, 22, 0.14), rgba(14, 165, 233, 0.12)),
+        rgba(255, 255, 255, 0.8);
+    border: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+.workspace-credit-balance-meta {
+    display: grid;
+    gap: 0.45rem;
+    text-align: right;
+    color: rgba(15, 23, 42, 0.72);
+    font-size: 0.9rem;
+}
+
 .flash-stack {
     margin-top: 1rem;
 }
@@ -780,6 +818,15 @@ textarea:focus {
 
     .workspace-credit-strip {
         justify-content: flex-start;
+    }
+
+    .workspace-credit-balance-card {
+        display: grid;
+        grid-template-columns: 1fr;
+    }
+
+    .workspace-credit-balance-meta {
+        text-align: left;
     }
 
     .seo-refresh-visual,

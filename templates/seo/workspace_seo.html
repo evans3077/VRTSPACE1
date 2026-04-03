@@ -7,7 +7,7 @@
             <p class="eyebrow">SEO Hub</p>
             <h1 style="max-width: none;">{% if project %}{{ project.name }}{% else %}Workspace SEO{% endif %}</h1>
             <p class="section-text" style="max-width: 820px;">
-                Competitor-backed SEO intelligence. This module audits your site structure, fetches real competitor websites, profiles what they publish, and turns those gaps into a concrete SEO roadmap.
+                Competitor-backed SEO intelligence. This module reuses the latest audit, fetches real competitor websites, profiles what they publish, and turns those gaps into a concrete SEO roadmap.
             </p>
         </div>
     </div>
@@ -28,6 +28,15 @@
                     Create a workspace project from an audit first, then return here to build SEO context and benchmark competitors.
                 </div>
                 {% else %}
+                {% if workspace_credit_actions %}
+                {% for item in workspace_credit_actions %}
+                {% if item.slug == "seo" %}
+                <div style="margin-bottom: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; line-height: 1.5;">
+                    This SEO refresh is currently estimated at <strong>{{ item.credits }} credits</strong>. {{ item.next_step }}
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
                 <form method="post" style="display: grid; gap: 1rem;">
                     {% csrf_token %}
                     {% for field in form %}

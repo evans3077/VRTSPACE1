@@ -19,8 +19,8 @@
                 </div>
                 {% if workspace_billing_state.credits %}
                 <div class="workspace-credit-strip">
-                    {% for credit in workspace_billing_state.credits %}
-                    <div class="workspace-credit-chip">
+                    {% with credit=workspace_billing_state.credits.0 %}
+                    <div class="workspace-credit-chip workspace-credit-chip-total">
                         <span>{{ credit.label }}</span>
                         <strong>
                             {% if credit.unlimited %}
@@ -30,26 +30,26 @@
                             {% endif %}
                         </strong>
                     </div>
-                    {% endfor %}
+                    {% endwith %}
                 </div>
                 {% endif %}
             </div>
 
             <nav class="workspace-subnav" aria-label="Workspace">
                 <a class="workspace-subnav-link {% if workspace_nav_current == 'workspace' %}is-active{% endif %}" href="{% url 'tools:workspace-dashboard' %}">
-                    Overview
+                    1. Audit
                 </a>
                 <a class="workspace-subnav-link {% if workspace_nav_current == 'audits' %}is-active{% endif %}" href="{% url 'tools:workspace-dashboard' %}#audit-history">
-                    Audits
+                    Audit History
                 </a>
                 <a class="workspace-subnav-link {% if workspace_nav_current == 'seo' %}is-active{% endif %}" href="{% url 'seo:workspace-seo' %}">
-                    SEO
+                    2. SEO
                 </a>
                 <a class="workspace-subnav-link {% if workspace_nav_current == 'aeo' %}is-active{% endif %}" href="{% url 'aeo:workspace-aeo' %}">
-                    AEO
+                    2. AEO
                 </a>
                 <a class="workspace-subnav-link {% if workspace_nav_current == 'content' %}is-active{% endif %}" href="{% url 'content:workspace-content' %}">
-                    Content
+                    3. Content
                 </a>
             </nav>
         </div>

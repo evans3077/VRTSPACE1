@@ -14,6 +14,7 @@ from django.views.generic import DetailView
 
 from apps.core.site_content import PACKAGES
 from apps.leads.billing import (
+    build_credit_action_guide,
     can_access_audit_feature,
     get_billing_state,
     get_effective_capabilities,
@@ -577,6 +578,10 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["current_capabilities"] = billing_state["capabilities"]
         context["usage_summary"] = billing_state["usage"]
         context["credit_summary"] = billing_state["credits"]
+        context["credit_overview"] = billing_state["credit_overview"]
+        context["credit_activity"] = billing_state["credit_activity"]
+        context["recent_credit_entries"] = billing_state["recent_credit_entries"]
+        context["credit_action_guide"] = build_credit_action_guide(project) if getattr(project, "pk", None) else []
         context["billing_plans"] = billing_state["plans"]
         context["audit_schedule"] = schedule
         context["latest_change_report"] = latest_change_report

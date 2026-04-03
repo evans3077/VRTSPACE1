@@ -7,7 +7,7 @@
             <p class="eyebrow">AI Content Engine</p>
             <h1 style="max-width: none;">Generate draft content from your workspace context</h1>
             <p class="section-text" style="max-width: 760px;">
-                Create structured drafts for service pages, landing pages, articles, and answer blocks using your current audit data and business inputs.
+                Create structured drafts for service pages, landing pages, articles, and answer blocks using the current audit plus the latest SEO and business context.
             </p>
         </div>
     </div>
@@ -46,6 +46,15 @@
                     <p class="eyebrow">Generate Draft</p>
                     <h2 style="font-size: 2rem;">Build a new structured output</h2>
                 </div>
+                {% if workspace_credit_actions %}
+                {% for item in workspace_credit_actions %}
+                {% if item.slug == "content" %}
+                <div style="margin-bottom: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; line-height: 1.5;">
+                    Content generation is currently estimated at <strong>{{ item.credits }} credits</strong>. {{ item.next_step }}
+                </div>
+                {% endif %}
+                {% endfor %}
+                {% endif %}
                 <form method="post" action="{% url 'content:workspace-content-generate' %}" style="display: grid; gap: 1rem;">
                     {% csrf_token %}
                     {% for field in form %}

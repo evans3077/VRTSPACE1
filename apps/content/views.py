@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.views import View
 from django.views.generic import DetailView, ListView
 
-from apps.leads.billing import BillingError, can_access_workspace_feature, record_usage, spend_credits
+from apps.leads.billing import BillingError, build_credit_action_guide, can_access_workspace_feature, record_usage, spend_action_credits
 from apps.leads.models import UsageRecord
 from apps.leads.services import get_workspace_projects
 
@@ -73,6 +73,7 @@ class WorkspaceGeneratedContentListView(LoginRequiredMixin, ListView):
         context["workspace_projects"] = get_workspace_projects(self.request.user)
         context["form"] = GeneratedContentRequestForm()
         context["editorial_tasks"] = get_editorial_tasks(project)
+        context["workspace_credit_actions"] = build_credit_action_guide(project) if project else []
         return context
 
 
@@ -113,11 +114,11 @@ class WorkspaceGeneratedContentCreateView(LoginRequiredMixin, View):
             )
 
         try:
-            spend_credits(
+            _entry, estimate = spend_action_credits(
                 request.user,
                 "content",
-                amount=1,
                 project=project,
+                payload={"output_type": form.cleaned_data["output_type"]},
                 note="Manual content draft generation",
                 reference_key=f"content-draft:{project.pk}:{request.user.pk}",
             )
@@ -131,7 +132,7 @@ class WorkspaceGeneratedContentCreateView(LoginRequiredMixin, View):
         except BillingError as exc:
             messages.error(request, str(exc))
             return redirect("content:workspace-content")
-        messages.success(request, "AI content draft created.")
+        messages.success(request, f"AI content draft created. This draft used {estimate['amount']} workspace credits.")
         return redirect("content:workspace-content-detail", pk=draft.pk)
 
 
@@ -154,11 +155,11 @@ class WorkspaceGeneratedContentFromSEOView(LoginRequiredMixin, View):
         brief = task.brief_json or {}
 
         try:
-            spend_credits(
+            _entry, estimate = spend_action_credits(
                 request.user,
                 "content",
-                amount=1,
                 project=project,
+                payload={"output_type": brief["output_type"]},
                 note="SEO-driven content draft generation",
                 reference_key=f"content-brief:{task.brief_key}",
             )
@@ -182,7 +183,7 @@ class WorkspaceGeneratedContentFromSEOView(LoginRequiredMixin, View):
         except BillingError as exc:
             messages.error(request, str(exc))
             return redirect("content:workspace-content")
-        messages.success(request, "SEO-driven content brief converted into a draft.")
+        messages.success(request, f"SEO-driven content brief converted into a draft using {estimate['amount']} workspace credits.")
         return redirect("content:workspace-content-detail", pk=draft.pk)
 
 

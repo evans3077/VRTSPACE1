@@ -13,9 +13,10 @@ from django.views.generic import DetailView
 
 from apps.leads.billing import (
     BillingError,
+    build_credit_action_guide,
     can_access_audit_feature,
     can_access_workspace_feature,
-    spend_credits,
+    spend_action_credits,
 )
 from apps.leads.services import get_workspace_projects, resolve_workspace_project
 from apps.leads.models import ClientProject
@@ -110,10 +111,9 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
         profile.save()
         sync_project_competitors(project, form.cleaned_data.get("competitor_urls", ""))
         try:
-            spend_credits(
+            _entry, estimate = spend_action_credits(
                 request.user,
                 "seo",
-                amount=1,
                 project=project,
                 note="SEO intelligence refresh",
                 reference_key=f"seo-refresh:{project.pk}:{timezone.now().date().isoformat()}",
@@ -131,7 +131,10 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             profile.metadata = metadata
             profile.save(update_fields=["metadata", "updated_at"])
             enqueue_project_seo_refresh(project.pk)
-            messages.success(request, "SEO refresh queued. The workspace will update when competitor profiling finishes.")
+            messages.success(
+                request,
+                f"SEO refresh queued. This run uses {estimate['amount']} credits and reuses your latest audit instead of requiring a new crawl.",
+            )
             return redirect("seo:workspace-seo")
         else:
             snapshot, opportunity_snapshot = refresh_project_seo_intelligence(project)
@@ -140,7 +143,10 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
                 context_snapshot=snapshot,
                 opportunity_snapshot=opportunity_snapshot,
             )
-            messages.success(request, "SEO context saved and refreshed for this workspace.")
+            messages.success(
+                request,
+                f"SEO context saved and refreshed. This run used {estimate['amount']} credits from the workspace balance.",
+            )
         return render(
             request,
             self.template_name,
@@ -254,6 +260,7 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             "seo_competitor_trends": build_competitor_trend_summary(project) if project else [],
             "seo_campaigns": campaign_items,
             "seo_chain_value_summary": build_campaign_value_summary(project, campaign_items=campaign_items) if project else {},
+            "workspace_credit_actions": build_credit_action_guide(project) if project else [],
             "seo_campaign_status_choices": SEOCampaign.Status.choices,
             "seo_value_summary": opportunity_payload.get("value_summary", {}),
             "seo_keyword_opportunities": opportunity_payload.get("keyword_opportunities", []),

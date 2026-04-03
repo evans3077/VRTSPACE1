@@ -210,6 +210,7 @@ class UsageRecord(TimestampedModel):
 
 class WorkspaceCreditLedger(TimestampedModel):
     class Category(models.TextChoices):
+        WORKSPACE = "workspace", "Workspace"
         AUDIT = "audit", "Audit"
         SEO = "seo", "SEO"
         AEO = "aeo", "AEO"

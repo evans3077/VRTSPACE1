@@ -291,6 +291,11 @@ Turn the current platform into a production-grade decision system that is clearl
   Credits are a better fit for recurring duties, usage tracking, and the future affiliate system than disconnected feature toggles and ad hoc counters.
   Needed result:
   Each plan has explicit monthly credits for audits, SEO, AEO, content, exports, shares, and later authority work, all tracked through one ledger.
+- [x] Reframe credits as one visible workspace balance with weighted spend
+  Why:
+  The user should see one simple number on the dashboard, not a confusing pile of unrelated credit buckets.
+  Needed result:
+  Plans grant a single workspace credit pool, heavier work spends more based on complexity, and the dashboard shows where those credits went.
 - [x] Define exact usage limits per plan
   Why:
   A SaaS plan is not complete until limits are explicit.
@@ -301,6 +306,11 @@ Turn the current platform into a production-grade decision system that is clearl
   The product menu and credit model were becoming hard to read in day-to-day use.
   Needed result:
   The global header stays simple, the workspace gets its own clear sub-navigation, and users can see plan and credit state without hunting through dense sections.
+- [x] Simplify the workspace flow around one audit base
+  Why:
+  The platform should feel like one path: audit first, then SEO or AEO, then content or exports only when needed.
+  Needed result:
+  The dashboard and module screens explain that the latest audit feeds the next layers and that a new audit is only required for validation or a fresh crawl.
 - [ ] Map every expensive workflow to a single plan-check path
   Why:
   Costly features should not be gated inconsistently.
@@ -342,11 +352,11 @@ Start here, in this exact order:
 
 1. Roll the credit policy through every expensive workflow
    Reason:
-   The contract exists now, but exports, shares, backlink work, and remaining automation paths still need to spend and validate credits through one path.
+   The contract now supports one visible balance and weighted spend, but exports, shares, backlink work, and remaining automation paths still need to spend and validate credits through one path.
 
 2. Rework upgrade prompts around earned value
    Reason:
-   Once credits are real, the UI should explain them clearly instead of only showing generic plan cards.
+   Once weighted credits are real, the UI should explain why a task costs what it costs and what the next plan unlocks.
 
 3. Recommendation clustering and evidence scoring
    Reason:
@@ -381,12 +391,13 @@ Target:
 - Route remaining expensive workflows through the credit policy layer
 - Add earned-value upgrade prompts tied to depleted credits and locked workflows
 - Keep the workspace explaining credits as the operating budget for recurring actions, not just a billing detail
+- Keep the workspace flow linear: audit first, then SEO or AEO, then execution layers only when the user chooses them
 
 Definition of done:
 
 - Exports, shares, backlink work, and recurring duties all use the same credit/policy checks
-- Upgrade prompts explain which credit bucket was used or exhausted
-- The workspace explains current credits and the next unlock in operational terms
+- Upgrade prompts explain what the current action costs, why it costs that amount, and what the next plan unlocks
+- The workspace explains current credits, recent spend, and the next unlock in operational terms
 
 ---
 
@@ -426,7 +437,7 @@ This is the pricing, packaging, and credit direction to implement in code and UI
 - SEO and AEO basics
 - Limited competitor-backed benchmarking
 - Limited reports and action packs
-- Small monthly credit bundle for audits, SEO, and AEO
+- A visible workspace credit pool that is spent by weighted task complexity
 
 ### Growth
 
@@ -436,7 +447,7 @@ This is the pricing, packaging, and credit direction to implement in code and UI
 - Content briefs and editorial queue
 - Stakeholder reporting and sharing
 - More automation and historical depth
-- Meaningful monthly credits for audit, SEO, AEO, content, export, and share workflows
+- A larger workspace credit pool that can support recurring audits, SEO, AEO, content, exports, and sharing
 
 ### Authority
 
