@@ -72,7 +72,7 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
         project = self._get_project(request.user)
         if not project:
             messages.error(request, "No workspace project is attached to this account yet.")
-            return redirect("tools:workspace-dashboard")
+            return redirect(f"{reverse('tools:workspace-dashboard')}#new-project")
         seo_allowed, _ = can_access_workspace_feature(request.user, "seo_workspace_enabled")
         if not seo_allowed:
             messages.error(request, "SEO workspace access requires a plan that includes SEO credits.")

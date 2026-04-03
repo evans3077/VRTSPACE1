@@ -2,7 +2,7 @@ from django import forms
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth import get_user_model
 
-from .models import AuditRequest, Lead
+from .models import AuditRequest, ClientProject, Lead
 
 
 BUSINESS_TYPE_CHOICES = (
@@ -147,3 +147,93 @@ class WorkspaceLoginForm(AuthenticationForm):
 
     def clean_username(self):
         return self.cleaned_data["username"].strip().lower()
+
+
+class WorkspaceProjectForm(forms.ModelForm):
+    website = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "example.com"}))
+
+    class Meta:
+        model = ClientProject
+        fields = [
+            "name",
+            "website",
+            "business_type",
+            "location",
+            "target_goal",
+            "primary_service",
+        ]
+        widgets = {
+            "name": forms.TextInput(attrs={"placeholder": "Project name or brand"}),
+            "business_type": forms.Select(choices=BUSINESS_TYPE_CHOICES),
+            "location": forms.TextInput(attrs={"placeholder": "Nairobi, Kenya"}),
+            "target_goal": forms.TextInput(attrs={"placeholder": "Increase qualified leads from search"}),
+            "primary_service": forms.TextInput(attrs={"placeholder": "Used car sales"}),
+        }
+
+    def clean_name(self):
+        return self.cleaned_data.get("name", "").strip()
+
+    def clean_website(self):
+        website = self.cleaned_data["website"].strip()
+        if website and not website.startswith(("http://", "https://")):
+            website = f"https://{website}"
+        return website
+
+    def clean_location(self):
+        return self.cleaned_data.get("location", "").strip()
+
+    def clean_target_goal(self):
+        return self.cleaned_data.get("target_goal", "").strip()
+
+    def clean_primary_service(self):
+        return self.cleaned_data.get("primary_service", "").strip()
+
+
+class WorkspaceAuditStartForm(forms.ModelForm):
+    email = forms.EmailField(widget=forms.HiddenInput())
+    business_type = forms.ChoiceField(choices=BUSINESS_TYPE_CHOICES, required=False)
+
+    class Meta:
+        model = AuditRequest
+        fields = [
+            "company_name",
+            "email",
+            "website",
+            "business_type",
+            "location",
+            "target_goal",
+            "primary_service",
+            "notes",
+        ]
+        widgets = {
+            "company_name": forms.TextInput(attrs={"placeholder": "Company or brand"}),
+            "website": forms.TextInput(attrs={"placeholder": "example.com"}),
+            "location": forms.TextInput(attrs={"placeholder": "Nairobi, Kenya"}),
+            "target_goal": forms.TextInput(attrs={"placeholder": "Increase qualified leads from search"}),
+            "primary_service": forms.TextInput(attrs={"placeholder": "Used car sales"}),
+            "notes": forms.Textarea(attrs={"rows": 3, "placeholder": "What should this first audit focus on?"}),
+        }
+
+    def clean_company_name(self):
+        return self.cleaned_data.get("company_name", "").strip()
+
+    def clean_email(self):
+        return self.cleaned_data.get("email", "").strip().lower()
+
+    def clean_website(self):
+        website = self.cleaned_data["website"].strip()
+        if website and not website.startswith(("http://", "https://")):
+            website = f"https://{website}"
+        return website
+
+    def clean_location(self):
+        return self.cleaned_data.get("location", "").strip()
+
+    def clean_target_goal(self):
+        return self.cleaned_data.get("target_goal", "").strip()
+
+    def clean_primary_service(self):
+        return self.cleaned_data.get("primary_service", "").strip()
+
+    def clean_notes(self):
+        return self.cleaned_data.get("notes", "").strip()

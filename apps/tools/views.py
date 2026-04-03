@@ -33,9 +33,16 @@ from apps.leads.auth import (
     get_or_create_user_from_google_profile,
     is_google_oauth_enabled,
 )
-from apps.leads.forms import AuditRequestForm, WorkspaceLoginForm, WorkspaceSignupForm
+from apps.leads.forms import (
+    AuditRequestForm,
+    WorkspaceAuditStartForm,
+    WorkspaceLoginForm,
+    WorkspaceProjectForm,
+    WorkspaceSignupForm,
+)
 from apps.leads.models import ClientProject, UsageRecord
 from apps.leads.services import (
+    create_workspace_project_for_user,
     create_audit_request_from_form,
     get_workspace_projects,
     get_workspace_project_summaries,
@@ -626,6 +633,25 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["email_reports_allowed"] = email_allowed
         context["workspace_projects"] = get_workspace_projects(self.request.user)
         context["workspace_project_summaries"] = get_workspace_project_summaries(self.request.user)
+        context["project_form"] = WorkspaceProjectForm(
+            initial={
+                "business_type": getattr(project, "business_type", "") if getattr(project, "pk", None) else "",
+                "location": getattr(project, "location", "") if getattr(project, "pk", None) else "",
+                "target_goal": getattr(project, "target_goal", "") if getattr(project, "pk", None) else "",
+                "primary_service": getattr(project, "primary_service", "") if getattr(project, "pk", None) else "",
+            }
+        )
+        context["audit_start_form"] = WorkspaceAuditStartForm(
+            initial={
+                "email": self.request.user.email,
+                "company_name": project.name if getattr(project, "pk", None) else "",
+                "website": getattr(project, "website", "") if getattr(project, "pk", None) else "",
+                "business_type": getattr(project, "business_type", "") if getattr(project, "pk", None) else "",
+                "location": getattr(project, "location", "") if getattr(project, "pk", None) else "",
+                "target_goal": getattr(project, "target_goal", "") if getattr(project, "pk", None) else "",
+                "primary_service": getattr(project, "primary_service", "") if getattr(project, "pk", None) else "",
+            }
+        )
         return context
 
 
@@ -647,6 +673,67 @@ class WorkspaceProjectSelectView(LoginRequiredMixin, View):
         if next_url.startswith("/"):
             return redirect(next_url)
         return redirect("tools:workspace-dashboard")
+
+
+class WorkspaceProjectCreateView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        form = WorkspaceProjectForm(request.POST)
+        if not form.is_valid():
+            dashboard_view = WorkspaceDashboardView()
+            dashboard_view.request = request
+            dashboard_view.object = dashboard_view.get_object()
+            context = dashboard_view.get_context_data(object=dashboard_view.object)
+            context["project_form"] = form
+            return dashboard_view.render_to_response(context, status=400)
+
+        project, created = create_workspace_project_for_user(
+            request.user,
+            name=form.cleaned_data["name"],
+            website=form.cleaned_data["website"],
+            business_type=form.cleaned_data.get("business_type", ""),
+            location=form.cleaned_data.get("location", ""),
+            target_goal=form.cleaned_data.get("target_goal", ""),
+            primary_service=form.cleaned_data.get("primary_service", ""),
+        )
+        set_active_workspace_project(request, project)
+        if created:
+            messages.success(request, f"{project.name} is ready. Run an audit when you want a fresh crawl, or move straight into SEO, AEO, or content setup.")
+        else:
+            messages.info(request, f"{project.name} already existed, so the workspace reopened that project instead of creating a duplicate.")
+        return redirect("tools:workspace-dashboard")
+
+
+class WorkspaceAuditStartView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        active_project = resolve_workspace_project(request, request.user)
+        form = WorkspaceAuditStartForm(request.POST)
+        if not form.is_valid():
+            dashboard_view = WorkspaceDashboardView()
+            dashboard_view.request = request
+            dashboard_view.object = dashboard_view.get_object()
+            context = dashboard_view.get_context_data(object=dashboard_view.object)
+            context["audit_start_form"] = form
+            return dashboard_view.render_to_response(context, status=400)
+
+        audit_request = create_audit_request_from_form(form, request=request)
+        normalized_start_url = normalize_url(form.cleaned_data["website"])
+        normalized_domain = extract_domain(normalized_start_url)
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain=normalized_domain or "pending",
+            start_url=normalized_start_url,
+        )
+        project = sync_client_project_from_audit_run(audit_run)
+        if active_project and getattr(active_project, "pk", None) and active_project.owner_id == request.user.id:
+            if not project.owner_id:
+                project.owner = request.user
+            if not project.audit_request_id:
+                project.audit_request = audit_request
+            project.save(update_fields=["owner", "audit_request", "updated_at"])
+        set_active_workspace_project(request, project)
+        enqueue_public_site_audit(audit_run.pk)
+        messages.success(request, "Audit started. The workspace will attach to this audit automatically as the results are saved.")
+        return redirect("tools:audit-result", pk=audit_run.pk)
 
 
 class AuditReportPdfView(DetailView):

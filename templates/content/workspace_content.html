@@ -21,7 +21,15 @@
             <article class="system-card">
                 <p class="eyebrow">Workspace</p>
                 <h3>{{ project.name|default:"No linked project" }}</h3>
-                <p>{{ project.normalized_domain|default:"Connect an audit-backed project to generate content." }}</p>
+                <p>
+                    {% if not project %}
+                    Create a project first to keep this content work independent.
+                    {% elif not project.latest_audit_run %}
+                    Run the first audit for this project before generating content.
+                    {% else %}
+                    {{ project.normalized_domain|default:"Connect an audit-backed project to generate content." }}
+                    {% endif %}
+                </p>
             </article>
             <article class="system-card">
                 <p class="eyebrow">Latest Audit</p>
@@ -46,6 +54,25 @@
                     <p class="eyebrow">Generate Draft</p>
                     <h2 style="font-size: 2rem;">Build a new structured output</h2>
                 </div>
+                {% if not project %}
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.6;">
+                    <div>Create a project first. Content generation should live inside a specific project so drafts, audits, SEO briefs, and credit usage stay consistent.</div>
+                    <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                        <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}#start-audit">Start with audit</a>
+                        <a class="button button-secondary" href="{% url 'tools:workspace-dashboard' %}#new-project">Create workspace</a>
+                    </div>
+                </div>
+                {% elif not project.latest_audit_run %}
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.6;">
+                    <div>This project needs its first audit before content generation. The content engine uses the audit as the base context for page decisions, internal links, and score gaps.</div>
+                    <div style="margin-top: 1rem;">
+                        <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="button button-primary">Run first audit</button>
+                        </form>
+                    </div>
+                </div>
+                {% else %}
                 {% if workspace_credit_actions %}
                 {% for item in workspace_credit_actions %}
                 {% if item.slug == "content" %}
@@ -71,6 +98,7 @@
                     {% endfor %}
                     <button type="submit" class="button button-primary">Generate draft</button>
                 </form>
+                {% endif %}
             </article>
 
             <article class="system-card">
@@ -94,12 +122,23 @@
                 <h2 style="font-size: 2rem;">Generate from the SEO roadmap</h2>
             </div>
             <div style="margin-bottom: 1rem;">
+                {% if project and project.latest_audit_run %}
                 <form method="post" action="{% url 'content:workspace-content-editorial-sync' %}">
                     {% csrf_token %}
                     <button type="submit" class="button button-secondary">Sync editorial queue</button>
                 </form>
+                {% endif %}
             </div>
             <div class="panel-scroll panel-scroll-tall">
+                {% if not project %}
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                    Create a project first before building a content queue.
+                </div>
+                {% elif not project.latest_audit_run %}
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                    Run the first audit to unlock the editorial queue for this project.
+                </div>
+                {% else %}
                 {% for task in editorial_tasks %}
                 {% with brief=task.brief_json %}
                 <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
@@ -175,6 +214,7 @@
                     Refresh the SEO hub first to build the content brief queue from the current page map and keyword opportunities.
                 </div>
                 {% endfor %}
+                {% endif %}
             </div>
         </article>
 

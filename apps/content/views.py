@@ -82,7 +82,10 @@ class WorkspaceGeneratedContentCreateView(LoginRequiredMixin, View):
         project = get_workspace_content_project(user=request.user, request=request)
         if not project:
             messages.error(request, "Create or connect a workspace project before generating drafts.")
-            return redirect("tools:workspace-dashboard")
+            return redirect(f"{reverse('tools:workspace-dashboard')}#new-project")
+        if not getattr(project, "latest_audit_run_id", None):
+            messages.error(request, "Run the first audit for this project before generating content.")
+            return redirect("content:workspace-content")
         allowed, _ = can_access_workspace_feature(request.user, "content_workspace_enabled")
         if not allowed:
             messages.error(request, "Content generation requires a plan that includes content credits.")
@@ -141,7 +144,10 @@ class WorkspaceGeneratedContentFromSEOView(LoginRequiredMixin, View):
         project = get_workspace_content_project(user=request.user, request=request)
         if not project:
             messages.error(request, "Create or connect a workspace project before generating drafts.")
-            return redirect("tools:workspace-dashboard")
+            return redirect(f"{reverse('tools:workspace-dashboard')}#new-project")
+        if not getattr(project, "latest_audit_run_id", None):
+            messages.error(request, "Run the first audit for this project before generating content from SEO briefs.")
+            return redirect("content:workspace-content")
         allowed, _ = can_access_workspace_feature(request.user, "content_workspace_enabled")
         if not allowed:
             messages.error(request, "Content generation requires a plan that includes content credits.")
@@ -192,7 +198,7 @@ class WorkspaceEditorialQueueSyncView(LoginRequiredMixin, View):
         project = get_workspace_content_project(user=request.user, request=request)
         if not project:
             messages.error(request, "Create or connect a workspace project before syncing the editorial queue.")
-            return redirect("tools:workspace-dashboard")
+            return redirect(f"{reverse('tools:workspace-dashboard')}#new-project")
         tasks = sync_project_editorial_tasks(project)
         messages.success(request, f"Editorial queue synced. {len(tasks)} active item(s) are now tracked.")
         return redirect("content:workspace-content")

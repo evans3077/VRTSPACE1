@@ -1,5 +1,5 @@
 from django.contrib.auth import get_user_model
-from django.test import TestCase
+from django.test import TestCase, override_settings
 from django.urls import reverse
 
 from apps.core.plan_catalog import get_plan_definition
@@ -167,6 +167,43 @@ class LeadFlowTests(TestCase):
         self.assertEqual(refreshed_project.target_goal, "Increase qualified leads")
         self.assertEqual(refreshed_project.primary_service, "Used car sales")
 
+    def test_sync_client_project_attaches_matching_manual_project(self):
+        owner = get_user_model().objects.create_user(
+            username="manual@example.com",
+            email="manual@example.com",
+            password="strongpass123",
+        )
+        manual_project = ClientProject.objects.create(
+            owner=owner,
+            name="Manual Northwind",
+            website="https://northwind.example.com",
+            normalized_domain="northwind.example.com",
+            contact_email="manual@example.com",
+            business_type="saas",
+        )
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="manual@example.com",
+            website="https://northwind.example.com",
+            business_type="saas",
+            location="Nairobi, Kenya",
+            target_goal="Increase demo requests",
+            primary_service="Revenue platform",
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="northwind.example.com",
+            start_url="https://northwind.example.com/",
+            overall_score=77,
+        )
+
+        project = sync_client_project_from_audit_run(audit_run)
+
+        self.assertEqual(project.pk, manual_project.pk)
+        self.assertEqual(project.audit_request, audit_request)
+        self.assertEqual(project.latest_audit_run, audit_run)
+        self.assertEqual(project.owner, owner)
+
 
 class WorkspaceCreditSystemTests(TestCase):
     def setUp(self):
@@ -198,6 +235,7 @@ class WorkspaceCreditSystemTests(TestCase):
         self.assertEqual(starter["action_label"], "Move to Starter")
         self.assertEqual(starter["action_direction"], "move")
 
+    @override_settings(AUDIT_TIER_ENFORCEMENT=True)
     def test_spend_credits_creates_workspace_grant_and_action_debit_entries(self):
         starter = WorkspacePlan.objects.get(slug="starter")
         WorkspaceSubscription.objects.create(
@@ -216,6 +254,25 @@ class WorkspaceCreditSystemTests(TestCase):
         self.assertEqual(balance["granted"], get_plan_definition("starter")["credits"]["workspace"])
         self.assertEqual(balance["used"], 1)
         self.assertEqual(balance["remaining"], 49)
+
+    def test_spend_credits_uses_shadow_mode_in_testing(self):
+        starter = WorkspacePlan.objects.get(slug="starter")
+        WorkspaceSubscription.objects.create(
+            user=self.user,
+            plan=starter,
+            status=WorkspaceSubscription.Status.ACTIVE,
+        )
+
+        entry = spend_credits(self.user, "seo", amount=55, note="SEO refresh")
+
+        balance = get_total_credit_balance_summary(self.user)
+        self.assertEqual(entry.delta, 0)
+        self.assertTrue(entry.metadata["shadow_mode"])
+        self.assertEqual(entry.metadata["shadow_amount"], 55)
+        self.assertEqual(balance["used"], 55)
+        self.assertEqual(balance["remaining"], 0)
+        self.assertEqual(balance["overage"], 5)
+        self.assertTrue(balance["is_testing_mode"])
 
     def test_estimate_credit_cost_scales_with_project_complexity(self):
         audit_request = AuditRequest.objects.create(

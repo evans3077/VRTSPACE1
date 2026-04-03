@@ -1378,9 +1378,79 @@ class WorkspaceProjectSelectionTests(TestCase):
         response = self.client.get(reverse("tools:workspace-dashboard"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Independent workspace projects")
+        self.assertContains(response, "Independent workspaces")
         self.assertContains(response, "Project One")
         self.assertContains(response, "Project Two")
+
+    @patch("apps.tools.views.enqueue_public_site_audit")
+    def test_workspace_audit_start_creates_audit_and_attaches_workspace(self, mocked_enqueue):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("tools:workspace-audit-start"),
+            {
+                "company_name": "Project Three",
+                "email": self.user.email,
+                "website": "three.example.com",
+                "business_type": "saas",
+                "location": "Nairobi, Kenya",
+                "target_goal": "Increase qualified leads",
+                "primary_service": "SEO automation",
+                "notes": "Start from SEO and attach the workspace automatically.",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        audit_run = AuditRun.objects.order_by("-created_at").first()
+        self.assertEqual(response["Location"], reverse("tools:audit-result", args=[audit_run.pk]))
+        project = ClientProject.objects.get(normalized_domain="three.example.com")
+        self.assertEqual(project.owner, self.user)
+        self.assertEqual(project.audit_request, audit_run.audit_request)
+        self.assertEqual(self.client.session["active_workspace_project_id"], project.pk)
+        mocked_enqueue.assert_called_once_with(audit_run.pk)
+
+    def test_workspace_project_create_creates_independent_project_and_activates_it(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("tools:workspace-project-create"),
+            {
+                "name": "Project Three",
+                "website": "three.example.com",
+                "business_type": "saas",
+                "location": "Nairobi, Kenya",
+                "target_goal": "Increase qualified leads",
+                "primary_service": "SEO automation",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response["Location"], reverse("tools:workspace-dashboard"))
+        project = ClientProject.objects.get(name="Project Three")
+        self.assertEqual(project.owner, self.user)
+        self.assertEqual(project.normalized_domain, "three.example.com")
+        self.assertEqual(self.client.session["active_workspace_project_id"], project.pk)
+
+    def test_workspace_project_create_reuses_matching_domain_instead_of_duplicating(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("tools:workspace-project-create"),
+            {
+                "name": "Project Two Updated",
+                "website": "two.example.com",
+                "business_type": "saas",
+                "location": "Mombasa, Kenya",
+                "target_goal": "Increase SQLs",
+                "primary_service": "Automation",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(ClientProject.objects.filter(owner=self.user, normalized_domain="two.example.com").count(), 1)
+        self.second_project.refresh_from_db()
+        self.assertEqual(self.second_project.name, "Project Two Updated")
+        self.assertEqual(self.client.session["active_workspace_project_id"], self.second_project.pk)
 
 
 class WorkspaceAutomationTests(TestCase):

@@ -1173,3 +1173,64 @@ textarea:focus {
 @keyframes seo-shimmer {
     100% { transform: translateX(100%); }
 }
+
+.workspace-expandable-card,
+.workspace-create-panel {
+    border: 1px solid rgba(15, 23, 42, 0.06);
+    border-radius: 22px;
+    background: #fff;
+}
+
+.workspace-expandable-summary,
+.workspace-create-summary {
+    list-style: none;
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+    cursor: pointer;
+}
+
+.workspace-expandable-summary::-webkit-details-marker,
+.workspace-create-summary::-webkit-details-marker {
+    display: none;
+}
+
+.workspace-expandable-card[open],
+.workspace-create-panel[open] {
+    box-shadow: 0 18px 40px rgba(15, 23, 42, 0.08);
+}
+
+.workspace-expandable-subtitle {
+    margin-top: 0.2rem;
+    color: #475569;
+    font-size: 0.88rem;
+}
+
+.workspace-expandable-meta {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+.workspace-expandable-body,
+.workspace-create-body {
+    margin-top: 1rem;
+}
+
+.workspace-expandable-metrics {
+    margin-top: 1rem;
+    display: grid;
+    gap: 0.4rem;
+    font-size: 0.82rem;
+    color: #475569;
+}
+
+@media (max-width: 860px) {
+    .workspace-expandable-summary,
+    .workspace-create-summary {
+        align-items: flex-start;
+        flex-direction: column;
+    }
+}

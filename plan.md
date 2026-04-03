@@ -281,6 +281,16 @@ Turn the current platform into a production-grade decision system that is clearl
 
 #### Track C: Credit system, packaging, and plan discipline
 
+- [x] Add manual workspace creation and active-workspace switching
+  Why:
+  Users need to keep separate websites or client work independent without hacking around the audit flow.
+  Delivered result:
+  The dashboard can create independent workspaces, reopen an existing one by domain, and switch the active workspace cleanly from the shell.
+- [x] Add audit-first onboarding for users who start from SEO, AEO, or content
+  Why:
+  Users should not get stranded in module screens when they actually need the first audit to create the working base.
+  Delivered result:
+  Zero states now point directly to a start-audit path that creates or attaches the workspace and continues into the audit result without extra detours.
 - [x] Produce a plan-by-plan packaging sheet in code and plan docs
   Why:
   Pricing without exact feature ownership creates confusion and weak upgrade logic.
@@ -296,6 +306,11 @@ Turn the current platform into a production-grade decision system that is clearl
   The user should see one simple number on the dashboard, not a confusing pile of unrelated credit buckets.
   Needed result:
   Plans grant a single workspace credit pool, heavier work spends more based on complexity, and the dashboard shows where those credits went.
+- [x] Prevent negative credit balances during testing mode
+  Why:
+  Free-pass testing should still log usage without making the product look broken or unpaid states look corrupt.
+  Delivered result:
+  Testing mode now records shadow usage, keeps the visible balance at zero or above, and shows estimated overage explicitly in the dashboard.
 - [x] Define exact usage limits per plan
   Why:
   A SaaS plan is not complete until limits are explicit.
@@ -306,6 +321,11 @@ Turn the current platform into a production-grade decision system that is clearl
   The product menu and credit model were becoming hard to read in day-to-day use.
   Needed result:
   The global header stays simple, the workspace gets its own clear sub-navigation, and users can see plan and credit state without hunting through dense sections.
+- [x] Add direct credit and billing shortcuts from the workspace shell
+  Why:
+  Buying or changing a plan should not require menu -> overview -> scroll -> select as a multi-step hunt.
+  Delivered result:
+  The header menu, workspace sub-navigation, and dashboard hero all expose direct links into credits and plans.
 - [x] Simplify the workspace flow around one audit base
   Why:
   The platform should feel like one path: audit first, then SEO or AEO, then content or exports only when needed.
@@ -326,6 +346,11 @@ Turn the current platform into a production-grade decision system that is clearl
   Upgrade prompts should follow visible work and visible limits, not generic sales language.
   Needed result:
   The UI explains what was used, what limit was reached, and what the next plan unlocks in operational terms.
+- [x] Reshape the dashboard into a clearer user shell
+  Why:
+  Static cards and long sections make the product feel heavier than it needs to be.
+  Delivered result:
+  The user dashboard now has a direct start-audit entry, a separate create-workspace entry, and a clickable expandable workspace portfolio instead of forcing the user through long static sections.
 - [x] Keep Enterprise reserved for true complexity
   Why:
   Enterprise should not become a dumping ground for ordinary paid features.

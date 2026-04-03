@@ -357,32 +357,47 @@ def ensure_plan_credit_grants(user, now=None):
     )
 
 
-def get_total_credit_balance_summary(user, now=None):
+def _get_shadow_usage_amount(entry):
+    if entry.delta < 0:
+        return abs(entry.delta)
+    return int((entry.metadata or {}).get("shadow_amount") or 0)
+
+
+def _iter_period_usage_entries(user, *, now=None):
     period_start, period_end = get_credit_record_window(now=now)
+    return WorkspaceCreditLedger.objects.filter(
+        user=user,
+        period_start=period_start,
+        period_end=period_end,
+    ).select_related("project")
+
+
+def get_total_credit_balance_summary(user, now=None):
     if not user or not getattr(user, "is_authenticated", False):
         return {"granted": 0, "used": 0, "remaining": 0, "unlimited": False}
 
     ensure_plan_credit_grants(user, now=now)
     allowance = _get_workspace_credit_allowance(user)
-    queryset = WorkspaceCreditLedger.objects.filter(
-        user=user,
-        period_start=period_start,
-        period_end=period_end,
-    )
+    queryset = _iter_period_usage_entries(user, now=now)
     granted = queryset.filter(delta__gt=0).aggregate(total=Sum("delta")).get("total") or 0
-    used = abs(queryset.filter(delta__lt=0).aggregate(total=Sum("delta")).get("total") or 0)
+    used = sum(_get_shadow_usage_amount(entry) for entry in queryset)
+    overage = max(used - granted, 0)
     if allowance is None:
         return {
             "granted": None,
             "used": used,
             "remaining": None,
             "unlimited": True,
+            "overage": 0,
+            "is_testing_mode": not settings.AUDIT_TIER_ENFORCEMENT,
         }
     return {
         "granted": granted,
         "used": used,
-        "remaining": granted - used,
+        "remaining": max(granted - used, 0),
         "unlimited": False,
+        "overage": overage,
+        "is_testing_mode": not settings.AUDIT_TIER_ENFORCEMENT,
     }
 
 
@@ -438,21 +453,14 @@ def get_credit_summary(user, now=None):
 
 
 def get_credit_activity_summary(user, now=None):
-    period_start, period_end = get_credit_record_window(now=now)
     if not user or not getattr(user, "is_authenticated", False):
         return []
 
-    queryset = WorkspaceCreditLedger.objects.filter(
-        user=user,
-        delta__lt=0,
-        period_start=period_start,
-        period_end=period_end,
-    )
-    used_by_category = {
-        item["category"]: abs(item["total"] or 0)
-        for item in queryset.values("category").annotate(total=Sum("delta"))
-        if item["category"] != WORKSPACE_CREDIT_CATEGORY
-    }
+    used_by_category = {}
+    for entry in _iter_period_usage_entries(user, now=now):
+        if entry.category == WORKSPACE_CREDIT_CATEGORY:
+            continue
+        used_by_category[entry.category] = used_by_category.get(entry.category, 0) + _get_shadow_usage_amount(entry)
     summary = []
     for category, label in CREDIT_ACTIVITY_LABELS.items():
         summary.append(
@@ -466,31 +474,30 @@ def get_credit_activity_summary(user, now=None):
 
 
 def get_recent_credit_entries(user, limit=8, now=None):
-    period_start, period_end = get_credit_record_window(now=now)
     if not user or not getattr(user, "is_authenticated", False):
         return []
     entries = (
-        WorkspaceCreditLedger.objects.filter(
-            user=user,
-            delta__lt=0,
-            period_start=period_start,
-            period_end=period_end,
-        )
-        .select_related("project")
-        .order_by("-created_at")[:limit]
+        _iter_period_usage_entries(user, now=now)
+        .order_by("-created_at")
     )
     recent = []
     for entry in entries:
+        amount = _get_shadow_usage_amount(entry)
+        if amount <= 0:
+            continue
         recent.append(
             {
                 "category": entry.category,
                 "label": CREDIT_ACTIVITY_LABELS.get(entry.category, entry.category.title()),
-                "amount": abs(entry.delta),
+                "amount": amount,
                 "note": entry.note,
                 "project_name": entry.project.name if entry.project_id else "",
                 "created_at": entry.created_at,
+                "is_estimated": bool((entry.metadata or {}).get("shadow_mode")),
             }
         )
+        if len(recent) >= limit:
+            break
     return recent
 
 
@@ -584,6 +591,8 @@ def spend_credits(user, category, *, amount=1, project=None, note="", reference_
     period_start, period_end = get_credit_record_window(now=now)
     subscription = get_workspace_subscription(user)
     plan = subscription.plan if is_active_subscription(subscription) else None
+    shadow_mode = not settings.AUDIT_TIER_ENFORCEMENT
+    delta = amount * -1 if not shadow_mode else 0
     entry = WorkspaceCreditLedger.objects.create(
         user=user,
         plan=plan,
@@ -591,12 +600,16 @@ def spend_credits(user, category, *, amount=1, project=None, note="", reference_
         project=project,
         category=category,
         kind=WorkspaceCreditLedger.Kind.DEBIT,
-        delta=amount * -1,
+        delta=delta,
         period_start=period_start,
         period_end=period_end,
         note=note[:255],
         reference_key=reference_key[:120],
-        metadata=metadata,
+        metadata={
+            **metadata,
+            "shadow_mode": shadow_mode,
+            "shadow_amount": amount if shadow_mode else 0,
+        },
     )
     return entry
 

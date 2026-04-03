@@ -79,6 +79,9 @@ class WorkspaceBillingCancelView(LoginRequiredMixin, View):
 class WorkspaceAuditRerunView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         project = resolve_workspace_project(request, request.user)
+        if project is None:
+            messages.error(request, "Create a project first before running an audit.")
+            return redirect(f"{reverse('tools:workspace-dashboard')}#new-project")
         try:
             audit_run = create_workspace_rerun_for_user(request.user, project=project)
         except BillingError as exc:
@@ -100,6 +103,9 @@ class WorkspaceAuditScheduleView(LoginRequiredMixin, View):
 
         is_active = request.POST.get("is_active") == "1"
         project = resolve_workspace_project(request, request.user)
+        if project is None:
+            messages.error(request, "Create a project first before setting recurring audit rules.")
+            return redirect(f"{reverse('tools:workspace-dashboard')}#new-project")
         try:
             schedule = update_workspace_schedule(
                 user=request.user,

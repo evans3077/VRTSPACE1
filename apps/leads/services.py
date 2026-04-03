@@ -4,6 +4,8 @@ from django.contrib.auth import get_user_model
 from django.db.models import Count
 from django.utils import timezone
 
+from apps.tools.services import extract_domain, normalize_url
+
 from .models import AuditRequest, ClientProject, Lead
 
 ACTIVE_WORKSPACE_PROJECT_SESSION_KEY = "active_workspace_project_id"
@@ -194,6 +196,42 @@ def set_active_workspace_project(request, project):
     request.session[ACTIVE_WORKSPACE_PROJECT_SESSION_KEY] = project.pk
 
 
+def create_workspace_project_for_user(user, *, name, website, business_type="", location="", target_goal="", primary_service=""):
+    normalized_website = normalize_url(website)
+    normalized_domain = extract_domain(normalized_website)
+    existing = (
+        ClientProject.objects.filter(
+            owner=user,
+            normalized_domain=normalized_domain,
+        )
+        .order_by("-updated_at", "-created_at")
+        .first()
+    )
+    if existing:
+        existing.name = name or existing.name
+        existing.website = normalized_website
+        existing.contact_email = user.email or existing.contact_email
+        existing.business_type = business_type or existing.business_type
+        existing.location = location or existing.location
+        existing.target_goal = target_goal or existing.target_goal
+        existing.primary_service = primary_service or existing.primary_service
+        existing.save()
+        return existing, False
+
+    project = ClientProject.objects.create(
+        owner=user,
+        name=name,
+        website=normalized_website,
+        normalized_domain=normalized_domain,
+        contact_email=user.email,
+        business_type=business_type,
+        location=location,
+        target_goal=target_goal,
+        primary_service=primary_service,
+    )
+    return project, True
+
+
 def sync_client_project_from_audit_run(audit_run):
     audit_request = audit_run.audit_request
     normalized_domain = audit_run.normalized_domain or urlparse(audit_run.start_url).netloc.lower()
@@ -206,19 +244,31 @@ def sync_client_project_from_audit_run(audit_run):
     primary_service = audit_request.primary_service if audit_request else ""
 
     if audit_request:
-        project, _created = ClientProject.objects.get_or_create(
-            audit_request=audit_request,
-            defaults={
-                "name": name,
-                "website": website,
-                "normalized_domain": normalized_domain,
-                "contact_email": email,
-                "business_type": business_type,
-                "location": location,
-                "target_goal": target_goal,
-                "primary_service": primary_service,
-            },
-        )
+        project = ClientProject.objects.filter(audit_request=audit_request).first()
+        if not project:
+            existing_by_identity = (
+                ClientProject.objects.filter(
+                    normalized_domain=normalized_domain,
+                    contact_email__iexact=email,
+                )
+                .order_by("-updated_at", "-created_at")
+                .first()
+            )
+            if existing_by_identity and not existing_by_identity.audit_request_id:
+                project = existing_by_identity
+                project.audit_request = audit_request
+            else:
+                project = ClientProject(
+                    audit_request=audit_request,
+                    name=name,
+                    website=website,
+                    normalized_domain=normalized_domain,
+                    contact_email=email,
+                    business_type=business_type,
+                    location=location,
+                    target_goal=target_goal,
+                    primary_service=primary_service,
+                )
     else:
         project = ClientProject.objects.filter(
             normalized_domain=normalized_domain,

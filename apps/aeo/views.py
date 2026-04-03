@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.views import View
 
 from apps.content.services import get_workspace_content_project
@@ -35,7 +36,7 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
         project = get_workspace_content_project(user=request.user, request=request)
         if not project:
             messages.error(request, "Create or connect a workspace project before running AEO analysis.")
-            return redirect("tools:workspace-dashboard")
+            return redirect(f"{reverse('tools:workspace-dashboard')}#new-project")
         allowed, _ = can_access_workspace_feature(request.user, "aeo_workspace_enabled")
         if not allowed:
             messages.error(request, "AEO analysis requires a plan that includes AEO credits.")

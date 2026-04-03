@@ -5,11 +5,20 @@
     <div class="container">
         <div class="section-heading">
             <p class="eyebrow">Workspace</p>
-            <h1 style="max-width: none;">{{ project.name|default:"Your workspace" }}</h1>
+            <h1 style="max-width: none;">{% if project.pk %}{{ project.name }}{% else %}User Dashboard{% endif %}</h1>
             <p class="section-text" style="max-width: 760px;">
                 Simple operating flow: run the audit, then move into SEO or AEO from the same result, then generate content only when you need execution.
             </p>
-            <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <div id="project-actions" style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                {% if not project.pk %}
+                <a class="button button-primary" href="#new-project">Create workspace</a>
+                {% elif not latest_audit %}
+                <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button button-primary">Run First Audit</button>
+                </form>
+                <a class="button button-secondary" href="#new-project">Edit Project Setup</a>
+                {% else %}
                 <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
                     {% csrf_token %}
                     <button type="submit" class="button button-primary">Run Audit</button>
@@ -17,7 +26,6 @@
                 <a class="button button-secondary" href="{% url 'seo:workspace-seo' %}">Go to SEO</a>
                 <a class="button button-secondary" href="{% url 'aeo:workspace-aeo' %}">Go to AEO</a>
                 <a class="button button-secondary" href="{% url 'content:workspace-content' %}">Go to Content</a>
-                {% if latest_audit %}
                 <a class="button button-secondary" href="{% url 'tools:audit-report-pdf' latest_audit.pk %}" target="_blank" rel="noopener">View Latest PDF</a>
                 <a class="button button-secondary" href="{% url 'tools:audit-report-pdf' latest_audit.pk %}?download=1">Download Latest PDF</a>
                 {% if export_reports_allowed %}
@@ -31,6 +39,7 @@
                     <button type="submit" class="button button-secondary">Manage Billing</button>
                 </form>
                 {% endif %}
+                <a class="button button-secondary" href="#plans">Plans & Billing</a>
             </div>
             {% if not audit_tier_enforcement %}
             <div style="margin-top: 1rem; display: inline-flex; gap: 0.5rem; align-items: center; padding: 0.75rem 1rem; border-radius: 999px; background: rgba(14, 165, 233, 0.08); color: #0f172a; font-size: 0.85rem; font-weight: 700;">
@@ -40,6 +49,20 @@
             <div class="workspace-flow-note" style="margin-top: 1rem;">
                 The latest audit feeds the next steps. You only spend fresh audit credits when you need a new crawl or want to validate changes.
             </div>
+            {% if not project.pk %}
+            <div style="margin-top: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.6;">
+                No active workspace yet. Start by creating one below. After that, the first audit becomes the base for SEO, AEO, content, exports, and reporting.
+            </div>
+            {% elif not latest_audit %}
+            <div style="margin-top: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; line-height: 1.6;">
+                This project is ready, but it does not have an audit base yet. Run the first audit now, then move into SEO, AEO, or content from that same result.
+            </div>
+            {% endif %}
+            {% if credit_overview.is_testing_mode and credit_overview.overage %}
+            <div style="margin-top: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; line-height: 1.6;">
+                Testing mode is active. The workspace has logged {{ credit_overview.overage }} credits of estimated overage without blocking the run.
+            </div>
+            {% endif %}
             {% if latest_audit and audit_export_action and not export_reports_allowed %}
             <div style="margin-top: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.6;">
                 <strong style="display: block; color: #0f172a; margin-bottom: 0.25rem;">Audit exports</strong>
@@ -64,61 +87,146 @@
         {% endif %}
 
         {% if workspace_project_summaries %}
-        <article class="system-card">
+        <article id="project-portfolio" class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                <p class="eyebrow">Projects</p>
-                <h2 style="font-size: 2rem;">Independent workspace projects</h2>
+                <p class="eyebrow">Workspaces</p>
+                <h2 style="font-size: 2rem;">Independent workspaces</h2>
             </div>
             <div class="system-grid">
                 {% for item in workspace_project_summaries %}
-                <article class="system-card" style="border-top: 4px solid {% if project.pk == item.pk %}var(--signal){% else %}rgba(15, 23, 42, 0.14){% endif %};">
-                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
-                        <strong>{{ item.name }}</strong>
-                        {% if project.pk == item.pk %}
-                        <span class="score-pill score-high">Active</span>
-                        {% endif %}
+                <details class="workspace-expandable-card"{% if project.pk == item.pk %} open{% endif %}>
+                    <summary class="workspace-expandable-summary">
+                        <div>
+                            <strong>{{ item.name }}</strong>
+                            <div class="workspace-expandable-subtitle">{{ item.project_type_label }}</div>
+                        </div>
+                        <div class="workspace-expandable-meta">
+                            {% if project.pk == item.pk %}
+                            <span class="score-pill score-high">Active</span>
+                            {% endif %}
+                            <span class="score-pill score-medium">Score {{ item.latest_score }}</span>
+                        </div>
+                    </summary>
+                    <div class="workspace-expandable-body">
+                        <div style="display: grid; gap: 0.35rem; color: #475569; font-size: 0.84rem;">
+                            <div>{{ item.normalized_domain }}</div>
+                            {% if item.business_type or item.location %}
+                            <div>{{ item.business_type|default:"Unclassified" }}{% if item.location %} | {{ item.location }}{% endif %}</div>
+                            {% endif %}
+                            {% if item.primary_service %}
+                            <div>{{ item.primary_service }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="seo-inline-tags" style="margin-top: 0.85rem;">
+                            {% for tag in item.focus_tags %}
+                            <span class="seo-inline-tag">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="workspace-expandable-metrics">
+                            <div>SEO snapshots: <strong style="color: #0f172a;">{{ item.seo_snapshot_count }}</strong></div>
+                            <div>AEO analyses: <strong style="color: #0f172a;">{{ item.aeo_audit_count }}</strong></div>
+                            <div>Content drafts: <strong style="color: #0f172a;">{{ item.generated_content_count }}</strong></div>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            {% if project.pk == item.pk %}
+                            <span class="score-pill score-medium">Open workspace</span>
+                            {% elif item.has_latest_audit %}
+                            <form method="post" action="{% url 'tools:workspace-project-select' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="project_id" value="{{ item.pk }}">
+                                <input type="hidden" name="next" value="{% url 'tools:workspace-dashboard' %}">
+                                <button type="submit" class="button button-secondary" style="width: 100%;">Open workspace</button>
+                            </form>
+                            {% else %}
+                            <form method="post" action="{% url 'tools:workspace-project-select' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="project_id" value="{{ item.pk }}">
+                                <input type="hidden" name="next" value="{% url 'tools:workspace-dashboard' %}">
+                                <button type="submit" class="button button-secondary" style="width: 100%;">Open and run audit</button>
+                            </form>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div style="margin-top: 0.35rem; color: #475569; font-size: 0.88rem;">{{ item.project_type_label }}</div>
-                    <div style="margin-top: 0.75rem; display: grid; gap: 0.35rem; color: #475569; font-size: 0.84rem;">
-                        <div>{{ item.normalized_domain }}</div>
-                        {% if item.business_type or item.location %}
-                        <div>{{ item.business_type|default:"Unclassified" }}{% if item.location %} | {{ item.location }}{% endif %}</div>
-                        {% endif %}
-                        {% if item.primary_service %}
-                        <div>{{ item.primary_service }}</div>
-                        {% endif %}
-                    </div>
-                    <div class="seo-inline-tags" style="margin-top: 0.85rem;">
-                        {% for tag in item.focus_tags %}
-                        <span class="seo-inline-tag">{{ tag }}</span>
-                        {% endfor %}
-                    </div>
-                    <div style="margin-top: 1rem; display: grid; gap: 0.4rem; font-size: 0.82rem; color: #475569;">
-                        <div>Latest score: <strong style="color: #0f172a;">{{ item.latest_score }}</strong></div>
-                        <div>SEO snapshots: <strong style="color: #0f172a;">{{ item.seo_snapshot_count }}</strong></div>
-                        <div>AEO analyses: <strong style="color: #0f172a;">{{ item.aeo_audit_count }}</strong></div>
-                        <div>Content drafts: <strong style="color: #0f172a;">{{ item.generated_content_count }}</strong></div>
-                    </div>
-                    <div style="margin-top: 1rem;">
-                        {% if project.pk == item.pk %}
-                        <span class="score-pill score-medium">Open project</span>
-                        {% else %}
-                        <form method="post" action="{% url 'tools:workspace-project-select' %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="project_id" value="{{ item.pk }}">
-                            <input type="hidden" name="next" value="{% url 'tools:workspace-dashboard' %}">
-                            <button type="submit" class="button button-secondary" style="width: 100%;">Open project</button>
-                        </form>
-                        {% endif %}
-                    </div>
-                </article>
+                </details>
                 {% endfor %}
             </div>
         </article>
         {% endif %}
 
+        <details id="start-audit" class="system-card workspace-create-panel"{% if audit_start_form.errors or not project.pk %} open{% endif %}>
+            <summary class="workspace-create-summary">
+                <div>
+                    <p class="eyebrow">Fast Start</p>
+                    <h2 style="font-size: 2rem; margin: 0;">Start with an audit</h2>
+                </div>
+                <span class="button button-primary">Start audit</span>
+            </summary>
+            <div class="workspace-create-body">
+                <div style="color: #475569; line-height: 1.6;">
+                    Use this when you want to begin with SEO or AEO immediately. The audit creates or attaches the workspace, then feeds the next layers without making you restart the flow.
+                    <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03);">
+                        Flow:
+                        <div style="margin-top: 0.35rem;">1. Start the audit</div>
+                        <div>2. Let the workspace attach automatically</div>
+                        <div>3. Continue into SEO, AEO, content, exports, and reporting</div>
+                    </div>
+                </div>
+                <form method="post" action="{% url 'tools:workspace-audit-start' %}" style="display: grid; gap: 0.85rem;">
+                    {% csrf_token %}
+                    {% for field in audit_start_form %}
+                    {% if field.is_hidden %}
+                    {{ field }}
+                    {% else %}
+                    <label style="display: grid; gap: 0.3rem;">
+                        <span style="font-weight: 700;">{{ field.label }}</span>
+                        {{ field }}
+                        {% if field.errors %}
+                        <span style="color: #991b1b; font-size: 0.82rem;">{{ field.errors|join:", " }}</span>
+                        {% endif %}
+                    </label>
+                    {% endif %}
+                    {% endfor %}
+                    <button type="submit" class="button button-primary">Start audit and attach workspace</button>
+                </form>
+            </div>
+        </details>
+
+        <details id="new-project" class="system-card workspace-create-panel"{% if project_form.errors %} open{% endif %}>
+            <summary class="workspace-create-summary">
+                <div>
+                    <p class="eyebrow">Workspace Setup</p>
+                    <h2 style="font-size: 2rem; margin: 0;">Create another independent workspace</h2>
+                </div>
+                <span class="button button-primary">Create workspace</span>
+            </summary>
+            <div class="workspace-create-body">
+                <div style="color: #475569; line-height: 1.6;">
+                    Create a workspace when you want to keep SEO, AEO, content, exports, and credit activity separate for another website, brand, or client without starting an audit yet.
+                    <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03);">
+                        Workflow:
+                        <div style="margin-top: 0.35rem;">1. Create the workspace</div>
+                        <div>2. Run the first audit</div>
+                        <div>3. Reuse that audit for SEO, AEO, and content</div>
+                    </div>
+                </div>
+                <form method="post" action="{% url 'tools:workspace-project-create' %}" style="display: grid; gap: 0.85rem;">
+                    {% csrf_token %}
+                    {% for field in project_form %}
+                    <label style="display: grid; gap: 0.3rem;">
+                        <span style="font-weight: 700;">{{ field.label }}</span>
+                        {{ field }}
+                        {% if field.errors %}
+                        <span style="color: #991b1b; font-size: 0.82rem;">{{ field.errors|join:", " }}</span>
+                        {% endif %}
+                    </label>
+                    {% endfor %}
+                    <button type="submit" class="button button-primary">Create workspace</button>
+                </form>
+            </div>
+        </details>
+
         <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; align-items: start;">
-            <article class="system-card">
+            <article id="credit-overview" class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                     <p class="eyebrow">Product Areas</p>
                     <h2 style="font-size: 2rem;">Audits, SEO, and AEO</h2>
@@ -129,7 +237,14 @@
                         <h3>{% if latest_audit %}{{ latest_audit.overall_score }}{% else %}-{% endif %}</h3>
                         <p>Technical, on-page, content, and performance tracking.</p>
                         <div style="margin-top: 1rem;">
+                            {% if project.pk and not latest_audit %}
+                            <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="button button-secondary">Run first audit</button>
+                            </form>
+                            {% else %}
                             <a class="button button-secondary" href="{% url 'tools:workspace-dashboard' %}#audit-history">Open Audits</a>
+                            {% endif %}
                         </div>
                     </article>
                     <article class="system-card" style="border-top: 4px solid #0f172a;">
@@ -137,7 +252,16 @@
                         <h3>{% if latest_seo_snapshot %}Ready{% else %}Setup{% endif %}</h3>
                         <p>Industry, location, keyword, and page-priority planning.</p>
                         <div style="margin-top: 1rem;">
+                            {% if not project.pk %}
+                            <a class="button button-secondary" href="#new-project">Create project</a>
+                            {% elif not latest_audit %}
+                            <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="button button-secondary">Run first audit</button>
+                            </form>
+                            {% else %}
                             <a class="button button-secondary" href="{% url 'seo:workspace-seo' %}">Open SEO</a>
+                            {% endif %}
                         </div>
                     </article>
                     <article class="system-card" style="border-top: 4px solid #ea580c;">
@@ -145,7 +269,16 @@
                         <h3>{% if latest_aeo_audit %}{{ latest_aeo_audit.visibility_score }}{% else %}Run{% endif %}</h3>
                         <p>AI visibility, entity clarity, and answer-structure readiness.</p>
                         <div style="margin-top: 1rem;">
+                            {% if not project.pk %}
+                            <a class="button button-secondary" href="#new-project">Create project</a>
+                            {% elif not latest_audit %}
+                            <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
+                                {% csrf_token %}
+                                <button type="submit" class="button button-secondary">Run first audit</button>
+                            </form>
+                            {% else %}
                             <a class="button button-secondary" href="{% url 'aeo:workspace-aeo' %}">Open AEO</a>
+                            {% endif %}
                         </div>
                     </article>
                 </div>
@@ -178,6 +311,11 @@
                         </div>
                     </div>
                 </div>
+                {% if credit_overview.is_testing_mode %}
+                <div style="margin-top: 0.75rem; font-size: 0.82rem; color: #475569;">
+                    Testing mode keeps the balance from dropping below zero while still logging estimated spend.
+                </div>
+                {% endif %}
                 <div style="margin-top: 1rem; display: grid; gap: 0.75rem;">
                     {% for item in credit_activity %}
                     <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; gap: 1rem;">
@@ -313,6 +451,7 @@
                     </div>
                     <div style="font-size: 0.84rem; color: #475569;">
                         {{ entry.label }}{% if entry.project_name %} | {{ entry.project_name }}{% endif %} | {{ entry.created_at }}
+                        {% if entry.is_estimated %} | Estimated during testing mode{% endif %}
                     </div>
                 </div>
                 {% endfor %}

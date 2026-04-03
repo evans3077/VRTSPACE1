@@ -25,7 +25,11 @@
                 </div>
                 {% if not project %}
                 <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
-                    Create a workspace project from an audit first, then return here to build SEO context and benchmark competitors.
+                    <div>Create a workspace project first. That project becomes the container for the audit, benchmark history, campaign work, and SEO exports.</div>
+                    <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                        <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}#start-audit">Start with audit</a>
+                        <a class="button button-secondary" href="{% url 'tools:workspace-dashboard' %}#new-project">Create workspace</a>
+                    </div>
                 </div>
                 {% else %}
                 {% if workspace_credit_actions %}
@@ -63,7 +67,13 @@
                 </div>
                 {% if not can_generate_snapshot %}
                 <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
-                    A completed audit is required before the SEO hub can benchmark structure and competitors.
+                    <div>A completed audit is required before the SEO hub can benchmark structure and competitors.</div>
+                    <div style="margin-top: 1rem;">
+                        <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="button button-primary">Run first audit</button>
+                        </form>
+                    </div>
                 </div>
                 {% elif seo_refresh_state.refresh_status == "queued" or seo_refresh_state.refresh_status == "running" %}
                 <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">

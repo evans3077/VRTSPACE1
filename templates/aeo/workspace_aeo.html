@@ -25,7 +25,21 @@
                 </div>
                 {% if not project %}
                 <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
-                    Create a workspace project from an audit first, then return here to run AEO analysis.
+                    <div>Create a workspace project first. After that, the first audit becomes the base for answer-engine analysis.</div>
+                    <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                        <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}#start-audit">Start with audit</a>
+                        <a class="button button-secondary" href="{% url 'tools:workspace-dashboard' %}#new-project">Create workspace</a>
+                    </div>
+                </div>
+                {% elif not project.latest_audit_run %}
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                    <div>This project exists, but it still needs its first audit before AEO can run.</div>
+                    <div style="margin-top: 1rem;">
+                        <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="button button-primary">Run first audit</button>
+                        </form>
+                    </div>
                 </div>
                 {% else %}
                 {% if workspace_credit_actions %}
@@ -73,7 +87,11 @@
                 {% endif %}
                 {% else %}
                 <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                    {% if project and project.latest_audit_run %}
                     No AEO snapshot has been generated yet for this workspace.
+                    {% else %}
+                    Run the first audit to unlock the AEO snapshot.
+                    {% endif %}
                 </div>
                 {% endif %}
             </article>
