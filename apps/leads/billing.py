@@ -9,27 +9,25 @@ from datetime import timezone as dt_timezone
 
 import requests
 from django.conf import settings
+from django.db.models import Sum
 from django.db.models import Q
 from django.utils import timezone
 
-from apps.core.site_content import PACKAGES
+from apps.core.plan_catalog import (
+    build_marketing_packages,
+    build_workspace_plan_defaults,
+    get_plan_definition,
+    get_plan_definitions,
+)
 from apps.tools.models import AuditRun
 
-from .models import ClientProject, UsageRecord, WorkspacePlan, WorkspaceSubscription
-
-
-FREE_PLAN_CAPABILITIES = {
-    "name": "Free",
-    "slug": "free",
-    "monthly_audits_limit": 1,
-    "history_limit": 1,
-    "premium_recommendation_limit": 3,
-    "recurring_audits_enabled": False,
-    "export_reports_enabled": False,
-    "email_reports_enabled": False,
-    "competitor_tracking_enabled": False,
-    "stakeholder_sharing_enabled": False,
-}
+from .models import (
+    ClientProject,
+    UsageRecord,
+    WorkspaceCreditLedger,
+    WorkspacePlan,
+    WorkspaceSubscription,
+)
 
 STRIPE_API_BASE = "https://api.stripe.com/v1"
 ACTIVE_SUBSCRIPTION_STATUSES = {
@@ -42,8 +40,64 @@ class BillingError(Exception):
     pass
 
 
+USAGE_LIMIT_MAP = {
+    UsageRecord.Metric.AUDIT_RUN: "audit",
+    UsageRecord.Metric.SEO_SNAPSHOT: "seo",
+    UsageRecord.Metric.AEO_AUDIT: "aeo",
+    UsageRecord.Metric.CONTENT_DRAFT: "content",
+    UsageRecord.Metric.EXPORT: "export",
+}
+
+USAGE_METRIC_BY_CREDIT_CATEGORY = {value: key for key, value in USAGE_LIMIT_MAP.items()}
+
+
+def _definition_to_capabilities(definition):
+    definition = definition or get_plan_definition("free") or {}
+    limits = dict(definition.get("limits", {}))
+    features = dict(definition.get("feature_flags", {}))
+    credits = dict(definition.get("credits", {}))
+    return {
+        "name": definition.get("name", "Free"),
+        "slug": definition.get("slug", "free"),
+        "label": definition.get("label", ""),
+        "price_label": definition.get("price_label", ""),
+        "description": definition.get("description", ""),
+        "audience": definition.get("audience", ""),
+        "upgrade_message": definition.get("upgrade_message", ""),
+        "features": features,
+        "limits": limits,
+        "credits": credits,
+        "monthly_audits_limit": limits.get("audit_runs"),
+        "history_limit": limits.get("saved_history"),
+        "premium_recommendation_limit": limits.get("premium_recommendations"),
+        "recurring_audits_enabled": features.get("recurring_audits_enabled", False),
+        "export_reports_enabled": features.get("export_reports_enabled", False),
+        "email_reports_enabled": features.get("email_reports_enabled", False),
+        "competitor_tracking_enabled": features.get("competitor_tracking_enabled", False),
+        "stakeholder_sharing_enabled": features.get("stakeholder_sharing_enabled", False),
+        "seo_workspace_enabled": features.get("seo_workspace_enabled", False),
+        "aeo_workspace_enabled": features.get("aeo_workspace_enabled", False),
+        "content_workspace_enabled": features.get("content_workspace_enabled", False),
+        "backlink_workspace_enabled": features.get("backlink_workspace_enabled", False),
+        "action_packs_enabled": features.get("action_packs_enabled", False),
+        "campaign_tracking_enabled": features.get("campaign_tracking_enabled", False),
+        "cross_module_summary_enabled": features.get("cross_module_summary_enabled", False),
+    }
+
+
+FREE_PLAN_CAPABILITIES = _definition_to_capabilities(get_plan_definition("free"))
+
+
 def get_workspace_plans():
     return list(WorkspacePlan.objects.filter(is_active=True).order_by("sort_order", "name"))
+
+
+def sync_workspace_plan_catalog():
+    for definition in get_plan_definitions(include_free=False):
+        WorkspacePlan.objects.update_or_create(
+            slug=definition["slug"],
+            defaults=build_workspace_plan_defaults(definition),
+        )
 
 
 def get_workspace_subscription(user):
@@ -70,29 +124,56 @@ def get_effective_capabilities(user):
         return dict(FREE_PLAN_CAPABILITIES)
 
     plan = subscription.plan
-    return {
-        "name": plan.name,
-        "slug": plan.slug,
-        "monthly_audits_limit": plan.monthly_audits_limit,
-        "history_limit": plan.history_limit,
-        "premium_recommendation_limit": plan.premium_recommendation_limit,
-        "recurring_audits_enabled": plan.recurring_audits_enabled,
-        "export_reports_enabled": plan.export_reports_enabled,
-        "email_reports_enabled": plan.email_reports_enabled,
-        "competitor_tracking_enabled": plan.competitor_tracking_enabled,
-        "stakeholder_sharing_enabled": plan.stakeholder_sharing_enabled,
+    capabilities = _definition_to_capabilities(get_plan_definition(plan.slug))
+    metadata = dict(plan.metadata or {})
+    capabilities["name"] = plan.name
+    capabilities["price_label"] = plan.price_label or capabilities.get("price_label", "")
+    capabilities["description"] = plan.description or capabilities.get("description", "")
+    capabilities["label"] = metadata.get("label", capabilities.get("label", ""))
+    capabilities["audience"] = metadata.get("audience", capabilities.get("audience", ""))
+    capabilities["upgrade_message"] = metadata.get("upgrade_message", capabilities.get("upgrade_message", ""))
+    capabilities["features"] = {
+        **capabilities.get("features", {}),
+        **metadata.get("features", {}),
     }
+    capabilities["limits"] = {
+        **capabilities.get("limits", {}),
+        **metadata.get("limits", {}),
+    }
+    capabilities["credits"] = {
+        **capabilities.get("credits", {}),
+        **metadata.get("credits", {}),
+    }
+    capabilities["monthly_audits_limit"] = plan.monthly_audits_limit
+    capabilities["history_limit"] = plan.history_limit
+    capabilities["premium_recommendation_limit"] = plan.premium_recommendation_limit
+    capabilities["recurring_audits_enabled"] = plan.recurring_audits_enabled
+    capabilities["export_reports_enabled"] = plan.export_reports_enabled
+    capabilities["email_reports_enabled"] = plan.email_reports_enabled
+    capabilities["competitor_tracking_enabled"] = plan.competitor_tracking_enabled
+    capabilities["stakeholder_sharing_enabled"] = plan.stakeholder_sharing_enabled
+    capabilities["limits"]["audit_runs"] = plan.monthly_audits_limit
+    capabilities["limits"]["saved_history"] = plan.history_limit
+    capabilities["limits"]["premium_recommendations"] = plan.premium_recommendation_limit
+    capabilities["features"]["recurring_audits_enabled"] = plan.recurring_audits_enabled
+    capabilities["features"]["export_reports_enabled"] = plan.export_reports_enabled
+    capabilities["features"]["email_reports_enabled"] = plan.email_reports_enabled
+    capabilities["features"]["competitor_tracking_enabled"] = plan.competitor_tracking_enabled
+    capabilities["features"]["stakeholder_sharing_enabled"] = plan.stakeholder_sharing_enabled
+    return capabilities
 
 
 def get_billing_state(user):
     subscription = get_workspace_subscription(user)
     capabilities = get_effective_capabilities(user)
     usage = get_usage_summary(user)
+    credit_summary = get_credit_summary(user)
     plans = build_plan_cards(user)
     return {
         "subscription": subscription,
         "capabilities": capabilities,
         "usage": usage,
+        "credits": credit_summary,
         "plans": plans,
         "stripe_enabled": settings.STRIPE_ENABLED,
         "publishable_key": settings.STRIPE_PUBLISHABLE_KEY,
@@ -100,25 +181,30 @@ def get_billing_state(user):
 
 
 def build_plan_cards(user=None):
-    package_map = {package["name"].lower(): package for package in PACKAGES}
     subscription = get_workspace_subscription(user) if user else None
-    current_plan_slug = subscription.plan.slug if is_active_subscription(subscription) else ""
+    current_plan_slug = subscription.plan.slug if is_active_subscription(subscription) else "free"
+    plan_map = {plan.slug: plan for plan in get_workspace_plans()}
     cards = []
-    for plan in get_workspace_plans():
-        package = package_map.get(plan.slug, {})
-        price_id = get_stripe_price_id(plan)
+    for package in build_marketing_packages(include_free=True):
+        plan = plan_map.get(package["slug"])
+        price_id = get_stripe_price_id(plan) if plan else ""
         cards.append(
             {
                 "plan": plan,
-                "name": plan.name,
-                "slug": plan.slug,
+                "name": package["name"],
+                "slug": package["slug"],
                 "label": package.get("label", ""),
-                "price": package.get("price", plan.price_label),
+                "price": package.get("price", getattr(plan, "price_label", "")),
                 "features": package.get("features", []),
-                "description": plan.description,
+                "limits_summary": package.get("limits_summary", []),
+                "credits": package.get("credits", {}),
+                "description": package.get("description", getattr(plan, "description", "")),
+                "audience": package.get("audience", ""),
+                "upgrade_message": package.get("upgrade_message", ""),
                 "stripe_price_id": price_id,
-                "is_current": plan.slug == current_plan_slug,
-                "is_custom": plan.slug == "enterprise" or not price_id,
+                "is_current": package["slug"] == current_plan_slug,
+                "is_custom": package.get("is_custom", False) or (bool(plan) and (plan.slug == "enterprise" or not price_id)),
+                "is_free": package.get("is_free", False),
             }
         )
     return cards
@@ -130,6 +216,110 @@ def get_month_period_window(now=None):
     last_day = calendar.monthrange(now.year, now.month)[1]
     end = date(year=now.year, month=now.month, day=last_day)
     return start, end
+
+
+def get_credit_record_window(now=None):
+    return get_month_period_window(now=now)
+
+
+def _get_credit_allowances(user):
+    return dict(get_effective_capabilities(user).get("credits", {}))
+
+
+def ensure_plan_credit_grants(user, now=None):
+    if not user or not getattr(user, "is_authenticated", False):
+        return
+    period_start, period_end = get_credit_record_window(now=now)
+    subscription = get_workspace_subscription(user)
+    plan = subscription.plan if is_active_subscription(subscription) else None
+    for category, amount in _get_credit_allowances(user).items():
+        if amount in (0, None):
+            continue
+        existing = WorkspaceCreditLedger.objects.filter(
+            user=user,
+            category=category,
+            kind=WorkspaceCreditLedger.Kind.GRANT,
+            period_start=period_start,
+            period_end=period_end,
+        ).exists()
+        if existing:
+            continue
+        WorkspaceCreditLedger.objects.create(
+            user=user,
+            plan=plan,
+            subscription=subscription,
+            category=category,
+            kind=WorkspaceCreditLedger.Kind.GRANT,
+            delta=amount,
+            period_start=period_start,
+            period_end=period_end,
+            note="Monthly plan credit allocation",
+            reference_key=f"plan-credit:{category}:{period_start.isoformat()}",
+            metadata={"source": "monthly_plan_credit"},
+        )
+
+
+def get_credit_balance_summary(user, category, now=None):
+    period_start, period_end = get_credit_record_window(now=now)
+    if not user or not getattr(user, "is_authenticated", False):
+        return {"granted": 0, "used": 0, "remaining": 0, "unlimited": False}
+
+    ensure_plan_credit_grants(user, now=now)
+    allowance = _get_credit_allowances(user).get(category)
+    queryset = WorkspaceCreditLedger.objects.filter(
+        user=user,
+        category=category,
+        period_start=period_start,
+        period_end=period_end,
+    )
+    total = queryset.aggregate(total=Sum("delta")).get("total") or 0
+    used = abs(
+        queryset.filter(delta__lt=0).aggregate(total=Sum("delta")).get("total") or 0
+    )
+    usage_metric = USAGE_METRIC_BY_CREDIT_CATEGORY.get(category)
+    if usage_metric:
+        usage_record = get_usage_record(user, usage_metric, now=now)
+        used = max(used, usage_record.quantity)
+    if allowance is None:
+        return {
+            "granted": None,
+            "used": used,
+            "remaining": None,
+            "unlimited": True,
+        }
+    granted = queryset.filter(delta__gt=0).aggregate(total=Sum("delta")).get("total") or 0
+    return {
+        "granted": granted,
+        "used": used,
+        "remaining": granted - used,
+        "unlimited": False,
+    }
+
+
+def get_credit_summary(user, now=None):
+    labels = {
+        "audit": "Audit credits",
+        "seo": "SEO credits",
+        "aeo": "AEO credits",
+        "content": "Content credits",
+        "backlink": "Backlink credits",
+        "export": "Export credits",
+        "share": "Share credits",
+    }
+    summary = []
+    for category, label in labels.items():
+        allowance = _get_credit_allowances(user).get(category)
+        if allowance is None and category not in _get_credit_allowances(user):
+            continue
+        balance = get_credit_balance_summary(user, category, now=now)
+        summary.append(
+            {
+                "category": category,
+                "label": label,
+                **balance,
+            }
+        )
+    return summary
 
 
 def get_usage_record(user, metric, now=None):
@@ -156,15 +346,25 @@ def get_usage_summary(user):
     audit_usage = get_usage_record(user, UsageRecord.Metric.AUDIT_RUN)
     seo_usage = get_usage_record(user, UsageRecord.Metric.SEO_SNAPSHOT)
     aeo_usage = get_usage_record(user, UsageRecord.Metric.AEO_AUDIT)
+    content_usage = get_usage_record(user, UsageRecord.Metric.CONTENT_DRAFT)
     export_usage = get_usage_record(user, UsageRecord.Metric.EXPORT)
-    limit = capabilities["monthly_audits_limit"]
+    audit_limit = capabilities.get("credits", {}).get("audit")
+    seo_limit = capabilities.get("credits", {}).get("seo")
+    aeo_limit = capabilities.get("credits", {}).get("aeo")
+    content_limit = capabilities.get("credits", {}).get("content")
+    export_limit = capabilities.get("credits", {}).get("export")
     return {
         "audit_runs_used": audit_usage.quantity,
-        "audit_runs_limit": limit,
-        "audit_runs_remaining": None if limit is None else max(limit - audit_usage.quantity, 0),
+        "audit_runs_limit": audit_limit,
+        "audit_runs_remaining": None if audit_limit is None else max(audit_limit - audit_usage.quantity, 0),
         "seo_snapshots_used": seo_usage.quantity,
+        "seo_snapshots_limit": seo_limit,
         "aeo_audits_used": aeo_usage.quantity,
+        "aeo_audits_limit": aeo_limit,
+        "content_drafts_used": content_usage.quantity,
+        "content_drafts_limit": content_limit,
         "exports_used": export_usage.quantity,
+        "exports_limit": export_limit,
     }
 
 
@@ -175,22 +375,56 @@ def record_usage(user, metric, quantity=1):
     return record
 
 
+def can_spend_credits(user, category, *, amount=1, now=None):
+    balance = get_credit_balance_summary(user, category, now=now)
+    if balance["unlimited"]:
+        return True, balance
+    return balance["remaining"] >= amount, balance
+
+
+def spend_credits(user, category, *, amount=1, project=None, note="", reference_key="", metadata=None, now=None):
+    metadata = metadata or {}
+    allowed, balance = can_spend_credits(user, category, amount=amount, now=now)
+    if settings.AUDIT_TIER_ENFORCEMENT and not allowed:
+        raise BillingError(
+            f"Your current plan does not have enough {category} credits remaining for this action."
+        )
+
+    period_start, period_end = get_credit_record_window(now=now)
+    subscription = get_workspace_subscription(user)
+    plan = subscription.plan if is_active_subscription(subscription) else None
+    entry = WorkspaceCreditLedger.objects.create(
+        user=user,
+        plan=plan,
+        subscription=subscription,
+        project=project,
+        category=category,
+        kind=WorkspaceCreditLedger.Kind.DEBIT,
+        delta=amount * -1,
+        period_start=period_start,
+        period_end=period_end,
+        note=note[:255],
+        reference_key=reference_key[:120],
+        metadata=metadata,
+    )
+    return entry
+
+
 def can_run_workspace_audit(user):
-    capabilities = get_effective_capabilities(user)
-    limit = capabilities["monthly_audits_limit"]
-    if limit is None:
-        return True, None
-    usage = get_usage_summary(user)
-    if usage["audit_runs_used"] >= limit:
-        return False, usage
-    return True, usage
+    return can_spend_credits(user, "audit", amount=1)
 
 
 def can_access_audit_feature(user, feature_name):
     capabilities = get_effective_capabilities(user)
     if not settings.AUDIT_TIER_ENFORCEMENT:
         return True, capabilities
-    return bool(capabilities.get(feature_name)), capabilities
+    if feature_name in capabilities:
+        return bool(capabilities.get(feature_name)), capabilities
+    return bool(capabilities.get("features", {}).get(feature_name)), capabilities
+
+
+def can_access_workspace_feature(user, feature_name):
+    return can_access_audit_feature(user, feature_name)
 
 
 def get_stripe_price_id(plan):
@@ -430,16 +664,23 @@ def create_workspace_rerun_for_user(user, *, project=None):
     if not project:
         raise BillingError("No workspace project is attached to this account yet.")
 
-    allowed, usage = can_run_workspace_audit(user)
+    allowed, balance = can_run_workspace_audit(user)
     if settings.AUDIT_TIER_ENFORCEMENT and not allowed:
-        raise BillingError(
-            f"Your current plan has reached its monthly audit limit ({usage['audit_runs_limit']})."
-        )
+        raise BillingError("Your current plan does not have enough audit credits remaining.")
 
     audit_run = AuditRun.objects.create(
         audit_request=project.audit_request,
         normalized_domain="pending",
         start_url=project.website,
+    )
+    spend_credits(
+        user,
+        "audit",
+        amount=1,
+        project=project,
+        note="Workspace audit rerun",
+        reference_key=f"audit-run:{audit_run.pk}",
+        metadata={"remaining_before": balance.get("remaining")},
     )
     record_usage(user, UsageRecord.Metric.AUDIT_RUN, quantity=1)
     return audit_run

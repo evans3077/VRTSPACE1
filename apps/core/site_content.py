@@ -1,6 +1,7 @@
 from copy import deepcopy
 from itertools import count
 
+from apps.core.plan_catalog import build_marketing_packages
 from django.utils.text import slugify
 
 SERVICE_GROUPS = [
@@ -272,48 +273,7 @@ SERVICE_GROUPS = [
     },
 ]
 
-PACKAGES = [
-    {
-        "name": "Starter",
-        "price": "~$200",
-        "label": "Self-serve entry",
-        "features": [
-            "Basic SEO setup",
-            "Audit report",
-            "Grouped recommendations",
-        ],
-    },
-    {
-        "name": "Growth",
-        "price": "~$500",
-        "label": "Team plan",
-        "features": [
-            "SEO and content",
-            "Basic AEO",
-            "Core tracking",
-        ],
-    },
-    {
-        "name": "Authority",
-        "price": "$1000+",
-        "label": "Advanced visibility plan",
-        "features": [
-            "Full SEO and AEO",
-            "AI visibility tracking",
-            "CRO layer",
-        ],
-    },
-    {
-        "name": "Enterprise",
-        "price": "Custom",
-        "label": "Custom environments",
-        "features": [
-            "Custom architecture",
-            "Cross-market strategy",
-            "Executive reporting",
-        ],
-    },
-]
+PACKAGES = build_marketing_packages(include_free=False)
 
 SYSTEM_BLOCKS = [
     {

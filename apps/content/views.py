@@ -6,6 +6,8 @@ from django.urls import reverse
 from django.views import View
 from django.views.generic import DetailView, ListView
 
+from apps.leads.billing import BillingError, can_access_workspace_feature, record_usage, spend_credits
+from apps.leads.models import UsageRecord
 from apps.leads.services import get_workspace_projects
 
 from .forms import GeneratedContentEditForm, GeneratedContentRequestForm
@@ -80,6 +82,10 @@ class WorkspaceGeneratedContentCreateView(LoginRequiredMixin, View):
         if not project:
             messages.error(request, "Create or connect a workspace project before generating drafts.")
             return redirect("tools:workspace-dashboard")
+        allowed, _ = can_access_workspace_feature(request.user, "content_workspace_enabled")
+        if not allowed:
+            messages.error(request, "Content generation requires a plan that includes content credits.")
+            return redirect("tools:workspace-dashboard")
 
         form = GeneratedContentRequestForm(request.POST)
         if not form.is_valid():
@@ -106,12 +112,25 @@ class WorkspaceGeneratedContentCreateView(LoginRequiredMixin, View):
                 status=400,
             )
 
-        draft = create_generated_content(
-            user=request.user,
-            project=project,
-            output_type=form.cleaned_data["output_type"],
-            input_data=form.cleaned_data,
-        )
+        try:
+            spend_credits(
+                request.user,
+                "content",
+                amount=1,
+                project=project,
+                note="Manual content draft generation",
+                reference_key=f"content-draft:{project.pk}:{request.user.pk}",
+            )
+            draft = create_generated_content(
+                user=request.user,
+                project=project,
+                output_type=form.cleaned_data["output_type"],
+                input_data=form.cleaned_data,
+            )
+            record_usage(request.user, UsageRecord.Metric.CONTENT_DRAFT)
+        except BillingError as exc:
+            messages.error(request, str(exc))
+            return redirect("content:workspace-content")
         messages.success(request, "AI content draft created.")
         return redirect("content:workspace-content-detail", pk=draft.pk)
 
@@ -122,6 +141,10 @@ class WorkspaceGeneratedContentFromSEOView(LoginRequiredMixin, View):
         if not project:
             messages.error(request, "Create or connect a workspace project before generating drafts.")
             return redirect("tools:workspace-dashboard")
+        allowed, _ = can_access_workspace_feature(request.user, "content_workspace_enabled")
+        if not allowed:
+            messages.error(request, "Content generation requires a plan that includes content credits.")
+            return redirect("tools:workspace-dashboard")
 
         brief_key = request.POST.get("brief_key", "").strip()
         task = get_editorial_task(project, brief_key)
@@ -130,22 +153,35 @@ class WorkspaceGeneratedContentFromSEOView(LoginRequiredMixin, View):
             return redirect("content:workspace-content")
         brief = task.brief_json or {}
 
-        draft = create_generated_content(
-            user=request.user,
-            project=project,
-            output_type=brief["output_type"],
-            input_data={
-                "business_type": brief["business_type"],
-                "location": brief["location"],
-                "target_audience": brief["target_audience"],
-                "page_goal": brief["page_goal"],
-                "offer_summary": brief["offer_summary"],
-                "target_keywords": [brief["primary_keyword"], *brief.get("secondary_keywords", [])],
-                "search_intent": brief["search_intent"],
-                "seo_brief": brief,
-                "source_editorial_task": task,
-            },
-        )
+        try:
+            spend_credits(
+                request.user,
+                "content",
+                amount=1,
+                project=project,
+                note="SEO-driven content draft generation",
+                reference_key=f"content-brief:{task.brief_key}",
+            )
+            draft = create_generated_content(
+                user=request.user,
+                project=project,
+                output_type=brief["output_type"],
+                input_data={
+                    "business_type": brief["business_type"],
+                    "location": brief["location"],
+                    "target_audience": brief["target_audience"],
+                    "page_goal": brief["page_goal"],
+                    "offer_summary": brief["offer_summary"],
+                    "target_keywords": [brief["primary_keyword"], *brief.get("secondary_keywords", [])],
+                    "search_intent": brief["search_intent"],
+                    "seo_brief": brief,
+                    "source_editorial_task": task,
+                },
+            )
+            record_usage(request.user, UsageRecord.Metric.CONTENT_DRAFT)
+        except BillingError as exc:
+            messages.error(request, str(exc))
+            return redirect("content:workspace-content")
         messages.success(request, "SEO-driven content brief converted into a draft.")
         return redirect("content:workspace-content-detail", pk=draft.pk)
 

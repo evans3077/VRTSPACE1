@@ -576,6 +576,7 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["current_subscription"] = billing_state["subscription"]
         context["current_capabilities"] = billing_state["capabilities"]
         context["usage_summary"] = billing_state["usage"]
+        context["credit_summary"] = billing_state["credits"]
         context["billing_plans"] = billing_state["plans"]
         context["audit_schedule"] = schedule
         context["latest_change_report"] = latest_change_report

@@ -11,7 +11,12 @@ from django.utils import timezone
 from django.views import View
 from django.views.generic import DetailView
 
-from apps.leads.billing import can_access_audit_feature
+from apps.leads.billing import (
+    BillingError,
+    can_access_audit_feature,
+    can_access_workspace_feature,
+    spend_credits,
+)
 from apps.leads.services import get_workspace_projects, resolve_workspace_project
 from apps.leads.models import ClientProject
 from apps.tools.audit_exports import build_absolute_app_url
@@ -64,6 +69,10 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
         if not project:
             messages.error(request, "No workspace project is attached to this account yet.")
             return redirect("tools:workspace-dashboard")
+        seo_allowed, _ = can_access_workspace_feature(request.user, "seo_workspace_enabled")
+        if not seo_allowed:
+            messages.error(request, "SEO workspace access requires a plan that includes SEO credits.")
+            return redirect("tools:workspace-dashboard")
 
         profile = getattr(project, "seo_profile", None)
         form = SEOProjectProfileForm(request.POST, instance=profile)
@@ -100,6 +109,18 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             profile.business_type = inferred_business_type
         profile.save()
         sync_project_competitors(project, form.cleaned_data.get("competitor_urls", ""))
+        try:
+            spend_credits(
+                request.user,
+                "seo",
+                amount=1,
+                project=project,
+                note="SEO intelligence refresh",
+                reference_key=f"seo-refresh:{project.pk}:{timezone.now().date().isoformat()}",
+            )
+        except BillingError as exc:
+            messages.error(request, str(exc))
+            return redirect("seo:workspace-seo")
         snapshot = None
         opportunity_snapshot = None
         backlink_snapshot = None

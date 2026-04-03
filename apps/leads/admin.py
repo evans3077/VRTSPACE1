@@ -5,6 +5,7 @@ from .models import (
     ClientProject,
     Lead,
     UsageRecord,
+    WorkspaceCreditLedger,
     WorkspacePlan,
     WorkspaceSubscription,
 )
@@ -53,5 +54,13 @@ class UsageRecordAdmin(admin.ModelAdmin):
     list_filter = ("metric", "plan")
     search_fields = ("user__username", "user__email")
     autocomplete_fields = ("user", "plan")
+
+
+@admin.register(WorkspaceCreditLedger)
+class WorkspaceCreditLedgerAdmin(admin.ModelAdmin):
+    list_display = ("user", "category", "kind", "delta", "period_start", "plan", "updated_at")
+    list_filter = ("category", "kind", "plan")
+    search_fields = ("user__username", "user__email", "reference_key", "note")
+    autocomplete_fields = ("user", "plan", "subscription", "project")
 
 # Register your models here.

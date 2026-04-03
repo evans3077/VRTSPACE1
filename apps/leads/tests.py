@@ -1,9 +1,12 @@
+from django.contrib.auth import get_user_model
 from django.test import TestCase
 from django.urls import reverse
 
+from apps.core.plan_catalog import get_plan_definition
 from apps.tools.models import AuditRun
 
-from .models import AuditRequest, ClientProject, Lead
+from .billing import build_plan_cards, get_credit_balance_summary, spend_credits, sync_workspace_plan_catalog
+from .models import AuditRequest, ClientProject, Lead, WorkspaceCreditLedger, WorkspacePlan, WorkspaceSubscription
 from .services import sync_client_project_from_audit_run
 
 
@@ -155,3 +158,43 @@ class LeadFlowTests(TestCase):
         self.assertEqual(refreshed_project.location, "Nairobi, Kenya")
         self.assertEqual(refreshed_project.target_goal, "Increase qualified leads")
         self.assertEqual(refreshed_project.primary_service, "Used car sales")
+
+
+class WorkspaceCreditSystemTests(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            username="billing-user",
+            email="billing@example.com",
+            password="pass1234",
+        )
+        sync_workspace_plan_catalog()
+
+    def test_build_plan_cards_includes_free_and_credit_metadata(self):
+        cards = build_plan_cards(self.user)
+
+        self.assertTrue(any(card["slug"] == "free" for card in cards))
+        starter = next(card for card in cards if card["slug"] == "starter")
+        self.assertEqual(starter["credits"]["audit"], 5)
+        self.assertEqual(starter["credits"]["seo"], 4)
+
+    def test_spend_credits_creates_grant_and_debit_entries(self):
+        starter = WorkspacePlan.objects.get(slug="starter")
+        WorkspaceSubscription.objects.create(
+            user=self.user,
+            plan=starter,
+            status=WorkspaceSubscription.Status.ACTIVE,
+        )
+
+        spend_credits(self.user, "seo", amount=1, note="SEO refresh")
+
+        self.assertEqual(
+            WorkspaceCreditLedger.objects.filter(
+                user=self.user,
+                category=WorkspaceCreditLedger.Category.SEO,
+            ).count(),
+            2,
+        )
+        balance = get_credit_balance_summary(self.user, "seo")
+        self.assertEqual(balance["granted"], get_plan_definition("starter")["credits"]["seo"])
+        self.assertEqual(balance["used"], 1)
+        self.assertEqual(balance["remaining"], 3)

@@ -174,6 +174,7 @@ class UsageRecord(TimestampedModel):
         AUDIT_RUN = "audit_run", "Audit Run"
         SEO_SNAPSHOT = "seo_snapshot", "SEO Snapshot"
         AEO_AUDIT = "aeo_audit", "AEO Audit"
+        CONTENT_DRAFT = "content_draft", "Content Draft"
         EXPORT = "export", "Export"
 
     user = models.ForeignKey(
@@ -205,5 +206,64 @@ class UsageRecord(TimestampedModel):
 
     def __str__(self):
         return f"{self.user} - {self.metric} ({self.period_start})"
+
+
+class WorkspaceCreditLedger(TimestampedModel):
+    class Category(models.TextChoices):
+        AUDIT = "audit", "Audit"
+        SEO = "seo", "SEO"
+        AEO = "aeo", "AEO"
+        CONTENT = "content", "Content"
+        BACKLINK = "backlink", "Backlink"
+        EXPORT = "export", "Export"
+        SHARE = "share", "Share"
+
+    class Kind(models.TextChoices):
+        GRANT = "grant", "Grant"
+        DEBIT = "debit", "Debit"
+        ADJUSTMENT = "adjustment", "Adjustment"
+        BONUS = "bonus", "Bonus"
+        REFUND = "refund", "Refund"
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="workspace_credit_entries",
+    )
+    plan = models.ForeignKey(
+        WorkspacePlan,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="credit_entries",
+    )
+    subscription = models.ForeignKey(
+        WorkspaceSubscription,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="credit_entries",
+    )
+    project = models.ForeignKey(
+        "leads.ClientProject",
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="credit_entries",
+    )
+    category = models.CharField(max_length=24, choices=Category.choices)
+    kind = models.CharField(max_length=24, choices=Kind.choices)
+    delta = models.IntegerField()
+    period_start = models.DateField()
+    period_end = models.DateField()
+    note = models.CharField(max_length=255, blank=True)
+    reference_key = models.CharField(max_length=120, blank=True)
+    metadata = models.JSONField(default=dict, blank=True)
+
+    class Meta:
+        ordering = ("-period_start", "-created_at")
+
+    def __str__(self):
+        return f"{self.user} - {self.category} ({self.delta})"
 
 # Create your models here.

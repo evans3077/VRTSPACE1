@@ -4,7 +4,7 @@ from django.shortcuts import redirect, render
 from django.views import View
 
 from apps.content.services import get_workspace_content_project
-from apps.leads.billing import record_usage
+from apps.leads.billing import BillingError, can_access_workspace_feature, record_usage, spend_credits
 from apps.leads.services import get_workspace_projects
 from apps.leads.models import UsageRecord
 
@@ -35,6 +35,10 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
         if not project:
             messages.error(request, "Create or connect a workspace project before running AEO analysis.")
             return redirect("tools:workspace-dashboard")
+        allowed, _ = can_access_workspace_feature(request.user, "aeo_workspace_enabled")
+        if not allowed:
+            messages.error(request, "AEO analysis requires a plan that includes AEO credits.")
+            return redirect("tools:workspace-dashboard")
 
         form = AEOAuditRequestForm(request.POST)
         if not form.is_valid():
@@ -53,11 +57,22 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
             )
 
         try:
+            spend_credits(
+                request.user,
+                "aeo",
+                amount=1,
+                project=project,
+                note="AEO analysis",
+                reference_key=f"aeo:{project.pk}:{form.cleaned_data['target_keyword'][:60]}",
+            )
             aeo_audit = create_aeo_audit(
                 project=project,
                 target_keyword=form.cleaned_data["target_keyword"],
             )
         except ValueError as exc:
+            messages.error(request, str(exc))
+            return redirect("aeo:workspace-aeo")
+        except BillingError as exc:
             messages.error(request, str(exc))
             return redirect("aeo:workspace-aeo")
 

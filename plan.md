@@ -279,29 +279,34 @@ Turn the current platform into a production-grade decision system that is clearl
   Needed result:
   Campaigns and action packs carry measurable validation checks tied to reruns or page-state verification.
 
-#### Track C: Packaging, limits, and plan discipline
+#### Track C: Credit system, packaging, and plan discipline
 
-- [ ] Produce a plan-by-plan packaging sheet in code and plan docs
+- [x] Produce a plan-by-plan packaging sheet in code and plan docs
   Why:
   Pricing without exact feature ownership creates confusion and weak upgrade logic.
   Needed result:
   Define what stays free, what belongs to Starter, Growth, Authority, and what moves to Enterprise only.
-- [ ] Define exact usage limits per plan
+- [x] Replace scattered hard caps with a credit-based plan contract
+  Why:
+  Credits are a better fit for recurring duties, usage tracking, and the future affiliate system than disconnected feature toggles and ad hoc counters.
+  Needed result:
+  Each plan has explicit monthly credits for audits, SEO, AEO, content, exports, shares, and later authority work, all tracked through one ledger.
+- [x] Define exact usage limits per plan
   Why:
   A SaaS plan is not complete until limits are explicit.
   Needed result:
-  Set monthly audit limits, SEO refresh limits, AEO refresh limits, export/share limits, historical depth, competitor depth, content-generation allowances, backlink prospecting allowances, and automation allowances per tier.
+  Set monthly credits, workflow access, historical depth, competitor depth, content-generation allowances, backlink prospecting allowances, and automation allowances per tier.
 - [ ] Map every expensive workflow to a single plan-check path
   Why:
   Costly features should not be gated inconsistently.
   Needed result:
-  Audits, competitor benchmarking, content generation, backlink prospecting, scheduled runs, share links, and exports all consult the same policy layer.
+  Audits, competitor benchmarking, content generation, backlink prospecting, scheduled runs, share links, and exports all consult the same policy and credit layer.
 - [ ] Rework upgrade prompts around earned value
   Why:
   Upgrade prompts should follow visible work and visible limits, not generic sales language.
   Needed result:
   The UI explains what was used, what limit was reached, and what the next plan unlocks in operational terms.
-- [ ] Keep Enterprise reserved for true complexity
+- [x] Keep Enterprise reserved for true complexity
   Why:
   Enterprise should not become a dumping ground for ordinary paid features.
   Needed result:
@@ -330,27 +335,31 @@ Turn the current platform into a production-grade decision system that is clearl
 
 Start here, in this exact order:
 
-1. Plan-by-plan packaging sheet and exact limits
+1. Roll the credit policy through every expensive workflow
    Reason:
-   Pricing, feature ownership, and enforcement need to be explicit before more surface area is added.
+   The contract exists now, but exports, shares, backlink work, and remaining automation paths still need to spend and validate credits through one path.
 
-2. Recommendation clustering and evidence scoring
+2. Rework upgrade prompts around earned value
+   Reason:
+   Once credits are real, the UI should explain them clearly instead of only showing generic plan cards.
+
+3. Recommendation clustering and evidence scoring
    Reason:
    This directly reduces noisy output and makes the system feel more deliberate.
 
-3. Page-level action packs
+4. Page-level action packs
    Reason:
    This strengthens the real wedge: exact, implementable actioning.
 
-4. Runtime stage budgets and caching
+5. Runtime stage budgets and caching
    Reason:
    This reduces long wait times without weakening output quality.
 
-5. Cross-module decision summaries
+6. Cross-module decision summaries
    Reason:
    This makes the combined value of audit, SEO, AEO, content, and backlinks easier to understand.
 
-6. Executive-level outcome summaries
+7. Executive-level outcome summaries
    Reason:
    Once the decision system is tighter internally, stakeholder reporting should summarize it in plain business language.
 
@@ -360,26 +369,26 @@ Start here, in this exact order:
 
 The next work block should be:
 
-### Block 1: Packaging and Plan Contract
+### Block 2: Credit Policy Rollout and Upgrade Messaging
 
 Target:
 
-- Produce a clear packaging sheet for Free, Starter, Growth, Authority, and Enterprise
-- Assign exact feature ownership and usage limits to each tier
-- Map all expensive workflows to one plan-policy contract
+- Route remaining expensive workflows through the credit policy layer
+- Add earned-value upgrade prompts tied to depleted credits and locked workflows
+- Make the workspace explain credits as the operating budget for recurring actions
 
 Definition of done:
 
-- The repo has one authoritative plan matrix for product, billing, and UI usage
-- Every major workflow has a named plan owner
-- Free vs paid vs enterprise-only boundaries are explicit
-- The next implementation steps can enforce those limits without ambiguity
+- Exports, shares, backlink work, and recurring duties all use the same credit/policy checks
+- Upgrade prompts explain which credit bucket was used or exhausted
+- The workspace explains current credits and the next unlock in operational terms
 
 ---
 
 ## Follow-Through Rules
 
 - Do not add more market-facing feature copy before the packaging sheet and tier limits are explicit.
+- Do not add new expensive recurring workflows without deciding which credit bucket pays for them.
 - Do not let weak evidence create visible recommendations.
 - Do not let heavy jobs run without bounded stage budgets, status, and fallback behavior.
 - Do not price a feature above the current precision it can defend.
@@ -393,7 +402,7 @@ Definition of done:
 
 ## Packaging Direction
 
-This is the pricing and packaging direction to implement in code and UI next.
+This is the pricing, packaging, and credit direction to implement in code and UI next.
 
 ### Free
 
@@ -401,6 +410,7 @@ This is the pricing and packaging direction to implement in code and UI next.
 - Limited history
 - Limited exports
 - No deep recurring workflows
+- Minimal or no recurring credits beyond the entry audit path
 - Purpose:
   acquisition and proof of value
 
@@ -411,6 +421,7 @@ This is the pricing and packaging direction to implement in code and UI next.
 - SEO and AEO basics
 - Limited competitor-backed benchmarking
 - Limited reports and action packs
+- Small monthly credit bundle for audits, SEO, and AEO
 
 ### Growth
 
@@ -420,6 +431,7 @@ This is the pricing and packaging direction to implement in code and UI next.
 - Content briefs and editorial queue
 - Stakeholder reporting and sharing
 - More automation and historical depth
+- Meaningful monthly credits for audit, SEO, AEO, content, export, and share workflows
 
 ### Authority
 
@@ -428,6 +440,7 @@ This is the pricing and packaging direction to implement in code and UI next.
 - Advanced reporting
 - Larger limits
 - Full campaign continuity and stronger collaboration paths
+- Large monthly credit bundle including authority-building workflows
 
 ### Enterprise
 

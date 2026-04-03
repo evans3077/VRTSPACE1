@@ -107,9 +107,29 @@
                         <span>Report exports</span>
                         <strong>{{ usage_summary.exports_used|default:0 }}</strong>
                     </div>
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; gap: 1rem;">
+                        <span>Content drafts</span>
+                        <strong>{{ usage_summary.content_drafts_used|default:0 }}</strong>
+                    </div>
                 </div>
+                {% if credit_summary %}
+                <div style="margin-top: 1rem; display: grid; gap: 0.65rem;">
+                    {% for credit in credit_summary %}
+                    <div style="padding: 0.85rem 1rem; border-radius: 14px; background: rgba(14, 165, 233, 0.08); display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
+                        <span>{{ credit.label }}</span>
+                        <strong>
+                            {% if credit.unlimited %}
+                            Unlimited
+                            {% else %}
+                            {{ credit.remaining }} left / {{ credit.granted }}
+                            {% endif %}
+                        </strong>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
                 <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; line-height: 1.6;">
-                    Your plan is not just storing audits. It is funding ongoing diagnostics, SEO planning, AI-visibility analysis, reporting, and workspace execution.
+                    Your plan funds a credit budget for audits, SEO, AEO, content, exports, and other recurring actions. Those credits are the operating layer for automation and later affiliate rewards.
                 </div>
             </article>
         </div>
@@ -144,9 +164,9 @@
                 </h3>
                 <p>
                     {% if usage_summary.audit_runs_remaining is not None %}
-                    {{ usage_summary.audit_runs_remaining }} remaining this month.
+                    {{ usage_summary.audit_runs_remaining }} audit credits remaining this month.
                     {% else %}
-                    No monthly audit cap on the current plan.
+                    No audit-credit cap on the current plan.
                     {% endif %}
                 </p>
             </article>
@@ -508,12 +528,32 @@
                         <span style="font-weight: 900;">{{ card.price }}</span>
                     </div>
                     <div style="color: #475569; font-size: 0.9rem; margin-bottom: 0.75rem;">{{ card.label }}</div>
+                    {% if card.audience %}
+                    <div style="color: #475569; font-size: 0.82rem; margin-bottom: 0.75rem;">{{ card.audience }}</div>
+                    {% endif %}
                     {% for feature in card.features %}
                     <div style="font-size: 0.85rem; color: #475569;">{{ feature }}</div>
                     {% endfor %}
+                    {% if card.credits %}
+                    <div style="margin-top: 0.85rem; display: grid; gap: 0.25rem; font-size: 0.8rem; color: #475569;">
+                        {% for key, value in card.credits.items %}
+                        <div style="display: flex; justify-content: space-between; gap: 1rem;">
+                            <span style="text-transform: capitalize;">{{ key }} credits</span>
+                            <strong style="color: #0f172a;">{% if value is None %}Unlimited{% else %}{{ value }}{% endif %}</strong>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if card.upgrade_message %}
+                    <div style="margin-top: 0.85rem; padding: 0.75rem 0.9rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); color: #475569; font-size: 0.82rem; line-height: 1.5;">
+                        {{ card.upgrade_message }}
+                    </div>
+                    {% endif %}
                     <div style="margin-top: 1rem;">
                         {% if card.is_current %}
                         <span class="score-pill score-high">Current plan</span>
+                        {% elif card.is_free %}
+                        <span class="score-pill score-medium">Included by default</span>
                         {% elif card.is_custom %}
                         <a class="button button-secondary" href="{% url 'core:home' %}#contact">Request custom scope</a>
                         {% else %}
