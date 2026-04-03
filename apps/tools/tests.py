@@ -1372,6 +1372,16 @@ class WorkspaceProjectSelectionTests(TestCase):
         self.assertContains(response, "Project Two")
         self.assertEqual(response.context["project"].pk, self.second_project.pk)
 
+    def test_workspace_dashboard_shows_independent_project_portfolio(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("tools:workspace-dashboard"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Independent workspace projects")
+        self.assertContains(response, "Project One")
+        self.assertContains(response, "Project Two")
+
 
 class WorkspaceAutomationTests(TestCase):
     @override_settings(AUDIT_TIER_ENFORCEMENT=True)

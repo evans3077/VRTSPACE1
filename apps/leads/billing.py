@@ -196,11 +196,32 @@ def get_billing_state(user):
 def build_plan_cards(user=None):
     subscription = get_workspace_subscription(user) if user else None
     current_plan_slug = subscription.plan.slug if is_active_subscription(subscription) else "free"
+    definition_map = {item["slug"]: item for item in get_plan_definitions(include_free=True)}
+    current_sort_order = definition_map.get(current_plan_slug, {}).get("sort_order", 0)
     plan_map = {plan.slug: plan for plan in get_workspace_plans()}
     cards = []
     for package in build_marketing_packages(include_free=True):
         plan = plan_map.get(package["slug"])
         price_id = get_stripe_price_id(plan) if plan else ""
+        package_sort_order = definition_map.get(package["slug"], {}).get("sort_order", 0)
+        is_current = package["slug"] == current_plan_slug
+        action_label = ""
+        action_direction = ""
+        if is_current:
+            action_label = "Current plan"
+            action_direction = "current"
+        elif package.get("is_custom", False) or (bool(plan) and (plan.slug == "enterprise" or not price_id)):
+            action_label = "Request custom scope"
+            action_direction = "custom"
+        elif package.get("is_free", False):
+            action_label = "Move to Free"
+            action_direction = "move"
+        elif package_sort_order > current_sort_order:
+            action_label = f"Upgrade to {package['name']}"
+            action_direction = "upgrade"
+        else:
+            action_label = f"Move to {package['name']}"
+            action_direction = "move"
         cards.append(
             {
                 "plan": plan,
@@ -215,9 +236,11 @@ def build_plan_cards(user=None):
                 "audience": package.get("audience", ""),
                 "upgrade_message": package.get("upgrade_message", ""),
                 "stripe_price_id": price_id,
-                "is_current": package["slug"] == current_plan_slug,
+                "is_current": is_current,
                 "is_custom": package.get("is_custom", False) or (bool(plan) and (plan.slug == "enterprise" or not price_id)),
                 "is_free": package.get("is_free", False),
+                "action_label": action_label,
+                "action_direction": action_direction,
             }
         )
     return cards

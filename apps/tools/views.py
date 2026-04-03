@@ -34,6 +34,7 @@ from apps.leads.models import ClientProject
 from apps.leads.services import (
     create_audit_request_from_form,
     get_workspace_projects,
+    get_workspace_project_summaries,
     resolve_workspace_project,
     set_active_workspace_project,
     sync_client_project_from_audit_run,
@@ -594,6 +595,7 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["export_reports_allowed"] = export_allowed
         context["email_reports_allowed"] = email_allowed
         context["workspace_projects"] = get_workspace_projects(self.request.user)
+        context["workspace_project_summaries"] = get_workspace_project_summaries(self.request.user)
         return context
 
 

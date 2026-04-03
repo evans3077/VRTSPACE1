@@ -1,6 +1,7 @@
 from urllib.parse import urlparse
 
 from django.contrib.auth import get_user_model
+from django.db.models import Count
 from django.utils import timezone
 
 from .models import AuditRequest, ClientProject, Lead
@@ -103,7 +104,12 @@ def get_workspace_project_queryset(user):
     if not user or not getattr(user, "is_authenticated", False):
         return ClientProject.objects.none()
     return (
-        ClientProject.objects.select_related("latest_audit_run", "audit_request")
+        ClientProject.objects.select_related("latest_audit_run", "audit_request", "seo_profile")
+        .annotate(
+            seo_snapshot_count=Count("seo_snapshots", distinct=True),
+            aeo_audit_count=Count("aeo_audits", distinct=True),
+            generated_content_count=Count("generated_content", distinct=True),
+        )
         .filter(owner=user)
         .order_by("name", "created_at")
     )
@@ -111,6 +117,49 @@ def get_workspace_project_queryset(user):
 
 def get_workspace_projects(user):
     return list(get_workspace_project_queryset(user))
+
+
+def summarize_workspace_project(project):
+    focus_tags = ["Audit"]
+    if getattr(project, "seo_snapshot_count", 0) or getattr(project, "seo_profile_id", None):
+        focus_tags.append("SEO")
+    if getattr(project, "aeo_audit_count", 0):
+        focus_tags.append("AEO")
+    if getattr(project, "generated_content_count", 0):
+        focus_tags.append("Content")
+
+    if "Content" in focus_tags:
+        project_type_label = "Content-active project"
+    elif "SEO" in focus_tags and "AEO" in focus_tags:
+        project_type_label = "SEO and AEO project"
+    elif "SEO" in focus_tags:
+        project_type_label = "SEO project"
+    elif "AEO" in focus_tags:
+        project_type_label = "AEO project"
+    else:
+        project_type_label = "Audit project"
+
+    return {
+        "pk": project.pk,
+        "name": project.name,
+        "normalized_domain": project.normalized_domain,
+        "location": project.location,
+        "business_type": project.business_type,
+        "primary_service": project.primary_service,
+        "latest_score": project.latest_score,
+        "stage": project.stage,
+        "stage_label": project.get_stage_display(),
+        "focus_tags": focus_tags,
+        "project_type_label": project_type_label,
+        "seo_snapshot_count": getattr(project, "seo_snapshot_count", 0),
+        "aeo_audit_count": getattr(project, "aeo_audit_count", 0),
+        "generated_content_count": getattr(project, "generated_content_count", 0),
+        "has_latest_audit": bool(getattr(project, "latest_audit_run_id", None)),
+    }
+
+
+def get_workspace_project_summaries(user):
+    return [summarize_workspace_project(project) for project in get_workspace_projects(user)]
 
 
 def resolve_workspace_project(request=None, user=None, *, project_id=None, fallback=True):

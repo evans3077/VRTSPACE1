@@ -311,6 +311,11 @@ Turn the current platform into a production-grade decision system that is clearl
   The platform should feel like one path: audit first, then SEO or AEO, then content or exports only when needed.
   Needed result:
   The dashboard and module screens explain that the latest audit feeds the next layers and that a new audit is only required for validation or a fresh crawl.
+- [x] Fix plan-direction language and project independence in the workspace
+  Why:
+  Higher-tier users should not be told to "upgrade" into lower tiers, and specialists need to see separate projects as distinct units of work.
+  Needed result:
+  Plan cards use correct movement language, and the dashboard shows independent projects with their own focus, state, and quick project switching.
 - [ ] Map every expensive workflow to a single plan-check path
   Why:
   Costly features should not be gated inconsistently.
@@ -356,7 +361,7 @@ Start here, in this exact order:
 
 2. Rework upgrade prompts around earned value
    Reason:
-   Once weighted credits are real, the UI should explain why a task costs what it costs and what the next plan unlocks.
+   Once weighted credits are real, the UI should explain why a task costs what it costs, what the next plan unlocks, and whether a plan move is an upgrade or a lower-capacity switch.
 
 3. Recommendation clustering and evidence scoring
    Reason:
@@ -392,12 +397,14 @@ Target:
 - Add earned-value upgrade prompts tied to depleted credits and locked workflows
 - Keep the workspace explaining credits as the operating budget for recurring actions, not just a billing detail
 - Keep the workspace flow linear: audit first, then SEO or AEO, then execution layers only when the user chooses them
+- Keep multi-project users able to distinguish independent projects clearly from the dashboard and project selector
 
 Definition of done:
 
 - Exports, shares, backlink work, and recurring duties all use the same credit/policy checks
 - Upgrade prompts explain what the current action costs, why it costs that amount, and what the next plan unlocks
 - The workspace explains current credits, recent spend, and the next unlock in operational terms
+- Multi-project users can see project focus and switch context without losing clarity about which project owns which SEO, AEO, and content work
 
 ---
 

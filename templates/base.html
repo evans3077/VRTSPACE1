@@ -49,7 +49,7 @@
                 {% if user.is_authenticated and not user.is_staff %}
                 <details class="workspace-menu">
                     <summary class="workspace-menu-trigger">
-                        Workspace
+                        Workspace{% if active_workspace_project %}: {{ active_workspace_project.name }}{% endif %}
                     </summary>
                     <div class="workspace-menu-panel">
                         <a href="{% url 'tools:workspace-dashboard' %}">Overview</a>
@@ -65,8 +65,8 @@
                     {% csrf_token %}
                     <input type="hidden" name="next" value="{{ request.get_full_path }}">
                     <select name="project_id" onchange="this.form.submit()" style="min-width: 220px;">
-                        {% for item in workspace_projects %}
-                        <option value="{{ item.pk }}"{% if active_workspace_project and active_workspace_project.pk == item.pk %} selected{% endif %}>{{ item.name }}</option>
+                        {% for item in workspace_project_summaries %}
+                        <option value="{{ item.pk }}"{% if active_workspace_project and active_workspace_project.pk == item.pk %} selected{% endif %}>{{ item.name }} | {{ item.project_type_label }}</option>
                         {% endfor %}
                     </select>
                 </form>

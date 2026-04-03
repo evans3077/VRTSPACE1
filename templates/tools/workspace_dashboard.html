@@ -56,6 +56,60 @@
         </div>
         {% endif %}
 
+        {% if workspace_project_summaries %}
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Projects</p>
+                <h2 style="font-size: 2rem;">Independent workspace projects</h2>
+            </div>
+            <div class="system-grid">
+                {% for item in workspace_project_summaries %}
+                <article class="system-card" style="border-top: 4px solid {% if project.pk == item.pk %}var(--signal){% else %}rgba(15, 23, 42, 0.14){% endif %};">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
+                        <strong>{{ item.name }}</strong>
+                        {% if project.pk == item.pk %}
+                        <span class="score-pill score-high">Active</span>
+                        {% endif %}
+                    </div>
+                    <div style="margin-top: 0.35rem; color: #475569; font-size: 0.88rem;">{{ item.project_type_label }}</div>
+                    <div style="margin-top: 0.75rem; display: grid; gap: 0.35rem; color: #475569; font-size: 0.84rem;">
+                        <div>{{ item.normalized_domain }}</div>
+                        {% if item.business_type or item.location %}
+                        <div>{{ item.business_type|default:"Unclassified" }}{% if item.location %} | {{ item.location }}{% endif %}</div>
+                        {% endif %}
+                        {% if item.primary_service %}
+                        <div>{{ item.primary_service }}</div>
+                        {% endif %}
+                    </div>
+                    <div class="seo-inline-tags" style="margin-top: 0.85rem;">
+                        {% for tag in item.focus_tags %}
+                        <span class="seo-inline-tag">{{ tag }}</span>
+                        {% endfor %}
+                    </div>
+                    <div style="margin-top: 1rem; display: grid; gap: 0.4rem; font-size: 0.82rem; color: #475569;">
+                        <div>Latest score: <strong style="color: #0f172a;">{{ item.latest_score }}</strong></div>
+                        <div>SEO snapshots: <strong style="color: #0f172a;">{{ item.seo_snapshot_count }}</strong></div>
+                        <div>AEO analyses: <strong style="color: #0f172a;">{{ item.aeo_audit_count }}</strong></div>
+                        <div>Content drafts: <strong style="color: #0f172a;">{{ item.generated_content_count }}</strong></div>
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        {% if project.pk == item.pk %}
+                        <span class="score-pill score-medium">Open project</span>
+                        {% else %}
+                        <form method="post" action="{% url 'tools:workspace-project-select' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="project_id" value="{{ item.pk }}">
+                            <input type="hidden" name="next" value="{% url 'tools:workspace-dashboard' %}">
+                            <button type="submit" class="button button-secondary" style="width: 100%;">Open project</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </article>
+        {% endif %}
+
         <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; align-items: start;">
             <article class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
@@ -596,14 +650,14 @@
                         {% if card.is_current %}
                         <span class="score-pill score-high">Current plan</span>
                         {% elif card.is_free %}
-                        <span class="score-pill score-medium">Included by default</span>
+                        <span class="score-pill score-medium">{{ card.action_label }}</span>
                         {% elif card.is_custom %}
                         <a class="button button-secondary" href="{% url 'core:home' %}#contact">Request custom scope</a>
                         {% else %}
                         <form method="post" action="{% url 'tools:workspace-billing-checkout' %}">
                             {% csrf_token %}
                             <input type="hidden" name="plan" value="{{ card.slug }}">
-                            <button type="submit" class="button button-primary" style="width: 100%;">Upgrade to {{ card.name }}</button>
+                            <button type="submit" class="button button-primary" style="width: 100%;">{{ card.action_label }}</button>
                         </form>
                         {% endif %}
                     </div>

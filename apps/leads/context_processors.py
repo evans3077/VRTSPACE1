@@ -1,5 +1,5 @@
 from .billing import get_billing_state
-from .services import get_workspace_projects, resolve_workspace_project
+from .services import get_workspace_project_summaries, get_workspace_projects, resolve_workspace_project
 
 
 def workspace_projects(request):
@@ -7,6 +7,7 @@ def workspace_projects(request):
     if not user or not getattr(user, "is_authenticated", False) or getattr(user, "is_staff", False):
         return {
             "workspace_projects": [],
+            "workspace_project_summaries": [],
             "active_workspace_project": None,
             "workspace_billing_state": {},
             "workspace_nav_current": "",
@@ -27,6 +28,7 @@ def workspace_projects(request):
 
     return {
         "workspace_projects": get_workspace_projects(user),
+        "workspace_project_summaries": get_workspace_project_summaries(user),
         "active_workspace_project": resolve_workspace_project(request=request, user=user),
         "workspace_billing_state": get_billing_state(user),
         "workspace_nav_current": nav_current,

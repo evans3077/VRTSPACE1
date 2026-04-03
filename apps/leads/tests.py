@@ -184,6 +184,20 @@ class WorkspaceCreditSystemTests(TestCase):
         starter = next(card for card in cards if card["slug"] == "starter")
         self.assertEqual(starter["credits"]["workspace"], 50)
 
+    def test_build_plan_cards_uses_move_label_for_lower_tier(self):
+        authority = WorkspacePlan.objects.get(slug="authority")
+        WorkspaceSubscription.objects.create(
+            user=self.user,
+            plan=authority,
+            status=WorkspaceSubscription.Status.ACTIVE,
+        )
+
+        cards = build_plan_cards(self.user)
+
+        starter = next(card for card in cards if card["slug"] == "starter")
+        self.assertEqual(starter["action_label"], "Move to Starter")
+        self.assertEqual(starter["action_direction"], "move")
+
     def test_spend_credits_creates_workspace_grant_and_action_debit_entries(self):
         starter = WorkspacePlan.objects.get(slug="starter")
         WorkspaceSubscription.objects.create(
