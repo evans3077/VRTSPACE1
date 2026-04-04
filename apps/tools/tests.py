@@ -1090,6 +1090,35 @@ class WorkspaceBillingTests(TestCase):
         self.assertEqual(subscription.stripe_checkout_session_id, "cs_test_123")
 
     @override_settings(
+        STRIPE_PUBLISHABLE_KEY="pk_test_value",
+        STRIPE_SECRET_KEY="sk_test_value",
+        STRIPE_ENABLED=True,
+        STRIPE_PRICE_IDS={"starter": "price_starter", "growth": "", "authority": "", "enterprise": ""},
+    )
+    @patch("apps.leads.billing.requests.post")
+    def test_workspace_checkout_uses_return_to_for_success_and_cancel_urls(self, mocked_post):
+        mocked_post.return_value.status_code = 200
+        mocked_post.return_value.json.return_value = {
+            "id": "cs_test_123",
+            "url": "https://checkout.stripe.test/session/123",
+        }
+        user = get_user_model().objects.create_user(
+            username="billing-return@example.com",
+            email="billing-return@example.com",
+            password="strongpass123",
+        )
+        self.client.force_login(user)
+
+        self.client.post(
+            reverse("tools:workspace-billing-checkout"),
+            {"plan": "starter", "return_to": "/workspace/seo/"},
+        )
+
+        payload = mocked_post.call_args.kwargs["data"]
+        self.assertIn("/workspace/billing/success/?next=%2Fworkspace%2Fseo%2F", payload["success_url"])
+        self.assertIn("/workspace/billing/cancel/?next=%2Fworkspace%2Fseo%2F", payload["cancel_url"])
+
+    @override_settings(
         STRIPE_WEBHOOK_SECRET="whsec_test_value",
     )
     def test_stripe_webhook_activates_subscription(self):
@@ -1452,6 +1481,44 @@ class WorkspaceProjectSelectionTests(TestCase):
         self.assertEqual(self.second_project.name, "Project Two Updated")
         self.assertEqual(self.client.session["active_workspace_project_id"], self.second_project.pk)
 
+
+class AccountDashboardTests(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            username="account@example.com",
+            email="account@example.com",
+            password="strongpass123",
+            first_name="Alex",
+            last_name="North",
+        )
+
+    def test_account_dashboard_renders_profile_and_billing_sections(self):
+        self.client.force_login(self.user)
+
+        response = self.client.get(reverse("tools:account-dashboard"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Personal dashboard")
+        self.assertContains(response, "Personal details")
+        self.assertContains(response, "Login details")
+        self.assertContains(response, "Subscription and plan access")
+
+    def test_account_profile_update_keeps_username_in_sync_with_email(self):
+        self.client.force_login(self.user)
+
+        response = self.client.post(
+            reverse("tools:account-profile-update"),
+            {
+                "first_name": "Alicia",
+                "last_name": "North",
+                "email": "alicia@example.com",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        self.user.refresh_from_db()
+        self.assertEqual(self.user.email, "alicia@example.com")
+        self.assertEqual(self.user.username, "alicia@example.com")
 
 class WorkspaceAutomationTests(TestCase):
     @override_settings(AUDIT_TIER_ENFORCEMENT=True)

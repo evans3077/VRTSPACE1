@@ -11,6 +11,9 @@ from .billing_views import (
 )
 from .views import (
     AgencyAuditDetailView,
+    AccountDashboardView,
+    AccountPasswordUpdateView,
+    AccountProfileUpdateView,
     AuditResultDetailView,
     AuditReportPdfView,
     GoogleOAuthCallbackView,
@@ -42,6 +45,9 @@ urlpatterns = [
     path("workspace/start/", WorkspaceSignupView.as_view(), name="workspace-signup"),
     path("workspace/login/", WorkspaceLoginView.as_view(), name="workspace-login"),
     path("workspace/logout/", WorkspaceLogoutView.as_view(), name="workspace-logout"),
+    path("account/", AccountDashboardView.as_view(), name="account-dashboard"),
+    path("account/profile/", AccountProfileUpdateView.as_view(), name="account-profile-update"),
+    path("account/password/", AccountPasswordUpdateView.as_view(), name="account-password-update"),
     path("workspace/projects/create/", WorkspaceProjectCreateView.as_view(), name="workspace-project-create"),
     path("workspace/projects/select/", WorkspaceProjectSelectView.as_view(), name="workspace-project-select"),
     path("workspace/audits/start/", WorkspaceAuditStartView.as_view(), name="workspace-audit-start"),

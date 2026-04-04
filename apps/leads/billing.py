@@ -836,6 +836,7 @@ def build_action_access_context(user, category, *, project=None, feature_name=No
         "next_plan_slug": next_plan.get("slug", "") if next_plan else "",
         "next_plan_name": next_plan.get("name", "") if next_plan else "",
         "next_plan_price": next_plan.get("price_label", "") if next_plan else "",
+        "direct_checkout_available": bool(next_plan and next_plan.get("slug") not in {"", "free", "enterprise"}),
     }
 
 

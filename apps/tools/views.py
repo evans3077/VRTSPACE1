@@ -1,7 +1,7 @@
 from urllib.parse import urlencode
 
 from django.contrib import messages
-from django.contrib.auth import get_user_model, login, logout
+from django.contrib.auth import get_user_model, login, logout, update_session_auth_hash
 from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
 from django.conf import settings
 from django.core.cache import cache
@@ -35,6 +35,8 @@ from apps.leads.auth import (
 )
 from apps.leads.forms import (
     AuditRequestForm,
+    AccountPasswordForm,
+    AccountProfileForm,
     WorkspaceAuditStartForm,
     WorkspaceLoginForm,
     WorkspaceProjectForm,
@@ -506,6 +508,61 @@ class WorkspaceLogoutView(View):
     def get(self, request, *args, **kwargs):
         logout(request)
         return redirect("core:home")
+
+
+class AccountDashboardView(LoginRequiredMixin, View):
+    template_name = "tools/account_dashboard.html"
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, self._build_context(request))
+
+    def _build_context(self, request, *, profile_form=None, password_form=None):
+        billing_state = get_billing_state(request.user)
+        subscription = billing_state["subscription"]
+        return {
+            "profile_form": profile_form or AccountProfileForm(instance=request.user),
+            "password_form": password_form or AccountPasswordForm(user=request.user),
+            "billing_state": billing_state,
+            "current_subscription": subscription,
+            "workspace_count": len(get_workspace_projects(request.user)),
+            "page_title": "Account | VRT SPACE AGENCY",
+            "meta_description": "Personal account settings, billing, and security controls.",
+            "meta_robots": "noindex, nofollow",
+            "canonical_url": request.build_absolute_uri(request.path),
+        }
+
+
+class AccountProfileUpdateView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        form = AccountProfileForm(request.POST, instance=request.user)
+        if not form.is_valid():
+            view = AccountDashboardView()
+            return render(
+                request,
+                view.template_name,
+                view._build_context(request, profile_form=form),
+                status=400,
+            )
+        form.save()
+        messages.success(request, "Account profile updated.")
+        return redirect("tools:account-dashboard")
+
+
+class AccountPasswordUpdateView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        form = AccountPasswordForm(user=request.user, data=request.POST)
+        if not form.is_valid():
+            view = AccountDashboardView()
+            return render(
+                request,
+                view.template_name,
+                view._build_context(request, password_form=form),
+                status=400,
+            )
+        user = form.save()
+        update_session_auth_hash(request, user)
+        messages.success(request, "Password updated.")
+        return redirect("tools:account-dashboard")
 
 
 class WorkspaceDashboardView(LoginRequiredMixin, DetailView):

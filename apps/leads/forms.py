@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import get_user_model
 
 from .models import AuditRequest, ClientProject, Lead
@@ -237,3 +237,39 @@ class WorkspaceAuditStartForm(forms.ModelForm):
 
     def clean_notes(self):
         return self.cleaned_data.get("notes", "").strip()
+
+
+class AccountProfileForm(forms.ModelForm):
+    class Meta:
+        model = get_user_model()
+        fields = ["first_name", "last_name", "email"]
+        widgets = {
+            "first_name": forms.TextInput(attrs={"placeholder": "First name"}),
+            "last_name": forms.TextInput(attrs={"placeholder": "Last name"}),
+            "email": forms.EmailInput(attrs={"placeholder": "you@company.com"}),
+        }
+
+    def clean_email(self):
+        email = self.cleaned_data.get("email", "").strip().lower()
+        user_model = get_user_model()
+        queryset = user_model.objects.filter(email__iexact=email)
+        if self.instance.pk:
+            queryset = queryset.exclude(pk=self.instance.pk)
+        if queryset.exists():
+            raise forms.ValidationError("This email is already in use.")
+        return email
+
+    def save(self, commit=True):
+        user = super().save(commit=False)
+        user.username = self.cleaned_data["email"]
+        if commit:
+            user.save(update_fields=["first_name", "last_name", "email", "username"])
+        return user
+
+
+class AccountPasswordForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["old_password"].widget.attrs.update({"placeholder": "Current password"})
+        self.fields["new_password1"].widget.attrs.update({"placeholder": "New password"})
+        self.fields["new_password2"].widget.attrs.update({"placeholder": "Confirm new password"})

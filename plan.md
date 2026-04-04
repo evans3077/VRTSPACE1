@@ -326,6 +326,16 @@ Turn the current platform into a production-grade decision system that is clearl
   Buying or changing a plan should not require menu -> overview -> scroll -> select as a multi-step hunt.
   Delivered result:
   The header menu, workspace sub-navigation, and dashboard hero all expose direct links into credits and plans.
+- [x] Separate account management from workspace operations
+  Why:
+  Personal profile, billing, and login management should not compete with project execution inside the workspace.
+  Delivered result:
+  A dedicated account dashboard now handles personal details, password changes, and billing access, while the workspace stays focused on projects and execution.
+- [x] Add direct checkout from blocked workflow states
+  Why:
+  If the product already knows which plan unlocks an action, sending the user through multiple intermediate screens reduces conversion and adds friction.
+  Delivered result:
+  Blocked export, sharing, and backlink states now offer direct checkout on the same screen with return routing back to the originating workflow.
 - [x] Simplify the workspace flow around one audit base
   Why:
   The platform should feel like one path: audit first, then SEO or AEO, then content or exports only when needed.

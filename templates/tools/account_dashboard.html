@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="padding-bottom: 2rem;">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Account</p>
+            <h1 style="max-width: none;">Personal dashboard</h1>
+            <p class="section-text" style="max-width: 760px;">
+                Manage personal details, billing access, password updates, and subscription state separately from workspace operations.
+            </p>
+            <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}">Open workspace</a>
+                {% if current_subscription and current_subscription.stripe_customer_id %}
+                <form method="post" action="{% url 'tools:workspace-billing-portal' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="return_to" value="{% url 'tools:account-dashboard' %}">
+                    <button type="submit" class="button button-secondary">Manage billing</button>
+                </form>
+                {% else %}
+                <a class="button button-secondary" href="{% url 'tools:workspace-dashboard' %}#plans">Choose plan</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="packages-section" style="padding-top: 0;">
+    <div class="container page-stack">
+        <div class="system-grid">
+            <article class="system-card">
+                <p class="eyebrow">Account email</p>
+                <h3>{{ request.user.email }}</h3>
+                <p>Primary sign-in identity</p>
+            </article>
+            <article class="system-card">
+                <p class="eyebrow">Plan</p>
+                <h3>{{ billing_state.capabilities.name|default:"Free" }}</h3>
+                <p>{{ billing_state.capabilities.price_label|default:"No paid subscription yet" }}</p>
+            </article>
+            <article class="system-card">
+                <p class="eyebrow">Workspace credits</p>
+                <h3>{% if billing_state.credit_overview.unlimited %}Unlimited{% else %}{{ billing_state.credit_overview.remaining|default:0 }}{% endif %}</h3>
+                <p>{{ billing_state.credit_overview.used|default:0 }} used this cycle</p>
+            </article>
+            <article class="system-card">
+                <p class="eyebrow">Workspaces</p>
+                <h3>{{ workspace_count }}</h3>
+                <p>Independent projects attached to this account</p>
+            </article>
+        </div>
+
+        <div class="layout-split-wide">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Profile</p>
+                    <h2 style="font-size: 2rem;">Personal details</h2>
+                </div>
+                <form method="post" action="{% url 'tools:account-profile-update' %}" style="display: grid; gap: 1rem;">
+                    {% csrf_token %}
+                    {% for field in profile_form %}
+                    <label style="display: grid; gap: 0.35rem;">
+                        <span style="font-weight: 700;">{{ field.label }}</span>
+                        {{ field }}
+                        {% if field.errors %}
+                        <span style="font-size: 0.82rem; color: #991b1b;">{{ field.errors|join:", " }}</span>
+                        {% endif %}
+                    </label>
+                    {% endfor %}
+                    <button type="submit" class="button button-primary">Save profile</button>
+                </form>
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Security</p>
+                    <h2 style="font-size: 2rem;">Login details</h2>
+                </div>
+                <form method="post" action="{% url 'tools:account-password-update' %}" style="display: grid; gap: 1rem;">
+                    {% csrf_token %}
+                    {% for field in password_form %}
+                    <label style="display: grid; gap: 0.35rem;">
+                        <span style="font-weight: 700;">{{ field.label }}</span>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <span style="font-size: 0.78rem; color: #475569;">{{ field.help_text|safe }}</span>
+                        {% endif %}
+                        {% if field.errors %}
+                        <span style="font-size: 0.82rem; color: #991b1b;">{{ field.errors|join:", " }}</span>
+                        {% endif %}
+                    </label>
+                    {% endfor %}
+                    <button type="submit" class="button button-primary">Update password</button>
+                </form>
+            </article>
+        </div>
+
+        <div class="layout-split-wide">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Billing</p>
+                    <h2 style="font-size: 2rem;">Subscription and plan access</h2>
+                </div>
+                <div style="display: grid; gap: 0.75rem;">
+                    <div style="padding: 0.95rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                        Current plan: <strong style="color: #0f172a;">{{ billing_state.capabilities.name|default:"Free" }}</strong>
+                    </div>
+                    <div style="padding: 0.95rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                        Credits remaining: <strong style="color: #0f172a;">{% if billing_state.credit_overview.unlimited %}Unlimited{% else %}{{ billing_state.credit_overview.remaining|default:0 }}{% endif %}</strong>
+                    </div>
+                    {% if current_subscription and current_subscription.stripe_customer_id %}
+                    <form method="post" action="{% url 'tools:workspace-billing-portal' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="return_to" value="{% url 'tools:account-dashboard' %}">
+                        <button type="submit" class="button button-primary">Open billing portal</button>
+                    </form>
+                    {% else %}
+                    <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}#plans">Open plans</a>
+                    {% endif %}
+                </div>
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Recent credit activity</p>
+                    <h2 style="font-size: 2rem;">Latest usage</h2>
+                </div>
+                <div style="display: grid; gap: 0.75rem;">
+                    {% for entry in billing_state.recent_credit_entries %}
+                    <div style="padding: 0.95rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03);">
+                        <div style="display: flex; justify-content: space-between; gap: 1rem;">
+                            <strong>{{ entry.label }}</strong>
+                            <span>{{ entry.amount }}</span>
+                        </div>
+                        {% if entry.project_name %}
+                        <div style="margin-top: 0.35rem; color: #475569; font-size: 0.84rem;">{{ entry.project_name }}</div>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                    <div style="padding: 0.95rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">No recent account activity yet.</div>
+                    {% endfor %}
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+{% endblock %}

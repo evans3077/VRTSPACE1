@@ -3,6 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse
+from urllib.parse import urlencode
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -27,6 +28,7 @@ from .jobs import enqueue_public_site_audit
 class WorkspaceCheckoutCreateView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         plan_slug = request.POST.get("plan", "").strip().lower()
+        return_to = request.POST.get("return_to", "").strip()
         plan = get_plan_by_slug(plan_slug)
         if not plan:
             messages.error(request, "That plan is not available.")
@@ -37,11 +39,17 @@ class WorkspaceCheckoutCreateView(LoginRequiredMixin, View):
             return redirect("core:home")
 
         try:
+            success_path = reverse("tools:workspace-billing-success")
+            cancel_path = reverse("tools:workspace-billing-cancel")
+            if return_to.startswith("/"):
+                query = urlencode({"next": return_to})
+                success_path = f"{success_path}?{query}"
+                cancel_path = f"{cancel_path}?{query}"
             session = create_checkout_session(
                 user=request.user,
                 plan=plan,
-                success_url=request.build_absolute_uri(reverse("tools:workspace-billing-success")),
-                cancel_url=request.build_absolute_uri(reverse("tools:workspace-billing-cancel")),
+                success_url=request.build_absolute_uri(success_path),
+                cancel_url=request.build_absolute_uri(cancel_path),
             )
         except BillingError as exc:
             messages.error(request, str(exc))
@@ -53,10 +61,14 @@ class WorkspaceCheckoutCreateView(LoginRequiredMixin, View):
 class WorkspaceBillingPortalView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         subscription = get_workspace_subscription(request.user)
+        return_to = request.POST.get("return_to", "").strip()
         try:
+            return_url = reverse("tools:workspace-dashboard")
+            if return_to.startswith("/"):
+                return_url = return_to
             session = create_billing_portal_session(
                 subscription=subscription,
-                return_url=request.build_absolute_uri(reverse("tools:workspace-dashboard")),
+                return_url=request.build_absolute_uri(return_url),
             )
         except BillingError as exc:
             messages.error(request, str(exc))
@@ -67,12 +79,18 @@ class WorkspaceBillingPortalView(LoginRequiredMixin, View):
 class WorkspaceBillingSuccessView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         messages.success(request, "Billing completed. Your workspace plan will update after Stripe confirms the subscription.")
+        next_url = request.GET.get("next", "").strip()
+        if next_url.startswith("/"):
+            return redirect(next_url)
         return redirect("tools:workspace-dashboard")
 
 
 class WorkspaceBillingCancelView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         messages.info(request, "Billing checkout was cancelled.")
+        next_url = request.GET.get("next", "").strip()
+        if next_url.startswith("/"):
+            return redirect(next_url)
         return redirect("tools:workspace-dashboard")
 
 

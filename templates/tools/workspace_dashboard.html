@@ -68,6 +68,14 @@
                 <strong style="display: block; color: #0f172a; margin-bottom: 0.25rem;">Audit exports</strong>
                 JSON and CSV exports usually spend {{ audit_export_action.credits }} workspace credit{{ audit_export_action.credits|pluralize }}.
                 {{ audit_export_action.next_unlock_message|default:audit_export_action.blocked_message }}
+                {% if audit_export_action.direct_checkout_available %}
+                <form method="post" action="{% url 'tools:workspace-billing-checkout' %}" style="margin-top: 0.85rem;">
+                    {% csrf_token %}
+                    <input type="hidden" name="plan" value="{{ audit_export_action.next_plan_slug }}">
+                    <input type="hidden" name="return_to" value="{{ request.get_full_path }}">
+                    <button type="submit" class="button button-primary">Unlock with {{ audit_export_action.next_plan_name }}</button>
+                </form>
+                {% endif %}
             </div>
             {% endif %}
         </div>
@@ -337,6 +345,14 @@
                             {{ audit_export_action.next_unlock_message }}
                             {% endif %}
                         </div>
+                        {% if audit_export_action.direct_checkout_available %}
+                        <form method="post" action="{% url 'tools:workspace-billing-checkout' %}" style="margin-top: 0.85rem;">
+                            {% csrf_token %}
+                            <input type="hidden" name="plan" value="{{ audit_export_action.next_plan_slug }}">
+                            <input type="hidden" name="return_to" value="{{ request.get_full_path }}">
+                            <button type="submit" class="button button-secondary">Unlock exports</button>
+                        </form>
+                        {% endif %}
                     </div>
                     <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03);">
                         <strong style="display: block; margin-bottom: 0.25rem;">Stakeholder sharing</strong>
@@ -346,6 +362,14 @@
                             {{ audit_share_action.next_unlock_message }}
                             {% endif %}
                         </div>
+                        {% if audit_share_action.direct_checkout_available %}
+                        <form method="post" action="{% url 'tools:workspace-billing-checkout' %}" style="margin-top: 0.85rem;">
+                            {% csrf_token %}
+                            <input type="hidden" name="plan" value="{{ audit_share_action.next_plan_slug }}">
+                            <input type="hidden" name="return_to" value="{{ request.get_full_path }}">
+                            <button type="submit" class="button button-secondary">Unlock sharing</button>
+                        </form>
+                        {% endif %}
                     </div>
                 </div>
                 {% endif %}
@@ -374,6 +398,14 @@
                     {% if item.state and not item.state.available and item.state.next_unlock_message %}
                     <div style="margin-top: 0.75rem; padding: 0.75rem 0.9rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); color: #475569; font-size: 0.82rem;">
                         {{ item.state.next_unlock_message }}
+                        {% if item.state.direct_checkout_available %}
+                        <form method="post" action="{% url 'tools:workspace-billing-checkout' %}" style="margin-top: 0.75rem;">
+                            {% csrf_token %}
+                            <input type="hidden" name="plan" value="{{ item.state.next_plan_slug }}">
+                            <input type="hidden" name="return_to" value="{{ request.get_full_path }}">
+                            <button type="submit" class="button button-secondary">Unlock {{ item.label }}</button>
+                        </form>
+                        {% endif %}
                     </div>
                     {% endif %}
                 </article>
@@ -585,6 +617,14 @@
                     <div style="padding: 0.85rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.5;">
                         Share links spend {{ audit_share_action.credits }} credits.
                         {{ audit_share_action.next_unlock_message|default:audit_share_action.blocked_message }}
+                        {% if audit_share_action.direct_checkout_available %}
+                        <form method="post" action="{% url 'tools:workspace-billing-checkout' %}" style="margin-top: 0.85rem;">
+                            {% csrf_token %}
+                            <input type="hidden" name="plan" value="{{ audit_share_action.next_plan_slug }}">
+                            <input type="hidden" name="return_to" value="{{ request.get_full_path }}">
+                            <button type="submit" class="button button-secondary">Unlock sharing</button>
+                        </form>
+                        {% endif %}
                     </div>
                     {% endif %}
                 </div>
