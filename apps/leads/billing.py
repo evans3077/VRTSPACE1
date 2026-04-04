@@ -928,6 +928,27 @@ def create_checkout_session(*, user, plan, success_url, cancel_url):
     return data
 
 
+def fetch_checkout_session(session_id):
+    if not settings.STRIPE_ENABLED:
+        raise BillingError("Stripe billing is not configured.")
+    if not session_id:
+        raise BillingError("Missing Stripe checkout session id.")
+
+    response = requests.get(
+        f"{STRIPE_API_BASE}/checkout/sessions/{session_id}",
+        auth=(settings.STRIPE_SECRET_KEY, ""),
+        timeout=20,
+    )
+    if response.status_code >= 400:
+        raise BillingError(f"Stripe checkout session lookup failed: {response.text[:200]}")
+    return response.json()
+
+
+def sync_subscription_from_checkout_session_id(session_id):
+    session_data = fetch_checkout_session(session_id)
+    return sync_subscription_from_checkout_session(session_data)
+
+
 def create_billing_portal_session(*, subscription, return_url):
     if not settings.STRIPE_ENABLED:
         raise BillingError("Stripe billing is not configured.")
@@ -996,6 +1017,7 @@ def sync_subscription_from_checkout_session(session_data):
     subscription.stripe_checkout_session_id = session_data.get("id", "") or subscription.stripe_checkout_session_id
     subscription.metadata = session_data
     subscription.save()
+    ensure_plan_credit_grants(subscription.user)
     return subscription
 
 
@@ -1033,6 +1055,8 @@ def sync_subscription_from_stripe_subscription(subscription_data, event_id=""):
     subscription.last_webhook_event_id = event_id
     subscription.metadata = subscription_data
     subscription.save()
+    if subscription.status in ACTIVE_SUBSCRIPTION_STATUSES:
+        ensure_plan_credit_grants(subscription.user)
     return subscription
 
 

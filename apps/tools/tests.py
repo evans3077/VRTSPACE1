@@ -14,7 +14,7 @@ from django.test import TestCase, override_settings
 from django.urls import reverse
 from django.utils import timezone
 
-from apps.leads.billing import BillingError, create_checkout_session
+from apps.leads.billing import BillingError, create_checkout_session, get_total_credit_balance_summary
 from apps.leads.models import AuditRequest, ClientProject, UsageRecord, WorkspaceCreditLedger, WorkspacePlan, WorkspaceSubscription
 from apps.seo.models import SEOContextSnapshot, SEOProjectProfile
 from apps.aeo.models import AEOAudit
@@ -720,7 +720,7 @@ class ProjectDashboardTests(TestCase):
 
         dashboard_response = self.client.get(reverse("tools:workspace-dashboard"))
         self.assertEqual(dashboard_response.status_code, 200)
-        self.assertContains(dashboard_response, "Site Health Monitor")
+        self.assertContains(dashboard_response, "Open SEO")
         self.assertContains(dashboard_response, "Free-pass mode")
 
     def test_workspace_dashboard_shows_audit_history_and_delta(self):
@@ -767,7 +767,7 @@ class ProjectDashboardTests(TestCase):
         response = self.client.get(reverse("tools:workspace-dashboard"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Saved reruns and score comparison")
+        self.assertContains(response, "Saved runs and validation")
         self.assertContains(response, "+13")
 
     def test_workspace_dashboard_shows_fix_locations_and_module_upgrade_cta(self):
@@ -832,8 +832,8 @@ class ProjectDashboardTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Where this appears")
         self.assertContains(response, "https://example.com/about/")
-        self.assertContains(response, "Unlock monitoring")
-        self.assertContains(response, reverse("tools:workspace-billing-checkout"))
+        self.assertContains(response, "What needs attention first")
+        self.assertNotContains(response, "Unlock monitoring")
 
     def test_workspace_dashboard_shows_audits_seo_aeo_and_usage_value_panel(self):
         user = get_user_model().objects.create_user(
@@ -895,10 +895,10 @@ class ProjectDashboardTests(TestCase):
         response = self.client.get(reverse("tools:workspace-dashboard"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Audits, SEO, and AEO")
-        self.assertContains(response, "Where your credits are going")
-        self.assertContains(response, "SEO context refreshes")
-        self.assertContains(response, "AEO analyses")
+        self.assertContains(response, "Continue the work")
+        self.assertContains(response, "Open SEO")
+        self.assertContains(response, "Open AEO")
+        self.assertContains(response, "Balance")
 
     def test_public_audit_result_shows_workspace_and_plan_ctas(self):
         audit_run = AuditRun.objects.create(
@@ -1121,7 +1121,49 @@ class WorkspaceBillingTests(TestCase):
 
         payload = mocked_post.call_args.kwargs["data"]
         self.assertIn("/workspace/billing/success/?next=%2Fworkspace%2Fseo%2F", payload["success_url"])
+        self.assertIn("session_id=%7BCHECKOUT_SESSION_ID%7D", payload["success_url"])
         self.assertIn("/workspace/billing/cancel/?next=%2Fworkspace%2Fseo%2F", payload["cancel_url"])
+
+    @override_settings(
+        STRIPE_PUBLISHABLE_KEY="pk_test_value",
+        STRIPE_SECRET_KEY="sk_test_value",
+        STRIPE_ENABLED=True,
+    )
+    @patch("apps.leads.billing.requests.get")
+    def test_billing_success_syncs_checkout_session_and_grants_credits(self, mocked_get):
+        user = get_user_model().objects.create_user(
+            username="billing-success@example.com",
+            email="billing-success@example.com",
+            password="strongpass123",
+        )
+        mocked_get.return_value.status_code = 200
+        mocked_get.return_value.json.return_value = {
+            "id": "cs_test_123",
+            "client_reference_id": str(user.pk),
+            "customer": "cus_123",
+            "subscription": "sub_123",
+            "metadata": {"plan_slug": "starter"},
+        }
+        starter_plan = WorkspacePlan.objects.get(slug="starter")
+        WorkspaceSubscription.objects.create(
+            user=user,
+            plan=starter_plan,
+            stripe_checkout_session_id="cs_test_123",
+        )
+        self.client.force_login(user)
+
+        response = self.client.get(
+            reverse("tools:workspace-billing-success"),
+            {"session_id": "cs_test_123"},
+        )
+
+        self.assertEqual(response.status_code, 302)
+        subscription = WorkspaceSubscription.objects.get(user=user)
+        self.assertEqual(subscription.status, WorkspaceSubscription.Status.ACTIVE)
+        self.assertEqual(subscription.stripe_customer_id, "cus_123")
+        balance = get_total_credit_balance_summary(user)
+        self.assertEqual(balance["granted"], 50)
+        self.assertEqual(balance["remaining"], 50)
 
     @override_settings(
         STRIPE_WEBHOOK_SECRET="whsec_test_value",
@@ -1218,7 +1260,7 @@ class WorkspaceBillingTests(TestCase):
         self.assertContains(response, "1 older audit run")
         self.assertContains(response, "74")
         self.assertNotContains(response, str(older_run.created_at))
-        self.assertContains(response, "View Latest PDF")
+        self.assertContains(response, "Open report")
 
     @override_settings(AUDIT_TIER_ENFORCEMENT=True)
     def test_workspace_rerun_blocks_when_monthly_audit_limit_is_reached(self):
@@ -1412,7 +1454,7 @@ class WorkspaceProjectSelectionTests(TestCase):
         response = self.client.get(reverse("tools:workspace-dashboard"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Independent workspaces")
+        self.assertContains(response, "Projects")
         self.assertContains(response, "Project One")
         self.assertContains(response, "Project Two")
 

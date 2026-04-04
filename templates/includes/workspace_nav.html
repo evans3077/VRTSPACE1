@@ -37,31 +37,16 @@
 
             <nav class="workspace-subnav" aria-label="Workspace">
                 <a class="workspace-subnav-link {% if workspace_nav_current == 'workspace' %}is-active{% endif %}" href="{% url 'tools:workspace-dashboard' %}">
-                    1. Audit
-                </a>
-                <a class="workspace-subnav-link" href="{% url 'tools:workspace-dashboard' %}#start-audit">
-                    Start Audit
-                </a>
-                <a class="workspace-subnav-link" href="{% url 'tools:workspace-dashboard' %}#new-project">
-                    New Project
-                </a>
-                <a class="workspace-subnav-link" href="{% url 'tools:workspace-dashboard' %}#credit-overview">
-                    Credits
-                </a>
-                <a class="workspace-subnav-link" href="{% url 'tools:workspace-dashboard' %}#plans">
-                    Plans
-                </a>
-                <a class="workspace-subnav-link {% if workspace_nav_current == 'audits' %}is-active{% endif %}" href="{% url 'tools:workspace-dashboard' %}#audit-history">
-                    Audit History
+                    Overview
                 </a>
                 <a class="workspace-subnav-link {% if workspace_nav_current == 'seo' %}is-active{% endif %}" href="{% url 'seo:workspace-seo' %}">
-                    2. SEO
+                    SEO
                 </a>
                 <a class="workspace-subnav-link {% if workspace_nav_current == 'aeo' %}is-active{% endif %}" href="{% url 'aeo:workspace-aeo' %}">
-                    2. AEO
+                    AEO
                 </a>
                 <a class="workspace-subnav-link {% if workspace_nav_current == 'content' %}is-active{% endif %}" href="{% url 'content:workspace-content' %}">
-                    3. Content
+                    Content
                 </a>
             </nav>
         </div>

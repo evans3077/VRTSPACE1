@@ -16,6 +16,7 @@ from apps.leads.billing import (
     get_plan_by_slug,
     get_workspace_subscription,
     handle_stripe_webhook_event,
+    sync_subscription_from_checkout_session_id,
     verify_stripe_signature,
 )
 from apps.leads.services import resolve_workspace_project
@@ -41,10 +42,13 @@ class WorkspaceCheckoutCreateView(LoginRequiredMixin, View):
         try:
             success_path = reverse("tools:workspace-billing-success")
             cancel_path = reverse("tools:workspace-billing-cancel")
+            success_query = "session_id={CHECKOUT_SESSION_ID}"
             if return_to.startswith("/"):
                 query = urlencode({"next": return_to})
-                success_path = f"{success_path}?{query}"
+                success_path = f"{success_path}?{query}&{success_query}"
                 cancel_path = f"{cancel_path}?{query}"
+            else:
+                success_path = f"{success_path}?{success_query}"
             session = create_checkout_session(
                 user=request.user,
                 plan=plan,
@@ -78,7 +82,19 @@ class WorkspaceBillingPortalView(LoginRequiredMixin, View):
 
 class WorkspaceBillingSuccessView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
-        messages.success(request, "Billing completed. Your workspace plan will update after Stripe confirms the subscription.")
+        session_id = request.GET.get("session_id", "").strip()
+        if session_id:
+            try:
+                sync_subscription_from_checkout_session_id(session_id)
+            except BillingError as exc:
+                messages.warning(
+                    request,
+                    f"Billing completed, but the subscription refresh is still pending. {exc}",
+                )
+            else:
+                messages.success(request, "Billing completed and workspace credits are now available.")
+        else:
+            messages.success(request, "Billing completed. Your workspace plan will update after Stripe confirms the subscription.")
         next_url = request.GET.get("next", "").strip()
         if next_url.startswith("/"):
             return redirect(next_url)

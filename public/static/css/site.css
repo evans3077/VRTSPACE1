@@ -172,11 +172,23 @@ a {
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    gap: 0.45rem;
     padding: 0.85rem 1rem;
     border-radius: 999px;
     background: rgba(15, 23, 42, 0.05);
     color: rgba(15, 23, 42, 0.72);
     font-weight: 700;
+}
+
+.nav-account-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+}
+
+.nav-account-link i,
+.workspace-subnav-link i {
+    font-size: 0.9em;
 }
 
 .workspace-subnav-link.is-active {

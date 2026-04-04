@@ -5,77 +5,55 @@
     <div class="container">
         <div class="section-heading">
             <p class="eyebrow">Workspace</p>
-            <h1 style="max-width: none;">{% if project.pk %}{{ project.name }}{% else %}User Dashboard{% endif %}</h1>
+            <h1 style="max-width: none;">{% if project.pk %}{{ project.name }}{% else %}Workspace Overview{% endif %}</h1>
             <p class="section-text" style="max-width: 760px;">
-                Simple operating flow: run the audit, then move into SEO or AEO from the same result, then generate content only when you need execution.
+                One working flow: create or open a workspace, run the audit, then move into SEO, AEO, or content from that same base.
             </p>
             <div id="project-actions" style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
                 {% if not project.pk %}
                 <a class="button button-primary" href="#new-project">Create workspace</a>
+                <a class="button button-secondary" href="#start-audit">Start with audit</a>
                 {% elif not latest_audit %}
                 <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
                     {% csrf_token %}
-                    <button type="submit" class="button button-primary">Run First Audit</button>
+                    <button type="submit" class="button button-primary">Run first audit</button>
                 </form>
-                <a class="button button-secondary" href="#new-project">Edit Project Setup</a>
+                <a class="button button-secondary" href="#new-project">Create another workspace</a>
                 {% else %}
                 <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
                     {% csrf_token %}
-                    <button type="submit" class="button button-primary">Run Audit</button>
+                    <button type="submit" class="button button-primary">Run audit</button>
                 </form>
-                <a class="button button-secondary" href="{% url 'seo:workspace-seo' %}">Go to SEO</a>
-                <a class="button button-secondary" href="{% url 'aeo:workspace-aeo' %}">Go to AEO</a>
-                <a class="button button-secondary" href="{% url 'content:workspace-content' %}">Go to Content</a>
-                <a class="button button-secondary" href="{% url 'tools:audit-report-pdf' latest_audit.pk %}" target="_blank" rel="noopener">View Latest PDF</a>
-                <a class="button button-secondary" href="{% url 'tools:audit-report-pdf' latest_audit.pk %}?download=1">Download Latest PDF</a>
-                {% if export_reports_allowed %}
-                <a class="button button-secondary" href="{% url 'tools:workspace-audit-export-json' latest_audit.pk %}" target="_blank" rel="noopener">Export JSON</a>
-                <a class="button button-secondary" href="{% url 'tools:workspace-audit-export-csv' latest_audit.pk %}">Export CSV</a>
+                <a class="button button-secondary" href="{% url 'tools:audit-result' latest_audit.pk %}">Open latest audit</a>
+                <a class="button button-secondary" href="{% url 'seo:workspace-seo' %}">Open SEO</a>
+                <a class="button button-secondary" href="{% url 'aeo:workspace-aeo' %}">Open AEO</a>
+                <a class="button button-secondary" href="{% url 'content:workspace-content' %}">Open Content</a>
                 {% endif %}
-                {% endif %}
-                {% if current_subscription and current_subscription.stripe_customer_id %}
-                <form method="post" action="{% url 'tools:workspace-billing-portal' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="button button-secondary">Manage Billing</button>
-                </form>
-                {% endif %}
-                <a class="button button-secondary" href="#plans">Plans & Billing</a>
             </div>
+
             {% if not audit_tier_enforcement %}
             <div style="margin-top: 1rem; display: inline-flex; gap: 0.5rem; align-items: center; padding: 0.75rem 1rem; border-radius: 999px; background: rgba(14, 165, 233, 0.08); color: #0f172a; font-size: 0.85rem; font-weight: 700;">
-                Free-pass mode: plans are visible, but billing gates are not enforced yet.
+                Free-pass mode is active. Usage is still logged even when billing gates are off.
             </div>
             {% endif %}
+
             <div class="workspace-flow-note" style="margin-top: 1rem;">
-                The latest audit feeds the next steps. You only spend fresh audit credits when you need a new crawl or want to validate changes.
+                Reuse the current audit for SEO, AEO, and content. Run another audit only when you need a fresh crawl or want to validate changes.
             </div>
+
             {% if not project.pk %}
             <div style="margin-top: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.6;">
-                No active workspace yet. Start by creating one below. After that, the first audit becomes the base for SEO, AEO, content, exports, and reporting.
+                No active workspace yet. Create one or start directly with an audit below.
             </div>
             {% elif not latest_audit %}
             <div style="margin-top: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; line-height: 1.6;">
-                This project is ready, but it does not have an audit base yet. Run the first audit now, then move into SEO, AEO, or content from that same result.
+                This workspace is ready. Run the first audit to unlock SEO, AEO, content, and validation history.
             </div>
             {% endif %}
+
             {% if credit_overview.is_testing_mode and credit_overview.overage %}
             <div style="margin-top: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; line-height: 1.6;">
-                Testing mode is active. The workspace has logged {{ credit_overview.overage }} credits of estimated overage without blocking the run.
-            </div>
-            {% endif %}
-            {% if latest_audit and audit_export_action and not export_reports_allowed %}
-            <div style="margin-top: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.6;">
-                <strong style="display: block; color: #0f172a; margin-bottom: 0.25rem;">Audit exports</strong>
-                JSON and CSV exports usually spend {{ audit_export_action.credits }} workspace credit{{ audit_export_action.credits|pluralize }}.
-                {{ audit_export_action.next_unlock_message|default:audit_export_action.blocked_message }}
-                {% if audit_export_action.direct_checkout_available %}
-                <form method="post" action="{% url 'tools:workspace-billing-checkout' %}" style="margin-top: 0.85rem;">
-                    {% csrf_token %}
-                    <input type="hidden" name="plan" value="{{ audit_export_action.next_plan_slug }}">
-                    <input type="hidden" name="return_to" value="{{ request.get_full_path }}">
-                    <button type="submit" class="button button-primary">Unlock with {{ audit_export_action.next_plan_name }}</button>
-                </form>
-                {% endif %}
+                Testing mode logged {{ credit_overview.overage }} estimated credit{{ credit_overview.overage|pluralize }} above the current balance without blocking the workflow.
             </div>
             {% endif %}
         </div>
@@ -85,20 +63,15 @@
 {% include "includes/workspace_nav.html" %}
 
 <section class="packages-section" style="padding-top: 0;">
-    <div class="container" style="display: grid; gap: 2rem;">
-        {% if latest_audit %}
-        <div class="system-grid">
-            <article class="system-card"><p class="eyebrow">Domain</p><h3>{{ latest_audit.normalized_domain }}</h3><p>Current tracked property</p></article>
-            <article class="system-card"><p class="eyebrow">Overall</p><h3>{{ latest_audit.overall_score }}</h3><p>Latest audit score</p></article>
-            <article class="system-card"><p class="eyebrow">Pages</p><h3>{{ latest_audit.pages_crawled }}</h3><p>Pages crawled</p></article>
-        </div>
-        {% endif %}
-
+    <div class="container page-stack">
         {% if workspace_project_summaries %}
         <article id="project-portfolio" class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                 <p class="eyebrow">Workspaces</p>
-                <h2 style="font-size: 2rem;">Independent workspaces</h2>
+                <h2 style="font-size: 2rem;">Projects</h2>
+                <p class="section-text" style="max-width: 680px; margin-left: 0;">
+                    Keep each website, brand, or client independent. Open the one you need and continue from there.
+                </p>
             </div>
             <div class="system-grid">
                 {% for item in workspace_project_summaries %}
@@ -137,20 +110,13 @@
                         </div>
                         <div style="margin-top: 1rem;">
                             {% if project.pk == item.pk %}
-                            <span class="score-pill score-medium">Open workspace</span>
-                            {% elif item.has_latest_audit %}
-                            <form method="post" action="{% url 'tools:workspace-project-select' %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="project_id" value="{{ item.pk }}">
-                                <input type="hidden" name="next" value="{% url 'tools:workspace-dashboard' %}">
-                                <button type="submit" class="button button-secondary" style="width: 100%;">Open workspace</button>
-                            </form>
+                            <span class="score-pill score-medium">Current workspace</span>
                             {% else %}
                             <form method="post" action="{% url 'tools:workspace-project-select' %}">
                                 {% csrf_token %}
                                 <input type="hidden" name="project_id" value="{{ item.pk }}">
                                 <input type="hidden" name="next" value="{% url 'tools:workspace-dashboard' %}">
-                                <button type="submit" class="button button-secondary" style="width: 100%;">Open and run audit</button>
+                                <button type="submit" class="button button-secondary" style="width: 100%;">Open workspace</button>
                             </form>
                             {% endif %}
                         </div>
@@ -161,146 +127,45 @@
         </article>
         {% endif %}
 
-        <details id="start-audit" class="system-card workspace-create-panel"{% if audit_start_form.errors or not project.pk %} open{% endif %}>
-            <summary class="workspace-create-summary">
-                <div>
-                    <p class="eyebrow">Fast Start</p>
-                    <h2 style="font-size: 2rem; margin: 0;">Start with an audit</h2>
-                </div>
-                <span class="button button-primary">Start audit</span>
-            </summary>
-            <div class="workspace-create-body">
-                <div style="color: #475569; line-height: 1.6;">
-                    Use this when you want to begin with SEO or AEO immediately. The audit creates or attaches the workspace, then feeds the next layers without making you restart the flow.
-                    <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03);">
-                        Flow:
-                        <div style="margin-top: 0.35rem;">1. Start the audit</div>
-                        <div>2. Let the workspace attach automatically</div>
-                        <div>3. Continue into SEO, AEO, content, exports, and reporting</div>
-                    </div>
-                </div>
-                <form method="post" action="{% url 'tools:workspace-audit-start' %}" style="display: grid; gap: 0.85rem;">
-                    {% csrf_token %}
-                    {% for field in audit_start_form %}
-                    {% if field.is_hidden %}
-                    {{ field }}
-                    {% else %}
-                    <label style="display: grid; gap: 0.3rem;">
-                        <span style="font-weight: 700;">{{ field.label }}</span>
-                        {{ field }}
-                        {% if field.errors %}
-                        <span style="color: #991b1b; font-size: 0.82rem;">{{ field.errors|join:", " }}</span>
-                        {% endif %}
-                    </label>
-                    {% endif %}
-                    {% endfor %}
-                    <button type="submit" class="button button-primary">Start audit and attach workspace</button>
-                </form>
-            </div>
-        </details>
-
-        <details id="new-project" class="system-card workspace-create-panel"{% if project_form.errors %} open{% endif %}>
-            <summary class="workspace-create-summary">
-                <div>
-                    <p class="eyebrow">Workspace Setup</p>
-                    <h2 style="font-size: 2rem; margin: 0;">Create another independent workspace</h2>
-                </div>
-                <span class="button button-primary">Create workspace</span>
-            </summary>
-            <div class="workspace-create-body">
-                <div style="color: #475569; line-height: 1.6;">
-                    Create a workspace when you want to keep SEO, AEO, content, exports, and credit activity separate for another website, brand, or client without starting an audit yet.
-                    <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03);">
-                        Workflow:
-                        <div style="margin-top: 0.35rem;">1. Create the workspace</div>
-                        <div>2. Run the first audit</div>
-                        <div>3. Reuse that audit for SEO, AEO, and content</div>
-                    </div>
-                </div>
-                <form method="post" action="{% url 'tools:workspace-project-create' %}" style="display: grid; gap: 0.85rem;">
-                    {% csrf_token %}
-                    {% for field in project_form %}
-                    <label style="display: grid; gap: 0.3rem;">
-                        <span style="font-weight: 700;">{{ field.label }}</span>
-                        {{ field }}
-                        {% if field.errors %}
-                        <span style="color: #991b1b; font-size: 0.82rem;">{{ field.errors|join:", " }}</span>
-                        {% endif %}
-                    </label>
-                    {% endfor %}
-                    <button type="submit" class="button button-primary">Create workspace</button>
-                </form>
-            </div>
-        </details>
-
-        <div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 2rem; align-items: start;">
-            <article id="credit-overview" class="system-card">
+        <div style="display: grid; grid-template-columns: 1.25fr 0.95fr; gap: 2rem; align-items: start;">
+            <article class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                    <p class="eyebrow">Product Areas</p>
-                    <h2 style="font-size: 2rem;">Audits, SEO, and AEO</h2>
+                    <p class="eyebrow">Current workspace</p>
+                    <h2 style="font-size: 2rem;">What is active right now</h2>
                 </div>
                 <div class="system-grid">
-                    <article class="system-card" style="border-top: 4px solid var(--signal);">
-                        <p class="eyebrow">Audits</p>
+                    <article class="system-card">
+                        <p class="eyebrow">Domain</p>
+                        <h3>{% if latest_audit %}{{ latest_audit.normalized_domain }}{% elif project.normalized_domain %}{{ project.normalized_domain }}{% else %}-{% endif %}</h3>
+                        <p>Tracked property</p>
+                    </article>
+                    <article class="system-card">
+                        <p class="eyebrow">Overall score</p>
                         <h3>{% if latest_audit %}{{ latest_audit.overall_score }}{% else %}-{% endif %}</h3>
-                        <p>Technical, on-page, content, and performance tracking.</p>
-                        <div style="margin-top: 1rem;">
-                            {% if project.pk and not latest_audit %}
-                            <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
-                                {% csrf_token %}
-                                <button type="submit" class="button button-secondary">Run first audit</button>
-                            </form>
-                            {% else %}
-                            <a class="button button-secondary" href="{% url 'tools:workspace-dashboard' %}#audit-history">Open Audits</a>
-                            {% endif %}
-                        </div>
+                        <p>Latest audit result</p>
                     </article>
-                    <article class="system-card" style="border-top: 4px solid #0f172a;">
-                        <p class="eyebrow">SEO</p>
-                        <h3>{% if latest_seo_snapshot %}Ready{% else %}Setup{% endif %}</h3>
-                        <p>Industry, location, keyword, and page-priority planning.</p>
-                        <div style="margin-top: 1rem;">
-                            {% if not project.pk %}
-                            <a class="button button-secondary" href="#new-project">Create project</a>
-                            {% elif not latest_audit %}
-                            <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
-                                {% csrf_token %}
-                                <button type="submit" class="button button-secondary">Run first audit</button>
-                            </form>
-                            {% else %}
-                            <a class="button button-secondary" href="{% url 'seo:workspace-seo' %}">Open SEO</a>
-                            {% endif %}
-                        </div>
+                    <article class="system-card">
+                        <p class="eyebrow">Pages crawled</p>
+                        <h3>{% if latest_audit %}{{ latest_audit.pages_crawled }}{% else %}-{% endif %}</h3>
+                        <p>Current crawl depth</p>
                     </article>
-                    <article class="system-card" style="border-top: 4px solid #ea580c;">
-                        <p class="eyebrow">AEO</p>
-                        <h3>{% if latest_aeo_audit %}{{ latest_aeo_audit.visibility_score }}{% else %}Run{% endif %}</h3>
-                        <p>AI visibility, entity clarity, and answer-structure readiness.</p>
-                        <div style="margin-top: 1rem;">
-                            {% if not project.pk %}
-                            <a class="button button-secondary" href="#new-project">Create project</a>
-                            {% elif not latest_audit %}
-                            <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
-                                {% csrf_token %}
-                                <button type="submit" class="button button-secondary">Run first audit</button>
-                            </form>
-                            {% else %}
-                            <a class="button button-secondary" href="{% url 'aeo:workspace-aeo' %}">Open AEO</a>
-                            {% endif %}
-                        </div>
+                    <article class="system-card">
+                        <p class="eyebrow">Last audit</p>
+                        <h3>{% if latest_audit %}{{ latest_audit.created_at|date:"M j" }}{% else %}-{% endif %}</h3>
+                        <p>{% if latest_audit %}{{ latest_audit.status|title }}{% else %}Waiting for first audit{% endif %}</p>
                     </article>
                 </div>
             </article>
 
             <article class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                    <p class="eyebrow">Where your credits are going</p>
-                    <h2 style="font-size: 2rem;">Visible balance and spend</h2>
+                    <p class="eyebrow">Credits</p>
+                    <h2 style="font-size: 2rem;">Balance</h2>
                 </div>
                 <div class="workspace-credit-balance-card">
                     <div>
-                        <p class="eyebrow" style="margin-bottom: 0.35rem;">Current Balance</p>
-                        <h3 style="margin: 0; font-size: 2.4rem;">
+                        <p class="eyebrow" style="margin-bottom: 0.35rem;">Remaining</p>
+                        <h3 style="margin: 0; font-size: clamp(2rem, 4vw, 2.6rem);">
                             {% if credit_overview.unlimited %}
                             Unlimited
                             {% else %}
@@ -309,473 +174,199 @@
                         </h3>
                     </div>
                     <div class="workspace-credit-balance-meta">
-                        <div><strong>{{ credit_overview.used|default:0 }}</strong> used this cycle</div>
-                        <div>
-                            {% if credit_overview.unlimited %}
-                            No workspace cap
-                            {% else %}
-                            <strong>{{ credit_overview.granted|default:0 }}</strong> granted this cycle
-                            {% endif %}
-                        </div>
-                    </div>
-                </div>
-                {% if credit_overview.is_testing_mode %}
-                <div style="margin-top: 0.75rem; font-size: 0.82rem; color: #475569;">
-                    Testing mode keeps the balance from dropping below zero while still logging estimated spend.
-                </div>
-                {% endif %}
-                <div style="margin-top: 1rem; display: grid; gap: 0.75rem;">
-                    {% for item in credit_activity %}
-                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; gap: 1rem;">
-                        <span>{{ item.label }}</span>
-                        <strong>{{ item.used }}</strong>
-                    </div>
-                    {% endfor %}
-                </div>
-                <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; line-height: 1.6;">
-                    Credits are one visible workspace balance. Heavier work spends more credits, lighter work spends less, and SEO or AEO can keep building on the latest audit until you decide to run another one.
-                </div>
-                {% if audit_export_action or audit_share_action %}
-                <div style="margin-top: 1rem; display: grid; gap: 0.75rem;">
-                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03);">
-                        <strong style="display: block; margin-bottom: 0.25rem;">Audit exports</strong>
-                        <div style="color: #475569; font-size: 0.84rem; line-height: 1.5;">
-                            {{ audit_export_action.credits }} credits when you need JSON or CSV delivery from this project.
-                            {% if audit_export_action.next_unlock_message %}
-                            {{ audit_export_action.next_unlock_message }}
-                            {% endif %}
-                        </div>
-                        {% if audit_export_action.direct_checkout_available %}
-                        <form method="post" action="{% url 'tools:workspace-billing-checkout' %}" style="margin-top: 0.85rem;">
-                            {% csrf_token %}
-                            <input type="hidden" name="plan" value="{{ audit_export_action.next_plan_slug }}">
-                            <input type="hidden" name="return_to" value="{{ request.get_full_path }}">
-                            <button type="submit" class="button button-secondary">Unlock exports</button>
-                        </form>
-                        {% endif %}
-                    </div>
-                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03);">
-                        <strong style="display: block; margin-bottom: 0.25rem;">Stakeholder sharing</strong>
-                        <div style="color: #475569; font-size: 0.84rem; line-height: 1.5;">
-                            {{ audit_share_action.credits }} credits when you create or refresh a shareable stakeholder link.
-                            {% if audit_share_action.next_unlock_message %}
-                            {{ audit_share_action.next_unlock_message }}
-                            {% endif %}
-                        </div>
-                        {% if audit_share_action.direct_checkout_available %}
-                        <form method="post" action="{% url 'tools:workspace-billing-checkout' %}" style="margin-top: 0.85rem;">
-                            {% csrf_token %}
-                            <input type="hidden" name="plan" value="{{ audit_share_action.next_plan_slug }}">
-                            <input type="hidden" name="return_to" value="{{ request.get_full_path }}">
-                            <button type="submit" class="button button-secondary">Unlock sharing</button>
-                        </form>
+                        <div>Used this cycle: <strong style="color: #0f172a;">{{ credit_overview.used|default:0 }}</strong></div>
+                        {% if credit_overview.granted %}
+                        <div>Granted this cycle: <strong style="color: #0f172a;">{{ credit_overview.granted }}</strong></div>
                         {% endif %}
                     </div>
                 </div>
-                {% endif %}
+                <div style="margin-top: 1rem; color: #475569; line-height: 1.6;">
+                    Keep the workspace focused on project work. Billing, top-ups, and personal settings live in your account area.
+                </div>
+                <div style="margin-top: 1rem;">
+                    <a class="button button-secondary" href="{% url 'tools:account-dashboard' %}#billing">Open account</a>
+                </div>
             </article>
         </div>
 
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+            <details id="start-audit" class="system-card workspace-create-panel"{% if audit_start_form.errors or not project.pk %} open{% endif %}>
+                <summary class="workspace-create-summary">
+                    <div>
+                        <p class="eyebrow">Start with audit</p>
+                        <h2 style="font-size: 2rem; margin: 0;">Audit and attach a workspace</h2>
+                    </div>
+                    <span class="button button-primary">Start</span>
+                </summary>
+                <div class="workspace-create-body">
+                    <div style="color: #475569; line-height: 1.6; margin-bottom: 1rem;">
+                        Use this when a user starts from SEO or AEO. The audit becomes the base and the workspace is attached automatically.
+                    </div>
+                    <form method="post" action="{% url 'tools:workspace-audit-start' %}" style="display: grid; gap: 0.85rem;">
+                        {% csrf_token %}
+                        {% for field in audit_start_form %}
+                        {% if field.is_hidden %}
+                        {{ field }}
+                        {% else %}
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">{{ field.label }}</span>
+                            {{ field }}
+                            {% if field.errors %}
+                            <span style="color: #991b1b; font-size: 0.82rem;">{{ field.errors|join:", " }}</span>
+                            {% endif %}
+                        </label>
+                        {% endif %}
+                        {% endfor %}
+                        <button type="submit" class="button button-primary">Start audit</button>
+                    </form>
+                </div>
+            </details>
+
+            <details id="new-project" class="system-card workspace-create-panel"{% if project_form.errors %} open{% endif %}>
+                <summary class="workspace-create-summary">
+                    <div>
+                        <p class="eyebrow">Create workspace</p>
+                        <h2 style="font-size: 2rem; margin: 0;">Add another independent project</h2>
+                    </div>
+                    <span class="button button-primary">Create</span>
+                </summary>
+                <div class="workspace-create-body">
+                    <div style="color: #475569; line-height: 1.6; margin-bottom: 1rem;">
+                        Create a separate workspace for another website, client, or brand. Each one keeps its own audit, SEO, AEO, and content history.
+                    </div>
+                    <form method="post" action="{% url 'tools:workspace-project-create' %}" style="display: grid; gap: 0.85rem;">
+                        {% csrf_token %}
+                        {% for field in project_form %}
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">{{ field.label }}</span>
+                            {{ field }}
+                            {% if field.errors %}
+                            <span style="color: #991b1b; font-size: 0.82rem;">{{ field.errors|join:", " }}</span>
+                            {% endif %}
+                        </label>
+                        {% endfor %}
+                        <button type="submit" class="button button-primary">Create workspace</button>
+                    </form>
+                </div>
+            </details>
+        </div>
+
+        {% if project.pk %}
         <article class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                <p class="eyebrow">Flow</p>
-                <h2 style="font-size: 2rem;">What each next step costs</h2>
+                <p class="eyebrow">Next steps</p>
+                <h2 style="font-size: 2rem;">Continue the work</h2>
             </div>
             <div class="system-grid">
-                {% for item in credit_action_guide %}
-                <article class="system-card" style="border-top: 4px solid {% if item.slug == 'audit' %}var(--signal){% elif item.slug == 'seo' %}#0f172a{% elif item.slug == 'aeo' %}#ea580c{% else %}#0ea5e9{% endif %};">
-                    <p class="eyebrow">{{ item.label }}</p>
-                    <h3>{{ item.credits }} credits</h3>
-                    <p>{{ item.next_step }}</p>
-                    <div style="margin-top: 0.75rem; font-size: 0.82rem; color: #475569; line-height: 1.5;">
-                        {{ item.reason }}
-                    </div>
-                    {% if item.uses_existing_audit %}
-                    <div style="margin-top: 0.75rem; padding: 0.75rem 0.9rem; border-radius: 14px; background: rgba(34, 197, 94, 0.1); color: #166534; font-size: 0.82rem;">
-                        Uses the latest audit instead of charging for another crawl.
-                    </div>
-                    {% endif %}
-                    {% if item.state and not item.state.available and item.state.next_unlock_message %}
-                    <div style="margin-top: 0.75rem; padding: 0.75rem 0.9rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); color: #475569; font-size: 0.82rem;">
-                        {{ item.state.next_unlock_message }}
-                        {% if item.state.direct_checkout_available %}
-                        <form method="post" action="{% url 'tools:workspace-billing-checkout' %}" style="margin-top: 0.75rem;">
+                <article class="system-card" style="border-top: 4px solid var(--signal);">
+                    <p class="eyebrow">Audit</p>
+                    <h3>{% if latest_audit %}Ready{% else %}Required{% endif %}</h3>
+                    <p>{% if latest_audit %}Run again when you need fresh validation or a new crawl.{% else %}Start here before using the other modules.{% endif %}</p>
+                    <div style="margin-top: 1rem;">
+                        <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
                             {% csrf_token %}
-                            <input type="hidden" name="plan" value="{{ item.state.next_plan_slug }}">
-                            <input type="hidden" name="return_to" value="{{ request.get_full_path }}">
-                            <button type="submit" class="button button-secondary">Unlock {{ item.label }}</button>
+                            <button type="submit" class="button button-secondary">{% if latest_audit %}Run audit{% else %}Run first audit{% endif %}</button>
                         </form>
+                    </div>
+                </article>
+                <article class="system-card" style="border-top: 4px solid #0f172a;">
+                    <p class="eyebrow">SEO</p>
+                    <h3>{% if latest_seo_snapshot %}Ready{% else %}Next{% endif %}</h3>
+                    <p>Use the audit base to benchmark competitors, pages, keywords, and execution priorities.</p>
+                    <div style="margin-top: 1rem;">
+                        {% if latest_audit %}
+                        <a class="button button-secondary" href="{% url 'seo:workspace-seo' %}">Open SEO</a>
+                        {% else %}
+                        <a class="button button-secondary" href="#start-audit">Start with audit</a>
                         {% endif %}
                     </div>
-                    {% endif %}
                 </article>
-                {% endfor %}
+                <article class="system-card" style="border-top: 4px solid #ea580c;">
+                    <p class="eyebrow">AEO</p>
+                    <h3>{% if latest_aeo_audit %}Ready{% else %}Next{% endif %}</h3>
+                    <p>Use the same audit to check entity clarity, answer coverage, and AI visibility structure.</p>
+                    <div style="margin-top: 1rem;">
+                        {% if latest_audit %}
+                        <a class="button button-secondary" href="{% url 'aeo:workspace-aeo' %}">Open AEO</a>
+                        {% else %}
+                        <a class="button button-secondary" href="#start-audit">Start with audit</a>
+                        {% endif %}
+                    </div>
+                </article>
+                <article class="system-card" style="border-top: 4px solid #16a34a;">
+                    <p class="eyebrow">Content</p>
+                    <h3>{% if latest_generated_content %}Active{% else %}Optional{% endif %}</h3>
+                    <p>Generate content only when you are ready to execute on the audit, SEO, or AEO findings.</p>
+                    <div style="margin-top: 1rem;">
+                        {% if latest_audit %}
+                        <a class="button button-secondary" href="{% url 'content:workspace-content' %}">Open Content</a>
+                        {% else %}
+                        <a class="button button-secondary" href="#start-audit">Start with audit</a>
+                        {% endif %}
+                    </div>
+                </article>
             </div>
         </article>
 
-        <div class="system-grid">
-            <article class="system-card" style="border-top: 4px solid var(--signal);">
-                <p class="eyebrow">Current Plan</p>
-                <h3>
-                    {% if current_subscription and current_subscription.plan %}
-                    {{ current_subscription.plan.name }}
-                    {% else %}
-                    Free
-                    {% endif %}
-                </h3>
-                <p>
-                    {% if current_subscription and current_subscription.plan %}
-                    Status: {{ current_subscription.get_status_display }}
-                    {% else %}
-                    No paid subscription is attached yet.
-                    {% endif %}
-                </p>
-            </article>
-            <article class="system-card">
-                <p class="eyebrow">Monthly Audit Usage</p>
-                <h3>
-                    {{ usage_summary.audit_runs_used|default:0 }}
-                    {% if usage_summary.audit_runs_limit %}
-                    / {{ usage_summary.audit_runs_limit }}
-                    {% else %}
-                    / Unlimited
-                    {% endif %}
-                </h3>
-                <p>
-                    {% if usage_summary.audit_runs_remaining is not None %}
-                    {{ usage_summary.audit_runs_remaining }} audit rerun{{ usage_summary.audit_runs_remaining|pluralize }} still available under the current plan policy.
-                    {% else %}
-                    No audit-rerun cap on the current plan.
-                    {% endif %}
-                </p>
-            </article>
-            <article class="system-card">
-                <p class="eyebrow">Feature Access</p>
-                <h3>{{ current_capabilities.name }}</h3>
-                <p>
-                    History:
-                    {% if current_capabilities.history_limit %}
-                    {{ current_capabilities.history_limit }} saved runs
-                    {% else %}
-                    Full history
-                    {% endif %}
-                </p>
-            </article>
-            <article class="system-card">
-                <p class="eyebrow">AI Content</p>
-                <h3>{{ generated_content_count|default:0 }}</h3>
-                <p>Saved drafts generated from your workspace and audit context.</p>
-            </article>
-        </div>
-
-        {% if recent_credit_entries %}
         <article class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                <p class="eyebrow">Credit Ledger</p>
-                <h2 style="font-size: 2rem;">Recent credit activity</h2>
+                <p class="eyebrow">Fix queue</p>
+                <h2 style="font-size: 2rem;">What needs attention first</h2>
             </div>
-            <div class="panel-scroll">
-                {% for entry in recent_credit_entries %}
-                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03); display: grid; gap: 0.35rem;">
-                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
-                        <strong>{{ entry.note }}</strong>
-                        <span class="score-pill score-medium">{{ entry.amount }} credits</span>
-                    </div>
-                    <div style="font-size: 0.84rem; color: #475569;">
-                        {{ entry.label }}{% if entry.project_name %} | {{ entry.project_name }}{% endif %} | {{ entry.created_at }}
-                        {% if entry.is_estimated %} | Estimated during testing mode{% endif %}
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </article>
-        {% endif %}
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
-            <article class="system-card">
-                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                    <p class="eyebrow">Recurring Audits</p>
-                    <h2 style="font-size: 2rem;">Automation control</h2>
-                </div>
-                <form method="post" action="{% url 'tools:workspace-audit-schedule' %}" style="display: grid; gap: 1rem;">
-                    {% csrf_token %}
-                    <label style="display: grid; gap: 0.35rem;">
-                        <span style="font-weight: 700;">Cadence</span>
-                        <select name="cadence" class="form-control">
-                            <option value="weekly" {% if audit_schedule and audit_schedule.cadence == "weekly" %}selected{% endif %}>Weekly</option>
-                            <option value="monthly" {% if audit_schedule and audit_schedule.cadence == "monthly" %}selected{% endif %}>Monthly</option>
-                        </select>
-                    </label>
-                    <label style="display: flex; gap: 0.65rem; align-items: center;">
-                        <input type="checkbox" name="is_active" value="1" {% if audit_schedule and audit_schedule.is_active %}checked{% endif %}>
-                        <span>Enable recurring audits for this workspace</span>
-                    </label>
-                    <label style="display: grid; gap: 0.35rem;">
-                        <span style="font-weight: 700;">Report recipients</span>
-                        <textarea name="report_recipients" class="form-control" rows="3" placeholder="stakeholder@example.com, team@example.com">{% if audit_schedule %}{{ audit_schedule.report_recipients|join:", " }}{% endif %}</textarea>
-                    </label>
-                    <label style="display: flex; gap: 0.65rem; align-items: center;">
-                        <input type="checkbox" name="email_reports_enabled" value="1" {% if audit_schedule and audit_schedule.email_reports_enabled %}checked{% endif %}>
-                        <span>Email the full report after each completed recurring audit</span>
-                    </label>
-                    <label style="display: flex; gap: 0.65rem; align-items: center;">
-                        <input type="checkbox" name="alert_on_score_drop" value="1" {% if audit_schedule and audit_schedule.alert_on_score_drop %}checked{% endif %}>
-                        <span>Alert when the overall score drops</span>
-                    </label>
-                    <label style="display: flex; gap: 0.65rem; align-items: center;">
-                        <input type="checkbox" name="alert_on_new_issues" value="1" {% if audit_schedule and audit_schedule.alert_on_new_issues %}checked{% endif %}>
-                        <span>Alert when new issues are detected</span>
-                    </label>
-                    <button type="submit" class="button button-secondary">Save automation settings</button>
-                </form>
-                <div style="margin-top: 1rem; display: grid; gap: 0.5rem; color: #475569; font-size: 0.9rem;">
-                    <div>
-                        Status:
-                        <strong style="color: #0f172a;">
-                            {% if audit_schedule and audit_schedule.is_active %}
-                            Active
-                            {% else %}
-                            Paused
-                            {% endif %}
-                        </strong>
-                    </div>
-                    <div>
-                        Next run:
-                        <strong style="color: #0f172a;">{{ audit_schedule.next_run_at|default:"Not scheduled" }}</strong>
-                    </div>
-                    <div>
-                        Automation access:
-                        <strong style="color: #0f172a;">
-                            {% if current_capabilities.recurring_audits_enabled %}
-                            Included on current plan
-                            {% elif audit_tier_enforcement %}
-                            Upgrade required
-                            {% else %}
-                            Available during free-pass testing
-                            {% endif %}
-                        </strong>
-                    </div>
-                    <div>
-                        Email reporting:
-                        <strong style="color: #0f172a;">
-                            {% if email_reports_allowed %}
-                            Available
-                            {% elif audit_tier_enforcement %}
-                            Upgrade required
-                            {% else %}
-                            Available during free-pass testing
-                            {% endif %}
-                        </strong>
-                    </div>
-                    {% if audit_schedule and audit_schedule.last_error_message %}
-                    <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(220, 38, 38, 0.08); color: #991b1b;">
-                        {{ audit_schedule.last_error_message }}
-                    </div>
-                    {% endif %}
-                </div>
-            </article>
-
-            <article class="system-card">
-                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                    <p class="eyebrow">Latest Change Report</p>
-                    <h2 style="font-size: 2rem;">What moved since the last run</h2>
-                </div>
-                {% if latest_change_report %}
-                <div style="display: grid; gap: 0.85rem;">
-                    <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03);">
-                        <strong style="display: block; margin-bottom: 0.35rem;">{{ latest_change_report.summary.headline }}</strong>
-                        <div style="color: #475569; font-size: 0.9rem;">
-                            New issues: {{ latest_change_report.new_issue_count }} | Resolved issues: {{ latest_change_report.resolved_issue_count }}
-                        </div>
-                    </div>
-                    {% for delta in latest_change_report.summary.score_deltas %}
-                    <div style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.75rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03);">
-                        <span style="text-transform: capitalize;">{{ delta.metric|cut:"_" }}</span>
-                        <strong>
-                            {% if delta.delta > 0 %}+{% endif %}{{ delta.delta }}
-                        </strong>
-                    </div>
-                    {% empty %}
-                    <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
-                        No metric deltas are available yet for this audit pair.
-                    </div>
-                    {% endfor %}
-                </div>
-                {% else %}
-                <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
-                    The first completed rerun will create a saved change report here.
-                </div>
-                {% endif %}
-                {% if latest_audit %}
-                <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                    {% if share_reports_allowed %}
-                    <form method="post" action="{% url 'tools:workspace-audit-share' latest_audit.pk %}">
-                        {% csrf_token %}
-                        <button type="submit" class="button button-secondary">Create Share Link</button>
-                    </form>
-                    {% elif audit_share_action %}
-                    <div style="padding: 0.85rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.5;">
-                        Share links spend {{ audit_share_action.credits }} credits.
-                        {{ audit_share_action.next_unlock_message|default:audit_share_action.blocked_message }}
-                        {% if audit_share_action.direct_checkout_available %}
-                        <form method="post" action="{% url 'tools:workspace-billing-checkout' %}" style="margin-top: 0.85rem;">
-                            {% csrf_token %}
-                            <input type="hidden" name="plan" value="{{ audit_share_action.next_plan_slug }}">
-                            <input type="hidden" name="return_to" value="{{ request.get_full_path }}">
-                            <button type="submit" class="button button-secondary">Unlock sharing</button>
-                        </form>
+            <div style="display: grid; gap: 0.75rem;">
+                {% for recommendation in fix_queue_recommendations %}
+                <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03);">
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.45rem;">
+                        {% if recommendation.root_cause_label %}
+                        <span class="score-pill score-high" style="font-size: 0.68rem;">{{ recommendation.root_cause_label }}</span>
+                        {% endif %}
+                        {% if recommendation.confidence_label %}
+                        <span class="score-pill {% if recommendation.evidence_status == 'strong' %}score-high{% elif recommendation.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.68rem;">{{ recommendation.confidence_label }}</span>
                         {% endif %}
                     </div>
+                    <strong style="display: block; margin-bottom: 0.35rem;">{{ recommendation.title }}</strong>
+                    {% if recommendation.description %}
+                    <div style="color: #475569; font-size: 0.88rem; line-height: 1.5; margin-bottom: 0.65rem;">{{ recommendation.description }}</div>
+                    {% endif %}
+                    <div style="color: #475569; font-size: 0.9rem; line-height: 1.5;">
+                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">What to fix</strong>
+                        {{ recommendation.recommended_fix }}
+                    </div>
+                    {% if recommendation.page_examples %}
+                    <div style="margin-top: 0.75rem; font-size: 0.82rem; color: #475569; line-height: 1.5;">
+                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Where this appears</strong>
+                        {{ recommendation.affected_pages_count|default:recommendation.page_examples|length }} pages including:
+                        {% for url in recommendation.page_examples %}
+                        <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
+                        {% endfor %}
+                    </div>
+                    {% elif recommendation.page_url %}
+                    <div style="margin-top: 0.75rem; font-size: 0.82rem; color: #475569; line-height: 1.5;">
+                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Where this appears</strong>
+                        <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ recommendation.page_url }}</div>
+                    </div>
+                    {% endif %}
+                    {% if recommendation.evidence_summary %}
+                    <div style="margin-top: 0.65rem; font-size: 0.8rem; color: #475569; line-height: 1.5;">
+                        <strong style="color: #0f172a;">Evidence:</strong> {{ recommendation.evidence_summary }}
+                    </div>
                     {% endif %}
                 </div>
-                {% if latest_share_url %}
-                <div style="margin-top: 1rem; padding: 0.9rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; font-size: 0.9rem;">
-                    Share link: <span style="font-family: monospace;">{{ latest_share_url }}</span>
+                {% empty %}
+                <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">No saved recommendations yet.</div>
+                {% endfor %}
+                {% if locked_recommendation_count %}
+                <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; font-size: 0.9rem;">
+                    {{ locked_recommendation_count }} more recommendation{{ locked_recommendation_count|pluralize }} unlock on a higher plan.
                 </div>
                 {% endif %}
-                {% endif %}
-            </article>
-        </div>
+            </div>
+        </article>
 
-        {% if context_analysis %}
         <article id="audit-history" class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                <p class="eyebrow">Competitor Context</p>
-                <h2 style="font-size: 2rem;">Market and benchmark signals</h2>
-            </div>
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
-                <div style="display: grid; gap: 0.75rem;">
-                    {% for insight in context_analysis.insights %}
-                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); color: #475569;">{{ insight }}</div>
-                    {% empty %}
-                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); color: #475569;">No competitor insights are available for this audit yet.</div>
-                    {% endfor %}
-                </div>
-                <div style="display: grid; gap: 0.75rem;">
-                    {% for competitor in context_analysis.competitors %}
-                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03);">
-                        <strong>{{ competitor.url }}</strong>
-                        <div style="color: #475569; font-size: 0.9rem; margin-top: 0.35rem;">
-                            {% if competitor.status == "unavailable" %}
-                            Could not fetch this competitor during the benchmark pass.
-                            {% else %}
-                            {{ competitor.word_count }} words | {{ competitor.schema_count }} schema blocks | {{ competitor.response_time_ms }}ms
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% endfor %}
-                </div>
-            </div>
-        </article>
-        {% endif %}
-
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
-            <article class="system-card">
-                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                    <p class="eyebrow">Recommended Modules</p>
-                    <h2 style="font-size: 2rem;">What to unlock next</h2>
-                </div>
-                <div style="display: grid; gap: 0.75rem;">
-                    {% for module in product_modules %}
-                    <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03);">
-                        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 0.35rem;">
-                            <strong>{{ module.title }}</strong>
-                            <span class="score-pill score-high" style="font-size: 0.65rem;">{{ module.plan|default:"Plan" }}</span>
-                        </div>
-                        <div style="color: #475569; font-size: 0.9rem;">{{ module.reason }}</div>
-                        {% if module.impact %}
-                        <div style="margin-top: 0.75rem; color: #475569; font-size: 0.85rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">What you get</strong>
-                            {{ module.impact }}
-                        </div>
-                        {% endif %}
-                        <div style="margin-top: 1rem;">
-                            {% if module.is_current_plan %}
-                            <span class="score-pill score-high">Included on current plan</span>
-                            {% elif module.can_checkout %}
-                            <form method="post" action="{% url 'tools:workspace-billing-checkout' %}">
-                                {% csrf_token %}
-                                <input type="hidden" name="plan" value="{{ module.plan_slug }}">
-                                <button type="submit" class="button button-primary">{{ module.cta_label }}</button>
-                            </form>
-                            {% elif module.is_custom_scope %}
-                            <a class="button button-secondary" href="{% url 'core:home' %}#contact">Request custom scope</a>
-                            {% else %}
-                            <a class="button button-secondary" href="#plans">View {{ module.plan|default:"plan" }}</a>
-                            {% endif %}
-                        </div>
-                    </div>
-                    {% empty %}
-                    <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">No module recommendations are available yet.</div>
-                    {% endfor %}
-                </div>
-            </article>
-
-            <article class="system-card">
-                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                    <p class="eyebrow">Fix Queue</p>
-                    <h2 style="font-size: 2rem;">Priority recommendations</h2>
-                </div>
-                <div style="display: grid; gap: 0.75rem;">
-                    {% for recommendation in fix_queue_recommendations %}
-                    <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03);">
-                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.45rem;">
-                            {% if recommendation.root_cause_label %}
-                            <span class="score-pill score-high" style="font-size: 0.68rem;">{{ recommendation.root_cause_label }}</span>
-                            {% endif %}
-                            {% if recommendation.confidence_label %}
-                            <span class="score-pill {% if recommendation.evidence_status == 'strong' %}score-high{% elif recommendation.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.68rem;">{{ recommendation.confidence_label }}</span>
-                            {% endif %}
-                        </div>
-                        <strong style="display: block; margin-bottom: 0.35rem;">{{ recommendation.title }}</strong>
-                        {% if recommendation.description %}
-                        <div style="color: #475569; font-size: 0.88rem; line-height: 1.5; margin-bottom: 0.65rem;">{{ recommendation.description }}</div>
-                        {% endif %}
-                        <div style="color: #475569; font-size: 0.9rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">What to fix</strong>
-                            {{ recommendation.recommended_fix }}
-                        </div>
-                        {% if recommendation.page_examples %}
-                        <div style="margin-top: 0.75rem; font-size: 0.82rem; color: #475569; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Where this appears</strong>
-                            {{ recommendation.affected_pages_count|default:recommendation.page_examples|length }} pages including:
-                            {% for url in recommendation.page_examples %}
-                            <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
-                            {% endfor %}
-                        </div>
-                        {% elif recommendation.page_url %}
-                        <div style="margin-top: 0.75rem; font-size: 0.82rem; color: #475569; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Where this appears</strong>
-                            <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ recommendation.page_url }}</div>
-                        </div>
-                        {% endif %}
-                        {% if recommendation.category_issue_count %}
-                        <div style="margin-top: 0.75rem; font-size: 0.82rem; color: #475569;">
-                            {{ recommendation.category_issue_count }} {{ recommendation.category|lower }} issue{{ recommendation.category_issue_count|pluralize }} detected in this audit.
-                        </div>
-                        {% endif %}
-                        {% if recommendation.evidence_summary %}
-                        <div style="margin-top: 0.65rem; font-size: 0.8rem; color: #475569; line-height: 1.5;">
-                            <strong style="color: #0f172a;">Evidence:</strong> {{ recommendation.evidence_summary }}
-                        </div>
-                        {% endif %}
-                    </div>
-                    {% empty %}
-                    <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">No saved recommendations yet.</div>
-                    {% endfor %}
-                    {% if locked_recommendation_count %}
-                    <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; font-size: 0.9rem;">
-                        {{ locked_recommendation_count }} more recommendation{{ locked_recommendation_count|pluralize }} unlock on a higher plan.
-                    </div>
-                    {% endif %}
-                </div>
-            </article>
-        </div>
-
-        <article id="plans" class="system-card">
-            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                <p class="eyebrow">Audit History</p>
-                <h2 style="font-size: 2rem;">Saved reruns and score comparison</h2>
+                <p class="eyebrow">Audit history</p>
+                <h2 style="font-size: 2rem;">Saved runs and validation</h2>
             </div>
             <div style="overflow-x: auto;">
                 <table style="width: 100%; border-collapse: collapse; min-width: 720px;">
@@ -809,12 +400,8 @@
                                 {{ item.audit.status|title }}
                                 {% if item.audit.status == "completed" %}
                                 <div style="margin-top: 0.4rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                                    <a href="{% url 'tools:audit-report-pdf' item.audit.pk %}" style="font-size: 0.8rem; color: var(--signal);">View PDF</a>
-                                    <a href="{% url 'tools:audit-report-pdf' item.audit.pk %}?download=1" style="font-size: 0.8rem; color: var(--signal);">Download</a>
-                                    {% if export_reports_allowed %}
-                                    <a href="{% url 'tools:workspace-audit-export-json' item.audit.pk %}" style="font-size: 0.8rem; color: var(--signal);">JSON</a>
-                                    <a href="{% url 'tools:workspace-audit-export-csv' item.audit.pk %}" style="font-size: 0.8rem; color: var(--signal);">CSV</a>
-                                    {% endif %}
+                                    <a href="{% url 'tools:audit-result' item.audit.pk %}" style="font-size: 0.8rem; color: var(--signal);">Open report</a>
+                                    <a href="{% url 'tools:audit-report-pdf' item.audit.pk %}" style="font-size: 0.8rem; color: var(--signal);">PDF</a>
                                 </div>
                                 {% endif %}
                             </td>
@@ -841,76 +428,6 @@
                 {{ locked_history_count }} older audit run{{ locked_history_count|pluralize }} are hidden by the current plan.
             </div>
             {% endif %}
-        </article>
-
-        <article class="system-card">
-            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                <p class="eyebrow">Plans</p>
-                <h2 style="font-size: 2rem;">Billing-ready tiers</h2>
-            </div>
-            <div class="system-grid">
-                {% for card in billing_plans %}
-                <div class="system-card" style="border-top: 4px solid {% if card.name == 'Authority' %}#0f172a{% else %}var(--signal){% endif %};">
-                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 0.35rem;">
-                        <strong>{{ card.name }}</strong>
-                        <span style="font-weight: 900;">{{ card.price }}</span>
-                    </div>
-                    <div style="color: #475569; font-size: 0.9rem; margin-bottom: 0.75rem;">{{ card.label }}</div>
-                    {% if card.audience %}
-                    <div style="color: #475569; font-size: 0.82rem; margin-bottom: 0.75rem;">{{ card.audience }}</div>
-                    {% endif %}
-                    {% for feature in card.features %}
-                    <div style="font-size: 0.85rem; color: #475569;">{{ feature }}</div>
-                    {% endfor %}
-                    {% if card.credits %}
-                    <div style="margin-top: 0.85rem; display: grid; gap: 0.25rem; font-size: 0.8rem; color: #475569;">
-                        {% for key, value in card.credits.items %}
-                        <div style="display: flex; justify-content: space-between; gap: 1rem;">
-                            <span>{% if key == "workspace" %}Workspace credits{% else %}{{ key|title }} credits{% endif %}</span>
-                            <strong style="color: #0f172a;">{% if value is None %}Unlimited{% else %}{{ value }}{% endif %}</strong>
-                        </div>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                    {% if card.upgrade_message %}
-                    <div style="margin-top: 0.85rem; padding: 0.75rem 0.9rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                        {{ card.upgrade_message }}
-                    </div>
-                    {% endif %}
-                    <div style="margin-top: 1rem;">
-                        {% if card.is_current %}
-                        <span class="score-pill score-high">Current plan</span>
-                        {% elif card.is_free %}
-                        <span class="score-pill score-medium">{{ card.action_label }}</span>
-                        {% elif card.is_custom %}
-                        <a class="button button-secondary" href="{% url 'core:home' %}#contact">Request custom scope</a>
-                        {% else %}
-                        <form method="post" action="{% url 'tools:workspace-billing-checkout' %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="plan" value="{{ card.slug }}">
-                            <button type="submit" class="button button-primary" style="width: 100%;">{{ card.action_label }}</button>
-                        </form>
-                        {% endif %}
-                    </div>
-                </div>
-                {% endfor %}
-            </div>
-        </article>
-
-        {% if custom_work_items %}
-        <article class="system-card">
-            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                <p class="eyebrow">Custom Work Exceptions</p>
-                <h2 style="font-size: 2rem;">When direct support makes sense</h2>
-            </div>
-            <div class="system-grid">
-                {% for item in custom_work_items %}
-                <div class="system-card" style="border-top: 4px solid #0f172a;">
-                    <h3>{{ item.title }}</h3>
-                    <p>{{ item.reason }}</p>
-                </div>
-                {% endfor %}
-            </div>
         </article>
         {% endif %}
     </div>

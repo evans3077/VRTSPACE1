@@ -27,6 +27,7 @@
     <meta name="twitter:card" content="{{ resolved_twitter_card }}">
     <meta name="twitter:title" content="{{ resolved_og_title }}">
     <meta name="twitter:description" content="{{ resolved_og_description }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="{% static 'css/site.css' %}">
     {% if schema_json %}
     <script type="application/ld+json">{{ schema_json|safe }}</script>
@@ -53,15 +54,9 @@
                     </summary>
                     <div class="workspace-menu-panel">
                         <a href="{% url 'tools:workspace-dashboard' %}">Overview</a>
-                        <a href="{% url 'tools:workspace-dashboard' %}#start-audit">Start Audit</a>
-                        <a href="{% url 'tools:workspace-dashboard' %}#new-project">New Project</a>
-                        <a href="{% url 'tools:workspace-dashboard' %}#credit-overview">Credits</a>
-                        <a href="{% url 'tools:workspace-dashboard' %}#plans">Plans & Billing</a>
                         <a href="{% url 'seo:workspace-seo' %}">SEO</a>
                         <a href="{% url 'aeo:workspace-aeo' %}">AEO</a>
                         <a href="{% url 'content:workspace-content' %}">Content</a>
-                        <a href="{% url 'tools:workspace-dashboard' %}#audit-history">Audit History</a>
-                        <a href="{% url 'tools:account-dashboard' %}">Account</a>
                     </div>
                 </details>
                 {% endif %}
@@ -77,7 +72,10 @@
                 </form>
                 {% endif %}
                 {% if user.is_authenticated %}
-                <a class="button button-secondary nav-auth-link" href="{% url 'tools:account-dashboard' %}">Account</a>
+                <a class="button button-secondary nav-auth-link nav-account-link" href="{% url 'tools:account-dashboard' %}">
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                    <span>Account</span>
+                </a>
                 <a class="button button-secondary nav-auth-link" href="{% url 'tools:workspace-logout' %}">Sign out</a>
                 <a class="button button-primary nav-cta" href="{% url 'tools:workspace-dashboard' %}">Open Workspace</a>
                 {% else %}

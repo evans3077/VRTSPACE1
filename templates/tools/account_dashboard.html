@@ -11,6 +11,8 @@
             </p>
             <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
                 <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}">Open workspace</a>
+                <a class="button button-secondary" href="#billing">Billing</a>
+                <a class="button button-secondary" href="#credits">Credits</a>
                 {% if current_subscription and current_subscription.stripe_customer_id %}
                 <form method="post" action="{% url 'tools:workspace-billing-portal' %}">
                     {% csrf_token %}
@@ -18,7 +20,7 @@
                     <button type="submit" class="button button-secondary">Manage billing</button>
                 </form>
                 {% else %}
-                <a class="button button-secondary" href="{% url 'tools:workspace-dashboard' %}#plans">Choose plan</a>
+                <a class="button button-secondary" href="#billing">Choose plan</a>
                 {% endif %}
             </div>
         </div>
@@ -27,6 +29,31 @@
 
 <section class="packages-section" style="padding-top: 0;">
     <div class="container page-stack">
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Account Navigation</p>
+                <h2 style="font-size: 2rem;">Personal settings and billing</h2>
+            </div>
+            <div class="workspace-subnav">
+                <a class="workspace-subnav-link" href="#profile">
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                    <span>Profile</span>
+                </a>
+                <a class="workspace-subnav-link" href="#security">
+                    <i class="fas fa-lock" aria-hidden="true"></i>
+                    <span>Security</span>
+                </a>
+                <a class="workspace-subnav-link" href="#billing">
+                    <i class="fas fa-credit-card" aria-hidden="true"></i>
+                    <span>Billing</span>
+                </a>
+                <a class="workspace-subnav-link" href="#credits">
+                    <i class="fas fa-coins" aria-hidden="true"></i>
+                    <span>Credits</span>
+                </a>
+            </div>
+        </article>
+
         <div class="system-grid">
             <article class="system-card">
                 <p class="eyebrow">Account email</p>
@@ -51,7 +78,7 @@
         </div>
 
         <div class="layout-split-wide">
-            <article class="system-card">
+            <article id="profile" class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                     <p class="eyebrow">Profile</p>
                     <h2 style="font-size: 2rem;">Personal details</h2>
@@ -71,7 +98,7 @@
                 </form>
             </article>
 
-            <article class="system-card">
+            <article id="security" class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                     <p class="eyebrow">Security</p>
                     <h2 style="font-size: 2rem;">Login details</h2>
@@ -96,7 +123,7 @@
         </div>
 
         <div class="layout-split-wide">
-            <article class="system-card">
+            <article id="billing" class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                     <p class="eyebrow">Billing</p>
                     <h2 style="font-size: 2rem;">Subscription and plan access</h2>
@@ -120,7 +147,7 @@
                 </div>
             </article>
 
-            <article class="system-card">
+            <article id="credits" class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                     <p class="eyebrow">Recent credit activity</p>
                     <h2 style="font-size: 2rem;">Latest usage</h2>
