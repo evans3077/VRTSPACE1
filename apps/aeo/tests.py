@@ -50,6 +50,9 @@ class AEOServiceTests(TestCase):
         self.assertGreater(payload["scores"]["visibility_score"], 0)
         self.assertTrue(payload["recommendations"])
         self.assertIn("Nairobi", payload["recommendations"][0]["example_rewrite"])
+        self.assertIn("root_cause_label", payload["recommendations"][0])
+        self.assertGreater(payload["recommendations"][0]["evidence_score"], 0)
+        self.assertTrue(payload["recommendations"][0]["where_to_apply"])
 
     def test_create_aeo_audit_persists_recommendation_records(self):
         audit_request = AuditRequest.objects.create(
@@ -164,6 +167,7 @@ class WorkspaceAEOViewTests(TestCase):
             1,
         )
         self.assertContains(response, "What AI systems need from this site")
+        self.assertContains(response, "Evidence confidence")
 
     def test_workspace_aeo_uses_selected_project(self):
         second_request = AuditRequest.objects.create(

@@ -1,6 +1,7 @@
 import re
 from collections import Counter
 
+from .evidence import decorate_recommendation
 from .models import AuditIssue
 from .scoring import build_gauge_offsets, build_score_breakdown, serialize_score_snapshot
 
@@ -152,7 +153,8 @@ def build_ranked_recommendations(audit_run, *, issues=None, score_breakdown=None
             SEVERITY_PRIORITY_BASE[issue.severity] + min(20, gap) + (5 if issue.page_id is None else 0),
         )
         recommendations.append(
-            {
+            decorate_recommendation(
+                {
                 "title": issue.message,
                 "description": f"{_issue_context(issue)} This is lowering the {issue.get_category_display()} score.",
                 "impact_level": issue.severity.title(),
@@ -169,7 +171,13 @@ def build_ranked_recommendations(audit_run, *, issues=None, score_breakdown=None
                 "severity": issue.severity,
                 "page_url": issue.page.url if issue.page_id and issue.page else None,
                 "cta": "Fix this for me" if issue.severity in {AuditIssue.Severity.CRITICAL, AuditIssue.Severity.HIGH} else "Review this fix",
-            }
+                },
+                page_targets=[issue.page.url] if issue.page_id and issue.page else [],
+                competitor_evidence=[],
+                issue_count=max(duplicate_counts[(issue.category, issue.code, issue.message)], 1),
+                technical_steps=_technical_steps(issue),
+                source_signals=[issue.category, issue.severity],
+            )
         )
 
     return sorted(
@@ -181,19 +189,18 @@ def build_ranked_recommendations(audit_run, *, issues=None, score_breakdown=None
 def build_featured_recommendations(recommendations, limit=6):
     grouped = {}
     for recommendation in recommendations:
-        key = (
-            recommendation["category_key"],
-            recommendation["title"],
-            recommendation["recommended_fix"],
-        )
+        key = recommendation.get("root_cause_key") or recommendation["category_key"]
         if key not in grouped:
             grouped[key] = {
                 **recommendation,
                 "page_examples": [],
+                "grouped_issue_titles": [],
             }
         current = grouped[key]
         if recommendation.get("page_url") and recommendation["page_url"] not in current["page_examples"]:
             current["page_examples"].append(recommendation["page_url"])
+        if recommendation.get("title") and recommendation["title"] not in current["grouped_issue_titles"]:
+            current["grouped_issue_titles"].append(recommendation["title"])
         current["duplicate_issue_count"] = max(
             current.get("duplicate_issue_count", 1),
             recommendation.get("duplicate_issue_count", 1),
@@ -204,13 +211,29 @@ def build_featured_recommendations(recommendations, limit=6):
     for item in grouped.values():
         page_examples = item["page_examples"][:3]
         affected_pages = max(len(item["page_examples"]), item.get("duplicate_issue_count", 1))
-        if affected_pages > 1:
+        grouped_issue_count = len(item.get("grouped_issue_titles", [])) or 1
+        if grouped_issue_count > 1:
+            item["description"] = (
+                f"This root cause is showing up through {grouped_issue_count} issue variants across "
+                f"{affected_pages} pages. It is lowering the {item['category']} score."
+            )
+        elif affected_pages > 1:
             item["description"] = (
                 f"Detected on {affected_pages} pages. This is lowering the {item['category']} score."
             )
         item["page_examples"] = page_examples
         item["affected_pages_count"] = affected_pages
-        collapsed.append(item)
+        item["grouped_issue_count"] = grouped_issue_count
+        collapsed.append(
+            decorate_recommendation(
+                item,
+                page_targets=item["page_examples"],
+                competitor_evidence=[],
+                issue_count=max(grouped_issue_count, affected_pages),
+                technical_steps=item.get("technical_steps", []),
+                source_signals=[item.get("category_key", ""), item.get("severity", "")],
+            )
+        )
 
     collapsed.sort(
         key=lambda item: (-item["priority_score"], SEVERITY_ORDER[item["severity"]], item["title"]),

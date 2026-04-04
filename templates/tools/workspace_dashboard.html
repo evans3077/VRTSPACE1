@@ -719,6 +719,14 @@
                 <div style="display: grid; gap: 0.75rem;">
                     {% for recommendation in fix_queue_recommendations %}
                     <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03);">
+                        <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.45rem;">
+                            {% if recommendation.root_cause_label %}
+                            <span class="score-pill score-high" style="font-size: 0.68rem;">{{ recommendation.root_cause_label }}</span>
+                            {% endif %}
+                            {% if recommendation.confidence_label %}
+                            <span class="score-pill {% if recommendation.evidence_status == 'strong' %}score-high{% elif recommendation.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.68rem;">{{ recommendation.confidence_label }}</span>
+                            {% endif %}
+                        </div>
                         <strong style="display: block; margin-bottom: 0.35rem;">{{ recommendation.title }}</strong>
                         {% if recommendation.description %}
                         <div style="color: #475569; font-size: 0.88rem; line-height: 1.5; margin-bottom: 0.65rem;">{{ recommendation.description }}</div>
@@ -744,6 +752,11 @@
                         {% if recommendation.category_issue_count %}
                         <div style="margin-top: 0.75rem; font-size: 0.82rem; color: #475569;">
                             {{ recommendation.category_issue_count }} {{ recommendation.category|lower }} issue{{ recommendation.category_issue_count|pluralize }} detected in this audit.
+                        </div>
+                        {% endif %}
+                        {% if recommendation.evidence_summary %}
+                        <div style="margin-top: 0.65rem; font-size: 0.8rem; color: #475569; line-height: 1.5;">
+                            <strong style="color: #0f172a;">Evidence:</strong> {{ recommendation.evidence_summary }}
                         </div>
                         {% endif %}
                     </div>

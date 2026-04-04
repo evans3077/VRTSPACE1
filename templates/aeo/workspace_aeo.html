@@ -104,11 +104,19 @@
                 <h2 style="font-size: 2rem;">What AI systems need from this site</h2>
             </div>
             <div style="display: grid; gap: 1rem;">
-                {% for recommendation in latest_aeo_audit.recommendations.all %}
+                {% for recommendation in aeo_payload.recommendations %}
                 <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
                     <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
                         <strong>{{ recommendation.issue }}</strong>
-                        <span class="score-pill score-high" style="font-size: 0.7rem;">{{ recommendation.category }}</span>
+                        <div style="display: flex; gap: 0.45rem; flex-wrap: wrap; justify-content: flex-end;">
+                            <span class="score-pill score-high" style="font-size: 0.7rem;">{{ recommendation.category }}</span>
+                            {% if recommendation.root_cause_label %}
+                            <span class="score-pill score-high" style="font-size: 0.7rem;">{{ recommendation.root_cause_label }}</span>
+                            {% endif %}
+                            {% if recommendation.confidence_label %}
+                            <span class="score-pill {% if recommendation.evidence_status == 'strong' %}score-high{% elif recommendation.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.7rem;">{{ recommendation.confidence_label }}</span>
+                            {% endif %}
+                        </div>
                     </div>
                     <div style="margin-top: 0.65rem; color: #475569; font-size: 0.88rem; line-height: 1.5;">
                         <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Why AI ignores this</strong>
@@ -126,6 +134,28 @@
                         <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Expected impact</strong>
                         {{ recommendation.expected_impact }}
                     </div>
+                    {% if recommendation.where_to_apply %}
+                    <div style="margin-top: 0.65rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
+                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Where to apply it</strong>
+                        {% for url in recommendation.where_to_apply %}
+                        <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if recommendation.action_steps %}
+                    <div style="margin-top: 0.65rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
+                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Action steps</strong>
+                        {% for step in recommendation.action_steps %}
+                        <div style="margin-top: 0.15rem;">{{ forloop.counter }}. {{ step }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if recommendation.evidence_summary %}
+                    <div style="margin-top: 0.65rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
+                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Evidence confidence</strong>
+                        {{ recommendation.evidence_summary }}{% if recommendation.evidence_score %} | Score {{ recommendation.evidence_score }}{% endif %}
+                    </div>
+                    {% endif %}
                 </div>
                 {% endfor %}
             </div>

@@ -208,7 +208,16 @@ class AuditResultDetailView(DetailView):
             product_modules = product_modules[:recommendation_limit]
         context["recommendations"] = visible_recommendations
         context["featured_recommendations"] = featured_recommendations
-        context["secondary_recommendations"] = [item for item in visible_recommendations if item not in featured_recommendations]
+        featured_root_causes = {
+            item.get("root_cause_key")
+            for item in featured_recommendations
+            if item.get("root_cause_key")
+        }
+        context["secondary_recommendations"] = [
+            item
+            for item in visible_recommendations
+            if item.get("root_cause_key") not in featured_root_causes
+        ]
         context["product_modules"] = product_modules
         context["custom_work_items"] = custom_work_items
         context["packages"] = PACKAGES

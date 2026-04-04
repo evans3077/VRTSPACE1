@@ -183,6 +183,8 @@ class SEOContextServiceTests(TestCase):
         self.assertIn("used car dealership Nairobi", payload["keyword_clusters"]["core commercial"])
         self.assertTrue(payload["recommendations"])
         self.assertIn("Nairobi", payload["recommendations"][0]["why_it_matters"])
+        self.assertIn("root_cause_label", payload["recommendations"][0])
+        self.assertGreater(payload["recommendations"][0]["evidence_score"], 0)
         self.assertTrue(payload["competitors"])
         self.assertTrue(payload["competitor_patterns"])
         self.assertTrue(payload["page_comparisons"])
@@ -198,6 +200,7 @@ class SEOContextServiceTests(TestCase):
         first_task = opportunity_payload["execution_queue"][0]
         self.assertTrue(first_task["edit_targets"])
         self.assertTrue(first_task["edit_targets"][0]["changes"])
+        self.assertIn("confidence_label", first_task)
 
     @override_settings(SERP_DISCOVERY_ENABLED=False)
     @patch("apps.seo.services.fetch_many")
@@ -852,6 +855,7 @@ class WorkspaceSEOViewTests(TestCase):
         self.assertContains(response, "Keyword Opportunity Queue")
         self.assertContains(response, "Execution Queue")
         self.assertContains(response, "Exact page edits")
+        self.assertContains(response, "Evidence confidence")
         self.assertContains(response, "used car dealership Nairobi")
         self.assertContains(response, "SERP discovery queries used")
         self.assertContains(response, "No H1 tag detected.")

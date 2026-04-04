@@ -700,7 +700,13 @@
                     <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
                         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
                             <strong>{{ item.title }}</strong>
-                            <span class="score-pill score-high" style="font-size: 0.7rem;">Priority {{ item.priority_score }}</span>
+                            <div style="display: flex; gap: 0.45rem; flex-wrap: wrap; justify-content: flex-end;">
+                                <span class="score-pill score-high" style="font-size: 0.7rem;">Priority {{ item.priority_score }}</span>
+                                {% if item.root_cause_label %}
+                                <span class="score-pill score-high" style="font-size: 0.7rem;">{{ item.root_cause_label }}</span>
+                                {% endif %}
+                                <span class="score-pill {% if item.evidence_status == 'strong' %}score-high{% elif item.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.7rem;">{{ item.confidence_label }}</span>
+                            </div>
                         </div>
                         <div style="margin-top: 0.65rem; color: #475569; font-size: 0.88rem; line-height: 1.5;">
                             <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Why this matters</strong>
@@ -727,6 +733,18 @@
                                 <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ evidence.url }}</div>
                             </div>
                             {% endfor %}
+                        </div>
+                        {% endif %}
+                        {% if item.evidence_summary %}
+                        <div style="margin-top: 0.65rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
+                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Evidence confidence</strong>
+                            {{ item.evidence_summary }}{% if item.evidence_score %} | Score {{ item.evidence_score }}{% endif %}
+                        </div>
+                        {% endif %}
+                        {% if item.focus_areas %}
+                        <div style="margin-top: 0.65rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
+                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Grouped focus areas</strong>
+                            {{ item.focus_areas|join:", " }}
                         </div>
                         {% endif %}
                         {% if item.example_keywords %}
@@ -874,7 +892,15 @@
                 <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
                     <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
                         <strong>{{ item.title }}</strong>
-                        <span class="score-pill score-high" style="font-size: 0.7rem;">{{ item.phase }}</span>
+                        <div style="display: flex; gap: 0.45rem; flex-wrap: wrap; justify-content: flex-end;">
+                            <span class="score-pill score-high" style="font-size: 0.7rem;">{{ item.phase }}</span>
+                            {% if item.root_cause_label %}
+                            <span class="score-pill score-high" style="font-size: 0.7rem;">{{ item.root_cause_label }}</span>
+                            {% endif %}
+                            {% if item.confidence_label %}
+                            <span class="score-pill {% if item.evidence_status == 'strong' %}score-high{% elif item.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.7rem;">{{ item.confidence_label }}</span>
+                            {% endif %}
+                        </div>
                     </div>
                     <div style="margin-top: 0.55rem; color: #475569; font-size: 0.88rem; line-height: 1.5;">
                         <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Deliverable</strong>
@@ -895,6 +921,11 @@
                     {% if item.linked_keywords %}
                     <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
                         <strong style="color: #0f172a;">Keywords:</strong> {{ item.linked_keywords|join:", " }}
+                    </div>
+                    {% endif %}
+                    {% if item.evidence_summary %}
+                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
+                        <strong style="color: #0f172a;">Evidence:</strong> {{ item.evidence_summary }}
                     </div>
                     {% endif %}
                     {% if item.edit_targets %}

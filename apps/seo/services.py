@@ -8,6 +8,7 @@ from django.utils.dateparse import parse_datetime
 from django.utils import timezone
 from django.utils.text import slugify
 
+from apps.tools.evidence import decorate_recommendation, infer_root_cause_key, should_surface_recommendation
 from .discovery import discover_serp_competitors
 from apps.tools.services import (
     ParsedPage,
@@ -1136,26 +1137,18 @@ def build_structural_recommendations(*, profile, site_structure, competitor_snap
 
 
 def _recommendation_cluster_key(item):
-    title = (item.get("title") or "").lower()
-    category = (item.get("category") or "").lower()
-    if title.startswith("deepen "):
-        return "content-depth"
-    if "page layer" in title or title.startswith("add a "):
-        return "page-coverage"
-    if "faq" in title or "answer-block" in title or "schema" in category:
-        return "answer-readiness"
-    if "h1" in title or "title" in title or "meta" in title:
-        return "on-page-structure"
-    if "slow" in title or "response time" in title or "performance" in category:
-        return "performance"
-    if "sitemap" in title or "technical" in category:
-        return "technical"
-    return f"default:{category or title}"
+    return item.get("root_cause_key") or infer_root_cause_key(
+        title=item.get("title", ""),
+        category=item.get("category", ""),
+        category_key=item.get("category_key", ""),
+        recommended_fix=item.get("recommended_fix", ""),
+    )
 
 
 def _merge_cluster_items(cluster_key, items):
     primary = max(items, key=lambda item: item.get("priority_score", 0))
     merged = dict(primary)
+    merged["root_cause_key"] = cluster_key
     where_to_apply = []
     for item in items:
         for url in item.get("where_to_apply", []):
@@ -1180,6 +1173,7 @@ def _merge_cluster_items(cluster_key, items):
             if keyword and keyword not in keyword_seen:
                 keyword_seen.append(keyword)
     merged["example_keywords"] = keyword_seen[:3]
+    merged["cluster_size"] = len(items)
 
     if len(items) > 1 and cluster_key == "content-depth":
         focus_areas = []
@@ -1202,7 +1196,21 @@ def _merge_cluster_items(cluster_key, items):
         merged["recommended_fix"] = "Add the missing page types competitors consistently publish for this niche, then connect them with internal links from your core revenue pages."
         merged["focus_areas"] = focus_areas[:5]
 
-    return merged
+    issue_count = sum(
+        max(
+            int((item.get("evidence") or {}).get("issue_count") or 0),
+            int(item.get("cluster_size") or 1),
+        )
+        for item in items
+    )
+    return decorate_recommendation(
+        merged,
+        page_targets=merged.get("where_to_apply", []),
+        competitor_evidence=merged.get("competitor_evidence", []),
+        issue_count=max(issue_count, len(items)),
+        technical_steps=merged.get("action_steps", []),
+        source_signals=[merged.get("category", ""), cluster_key],
+    )
 
 
 def build_context_recommendations(audit_run, profile, site_structure, competitor_snapshots):
@@ -1214,9 +1222,11 @@ def build_context_recommendations(audit_run, profile, site_structure, competitor
         category_key = recommendation.get("category_key", "")
         breakdown = score_breakdown.get(category_key, {})
         audit_recommendations.append(
-            {
+            decorate_recommendation(
+                {
                 "title": recommendation.get("title", "SEO opportunity"),
                 "category": recommendation.get("category", "SEO"),
+                "category_key": category_key,
                 "priority_score": recommendation.get("priority_score", 0),
                 "why_it_matters": (
                     f"For a {get_industry_rule(profile.business_type)['label'].lower()} business in {profile.location}, "
@@ -1227,18 +1237,43 @@ def build_context_recommendations(audit_run, profile, site_structure, competitor
                 "competitor_evidence": [],
                 "example_keywords": local_keywords[:2],
                 "expected_impact": recommendation.get("estimated_impact", ""),
-            }
+                },
+                page_targets=recommendation.get("page_examples") or ([recommendation.get("page_url")] if recommendation.get("page_url") else []),
+                competitor_evidence=[],
+                issue_count=max(
+                    int(recommendation.get("grouped_issue_count") or 0),
+                    int(recommendation.get("category_issue_count") or 0),
+                    1,
+                ),
+                technical_steps=recommendation.get("technical_steps", []),
+                source_signals=[category_key, "audit"],
+            )
         )
 
-    structural = build_structural_recommendations(
+    structural = [
+        decorate_recommendation(
+            item,
+            page_targets=item.get("where_to_apply", []),
+            competitor_evidence=item.get("competitor_evidence", []),
+            issue_count=max(len(item.get("where_to_apply", [])), 1),
+            technical_steps=[item.get("recommended_fix", "")],
+            source_signals=[item.get("category", ""), "competitor"],
+        )
+        for item in build_structural_recommendations(
         profile=profile,
         site_structure=site_structure,
         competitor_snapshots=competitor_snapshots,
-    )
+        )
+    ]
     clustered = defaultdict(list)
     for item in structural + audit_recommendations:
         clustered[_recommendation_cluster_key(item)].append(item)
-    combined = [_merge_cluster_items(cluster_key, items) for cluster_key, items in clustered.items()]
+    combined = [
+        item
+        for cluster_key, items in clustered.items()
+        for item in [_merge_cluster_items(cluster_key, items)]
+        if should_surface_recommendation(item, minimum_score=42)
+    ]
     combined.sort(key=lambda item: -item["priority_score"])
     return combined[:8]
 
@@ -1675,7 +1710,8 @@ def build_execution_queue(profile, site_structure, recommendations, page_map, ke
             else f"Improve the current {item['page_type_label']} pages"
         )
         tasks.append(
-            {
+            decorate_recommendation(
+                {
                 "title": f"{phase} {item['page_type_label']} coverage",
                 "phase": phase,
                 "priority_score": item["priority_score"],
@@ -1700,14 +1736,22 @@ def build_execution_queue(profile, site_structure, recommendations, page_map, ke
                     "Re-run the audit and SEO refresh after publishing the update so the queue can verify the result.",
                 ],
                 "competitor_evidence": item["competitor_evidence"][:2],
-            }
+                "category": item["page_type_label"],
+                },
+                page_targets=item["target_urls"],
+                competitor_evidence=item["competitor_evidence"][:2],
+                issue_count=max(len(item["target_urls"]), 1),
+                technical_steps=[item["action"]],
+                source_signals=[item["page_type"], phase.lower()],
+            )
         )
 
     for recommendation in recommendations[:4]:
         if not recommendation.get("where_to_apply") and not recommendation.get("recommended_fix"):
             continue
         tasks.append(
-            {
+            decorate_recommendation(
+                {
                 "title": recommendation.get("title", "SEO optimization task"),
                 "phase": "Optimize",
                 "priority_score": recommendation.get("priority_score", 0),
@@ -1732,7 +1776,15 @@ def build_execution_queue(profile, site_structure, recommendations, page_map, ke
                     "Re-run the audit and SEO refresh to validate the improvement.",
                 ],
                 "competitor_evidence": recommendation.get("competitor_evidence", [])[:2],
-            }
+                "category": recommendation.get("category", "SEO"),
+                "root_cause_key": recommendation.get("root_cause_key", ""),
+                },
+                page_targets=recommendation.get("where_to_apply", []),
+                competitor_evidence=recommendation.get("competitor_evidence", [])[:2],
+                issue_count=max(len(recommendation.get("where_to_apply", [])), recommendation.get("cluster_size", 1), 1),
+                technical_steps=[recommendation.get("recommended_fix", "")],
+                source_signals=[recommendation.get("category", "SEO"), "optimize"],
+            )
         )
 
     tasks.sort(key=lambda item: -item["priority_score"])

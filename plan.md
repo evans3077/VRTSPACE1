@@ -230,16 +230,16 @@ Turn the current platform into a production-grade decision system that is clearl
 
 #### Track A: Precision and runtime hardening
 
-- [ ] Add recommendation root-cause clustering across Audit, SEO, and AEO
+- [x] Add recommendation root-cause clustering across Audit, SEO, and AEO
   Why:
   Users still see advice that can feel too similar even when the evidence differs.
-  Needed result:
-  Repeated issue variants collapse into a smaller number of strategic actions with grouped evidence, affected URLs, and clear implementation order.
-- [ ] Add stronger evidence scoring before any recommendation is shown
+  Delivered result:
+  Audit, SEO, and AEO now collapse repeated issue variants into root-cause groups with grouped evidence, affected URLs, confidence labels, and clearer implementation order.
+- [x] Add stronger evidence scoring before any recommendation is shown
   Why:
   Weak competitor or crawl evidence should not leak into visible advice.
-  Needed result:
-  Every recommendation must pass fit, confidence, and page-target checks before entering the queue.
+  Delivered result:
+  Shared evidence scoring now decorates audit, SEO, and AEO recommendations and filters weak SEO/AEO advice before it reaches the visible roadmap.
 - [ ] Add cross-module decision summaries
   Why:
   Audit, SEO, AEO, content, and backlink work now exist, but the user still has to join the dots across separate screens.
@@ -418,19 +418,30 @@ The next work block should be:
 
 ### Block 3: Recommendation Clustering and Evidence Scoring
 
+Status: complete
+
+Delivered:
+
+- Audit recommendations now carry root-cause labels, evidence scores, confidence labels, and grouped issue traces
+- SEO roadmap and execution queue items now carry the same evidence contract and filter out weak benchmark advice before render
+- AEO recommendations now expose root-cause grouping, evidence confidence, exact target pages, and ordered action steps from the saved payload
+- The workspace fix queue now reflects the tighter recommendation contract instead of flat repeated issue text
+
+### Block 4: Page-Level Action Packs and Success Criteria
+
 Target:
 
-- Reduce repetitive recommendation variants across audit, SEO, and AEO
-- Add confidence thresholds before weak benchmark evidence reaches visible advice
-- Preserve page-level specificity while clustering duplicate root causes
-- Keep the workspace decision flow simple enough that users can see what to do first without reading every panel
+- Turn grouped recommendations into fuller per-page implementation packs
+- Standardize exact change instructions across audit, SEO, and AEO
+- Attach measurable success criteria before an action is considered done
+- Keep the user flow simple: open project -> choose page -> apply the pack -> validate with rerun
 
 Definition of done:
 
-- Root-cause clustering is visible in audit and SEO outputs
-- Recommendations carry evidence scores or confidence thresholds before they render
-- Duplicate advice across modules is collapsed into a smaller number of strategic actions
-- Users still see exact URLs, page targets, and implementation steps where they need them
+- A chosen page can show a full action pack with title, H1, intro, schema, FAQ, proof, CTA, and internal-link instructions
+- Execution items carry success criteria that can be validated by reruns or page-state checks
+- Audit, SEO, and AEO recommend the same page-level change language instead of drifting into separate styles
+- Users can move from a recommendation card into the exact page-level pack without hunting across screens
 
 ### Block 2: Credit Policy Rollout and Upgrade Messaging
 

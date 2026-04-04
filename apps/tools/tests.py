@@ -467,6 +467,9 @@ class AuditScoringTests(TestCase):
         self.assertIn("recommendations", summary)
         self.assertIn("product_modules", summary)
         self.assertEqual(summary["recommendations"][0]["title"], "Page title is missing.")
+        self.assertEqual(summary["recommendations"][0]["root_cause_key"], "on-page-structure")
+        self.assertGreater(summary["recommendations"][0]["evidence_score"], 0)
+        self.assertIn("confidence", summary["recommendations"][0]["confidence_label"].lower())
         self.assertGreaterEqual(
             summary["recommendations"][0]["priority_score"],
             summary["recommendations"][1]["priority_score"],
@@ -550,6 +553,8 @@ class AuditScoringTests(TestCase):
         self.assertEqual(summary["featured_recommendations"][1]["category_key"], "technical")
         self.assertEqual(summary["featured_recommendations"][0]["affected_pages_count"], 2)
         self.assertEqual(summary["featured_recommendations"][0]["category_issue_count"], 2)
+        self.assertEqual(summary["featured_recommendations"][0]["root_cause_key"], "on-page-structure")
+        self.assertIn("confidence", summary["featured_recommendations"][0]["confidence_label"].lower())
 
     def test_summary_flags_custom_work_for_severe_structural_issues(self):
         audit_run = AuditRun.objects.create(

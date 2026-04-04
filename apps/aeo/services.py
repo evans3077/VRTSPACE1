@@ -1,6 +1,7 @@
 from django.db import transaction
 
 from apps.seo.models import SEOProjectProfile
+from apps.tools.evidence import decorate_recommendation, should_surface_recommendation
 from apps.tools.models import AuditRun
 
 from .models import AEOAudit, AIRecommendation
@@ -68,16 +69,66 @@ def _build_visibility_score(audit_run):
     )
 
 
+def _priority_page_targets(audit_run, limit=3):
+    pages = []
+    for page in audit_run.pages.order_by("-word_count", "url")[: max(limit * 2, 6)]:
+        if not page.url:
+            continue
+        pages.append(page.url)
+        if len(pages) >= limit:
+            break
+    return pages
+
+
+def _aeo_cluster_key(item):
+    category = (item.get("category") or "").lower()
+    if "answer" in category or "direct-answer" in category:
+        return "answer-readiness"
+    if "content" in category:
+        return "content-depth"
+    if "entity" in category:
+        return "entity-clarity"
+    if "competitive" in category:
+        return "page-coverage"
+    return "answer-readiness"
+
+
+def _merge_aeo_cluster(cluster_key, items):
+    primary = max(items, key=lambda item: item.get("priority_score", 0))
+    merged = dict(primary)
+    urls = []
+    for item in items:
+        for url in item.get("where_to_apply", []):
+            if url and url not in urls:
+                urls.append(url)
+    merged["where_to_apply"] = urls[:4]
+    merged["cluster_size"] = len(items)
+    if len(items) > 1:
+        merged["issue"] = primary.get("cluster_title") or primary.get("issue")
+        merged["fix"] = primary.get("cluster_fix") or primary.get("fix")
+    return decorate_recommendation(
+        merged,
+        page_targets=merged.get("where_to_apply", []),
+        competitor_evidence=merged.get("competitor_evidence", []),
+        issue_count=max(len(items), len(merged.get("where_to_apply", [])), 1),
+        technical_steps=merged.get("action_steps", []),
+        source_signals=[merged.get("category", ""), "aeo"],
+    )
+
+
 def build_aeo_recommendations(*, audit_run, profile=None, target_keyword=""):
     summary = audit_run.summary or {}
     recommendations = []
     location = getattr(profile, "location", "")
     service = getattr(profile, "primary_service", "") or getattr(profile, "business_type", "service").replace("_", " ")
     keyword = target_keyword or f"{service} {location}".strip()
+    target_urls = _priority_page_targets(audit_run)
+    competitor_context = summary.get("context_analysis", {}).get("competitors") or []
 
     if audit_run.aeo_score < 80:
         recommendations.append(
-            {
+            decorate_recommendation(
+                {
                 "issue": "Direct-answer coverage is weak.",
                 "category": "Answer structure",
                 "priority_score": 92,
@@ -85,11 +136,28 @@ def build_aeo_recommendations(*, audit_run, profile=None, target_keyword=""):
                 "fix": "Add short answer-first blocks near the top of priority pages and support them with FAQ sections.",
                 "example_rewrite": f"{service.title()} in {location} should open with a direct answer explaining the offer, the audience, and the next step.",
                 "expected_impact": "Improves answer extraction and citation readiness for AI search surfaces.",
-            }
+                "where_to_apply": target_urls,
+                "action_steps": [
+                    "Add a direct answer summary in the first visible section of the target page.",
+                    "Support that summary with 3 to 5 short FAQs tied to the same intent.",
+                    "Keep the answer block close to the H1 and service-location summary.",
+                ],
+                "cluster_title": "Build stronger answer-ready page openings",
+                "cluster_fix": "Add answer-first intros, FAQ coverage, and structured summaries to the highest-intent pages.",
+                },
+                page_targets=target_urls,
+                competitor_evidence=competitor_context[:2],
+                issue_count=max(len(target_urls), 1),
+                technical_steps=[
+                    "Add short answer-first blocks near the top of priority pages and support them with FAQ sections."
+                ],
+                source_signals=["aeo_score", "answer-structure"],
+            )
         )
     if audit_run.content_score < 80:
         recommendations.append(
-            {
+            decorate_recommendation(
+                {
                 "issue": "Content completeness is below AI-ready depth.",
                 "category": "Content depth",
                 "priority_score": 84,
@@ -97,11 +165,26 @@ def build_aeo_recommendations(*, audit_run, profile=None, target_keyword=""):
                 "fix": "Expand core pages with proof, summaries, FAQs, and direct examples tied to the user intent.",
                 "example_rewrite": f"For queries like '{keyword}', add a short summary, proof points, and a compact FAQ block on the target page.",
                 "expected_impact": "Improves completeness and makes the content easier for AI systems to summarize accurately.",
-            }
+                "where_to_apply": target_urls,
+                "action_steps": [
+                    "Add proof blocks, examples, and short summaries to the target page.",
+                    "Use FAQ coverage to fill likely follow-up questions around the target query.",
+                    "Keep the answer concise enough to be cited, then expand with proof below.",
+                ],
+                "cluster_title": "Increase AI-citable content depth",
+                "cluster_fix": "Deepen weak pages with proofs, summaries, examples, and question coverage that can be cited cleanly.",
+                },
+                page_targets=target_urls,
+                competitor_evidence=competitor_context[:2],
+                issue_count=max(len(target_urls), 1),
+                technical_steps=["Expand core pages with proof, summaries, FAQs, and direct examples tied to the user intent."],
+                source_signals=["content_score", "content-depth"],
+            )
         )
     if audit_run.on_page_score < 75:
         recommendations.append(
-            {
+            decorate_recommendation(
+                {
                 "issue": "Entity and topic signals are inconsistent on page.",
                 "category": "Entity clarity",
                 "priority_score": 79,
@@ -109,11 +192,24 @@ def build_aeo_recommendations(*, audit_run, profile=None, target_keyword=""):
                 "fix": "Align titles, H1s, and summary copy with the business type, service, and location.",
                 "example_rewrite": f"Use a heading like '{service.title()} in {location}' and follow it with a clear one-paragraph summary of the offer.",
                 "expected_impact": "Improves entity recognition and answer relevance.",
-            }
+                "where_to_apply": target_urls,
+                "action_steps": [
+                    "Rewrite the title and H1 to name the business type, service, and location clearly.",
+                    "Match the opening summary to the same entity language used in the title and H1.",
+                    "Remove vague hero copy that hides the actual offer or location.",
+                ],
+                },
+                page_targets=target_urls,
+                competitor_evidence=[],
+                issue_count=max(len(target_urls), 1),
+                technical_steps=["Align titles, H1s, and summary copy with the business type, service, and location."],
+                source_signals=["on_page_score", "entity-clarity"],
+            )
         )
     if not summary.get("context_analysis", {}).get("competitors"):
         recommendations.append(
-            {
+            decorate_recommendation(
+                {
                 "issue": "Competitor answer patterns are missing from the analysis.",
                 "category": "Competitive context",
                 "priority_score": 70,
@@ -121,9 +217,32 @@ def build_aeo_recommendations(*, audit_run, profile=None, target_keyword=""):
                 "fix": "Add competitor URLs to the audit and compare how their pages structure direct answers, FAQs, and schema.",
                 "example_rewrite": f"Compare how competing pages in {location} answer '{keyword}' and mirror the strongest answer structure with clearer evidence.",
                 "expected_impact": "Improves competitive positioning for answer-driven searches.",
-            }
+                "where_to_apply": target_urls[:1],
+                "action_steps": [
+                    "Benchmark direct competitors that target the same location and service.",
+                    "Compare how their pages structure direct answers, FAQs, schema, and proof.",
+                    "Use the strongest common answer pattern as the baseline for your priority pages.",
+                ],
+                },
+                page_targets=target_urls[:1],
+                competitor_evidence=[],
+                issue_count=1,
+                technical_steps=["Add competitor URLs to the audit and compare how their pages structure direct answers, FAQs, and schema."],
+                source_signals=["competitive-context"],
+            )
         )
-    return recommendations[:6]
+
+    clustered = {}
+    for item in recommendations:
+        clustered.setdefault(_aeo_cluster_key(item), []).append(item)
+    merged = [
+        item
+        for cluster_key, items in clustered.items()
+        for item in [_merge_aeo_cluster(cluster_key, items)]
+        if should_surface_recommendation(item, minimum_score=40)
+    ]
+    merged.sort(key=lambda item: -item.get("priority_score", 0))
+    return merged[:6]
 
 
 def build_aeo_payload(*, audit_run, profile=None, target_keyword=""):
