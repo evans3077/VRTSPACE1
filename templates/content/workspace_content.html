@@ -55,7 +55,7 @@
                     <h2 style="font-size: 2rem;">Build a new structured output</h2>
                 </div>
                 {% if not project %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.6;">
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8; line-height: 1.6;">
                     <div>Create a project first. Content generation should live inside a specific project so drafts, audits, SEO briefs, and credit usage stay consistent.</div>
                     <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
                         <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}#start-audit">Start with audit</a>
@@ -63,7 +63,7 @@
                     </div>
                 </div>
                 {% elif not project.latest_audit_run %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.6;">
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8; line-height: 1.6;">
                     <div>This project needs its first audit before content generation. The content engine uses the audit as the base context for page decisions, internal links, and score gaps.</div>
                     <div style="margin-top: 1rem;">
                         <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
@@ -76,7 +76,7 @@
                 {% if workspace_credit_actions %}
                 {% for item in workspace_credit_actions %}
                 {% if item.slug == "content" %}
-                <div style="margin-bottom: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; line-height: 1.5;">
+                <div style="margin-bottom: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #f8fafc; line-height: 1.5;">
                     Content generation is currently estimated at <strong>{{ item.credits }} credits</strong>. {{ item.next_step }}
                 </div>
                 {% endif %}
@@ -89,7 +89,7 @@
                         <span style="font-weight: 700;">{{ field.label }}</span>
                         {{ field }}
                         {% if field.help_text %}
-                        <span style="font-size: 0.85rem; color: #475569;">{{ field.help_text }}</span>
+                        <span style="font-size: 0.85rem; color: #94a3b8;">{{ field.help_text }}</span>
                         {% endif %}
                         {% for error in field.errors %}
                         <span style="font-size: 0.85rem; color: #b91c1c;">{{ error }}</span>
@@ -106,7 +106,7 @@
                     <p class="eyebrow">Output Contract</p>
                     <h2 style="font-size: 2rem;">What the generator stores</h2>
                 </div>
-                <div style="display: grid; gap: 0.75rem; color: #475569;">
+                <div style="display: grid; gap: 0.75rem; color: #94a3b8;">
                     <div>SEO fields: title, meta title, meta description, schema JSON</div>
                     <div>Body structure: answer-first intro, section layout, FAQ, CTA</div>
                     <div>Workspace context: audit recommendations, score gaps, internal links</div>
@@ -131,41 +131,41 @@
             </div>
             <div class="panel-scroll panel-scroll-tall">
                 {% if not project %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                     Create a project first before building a content queue.
                 </div>
                 {% elif not project.latest_audit_run %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                     Run the first audit to unlock the editorial queue for this project.
                 </div>
                 {% else %}
                 {% for task in editorial_tasks %}
                 {% with brief=task.brief_json %}
-                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03);">
                     <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
                         <strong>{{ brief.primary_keyword }}</strong>
                         <span class="score-pill score-high">{{ task.get_status_display }}</span>
                     </div>
-                    <div style="margin-top: 0.35rem; color: #475569; font-size: 0.82rem;">
+                    <div style="margin-top: 0.35rem; color: #94a3b8; font-size: 0.82rem;">
                         Output: {{ brief.output_type_label|title }} | Priority {{ task.priority_score }}
                     </div>
-                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.9rem; line-height: 1.5;">
+                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.9rem; line-height: 1.5;">
                         {{ brief.reason }}
                     </div>
-                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                        <strong style="color: #0f172a;">Recommended action:</strong> {{ brief.action }}
+                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                        <strong style="color: #f8fafc;">Recommended action:</strong> {{ brief.action }}
                     </div>
                     {% if task.seo_campaign %}
-                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
-                        <strong style="color: #0f172a;">Campaign:</strong>
+                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
+                        <strong style="color: #f8fafc;">Campaign:</strong>
                         {{ task.seo_campaign.title }} | {{ task.seo_campaign.get_status_display }} | {{ task.seo_campaign.get_validation_status_display }}
                     </div>
                     {% endif %}
-                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
-                        <strong style="color: #0f172a;">Title options:</strong> {{ brief.title_options|join:", " }}
+                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
+                        <strong style="color: #f8fafc;">Title options:</strong> {{ brief.title_options|join:", " }}
                     </div>
-                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
-                        <strong style="color: #0f172a;">Brief refinement:</strong>
+                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
+                        <strong style="color: #f8fafc;">Brief refinement:</strong>
                         {% if task.metadata.brief_refinement.applied %}
                         {{ task.metadata.brief_refinement.provider|title }}{% if task.metadata.brief_refinement.model %} / {{ task.metadata.brief_refinement.model }}{% endif %}
                         {% else %}
@@ -173,21 +173,21 @@
                         {% endif %}
                     </div>
                     {% if brief.target_urls %}
-                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Target URLs</strong>
+                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Target URLs</strong>
                         {% for url in brief.target_urls %}
-                        <div class="url-wrap-mono" style="font-size: 0.76rem; color: #64748b; margin-top: 0.15rem;">{{ url }}</div>
+                        <div class="url-wrap-mono" style="font-size: 0.76rem; color: #94a3b8; margin-top: 0.15rem;">{{ url }}</div>
                         {% endfor %}
                     </div>
                     {% endif %}
                     {% if brief.competitor_evidence %}
-                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
-                        <strong style="color: #0f172a;">Competitor evidence:</strong>
+                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
+                        <strong style="color: #f8fafc;">Competitor evidence:</strong>
                         {{ brief.competitor_evidence.0.title|default:brief.competitor_evidence.0.url }}
                     </div>
                     {% endif %}
                     {% if task.latest_generated_content %}
-                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
+                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
                         Latest draft:
                         <a href="{% url 'content:workspace-content-detail' task.latest_generated_content.pk %}" style="color: var(--signal);">
                             {{ task.latest_generated_content.title }}
@@ -210,7 +210,7 @@
                 </div>
                 {% endwith %}
                 {% empty %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                     Refresh the SEO hub first to build the content brief queue from the current page map and keyword opportunities.
                 </div>
                 {% endfor %}
@@ -225,23 +225,23 @@
             </div>
             <div class="panel-scroll">
                 {% for item in generated_content_list %}
-                <a href="{% url 'content:workspace-content-detail' item.pk %}" style="display: block; padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); text-decoration: none; color: inherit;">
+                <a href="{% url 'content:workspace-content-detail' item.pk %}" style="display: block; padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); text-decoration: none; color: inherit;">
                     <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
                         <strong>{{ item.title }}</strong>
                         <span class="score-pill score-high">{{ item.get_output_type_display }}</span>
                     </div>
-                    <div style="margin-top: 0.35rem; color: #475569; font-size: 0.9rem;">
+                    <div style="margin-top: 0.35rem; color: #94a3b8; font-size: 0.9rem;">
                         {{ item.business_type }}{% if item.location %} in {{ item.location }}{% endif %} | Status: {{ item.get_status_display }}
                     </div>
                     {% if item.source_seo_campaign %}
-                    <div style="margin-top: 0.45rem; color: #475569; font-size: 0.82rem;">
-                        <strong style="color: #0f172a;">Campaign:</strong>
+                    <div style="margin-top: 0.45rem; color: #94a3b8; font-size: 0.82rem;">
+                        <strong style="color: #f8fafc;">Campaign:</strong>
                         {{ item.source_seo_campaign.title }} | {{ item.source_seo_campaign.get_status_display }}
                     </div>
                     {% endif %}
                 </a>
                 {% empty %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                     No generated drafts yet.
                 </div>
                 {% endfor %}

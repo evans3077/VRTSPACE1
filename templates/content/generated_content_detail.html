@@ -83,31 +83,31 @@
             <div class="system-grid">
                 <div>
                     <strong style="display: block; margin-bottom: 0.25rem;">Campaign</strong>
-                    <div style="color: #475569;">{{ generated_content.source_seo_campaign.title }}</div>
-                    <div style="color: #64748b; font-size: 0.85rem;">
+                    <div style="color: #94a3b8;">{{ generated_content.source_seo_campaign.title }}</div>
+                    <div style="color: #94a3b8; font-size: 0.85rem;">
                         {{ generated_content.source_seo_campaign.get_status_display }} | {{ generated_content.source_seo_campaign.get_validation_status_display }}
                     </div>
                 </div>
                 <div>
                     <strong style="display: block; margin-bottom: 0.25rem;">Target keyword</strong>
-                    <div style="color: #475569;">{{ generated_content.source_seo_campaign.target_keyword|default:"Not specified" }}</div>
+                    <div style="color: #94a3b8;">{{ generated_content.source_seo_campaign.target_keyword|default:"Not specified" }}</div>
                 </div>
                 <div>
                     <strong style="display: block; margin-bottom: 0.25rem;">Related pages</strong>
                     {% for url in generated_content.source_seo_campaign.related_page_urls %}
-                    <div class="url-wrap-mono" style="font-size: 0.8rem; color: #64748b;">{{ url }}</div>
+                    <div class="url-wrap-mono" style="font-size: 0.8rem; color: #94a3b8;">{{ url }}</div>
                     {% empty %}
-                    <div style="color: #64748b;">No related pages recorded.</div>
+                    <div style="color: #94a3b8;">No related pages recorded.</div>
                     {% endfor %}
                 </div>
                 <div>
                     <strong style="display: block; margin-bottom: 0.25rem;">Validation</strong>
                     {% if generated_content.source_seo_campaign.latest_validation_audit_run %}
-                    <div style="color: #475569;">
+                    <div style="color: #94a3b8;">
                         Audit score {{ generated_content.source_seo_campaign.latest_validation_audit_run.overall_score }}
                     </div>
                     {% else %}
-                    <div style="color: #64748b;">Awaiting rerun validation.</div>
+                    <div style="color: #94a3b8;">Awaiting rerun validation.</div>
                     {% endif %}
                 </div>
             </div>
@@ -124,16 +124,16 @@
                 {% if generated_content.brief_json.title_options %}
                 <div style="display: grid; gap: 0.65rem;">
                     {% for item in generated_content.brief_json.title_options %}
-                    <div style="padding: 0.8rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03);">{{ item }}</div>
+                    <div style="padding: 0.8rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03);">{{ item }}</div>
                     {% endfor %}
                 </div>
                 {% endif %}
                 {% if generated_content.brief_json.outline_sections %}
                 <div style="margin-top: 1rem; display: grid; gap: 0.75rem;">
                     {% for item in generated_content.brief_json.outline_sections %}
-                    <div style="padding: 0.8rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03);">
+                    <div style="padding: 0.8rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03);">
                         <strong style="display: block; margin-bottom: 0.25rem;">{{ item.heading }}</strong>
-                        <div style="color: #475569;">{{ item.instruction }}</div>
+                        <div style="color: #94a3b8;">{{ item.instruction }}</div>
                     </div>
                     {% endfor %}
                 </div>
@@ -148,18 +148,18 @@
                 {% if generated_content.brief_json.faq_targets %}
                 <div style="display: grid; gap: 0.65rem;">
                     {% for item in generated_content.brief_json.faq_targets %}
-                    <div style="padding: 0.8rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03);">{{ item }}</div>
+                    <div style="padding: 0.8rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03);">{{ item }}</div>
                     {% endfor %}
                 </div>
                 {% endif %}
                 {% if generated_content.brief_json.internal_link_targets %}
                 <div style="margin-top: 1rem; display: grid; gap: 0.65rem;">
                     {% for item in generated_content.brief_json.internal_link_targets %}
-                    <div style="padding: 0.8rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03);">
+                    <div style="padding: 0.8rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03);">
                         <strong>{{ item.label }}</strong>
-                        <div style="color: #475569; font-size: 0.9rem;">{{ item.url }}</div>
+                        <div style="color: #94a3b8; font-size: 0.9rem;">{{ item.url }}</div>
                         {% if item.reason %}
-                        <div style="color: #64748b; font-size: 0.82rem; margin-top: 0.2rem;">{{ item.reason }}</div>
+                        <div style="color: #94a3b8; font-size: 0.82rem; margin-top: 0.2rem;">{{ item.reason }}</div>
                         {% endif %}
                     </div>
                     {% endfor %}
@@ -198,9 +198,9 @@
                 </div>
                 <div style="display: grid; gap: 0.65rem;">
                     {% for item in generated_content.suggested_internal_links %}
-                    <div style="padding: 0.8rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03);">
+                    <div style="padding: 0.8rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03);">
                         <strong>{{ item.label }}</strong>
-                        <div style="color: #475569; font-size: 0.9rem;">{{ item.url }}</div>
+                        <div style="color: #94a3b8; font-size: 0.9rem;">{{ item.url }}</div>
                     </div>
                     {% endfor %}
                 </div>
@@ -226,10 +226,10 @@
                 <button type="submit" class="button button-secondary">Save draft changes</button>
             </form>
             {% if generated_content.applied_service %}
-            <div style="margin-top: 1rem; color: #475569;">Applied to Service: <strong>{{ generated_content.applied_service.title }}</strong></div>
+            <div style="margin-top: 1rem; color: #94a3b8;">Applied to Service: <strong>{{ generated_content.applied_service.title }}</strong></div>
             {% endif %}
             {% if generated_content.applied_article %}
-            <div style="margin-top: 1rem; color: #475569;">Applied to Article: <strong>{{ generated_content.applied_article.title }}</strong></div>
+            <div style="margin-top: 1rem; color: #94a3b8;">Applied to Article: <strong>{{ generated_content.applied_article.title }}</strong></div>
             {% endif %}
         </article>
 
@@ -240,9 +240,9 @@
             </div>
             <div style="display: grid; gap: 0.75rem;">
                 {% for item in generated_content.faq_items %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03);">
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03);">
                     <strong style="display: block; margin-bottom: 0.35rem;">{{ item.question }}</strong>
-                    <div style="color: #475569;">{{ item.answer }}</div>
+                    <div style="color: #94a3b8;">{{ item.answer }}</div>
                 </div>
                 {% endfor %}
             </div>

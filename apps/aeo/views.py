@@ -19,6 +19,11 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         project = get_workspace_content_project(user=request.user, request=request)
         latest_aeo_audit = get_latest_aeo_audit(project)
+        aeo_history = (
+            project.aeo_audits.order_by("-created_at")[:10]
+            if project and getattr(project, "pk", None)
+            else []
+        )
         return render(
             request,
             self.template_name,
@@ -28,6 +33,7 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 "form": AEOAuditRequestForm(initial={"target_keyword": getattr(latest_aeo_audit, "target_keyword", "")}),
                 "latest_aeo_audit": latest_aeo_audit,
                 "aeo_payload": latest_aeo_audit.output_json if latest_aeo_audit else {},
+                "aeo_history": aeo_history,
                 "workspace_credit_actions": build_credit_action_guide(project, request.user) if project else [],
             },
         )
@@ -82,6 +88,11 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
             request,
             f"AEO analysis created from the latest workspace audit. This run used {estimate['amount']} workspace credits.",
         )
+        aeo_history = (
+            project.aeo_audits.order_by("-created_at")[:10]
+            if project and getattr(project, "pk", None)
+            else []
+        )
         return render(
             request,
             self.template_name,
@@ -91,6 +102,7 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 "form": AEOAuditRequestForm(initial={"target_keyword": aeo_audit.target_keyword}),
                 "latest_aeo_audit": aeo_audit,
                 "aeo_payload": aeo_audit.output_json,
+                "aeo_history": aeo_history,
                 "workspace_credit_actions": build_credit_action_guide(project, request.user),
             },
         )

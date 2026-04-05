@@ -594,14 +594,34 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context = super().get_context_data(**kwargs)
         project = self.object
         generated_content_count = 0
+        latest_generated_content = None
+        content_draft_count = 0
         if getattr(project, "pk", None):
             from apps.content.models import GeneratedContent
 
-            generated_content_count = GeneratedContent.objects.filter(project=project).count()
+            content_qs = GeneratedContent.objects.filter(project=project)
+            generated_content_count = content_qs.count()
+            content_draft_count = generated_content_count
+            latest_generated_content = content_qs.order_by("-created_at").first()
         latest_audit = getattr(project, "latest_audit_run", None)
         latest_summary = latest_audit.summary if latest_audit and isinstance(latest_audit.summary, dict) else {}
         latest_seo_snapshot = project.seo_snapshots.order_by("-created_at").first() if getattr(project, "pk", None) else None
         latest_aeo_audit = project.aeo_audits.order_by("-created_at").first() if getattr(project, "pk", None) else None
+        # SEO campaign/execution counts for the Command Card
+        seo_active_campaign_count = 0
+        seo_execution_item_count = 0
+        if latest_seo_snapshot and getattr(project, "pk", None):
+            try:
+                from apps.seo.models import SEOCampaign
+                seo_active_campaign_count = SEOCampaign.objects.filter(
+                    project=project
+                ).exclude(status="completed").count()
+                # Execution items live in the snapshot JSON
+                snap_data = latest_seo_snapshot.data if hasattr(latest_seo_snapshot, "data") else {}
+                if isinstance(snap_data, dict):
+                    seo_execution_item_count = len(snap_data.get("execution_queue", []))
+            except Exception:
+                pass
         audit_history, locked_history_count = get_limited_audit_history(project, self.request.user)
         audit_history_list = list(audit_history)
         change_report_map = {
@@ -641,6 +661,10 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["score_breakdown"] = latest_summary.get("score_breakdown", {})
         context["recommendations"] = recommendations
         context["fix_queue_recommendations"] = fix_queue_recommendations
+        context["latest_generated_content"] = latest_generated_content
+        context["content_draft_count"] = content_draft_count
+        context["seo_active_campaign_count"] = seo_active_campaign_count
+        context["seo_execution_item_count"] = seo_execution_item_count
         context["product_modules"] = _decorate_product_modules(
             latest_summary.get("product_modules", []),
             billing_state["plans"],

@@ -15,16 +15,34 @@
 
 {% include "includes/workspace_nav.html" %}
 
+{% if project and snapshot %}
+<nav class="page-jump-nav" aria-label="Page sections">
+    <div class="container">
+        <div class="page-jump-links">
+            <a class="page-jump-link" href="#seo-overview"><i class="fas fa-chart-bar" aria-hidden="true"></i> Overview</a>
+            <a class="page-jump-link" href="#seo-benchmark"><i class="fas fa-users" aria-hidden="true"></i> Benchmark</a>
+            <a class="page-jump-link" href="#seo-history"><i class="fas fa-history" aria-hidden="true"></i> SERP History</a>
+            <a class="page-jump-link" href="#seo-competitors"><i class="fas fa-eye" aria-hidden="true"></i> Competitor Trace</a>
+            <a class="page-jump-link" href="#seo-patterns"><i class="fas fa-puzzle-piece" aria-hidden="true"></i> Patterns</a>
+            <a class="page-jump-link" href="#seo-campaigns"><i class="fas fa-tasks" aria-hidden="true"></i> Campaigns</a>
+            <a class="page-jump-link" href="#seo-roadmap"><i class="fas fa-map" aria-hidden="true"></i> Roadmap</a>
+            <a class="page-jump-link" href="#seo-backlinks"><i class="fas fa-link" aria-hidden="true"></i> Backlinks</a>
+            <a class="page-jump-link" href="#seo-opportunities"><i class="fas fa-lightbulb" aria-hidden="true"></i> Opportunities</a>
+        </div>
+    </div>
+</nav>
+{% endif %}
+
 <section class="packages-section" style="padding-top: 0;">
     <div class="container page-stack">
-        <div class="layout-split-sidebar">
+        <div id="seo-overview" class="layout-split-sidebar">
             <article class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                     <p class="eyebrow">SEO Inputs</p>
                     <h2 style="font-size: 2rem;">Business and competitor context</h2>
                 </div>
                 {% if not project %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                     <div>Create a workspace project first. That project becomes the container for the audit, benchmark history, campaign work, and SEO exports.</div>
                     <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
                         <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}#start-audit">Start with audit</a>
@@ -35,7 +53,7 @@
                 {% if workspace_credit_actions %}
                 {% for item in workspace_credit_actions %}
                 {% if item.slug == "seo" %}
-                <div style="margin-bottom: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; line-height: 1.5;">
+                <div style="margin-bottom: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #f8fafc; line-height: 1.5;">
                     This SEO refresh is currently estimated at <strong>{{ item.credits }} credits</strong>. {{ item.next_step }}
                 </div>
                 {% endif %}
@@ -48,7 +66,7 @@
                         <span style="font-weight: 700;">{{ field.label }}</span>
                         {{ field }}
                         {% if field.help_text %}
-                        <span style="color: #475569; font-size: 0.82rem;">{{ field.help_text }}</span>
+                        <span style="color: #94a3b8; font-size: 0.82rem;">{{ field.help_text }}</span>
                         {% endif %}
                         {% if field.errors %}
                         <span style="color: #991b1b; font-size: 0.82rem;">{{ field.errors|join:", " }}</span>
@@ -66,7 +84,7 @@
                     <h2 style="font-size: 2rem;">Current benchmark output</h2>
                 </div>
                 {% if not can_generate_snapshot %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                     <div>A completed audit is required before the SEO hub can benchmark structure and competitors.</div>
                     <div style="margin-top: 1rem;">
                         <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
@@ -76,11 +94,11 @@
                     </div>
                 </div>
                 {% elif seo_refresh_state.refresh_status == "queued" or seo_refresh_state.refresh_status == "running" %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                     A fresh SEO benchmark is running in the background. This panel will populate when competitor profiling completes.
                 </div>
                 {% elif not snapshot %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                     Save the business profile and competitor URLs to generate the first SEO intelligence snapshot.
                 </div>
                 {% else %}
@@ -90,7 +108,7 @@
                     <article class="system-card"><p class="eyebrow">Competitors Benchmarked</p><h3>{{ seo_benchmark_summary.available_competitors|default:0 }}</h3><p>Fetched and profiled directly</p></article>
                     <article class="system-card"><p class="eyebrow">Discovery Precision</p><h3 style="font-size: 1.1rem;">{{ seo_benchmark_summary.average_relevance|default:0 }}</h3><p>Average relevance across discovered competitors</p></article>
                 </div>
-                <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; line-height: 1.6;">
+                <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #f8fafc; line-height: 1.6;">
                     <strong style="display: block; margin-bottom: 0.35rem;">Goal focus</strong>
                     {{ seo_context.goal_focus }}
                 </div>
@@ -160,7 +178,7 @@
         {% endif %}
 
         {% if snapshot %}
-        <article class="system-card">
+        <article id="seo-benchmark" class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                 <p class="eyebrow">Value From This Refresh</p>
                 <h2 style="font-size: 2rem;">What the system actually processed</h2>
@@ -171,7 +189,7 @@
                 <a class="button button-secondary" href="{% url 'seo:workspace-seo-report-pdf' %}?download=1">Download PDF</a>
                 <a class="button button-secondary" href="{% url 'seo:workspace-seo-export-json' %}">Export JSON</a>
                 {% else %}
-                <div style="padding: 0.85rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.5;">
+                <div style="padding: 0.85rem 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8; line-height: 1.5;">
                     SEO exports use {{ seo_export_action.credits }} credits.
                     {{ seo_export_action.next_unlock_message|default:seo_export_action.blocked_message }}
                     {% if seo_export_action.direct_checkout_available %}
@@ -190,7 +208,7 @@
                     <button type="submit" class="button button-primary">Create Share Link</button>
                 </form>
                 {% else %}
-                <div style="padding: 0.85rem 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.5;">
+                <div style="padding: 0.85rem 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8; line-height: 1.5;">
                     Stakeholder sharing uses {{ seo_share_action.credits }} credits.
                     {{ seo_share_action.next_unlock_message|default:seo_share_action.blocked_message }}
                     {% if seo_share_action.direct_checkout_available %}
@@ -205,7 +223,7 @@
                 {% endif %}
             </div>
             {% if latest_seo_share_url %}
-            <div style="margin-bottom: 1rem; padding: 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #0f172a; line-height: 1.6;">
+            <div style="margin-bottom: 1rem; padding: 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #f8fafc; line-height: 1.6;">
                 <strong style="display: block; margin-bottom: 0.25rem;">Latest stakeholder link</strong>
                 <div class="url-wrap-mono" style="font-size: 0.82rem;">{{ latest_seo_share_url }}</div>
                 <div style="margin-top: 0.45rem;">
@@ -232,8 +250,8 @@
                 <article class="system-card"><p class="eyebrow">Acquired Links</p><h3>{{ seo_chain_value_summary.acquired_link_count|default:0 }}</h3><p>Linked campaigns that already converted into acquired backlinks</p></article>
             </div>
             {% if seo_discovery.queries %}
-            <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.6;">
-                <strong style="display: block; color: #0f172a; margin-bottom: 0.35rem;">SERP discovery queries used</strong>
+            <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8; line-height: 1.6;">
+                <strong style="display: block; color: #f8fafc; margin-bottom: 0.35rem;">SERP discovery queries used</strong>
                 {{ seo_discovery.queries|join:", " }}
             </div>
             {% if seo_discovery.errors %}
@@ -245,13 +263,13 @@
             </div>
             {% endif %}
             {% elif snapshot %}
-            <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.6;">
+            <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8; line-height: 1.6;">
                 Automatic SERP discovery is not configured yet. Manual competitors are still benchmarked directly.
             </div>
             {% endif %}
         </article>
 
-        <div class="layout-split-wide">
+        <div id="seo-history" class="layout-split-wide">
             <article class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                     <p class="eyebrow">SERP Evidence History</p>
@@ -260,7 +278,7 @@
                 {% if seo_serp_history %}
                 <div class="panel-scroll">
                     {% for item in seo_serp_history %}
-                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03);">
                         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
                             <strong>{{ item.label }}</strong>
                             <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
@@ -279,20 +297,20 @@
                             {% endif %}
                         </div>
                         {% if item.top_queries %}
-                        <div style="margin-top: 0.75rem; color: #475569; font-size: 0.84rem;">
-                            <strong style="color: #0f172a;">Queries:</strong> {{ item.top_queries|join:", " }}
+                        <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.84rem;">
+                            <strong style="color: #f8fafc;">Queries:</strong> {{ item.top_queries|join:", " }}
                         </div>
                         {% endif %}
                         {% if item.included_domains %}
-                        <div style="margin-top: 0.55rem; color: #475569; font-size: 0.84rem;">
-                            <strong style="color: #0f172a;">Included domains:</strong> {{ item.included_domains|join:", " }}
+                        <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.84rem;">
+                            <strong style="color: #f8fafc;">Included domains:</strong> {{ item.included_domains|join:", " }}
                         </div>
                         {% endif %}
                     </div>
                     {% endfor %}
                 </div>
                 {% else %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                     Run SEO refreshes over time to build benchmark history.
                 </div>
                 {% endif %}
@@ -306,12 +324,12 @@
                 {% if seo_competitor_trends %}
                 <div class="panel-scroll">
                     {% for item in seo_competitor_trends %}
-                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03);">
                         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
                             <div>
                                 <strong>{{ item.domain }}</strong>
                                 {% if item.url %}
-                                <div style="font-size: 0.78rem; color: #64748b; margin-top: 0.2rem; word-break: break-word;">{{ item.url }}</div>
+                                <div style="font-size: 0.78rem; color: #94a3b8; margin-top: 0.2rem; word-break: break-word;">{{ item.url }}</div>
                                 {% endif %}
                             </div>
                             <span class="score-pill score-medium" style="font-size: 0.7rem;">{{ item.last_decision|default:"Observed" }}</span>
@@ -328,25 +346,25 @@
                             <span class="seo-inline-tag">Latest relevance: {{ item.latest_relevance|default:0 }}</span>
                         </div>
                         {% if item.queries %}
-                        <div style="margin-top: 0.75rem; color: #475569; font-size: 0.84rem;">
-                            <strong style="color: #0f172a;">Observed queries:</strong> {{ item.queries|join:", " }}
+                        <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.84rem;">
+                            <strong style="color: #f8fafc;">Observed queries:</strong> {{ item.queries|join:", " }}
                         </div>
                         {% endif %}
-                        <div style="margin-top: 0.55rem; color: #475569; font-size: 0.84rem;">
-                            <strong style="color: #0f172a;">Last seen:</strong> {{ item.last_seen_label }}
+                        <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.84rem;">
+                            <strong style="color: #f8fafc;">Last seen:</strong> {{ item.last_seen_label }}
                         </div>
                     </div>
                     {% endfor %}
                 </div>
                 {% else %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                     Competitor trend tracking will populate after multiple SEO refreshes.
                 </div>
                 {% endif %}
             </article>
         </div>
 
-        <article class="system-card">
+        <article id="seo-competitors" class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                 <p class="eyebrow">Benchmark Decision Trace</p>
                 <h2 style="font-size: 2rem;">Why competitors were kept or filtered out</h2>
@@ -354,11 +372,11 @@
             {% if seo_competitor_trace %}
             <div class="panel-scroll panel-scroll-tall">
                 {% for item in seo_competitor_trace %}
-                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03);">
                     <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
                         <div>
                             <strong>{{ item.domain }}</strong>
-                            <div style="font-size: 0.78rem; color: #64748b; margin-top: 0.2rem; word-break: break-word;">{{ item.url }}</div>
+                            <div style="font-size: 0.78rem; color: #94a3b8; margin-top: 0.2rem; word-break: break-word;">{{ item.url }}</div>
                         </div>
                         <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                             <span class="score-pill {% if item.included %}score-high{% else %}score-low{% endif %}" style="font-size: 0.7rem;">{{ item.final_decision_label }}</span>
@@ -380,11 +398,11 @@
                     <div class="compact-grid" style="margin-top: 0.85rem;">
                         <div style="padding: 0.85rem; border-radius: 14px; background: rgba(255,255,255,0.7);">
                             <strong style="display: block; margin-bottom: 0.35rem;">Why this decision happened</strong>
-                            <div style="color: #475569; font-size: 0.85rem; line-height: 1.55;">{{ item.fit.reason|default:"No fit summary available for this benchmark candidate yet." }}</div>
+                            <div style="color: #94a3b8; font-size: 0.85rem; line-height: 1.55;">{{ item.fit.reason|default:"No fit summary available for this benchmark candidate yet." }}</div>
                         </div>
                         <div style="padding: 0.85rem; border-radius: 14px; background: rgba(255,255,255,0.7);">
                             <strong style="display: block; margin-bottom: 0.35rem;">Positive signals</strong>
-                            <div style="color: #475569; font-size: 0.85rem; line-height: 1.55;">
+                            <div style="color: #94a3b8; font-size: 0.85rem; line-height: 1.55;">
                                 {% if item.fit.match_signals %}
                                     {{ item.fit.match_signals|join:", " }}
                                 {% elif item.match_signals %}
@@ -396,7 +414,7 @@
                         </div>
                         <div style="padding: 0.85rem; border-radius: 14px; background: rgba(255,255,255,0.7);">
                             <strong style="display: block; margin-bottom: 0.35rem;">Penalty signals</strong>
-                            <div style="color: #475569; font-size: 0.85rem; line-height: 1.55;">
+                            <div style="color: #94a3b8; font-size: 0.85rem; line-height: 1.55;">
                                 {% if item.fit.penalty_signals %}
                                     {{ item.fit.penalty_signals|join:", " }}
                                 {% else %}
@@ -406,7 +424,7 @@
                         </div>
                         <div style="padding: 0.85rem; border-radius: 14px; background: rgba(255,255,255,0.7);">
                             <strong style="display: block; margin-bottom: 0.35rem;">Discovery queries</strong>
-                            <div style="color: #475569; font-size: 0.85rem; line-height: 1.55;">
+                            <div style="color: #94a3b8; font-size: 0.85rem; line-height: 1.55;">
                                 {% if item.queries %}
                                     {{ item.queries|join:", " }}
                                 {% else %}
@@ -417,8 +435,8 @@
                     </div>
 
                     {% if item.sample_titles %}
-                    <div style="margin-top: 0.75rem; color: #475569; font-size: 0.82rem; line-height: 1.55;">
-                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Observed titles</strong>
+                    <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.55;">
+                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Observed titles</strong>
                         {% for title in item.sample_titles %}
                         <div>{{ title }}</div>
                         {% endfor %}
@@ -451,13 +469,13 @@
                 {% endfor %}
             </div>
             {% else %}
-            <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+            <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                 Run an SEO refresh to generate accepted and filtered competitor traces.
             </div>
             {% endif %}
         </article>
 
-        <div class="layout-split-wide">
+        <div id="seo-patterns" class="layout-split-wide">
             <article class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                     <p class="eyebrow">Competitor Patterns</p>
@@ -465,7 +483,7 @@
                 </div>
                 <div class="panel-scroll">
                     {% for item in seo_competitor_patterns %}
-                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03);">
                         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
                             <strong>{{ item.page_type_label }}</strong>
                             <span class="score-pill score-high" style="font-size: 0.7rem;">{{ item.competitor_page_count }} competitor pages</span>
@@ -478,13 +496,13 @@
                             <span class="seo-inline-tag">Avg internal links: {{ item.avg_internal_links }}</span>
                         </div>
                         {% if item.common_terms %}
-                        <div style="margin-top: 0.75rem; color: #475569; font-size: 0.84rem;">
-                            <strong style="color: #0f172a;">Common terms:</strong> {{ item.common_terms|join:", " }}
+                        <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.84rem;">
+                            <strong style="color: #f8fafc;">Common terms:</strong> {{ item.common_terms|join:", " }}
                         </div>
                         {% endif %}
                         {% if item.title_samples %}
-                        <div style="margin-top: 0.75rem; color: #475569; font-size: 0.84rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Representative titles</strong>
+                        <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.84rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Representative titles</strong>
                             {% for sample in item.title_samples %}
                             <div>{{ sample }}</div>
                             {% endfor %}
@@ -492,7 +510,7 @@
                         {% endif %}
                     </div>
                     {% empty %}
-                    <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                    <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                         Accepted competitor patterns will appear here after the benchmark set is built.
                     </div>
                     {% endfor %}
@@ -506,16 +524,16 @@
                 </div>
                 <div class="panel-scroll panel-scroll-tall">
                     {% for item in seo_page_comparisons %}
-                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03);">
                         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
                             <strong>{{ item.page_type_label }}</strong>
                             <span class="score-pill {% if item.status == 'aligned' %}score-high{% elif item.status == 'gap' %}score-medium{% else %}score-low{% endif %}" style="font-size: 0.7rem; text-transform: capitalize;">{{ item.status }}</span>
                         </div>
                         {% if item.site_page_url %}
-                        <div style="margin-top: 0.6rem; color: #475569; font-size: 0.84rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Current page</strong>
+                        <div style="margin-top: 0.6rem; color: #94a3b8; font-size: 0.84rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Current page</strong>
                             <div>{{ item.site_page_title|default:"Untitled page" }}</div>
-                            <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; word-break: break-word;">{{ item.site_page_url }}</div>
+                            <div style="font-family: monospace; font-size: 0.76rem; color: #94a3b8; word-break: break-word;">{{ item.site_page_url }}</div>
                         </div>
                         {% endif %}
                         <div class="seo-inline-tags" style="margin-top: 0.75rem;">
@@ -525,20 +543,20 @@
                             <span class="seo-inline-tag">Competitor avg internal links: {{ item.competitor_avg_internal_links }}</span>
                         </div>
                         {% if item.competitor_common_terms %}
-                        <div style="margin-top: 0.75rem; color: #475569; font-size: 0.84rem;">
-                            <strong style="color: #0f172a;">Competitor language:</strong> {{ item.competitor_common_terms|join:", " }}
+                        <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.84rem;">
+                            <strong style="color: #f8fafc;">Competitor language:</strong> {{ item.competitor_common_terms|join:", " }}
                         </div>
                         {% endif %}
                         {% if item.competitor_title_samples %}
-                        <div style="margin-top: 0.75rem; color: #475569; font-size: 0.84rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Competitor title samples</strong>
+                        <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.84rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Competitor title samples</strong>
                             {% for sample in item.competitor_title_samples %}
                             <div>{{ sample }}</div>
                             {% endfor %}
                         </div>
                         {% endif %}
-                        <div style="margin-top: 0.75rem; color: #475569; font-size: 0.84rem; line-height: 1.55;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Structural deltas</strong>
+                        <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.84rem; line-height: 1.55;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Structural deltas</strong>
                             {% if item.missing_elements %}
                                 {% for delta in item.missing_elements %}
                                 <div>{{ delta }}</div>
@@ -547,13 +565,13 @@
                                 <div>This page type is broadly aligned with the accepted competitor pattern.</div>
                             {% endif %}
                         </div>
-                        <div style="margin-top: 0.75rem; color: #475569; font-size: 0.84rem; line-height: 1.55;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Recommended action</strong>
+                        <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.84rem; line-height: 1.55;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Recommended action</strong>
                             {{ item.recommended_action }}
                         </div>
                     </div>
                     {% empty %}
-                    <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                    <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                         Page comparison output will appear after competitor patterns are available.
                     </div>
                     {% endfor %}
@@ -561,7 +579,7 @@
             </article>
         </div>
 
-        <article class="system-card">
+        <article id="seo-campaigns" class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                 <p class="eyebrow">Campaign Pipeline</p>
                 <h2 style="font-size: 2rem;">Execution items with real status and ownership</h2>
@@ -570,11 +588,11 @@
             <div class="panel-scroll panel-scroll-tall">
                 {% for item in seo_campaigns %}
                 {% with campaign=item.campaign %}
-                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03);">
                     <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
                         <div>
                             <strong>{{ campaign.title }}</strong>
-                            <div style="font-size: 0.82rem; color: #475569; margin-top: 0.25rem;">
+                            <div style="font-size: 0.82rem; color: #94a3b8; margin-top: 0.25rem;">
                                 {% if campaign.target_keyword %}Keyword: {{ campaign.target_keyword }}{% endif %}
                             </div>
                         </div>
@@ -597,23 +615,23 @@
                     </div>
 
                     {% if campaign.related_page_urls %}
-                    <div style="margin-top: 0.75rem; color: #475569; font-size: 0.84rem; line-height: 1.5;">
-                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Related pages</strong>
+                    <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.84rem; line-height: 1.5;">
+                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Related pages</strong>
                         {% for url in campaign.related_page_urls %}
-                        <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; word-break: break-word;">{{ url }}</div>
+                        <div style="font-family: monospace; font-size: 0.76rem; color: #94a3b8; word-break: break-word;">{{ url }}</div>
                         {% endfor %}
                     </div>
                     {% endif %}
 
                     {% if campaign.related_keywords %}
-                    <div style="margin-top: 0.75rem; color: #475569; font-size: 0.84rem;">
-                        <strong style="color: #0f172a;">Related keywords:</strong> {{ campaign.related_keywords|join:", " }}
+                    <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.84rem;">
+                        <strong style="color: #f8fafc;">Related keywords:</strong> {{ campaign.related_keywords|join:", " }}
                     </div>
                     {% endif %}
 
                     {% if campaign.success_criteria %}
-                    <div style="margin-top: 0.75rem; color: #475569; font-size: 0.84rem; line-height: 1.55;">
-                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Success criteria</strong>
+                    <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.84rem; line-height: 1.55;">
+                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Success criteria</strong>
                         {% for item in campaign.success_criteria %}
                         <div>{{ item }}</div>
                         {% endfor %}
@@ -624,28 +642,28 @@
                         <div style="padding: 0.85rem; border-radius: 14px; background: rgba(255,255,255,0.7);">
                             <strong style="display: block; margin-bottom: 0.25rem;">Editorial brief</strong>
                             {% if item.editorial_task %}
-                            <div style="color: #475569; font-size: 0.84rem;">{{ item.editorial_task.title }}</div>
+                            <div style="color: #94a3b8; font-size: 0.84rem;">{{ item.editorial_task.title }}</div>
                             {% if item.editorial_task.latest_generated_content %}
                             <div style="margin-top: 0.25rem;">
                                 <a href="{% url 'content:workspace-content-detail' item.editorial_task.latest_generated_content.pk %}" style="color: var(--signal);">Open linked draft</a>
                             </div>
                             {% endif %}
                             {% else %}
-                            <div style="color: #475569; font-size: 0.84rem;">No editorial task linked yet.</div>
+                            <div style="color: #94a3b8; font-size: 0.84rem;">No editorial task linked yet.</div>
                             {% endif %}
                         </div>
                         <div style="padding: 0.85rem; border-radius: 14px; background: rgba(255,255,255,0.7);">
                             <strong style="display: block; margin-bottom: 0.25rem;">Outreach chain</strong>
-                            <div style="color: #475569; font-size: 0.84rem;">Prospects linked: {{ item.backlink_prospect_count }}</div>
-                            <div style="color: #475569; font-size: 0.84rem;">Acquired: {{ item.acquired_backlink_count }}</div>
+                            <div style="color: #94a3b8; font-size: 0.84rem;">Prospects linked: {{ item.backlink_prospect_count }}</div>
+                            <div style="color: #94a3b8; font-size: 0.84rem;">Acquired: {{ item.acquired_backlink_count }}</div>
                         </div>
                         <div style="padding: 0.85rem; border-radius: 14px; background: rgba(255,255,255,0.7);">
                             <strong style="display: block; margin-bottom: 0.25rem;">Validation</strong>
                             {% if item.latest_validation_audit_run %}
-                            <div style="color: #475569; font-size: 0.84rem;">Latest audit score: {{ item.latest_validation_audit_run.overall_score }}</div>
-                            <div style="color: #475569; font-size: 0.84rem;">Run: {{ item.latest_validation_audit_run.created_at|date:"M d, Y" }}</div>
+                            <div style="color: #94a3b8; font-size: 0.84rem;">Latest audit score: {{ item.latest_validation_audit_run.overall_score }}</div>
+                            <div style="color: #94a3b8; font-size: 0.84rem;">Run: {{ item.latest_validation_audit_run.created_at|date:"M d, Y" }}</div>
                             {% else %}
-                            <div style="color: #475569; font-size: 0.84rem;">No validating rerun attached yet.</div>
+                            <div style="color: #94a3b8; font-size: 0.84rem;">No validating rerun attached yet.</div>
                             {% endif %}
                         </div>
                     </div>
@@ -670,7 +688,7 @@
                             <span style="font-weight: 700; font-size: 0.82rem;">Campaign note</span>
                             <input type="text" name="note" value="{{ campaign.metadata.note|default:'' }}" maxlength="500" placeholder="Implementation note or blocker">
                         </label>
-                        <label style="display: inline-flex; gap: 0.5rem; align-items: center; font-size: 0.84rem; color: #475569;">
+                        <label style="display: inline-flex; gap: 0.5rem; align-items: center; font-size: 0.84rem; color: #94a3b8;">
                             <input type="checkbox" name="assign_to_me" value="1" {% if campaign.owner_id == request.user.id %}checked{% endif %}>
                             Assign to me
                         </label>
@@ -683,13 +701,13 @@
                 {% endfor %}
             </div>
             {% else %}
-            <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+            <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                 Campaign objects will appear here once the execution queue is available for this project.
             </div>
             {% endif %}
         </article>
 
-        <div class="layout-split-wide">
+        <div id="seo-roadmap" class="layout-split-wide">
             <article class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                     <p class="eyebrow">SEO Opportunity Roadmap</p>
@@ -697,7 +715,7 @@
                 </div>
                 <div class="panel-scroll panel-scroll-tall">
                     {% for item in seo_recommendations %}
-                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03);">
                         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
                             <strong>{{ item.title }}</strong>
                             <div style="display: flex; gap: 0.45rem; flex-wrap: wrap; justify-content: flex-end;">
@@ -708,54 +726,54 @@
                                 <span class="score-pill {% if item.evidence_status == 'strong' %}score-high{% elif item.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.7rem;">{{ item.confidence_label }}</span>
                             </div>
                         </div>
-                        <div style="margin-top: 0.65rem; color: #475569; font-size: 0.88rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Why this matters</strong>
+                        <div style="margin-top: 0.65rem; color: #94a3b8; font-size: 0.88rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Why this matters</strong>
                             {{ item.why_it_matters }}
                         </div>
-                        <div style="margin-top: 0.65rem; color: #475569; font-size: 0.88rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">What to do</strong>
+                        <div style="margin-top: 0.65rem; color: #94a3b8; font-size: 0.88rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">What to do</strong>
                             {{ item.recommended_fix }}
                         </div>
                         {% if item.where_to_apply %}
-                        <div style="margin-top: 0.65rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Where to apply it</strong>
+                        <div style="margin-top: 0.65rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Where to apply it</strong>
                             {% for url in item.where_to_apply %}
-                            <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
+                            <div style="font-family: monospace; font-size: 0.76rem; color: #94a3b8; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
                             {% endfor %}
                         </div>
                         {% endif %}
                         {% if item.competitor_evidence %}
-                        <div style="margin-top: 0.75rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Competitor evidence</strong>
+                        <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Competitor evidence</strong>
                             {% for evidence in item.competitor_evidence %}
                             <div style="margin-top: 0.25rem;">
-                                <div style="font-weight: 700; color: #0f172a;">{{ evidence.title|default:evidence.page_type|title }}</div>
-                                <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ evidence.url }}</div>
+                                <div style="font-weight: 700; color: #f8fafc;">{{ evidence.title|default:evidence.page_type|title }}</div>
+                                <div style="font-family: monospace; font-size: 0.76rem; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ evidence.url }}</div>
                             </div>
                             {% endfor %}
                         </div>
                         {% endif %}
                         {% if item.evidence_summary %}
-                        <div style="margin-top: 0.65rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Evidence confidence</strong>
+                        <div style="margin-top: 0.65rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Evidence confidence</strong>
                             {{ item.evidence_summary }}{% if item.evidence_score %} | Score {{ item.evidence_score }}{% endif %}
                         </div>
                         {% endif %}
                         {% if item.focus_areas %}
-                        <div style="margin-top: 0.65rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Grouped focus areas</strong>
+                        <div style="margin-top: 0.65rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Grouped focus areas</strong>
                             {{ item.focus_areas|join:", " }}
                         </div>
                         {% endif %}
                         {% if item.example_keywords %}
-                        <div style="margin-top: 0.65rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Keyword direction</strong>
+                        <div style="margin-top: 0.65rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Keyword direction</strong>
                             {{ item.example_keywords|join:", " }}
                         </div>
                         {% endif %}
                         {% if item.expected_impact %}
-                        <div style="margin-top: 0.65rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Expected impact</strong>
+                        <div style="margin-top: 0.65rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Expected impact</strong>
                             {{ item.expected_impact }}
                         </div>
                         {% endif %}
@@ -772,7 +790,7 @@
                     </div>
                     <div class="panel-scroll">
                         {% for page_type, count in seo_site_structure.summary.counts_by_type.items %}
-                        <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(15, 23, 42, 0.03); display: flex; justify-content: space-between; gap: 1rem;">
+                        <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03); display: flex; justify-content: space-between; gap: 1rem;">
                             <span style="text-transform: capitalize;">{{ page_type|cut:"_" }}</span>
                             <strong>{{ count }}</strong>
                         </div>
@@ -787,10 +805,10 @@
                     </div>
                     <div class="panel-scroll">
                         {% for label, keywords in seo_keyword_clusters.items %}
-                        <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03);">
+                        <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03);">
                             <strong style="display: block; margin-bottom: 0.45rem; text-transform: capitalize;">{{ label }}</strong>
                             {% for keyword in keywords %}
-                            <div style="color: #475569; font-size: 0.88rem; margin-top: 0.2rem;">{{ keyword }}</div>
+                            <div style="color: #94a3b8; font-size: 0.88rem; margin-top: 0.2rem;">{{ keyword }}</div>
                             {% endfor %}
                         </div>
                         {% endfor %}
@@ -799,7 +817,7 @@
             </div>
         </div>
 
-        <div class="layout-split">
+        <div id="seo-opportunities" class="layout-split">
             <article class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                     <p class="eyebrow">Keyword Opportunity Queue</p>
@@ -807,34 +825,34 @@
                 </div>
                 <div class="panel-scroll">
                     {% for item in seo_keyword_opportunities %}
-                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03);">
                         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
                             <strong>{{ item.keyword }}</strong>
                             <span class="score-pill score-high" style="font-size: 0.7rem;">{{ item.intent }}</span>
                         </div>
-                        <div style="margin-top: 0.55rem; color: #475569; font-size: 0.88rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Why this is in the queue</strong>
+                        <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.88rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Why this is in the queue</strong>
                             {{ item.reason }}
                         </div>
-                        <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
-                            Status: <strong style="color: #0f172a; text-transform: capitalize;">{{ item.status|cut:"_" }}</strong>
+                        <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
+                            Status: <strong style="color: #f8fafc; text-transform: capitalize;">{{ item.status|cut:"_" }}</strong>
                         </div>
                         {% if item.target_urls %}
-                        <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Existing URLs to map this against</strong>
+                        <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Existing URLs to map this against</strong>
                             {% for url in item.target_urls %}
-                            <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
+                            <div style="font-family: monospace; font-size: 0.76rem; color: #94a3b8; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
                             {% endfor %}
                         </div>
                         {% endif %}
                         {% if item.support_terms %}
-                        <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
-                            <strong style="color: #0f172a;">Related terms:</strong> {{ item.support_terms|join:", " }}
+                        <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
+                            <strong style="color: #f8fafc;">Related terms:</strong> {{ item.support_terms|join:", " }}
                         </div>
                         {% endif %}
                     </div>
                     {% empty %}
-                    <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                    <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                         Save SEO context to generate the keyword queue.
                     </div>
                     {% endfor %}
@@ -848,33 +866,33 @@
                 </div>
                 <div class="panel-scroll">
                     {% for item in seo_page_map %}
-                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03);">
                         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
                             <strong>{{ item.page_type_label }}</strong>
                             <span class="score-pill {% if item.status == 'missing' %}score-low{% elif item.status == 'expand' %}score-medium{% else %}score-high{% endif %}" style="font-size: 0.7rem; text-transform: capitalize;">{{ item.status }}</span>
                         </div>
-                        <div style="margin-top: 0.55rem; color: #475569; font-size: 0.88rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Recommended action</strong>
+                        <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.88rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Recommended action</strong>
                             {{ item.action }}
                         </div>
-                        <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
-                            <strong style="color: #0f172a;">Target keyword:</strong> {{ item.target_keyword }}
+                        <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
+                            <strong style="color: #f8fafc;">Target keyword:</strong> {{ item.target_keyword }}
                         </div>
-                        <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
+                        <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
                             Your site: {{ item.site_count }} page{{ item.site_count|pluralize }} |
                             Competitors: {{ item.competitor_presence }}/{{ item.competitor_count }} benchmarked sites publish this type
                         </div>
                         {% if item.target_urls %}
-                        <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Current URLs</strong>
+                        <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Current URLs</strong>
                             {% for url in item.target_urls %}
-                            <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
+                            <div style="font-family: monospace; font-size: 0.76rem; color: #94a3b8; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
                             {% endfor %}
                         </div>
                         {% endif %}
                     </div>
                     {% empty %}
-                    <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                    <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                         The page map appears after the first successful SEO benchmark refresh.
                     </div>
                     {% endfor %}
@@ -882,14 +900,14 @@
             </article>
         </div>
 
-        <article class="system-card">
+        <article id="seo-backlinks" class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                 <p class="eyebrow">Execution Queue</p>
                 <h2 style="font-size: 2rem;">What to build or update first</h2>
             </div>
             <div style="display: grid; gap: 1rem;">
                 {% for item in seo_execution_queue %}
-                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03);">
                     <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
                         <strong>{{ item.title }}</strong>
                         <div style="display: flex; gap: 0.45rem; flex-wrap: wrap; justify-content: flex-end;">
@@ -902,41 +920,41 @@
                             {% endif %}
                         </div>
                     </div>
-                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.88rem; line-height: 1.5;">
-                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Deliverable</strong>
+                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.88rem; line-height: 1.5;">
+                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Deliverable</strong>
                         {{ item.deliverable }}
                     </div>
                     {% if item.target_urls %}
-                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Where to apply it</strong>
+                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Where to apply it</strong>
                         {% for url in item.target_urls %}
-                        <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
+                        <div style="font-family: monospace; font-size: 0.76rem; color: #94a3b8; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
                         {% endfor %}
                     </div>
                     {% else %}
-                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
-                        <strong style="color: #0f172a;">Target:</strong> {{ item.target }}
+                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
+                        <strong style="color: #f8fafc;">Target:</strong> {{ item.target }}
                     </div>
                     {% endif %}
                     {% if item.linked_keywords %}
-                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
-                        <strong style="color: #0f172a;">Keywords:</strong> {{ item.linked_keywords|join:", " }}
+                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
+                        <strong style="color: #f8fafc;">Keywords:</strong> {{ item.linked_keywords|join:", " }}
                     </div>
                     {% endif %}
                     {% if item.evidence_summary %}
-                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem;">
-                        <strong style="color: #0f172a;">Evidence:</strong> {{ item.evidence_summary }}
+                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
+                        <strong style="color: #f8fafc;">Evidence:</strong> {{ item.evidence_summary }}
                     </div>
                     {% endif %}
                     {% if item.edit_targets %}
                     <div style="margin-top: 0.75rem; display: grid; gap: 0.75rem;">
-                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Exact page edits</strong>
+                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Exact page edits</strong>
                         {% for target in item.edit_targets %}
                         <div style="padding: 0.85rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.7);">
-                            <div style="font-weight: 700; color: #0f172a;">{{ target.page_title }}</div>
-                            <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; margin-top: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ target.url }}</div>
-                            <div style="margin-top: 0.45rem; color: #475569; font-size: 0.82rem;">Change scope: {{ target.change_scope|cut:"_"|title }}</div>
-                            <div style="margin-top: 0.5rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
+                            <div style="font-weight: 700; color: #f8fafc;">{{ target.page_title }}</div>
+                            <div style="font-family: monospace; font-size: 0.76rem; color: #94a3b8; margin-top: 0.2rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ target.url }}</div>
+                            <div style="margin-top: 0.45rem; color: #94a3b8; font-size: 0.82rem;">Change scope: {{ target.change_scope|cut:"_"|title }}</div>
+                            <div style="margin-top: 0.5rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
                                 {% for change in target.changes %}
                                 <div style="margin-top: 0.15rem;">{{ forloop.counter }}. {{ change }}</div>
                                 {% endfor %}
@@ -945,15 +963,15 @@
                         {% endfor %}
                     </div>
                     {% endif %}
-                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Action steps</strong>
+                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Action steps</strong>
                         {% for step in item.action_steps %}
                         <div style="margin-top: 0.15rem;">{{ forloop.counter }}. {{ step }}</div>
                         {% endfor %}
                     </div>
                 </div>
                 {% empty %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                     The execution queue appears after the first benchmark refresh.
                 </div>
                 {% endfor %}
@@ -972,9 +990,9 @@
                         <strong>{{ competitor.domain|default:competitor.url }}</strong>
                         <span class="score-pill {% if competitor.status == 'ok' %}score-high{% else %}score-low{% endif %}" style="font-size: 0.7rem;">{{ competitor.status|default:"unknown"|title }}</span>
                     </div>
-                    <div style="color: #475569; font-size: 0.82rem; line-height: 1.5;">
+                    <div style="color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
                         Source:
-                        <strong style="color: #0f172a;">
+                        <strong style="color: #f8fafc;">
                             {% if competitor.source == "serp" %}
                             Auto-discovered from SERPs
                             {% elif competitor.source == "profile" %}
@@ -985,19 +1003,19 @@
                         </strong>
                     </div>
                     {% if competitor.status == "ok" %}
-                    <div style="color: #475569; font-size: 0.88rem; line-height: 1.5;">
+                    <div style="color: #94a3b8; font-size: 0.88rem; line-height: 1.5;">
                         {{ competitor.summary.page_count }} pages profiled |
                         FAQ schema pages: {{ competitor.summary.faq_schema_pages|default:0 }} |
                         Location-matched pages: {{ competitor.summary.location_match_pages|default:0 }}
                     </div>
                     {% if competitor.metadata.serp %}
-                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                        Best SERP position: <strong style="color: #0f172a;">{{ competitor.metadata.serp.best_position }}</strong> |
+                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                        Best SERP position: <strong style="color: #f8fafc;">{{ competitor.metadata.serp.best_position }}</strong> |
                         Seen in {{ competitor.metadata.serp.query_count }} quer{{ competitor.metadata.serp.query_count|pluralize:"y,ies" }} |
                         Relevance {{ competitor.metadata.serp.average_relevance|default:0 }}
                     </div>
-                    <div style="margin-top: 0.35rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Queries</strong>
+                    <div style="margin-top: 0.35rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Queries</strong>
                         {{ competitor.metadata.serp.queries|join:", " }}
                     </div>
                     {% if competitor.metadata.serp.match_signals %}
@@ -1009,15 +1027,15 @@
                     {% endif %}
                     {% endif %}
                     {% if competitor.summary.asset_totals %}
-                    <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                        Assets: <strong style="color: #0f172a;">{{ competitor.summary.asset_totals.images|default:0 }} images</strong>,
+                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                        Assets: <strong style="color: #f8fafc;">{{ competitor.summary.asset_totals.images|default:0 }} images</strong>,
                         {{ competitor.summary.asset_totals.scripts|default:0 }} scripts,
                         {{ competitor.summary.asset_totals.webp_count|default:0 }} webp assets
                     </div>
                     {% endif %}
                     {% if competitor.summary.top_cms %}
-                    <div style="margin-top: 0.35rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                        <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Tech stack signals</strong>
+                    <div style="margin-top: 0.35rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Tech stack signals</strong>
                         CMS: {% for item in competitor.summary.top_cms %}{{ item.0 }}{% if not forloop.last %}, {% endif %}{% endfor %}
                         {% if competitor.summary.top_frameworks %}
                         <br>Frameworks: {% for item in competitor.summary.top_frameworks %}{{ item.0 }}{% if not forloop.last %}, {% endif %}{% endfor %}
@@ -1026,20 +1044,20 @@
                     {% endif %}
                     <div style="margin-top: 0.75rem; display: grid; gap: 0.35rem;">
                         {% for page_type, count in competitor.summary.counts_by_type.items %}
-                        <div style="display: flex; justify-content: space-between; gap: 1rem; color: #475569; font-size: 0.82rem;">
+                        <div style="display: flex; justify-content: space-between; gap: 1rem; color: #94a3b8; font-size: 0.82rem;">
                             <span style="text-transform: capitalize;">{{ page_type|cut:"_" }}</span>
-                            <strong style="color: #0f172a;">{{ count }}</strong>
+                            <strong style="color: #f8fafc;">{{ count }}</strong>
                         </div>
                         {% endfor %}
                     </div>
                     {% else %}
-                    <div style="color: #475569; font-size: 0.88rem; line-height: 1.5;">
+                    <div style="color: #94a3b8; font-size: 0.88rem; line-height: 1.5;">
                         This competitor site could not be profiled during the latest refresh.
                     </div>
                     {% endif %}
                 </div>
                 {% empty %}
-                <div class="system-card" style="color: #475569;">
+                <div class="system-card" style="color: #94a3b8;">
                     Add competitor URLs above to benchmark real sites in this niche and location.
                 </div>
                 {% endfor %}
@@ -1062,29 +1080,29 @@
                 {% endif %}
                 <div class="panel-scroll">
                     {% for asset in backlink_linkable_assets %}
-                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03);">
                         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
                             <strong>{{ asset.asset_title }}</strong>
                             <span class="score-pill score-high" style="font-size: 0.7rem;">Priority {{ asset.priority_score }}</span>
                         </div>
-                        <div style="margin-top: 0.45rem; color: #475569; font-size: 0.82rem;">
-                            <strong style="color: #0f172a;">Type:</strong> {{ asset.asset_type|cut:"_"|title }} | {{ asset.asset_kind|title }}
+                        <div style="margin-top: 0.45rem; color: #94a3b8; font-size: 0.82rem;">
+                            <strong style="color: #f8fafc;">Type:</strong> {{ asset.asset_type|cut:"_"|title }} | {{ asset.asset_kind|title }}
                         </div>
                         {% if asset.asset_url %}
-                        <div style="margin-top: 0.45rem; color: #64748b; font-family: monospace; font-size: 0.76rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <div style="margin-top: 0.45rem; color: #94a3b8; font-family: monospace; font-size: 0.76rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                             {{ asset.asset_url }}
                         </div>
                         {% endif %}
-                        <div style="margin-top: 0.55rem; color: #475569; font-size: 0.88rem; line-height: 1.5;">
+                        <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.88rem; line-height: 1.5;">
                             {{ asset.pitch_hook }}
                         </div>
-                        <div style="margin-top: 0.55rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Why this asset matters</strong>
+                        <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Why this asset matters</strong>
                             {{ asset.reason }}
                         </div>
                     </div>
                     {% empty %}
-                    <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                    <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                         Complete the SEO refresh first. Linkable asset recommendations are generated from the live page map and draft inventory.
                     </div>
                     {% endfor %}
@@ -1106,20 +1124,20 @@
                 {% endif %}
                 <div class="panel-scroll panel-scroll-tall">
                     {% for prospect in backlink_prospects %}
-                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(15, 23, 42, 0.03);">
+                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03);">
                         <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
                             <strong>{{ prospect.domain }}</strong>
                             <span class="score-pill score-high" style="font-size: 0.7rem;">Score {{ prospect.total_score }}</span>
                         </div>
-                        <div style="margin-top: 0.35rem; color: #475569; font-size: 0.82rem;">
-                            {{ prospect.get_prospect_type_display }} | Target asset: <strong style="color: #0f172a;">{{ prospect.target_asset_title }}</strong>
+                        <div style="margin-top: 0.35rem; color: #94a3b8; font-size: 0.82rem;">
+                            {{ prospect.get_prospect_type_display }} | Target asset: <strong style="color: #f8fafc;">{{ prospect.target_asset_title }}</strong>
                         </div>
-                        <div style="margin-top: 0.35rem; color: #64748b; font-family: monospace; font-size: 0.76rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                        <div style="margin-top: 0.35rem; color: #94a3b8; font-family: monospace; font-size: 0.76rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                             {{ prospect.prospect_url }}
                         </div>
                         {% if prospect.title %}
-                        <div style="margin-top: 0.55rem; color: #475569; font-size: 0.88rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Page title</strong>
+                        <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.88rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Page title</strong>
                             {{ prospect.title }}
                         </div>
                         {% endif %}
@@ -1130,13 +1148,13 @@
                             <span class="seo-inline-tag">Outreach {{ prospect.outreach_likelihood_score }}</span>
                         </div>
                         {% if prospect.outreach_packet %}
-                        <div style="margin-top: 0.75rem; color: #475569; font-size: 0.82rem; line-height: 1.5;">
-                            <strong style="display: block; color: #0f172a; margin-bottom: 0.2rem;">Pitch angle</strong>
+                        <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Pitch angle</strong>
                             {{ prospect.outreach_packet.pitch_angle }}
                         </div>
                         {% if prospect.outreach_packet.subject_lines %}
-                        <div style="margin-top: 0.45rem; color: #475569; font-size: 0.82rem;">
-                            <strong style="color: #0f172a;">Subject lines:</strong> {{ prospect.outreach_packet.subject_lines|join:", " }}
+                        <div style="margin-top: 0.45rem; color: #94a3b8; font-size: 0.82rem;">
+                            <strong style="color: #f8fafc;">Subject lines:</strong> {{ prospect.outreach_packet.subject_lines|join:", " }}
                         </div>
                         {% endif %}
                         {% endif %}
@@ -1144,7 +1162,7 @@
                             {% csrf_token %}
                             <div style="display: grid; grid-template-columns: 0.8fr 1fr; gap: 0.75rem;">
                                 <label style="display: grid; gap: 0.25rem;">
-                                    <span style="font-size: 0.78rem; font-weight: 700; color: #0f172a;">Status</span>
+                                    <span style="font-size: 0.78rem; font-weight: 700; color: #f8fafc;">Status</span>
                                     <select name="status">
                                         {% for value, label in backlink_status_choices %}
                                         <option value="{{ value }}"{% if prospect.status == value %} selected{% endif %}>{{ label }}</option>
@@ -1152,19 +1170,19 @@
                                     </select>
                                 </label>
                                 <label style="display: grid; gap: 0.25rem;">
-                                    <span style="font-size: 0.78rem; font-weight: 700; color: #0f172a;">Anchor text</span>
+                                    <span style="font-size: 0.78rem; font-weight: 700; color: #f8fafc;">Anchor text</span>
                                     <input type="text" name="suggested_anchor_text" value="{{ prospect.suggested_anchor_text }}">
                                 </label>
                             </div>
                             <label style="display: grid; gap: 0.25rem;">
-                                <span style="font-size: 0.78rem; font-weight: 700; color: #0f172a;">Notes</span>
+                                <span style="font-size: 0.78rem; font-weight: 700; color: #f8fafc;">Notes</span>
                                 <textarea name="notes" rows="2">{{ prospect.metadata.notes }}</textarea>
                             </label>
                             <button type="submit" class="button button-secondary">Update prospect</button>
                         </form>
                     </div>
                     {% empty %}
-                    <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569;">
+                    <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
                         No backlink prospects yet. Run the SEO refresh to generate scored outreach targets from the current linkable assets.
                     </div>
                     {% endfor %}
@@ -1177,7 +1195,7 @@
                 <p class="eyebrow">Backlink Intelligence</p>
                 <h2 style="font-size: 2rem;">Authority work unlock</h2>
             </div>
-            <div style="padding: 1rem; border-radius: 16px; background: rgba(15, 23, 42, 0.03); color: #475569; line-height: 1.6;">
+            <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8; line-height: 1.6;">
                 Backlink prospecting typically uses {{ backlink_action.credits }} workspace credits on top of the SEO refresh.
                 {{ backlink_action.next_unlock_message|default:backlink_action.blocked_message }}
                 {% if backlink_action.direct_checkout_available %}

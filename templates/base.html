@@ -11,6 +11,8 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>{{ resolved_page_title }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <meta name="description" content="{{ resolved_meta_description }}">
     {% if canonical_url %}
     <link rel="canonical" href="{{ canonical_url }}">
@@ -27,6 +29,7 @@
     <meta name="twitter:card" content="{{ resolved_twitter_card }}">
     <meta name="twitter:title" content="{{ resolved_og_title }}">
     <meta name="twitter:description" content="{{ resolved_og_description }}">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="{% static 'css/site.css' %}">
     {% if schema_json %}
@@ -83,6 +86,10 @@
                 <a class="button button-primary nav-cta" href="{% url 'tools:workspace-signup' %}">Create Workspace</a>
                 {% endif %}
             </div>
+            <!-- Hamburger for mobile -->
+            <button class="nav-hamburger" id="nav-hamburger" aria-label="Open navigation" aria-expanded="false" aria-controls="nav-mobile-drawer">
+                <span></span><span></span><span></span>
+            </button>
         </div>
     </header>
     {% if messages %}
@@ -109,5 +116,86 @@
             </div>
         </div>
     </footer>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="nav-mobile-drawer" id="nav-mobile-drawer" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+        <button class="nav-mobile-close" id="nav-mobile-close" aria-label="Close navigation">&times;</button>
+        <div class="nav-mobile-brand">VRT SPACE AGENCY</div>
+        <nav class="nav-mobile-links" aria-label="Mobile primary">
+            <a href="{% url 'core:services' %}">Services</a>
+            <a href="{% url 'core:home' %}#packages">Packages</a>
+            <a href="{% url 'core:home' %}#audit">Audit</a>
+            <a href="{% url 'core:home' %}#method">Method</a>
+            {% if user.is_staff %}
+            <a href="{% url 'analytics:operations-dashboard' %}">Ops Dashboard</a>
+            {% endif %}
+            {% if user.is_authenticated and not user.is_staff %}
+            <a href="{% url 'tools:workspace-dashboard' %}">Workspace Overview</a>
+            <a href="{% url 'seo:workspace-seo' %}">SEO</a>
+            <a href="{% url 'aeo:workspace-aeo' %}">AEO</a>
+            <a href="{% url 'content:workspace-content' %}">Content</a>
+            {% endif %}
+        </nav>
+        <div class="nav-mobile-actions">
+            {% if user.is_authenticated %}
+            <a class="button button-secondary" href="{% url 'tools:account-dashboard' %}">Account</a>
+            <a class="button button-secondary" href="{% url 'tools:workspace-logout' %}">Sign out</a>
+            <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}">Open Workspace</a>
+            {% else %}
+            <a class="button button-secondary" href="{% url 'tools:workspace-login' %}">Sign in</a>
+            <a class="button button-primary" href="{% url 'tools:workspace-signup' %}">Create Workspace</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        var hamburger = document.getElementById('nav-hamburger');
+        var drawer = document.getElementById('nav-mobile-drawer');
+        var closeBtn = document.getElementById('nav-mobile-close');
+        if (!hamburger || !drawer) return;
+
+        function openDrawer() {
+            drawer.classList.add('is-open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeDrawer() {
+            drawer.classList.remove('is-open');
+            document.body.style.overflow = '';
+        }
+
+        hamburger.addEventListener('click', openDrawer);
+        if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+        drawer.addEventListener('click', function(e) {
+            if (e.target === drawer) closeDrawer();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeDrawer();
+        });
+
+        // Audit Form Progressive Disclosure
+        var auditExpandBtn = document.getElementById('audit-form-expand');
+        var auditAdvancedSection = document.getElementById('audit-form-advanced');
+        if (auditExpandBtn && auditAdvancedSection) {
+            auditExpandBtn.addEventListener('click', function() {
+                var isExpanded = auditExpandBtn.getAttribute('aria-expanded') === 'true';
+                if (!isExpanded) {
+                    auditExpandBtn.setAttribute('aria-expanded', 'true');
+                    auditAdvancedSection.classList.add('is-open');
+                    auditAdvancedSection.setAttribute('aria-hidden', 'false');
+                    var label = document.getElementById('audit-expand-label');
+                    if (label) label.textContent = 'Hide advanced context';
+                } else {
+                    auditExpandBtn.setAttribute('aria-expanded', 'false');
+                    auditAdvancedSection.classList.remove('is-open');
+                    auditAdvancedSection.setAttribute('aria-hidden', 'true');
+                    var label = document.getElementById('audit-expand-label');
+                    if (label) label.textContent = 'Add context for a richer report';
+                }
+            });
+        }
+    })();
+    </script>
 </body>
 </html>
+

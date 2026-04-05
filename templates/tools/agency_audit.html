@@ -4,7 +4,7 @@
 <style>
     .agency-dashboard {
         padding: 4rem 0;
-        background: #f8fafc;
+        background: rgba(255, 255, 255, 0.02);
         min-height: 100vh;
     }
     .dashboard-grid {
@@ -31,7 +31,7 @@
     }
     .card {
         background: white;
-        border: 1px solid #e2e8f0;
+        border: 1px solid rgba(255, 255, 255, 0.08);
         border-radius: 20px;
         padding: 1.5rem;
         box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
@@ -40,7 +40,7 @@
         font-size: 1.25rem;
         margin-bottom: 1rem;
         color: #1e293b;
-        border-bottom: 1px solid #f1f5f9;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         padding-bottom: 0.5rem;
     }
     .score-pill {
@@ -65,11 +65,11 @@
         background: #f1f5f9;
         font-size: 0.85rem;
         text-transform: uppercase;
-        color: #64748b;
+        color: #94a3b8;
     }
     .page-table td {
         padding: 12px;
-        border-bottom: 1px solid #f1f5f9;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         font-size: 0.95rem;
     }
     .issue-tag {
@@ -181,25 +181,25 @@
                             <div class="gauge-container {% if audit_run.performance_score and audit_run.performance_score >= 90 %}score-green{% elif audit_run.performance_score and audit_run.performance_score >= 50 %}score-orange{% elif audit_run.performance_score and audit_run.performance_score > 0 %}score-red{% else %}score-gray{% endif %}" style="--gauge-score: {{ audit_run.performance_score|default:0 }};">
                                 <span class="gauge-value">{{ audit_run.performance_score|default:"-" }}</span>
                             </div>
-                            <span style="font-size: 0.7rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Performance</span>
+                            <span style="font-size: 0.7rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Performance</span>
                         </div>
                         <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
                             <div class="gauge-container {% if audit_run.accessibility_score and audit_run.accessibility_score >= 90 %}score-green{% elif audit_run.accessibility_score and audit_run.accessibility_score >= 50 %}score-orange{% elif audit_run.accessibility_score and audit_run.accessibility_score > 0 %}score-red{% else %}score-gray{% endif %}" style="--gauge-score: {{ audit_run.accessibility_score|default:0 }};">
                                 <span class="gauge-value">{{ audit_run.accessibility_score|default:"-" }}</span>
                             </div>
-                            <span style="font-size: 0.7rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Accessibility</span>
+                            <span style="font-size: 0.7rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Accessibility</span>
                         </div>
                         <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
                             <div class="gauge-container {% if audit_run.best_practices_score and audit_run.best_practices_score >= 90 %}score-green{% elif audit_run.best_practices_score and audit_run.best_practices_score >= 50 %}score-orange{% elif audit_run.best_practices_score and audit_run.best_practices_score > 0 %}score-red{% else %}score-gray{% endif %}" style="--gauge-score: {{ audit_run.best_practices_score|default:0 }};">
                                 <span class="gauge-value">{{ audit_run.best_practices_score|default:"-" }}</span>
                             </div>
-                            <span style="font-size: 0.7rem; color: #64748b; font-weight: 700; text-transform: uppercase;">Best Practices</span>
+                            <span style="font-size: 0.7rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">Best Practices</span>
                         </div>
                         <div style="display: flex; flex-direction: column; align-items: center; gap: 0.5rem;">
                             <div class="gauge-container {% if audit_run.seo_score and audit_run.seo_score >= 90 %}score-green{% elif audit_run.seo_score and audit_run.seo_score >= 50 %}score-orange{% elif audit_run.seo_score and audit_run.seo_score > 0 %}score-red{% else %}score-gray{% endif %}" style="--gauge-score: {{ audit_run.seo_score|default:0 }};">
                                 <span class="gauge-value">{{ audit_run.seo_score|default:"-" }}</span>
                             </div>
-                            <span style="font-size: 0.7rem; color: #64748b; font-weight: 700; text-transform: uppercase;">SEO</span>
+                            <span style="font-size: 0.7rem; color: #94a3b8; font-weight: 700; text-transform: uppercase;">SEO</span>
                         </div>
                     </div>
                 </article>
@@ -208,7 +208,7 @@
                     <h2>Expert Intelligence</h2>
                     <div style="display: grid; gap: 1rem;">
                         <div>
-                            <p style="font-size: 0.75rem; color: #64748b; text-transform: uppercase;">Tech Stack</p>
+                            <p style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase;">Tech Stack</p>
                             <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.25rem;">
                                 {% if audit_run.tech_summary.cms %}
                                 {% for cms in audit_run.tech_summary.cms %}<span class="issue-tag" style="background: #dbeafe; color: #1e40af;">CMS: {{ cms }}</span>{% endfor %}
@@ -219,7 +219,7 @@
                             </div>
                         </div>
                         <div>
-                            <p style="font-size: 0.75rem; color: #64748b; text-transform: uppercase;">Tracking & Marketing</p>
+                            <p style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase;">Tracking & Marketing</p>
                             <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.25rem;">
                                 {% for tool in audit_run.tech_summary.analytics %}<span class="issue-tag" style="background: #f0fdf4; color: #166534;">{{ tool }}</span>{% endfor %}
                                 {% for tool in audit_run.tech_summary.marketing %}<span class="issue-tag" style="background: #fff7ed; color: #9a3412;">{{ tool }}</span>{% endfor %}
@@ -247,11 +247,11 @@
                             <span style="display: flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; background: {{ service.color }}; color: white; border-radius: 50%; font-size: 0.75rem; font-weight: 800;">{{ forloop.counter }}</span>
                             <div style="font-size: 0.8rem;">
                                 <strong>{{ service.service }}</strong>
-                                <div style="color: #475569; margin-top: 0.2rem;">{{ service.reason|default:service.impact }}</div>
+                                <div style="color: #94a3b8; margin-top: 0.2rem;">{{ service.reason|default:service.impact }}</div>
                             </div>
                         </li>
                         {% empty %}
-                        <li style="font-size: 0.8rem; color: #475569;">No immediate upsell path detected from the current audit state.</li>
+                        <li style="font-size: 0.8rem; color: #94a3b8;">No immediate upsell path detected from the current audit state.</li>
                         {% endfor %}
                     </ul>
                 </article>
@@ -267,15 +267,15 @@
                     <h2>Score Breakdown</h2>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
                         {% for key, item in score_breakdown.items %}
-                        <div style="padding: 1rem; border: 1px solid #e2e8f0; border-left: 5px solid {% if item.status == 'strong' %}#16a34a{% elif item.status == 'stable' %}#0ea5e9{% elif item.status == 'weak' %}#ea580c{% else %}#dc2626{% endif %}; border-radius: 14px;">
+                        <div style="padding: 1rem; border: 1px solid rgba(255, 255, 255, 0.08); border-left: 5px solid {% if item.status == 'strong' %}#16a34a{% elif item.status == 'stable' %}#0ea5e9{% elif item.status == 'weak' %}#ea580c{% else %}#dc2626{% endif %}; border-radius: 14px;">
                             <div style="display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 0.5rem;">
                                 <strong style="color: #1e293b;">{{ item.label }}</strong>
                                 <span style="font-weight: 800; color: #1e293b;">{{ item.score }}</span>
                             </div>
-                            <div style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
+                            <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
                                 {{ item.status }} | {{ item.issues }} issue{{ item.issues|pluralize }}
                             </div>
-                            <div style="font-size: 0.85rem; color: #475569; line-height: 1.5;">{{ item.next_step }}</div>
+                            <div style="font-size: 0.85rem; color: #94a3b8; line-height: 1.5;">{{ item.next_step }}</div>
                         </div>
                         {% endfor %}
                     </div>
@@ -285,24 +285,24 @@
                     <h2>Priority Recommendations</h2>
                     <div style="display: grid; gap: 1rem;">
                         {% for recommendation in recommendations|slice:":6" %}
-                        <div style="padding: 1rem; border: 1px solid #e2e8f0; border-radius: 14px;">
+                        <div style="padding: 1rem; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px;">
                             <div style="display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 0.5rem;">
                                 <strong style="color: #1e293b;">{{ recommendation.title }}</strong>
                                 <span class="score-pill {% if recommendation.priority_score >= 80 %}score-low{% elif recommendation.priority_score >= 60 %}score-med{% else %}score-high{% endif %}">
                                     {{ recommendation.priority_score }}
                                 </span>
                             </div>
-                            <div style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
+                            <div style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
                                 {{ recommendation.category }} | {{ recommendation.impact_level }}
                             </div>
-                            <div style="font-size: 0.88rem; color: #475569; line-height: 1.6; margin-bottom: 0.75rem;">{{ recommendation.description }}</div>
+                            <div style="font-size: 0.88rem; color: #94a3b8; line-height: 1.6; margin-bottom: 0.75rem;">{{ recommendation.description }}</div>
                             <div style="font-size: 0.88rem; color: #1e293b; line-height: 1.6;"><strong>Fix:</strong> {{ recommendation.recommended_fix }}</div>
                             {% if recommendation.page_url %}
                             <div style="font-size: 0.75rem; color: #2563eb; margin-top: 0.5rem;">Page: {{ recommendation.page_url }}</div>
                             {% endif %}
                         </div>
                         {% empty %}
-                        <div style="font-size: 0.9rem; color: #475569;">No recommendation set available for this audit.</div>
+                        <div style="font-size: 0.9rem; color: #94a3b8;">No recommendation set available for this audit.</div>
                         {% endfor %}
                     </div>
                 </article>
@@ -310,7 +310,7 @@
                 {% if audit_run.summary.pagespeed.failed_audits %}
                 <article class="card" style="border-left: 6px solid #dc2626;">
                     <h2>Critical Technical Fixes (Lighthouse)</h2>
-                    <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 1.25rem;">Specific audit failures requiring immediate attention:</p>
+                    <p style="font-size: 0.9rem; color: #94a3b8; margin-bottom: 1.25rem;">Specific audit failures requiring immediate attention:</p>
                     <div style="display: grid; gap: 1rem;">
                         {% for fail in audit_run.summary.pagespeed.failed_audits %}
                         <div style="padding: 12px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 12px;">
@@ -329,7 +329,7 @@
 
                 <article class="card">
                     <h2>Technical Inventory</h2>
-                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 1rem;">Direct signals extracted by the VRT SPACE diagnostic engine.</p>
+                    <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 1rem;">Direct signals extracted by the VRT SPACE diagnostic engine.</p>
                     <div style="overflow-x: auto;">
                         <table class="page-table">
                             <thead>
@@ -386,20 +386,20 @@
                     <h2>Issues Grouped by Category</h2>
                     {% for category, cat_issues in issues_by_category.items %}
                     <div style="margin-bottom: 1.5rem;">
-                        <h3 style="text-transform: uppercase; font-size: 0.75rem; color: #64748b; letter-spacing: 0.05em; margin-bottom: 0.5rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 0.25rem;">
+                        <h3 style="text-transform: uppercase; font-size: 0.75rem; color: #94a3b8; letter-spacing: 0.05em; margin-bottom: 0.5rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 0.25rem;">
                             {{ category|title }} ({{ cat_issues|length }} Issues)
                         </h3>
                         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
                             {% for issue in cat_issues %}
                             <div class="issue-item {% if issue.severity == 'critical' or issue.severity == 'high' %}severity-border-high{% else %}severity-border-med{% endif %}">
                                 <div style="font-weight: 700; font-size: 0.95rem;">{{ issue.message }}</div>
-                                <div style="font-size: 0.85rem; color: #475569; margin-top: 4px;">{{ issue.recommendation }}</div>
+                                <div style="font-size: 0.85rem; color: #94a3b8; margin-top: 4px;">{{ issue.recommendation }}</div>
                                 {% if issue.page %}
                                 <div style="font-size: 0.75rem; color: #2563eb; margin-top: 4px; font-weight: 600;">
                                     Page: <a href="{{ issue.page.url }}" target="_blank" style="color: inherit; text-decoration: underline;">{{ issue.page.url }}</a>
                                 </div>
                                 {% else %}
-                                <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px; font-style: italic;">Site-wide issue</div>
+                                <div style="font-size: 0.75rem; color: #94a3b8; margin-top: 4px; font-style: italic;">Site-wide issue</div>
                                 {% endif %}
                             </div>
                             {% endfor %}

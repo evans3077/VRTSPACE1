@@ -1,11 +1,13 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="hero">
-    <div class="container hero-grid">
+<section class="hero" style="position: relative; overflow: visible;">
+    <div class="ambient-glow-violet" style="top: -15%; left: -10%;"></div>
+    <div class="ambient-glow-cyan" style="bottom: -20%; right: -10%;"></div>
+    <div class="container hero-grid" style="position: relative; z-index: 1;">
         <div class="hero-copy">
-            <p class="eyebrow">SEO audits, AI visibility, and growth workspaces</p>
-            <h1>Turn your website into a measurable growth system.</h1>
+            <p class="eyebrow" style="color: var(--accent-cyan); letter-spacing: 0.15em;">SEO audits, AI visibility, and growth workspaces</p>
+            <h1 style="background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Turn your website into a measurable growth system.</h1>
             <p class="hero-text">
                 Run the audit, open a workspace, track what is broken, and decide when to unlock deeper
                 monitoring, automation, and content systems. Custom builds stay available when the product
@@ -40,7 +42,9 @@
                 <p>Scan the site, see the score, group the highest-impact fixes, and route the result into a user workspace instead of a sales handoff.</p>
                 <form method="post" action="{% url 'tools:free-seo-audit' %}">
                     {% csrf_token %}
-                {{ audit_form.non_field_errors }}
+                    {{ audit_form.non_field_errors }}
+
+                    <!-- Core fields — always visible -->
                     <label>
                         Company
                         {{ audit_form.company_name }}
@@ -56,47 +60,57 @@
                         {{ audit_form.website }}
                         {{ audit_form.website.errors }}
                     </label>
-                    <label>
-                        Business type
-                        {{ audit_form.business_type }}
-                        {{ audit_form.business_type.errors }}
-                    </label>
-                    <label>
-                        Location
-                        {{ audit_form.location }}
-                        {{ audit_form.location.errors }}
-                    </label>
-                    <label>
-                        Target goal
-                        {{ audit_form.target_goal }}
-                        {{ audit_form.target_goal.errors }}
-                    </label>
-                    <label>
-                        Primary offer
-                        {{ audit_form.primary_service }}
-                        {{ audit_form.primary_service.errors }}
-                    </label>
-                    <label>
-                        Monthly lead goal
-                        {{ audit_form.monthly_leads_goal }}
-                        {{ audit_form.monthly_leads_goal.errors }}
-                    </label>
-                    <label>
-                        Market context
-                        {{ audit_form.market_context }}
-                        {{ audit_form.market_context.errors }}
-                    </label>
-                    <label>
-                        Competitor URLs
-                        {{ audit_form.competitor_urls }}
-                        {{ audit_form.competitor_urls.errors }}
-                    </label>
-                    <label>
-                        Notes
-                        {{ audit_form.notes }}
-                        {{ audit_form.notes.errors }}
-                    </label>
-                    <button class="button button-primary" type="submit">Run audit now</button>
+
+                    <!-- Progressive disclosure: optional context -->
+                    <button type="button" class="audit-form-expand-btn" id="audit-form-expand" aria-expanded="false" aria-controls="audit-form-advanced">
+                        <i class="fas fa-plus-circle" aria-hidden="true"></i>
+                        <span id="audit-expand-label">Add context for a richer report</span>
+                    </button>
+
+                    <div class="audit-form-advanced" id="audit-form-advanced" aria-hidden="true">
+                        <label>
+                            Business type
+                            {{ audit_form.business_type }}
+                            {{ audit_form.business_type.errors }}
+                        </label>
+                        <label>
+                            Location
+                            {{ audit_form.location }}
+                            {{ audit_form.location.errors }}
+                        </label>
+                        <label>
+                            Target goal
+                            {{ audit_form.target_goal }}
+                            {{ audit_form.target_goal.errors }}
+                        </label>
+                        <label>
+                            Primary offer
+                            {{ audit_form.primary_service }}
+                            {{ audit_form.primary_service.errors }}
+                        </label>
+                        <label>
+                            Monthly lead goal
+                            {{ audit_form.monthly_leads_goal }}
+                            {{ audit_form.monthly_leads_goal.errors }}
+                        </label>
+                        <label>
+                            Market context
+                            {{ audit_form.market_context }}
+                            {{ audit_form.market_context.errors }}
+                        </label>
+                        <label>
+                            Competitor URLs
+                            {{ audit_form.competitor_urls }}
+                            {{ audit_form.competitor_urls.errors }}
+                        </label>
+                        <label>
+                            Notes
+                            {{ audit_form.notes }}
+                            {{ audit_form.notes.errors }}
+                        </label>
+                    </div>
+
+                    <button class="button button-primary" type="submit" style="width: 100%; margin-top: 0.25rem;">Run audit now</button>
                 </form>
                 <p class="form-note">Use this for SEO, AI visibility, performance, and conversion diagnostics before choosing a plan or a custom build.</p>
             </div>
