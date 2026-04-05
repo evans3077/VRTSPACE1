@@ -1649,6 +1649,9 @@ class BacklinkIntelligenceTests(TestCase):
 
 
 class SEOCompetitorDiscoveryTests(TestCase):
+    def setUp(self):
+        cache.clear()
+
     def test_build_local_keyword_set_uses_business_specific_terms(self):
         profile = SEOProjectProfile(
             business_type="automotive",

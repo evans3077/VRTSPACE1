@@ -574,12 +574,12 @@ def _relevance_signals(result, profile):
     result_dict = result if isinstance(result, dict) else {}
     haystack = " ".join(
         [
-            result_dict.get("title", ""),
-            result_dict.get("snippet", ""),
-            result_dict.get("description", ""),
-            _candidate_link(result),
+            str(result_dict.get("title", "") or ""),
+            str(result_dict.get("snippet", "") or ""),
+            str(result_dict.get("description", "") or ""),
+            str(_candidate_link(result) or ""),
         ]
-    ).lower()
+    ).replace("/", " ").replace("-", " ").replace("_", " ").lower()
     signals = []
     score = 0
     for term in _profile_service_terms(profile)[:8]:

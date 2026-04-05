@@ -392,6 +392,8 @@ Turn the current platform into a production-grade decision system that is clearl
   Heavy SEO work must stay durable under real usage.
   Needed result:
   Queue heavy jobs correctly, rate-limit discovery and crawl depth, and make fallback behavior explicit when providers return partial or weak data.
+  Progress:
+  SERP discovery now uses provider cooldowns, shorter fallback timeouts, and per-refresh provider shutdown so one SerpApi 429 or DuckDuckGo timeout does not cascade into a long sequence of duplicate failures.
 - [ ] Add executive-level outcome summaries
   Why:
   Stakeholders should not have to read the entire workspace to understand value.
