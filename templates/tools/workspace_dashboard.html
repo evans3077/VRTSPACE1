@@ -2,7 +2,7 @@
 
 {% block content %}
 <section class="hero" style="padding-bottom: 2rem;">
-    <div class="container">
+    <div class="container-fluid">
         <div class="section-heading">
             <p class="eyebrow">Workspace</p>
             <h1 style="max-width: none;">{% if project.pk %}{{ project.name }}{% else %}Workspace Overview{% endif %}</h1>
@@ -42,7 +42,7 @@
             </div>
 
             {% if not project.pk %}
-            <div style="margin-top: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8; line-height: 1.6;">
+            <div style="margin-top: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: #f8fafc; color: #64748b; line-height: 1.6;">
                 No active workspace yet. Create one or start directly with an audit below.
             </div>
             {% elif not latest_audit %}
@@ -63,7 +63,7 @@
 {% include "includes/workspace_nav.html" %}
 
 <section class="packages-section" style="padding-top: 0;">
-    <div class="container page-stack">
+    <div class="container-fluid page-stack">
         {% if project.pk and latest_audit %}
         <article class="system-card" style="margin-bottom: 2rem; border-color: rgba(139, 92, 246, 0.3); background: rgba(139, 92, 246, 0.05);">
             <div class="section-heading" style="text-align: left; margin-bottom: 1.5rem;">
@@ -145,7 +145,7 @@
                         </div>
                     </summary>
                     <div class="workspace-expandable-body">
-                        <div style="display: grid; gap: 0.35rem; color: #94a3b8; font-size: 0.84rem;">
+                        <div style="display: grid; gap: 0.35rem; color: #64748b; font-size: 0.84rem;">
                             <div>{{ item.normalized_domain }}</div>
                             {% if item.business_type or item.location %}
                             <div>{{ item.business_type_label|default:"Unclassified" }}{% if item.location %} | {{ item.location }}{% endif %}</div>
@@ -236,7 +236,7 @@
                         {% endif %}
                     </div>
                 </div>
-                <div style="margin-top: 1rem; color: #94a3b8; line-height: 1.6;">
+                <div style="margin-top: 1rem; color: #64748b; line-height: 1.6;">
                     Keep the workspace focused on project work. Billing, top-ups, and personal settings live in your account area.
                 </div>
                 <div style="margin-top: 1rem;">
@@ -255,7 +255,7 @@
                     <span class="button button-primary">Start</span>
                 </summary>
                 <div class="workspace-create-body">
-                    <div style="color: #94a3b8; line-height: 1.6; margin-bottom: 1rem;">
+                    <div style="color: #64748b; line-height: 1.6; margin-bottom: 1rem;">
                         Use this when a user starts from SEO or AEO. The audit becomes the base and the workspace is attached automatically.
                     </div>
                     <form method="post" action="{% url 'tools:workspace-audit-start' %}" style="display: grid; gap: 0.85rem;">
@@ -338,7 +338,7 @@
                     <span class="button button-primary">Create</span>
                 </summary>
                 <div class="workspace-create-body">
-                    <div style="color: #94a3b8; line-height: 1.6; margin-bottom: 1rem;">
+                    <div style="color: #64748b; line-height: 1.6; margin-bottom: 1rem;">
                         Create a separate workspace for another website, client, or brand. Each one keeps its own audit, SEO, AEO, and content history.
                     </div>
                     <form method="post" action="{% url 'tools:workspace-project-create' %}" style="display: grid; gap: 0.85rem;">
@@ -585,7 +585,7 @@
             </div>
             <div style="display: grid; gap: 0.75rem;">
                 {% for recommendation in fix_queue_recommendations %}
-                <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03);">
+                <div style="padding: 0.9rem 1rem; border-radius: 16px; background: #f8fafc;">
                     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.45rem;">
                         {% if recommendation.root_cause_label %}
                         <span class="score-pill score-high" style="font-size: 0.68rem;">{{ recommendation.root_cause_label }}</span>
@@ -596,34 +596,34 @@
                     </div>
                     <strong style="display: block; margin-bottom: 0.35rem;">{{ recommendation.title }}</strong>
                     {% if recommendation.description %}
-                    <div style="color: #94a3b8; font-size: 0.88rem; line-height: 1.5; margin-bottom: 0.65rem;">{{ recommendation.description }}</div>
+                    <div style="color: #64748b; font-size: 0.88rem; line-height: 1.5; margin-bottom: 0.65rem;">{{ recommendation.description }}</div>
                     {% endif %}
-                    <div style="color: #94a3b8; font-size: 0.9rem; line-height: 1.5;">
+                    <div style="color: #64748b; font-size: 0.9rem; line-height: 1.5;">
                         <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">What to fix</strong>
                         {{ recommendation.recommended_fix }}
                     </div>
                     {% if recommendation.page_examples %}
-                    <div style="margin-top: 0.75rem; font-size: 0.82rem; color: #94a3b8; line-height: 1.5;">
+                    <div style="margin-top: 0.75rem; font-size: 0.82rem; color: #64748b; line-height: 1.5;">
                         <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Where this appears</strong>
                         {{ recommendation.affected_pages_count|default:recommendation.page_examples|length }} pages including:
                         {% for url in recommendation.page_examples %}
-                        <div style="font-family: monospace; font-size: 0.76rem; color: #94a3b8; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
+                        <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
                         {% endfor %}
                     </div>
                     {% elif recommendation.page_url %}
-                    <div style="margin-top: 0.75rem; font-size: 0.82rem; color: #94a3b8; line-height: 1.5;">
+                    <div style="margin-top: 0.75rem; font-size: 0.82rem; color: #64748b; line-height: 1.5;">
                         <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Where this appears</strong>
-                        <div style="font-family: monospace; font-size: 0.76rem; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ recommendation.page_url }}</div>
+                        <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ recommendation.page_url }}</div>
                     </div>
                     {% endif %}
                     {% if recommendation.evidence_summary %}
-                    <div style="margin-top: 0.65rem; font-size: 0.8rem; color: #94a3b8; line-height: 1.5;">
+                    <div style="margin-top: 0.65rem; font-size: 0.8rem; color: #64748b; line-height: 1.5;">
                         <strong style="color: #f8fafc;">Evidence:</strong> {{ recommendation.evidence_summary }}
                     </div>
                     {% endif %}
                 </div>
                 {% empty %}
-                <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">No saved recommendations yet.</div>
+                <div style="padding: 0.9rem 1rem; border-radius: 16px; background: #f8fafc; color: #64748b;">No saved recommendations yet.</div>
                 {% endfor %}
                 {% if locked_recommendation_count %}
                 <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #f8fafc; font-size: 0.9rem;">
@@ -662,7 +662,7 @@
                                 {% elif item.delta < 0 %}
                                 <span style="color: #dc2626; font-weight: 700;">{{ item.delta }}</span>
                                 {% else %}
-                                <span style="color: #94a3b8; font-weight: 700;">0</span>
+                                <span style="color: #64748b; font-weight: 700;">0</span>
                                 {% endif %}
                             </td>
                             <td style="padding: 0.8rem 0.4rem;">{{ item.audit.pages_crawled }}</td>
@@ -678,7 +678,7 @@
                         </tr>
                         {% if item.change_report %}
                         <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); background: rgba(255, 255, 255, 0.02);">
-                            <td colspan="5" style="padding: 0.75rem 0.4rem; color: #94a3b8; font-size: 0.9rem;">
+                            <td colspan="5" style="padding: 0.75rem 0.4rem; color: #64748b; font-size: 0.9rem;">
                                 {{ item.change_report.summary.headline }}
                                 New: {{ item.change_report.new_issue_count }} |
                                 Resolved: {{ item.change_report.resolved_issue_count }}
@@ -687,7 +687,7 @@
                         {% endif %}
                         {% empty %}
                         <tr>
-                            <td colspan="5" style="padding: 0.8rem 0.4rem; color: #94a3b8;">No saved reruns yet.</td>
+                            <td colspan="5" style="padding: 0.8rem 0.4rem; color: #64748b;">No saved reruns yet.</td>
                         </tr>
                         {% endfor %}
                     </tbody>

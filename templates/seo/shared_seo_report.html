@@ -2,7 +2,7 @@
 
 {% block content %}
 <section class="hero" style="padding-bottom: 2rem;">
-    <div class="container">
+    <div class="container-fluid">
         <div class="section-heading">
             <p class="eyebrow">Shared SEO Report</p>
             <h1 style="max-width: none;">{{ project.name }}</h1>
@@ -18,7 +18,7 @@
 </section>
 
 <section class="packages-section" style="padding-top: 0;">
-    <div class="container page-stack">
+    <div class="container-fluid page-stack">
         <div class="system-grid">
             <article class="system-card"><p class="eyebrow">Domain</p><h3>{{ report_payload.project.domain }}</h3><p>{{ report_payload.profile.location }}</p></article>
             <article class="system-card"><p class="eyebrow">Goal</p><h3 style="font-size: 1.05rem;">{{ report_payload.profile.target_goal }}</h3><p>Declared SEO objective</p></article>
@@ -31,7 +31,7 @@
                 <p class="eyebrow">Executive Summary</p>
                 <h2 style="font-size: 2rem;">What this SEO report shows</h2>
             </div>
-            <div style="display: grid; gap: 0.75rem; color: #94a3b8; line-height: 1.6;">
+            <div style="display: grid; gap: 0.75rem; color: #64748b; line-height: 1.6;">
                 <div>This report freezes the current SEO benchmark state for <strong style="color: #f8fafc;">{{ report_payload.project.domain }}</strong>.</div>
                 <div>The benchmark compares the site against accepted competitors, then turns the structural gaps into execution items, campaign objects, and outreach targets.</div>
                 <div>Use the sections below to review why competitors were accepted, what page patterns they use, and which tasks should be implemented first.</div>
@@ -50,7 +50,7 @@
                     <article class="system-card"><p class="eyebrow">SERP Queries</p><h3>{{ report_payload.discovery.queries|length }}</h3><p>Global discovery queries used</p></article>
                 </div>
                 {% if report_payload.discovery.queries %}
-                <div style="margin-top: 1rem; color: #94a3b8; line-height: 1.6;">
+                <div style="margin-top: 1rem; color: #64748b; line-height: 1.6;">
                     <strong style="display: block; color: #f8fafc; margin-bottom: 0.25rem;">Queries used</strong>
                     {{ report_payload.discovery.queries|join:", " }}
                 </div>
@@ -78,12 +78,12 @@
             </div>
             <div class="panel-scroll">
                 {% for item in report_payload.competitor_trace %}
-                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03);">
+                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: #f8fafc;">
                     <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
                         <strong>{{ item.domain }}</strong>
                         <span class="score-pill {% if item.included %}score-high{% else %}score-low{% endif %}" style="font-size: 0.7rem;">{{ item.final_decision_label }}</span>
                     </div>
-                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.88rem; line-height: 1.5;">
+                    <div style="margin-top: 0.55rem; color: #64748b; font-size: 0.88rem; line-height: 1.5;">
                         {{ item.fit.reason }}
                     </div>
                     <div class="seo-inline-tags" style="margin-top: 0.55rem;">
@@ -93,7 +93,7 @@
                     </div>
                 </div>
                 {% empty %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">No competitor trace was stored for this report.</div>
+                <div style="padding: 1rem; border-radius: 16px; background: #f8fafc; color: #64748b;">No competitor trace was stored for this report.</div>
                 {% endfor %}
             </div>
         </article>
@@ -106,12 +106,12 @@
                 </div>
                 <div class="panel-scroll">
                     {% for item in report_payload.keyword_opportunities %}
-                    <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03);">
+                    <div style="padding: 1rem; border-radius: 16px; background: #f8fafc;">
                         <strong>{{ item.keyword }}</strong>
-                        <div style="color: #94a3b8; margin-top: 0.35rem;">{{ item.reason }}</div>
+                        <div style="color: #64748b; margin-top: 0.35rem;">{{ item.reason }}</div>
                     </div>
                     {% empty %}
-                    <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">No keyword opportunities were stored.</div>
+                    <div style="padding: 1rem; border-radius: 16px; background: #f8fafc; color: #64748b;">No keyword opportunities were stored.</div>
                     {% endfor %}
                 </div>
             </article>
@@ -123,25 +123,25 @@
                 </div>
                 <div class="panel-scroll panel-scroll-tall">
                     {% for item in report_payload.execution_queue %}
-                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03);">
+                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: #f8fafc;">
                         <strong>{{ item.title }}</strong>
-                        <div style="margin-top: 0.45rem; color: #94a3b8;">{{ item.deliverable }}</div>
+                        <div style="margin-top: 0.45rem; color: #64748b;">{{ item.deliverable }}</div>
                         {% if item.target_urls %}
-                        <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
+                        <div style="margin-top: 0.55rem; color: #64748b; font-size: 0.82rem;">
                             <strong style="color: #f8fafc;">Where to apply</strong>
                             {% for url in item.target_urls %}
-                            <div class="url-wrap-mono" style="font-size: 0.76rem; color: #94a3b8; margin-top: 0.15rem;">{{ url }}</div>
+                            <div class="url-wrap-mono" style="font-size: 0.76rem; color: #64748b; margin-top: 0.15rem;">{{ url }}</div>
                             {% endfor %}
                         </div>
                         {% endif %}
-                        <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.84rem; line-height: 1.5;">
+                        <div style="margin-top: 0.55rem; color: #64748b; font-size: 0.84rem; line-height: 1.5;">
                             {% for step in item.action_steps|slice:":3" %}
                             <div>{{ forloop.counter }}. {{ step }}</div>
                             {% endfor %}
                         </div>
                     </div>
                     {% empty %}
-                    <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">No execution queue items were stored.</div>
+                    <div style="padding: 1rem; border-radius: 16px; background: #f8fafc; color: #64748b;">No execution queue items were stored.</div>
                     {% endfor %}
                 </div>
             </article>
@@ -154,20 +154,20 @@
             </div>
             <div class="panel-scroll">
                 {% for item in report_payload.campaigns %}
-                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03);">
+                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: #f8fafc;">
                     <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
                         <strong>{{ item.title }}</strong>
                         <span class="score-pill score-medium" style="font-size: 0.7rem;">{{ item.status|title }}</span>
                     </div>
-                    <div style="margin-top: 0.45rem; color: #94a3b8; font-size: 0.84rem;">
+                    <div style="margin-top: 0.45rem; color: #64748b; font-size: 0.84rem;">
                         Validation: {{ item.validation_status|title }} | Draft: {{ item.draft_title|default:"Not created" }}
                     </div>
-                    <div style="margin-top: 0.45rem; color: #94a3b8; font-size: 0.84rem;">
+                    <div style="margin-top: 0.45rem; color: #64748b; font-size: 0.84rem;">
                         Outreach targets: {{ item.backlink_prospect_count }} | Acquired links: {{ item.acquired_backlink_count }}
                     </div>
                 </div>
                 {% empty %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">No campaign pipeline data was stored.</div>
+                <div style="padding: 1rem; border-radius: 16px; background: #f8fafc; color: #64748b;">No campaign pipeline data was stored.</div>
                 {% endfor %}
             </div>
         </article>

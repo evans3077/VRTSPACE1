@@ -31,7 +31,7 @@
                 <p class="eyebrow">Executive Summary</p>
                 <h2 style="font-size: 2rem;">What this audit means</h2>
             </div>
-            <div style="display: grid; gap: 0.75rem; color: #94a3b8; line-height: 1.6;">
+            <div style="display: grid; gap: 0.75rem; color: #64748b; line-height: 1.6;">
                 <div>This report summarizes the current saved audit state for <strong style="color: #f8fafc;">{{ audit_run.normalized_domain }}</strong>.</div>
                 {% if change_report %}
                 <div>{{ change_report.summary.headline }} New issues: {{ change_report.new_issue_count }}. Resolved issues: {{ change_report.resolved_issue_count }}.</div>
@@ -50,11 +50,11 @@
                 </div>
                 <div style="display: grid; gap: 0.75rem;">
                     {% for key, item in score_breakdown.items %}
-                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03);">
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: #f8fafc;">
                         <strong>{{ item.label }}</strong>
-                        <div style="color: #94a3b8; font-size: 0.9rem; margin-top: 0.25rem;">Score {{ item.score }} | {{ item.issues }} issues</div>
+                        <div style="color: #64748b; font-size: 0.9rem; margin-top: 0.25rem;">Score {{ item.score }} | {{ item.issues }} issues</div>
                         {% if item.next_step %}
-                        <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.85rem; line-height: 1.5;">
+                        <div style="margin-top: 0.55rem; color: #64748b; font-size: 0.85rem; line-height: 1.5;">
                             <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Next step</strong>
                             {{ item.next_step }}
                         </div>
@@ -71,12 +71,12 @@
                 </div>
                 <div style="display: grid; gap: 0.75rem;">
                     {% for category, count in issue_summary.by_category.items %}
-                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03); display: flex; justify-content: space-between; gap: 1rem;">
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: #f8fafc; display: flex; justify-content: space-between; gap: 1rem;">
                         <span style="text-transform: capitalize;">{{ category|cut:"_" }}</span>
                         <strong>{{ count }}</strong>
                     </div>
                     {% empty %}
-                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">No categorized issues were stored for this audit.</div>
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: #f8fafc; color: #64748b;">No categorized issues were stored for this audit.</div>
                     {% endfor %}
                 </div>
             </article>
@@ -90,9 +90,9 @@
             </div>
             <div style="display: grid; gap: 0.75rem;">
                 {% for insight in context_analysis.insights %}
-                <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">{{ insight }}</div>
+                <div style="padding: 0.9rem 1rem; border-radius: 14px; background: #f8fafc; color: #64748b;">{{ insight }}</div>
                 {% empty %}
-                <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">No market or competitor benchmark notes were stored for this audit.</div>
+                <div style="padding: 0.9rem 1rem; border-radius: 14px; background: #f8fafc; color: #64748b;">No market or competitor benchmark notes were stored for this audit.</div>
                 {% endfor %}
             </div>
         </article>
@@ -105,41 +105,41 @@
             </div>
             <div style="display: grid; gap: 1rem;">
                 {% for recommendation in recommendations %}
-                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03);">
+                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: #f8fafc;">
                     <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
                         <strong>{{ recommendation.title }}</strong>
                         <span class="score-pill score-high" style="font-size: 0.7rem;">{{ recommendation.category }}</span>
                     </div>
                     {% if recommendation.description %}
-                    <div style="margin-top: 0.65rem; color: #94a3b8; font-size: 0.9rem; line-height: 1.5;">{{ recommendation.description }}</div>
+                    <div style="margin-top: 0.65rem; color: #64748b; font-size: 0.9rem; line-height: 1.5;">{{ recommendation.description }}</div>
                     {% endif %}
-                    <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.88rem; line-height: 1.5;">
+                    <div style="margin-top: 0.75rem; color: #64748b; font-size: 0.88rem; line-height: 1.5;">
                         <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Solution</strong>
                         {{ recommendation.recommended_fix }}
                     </div>
                     {% if recommendation.page_examples %}
-                    <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                    <div style="margin-top: 0.75rem; color: #64748b; font-size: 0.82rem; line-height: 1.5;">
                         <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Where this appears</strong>
                         {{ recommendation.affected_pages_count|default:recommendation.page_examples|length }} pages including:
                         {% for url in recommendation.page_examples %}
-                        <div style="font-family: monospace; font-size: 0.76rem; color: #94a3b8; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
+                        <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
                         {% endfor %}
                     </div>
                     {% elif recommendation.page_url %}
-                    <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                    <div style="margin-top: 0.75rem; color: #64748b; font-size: 0.82rem; line-height: 1.5;">
                         <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Where this appears</strong>
-                        <div style="font-family: monospace; font-size: 0.76rem; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ recommendation.page_url }}</div>
+                        <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ recommendation.page_url }}</div>
                     </div>
                     {% endif %}
                     {% if recommendation.estimated_impact %}
-                    <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
+                    <div style="margin-top: 0.75rem; color: #64748b; font-size: 0.82rem; line-height: 1.5;">
                         <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Expected result</strong>
                         {{ recommendation.estimated_impact }}
                     </div>
                     {% endif %}
                 </div>
                 {% empty %}
-                <div style="padding: 0.9rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">No recommendations were stored for this report.</div>
+                <div style="padding: 0.9rem 1rem; border-radius: 14px; background: #f8fafc; color: #64748b;">No recommendations were stored for this report.</div>
                 {% endfor %}
             </div>
         </article>
@@ -157,9 +157,9 @@
                         <strong>{{ module.title }}</strong>
                         <span class="score-pill score-high" style="font-size: 0.7rem;">{{ module.plan }}</span>
                     </div>
-                    <div style="color: #94a3b8; font-size: 0.9rem; line-height: 1.5;">{{ module.reason }}</div>
+                    <div style="color: #64748b; font-size: 0.9rem; line-height: 1.5;">{{ module.reason }}</div>
                     {% if module.impact %}
-                    <div style="margin-top: 0.75rem; color: #94a3b8; font-size: 0.85rem; line-height: 1.5;">
+                    <div style="margin-top: 0.75rem; color: #64748b; font-size: 0.85rem; line-height: 1.5;">
                         <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Outcome</strong>
                         {{ module.impact }}
                     </div>

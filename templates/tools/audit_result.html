@@ -80,7 +80,7 @@ setTimeout(function () {
         </div>
 
         <div class="layout-split-sidebar" style="margin-top: 3rem; align-items: center;">
-            <div class="audit-gauge-card" style="padding: 3rem; background: rgba(255, 255, 255, 0.6); border: 2px solid var(--signal);">
+            <div class="audit-gauge-card" style="padding: 3rem; background: #ffffff; border: 1px solid #e2e8f0; border: 2px solid var(--signal);">
                 <div class="gauge-circle" style="width: 180px; height: 180px;">
                     <svg class="gauge-svg" width="180" height="180">
                         <circle class="gauge-bg" cx="90" cy="90" r="82" style="stroke-width: 12;"></circle>
@@ -137,9 +137,9 @@ setTimeout(function () {
             </div>
             <h3 style="margin-bottom: 0.35rem;">{{ metric.value }}</h3>
             <div style="font-weight: 700; color: var(--ink); margin-bottom: 0.5rem;">{{ metric.label }}</div>
-            <div style="font-size: 0.82rem; color: #94a3b8; margin-bottom: 0.75rem;">Target: {{ metric.target_label }}</div>
-            <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.5rem; line-height: 1.5;">{{ metric.description }}</p>
-            <div style="font-size: 0.82rem; color: #94a3b8; line-height: 1.5;">
+            <div style="font-size: 0.82rem; color: #64748b; margin-bottom: 0.75rem;">Target: {{ metric.target_label }}</div>
+            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.5rem; line-height: 1.5;">{{ metric.description }}</p>
+            <div style="font-size: 0.82rem; color: #64748b; line-height: 1.5;">
                 <strong style="display: block; color: var(--ink); margin-bottom: 0.2rem;">Why it matters</strong>
                 {{ metric.impact }}
             </div>
@@ -162,13 +162,13 @@ setTimeout(function () {
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
             {% for failure in audit_run.summary.vitals_failures %}
-            <div style="background: white; padding: 1.25rem; border-radius: 12px; border-left: 4px solid #ef4444;">
+            <div style="background: #ffffff; border: 1px solid #e2e8f0; padding: 1.25rem; border-radius: 12px; border-left: 4px solid #ef4444;">
                 <div style="font-weight: 800; color: #1e293b; font-size: 0.9rem; margin-bottom: 0.25rem;">{{ failure.metric }}</div>
                 <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 0.5rem;">
                     <span style="color: #dc2626; font-weight: 900; font-size: 1.25rem;">{{ failure.value }}</span>
-                    <span style="color: #94a3b8; font-size: 0.75rem;">(Limit: {{ failure.threshold }})</span>
+                    <span style="color: #64748b; font-size: 0.75rem;">(Limit: {{ failure.threshold }})</span>
                 </div>
-                <p style="font-size: 0.8rem; color: #94a3b8; margin: 0; line-height: 1.4;">{{ failure.impact }}</p>
+                <p style="font-size: 0.8rem; color: #64748b; margin: 0; line-height: 1.4;">{{ failure.impact }}</p>
             </div>
             {% endfor %}
         </div>
@@ -182,7 +182,7 @@ setTimeout(function () {
 </section>
 {% endif %}
 
-<section class="packages-section" style="background: rgba(255,255,255,0.4); border-top: 1px solid rgba(255, 255, 255,0.05);">
+<section class="packages-section" style="background: #ffffff; border: 1px solid #e2e8f0; border-top: 1px solid rgba(255, 255, 255,0.05);">
     <div class="container">
         <div class="section-heading">
             <p class="eyebrow">Recommended Modules</p>
@@ -253,40 +253,40 @@ setTimeout(function () {
                     <span style="font-size: 0.75rem; font-weight: 700; color: var(--signal);">Priority {{ recommendation.priority_score }}</span>
                 </div>
                 <h4 style="margin-bottom: 0.75rem; font-size: 1rem; color: var(--ink);">{{ recommendation.title }}</h4>
-                <p style="font-size: 0.85rem; color: #94a3b8; margin-bottom: 0.75rem; line-height: 1.5;">{{ recommendation.description }}</p>
+                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.75rem; line-height: 1.5;">{{ recommendation.description }}</p>
                 <div style="background: rgba(14, 165, 233, 0.05); padding: 1rem; border-radius: 12px; font-size: 0.85rem; border-left: 3px solid var(--signal);">
                     <strong style="display: block; color: var(--signal); margin-bottom: 4px; font-size: 0.75rem; text-transform: uppercase;">Strategic Fix:</strong>
                     {{ recommendation.recommended_fix }}
                 </div>
-                <div style="margin-top: 1rem; font-size: 0.78rem; color: #94a3b8; line-height: 1.5;">
+                <div style="margin-top: 1rem; font-size: 0.78rem; color: #64748b; line-height: 1.5;">
                     <strong style="display: block; margin-bottom: 0.25rem; color: var(--ink);">Expected Impact</strong>
                     {{ recommendation.estimated_impact }}
                 </div>
-                <div style="margin-top: 1rem; font-size: 0.78rem; color: #94a3b8; line-height: 1.5;">
+                <div style="margin-top: 1rem; font-size: 0.78rem; color: #64748b; line-height: 1.5;">
                     <strong style="display: block; margin-bottom: 0.25rem; color: var(--ink);">Evidence</strong>
                     {{ recommendation.evidence_summary }}{% if recommendation.evidence_score %} | Score {{ recommendation.evidence_score }}{% endif %}
                 </div>
                 {% if recommendation.grouped_issue_titles and recommendation.grouped_issue_titles|length > 1 %}
-                <div style="margin-top: 1rem; font-size: 0.78rem; color: #94a3b8; line-height: 1.5;">
+                <div style="margin-top: 1rem; font-size: 0.78rem; color: #64748b; line-height: 1.5;">
                     <strong style="display: block; margin-bottom: 0.25rem; color: var(--ink);">Grouped Signals</strong>
                     {{ recommendation.grouped_issue_titles|join:", " }}
                 </div>
                 {% endif %}
                 {% if recommendation.affected_pages_count and recommendation.affected_pages_count > 1 %}
-                <div style="margin-top: 1rem; font-size: 0.78rem; color: #94a3b8; line-height: 1.5;">
+                <div style="margin-top: 1rem; font-size: 0.78rem; color: #64748b; line-height: 1.5;">
                     <strong style="display: block; margin-bottom: 0.25rem; color: var(--ink);">Affected Pages</strong>
                     {{ recommendation.affected_pages_count }} pages show this issue.
                 </div>
                 {% endif %}
                 {% if recommendation.page_examples %}
-                <div style="margin-top: 1rem; font-size: 0.72rem; color: #94a3b8; line-height: 1.5;">
+                <div style="margin-top: 1rem; font-size: 0.72rem; color: #64748b; line-height: 1.5;">
                     <strong style="display: block; margin-bottom: 0.25rem; color: var(--ink);">Examples</strong>
                     {% for url in recommendation.page_examples %}
                     <div style="font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
                     {% endfor %}
                 </div>
                 {% elif recommendation.page_url %}
-                <div style="margin-top: 1rem; font-size: 0.7rem; color: #94a3b8; font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
+                <div style="margin-top: 1rem; font-size: 0.7rem; color: #64748b; font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
                     Reference: {{ recommendation.page_url }}
                 </div>
                 {% endif %}
@@ -302,14 +302,14 @@ setTimeout(function () {
             {% empty %}
             <article class="advice-card severity-LOW" style="padding: 1.5rem;">
                 <h4 style="margin-bottom: 0.75rem; font-size: 1rem; color: var(--ink);">No urgent recommendation set</h4>
-                <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">The current crawl did not produce a priority remediation list.</p>
+                <p style="font-size: 0.85rem; color: #64748b; margin: 0;">The current crawl did not produce a priority remediation list.</p>
             </article>
             {% endfor %}
         </div>
     </div>
 </section>
 
-<section class="packages-section" style="background: rgba(255,255,255,0.45); border-top: 1px solid rgba(255, 255, 255,0.05);">
+<section class="packages-section" style="background: #ffffff; border: 1px solid #e2e8f0; border-top: 1px solid rgba(255, 255, 255,0.05);">
     <div class="container">
         <div class="section-heading">
             <p class="eyebrow">Score Breakdown</p>
@@ -324,11 +324,11 @@ setTimeout(function () {
                     <h3 style="margin: 0;">{{ item.label }}</h3>
                     <span style="font-size: 1.4rem; font-weight: 900; color: var(--ink);">{{ item.score }}</span>
                 </div>
-                <p style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin-bottom: 0.75rem;">
+                <p style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; margin-bottom: 0.75rem;">
                     {{ item.status }} | {{ item.issues }} issue{{ item.issues|pluralize }}
                 </p>
-                <p style="margin-bottom: 0.75rem; color: #94a3b8; line-height: 1.5;">{{ item.explanation }}</p>
-                <div style="background: rgba(255, 255, 255, 0.03); padding: 1rem; border-radius: 12px; font-size: 0.85rem; line-height: 1.5;">
+                <p style="margin-bottom: 0.75rem; color: #64748b; line-height: 1.5;">{{ item.explanation }}</p>
+                <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; font-size: 0.85rem; line-height: 1.5;">
                     <strong style="display: block; color: var(--ink); margin-bottom: 0.25rem;">Next Step</strong>
                     {{ item.next_step }}
                 </div>
@@ -339,7 +339,7 @@ setTimeout(function () {
 </section>
 
 {% if audit_run.summary.context_analysis %}
-<section class="packages-section" style="background: rgba(255,255,255,0.5); border-top: 1px solid rgba(255, 255, 255,0.05);">
+<section class="packages-section" style="background: #ffffff; border: 1px solid #e2e8f0; border-top: 1px solid rgba(255, 255, 255,0.05);">
     <div class="container">
         <div class="section-heading">
             <p class="eyebrow">Context Analysis</p>
@@ -349,14 +349,14 @@ setTimeout(function () {
         <div class="layout-split">
             <div style="display: grid; gap: 0.75rem;">
                 {% for insight in audit_run.summary.context_analysis.insights %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">{{ insight }}</div>
+                <div style="padding: 1rem; border-radius: 16px; background: #f8fafc; color: #64748b;">{{ insight }}</div>
                 {% endfor %}
             </div>
             <div style="display: grid; gap: 0.75rem;">
                 {% for competitor in audit_run.summary.context_analysis.competitors %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03);">
+                <div style="padding: 1rem; border-radius: 16px; background: #f8fafc;">
                     <strong>{{ competitor.url }}</strong>
-                    <div style="margin-top: 0.35rem; color: #94a3b8; font-size: 0.9rem;">
+                    <div style="margin-top: 0.35rem; color: #64748b; font-size: 0.9rem;">
                         {% if competitor.status == "unavailable" %}
                         This competitor could not be fetched during the benchmark pass.
                         {% else %}
@@ -388,20 +388,20 @@ setTimeout(function () {
                     <span class="score-pill {% if recommendation.evidence_status == 'strong' %}score-high{% elif recommendation.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.65rem;">{{ recommendation.confidence_label }}</span>
                 </div>
                 <h3 style="margin-bottom: 1rem; font-size: 1.15rem;">{{ recommendation.title }}</h3>
-                <div style="background: rgba(255, 255, 255, 0.03); padding: 1rem; border-radius: 12px; font-size: 0.9rem; line-height: 1.6;">
+                <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; font-size: 0.9rem; line-height: 1.6;">
                     <strong style="display: block; opacity: 0.6; margin-bottom: 4px;">Resolution Recommendation:</strong>
                     {{ recommendation.recommended_fix }}
                 </div>
-                <div style="margin-top: 1rem; font-size: 0.82rem; color: #94a3b8; line-height: 1.5;">
+                <div style="margin-top: 1rem; font-size: 0.82rem; color: #64748b; line-height: 1.5;">
                     <strong style="display: block; color: var(--ink); margin-bottom: 0.25rem;">Evidence</strong>
                     {{ recommendation.evidence_summary }}{% if recommendation.evidence_score %} | Score {{ recommendation.evidence_score }}{% endif %}
                 </div>
-                <div style="margin-top: 1rem; font-size: 0.78rem; color: #94a3b8; line-height: 1.5;">
+                <div style="margin-top: 1rem; font-size: 0.78rem; color: #64748b; line-height: 1.5;">
                     <strong style="display: block; margin-bottom: 0.25rem; color: var(--ink);">Category Count</strong>
                     {{ recommendation.category_issue_count }} {{ recommendation.category|lower }} issue{{ recommendation.category_issue_count|pluralize }} detected in this audit.
                 </div>
                 {% if recommendation.technical_steps %}
-                <div style="margin-top: 1rem; font-size: 0.82rem; color: #94a3b8; line-height: 1.5;">
+                <div style="margin-top: 1rem; font-size: 0.82rem; color: #64748b; line-height: 1.5;">
                     <strong style="display: block; color: var(--ink); margin-bottom: 0.35rem;">Implementation Steps</strong>
                     {% for step in recommendation.technical_steps %}
                     <div>{{ forloop.counter }}. {{ step }}</div>
@@ -413,7 +413,7 @@ setTimeout(function () {
             <article class="advice-card severity-LOW">
                 <p class="eyebrow" style="font-size: 0.65rem; margin-bottom: 0.5rem; color: var(--signal);">Audit</p>
                 <h3 style="margin-bottom: 1rem; font-size: 1.15rem;">No secondary issue set available</h3>
-                <div style="background: rgba(255, 255, 255, 0.03); padding: 1rem; border-radius: 12px; font-size: 0.9rem; line-height: 1.6;">
+                <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; font-size: 0.9rem; line-height: 1.6;">
                     The primary recommendation list above already captures the current detected priorities.
                 </div>
             </article>
@@ -459,7 +459,7 @@ setTimeout(function () {
     </div>
 </section>
 
-<section class="packages-section" style="background: rgba(255,255,255,0.45); border-top: 1px solid rgba(255, 255, 255,0.05);">
+<section class="packages-section" style="background: #ffffff; border: 1px solid #e2e8f0; border-top: 1px solid rgba(255, 255, 255,0.05);">
     <div class="container">
         <div class="section-heading">
             <p class="eyebrow">Plans</p>
@@ -473,8 +473,8 @@ setTimeout(function () {
                     <h3 style="margin: 0;">{{ package.name }}</h3>
                     <span style="font-size: 1rem; font-weight: 900; color: var(--ink);">{{ package.price }}</span>
                 </div>
-                <p style="font-weight: 600; color: #94a3b8; margin-bottom: 1rem;">{{ package.label }}</p>
-                <div style="display: grid; gap: 0.5rem; font-size: 0.88rem; color: #94a3b8; margin-bottom: 1.25rem;">
+                <p style="font-weight: 600; color: #64748b; margin-bottom: 1rem;">{{ package.label }}</p>
+                <div style="display: grid; gap: 0.5rem; font-size: 0.88rem; color: #64748b; margin-bottom: 1.25rem;">
                     {% for feature in package.features %}
                     <div>{{ feature }}</div>
                     {% endfor %}
@@ -489,7 +489,7 @@ setTimeout(function () {
 </section>
 
 {% if custom_work_items %}
-<section class="packages-section" style="background: rgba(255,255,255,0.5); border-top: 1px solid rgba(255, 255, 255,0.05);">
+<section class="packages-section" style="background: #ffffff; border: 1px solid #e2e8f0; border-top: 1px solid rgba(255, 255, 255,0.05);">
     <div class="container">
         <div class="section-heading">
             <p class="eyebrow">Custom Work Exceptions</p>
@@ -501,7 +501,7 @@ setTimeout(function () {
             <article class="system-card" style="border-top: 4px solid #f8fafc;">
                 <h3>{{ item.title }}</h3>
                 <p style="font-weight: 600; color: var(--ink); margin-bottom: 0.75rem; line-height: 1.4;">{{ item.reason }}</p>
-                <div style="background: rgba(255, 255, 255, 0.04); padding: 1rem; border-radius: 12px; font-size: 0.85rem; line-height: 1.5;">
+                <div style="background: #ffffff; padding: 1rem; border-radius: 12px; font-size: 0.85rem; line-height: 1.5;">
                     <strong style="display: block; color: var(--ink); margin-bottom: 0.25rem;">Use Case</strong>
                     {{ item.impact }}
                 </div>
@@ -539,7 +539,7 @@ setTimeout(function () {
                     <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
                         <td style="padding: 1rem;">
                             <div class="url-wrap-mono" style="font-weight: 600; font-size: 0.95rem;">{{ page.url }}</div>
-                            <div style="font-size: 0.75rem; color: #94a3b8;">Title: {{ page.title|truncatechars:70|default:"Missing" }}</div>
+                            <div style="font-size: 0.75rem; color: #64748b;">Title: {{ page.title|truncatechars:70|default:"Missing" }}</div>
                         </td>
                         <td style="padding: 1rem; font-size: 0.9rem;">{{ page.response_time_ms }}ms</td>
                         <td style="padding: 1rem; font-size: 0.9rem;">{{ page.word_count|default:0 }}</td>

@@ -20,7 +20,7 @@
                 <article class="system-card" style="border-top: 4px solid var(--signal);">
                     <p class="eyebrow">Project State</p>
                     <h3>{{ project.stage|title }}</h3>
-                    <div style="display: grid; gap: 0.75rem; margin-top: 1rem; font-size: 0.92rem; color: #94a3b8;">
+                    <div style="display: grid; gap: 0.75rem; margin-top: 1rem; font-size: 0.92rem; color: #64748b;">
                         <div><strong style="color: var(--ink);">Website:</strong> {{ project.website }}</div>
                         <div><strong style="color: var(--ink);">Contact:</strong> {{ project.contact_email|default:"Not set" }}</div>
                         <div><strong style="color: var(--ink);">Latest Score:</strong> {{ project.latest_score }}</div>
@@ -31,7 +31,7 @@
                 <article class="system-card">
                     <p class="eyebrow">Latest Audit</p>
                     <h3>{{ latest_audit.normalized_domain }}</h3>
-                    <div style="display: grid; gap: 0.75rem; margin-top: 1rem; font-size: 0.92rem; color: #94a3b8;">
+                    <div style="display: grid; gap: 0.75rem; margin-top: 1rem; font-size: 0.92rem; color: #64748b;">
                         <div><strong style="color: var(--ink);">Status:</strong> {{ latest_audit.status|title }}</div>
                         <div><strong style="color: var(--ink);">Pages Crawled:</strong> {{ latest_audit.pages_crawled }}</div>
                         <div><strong style="color: var(--ink);">Completed:</strong> {{ latest_audit.completed_at|default:"Pending" }}</div>
@@ -49,12 +49,12 @@
                     <p class="eyebrow">Recommended Modules</p>
                     <div style="display: grid; gap: 0.75rem;">
                         {% for fit in product_modules %}
-                        <div style="padding: 0.9rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03);">
+                        <div style="padding: 0.9rem; border-radius: 14px; background: #f8fafc;">
                             <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 0.3rem;">
                                 <strong style="display: block; color: var(--ink);">{{ fit.title }}</strong>
                                 <span class="score-pill score-high" style="font-size: 0.65rem;">{{ fit.plan|default:"Plan" }}</span>
                             </div>
-                            <span style="font-size: 0.84rem; color: #94a3b8;">{{ fit.reason }}</span>
+                            <span style="font-size: 0.84rem; color: #64748b;">{{ fit.reason }}</span>
                         </div>
                         {% endfor %}
                     </div>
@@ -66,9 +66,9 @@
                     <p class="eyebrow">Custom Work</p>
                     <div style="display: grid; gap: 0.75rem;">
                         {% for item in custom_work_items %}
-                        <div style="padding: 0.9rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03);">
+                        <div style="padding: 0.9rem; border-radius: 14px; background: #f8fafc;">
                             <strong style="display: block; color: var(--ink); margin-bottom: 0.3rem;">{{ item.title }}</strong>
-                            <span style="font-size: 0.84rem; color: #94a3b8;">{{ item.reason }}</span>
+                            <span style="font-size: 0.84rem; color: #64748b;">{{ item.reason }}</span>
                         </div>
                         {% endfor %}
                     </div>
@@ -89,10 +89,10 @@
                                 <strong>{{ item.label }}</strong>
                                 <span style="font-size: 1.3rem; font-weight: 900; color: var(--ink);">{{ item.score }}</span>
                             </div>
-                            <p style="font-size: 0.75rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">
+                            <p style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">
                                 {{ item.status }} | {{ item.issues }} issue{{ item.issues|pluralize }}
                             </p>
-                            <p style="font-size: 0.88rem; color: #94a3b8; margin: 0;">{{ item.next_step }}</p>
+                            <p style="font-size: 0.88rem; color: #64748b; margin: 0;">{{ item.next_step }}</p>
                         </div>
                         {% empty %}
                         <div class="system-card">
@@ -120,11 +120,11 @@
                                     {{ recommendation.priority_score }}
                                 </span>
                             </div>
-                            <p style="margin: 0 0 0.75rem; color: #94a3b8;">{{ recommendation.description }}</p>
+                            <p style="margin: 0 0 0.75rem; color: #64748b;">{{ recommendation.description }}</p>
                             <div style="font-size: 0.88rem; color: var(--ink);"><strong>Fix:</strong> {{ recommendation.recommended_fix }}</div>
                         </div>
                         {% empty %}
-                        <div style="padding: 1rem 1.1rem; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 18px; color: #94a3b8;">
+                        <div style="padding: 1rem 1.1rem; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 18px; color: #64748b;">
                             No recommendation set is available for this project yet.
                         </div>
                         {% endfor %}
@@ -164,7 +164,7 @@
                                 </tr>
                                 {% empty %}
                                 <tr>
-                                    <td colspan="7" style="padding: 1rem; color: #94a3b8;">No audit history has been attached to this project.</td>
+                                    <td colspan="7" style="padding: 1rem; color: #64748b;">No audit history has been attached to this project.</td>
                                 </tr>
                                 {% endfor %}
                             </tbody>

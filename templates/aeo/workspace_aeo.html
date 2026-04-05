@@ -2,7 +2,7 @@
 
 {% block content %}
 <section class="hero" style="padding-bottom: 2rem;">
-    <div class="container">
+    <div class="container-fluid">
         <div class="section-heading">
             <p class="eyebrow">AEO Hub</p>
             <h1 style="max-width: none;">{% if project %}{{ project.name }}{% else %}Workspace AEO{% endif %}</h1>
@@ -17,7 +17,7 @@
 
 {% if latest_aeo_audit %}
 <nav class="page-jump-nav" aria-label="AEO sections">
-    <div class="container">
+    <div class="container-fluid">
         <div class="page-jump-links">
             <a class="page-jump-link" href="#aeo-scores"><i class="fas fa-chart-pie" aria-hidden="true"></i> Scores</a>
             <a class="page-jump-link" href="#aeo-recommendations"><i class="fas fa-lightbulb" aria-hidden="true"></i> Recommendations</a>
@@ -30,7 +30,7 @@
 {% endif %}
 
 <section class="packages-section" style="padding-top: 0;">
-    <div class="container page-stack">
+    <div class="container-fluid page-stack">
 
         <!-- State: No project -->
         {% if not project %}
@@ -39,7 +39,7 @@
                 <p class="eyebrow">Getting Started</p>
                 <h2 style="font-size: 2rem;">Create a workspace first</h2>
             </div>
-            <p style="color: #94a3b8; line-height: 1.6; margin-bottom: 1.5rem;">
+            <p style="color: #64748b; line-height: 1.6; margin-bottom: 1.5rem;">
                 AEO analysis uses the latest completed audit as its base. Create a workspace project, run an audit, then return here.
             </p>
             <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
@@ -55,7 +55,7 @@
                 <p class="eyebrow">Audit Required</p>
                 <h2 style="font-size: 2rem;">Run the first audit to unlock AEO</h2>
             </div>
-            <p style="color: #94a3b8; line-height: 1.6; margin-bottom: 1.5rem;">
+            <p style="color: #64748b; line-height: 1.6; margin-bottom: 1.5rem;">
                 AEO analysis is built from your site's crawl data, page structure, and content signals. It needs at least one completed audit before it can generate meaningful AI visibility scores.
             </p>
             <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
@@ -90,7 +90,7 @@
                         <span style="font-weight: 700;">{{ form.target_keyword.label }}</span>
                         {{ form.target_keyword }}
                         {% if form.target_keyword.help_text %}
-                        <span style="color: #94a3b8; font-size: 0.82rem;">{{ form.target_keyword.help_text }}</span>
+                        <span style="color: #64748b; font-size: 0.82rem;">{{ form.target_keyword.help_text }}</span>
                         {% endif %}
                         {% if form.target_keyword.errors %}
                         <span style="color: #991b1b; font-size: 0.82rem;">{{ form.target_keyword.errors|join:", " }}</span>
@@ -99,7 +99,7 @@
                     <button type="submit" class="button button-primary">Run AEO Analysis</button>
                 </form>
                 {% if latest_aeo_audit %}
-                <div style="margin-top: 1rem; padding: 0.85rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03); color: #94a3b8; font-size: 0.85rem; line-height: 1.5;">
+                <div style="margin-top: 1rem; padding: 0.85rem 1rem; border-radius: 14px; background: #f8fafc; color: #64748b; font-size: 0.85rem; line-height: 1.5;">
                     Last run: <strong style="color: #f8fafc;">{{ latest_aeo_audit.created_at|date:"M j, Y" }}</strong>
                     {% if aeo_payload.context.target_keyword %}
                     &nbsp;&middot;&nbsp; Keyword: <strong style="color: #f8fafc;">{{ aeo_payload.context.target_keyword }}</strong>
@@ -142,25 +142,25 @@
                         <p class="eyebrow">Visibility</p>
                         <h3>{{ latest_aeo_audit.visibility_score }}/100</h3>
                         <div class="progress-bar-shell"><div class="progress-bar-fill{% if latest_aeo_audit.visibility_score >= 70 %}-green{% endif %}" style="width: {{ latest_aeo_audit.visibility_score }}%;"></div></div>
-                        <p style="font-size: 0.82rem; color: #94a3b8; margin-top: 0.5rem;">AI answer readiness. Derived from AEO, content, and on-page scores averaged together.</p>
+                        <p style="font-size: 0.82rem; color: #64748b; margin-top: 0.5rem;">AI answer readiness. Derived from AEO, content, and on-page scores averaged together.</p>
                     </article>
                     <article class="system-card" style="border-top: 4px solid {% if latest_aeo_audit.entity_score >= 70 %}#16a34a{% elif latest_aeo_audit.entity_score >= 50 %}#ca8a04{% else %}#dc2626{% endif %};">
                         <p class="eyebrow">Entity Clarity</p>
                         <h3>{{ latest_aeo_audit.entity_score }}/100</h3>
                         <div class="progress-bar-shell"><div class="progress-bar-fill{% if latest_aeo_audit.entity_score >= 70 %}-green{% endif %}" style="width: {{ latest_aeo_audit.entity_score }}%;"></div></div>
-                        <p style="font-size: 0.82rem; color: #94a3b8; margin-top: 0.5rem;">Business identity, service, and location signals present in the site profile.</p>
+                        <p style="font-size: 0.82rem; color: #64748b; margin-top: 0.5rem;">Business identity, service, and location signals present in the site profile.</p>
                     </article>
                     <article class="system-card" style="border-top: 4px solid {% if latest_aeo_audit.structure_score >= 70 %}#16a34a{% elif latest_aeo_audit.structure_score >= 50 %}#ca8a04{% else %}#dc2626{% endif %};">
                         <p class="eyebrow">Structure</p>
                         <h3>{{ latest_aeo_audit.structure_score }}/100</h3>
                         <div class="progress-bar-shell"><div class="progress-bar-fill{% if latest_aeo_audit.structure_score >= 70 %}-green{% endif %}" style="width: {{ latest_aeo_audit.structure_score }}%;"></div></div>
-                        <p style="font-size: 0.82rem; color: #94a3b8; margin-top: 0.5rem;">Schema markup, FAQ coverage, H1 presence, and answer formatting signals from the crawl.</p>
+                        <p style="font-size: 0.82rem; color: #64748b; margin-top: 0.5rem;">Schema markup, FAQ coverage, H1 presence, and answer formatting signals from the crawl.</p>
                     </article>
                     <article class="system-card" style="border-top: 4px solid {% if latest_aeo_audit.completeness_score >= 70 %}#16a34a{% elif latest_aeo_audit.completeness_score >= 50 %}#ca8a04{% else %}#dc2626{% endif %};">
                         <p class="eyebrow">Completeness</p>
                         <h3>{{ latest_aeo_audit.completeness_score }}/100</h3>
                         <div class="progress-bar-shell"><div class="progress-bar-fill{% if latest_aeo_audit.completeness_score >= 70 %}-green{% endif %}" style="width: {{ latest_aeo_audit.completeness_score }}%;"></div></div>
-                        <p style="font-size: 0.82rem; color: #94a3b8; margin-top: 0.5rem;">Content depth, page coverage, meta-descriptions, and competitor context presence.</p>
+                        <p style="font-size: 0.82rem; color: #64748b; margin-top: 0.5rem;">Content depth, page coverage, meta-descriptions, and competitor context presence.</p>
                     </article>
                 </div>
             </article>
@@ -168,7 +168,7 @@
             <article class="system-card">
                 <p class="eyebrow">Latest Snapshot</p>
                 <h2 style="font-size: 2rem;">No AEO snapshot yet</h2>
-                <p style="color: #94a3b8; margin-bottom: 1rem; line-height: 1.6;">Run the form on the left to generate the first AEO analysis. It reuses the existing audit — no extra crawl needed.</p>
+                <p style="color: #64748b; margin-bottom: 1rem; line-height: 1.6;">Run the form on the left to generate the first AEO analysis. It reuses the existing audit — no extra crawl needed.</p>
             </article>
             {% endif %}
         </div>
@@ -190,25 +190,25 @@
                     </div>
                     {% endif %}
                     {% if aeo_payload.context.primary_service %}
-                    <div style="padding: 0.85rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03);">
+                    <div style="padding: 0.85rem 1rem; border-radius: 14px; background: #f8fafc;">
                         <div class="eyebrow" style="font-size: 0.65rem; margin-bottom: 0.2rem;">Primary Service</div>
                         <strong>{{ aeo_payload.context.primary_service }}</strong>
                     </div>
                     {% endif %}
                     {% if aeo_payload.context.business_type %}
-                    <div style="padding: 0.85rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03);">
+                    <div style="padding: 0.85rem 1rem; border-radius: 14px; background: #f8fafc;">
                         <div class="eyebrow" style="font-size: 0.65rem; margin-bottom: 0.2rem;">Business Type</div>
                         <strong>{{ aeo_payload.context.business_type }}</strong>
                     </div>
                     {% endif %}
                     {% if aeo_payload.context.location %}
-                    <div style="padding: 0.85rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03);">
+                    <div style="padding: 0.85rem 1rem; border-radius: 14px; background: #f8fafc;">
                         <div class="eyebrow" style="font-size: 0.65rem; margin-bottom: 0.2rem;">Location</div>
                         <strong>{{ aeo_payload.context.location }}</strong>
                     </div>
                     {% endif %}
                     {% if aeo_payload.context.target_goal %}
-                    <div style="padding: 0.85rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03);">
+                    <div style="padding: 0.85rem 1rem; border-radius: 14px; background: #f8fafc;">
                         <div class="eyebrow" style="font-size: 0.65rem; margin-bottom: 0.2rem;">Business Goal</div>
                         <strong>{{ aeo_payload.context.target_goal }}</strong>
                     </div>
@@ -229,26 +229,26 @@
                 </div>
                 {% if latest_aeo_audit.source_audit_run %}
                 <div style="display: grid; gap: 0.65rem;">
-                    <div style="padding: 0.85rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03);">
+                    <div style="padding: 0.85rem 1rem; border-radius: 14px; background: #f8fafc;">
                         <div class="eyebrow" style="font-size: 0.65rem; margin-bottom: 0.2rem;">Domain</div>
                         <strong>{{ latest_aeo_audit.source_audit_run.normalized_domain }}</strong>
                     </div>
-                    <div style="padding: 0.85rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03);">
+                    <div style="padding: 0.85rem 1rem; border-radius: 14px; background: #f8fafc;">
                         <div class="eyebrow" style="font-size: 0.65rem; margin-bottom: 0.2rem;">Pages Crawled</div>
                         <strong>{{ latest_aeo_audit.source_audit_run.pages_crawled }}</strong>
                     </div>
-                    <div style="padding: 0.85rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03);">
+                    <div style="padding: 0.85rem 1rem; border-radius: 14px; background: #f8fafc;">
                         <div class="eyebrow" style="font-size: 0.65rem; margin-bottom: 0.2rem;">Overall Audit Score</div>
                         <strong>{{ latest_aeo_audit.source_audit_run.overall_score }}/100</strong>
                     </div>
-                    <div style="padding: 0.85rem 1rem; border-radius: 14px; background: rgba(255, 255, 255, 0.03);">
+                    <div style="padding: 0.85rem 1rem; border-radius: 14px; background: #f8fafc;">
                         <div class="eyebrow" style="font-size: 0.65rem; margin-bottom: 0.2rem;">AEO Score (Audit Layer)</div>
                         <strong>{{ latest_aeo_audit.source_audit_run.aeo_score|default:"—" }}</strong>
                     </div>
                     <a href="{% url 'tools:audit-result' latest_aeo_audit.source_audit_run.pk %}" class="button button-secondary" style="margin-top: 0.35rem;">Open source audit report &rarr;</a>
                 </div>
                 {% else %}
-                <p style="color: #94a3b8;">Source audit not linked to this snapshot.</p>
+                <p style="color: #64748b;">Source audit not linked to this snapshot.</p>
                 {% endif %}
             </article>
         </div>
@@ -258,13 +258,13 @@
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                 <p class="eyebrow">AEO Recommendations</p>
                 <h2 style="font-size: 2rem;">What AI systems need from this site</h2>
-                <p style="color: #94a3b8; line-height: 1.6; max-width: 740px;">
+                <p style="color: #64748b; line-height: 1.6; max-width: 740px;">
                     Each item is clustered by root cause so you fix the structural gap, not just the symptom. Priority scores are calculated from content evidence and AI citation patterns.
                 </p>
             </div>
             <div style="display: grid; gap: 1.25rem;">
                 {% for recommendation in aeo_payload.recommendations %}
-                <div style="padding: 1.25rem 1.35rem; border-radius: 20px; background: rgba(255, 255, 255, 0.03); border-left: 4px solid {% if recommendation.priority_score >= 85 %}#dc2626{% elif recommendation.priority_score >= 70 %}#ea580c{% else %}#0ea5e9{% endif %};">
+                <div style="padding: 1.25rem 1.35rem; border-radius: 20px; background: #f8fafc; border-left: 4px solid {% if recommendation.priority_score >= 85 %}#dc2626{% elif recommendation.priority_score >= 70 %}#ea580c{% else %}#0ea5e9{% endif %};">
                     <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 0.85rem; flex-wrap: wrap;">
                         <div style="display: flex; gap: 0.45rem; flex-wrap: wrap; align-items: center;">
                             <span class="module-section-badge module-section-badge-aeo">AEO</span>
@@ -306,7 +306,7 @@
                         <div style="font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.5); margin-bottom: 0.4rem;">Action Steps</div>
                         <div style="display: grid; gap: 0.35rem;">
                         {% for step in recommendation.action_steps %}
-                        <div style="display: flex; gap: 0.65rem; align-items: flex-start; font-size: 0.85rem; color: #94a3b8; line-height: 1.5;">
+                        <div style="display: flex; gap: 0.65rem; align-items: flex-start; font-size: 0.85rem; color: #64748b; line-height: 1.5;">
                             <span style="min-width: 20px; height: 20px; border-radius: 999px; background: var(--signal); color: white; font-size: 0.62rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 0.1rem;">{{ forloop.counter }}</span>
                             {{ step }}
                         </div>
@@ -317,12 +317,12 @@
 
                     <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-top: 0.85rem; flex-wrap: wrap; gap: 0.75rem;">
                         {% if recommendation.expected_impact %}
-                        <div style="font-size: 0.8rem; color: #94a3b8; line-height: 1.5; max-width: 480px;">
+                        <div style="font-size: 0.8rem; color: #64748b; line-height: 1.5; max-width: 480px;">
                             <strong style="color: var(--ink);">Expected impact:</strong> {{ recommendation.expected_impact }}
                         </div>
                         {% endif %}
                         {% if recommendation.where_to_apply %}
-                        <div style="font-size: 0.75rem; color: #94a3b8; text-align: right;">
+                        <div style="font-size: 0.75rem; color: #64748b; text-align: right;">
                             {{ recommendation.where_to_apply|length }} page{{ recommendation.where_to_apply|length|pluralize }} affected
                         </div>
                         {% endif %}
@@ -332,19 +332,19 @@
                     <div style="margin-top: 0.65rem;">
                         <div style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: rgba(255, 255, 255, 0.5); margin-bottom: 0.35rem;">Where to Apply</div>
                         {% for url in recommendation.where_to_apply %}
-                        <div style="font-family: monospace; font-size: 0.74rem; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 0.15rem;">{{ url }}</div>
+                        <div style="font-family: monospace; font-size: 0.74rem; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 0.15rem;">{{ url }}</div>
                         {% endfor %}
                     </div>
                     {% endif %}
 
                     {% if recommendation.evidence_summary %}
-                    <div style="margin-top: 0.65rem; font-size: 0.78rem; color: #94a3b8; line-height: 1.5;">
+                    <div style="margin-top: 0.65rem; font-size: 0.78rem; color: #64748b; line-height: 1.5;">
                         <strong style="color: var(--ink);">Evidence:</strong> {{ recommendation.evidence_summary }}{% if recommendation.evidence_score %} &nbsp;&middot;&nbsp; Score {{ recommendation.evidence_score }}{% endif %}
                     </div>
                     {% endif %}
                 </div>
                 {% empty %}
-                <div style="padding: 1.25rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03); color: #94a3b8; line-height: 1.6;">
+                <div style="padding: 1.25rem; border-radius: 18px; background: #f8fafc; color: #64748b; line-height: 1.6;">
                     No recommendations were generated for this snapshot. This usually means all four AEO dimensions scored above threshold. Run a fresh analysis with a more specific target keyword to see detailed signals.
                 </div>
                 {% endfor %}
@@ -361,19 +361,19 @@
                 <table style="width: 100%; border-collapse: collapse; min-width: 600px;">
                     <thead>
                         <tr style="text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
-                            <th style="padding: 0.8rem 0.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8;">Date</th>
-                            <th style="padding: 0.8rem 0.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8;">Keyword</th>
-                            <th style="padding: 0.8rem 0.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8;">Visibility</th>
-                            <th style="padding: 0.8rem 0.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8;">Entity</th>
-                            <th style="padding: 0.8rem 0.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8;">Structure</th>
-                            <th style="padding: 0.8rem 0.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8;">Completeness</th>
+                            <th style="padding: 0.8rem 0.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b;">Date</th>
+                            <th style="padding: 0.8rem 0.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b;">Keyword</th>
+                            <th style="padding: 0.8rem 0.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b;">Visibility</th>
+                            <th style="padding: 0.8rem 0.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b;">Entity</th>
+                            <th style="padding: 0.8rem 0.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b;">Structure</th>
+                            <th style="padding: 0.8rem 0.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b;">Completeness</th>
                         </tr>
                     </thead>
                     <tbody>
                         {% for audit in aeo_history %}
                         <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
                             <td style="padding: 0.8rem 0.5rem; font-size: 0.88rem;">{{ audit.created_at|date:"M j, Y" }}</td>
-                            <td style="padding: 0.8rem 0.5rem; font-size: 0.85rem; color: #94a3b8;">{{ audit.target_keyword|default:"—" }}</td>
+                            <td style="padding: 0.8rem 0.5rem; font-size: 0.85rem; color: #64748b;">{{ audit.target_keyword|default:"—" }}</td>
                             <td style="padding: 0.8rem 0.5rem; font-weight: 700; color: {% if audit.visibility_score >= 70 %}#15803d{% elif audit.visibility_score >= 50 %}#a16207{% else %}#b91c1c{% endif %};">{{ audit.visibility_score }}</td>
                             <td style="padding: 0.8rem 0.5rem; font-weight: 700; color: {% if audit.entity_score >= 70 %}#15803d{% elif audit.entity_score >= 50 %}#a16207{% else %}#b91c1c{% endif %};">{{ audit.entity_score }}</td>
                             <td style="padding: 0.8rem 0.5rem; font-weight: 700; color: {% if audit.structure_score >= 70 %}#15803d{% elif audit.structure_score >= 50 %}#a16207{% else %}#b91c1c{% endif %};">{{ audit.structure_score }}</td>
@@ -381,7 +381,7 @@
                         </tr>
                         {% empty %}
                         <tr>
-                            <td colspan="6" style="padding: 0.8rem 0.5rem; color: #94a3b8;">Only the current snapshot is available.</td>
+                            <td colspan="6" style="padding: 0.8rem 0.5rem; color: #64748b;">Only the current snapshot is available.</td>
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -394,7 +394,7 @@
             <article class="system-card" style="border-top: 4px solid #f8fafc;">
                 <p class="eyebrow">Apply to SEO</p>
                 <h3>Entity gaps feed the SEO keyword strategy</h3>
-                <p style="font-size: 0.88rem; color: #94a3b8; line-height: 1.5; margin-bottom: 1rem;">
+                <p style="font-size: 0.88rem; color: #64748b; line-height: 1.5; margin-bottom: 1rem;">
                     AEO entity and answer recommendations often overlap with SEO content gaps. Use the SEO workspace to turn these gaps into keyword-backed campaign items.
                 </p>
                 <a class="button button-secondary" href="{% url 'seo:workspace-seo' %}">Open SEO workspace &rarr;</a>
@@ -402,7 +402,7 @@
             <article class="system-card" style="border-top: 4px solid #16a34a;">
                 <p class="eyebrow">Create Content</p>
                 <h3>Write answer-optimised content from AEO findings</h3>
-                <p style="font-size: 0.88rem; color: #94a3b8; line-height: 1.5; margin-bottom: 1rem;">
+                <p style="font-size: 0.88rem; color: #64748b; line-height: 1.5; margin-bottom: 1rem;">
                     Take the recommended fixes and generate structured answer-first content from the content workspace. Each draft is linked to its AEO signal.
                 </p>
                 <a class="button button-secondary" href="{% url 'content:workspace-content' %}">Open Content workspace &rarr;</a>

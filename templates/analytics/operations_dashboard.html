@@ -59,12 +59,12 @@
                 </div>
                 <div style="display: grid; gap: 0.75rem;">
                     {% for item in interest_mix %}
-                    <div style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.85rem 1rem; background: rgba(255, 255, 255, 0.03); border-radius: 14px;">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.85rem 1rem; background: #f8fafc; border-radius: 14px;">
                         <strong>{{ item.label }}</strong>
                         <span>{{ item.count }}</span>
                     </div>
                     {% empty %}
-                    <div style="padding: 0.85rem 1rem; background: rgba(255, 255, 255, 0.03); border-radius: 14px;">No inquiry demand recorded yet.</div>
+                    <div style="padding: 0.85rem 1rem; background: #f8fafc; border-radius: 14px;">No inquiry demand recorded yet.</div>
                     {% endfor %}
                 </div>
             </article>
@@ -78,9 +78,9 @@
                 </div>
                 <div style="display: grid; gap: 0.75rem;">
                     {% for item in weekly_activity %}
-                    <div style="padding: 0.8rem 1rem; background: rgba(255, 255, 255, 0.03); border-radius: 14px;">
+                    <div style="padding: 0.8rem 1rem; background: #f8fafc; border-radius: 14px;">
                         <strong style="display: block;">{{ item.label }}</strong>
-                        <span style="font-size: 0.9rem; color: #94a3b8;">Inquiries: {{ item.leads }} | Audits: {{ item.audits }}</span>
+                        <span style="font-size: 0.9rem; color: #64748b;">Inquiries: {{ item.leads }} | Audits: {{ item.audits }}</span>
                     </div>
                     {% endfor %}
                 </div>
@@ -93,12 +93,12 @@
                 </div>
                 <div style="display: grid; gap: 0.75rem;">
                     {% for item in geo_breakdown.countries %}
-                    <div style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.8rem 1rem; background: rgba(255, 255, 255, 0.03); border-radius: 14px;">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.8rem 1rem; background: #f8fafc; border-radius: 14px;">
                         <strong>{{ item.label }}</strong>
                         <span>{{ item.count }}</span>
                     </div>
                     {% empty %}
-                    <div style="padding: 0.8rem 1rem; background: rgba(255, 255, 255, 0.03); border-radius: 14px;">No country data captured yet.</div>
+                    <div style="padding: 0.8rem 1rem; background: #f8fafc; border-radius: 14px;">No country data captured yet.</div>
                     {% endfor %}
                 </div>
             </article>
@@ -110,12 +110,12 @@
                 </div>
                 <div style="display: grid; gap: 0.75rem;">
                     {% for item in geo_breakdown.regions %}
-                    <div style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.8rem 1rem; background: rgba(255, 255, 255, 0.03); border-radius: 14px;">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.8rem 1rem; background: #f8fafc; border-radius: 14px;">
                         <strong>{{ item.label }}</strong>
                         <span>{{ item.count }}</span>
                     </div>
                     {% empty %}
-                    <div style="padding: 0.8rem 1rem; background: rgba(255, 255, 255, 0.03); border-radius: 14px;">No region data captured yet.</div>
+                    <div style="padding: 0.8rem 1rem; background: #f8fafc; border-radius: 14px;">No region data captured yet.</div>
                     {% endfor %}
                 </div>
             </article>
@@ -129,7 +129,7 @@
                 </div>
                 <div style="display: grid; gap: 0.75rem;">
                     {% for item in stage_mix %}
-                    <div style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.85rem 1rem; background: rgba(255, 255, 255, 0.03); border-radius: 14px;">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.85rem 1rem; background: #f8fafc; border-radius: 14px;">
                         <strong>{{ item.label }}</strong>
                         <span>{{ item.count }}</span>
                     </div>

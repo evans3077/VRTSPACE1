@@ -42,10 +42,10 @@
             <a class="brand" href="/">VRT SPACE AGENCY</a>
             <div class="nav-actions">
                 <nav class="nav-links" aria-label="Primary">
-                    <a href="{% url 'core:services' %}">Services</a>
-                    <a href="{% url 'core:packages' %}">Packages</a>
-                    <a href="{% url 'core:home' %}#audit">Audit</a>
-                    <a href="{% url 'core:home' %}#method">Method</a>
+                    <a href="{% url 'core:home' %}#method">Platform</a>
+                    <a href="{% url 'core:services' %}">Solutions</a>
+                    <a href="{% url 'core:packages' %}">Pricing</a>
+                    <a href="{% url 'core:home' %}#audit">Free Audit</a>
                     {% if user.is_staff %}
                     <a href="{% url 'analytics:operations-dashboard' %}">Ops</a>
                     {% endif %}
