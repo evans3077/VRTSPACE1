@@ -69,6 +69,7 @@
             <div class="section-heading" style="text-align: left; margin-bottom: 1.5rem;">
                 <p class="eyebrow" style="color: var(--signal);">Command Center</p>
                 <h2 style="font-size: 2rem;">Priority Execution</h2>
+                <p class="section-text" style="max-width: 720px; margin-left: 0;">Continue the work from the current audit base. The workspace should always make the next operational move obvious.</p>
             </div>
             
             <div class="command-module-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
@@ -147,7 +148,7 @@
                         <div style="display: grid; gap: 0.35rem; color: #94a3b8; font-size: 0.84rem;">
                             <div>{{ item.normalized_domain }}</div>
                             {% if item.business_type or item.location %}
-                            <div>{{ item.business_type|default:"Unclassified" }}{% if item.location %} | {{ item.location }}{% endif %}</div>
+                            <div>{{ item.business_type_label|default:"Unclassified" }}{% if item.location %} | {{ item.location }}{% endif %}</div>
                             {% endif %}
                             {% if item.primary_service %}
                             <div>{{ item.primary_service }}</div>
@@ -310,7 +311,7 @@
 
         <!-- Cross-Module Command Card: Phase 11 Track A -->
         <div class="command-card" id="command-center">
-            <p class="eyebrow">Command Centre</p>
+            <p class="eyebrow">Command Center</p>
             <h2 style="color: white; margin: 0.4rem 0 0.2rem; font-size: clamp(1.5rem, 2.5vw, 2rem);">
                 {{ project.name }} &mdash; What to do next
             </h2>

@@ -1982,7 +1982,66 @@ class SEOCompetitorDiscoveryTests(TestCase):
         domains = [item["normalized_domain"] for item in discovery["competitors"]]
         self.assertIn("competitor-a.com", domains)
         self.assertIn("competitor-b.com", domains)
-        self.assertNotIn("competitor-c.com", domains)
+        self.assertIn("competitor-c.com", domains)
+
+    @override_settings(
+        SERP_DISCOVERY_ENABLED=True,
+        SERP_DISCOVERY_PROVIDER="serpapi",
+        SERPAPI_API_KEY="test-key",
+        SERP_DISCOVERY_QUERY_LIMIT=1,
+        SERP_DISCOVERY_RESULTS_PER_QUERY=5,
+    )
+    @patch("apps.seo.discovery.fetch_serpapi_results")
+    def test_discover_serp_competitors_keeps_local_peer_sites_for_local_service_queries(self, mocked_serp_fetch):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="ops@example.com",
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="local_service",
+            location="Machakos, Kenya",
+            target_goal="Increase qualified leads",
+            primary_service="events gardens",
+            target_audience="people looking for events gardens in machakos",
+        )
+        mocked_serp_fetch.return_value = {
+            "organic_results": [],
+            "local_results": {
+                "places": [
+                    {
+                        "position": 1,
+                        "title": "Zamar Springs Gardens",
+                        "website": "https://zamar-example.co.ke/",
+                        "description": "Venue for weddings and conferences in Machakos.",
+                        "address": "Machakos, Kenya",
+                        "type": "Event venue",
+                    },
+                    {
+                        "position": 2,
+                        "title": "Kai Safari Gardens",
+                        "website": "https://kai-example.co.ke/",
+                        "description": "Gardens and event space in Machakos.",
+                        "address": "Machakos, Kenya",
+                        "type": "Wedding venue",
+                    },
+                ]
+            },
+        }
+
+        discovery = discover_serp_competitors(project, profile)
+
+        domains = [item["normalized_domain"] for item in discovery["competitors"]]
+        self.assertIn("zamar-example.co.ke", domains)
+        self.assertIn("kai-example.co.ke", domains)
 
     @override_settings(
         SERP_DISCOVERY_ENABLED=True,

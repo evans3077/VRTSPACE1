@@ -246,6 +246,8 @@ Turn the current platform into a production-grade decision system that is clearl
   Shared evidence scoring now decorates audit, SEO, and AEO recommendations and filters weak SEO/AEO advice before it reaches the visible roadmap.
   Refinement:
   Hospitality and venue-style profiles now block OTAs, metasearch travel sites, and generic search surfaces from entering the benchmark set when they match the search query but not the actual service being sold.
+  Local competitor correction:
+  Sparse local-pack results with real websites are now scored as valid peer evidence instead of being dropped for failing organic-style snippet thresholds. The benchmark set can now admit real local operators when they match the service, geography, and route intent.
 - [ ] Add cross-module decision summaries
   Why:
   Audit, SEO, AEO, content, and backlink work now exist, but the user still has to join the dots across separate screens.

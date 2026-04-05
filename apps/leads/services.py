@@ -122,6 +122,7 @@ def get_workspace_projects(user):
 
 
 def summarize_workspace_project(project):
+    business_type_label = str(project.business_type or "").replace("_", " ").strip().title()
     focus_tags = ["Audit"]
     if getattr(project, "seo_snapshot_count", 0) or getattr(project, "seo_profile_id", None):
         focus_tags.append("SEO")
@@ -147,6 +148,7 @@ def summarize_workspace_project(project):
         "normalized_domain": project.normalized_domain,
         "location": project.location,
         "business_type": project.business_type,
+        "business_type_label": business_type_label,
         "primary_service": project.primary_service,
         "latest_score": project.latest_score,
         "stage": project.stage,

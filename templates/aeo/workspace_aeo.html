@@ -273,6 +273,7 @@
                             <span class="score-pill score-high" style="font-size: 0.68rem;">{{ recommendation.category }}</span>
                             {% endif %}
                             {% if recommendation.confidence_label %}
+                            <span class="score-pill score-medium" style="font-size: 0.68rem;">Evidence confidence</span>
                             <span class="score-pill {% if recommendation.evidence_status == 'strong' %}score-high{% elif recommendation.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.68rem;">{{ recommendation.confidence_label }}</span>
                             {% endif %}
                             {% if recommendation.cluster_size and recommendation.cluster_size > 1 %}

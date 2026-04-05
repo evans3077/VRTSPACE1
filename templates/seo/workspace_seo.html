@@ -270,14 +270,14 @@
                 <strong style="display: block; color: #f8fafc; margin-bottom: 0.35rem;">Discovery routing policy</strong>
                 <div>
                     Benchmark peers are selected for
-                    <strong style="color: #f8fafc;">{{ seo_discovery.routing_policy.business_type|default:"general" }}</strong>
+                    <strong style="color: #f8fafc;">{{ seo_context.industry_label|default:"General" }}</strong>
                     with service focus on
                     <strong style="color: #f8fafc;">{{ seo_discovery.routing_policy.primary_service|default:"the declared offer" }}</strong>.
                 </div>
-                {% if seo_discovery.routing_policy.source_families %}
+                {% if seo_discovery.routing_policy.routes %}
                 <div style="margin-top: 0.65rem;" class="seo-inline-tags">
-                    {% for family in seo_discovery.routing_policy.source_families %}
-                    <span class="seo-inline-tag">{{ family }}</span>
+                    {% for route in seo_discovery.routing_policy.routes %}
+                    <span class="seo-inline-tag">{{ route.family_label }}</span>
                     {% endfor %}
                 </div>
                 {% endif %}

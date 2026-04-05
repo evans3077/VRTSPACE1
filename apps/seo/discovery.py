@@ -620,6 +620,28 @@ def _classify_result_bucket(*, domain, haystack, profile):
     return "benchmark_competitor", "peer-site"
 
 
+def _result_haystack(result, query=""):
+    result_dict = result if isinstance(result, dict) else {}
+    extra_bits = []
+    for key in ("type", "category", "address", "phone", "website", "place_id"):
+        value = result_dict.get(key)
+        if value:
+            extra_bits.append(str(value))
+    for key in ("types", "extensions"):
+        values = result_dict.get(key)
+        if isinstance(values, list):
+            extra_bits.extend(str(value) for value in values if value)
+    return " ".join(
+        [
+            str(result_dict.get("title", "") or ""),
+            str(result_dict.get("snippet", "") or result_dict.get("description", "") or ""),
+            str(_candidate_link(result) or ""),
+            str(query or ""),
+            *extra_bits,
+        ]
+    ).replace("/", " ").replace("-", " ").replace("_", " ").lower()
+
+
 def _domain_root_url(link):
     parsed = urlparse(link)
     if not parsed.scheme or not parsed.netloc:
@@ -627,7 +649,15 @@ def _domain_root_url(link):
     return normalize_url(f"{parsed.scheme}://{parsed.netloc}/")
 
 
-def _parse_result(result, *, query, own_domain, source_family="", target_bucket="benchmark_competitor"):
+def _parse_result(
+    result,
+    *,
+    query,
+    own_domain,
+    source_family="",
+    target_bucket="benchmark_competitor",
+    result_kind="organic",
+):
     link = _candidate_link(result)
     if not link:
         return None
@@ -641,13 +671,7 @@ def _parse_result(result, *, query, own_domain, source_family="", target_bucket=
     except (TypeError, ValueError):
         position = 99
     result_dict = result if isinstance(result, dict) else {}
-    haystack = " ".join(
-        [
-            str(result_dict.get("title", "") or ""),
-            str(result_dict.get("snippet", "") or result_dict.get("description", "") or ""),
-            str(link or ""),
-        ]
-    ).replace("/", " ").replace("-", " ").replace("_", " ").lower()
+    haystack = _result_haystack(result, query=query if result_kind == "local" else "")
     bucket, bucket_reason = _classify_result_bucket(domain=domain, haystack=haystack, profile=None)
     if bucket == "benchmark_competitor" and target_bucket != "benchmark_competitor":
         bucket = target_bucket
@@ -663,6 +687,7 @@ def _parse_result(result, *, query, own_domain, source_family="", target_bucket=
         "bucket": bucket,
         "bucket_reason": bucket_reason,
         "source_family": source_family or "benchmark_competitors",
+        "result_kind": result_kind,
     }
 
 
@@ -696,6 +721,7 @@ def _aggregate_candidates(raw_candidates):
             "result_urls": [],
             "relevance_scores": [],
             "match_signals": [],
+            "result_kinds": [],
         }
     )
     for item in raw_candidates:
@@ -717,6 +743,8 @@ def _aggregate_candidates(raw_candidates):
             entry["result_urls"].append(item["result_url"])
         if item.get("relevance_score") is not None:
             entry["relevance_scores"].append(item["relevance_score"])
+        if item.get("result_kind") and item["result_kind"] not in entry["result_kinds"]:
+            entry["result_kinds"].append(item["result_kind"])
         for signal in item.get("match_signals", []):
             if signal not in entry["match_signals"]:
                 entry["match_signals"].append(signal)
@@ -751,6 +779,7 @@ def _aggregate_candidates(raw_candidates):
                 "discovery_score": discovery_score,
                 "average_relevance": average_relevance,
                 "match_signals": item["match_signals"][:8],
+                "result_kinds": item["result_kinds"][:2],
             }
         )
 
@@ -773,6 +802,20 @@ def _aggregate_candidates(raw_candidates):
                     or signal.startswith("industry:")
                     or signal.startswith("primary_service:")
                     or signal.startswith("location:")
+                    for signal in item["match_signals"]
+                )
+            )
+            or (
+                "local" in item["result_kinds"]
+                and item["average_relevance"] >= 3
+                and "non_competitor_host" not in item["match_signals"]
+                and "foreign_location_conflict" not in item["match_signals"]
+                and any(
+                    signal == "local_pack_presence"
+                    or signal == "local_query_alignment"
+                    or signal.startswith("service:")
+                    or signal.startswith("industry:")
+                    or signal.startswith("primary_service:")
                     for signal in item["match_signals"]
                 )
             )
@@ -844,18 +887,12 @@ def fetch_search_results(query, location="", runtime_state=None):
     }
 
 
-def _relevance_signals(result, profile):
+def _relevance_signals(result, profile, *, query="", result_kind="organic"):
     result_dict = result if isinstance(result, dict) else {}
-    haystack = " ".join(
-        [
-            str(result_dict.get("title", "") or ""),
-            str(result_dict.get("snippet", "") or ""),
-            str(result_dict.get("description", "") or ""),
-            str(_candidate_link(result) or ""),
-        ]
-    ).replace("/", " ").replace("-", " ").replace("_", " ").lower()
+    haystack = _result_haystack(result, query=query if result_kind == "local" else "")
     signals = []
     score = 0
+    local_pack = result_kind == "local"
     for term in _profile_service_terms(profile)[:8]:
         if term in haystack:
             score += 4 if " " in term else 2
@@ -878,6 +915,12 @@ def _relevance_signals(result, profile):
             primary_matches += 1
             score += 4
             signals.append(f"primary_service:{token}")
+    if local_pack:
+        score += 3
+        signals.append("local_pack_presence")
+        if any(token in haystack for token in _tokenize_terms(query)):
+            score += 2
+            signals.append("local_query_alignment")
     if any(hint in haystack for hint in GENERIC_RESULT_HINTS):
         score -= 4
         signals.append("generic_noise")
@@ -893,10 +936,10 @@ def _relevance_signals(result, profile):
     if profile.business_type in INDUSTRY_MUST_HAVE_TERMS and not any(
         hint in haystack for hint in INDUSTRY_MUST_HAVE_TERMS[profile.business_type]
     ):
-        score -= 5
+        score -= 2 if local_pack else 5
         signals.append("missing_industry_match")
     if _primary_service_tokens(profile) and primary_matches == 0:
-        score -= 5
+        score -= 2 if local_pack else 5
         signals.append("missing_primary_service_alignment")
     if (
         (not result_dict.get("title") and not result_dict.get("snippet") and not result_dict.get("description"))
@@ -959,9 +1002,15 @@ def discover_serp_competitors(project, profile):
                         own_domain=own_domain,
                         source_family=route["family_key"],
                         target_bucket=route["target_bucket"],
+                        result_kind="organic",
                     )
                     if parsed:
-                        relevance_score, match_signals = _relevance_signals(result, profile)
+                        relevance_score, match_signals = _relevance_signals(
+                            result,
+                            profile,
+                            query=query,
+                            result_kind="organic",
+                        )
                         parsed["relevance_score"] = relevance_score
                         parsed["match_signals"] = match_signals
                         raw_candidates.append(parsed)
@@ -972,9 +1021,15 @@ def discover_serp_competitors(project, profile):
                         own_domain=own_domain,
                         source_family=route["family_key"],
                         target_bucket=route["target_bucket"],
+                        result_kind="local",
                     )
                     if parsed:
-                        relevance_score, match_signals = _relevance_signals(result, profile)
+                        relevance_score, match_signals = _relevance_signals(
+                            result,
+                            profile,
+                            query=query,
+                            result_kind="local",
+                        )
                         parsed["relevance_score"] = relevance_score
                         parsed["match_signals"] = match_signals
                         raw_candidates.append(parsed)
