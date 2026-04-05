@@ -1,23 +1,12 @@
 from django import forms
 
+from apps.leads.intake_options import BUSINESS_TYPE_CHOICES
+
 from .models import SEOProjectProfile
 
 
-BUSINESS_TYPE_CHOICES = (
-    ("", "Auto-detect from website"),
-    ("automotive", "Automotive"),
-    ("agency", "Agency / Professional Services"),
-    ("saas", "SaaS"),
-    ("hotel", "Hotel / Hospitality"),
-    ("ecommerce", "Ecommerce"),
-    ("healthcare", "Healthcare"),
-    ("real_estate", "Real Estate"),
-    ("local_service", "Local Service Business"),
-)
-
-
 class SEOProjectProfileForm(forms.ModelForm):
-    business_type = forms.ChoiceField(choices=BUSINESS_TYPE_CHOICES, required=False)
+    business_type = forms.ChoiceField(choices=(("", "Auto-detect from website"),) + BUSINESS_TYPE_CHOICES[1:], required=False)
     competitor_urls = forms.CharField(
         required=False,
         widget=forms.Textarea(

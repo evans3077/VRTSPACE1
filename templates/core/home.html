@@ -74,10 +74,41 @@
                             {{ audit_form.business_type.errors }}
                         </label>
                         <label>
-                            Location
-                            {{ audit_form.location }}
-                            {{ audit_form.location.errors }}
+                            Specific niche
+                            {{ audit_form.business_subtype }}
+                            {{ audit_form.business_subtype.errors }}
                         </label>
+                        <label>
+                            Target audience
+                            {{ audit_form.target_audience }}
+                            {{ audit_form.target_audience.errors }}
+                        </label>
+                        <label>
+                            Market type
+                            {{ audit_form.location_mode }}
+                            {{ audit_form.location_mode.errors }}
+                        </label>
+                        {{ audit_form.location }}
+                        <div id="audit-location-fields" style="display: grid; gap: 0.85rem; padding: 0.85rem; border: 1px solid rgba(148, 163, 184, 0.22); border-radius: 1rem; background: rgba(15, 23, 42, 0.28);">
+                            <label>
+                                Country
+                                {{ audit_form.location_country }}
+                                {{ audit_form.location_country.errors }}
+                            </label>
+                            <label>
+                                Market level
+                                {{ audit_form.location_scope }}
+                                {{ audit_form.location_scope.errors }}
+                            </label>
+                            <label>
+                                <span id="audit-location-area-label">Location name</span>
+                                {{ audit_form.location_area }}
+                                {{ audit_form.location_area.errors }}
+                            </label>
+                            <p class="form-note" style="margin: 0;">
+                                Choose the country first, then enter the state, county, province, region, or city inside that country. For SaaS or global-service businesses, switch this to Worldwide.
+                            </p>
+                        </div>
                         <label>
                             Target goal
                             {{ audit_form.target_goal }}
@@ -122,6 +153,43 @@
         </div>
     </div>
 </section>
+{{ audit_form.country_ui_metadata|json_script:"audit-country-ui" }}
+<script>
+(() => {
+    const modeField = document.getElementById("id_location_mode");
+    const countryField = document.getElementById("id_location_country");
+    const scopeField = document.getElementById("id_location_scope");
+    const areaField = document.getElementById("id_location_area");
+    const targetedPanel = document.getElementById("audit-location-fields");
+    const areaLabel = document.getElementById("audit-location-area-label");
+    const metadataNode = document.getElementById("audit-country-ui");
+    if (!modeField || !countryField || !scopeField || !areaField || !targetedPanel || !areaLabel || !metadataNode) {
+        return;
+    }
+    const countryMeta = JSON.parse(metadataNode.textContent || "{}");
+    const defaultScopeLabel = (countryCode) => {
+        const item = countryMeta[countryCode] || {};
+        return item.admin_label || "Region / province";
+    };
+    const scopeText = () => {
+        const selected = scopeField.options[scopeField.selectedIndex];
+        return selected && selected.value ? selected.text : defaultScopeLabel(countryField.value);
+    };
+    const sync = () => {
+        const worldwide = modeField.value === "worldwide";
+        targetedPanel.style.display = worldwide ? "none" : "grid";
+        countryField.disabled = worldwide;
+        scopeField.disabled = worldwide;
+        areaField.disabled = worldwide;
+        areaLabel.textContent = worldwide ? "Location name" : `${scopeText()} name`;
+        areaField.placeholder = worldwide ? "" : `Enter the ${scopeText().toLowerCase()} inside the selected country`;
+    };
+    modeField.addEventListener("change", sync);
+    countryField.addEventListener("change", sync);
+    scopeField.addEventListener("change", sync);
+    sync();
+})();
+</script>
 
 <section class="insight-section">
     <div class="container section-heading">

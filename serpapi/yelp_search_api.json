@@ -1,0 +1,1235 @@
+{
+"search_metadata":
+{
+"id":
+"6959275f8c24bd247f1be7db",
+"status":
+"Success",
+"json_endpoint":
+"https://serpapi.com/searches/4b2571f4ba3a510d/6959275f8c24bd247f1be7db.json",
+"created_at":
+"2026-01-03 14:27:43 UTC",
+"processed_at":
+"2026-01-03 14:27:43 UTC",
+"yelp_url":
+"https://www.yelp.com/search?find_desc=Coffee&find_loc=Austin%2C+Texas%2C+United+States",
+"raw_html_file":
+"https://serpapi.com/searches/4b2571f4ba3a510d/6959275f8c24bd247f1be7db.html",
+"total_time_taken":
+0.85
+},
+"search_parameters":
+{
+"engine":
+"yelp",
+"find_desc":
+"Coffee",
+"find_loc":
+"Austin, Texas, United States"
+},
+"filters":
+{
+"category":
+[
+{
+"text":
+"Gelato",
+"value":
+"gelato"
+},
+{
+"text":
+"Shaved Ice",
+"value":
+"shavedice"
+},
+{
+"text":
+"Cafeteria",
+"value":
+"cafeteria"
+},
+{
+"text":
+"Kombucha",
+"value":
+"kombucha"
+},
+{
+"text":
+"Cheese Shops",
+"value":
+"cheese"
+},
+{
+"text":
+"Tea Rooms",
+"value":
+"tea"
+},
+{
+"text":
+"Gift Shops",
+"value":
+"giftshops"
+},
+{
+"text":
+"Organic Stores",
+"value":
+"organic_stores"
+},
+{
+"text":
+"Breakfast & Brunch",
+"value":
+"breakfast_brunch"
+},
+{
+"text":
+"Food Trucks",
+"value":
+"foodtrucks"
+},
+{
+"text":
+"Beverage Store",
+"value":
+"beverage_stores"
+},
+{
+"text":
+"Chocolatiers & Shops",
+"value":
+"chocolate"
+},
+{
+"text":
+"Acai Bowls",
+"value":
+"acaibowls"
+},
+{
+"text":
+"Australian",
+"value":
+"australian"
+},
+{
+"text":
+"Empanadas",
+"value":
+"empanadas"
+},
+{
+"text":
+"Donuts",
+"value":
+"donuts"
+},
+{
+"text":
+"Bagels",
+"value":
+"bagels"
+},
+{
+"text":
+"Vegan",
+"value":
+"vegan"
+},
+{
+"text":
+"Food",
+"value":
+"food"
+},
+{
+"text":
+"Farmers Market",
+"value":
+"farmersmarket"
+},
+{
+"text":
+"Juice Bars & Smoothies",
+"value":
+"juicebars"
+},
+{
+"text":
+"Desserts",
+"value":
+"desserts"
+},
+{
+"text":
+"Patisserie/Cake Shop",
+"value":
+"cakeshop"
+},
+{
+"text":
+"Creperies",
+"value":
+"creperies"
+},
+{
+"text":
+"Specialty Food",
+"value":
+"gourmet"
+},
+{
+"text":
+"Tasting Classes",
+"value":
+"tastingclasses"
+},
+{
+"text":
+"Waffles",
+"value":
+"waffles"
+},
+{
+"text":
+"Sandwiches",
+"value":
+"sandwiches"
+},
+{
+"text":
+"Coffee Roasteries",
+"value":
+"coffeeroasteries"
+},
+{
+"text":
+"Bubble Tea",
+"value":
+"bubbletea"
+},
+{
+"text":
+"Bookstores",
+"value":
+"bookstores"
+},
+{
+"text":
+"Diners",
+"value":
+"diners"
+},
+{
+"text":
+"Pancakes",
+"value":
+"pancakes"
+},
+{
+"text":
+"Cupcakes",
+"value":
+"cupcakes"
+},
+{
+"text":
+"Ice Cream & Frozen Yogurt",
+"value":
+"icecream"
+},
+{
+"text":
+"Scandinavian",
+"value":
+"scandinavian"
+},
+{
+"text":
+"Bakeries",
+"value":
+"bakeries"
+},
+{
+"text":
+"Venezuelan",
+"value":
+"venezuelan"
+},
+{
+"text":
+"Candy Stores",
+"value":
+"candy"
+},
+{
+"text":
+"Books, Mags, Music & Video",
+"value":
+"media"
+},
+{
+"text":
+"Cafes",
+"value":
+"cafes"
+},
+{
+"text":
+"Water Stores",
+"value":
+"waterstores"
+},
+{
+"text":
+"Themed Cafes",
+"value":
+"themedcafes"
+},
+{
+"text":
+"Coffee & Tea",
+"value":
+"coffee"
+},
+{
+"text":
+"Caterers",
+"value":
+"catering"
+},
+{
+"text":
+"Herbs & Spices",
+"value":
+"herbsandspices"
+}
+],
+"price":
+[
+{
+"text":
+"$",
+"value":
+"RestaurantsPriceRange2.1"
+},
+{
+"text":
+"$$",
+"value":
+"RestaurantsPriceRange2.2"
+},
+{
+"text":
+"$$$",
+"value":
+"RestaurantsPriceRange2.3"
+},
+{
+"text":
+"$$$$",
+"value":
+"RestaurantsPriceRange2.4"
+}
+],
+"distance":
+[
+{
+"text":
+"Biking (2 mi.)",
+"value":
+"g:-97.78329849243164,30.282936335784672,-97.73214340209961,30.327397491366572"
+},
+{
+"text":
+"Bird's-eye View",
+"value":
+"g:-97.86003112792969,30.21635515266855,-97.65541076660156,30.394199462058317"
+},
+{
+"text":
+"Within 4 blocks",
+"value":
+"g:-97.76091814041138,30.302372046570763,-97.75452375411987,30.307929692159156"
+},
+{
+"text":
+"Walking (1 mi.)",
+"value":
+"g:-97.77050971984863,30.294053515036044,-97.74493217468262,30.316284093102404"
+},
+{
+"text":
+"Driving (5 mi.)",
+"value":
+"g:-97.80887603759766,30.260549927069945,-97.7065658569336,30.349472368261814"
+}
+]
+},
+"ads_results":
+[
+{
+"place_ids":
+[
+"hug4QV-cEB6grXlPY2SBCA",
+"cocos-cafe-austin"
+],
+"title":
+"CoCo’s Cafe",
+"link":
+"https://www.yelp.com/adredir?ad_business_id=hug4QV-cEB6grXlPY2SBCA&amp;campaign_id=103515798&amp;click_origin=search_results&amp;placement=vertical_0&amp;placement_slot=0&amp;redirect_url=https%3A%2F%2Fwww.yelp.com%2Fbiz%2Fcocos-cafe-austin&amp;request_id=f67458b90b9d9459&amp;signature=6207d9fd58aeb56a3d5183805a2dcf1e44df9bd909a8ed0b21536419a7393a4b&amp;slot=0",
+"reviews_link":
+"https://serpapi.com/search.json?engine=yelp_reviews&num=49&place_id=hug4QV-cEB6grXlPY2SBCA&start=0",
+"categories":
+[
+{
+"title":
+"Bubble Tea",
+"link":
+"https://www.yelp.com/search?find_desc=Bubble+Tea&amp;find_loc=Austin%2C+TX"
+},
+{
+"title":
+"Taiwanese",
+"link":
+"https://www.yelp.com/search?find_desc=Taiwanese&amp;find_loc=Austin%2C+TX"
+},
+{
+"title":
+"Coffee & Tea",
+"link":
+"https://www.yelp.com/search?find_desc=Coffee+%26+Tea&amp;find_loc=Austin%2C+TX"
+}
+],
+"price":
+"$$",
+"rating":
+3.9,
+"reviews":
+633,
+"highlights":
+[
+"On their website: <b>latte</b>"
+],
+"phone":
+"(512) 833-6588",
+"snippet":
+"Coco's is one of the most reliable and consistent places on my will-always-come-back list of restaurants. I started with the Coco's on campus, but now…",
+"button":
+{
+"text":
+"Order",
+"link":
+"https://www.yelp.com/adredir?ad_business_id=hug4QV-cEB6grXlPY2SBCA&amp;click_origin=search_results_platform&amp;placement=vertical_0&amp;placement_slot=0&amp;redirect_url=https%3A%2F%2Fwww.yelp.com%2Fbiz%2Fcocos-cafe-austin%3Fshow_platform_modal%3DTrue&amp;request_id=f67458b90b9d9459&amp;signature=3ad7943f89f3a2040f43a053cd71dcb89c52f7c78ef3672038816241d8daf71f&amp;slot=0"
+},
+"thumbnail":
+"https://s3-media0.fl.yelpcdn.com/bphoto/kDjI23eFLv6JlwPrsdtIIg/348s.jpg"
+}
+],
+"organic_results":
+[
+{
+"position":
+1,
+"place_ids":
+[
+"oiJ7QuhhpsEpe9zFTZF0bA",
+"desnudo-coffee-austin"
+],
+"title":
+"Desnudo Coffee",
+"link":
+"https://www.yelp.com/biz/desnudo-coffee-austin?osq=Coffee",
+"reviews_link":
+"https://serpapi.com/search.json?engine=yelp_reviews&num=49&place_id=oiJ7QuhhpsEpe9zFTZF0bA&start=0",
+"categories":
+[
+{
+"title":
+"Coffee Roasteries",
+"link":
+"https://www.yelp.com/search?find_desc=Coffee+Roasteries&amp;find_loc=Austin%2C+TX"
+}
+],
+"price":
+"$$",
+"rating":
+4.7,
+"reviews":
+314,
+"neighborhoods":
+"East Austin",
+"phone":
+"(424) 400-1857",
+"snippet":
+"Great coffee, but I wish I could've ordered ahead (they turn it off when it gets busy, but staff...",
+"thumbnail":
+"https://s3-media0.fl.yelpcdn.com/bphoto/DhaJI0qk_IEzyR175rK-oA/348s.jpg"
+},
+{
+"position":
+2,
+"place_ids":
+[
+"uyYG-z7yiSPhXmkauzb43Q",
+"flora-coffee-austin"
+],
+"title":
+"Flora Coffee",
+"link":
+"https://www.yelp.com/biz/flora-coffee-austin?osq=Coffee",
+"reviews_link":
+"https://serpapi.com/search.json?engine=yelp_reviews&num=49&place_id=uyYG-z7yiSPhXmkauzb43Q&start=0",
+"categories":
+[
+{
+"title":
+"Coffee & Tea",
+"link":
+"https://www.yelp.com/search?find_desc=Coffee+%26+Tea&amp;find_loc=Austin%2C+TX"
+},
+{
+"title":
+"Kombucha",
+"link":
+"https://www.yelp.com/search?find_desc=Kombucha&amp;find_loc=Austin%2C+TX"
+}
+],
+"rating":
+4.8,
+"reviews":
+46,
+"snippet":
+"This place is beautiful, they also do yoga and have the most amazing green juice, great coffee...",
+"thumbnail":
+"https://s3-media0.fl.yelpcdn.com/bphoto/8uqlBz0rSLl3f4PzwHCiFw/348s.jpg"
+},
+{
+"position":
+3,
+"place_ids":
+[
+"iKjyR3h75uII0gm9-wY5UQ",
+"daydreamer-coffee-austin-2"
+],
+"title":
+"Daydreamer Coffee",
+"link":
+"https://www.yelp.com/biz/daydreamer-coffee-austin-2?osq=Coffee",
+"reviews_link":
+"https://serpapi.com/search.json?engine=yelp_reviews&num=49&place_id=iKjyR3h75uII0gm9-wY5UQ&start=0",
+"categories":
+[
+{
+"title":
+"Coffee & Tea",
+"link":
+"https://www.yelp.com/search?find_desc=Coffee+%26+Tea&amp;find_loc=Austin%2C+TX"
+}
+],
+"rating":
+4.8,
+"reviews":
+6,
+"snippet":
+"Very nice to find this new coffee shop on Rainey. The staff was super friendly, to coffee was great...",
+"thumbnail":
+"https://s3-media0.fl.yelpcdn.com/bphoto/wXv6iE17S3KIBEjtPHauXQ/348s.jpg"
+},
+{
+"position":
+4,
+"place_ids":
+[
+"coNV-mKJqjtqmm5RBrAwMA",
+"mazúr-coffee-austin"
+],
+"title":
+"Mazúr Coffee",
+"link":
+"https://www.yelp.com/biz/maz%C3%BAr-coffee-austin?osq=Coffee",
+"reviews_link":
+"https://serpapi.com/search.json?engine=yelp_reviews&num=49&place_id=coNV-mKJqjtqmm5RBrAwMA&start=0",
+"categories":
+[
+{
+"title":
+"Coffee & Tea",
+"link":
+"https://www.yelp.com/search?find_desc=Coffee+%26+Tea&amp;find_loc=Austin%2C+TX"
+},
+{
+"title":
+"Desserts",
+"link":
+"https://www.yelp.com/search?find_desc=Desserts&amp;find_loc=Austin%2C+TX"
+}
+],
+"rating":
+4.6,
+"reviews":
+9,
+"neighborhoods":
+"Rosedale",
+"phone":
+"(512) 956-7992",
+"snippet":
+"Very cute and cozy coffee shop! Easy parking and the coffee entrance is in the back.",
+"thumbnail":
+"https://s3-media0.fl.yelpcdn.com/bphoto/VoUclP0yEgO75q3O_l5vOw/348s.jpg"
+},
+{
+"position":
+5,
+"place_ids":
+[
+"88BXCKA2OKI1QkB4sbR9Qg",
+"noble-joe-coffee-austin-4"
+],
+"title":
+"Noble Joe Coffee",
+"link":
+"https://www.yelp.com/biz/noble-joe-coffee-austin-4?osq=Coffee",
+"reviews_link":
+"https://serpapi.com/search.json?engine=yelp_reviews&num=49&place_id=88BXCKA2OKI1QkB4sbR9Qg&start=0",
+"categories":
+[
+{
+"title":
+"Coffee & Tea",
+"link":
+"https://www.yelp.com/search?find_desc=Coffee+%26+Tea&amp;find_loc=Austin%2C+TX"
+},
+{
+"title":
+"Food Trucks",
+"link":
+"https://www.yelp.com/search?find_desc=Food+Trucks&amp;find_loc=Austin%2C+TX"
+}
+],
+"price":
+"$$",
+"rating":
+4.8,
+"reviews":
+85,
+"snippet":
+"You'll feel like old friends at Noble Joe. They have great coffee, lattes, and tacos and even better...",
+"thumbnail":
+"https://s3-media0.fl.yelpcdn.com/bphoto/JUQkfS0dy0MZe1JSXniR4w/348s.jpg"
+},
+{
+"position":
+6,
+"place_ids":
+[
+"c7aWDnjuBl3l_vraqKFjHA",
+"terrible-love-austin"
+],
+"title":
+"Terrible Love",
+"link":
+"https://www.yelp.com/biz/terrible-love-austin?osq=Coffee",
+"reviews_link":
+"https://serpapi.com/search.json?engine=yelp_reviews&num=49&place_id=c7aWDnjuBl3l_vraqKFjHA&start=0",
+"categories":
+[
+{
+"title":
+"Coffee & Tea",
+"link":
+"https://www.yelp.com/search?find_desc=Coffee+%26+Tea&amp;find_loc=Austin%2C+TX"
+},
+{
+"title":
+"Breakfast & Brunch",
+"link":
+"https://www.yelp.com/search?find_desc=Breakfast+%26+Brunch&amp;find_loc=Austin%2C+TX"
+},
+{
+"title":
+"Food Trucks",
+"link":
+"https://www.yelp.com/search?find_desc=Food+Trucks&amp;find_loc=Austin%2C+TX"
+}
+],
+"price":
+"$",
+"rating":
+4.7,
+"reviews":
+80,
+"neighborhoods":
+"Hyde Park",
+"snippet":
+"Great coffee and great space to hang out! They whipped out an amazing iced latte.",
+"thumbnail":
+"https://s3-media0.fl.yelpcdn.com/bphoto/g73eqcPDv-0c8-TBjIJd4w/348s.jpg"
+},
+{
+"position":
+7,
+"place_ids":
+[
+"YAnvqg699tciMYsqQfqMjw",
+"andersons-coffee-company-austin"
+],
+"title":
+"Anderson’s Coffee Company",
+"link":
+"https://www.yelp.com/biz/andersons-coffee-company-austin?osq=Coffee",
+"reviews_link":
+"https://serpapi.com/search.json?engine=yelp_reviews&num=49&place_id=YAnvqg699tciMYsqQfqMjw&start=0",
+"categories":
+[
+{
+"title":
+"Coffee Roasteries",
+"link":
+"https://www.yelp.com/search?find_desc=Coffee+Roasteries&amp;find_loc=Austin%2C+TX"
+}
+],
+"price":
+"$$",
+"rating":
+4.6,
+"reviews":
+194,
+"highlights":
+[
+"Locally owned & operated",
+"50 years in business",
+"Family-owned & operated",
+"Free parking",
+"7 Employees"
+],
+"phone":
+"(512) 453-1533",
+"snippet":
+"Amazing coffee. Exceptional service. It's not a coffee shop. Just great coffee.",
+"thumbnail":
+"https://s3-media0.fl.yelpcdn.com/bphoto/bkbxYsziFL_yh61KO1lh6Q/348s.jpg"
+},
+{
+"position":
+8,
+"place_ids":
+[
+"1HQFQJ5s_qYLH8iNO9lAwQ",
+"caphein-coffee-austin-2"
+],
+"title":
+"CaPhein Coffee",
+"link":
+"https://www.yelp.com/biz/caphein-coffee-austin-2?osq=Coffee",
+"reviews_link":
+"https://serpapi.com/search.json?engine=yelp_reviews&num=49&place_id=1HQFQJ5s_qYLH8iNO9lAwQ&start=0",
+"categories":
+[
+{
+"title":
+"Coffee & Tea",
+"link":
+"https://www.yelp.com/search?find_desc=Coffee+%26+Tea&amp;find_loc=Austin%2C+TX"
+}
+],
+"rating":
+4.2,
+"reviews":
+163,
+"neighborhoods":
+"University of Texas",
+"snippet":
+"Great coffee and very helpful and friendly staff! The coco ube was very tasty and had toasted...",
+"thumbnail":
+"https://s3-media0.fl.yelpcdn.com/bphoto/fyv0QoO6sAXD-3Bh675PyQ/348s.jpg"
+},
+{
+"position":
+9,
+"place_ids":
+[
+"6oPSBvk1TS3uCGlyfYTheA",
+"ghoul-coffee-austin-2"
+],
+"title":
+"Ghoul Coffee",
+"link":
+"https://www.yelp.com/biz/ghoul-coffee-austin-2?osq=Coffee",
+"reviews_link":
+"https://serpapi.com/search.json?engine=yelp_reviews&num=49&place_id=6oPSBvk1TS3uCGlyfYTheA&start=0",
+"categories":
+[
+{
+"title":
+"Coffee & Tea",
+"link":
+"https://www.yelp.com/search?find_desc=Coffee+%26+Tea&amp;find_loc=Austin%2C+TX"
+}
+],
+"rating":
+4.8,
+"reviews":
+68,
+"neighborhoods":
+"East Austin",
+"snippet":
+"Cute coffee shop! Love the Halloween vibe The girl was so sweet and very helpful The coffee was...",
+"button":
+{
+"text":
+"Order",
+"link":
+"https://www.yelp.com/biz/6oPSBvk1TS3uCGlyfYTheA?show_platform_modal=True"
+},
+"thumbnail":
+"https://s3-media0.fl.yelpcdn.com/bphoto/5_77Do_m72K_guGucD-uWg/348s.jpg"
+},
+{
+"position":
+10,
+"place_ids":
+[
+"eXrdq56qaMGjRgPO5HZSEA",
+"hecho-amano-coffee-pflugerville"
+],
+"title":
+"Hecho Amano Coffee",
+"link":
+"https://www.yelp.com/biz/hecho-amano-coffee-pflugerville?osq=Coffee",
+"reviews_link":
+"https://serpapi.com/search.json?engine=yelp_reviews&num=49&place_id=eXrdq56qaMGjRgPO5HZSEA&start=0",
+"categories":
+[
+{
+"title":
+"Coffee & Tea",
+"link":
+"https://www.yelp.com/search?find_desc=Coffee+%26+Tea&amp;find_loc=Austin%2C+TX"
+}
+],
+"rating":
+4.9,
+"reviews":
+28,
+"phone":
+"(512) 565-8188",
+"snippet":
+"So impressed with this cute neighborhood coffee shop! I predict they're going to quickly outgrow...",
+"thumbnail":
+"https://s3-media0.fl.yelpcdn.com/bphoto/0SLk5kRPvNXnTeX2_ZCLJg/348s.jpg"
+}
+],
+"pagination":
+{
+"next":
+"https://www.yelp.com/search?find_desc=Coffee&find_loc=Austin%2C+Texas%2C+United+States&start=10"
+},
+"serpapi_pagination":
+{
+"next_link":
+"https://serpapi.com/search.json?engine=yelp&find_desc=Coffee&find_loc=Austin%2C+Texas%2C+United+States&start=10",
+"next":
+"https://serpapi.com/search.json?engine=yelp&find_desc=Coffee&find_loc=Austin%2C+Texas%2C+United+States&start=10"
+}
+}
+
+GET
+
+
+https://serpapi.com/search.json?engine=yelp&find_desc=Coffee&find_loc=Austin,+Texas,+United+States
+
+Code to integrate
+
+cURLRubyPythonJavaScriptGoPHPJavaRust.NETGoogle Sheets
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "yelp",
+  find_desc: "Coffee",
+  find_loc: "Austin, Texas, United States",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+organic_results = results[:organic_results]
+API Parameters
+Search Query
+find_desc
+
+Optional
+
+Parameter defines the query you want to search. You can use anything that you would use in a regular Yelp search.
+
+Geographic Location
+find_loc
+
+Required
+
+Parameter defines from where you want the search to originate. You can use any location you would use in a regular Yelp search. Following location formats are acceptable:
+
+- 706 Mission St, San Francisco, CA
+- San Francisco, CA
+- San Francisco, CA 94103
+- 94103
+
+l
+
+Optional
+
+Parameter defines the distance (map radius) or neighborhoods you want to search in. You can use our JSON endpoint to fetch values for either of them.
+
+Values for distance are accessible through filters.distance (e.g. value for 'Bird's-eye View' is g:-97.86003112792969,30.21635515266855,-97.65541076660156,30.394199462058317).
+
+You can also specify neighborhoods to search in. Values for neighborhoods are accessible through filters.neighborhoods.
+The value for a single neighborhood is formed in the next order:
+filters.neighborhoods.value + filters.neighborhoods.list[0].value (e.g. p:TX:Austin::Downtown).
+You can also set value for multiple neighborhoods:
+filters.neighborhoods.value + [filters.neighborhoods.list[0].value,filters.neighborhoods.list[1].value] (e.g. p:TX:Austin::[Downtown,East_Austin]).
+
+Distance and neighborhoods values can't be used together.
+
+Localization
+yelp_domain
+
+Optional
+
+Parameter defines the Yelp domain to use. It defaults to yelp.com. Head to the Yelp domains for a full list of supported Yelp domains.
+
+Advanced Yelp Parameters
+cflt
+
+Optional
+
+Parameter is used to define a category. It can be used alongside find_desc parameter to refine the search.
+
+sortby
+
+Optional
+
+Parameter is used for sorting results. Available options:
+
+recommended - Recommended (default)
+rating - Highest Rated
+review_count - Most Reviewed
+
+attrs
+
+Optional
+
+Parameter is used for refining results. You can add more filters like 'price', 'features', etc. to your search. You can use our JSON endpoint to fetch values. Values for filters are accessible through filters (e.g. value for filtering results by 'No Smoking' is Smoking.no).
+
+You can also use multiple values:
+filters.features[0].value,filters.features[1].value (e.g. GoodForKids,DogsAllowed)
+
+Pagination
+start
+
+Optional
+
+Parameter defines the result offset. It skips the given number of results. It's used for pagination. (e.g., 0 (default) is the first page of results, 10 is the 2nd page of results, 20 is the 3rd page of results, etc.).
+
+Serpapi Parameters
+engine
+
+Required
+
+Set parameter to yelp to use the Yelp API engine.
+
+no_cache
+
+Optional
+
+Parameter will force SerpApi to fetch the Yelp results even if a cached version is already present. A cache is served only if the query and all parameters are exactly the same. Cache expires after 1h. Cached searches are free, and are not counted towards your searches per month. It can be set to false (default) to allow results from the cache, or true to disallow results from the cache. no_cache and async parameters should not be used together.
+
+async
+
+Optional
+
+Parameter defines the way you want to submit your search to SerpApi. It can be set to false (default) to open an HTTP connection and keep it open until you got your search results, or true to just submit your search to SerpApi and retrieve them later. In this case, you'll need to use our Searches Archive API to retrieve your results. async and no_cache parameters should not be used together. async should not be used on accounts with Ludicrous Speed enabled.
+
+zero_trace
+
+Optional
+
+Enterprise only. Parameter enables ZeroTrace mode. It can be set to false (default) or true. Enable this mode to skip storing search parameters, search files, and search metadata on our servers. This may make debugging more difficult.
+
+api_key
+
+Required
+
+Parameter defines the SerpApi private key to use.
+
+output
+
+Optional
+
+Parameter defines the final output you want. It can be set to json (default) to get a structured JSON of the results, or html to get the raw html retrieved.
+
+API Results
+JSON Results
+JSON output includes structured data for Organic Results, Ads Results and Filters.
+
+A search status is accessible through search_metadata.status. It flows this way: Processing -> Success || Error. If a search has failed, error will contain an error message. search_metadata.id is the search ID inside SerpApi.
+
+HTML Results
+HTML output is useful to debug JSON results or support features not supported yet by SerpApi. HTML output gives you the raw HTML results from Yelp.
+
+API Examples
+Example with 
+find_desc
+:
+Coffee
+and 
+find_loc
+:
+New York, NY, USA
+as a location
+GET
+
+
+https://serpapi.com/search.json?engine=yelp&find_desc=Coffee&find_loc=New+York,+NY,+USA
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "yelp",
+  find_desc: "Coffee",
+  find_loc: "New York, NY, USA",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+organic_results = results[:organic_results]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "62430771de983400a4038f8d",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/84258a6c70981a89/62430771de983400a4038f8d.json",
+    "created_at": "2022-03-29 13:19:45 UTC",
+    "processed_at": "2022-03-29 13:19:45 UTC",
+    "yelp_url": "https://www.yelp.com/search?find_desc=Coffee&find_loc=New+York%2C+NY%2C+USA",
+    "raw_html_file": "https://serpapi.com/searches/84258a6c70981a89/62430771de983400a4038f8d.html",
+    "total_time_taken": 2.71
+  },
+  "search_parameters": {
+    "engine": "yelp",
+    "find_desc": "Coffee",
+    "find_loc": "New York, NY, USA",
+  },
+  "filters": {
+    "distance": [
+      {
+        "text": "Bird's-eye View",
+        "value": "g:-74.09660339355469,40.62750334315296,-73.89198303222656,40.783660996197945"
+      },
+      {
+        "text": "Driving (5 mi.)",
+        "value": "g:-74.04544830322266,40.666316664620794,-73.9431381225586,40.744395800976775"
+      },
+      {
+        "text": "Biking (2 mi.)",
+        "value": "g:-74.01987075805664,40.685975199914836,-73.96871566772461,40.72501469240076"
+      },
+      ...
+    ],
+    "price": [
+      {
+        "text": "$",
+        "value": "RestaurantsPriceRange2.1"
+      },
+      {
+        "text": "$$",
+        "value": "RestaurantsPriceRange2.2"
+      },
+      {
+        "text": "$$$",
+        "value": "RestaurantsPriceRange2.3"
+      },
+      ...
+    ],
+    "category": [
+      {
+        "text": "Food Trucks",
+        "value": "foodtrucks"
+      },
+      {
+        "text": "Pizza",
+        "value": "pizza"
+      },
+      {
+        "text": "Food Delivery Services",
+        "value": "fooddeliveryservices"
+      },
+      ...
+    ],
+    "features": [
+      {
+        "text": "All staff fully vaccinated",
+        "value": "staff_fully_vaccinated"
+      },
+      {
+        "text": "Outdoor Seating",
+        "value": "OutdoorSeating"
+      },
+      {
+        "text": "Music: Live",
+        "value": "Music.live"
+      },
+      ...
+    ]
+  },
+  "ads_results": [
+    {
+      "block_position": "top",
+      "place_ids": [
+        "tXWkZsgqEnAGhMJNquO7jQ",
+        "dunkin-new-york-131"
+      ],
+      "title": "Dunkin’",
+      "link": "https://www.yelp.com/adredir?ad_business_id=tXWkZsgqEnAGhMJNquO7jQ&amp;campaign_id=d3pLjUZg8X8mvCkOpi8aSw&amp;click_origin=search_results&amp;placement=above_search&amp;placement_slot=0&amp;redirect_url=https%3A%2F%2Fwww.yelp.com%2Fbiz%2Fdunkin-new-york-131&amp;request_id=08a0728430d8807f&amp;signature=e53a4aa0e14ce0cfb9c92fd06e15866470d50e6085c59cf3b00283843e33d279&amp;slot=0",
+      "reviews_link": "https://serpapi.com/search.json?engine=yelp_reviews&place_id=tXWkZsgqEnAGhMJNquO7jQ",
+      "categories": [
+        {
+          "title": "Coffee & Tea",
+          "link": "https://www.yelp.com/search?cflt=coffee&amp;find_loc=New+York%2C+NY%2C+USA"
+        },
+        {
+          "title": "Donuts",
+          "link": "https://www.yelp.com/search?cflt=donuts&amp;find_loc=New+York%2C+NY%2C+USA"
+        }
+      ],
+      "reviews": 22,
+      "neighborhoods": "Civic Center",
+      "phone": "(212) 732-0406",
+      "snippet": "Have I ever seen such efficiency within a Dunkin Donuts establishment like this location? NOPE! The workers here are fast, nice, and always aim to please. After a few times ordering…",
+      "service_options": {
+        "delivery": true,
+        "takeout": true
+      },
+      "button": {
+        "text": "Get Directions",
+        "link": "https://www.yelp.com/adredir?ad_business_id=tXWkZsgqEnAGhMJNquO7jQ&amp;click_origin=search_results_direction&amp;placement=above_search&amp;placement_slot=0&amp;redirect_url=https%3A%2F%2Fwww.yelp.com%2Fmap%2Fdunkin-new-york-131&amp;request_id=08a0728430d8807f&amp;signature=513aec0038b820ed1e8baeb38a68c927226b00fc4489c32248acbdc9a1e74252&amp;slot=0"
+      },
+      "thumbnail": "https://s3-media0.fl.yelpcdn.com/bphoto/BiRZEqS3rs5l7Xn8yDTsCA/348s.jpg"
+    },
+    ...
+  ],
+  "organic_results": [
+    {
+      "position": 1,
+      "place_ids": [
+        "ED7A7vDdg8yLNKJTSVHHmg",
+        "arabica-brooklyn"
+      ],
+      "title": "% Arabica",
+      "link": "https://www.yelp.com/biz/arabica-brooklyn?osq=Coffee",
+      "reviews_link": "https://serpapi.com/search.json?engine=yelp_reviews&place_id=ED7A7vDdg8yLNKJTSVHHmg",
+      "categories": [
+        {
+          "title": "Coffee & Tea",
+          "link": "https://www.yelp.com/search?cflt=coffee&amp;find_loc=New+York%2C+NY%2C+USA"
+        }
+      ],
+      "price": "$$",
+      "rating": 4,
+      "reviews": 114,
+      "neighborhoods": "Brooklyn Heights",
+      "snippet": "Coffee was good overall. Their customer service was great and attentive. 4 stars are mainly because",
+      "service_options": {
+        "outdoor_dining": true
+      },
+      "thumbnail": "https://s3-media0.fl.yelpcdn.com/bphoto/_3VSEFG3iUT-M66JYc7U4w/348s.jpg"
+    },
+    {
+      "position": 2,
+      "place_ids": [
+        "K6fkejf2ZBUdlsVrm5RbrA",
+        "kore-coffee-new-york-2"
+      ],
+      "title": "Kore Coffee",
+      "link": "https://www.yelp.com/biz/kore-coffee-new-york-2?osq=Coffee",
+      "reviews_link": "https://serpapi.com/search.json?engine=yelp_reviews&place_id=K6fkejf2ZBUdlsVrm5RbrA",
+      "categories": [
+        {
+          "title": "Coffee & Tea",
+          "link": "https://www.yelp.com/search?cflt=coffee&amp;find_loc=New+York%2C+NY%2C+USA"
+        }
+      ],
+      "rating": 5,
+      "reviews": 10,
+      "neighborhoods": "Chinatown",
+      "highlights": [
+        "Opened 5 weeks ago"
+      ],
+      "snippet": "A small coffee shop in the middle of Chinatown. I was so surprised to walk by and randomly find",
+      "thumbnail": "https://s3-media0.fl.yelpcdn.com/bphoto/Nfc-QcUS71NWWjdlDx8JBw/348s.jpg"
+    },
+    {
+      "position": 3,
+      "place_ids": [
+        "pimuUR-TEHIjUla3S3jemQ",
+        "coffee-project-new-york-east-village-new-york"
+      ],
+      "title": "Coffee Project New York | East Village",
+      "link": "https://www.yelp.com/biz/coffee-project-new-york-east-village-new-york?osq=Coffee",
+      "reviews_link": "https://serpapi.com/search.json?engine=yelp_reviews&place_id=pimuUR-TEHIjUla3S3jemQ",
+      "categories": [
+        {
+          "title": "Coffee & Tea",
+          "link": "https://www.yelp.com/search?cflt=coffee&amp;find_loc=New+York%2C+NY%2C+USA"
+        },
+        {
+          "title": "Sandwiches",
+          "link": "https://www.yelp.com/search?cflt=sandwiches&amp;find_loc=New+York%2C+NY%2C+USA"
+        }
+      ],
+      "price": "$",
+      "rating": 4.5,
+      "reviews": 716,
+      "neighborhoods": "East Village",
+      "phone": "(347) 815-6690",
+      "snippet": "I really enjoyed the place. The coffee itself was really good. The service was one of the best I",
+      "service_options": {
+        "outdoor_dining": true,
+        "delivery": true,
+        "takeout": true
+      },
+      "thumbnail": "https://s3-media0.fl.yelpcdn.com/bphoto/oTalWA2QqsoRD4RprV0tOg/348s.jpg"
+    },
+    ...
+  ],
+  "pagination": {
+    "current": 1,
+    "next": "https://www.yelp.com/search?find_desc=Coffee&find_loc=New%20York%2C%20NY%2C%20USA&start=10",
+    "other_pages": {
+      "2": "https://www.yelp.com/search?find_desc=Coffee&find_loc=New%20York%2C%20NY%2C%20USA&start=10",
+      "3": "https://www.yelp.com/search?find_desc=Coffee&find_loc=New%20York%2C%20NY%2C%20USA&start=20",
+      "4": "https://www.yelp.com/search?find_desc=Coffee&find_loc=New%20York%2C%20NY%2C%20USA&start=30",
+      ...
+    }
+  },
+  "serpapi_pagination": {
+    "current": 1,
+    "next_link": "https://serpapi.com/search.json?engine=yelp&find_desc=Coffee&find_loc=New+York%2C+NY%2C+USA&start=10",
+    "next": "https://serpapi.com/search.json?engine=yelp&find_desc=Coffee&find_loc=New+York%2C+NY%2C+USA&start=10",
+    "other_pages": {
+      "2": "https://serpapi.com/search.json?engine=yelp&find_desc=Coffee&find_loc=New+York%2C+NY%2C+USA&start=10",
+      "3": "https://serpapi.com/search.json?engine=yelp&find_desc=Coffee&find_loc=New+York%2C+NY%2C+USA&start=20",
+      "4": "https://serpapi.com/search.json?engine=yelp&find_desc=Coffee&find_loc=New+York%2C+NY%2C+USA&start=30",
+      ...
+    }
+  }
+}

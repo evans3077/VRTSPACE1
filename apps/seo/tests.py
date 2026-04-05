@@ -1731,6 +1731,21 @@ class SEOCompetitorDiscoveryTests(TestCase):
         self.assertIn("car dealer Nairobi", keywords)
         self.assertNotIn("service Nairobi", keywords)
 
+    def test_build_local_keyword_set_prefers_event_venue_language_for_event_focused_hospitality(self):
+        profile = SEOProjectProfile(
+            business_type="hotel",
+            location="Machakos, Kenya",
+            target_goal="Increase quality leads",
+            primary_service="events gardens",
+            target_audience="people looking for events gardens in machakos",
+        )
+
+        keywords = build_local_keyword_set(profile)
+
+        self.assertIn("event venue Machakos, Kenya", keywords)
+        self.assertIn("wedding venue Machakos, Kenya", keywords)
+        self.assertNotIn("rooms in Machakos, Kenya", keywords)
+
     def test_build_discovery_queries_uses_service_location_and_audience(self):
         profile = SEOProjectProfile(
             business_type="automotive",
@@ -1780,6 +1795,138 @@ class SEOCompetitorDiscoveryTests(TestCase):
         self.assertIn("backlink_prospects", families)
         citation_route = next(item for item in routes if item["family_key"] == "citation_sources")
         self.assertTrue(any("directory" in query or "reviews" in query for query in citation_route["queries"]))
+
+    def test_build_seo_opportunity_payload_uses_event_venue_page_priorities_for_event_focused_hospitality(self):
+        audit_request = AuditRequest.objects.create(
+            company_name="Zamar Springs Gardens",
+            email="ops@example.com",
+            website="https://zamarsprings.com",
+        )
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="zamarsprings.com",
+            start_url="https://zamarsprings.com/",
+            overall_score=71,
+            status=AuditRun.Status.COMPLETED,
+            summary={},
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            latest_audit_run=audit_run,
+            name="Zamar Springs Gardens",
+            website="https://zamarsprings.com",
+            normalized_domain="zamarsprings.com",
+            contact_email="ops@example.com",
+            latest_score=71,
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="hotel",
+            location="Machakos, Kenya",
+            target_goal="Increase quality leads",
+            primary_service="events gardens",
+            target_audience="people looking for events gardens in machakos",
+        )
+        competitor = SEOCompetitor.objects.create(
+            project=project,
+            homepage_url="https://maanzoni.example.com/",
+            normalized_domain="maanzoni.example.com",
+            label="maanzoni.example.com",
+            source=SEOCompetitor.Source.SERP,
+            is_active=True,
+        )
+        SEOCompetitorSnapshot.objects.create(
+            competitor=competitor,
+            source_audit_run=audit_run,
+            output_json={
+                "status": "ok",
+                "pages": [
+                    {
+                        "url": "https://maanzoni.example.com/weddings/",
+                        "title": "Wedding Venue in Machakos",
+                        "h1": "Wedding Venue in Machakos",
+                        "meta_description": "Wedding venue and event gardens in Machakos.",
+                        "word_count": 600,
+                        "schema_count": 1,
+                        "has_faq_schema": True,
+                        "response_time_ms": 300,
+                        "page_type": "event",
+                        "location_match": True,
+                        "asset_summary": {},
+                        "tech_stack": {},
+                        "internal_link_count": 4,
+                    },
+                    {
+                        "url": "https://maanzoni.example.com/packages/",
+                        "title": "Event Packages in Machakos",
+                        "h1": "Event Packages in Machakos",
+                        "meta_description": "Venue packages for weddings and conferences in Machakos.",
+                        "word_count": 520,
+                        "schema_count": 1,
+                        "has_faq_schema": False,
+                        "response_time_ms": 310,
+                        "page_type": "pricing",
+                        "location_match": True,
+                        "asset_summary": {},
+                        "tech_stack": {},
+                        "internal_link_count": 3,
+                    },
+                ],
+                "summary": {
+                    "counts_by_type": {"event": 1, "pricing": 1},
+                    "avg_word_count_by_type": {"event": 600, "pricing": 520},
+                    "faq_schema_pages": 1,
+                    "location_match_pages": 2,
+                    "page_count": 2,
+                    "fit": {
+                        "accepted": True,
+                        "best_page_score": 7,
+                        "matching_pages": 2,
+                        "topic_score": 8,
+                        "local_score": 4,
+                        "penalty": 0,
+                        "match_signals": ["topic:event venue", "location:machakos"],
+                        "penalty_signals": [],
+                        "reason": "2 page(s) matched the declared niche and location.",
+                    },
+                },
+            },
+        )
+        context_snapshot = SEOContextSnapshot.objects.create(
+            project=project,
+            profile=profile,
+            source_audit_run=audit_run,
+            output_json={
+                "context": {
+                    "business_type": "hotel",
+                    "industry_label": "Event Venue / Hospitality",
+                    "location": "Machakos, Kenya",
+                    "target_goal": "Increase quality leads",
+                    "primary_service": "events gardens",
+                    "target_audience": "people looking for events gardens in machakos",
+                },
+                "site_structure": {
+                    "pages": [
+                        {"url": "https://zamarsprings.com/", "title": "Home", "page_type": "home", "word_count": 250, "internal_link_count": 3},
+                        {"url": "https://zamarsprings.com/gardens/", "title": "Event Gardens", "page_type": "event", "word_count": 350, "internal_link_count": 2},
+                    ],
+                    "summary": {
+                        "counts_by_type": {"home": 1, "event": 1},
+                        "avg_word_count_by_type": {"home": 250, "event": 350},
+                        "faq_schema_pages": 0,
+                        "location_match_pages": 1,
+                        "page_count": 2,
+                    },
+                },
+            },
+        )
+
+        payload = build_seo_opportunity_payload(project, profile, audit_run, context_snapshot=context_snapshot)
+
+        page_types = [item["page_type"] for item in payload["page_map"][:3]]
+        self.assertEqual(page_types[0], "event")
+        self.assertIn("pricing", page_types)
+        self.assertNotIn("room", page_types[:3])
 
     @override_settings(
         SERP_DISCOVERY_ENABLED=True,

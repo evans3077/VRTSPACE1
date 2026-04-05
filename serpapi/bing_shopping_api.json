@@ -1,0 +1,3174 @@
+{
+"search_metadata":
+{
+"id":
+"695927428c24bd247f1be7d3",
+"status":
+"Success",
+"json_endpoint":
+"https://serpapi.com/searches/f64ac07a015fcd2f/695927428c24bd247f1be7d3.json",
+"created_at":
+"2026-01-03 14:27:14 UTC",
+"processed_at":
+"2026-01-03 14:27:14 UTC",
+"bing_shopping_url":
+"https://www.bing.com/shop?q=Coffee",
+"raw_html_file":
+"https://serpapi.com/searches/f64ac07a015fcd2f/695927428c24bd247f1be7d3.html",
+"total_time_taken":
+0.85
+},
+"search_parameters":
+{
+"engine":
+"bing_shopping",
+"q":
+"Coffee",
+"device":
+"desktop"
+},
+"shopping_results":
+[
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=bbf0d5c0689cfb128b13d5c32c4927a7e10664b0f1f0dc8e9e16d1164c81d69aJmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjIwMjlDREI1QzYwQkMwRDEwMjQ1ODhFRTVGNDY1MjVDMSUyMitnSWRIYXNoJTNhJTIyMzk4NDUxNTc1JTIyK2dHbG9iYWxPZmZlcklkcyUzYSUyMjM3NjUzNjMzMTY5JTIyK0F1Y0NvbnRleHRHdWlkJTNhJTIyMCUyMitHcm91cEVudGl0eUlkJTNhJTIyMDI5Q0RCNUM2MEJDMEQxMDI0NTg4RUU1RjQ2NTI1QzElMjIrTm9uU3BvbnNvcmVkT2ZmZXIlM2ElMjJUcnVlJTIyJnByb2R1Y3RwYWdlPXRydWUmRk9STT1TSFBQRFAmYnJvd3NlPXRydWU&ntb=1",
+"title":
+"The Original Donut Shop Single-Serve Coffee K-Cup, Medium Roast, Carton Of 48 ODFN744377",
+"thumbnails":
+[
+"https://th.bing.com/th?id=OPHS.o%2buhJpD99KXK%2fA474C474&w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"OfficeSupply.com",
+"price":
+"$30.08",
+"extracted_price":
+30.08,
+"rating":
+4.3,
+"reviews":
+"5K+",
+"external_link":
+"https://www.officesupply.com/cleaning-breakroom/food-beverage-supplies/foods-beverages/coffee/original-donut-shop-single-serve-coffee-medium-roast-carton/p898829.html?ref=pla&utm_source=bing&utm_medium=cpc&utm_campaign=PLA&scid=scbplp898829&sc_intid=898829"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=8d2520d15a4798b7ebac44605c9187946ada889c5d7bba15b7d1e55925ae5021JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjIxRTI0ODhFRTZBQzY1OTEzOUEyQUZBNkU1MjRDMzU3NSUyMitnSWRIYXNoJTNhJTIyMzk3MDM3NDA5MyUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjIxMDEwNTMyNDYzODglMjIrQXVjQ29udGV4dEd1aWQlM2ElMjIwJTIyK0dyb3VwRW50aXR5SWQlM2ElMjIxRTI0ODhFRTZBQzY1OTEzOUEyQUZBNkU1MjRDMzU3NSUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+"title":
+"Folgers Classic Roast Coffee, 40.3 Oz",
+"thumbnails":
+[
+"https://th.bing.com/th?id=OPHS.CeZI5TH%2b0wBOXg474C474&w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"Office Depot",
+"price":
+"$40.89",
+"extracted_price":
+40.89,
+"rating":
+4.1,
+"reviews":
+"1K+",
+"external_link":
+"https://www.officedepot.com/a/products/993562/Folgers-Classic-Roast-Coffee-403-Oz/"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=a11ef7783aee2f7d5e9440a72e876d456328be7afa55a8a617ef4dace1c36fcfJmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjI4RUUwQTc1QUFBOUVCMDBCNDIzMDFEMDI1RTA0QTgyQSUyMitnSWRIYXNoJTNhJTIyMzA2MzE5Njk2OCUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjIxMjU4OTMyMjM1NTIlMjIrQXVjQ29udGV4dEd1aWQlM2ElMjIwJTIyK0dyb3VwRW50aXR5SWQlM2ElMjI4RUUwQTc1QUFBOUVCMDBCNDIzMDFEMDI1RTA0QTgyQSUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+"title":
+"Folgers Ground Black Silk Coffee FOL30439CT",
+"thumbnails":
+[
+"https://th.bing.com/th/id/OPHS.Ah3mk72ZEZVYfg474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"OfficeSupply.com",
+"price":
+"$148.46",
+"extracted_price":
+148.46,
+"rating":
+4.3,
+"reviews":
+"579",
+"free_shipping":
+true,
+"external_link":
+"https://www.officesupply.com/cleaning-breakroom/food-beverage-supplies/foods-beverages/coffee/folgers-ground-black-silk-coffee/p1270134.html?ref=pla&utm_source=bing&utm_medium=cpc&utm_campaign=PLA&scid=scbplp1270134&sc_intid=1270134"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=31b022ae51768e782bd0bcc91a05c9ab43583c95995b76f4e7495a39634d6da3JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjI4M0I3QkY2M0MzREY5NzM2MzlBRkZCOEI1MEMyNzJDMSUyMitnSWRIYXNoJTNhJTIyMTU3OTk5MDIyMiUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjIzMDY3MTUzNDYyJTIyK0F1Y0NvbnRleHRHdWlkJTNhJTIyMCUyMitHcm91cEVudGl0eUlkJTNhJTIyODNCN0JGNjNDM0RGOTczNjM5QUZGQjhCNTBDMjcyQzElMjIrTm9uU3BvbnNvcmVkT2ZmZXIlM2ElMjJUcnVlJTIyJnByb2R1Y3RwYWdlPXRydWUmRk9STT1TSFBQRFAmYnJvd3NlPXRydWU&ntb=1",
+"title":
+"Maxwell House Regular Coffee Filter Packs, Packets Make 6 Cups, 42 Packets/Carton KRFGEN862400",
+"thumbnails":
+[
+"https://th.bing.com/th/id/OPHS.f8Umd8XqjnNQhQ474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"OfficeSupply.com",
+"price":
+"$47.98",
+"extracted_price":
+47.98,
+"rating":
+4.2,
+"reviews":
+"937",
+"free_shipping":
+true,
+"external_link":
+"https://www.officesupply.com/cleaning-breakroom/food-beverage-supplies/foods-beverages/coffee/maxwell-house-regular-coffee-filter-packs-packets-make-cups-packets-carton/p76497.html?ref=pla&utm_source=bing&utm_medium=cpc&utm_campaign=PLA&scid=scbplp76497&sc_intid=76497"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=90a189fa6f98bbdf1213a4c5ef9f52a8fdb1f2a30278fb28556a0c91b26b068bJmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMTIlMjIrZ0lkJTNhJTIyMzA0NTQ3NTk4NzY4JTIyK2dJZEhhc2glM2ElMjIwJTIyK2dHbG9iYWxPZmZlcklkcyUzYSUyMjMwNDU0NzU5ODc2OCUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMjMwNDU0NzU5ODc2OCUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+"title":
+"Kona Coffee Sampler Regular / Whole Bean",
+"thumbnails":
+[
+"https://th.bing.com/th?id=OPHS.rlNKB%2f8BtxjT9A474C474&w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"CoffeeAM",
+"price":
+"$94.95",
+"extracted_price":
+94.95,
+"external_link":
+"https://www.coffeeam.com/products/kona-coffee-sampler?variant=31128537727078&country=US&currency=USD&utm_medium=product_sync&utm_source=bing&utm_content=sag_organic&utm_campaign=sag_organic"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=80c11b14239abfe27e97b1357fe23ee12e8f17c08da97b353362519deffd8c0eJmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjJDODVBMUNCMTlDNjgyMDU2RTBEMEFCQTI0RjJGQjI0MSUyMitnSWRIYXNoJTNhJTIyMzMwMDc2ODg2MiUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjI2OTAyNjIwNTY5MyUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMkM4NUExQ0IxOUM2ODIwNTZFMEQwQUJBMjRGMkZCMjQxJTIyK05vblNwb25zb3JlZE9mZmVyJTNhJTIyVHJ1ZSUyMiZwcm9kdWN0cGFnZT10cnVlJkZPUk09U0hQUERQJmJyb3dzZT10cnVl&ntb=1",
+"title":
+"Hills Bros. Original Blend Coffee, 30.5 Oz Can HIBMZB43000",
+"thumbnails":
+[
+"https://th.bing.com/th/id/OPHS.1Pek4V4jnieIRA474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"OfficeSupply.com",
+"price":
+"$32.44",
+"extracted_price":
+32.44,
+"rating":
+4.6,
+"reviews":
+"283",
+"external_link":
+"https://www.officesupply.com/cleaning-breakroom/food-beverage-supplies/foods-beverages/coffee/hills-bros-original-blend-coffee/p1110457.html?ref=pla&utm_source=bing&utm_medium=cpc&utm_campaign=PLA&scid=scbplp1110457&sc_intid=1110457"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=2ec7edb884910e851f7eccf94cbeabcc66274e4296296951afe649f1b7130b5bJmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMTIlMjIrZ0lkJTNhJTIyMzA0NTQ3NjAzMDQzJTIyK2dJZEhhc2glM2ElMjIwJTIyK2dHbG9iYWxPZmZlcklkcyUzYSUyMjMwNDU0NzYwMzA0MyUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMjMwNDU0NzYwMzA0MyUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+"title":
+"Kona Coffee Sampler Regular / Drip Grind",
+"thumbnails":
+[
+"https://th.bing.com/th?id=OPHS.rlNKB%2f8BtxjT9A474C474&w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"CoffeeAM",
+"price":
+"$94.95",
+"extracted_price":
+94.95,
+"external_link":
+"https://www.coffeeam.com/products/kona-coffee-sampler?variant=31128537694310&country=US&currency=USD&utm_medium=product_sync&utm_source=bing&utm_content=sag_organic&utm_campaign=sag_organic"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=82a4153ccbbbeb05c7fa32489208cb80eba622840766e443bef8e83eae8d2cceJmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjIyMTg3RjQ0QUFFQjVFNTBEQUZCRTc4Rjg5QjMxNjY1QSUyMitnSWRIYXNoJTNhJTIyMTU0MDk2NjgwOSUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjIyMTE0Mzc4MTk0NDElMjIrQXVjQ29udGV4dEd1aWQlM2ElMjIwJTIyK0dyb3VwRW50aXR5SWQlM2ElMjIyMTg3RjQ0QUFFQjVFNTBEQUZCRTc4Rjg5QjMxNjY1QSUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+"title":
+"Dunkin' K-Cup Original Blend Coffee GMT0315",
+"thumbnails":
+[
+"https://th.bing.com/th/id/OPHS.84XCu1e7DK0Zrw474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"OfficeSupply.com",
+"price":
+"$20.02",
+"extracted_price":
+20.02,
+"rating":
+4.5,
+"reviews":
+"1K+",
+"external_link":
+"https://www.officesupply.com/cleaning-breakroom/food-beverage-supplies/foods-beverages/coffee/dunkin-original-blend-coffee/p1575803.html?ref=pla&utm_source=bing&utm_medium=cpc&utm_campaign=PLA&scid=scbplp1575803&sc_intid=1575803"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=7d7d1c23f5ec329cb7c3f741f6638fe119735dc8ec60041bd06435736ab7cbc6JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjJBNjkwRDBGODU0OTg2M0I4RjQyQThBRUYxMjE4MEEzRSUyMitnSWRIYXNoJTNhJTIyMjE3MjczODQ1MiUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjIxMDAzNDM4NzU4NzAlMjIrQXVjQ29udGV4dEd1aWQlM2ElMjIwJTIyK0dyb3VwRW50aXR5SWQlM2ElMjJBNjkwRDBGODU0OTg2M0I4RjQyQThBRUYxMjE4MEEzRSUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+"title":
+"Folgers 100% Medium Roast Ground Colombian Coffee, 40.3 Oz.",
+"thumbnails":
+[
+"https://th.bing.com/th/id/OPHS.2u0eSEQl8TYTxw474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"Sam's Club",
+"price":
+"$22.48",
+"extracted_price":
+22.48,
+"rating":
+3.9,
+"reviews":
+"527",
+"external_link":
+"https://www.samsclub.com/p/folgers-medium-roast-ground-colombian-coffee-40-3oz/P03007135"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=808231609ab9103bba30b8cbd05c9b1b0f2addf688dc1438b5c2ace64d83cf9eJmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjI5RTRDNTY1MEFGOUYwODU3MUI3MjI4QTM1MEUxNDdGMCUyMitnSWRIYXNoJTNhJTIyMzc3ODcyNTgyOCUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjI4NTkzNDA3NTczJTIyK0F1Y0NvbnRleHRHdWlkJTNhJTIyMCUyMitHcm91cEVudGl0eUlkJTNhJTIyOUU0QzU2NTBBRjlGMDg1NzFCNzIyOEEzNTBFMTQ3RjAlMjIrTm9uU3BvbnNvcmVkT2ZmZXIlM2ElMjJUcnVlJTIyJnByb2R1Y3RwYWdlPXRydWUmRk9STT1TSFBQRFAmYnJvd3NlPXRydWU&ntb=1",
+"title":
+"Folgers Coffee Filter Packs, Classic Roast, 1.4 Oz Pack, 40/Carton FOL10117",
+"thumbnails":
+[
+"https://th.bing.com/th?id=OPHS.VBsvdPJW0wQF%2bw474C474&w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"OfficeSupply.com",
+"price":
+"$59.59",
+"extracted_price":
+59.59,
+"rating":
+4.6,
+"reviews":
+"118",
+"free_shipping":
+true,
+"external_link":
+"https://www.officesupply.com/cleaning-breakroom/food-beverage-supplies/foods-beverages/coffee/folgers-coffee-filter-packs-classic-roast-pack-carton/p570369.html?ref=pla&utm_source=bing&utm_medium=cpc&utm_campaign=PLA&scid=scbplp570369&sc_intid=570369"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=342fdb6aa8e5801b94bb8196f97b4e80cec2ed37e0b67599e429b4970fb37948JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMTIlMjIrZ0lkJTNhJTIyMzA2NzIxOTg5MSUyMitnSWRIYXNoJTNhJTIyMCUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjIzMDY3MjE5ODkxJTIyK0F1Y0NvbnRleHRHdWlkJTNhJTIyMCUyMitHcm91cEVudGl0eUlkJTNhJTIyMzA2NzIxOTg5MSUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+"title":
+"Folgers Coffee Filter Packs, Regular, Medium Roast, Each Filter Pack Makes 8 Cups, 40 Packs/Carton FOL52320",
+"thumbnails":
+[
+"https://th.bing.com/th/id/OPHS.nUfmPzuUkYfIVg474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"OfficeSupply.com",
+"price":
+"$43.99",
+"extracted_price":
+43.99,
+"rating":
+4.6,
+"reviews":
+"35",
+"external_link":
+"https://www.officesupply.com/cleaning-breakroom/food-beverage-supplies/foods-beverages/coffee/folgers-coffee-filter-packs-regular-medium-roast-each-filter-pack-makes-cups-packs-carton/p505800.html?ref=pla&utm_source=bing&utm_medium=cpc&utm_campaign=PLA&scid=scbplp505800&sc_intid=505800"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=d9cb2bd74f8302c085a1b8105a8d011fd94add9c478f88b388927a0d8e6a4ad9JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjI5MjY4REQwRjMyMUNCRDMxMUFERjNCMkQyRjFBNTUxRiUyMitnSWRIYXNoJTNhJTIyMzI0MjI1OTMwNyUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjIyMTc2MjM5OTcyNzIlMjIrQXVjQ29udGV4dEd1aWQlM2ElMjIwJTIyK0dyb3VwRW50aXR5SWQlM2ElMjI5MjY4REQwRjMyMUNCRDMxMUFERjNCMkQyRjFBNTUxRiUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+"title":
+"Nescafé Clasico Dark Roast Instant Coffee, 8 Oz Pouch NES70948EA",
+"thumbnails":
+[
+"https://th.bing.com/th/id/OPHS.mavuOelsK6mqDA474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"OfficeSupply.com",
+"price":
+"$10.93",
+"extracted_price":
+10.93,
+"rating":
+4.3,
+"reviews":
+"351",
+"external_link":
+"https://www.officesupply.com/cleaning-breakroom/food-beverage-supplies/foods-beverages/coffee/nescafe-clasico-dark-roast-instant-coffee-pouch/p1578689.html?ref=pla&utm_source=bing&utm_medium=cpc&utm_campaign=PLA&scid=scbplp1578689&sc_intid=1578689"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=fad6dcb5483b9b3819d3f040a5aa9d687d23caa07ba7407093f125739de73f86JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjJBNkVBN0JCOEZCMzJGQkU4M0I4MzdFRjJEMEI0MTVDNiUyMitnSWRIYXNoJTNhJTIyNDI0MzgzMjAxMiUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjIyMDEyNzY0MzY1MzglMjIrQXVjQ29udGV4dEd1aWQlM2ElMjIwJTIyK0dyb3VwRW50aXR5SWQlM2ElMjJBNkVBN0JCOEZCMzJGQkU4M0I4MzdFRjJEMEI0MTVDNiUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+"title":
+"Coffee Pods For Keurig K-Cup Brewers, Dark Roast, French Roast Blend, 80 Count",
+"thumbnails":
+[
+"https://th.bing.com/th?id=OPHS.IAAJmC%2bgWzzGQg474C474&w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th?id=OPHS.Pj%2fLUfeaBypXpw474C474&w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"Home Depot",
+"price":
+"$33.99",
+"extracted_price":
+33.99,
+"rating":
+4,
+"reviews":
+"28",
+"free_shipping":
+true,
+"external_link":
+"https://www.homedepot.com/p/Coffee-Pods-for-Keurig-K-Cup-Brewers-Dark-Roast-French-Roast-Blend-80-Count-292811/328566767"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=6f513e947c1648fccf65c2931e5ab17b808c0713506007e8e516940896855a01JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjI4QjhEOTQ2RkFDQTJGQjRGOTQ2M0EwOUNGODc3MEYyNSUyMitnSWRIYXNoJTNhJTIyMjIzODc2NDQyOCUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjIyOTg5ODQ4MDE5MTElMjIrQXVjQ29udGV4dEd1aWQlM2ElMjIwJTIyK0dyb3VwRW50aXR5SWQlM2ElMjI4QjhEOTQ2RkFDQTJGQjRGOTQ2M0EwOUNGODc3MEYyNSUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+"title":
+"Folgers Ground Black Gold Dark Roast Ground Coffee - Black Coffee - Dark - Ground - Black Gold - 1 Each",
+"thumbnails":
+[
+"https://th.bing.com/th/id/OPHS.A1wSOOGVv3poVQ474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"Office Depot",
+"price":
+"$13.09",
+"extracted_price":
+13.09,
+"rating":
+4.4,
+"reviews":
+"145",
+"external_link":
+"https://www.officedepot.com/a/products/7068237/Folgers-Ground-Black-Gold-Dark-Roast/?utm_source=connexity&utm_medium=cpc&utm_content={msclkid}&cnxclid={msclkid}&utm_campaign=pla_"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=1e908fd803d1d8977c2a8c56b1b50c7ca5999b7fd445b410c077c9c881a4c203JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjI0RDc1NTlBQ0YyQzFFNTNDNjBGRUFEOEI1MTZCQkYxMiUyMitnSWRIYXNoJTNhJTIyMTQ4NDYwMTExNyUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjI3OTc1NTEwMDk0JTIyK0F1Y0NvbnRleHRHdWlkJTNhJTIyMCUyMitHcm91cEVudGl0eUlkJTNhJTIyNEQ3NTU5QUNGMkMxRTUzQzYwRkVBRDhCNTE2QkJGMTIlMjIrTm9uU3BvbnNvcmVkT2ZmZXIlM2ElMjJUcnVlJTIyJnByb2R1Y3RwYWdlPXRydWUmRk9STT1TSFBQRFAmYnJvd3NlPXRydWU&ntb=1",
+"title":
+"Crown Beverages Emperor's Finest Premium Blend Decaf Coffee Packet 2 Oz. - 80/Case",
+"thumbnails":
+[
+"https://th.bing.com/th/id/OPHS.Nbrc63oCxWJPUQ474C474?w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th?id=OPHS.9cms%2f8swkWiQEQ474C474&w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th?id=OPHS.QFEDPsv70MDJ%2fQ474C474&w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th/id/OPHS.GQUFbkz2ivmaYw474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"WebstaurantStore",
+"price":
+"$88.49",
+"extracted_price":
+88.49,
+"rating":
+4.7,
+"reviews":
+"242",
+"external_link":
+"https://www.webstaurantstore.com/crown-beverages-emperors-finest-premium-blend-decaf-coffee-2-oz-packet-case/110EMPFINDEC.html"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=327bbcb32000a41b7d7e2789ba4b2ca1afacb483ca3aabd9c767f6d214169212JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMTIlMjIrZ0lkJTNhJTIyMzA0NTQ3NjAwNDQ4JTIyK2dJZEhhc2glM2ElMjIwJTIyK2dHbG9iYWxPZmZlcklkcyUzYSUyMjMwNDU0NzYwMDQ0OCUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMjMwNDU0NzYwMDQ0OCUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+"title":
+"South American Coffee Sampler Regular / Whole Bean",
+"thumbnails":
+[
+"https://th.bing.com/th?id=OPHS.pSGKS3s75U%2fa%2bA474C474&w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"CoffeeAM",
+"price":
+"$42.95",
+"extracted_price":
+42.95,
+"external_link":
+"https://www.coffeeam.com/products/south-american-coffee-sampler?variant=31128612634726&country=US&currency=USD&utm_medium=product_sync&utm_source=bing&utm_content=sag_organic&utm_campaign=sag_organic"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=f8d45d901974968902697e23ffefe2a50e26cf4c231d59e1a39d3b66b19a5f89JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjIwOUQwMEUwOTYxMjlCMTIyMjg3OTQzMjdENEYxODJFMiUyMitnSWRIYXNoJTNhJTIyNDA1NzM5OTQ2NiUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjIxNzYwMDEyNzQ3MCUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMjA5RDAwRTA5NjEyOUIxMjIyODc5NDMyN0Q0RjE4MkUyJTIyK05vblNwb25zb3JlZE9mZmVyJTNhJTIyVHJ1ZSUyMiZwcm9kdWN0cGFnZT10cnVlJkZPUk09U0hQUERQJmJyb3dzZT10cnVl&ntb=1",
+"title":
+"12 Oz. Signature Blend Dark Roast Premium Ground Coffee (6-Pack)",
+"thumbnails":
+[
+"https://th.bing.com/th/id/OPHS.N4SV0J8DM5xm7g474C474?w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th/id/OPHS.09lbxp5gOIr9Ow474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"Home Depot",
+"price":
+"$38.37",
+"extracted_price":
+38.37,
+"rating":
+4.8,
+"reviews":
+"224",
+"free_shipping":
+true,
+"external_link":
+"https://www.homedepot.com/p/Community-Coffee-12-oz-Signature-Blend-Dark-Roast-Premium-Ground-Coffee-6-Pack-1815A/306817146"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=0a4584a28e733f9e5cbb2ee66efc6096bb3c2827ba9db28981ee25c2c0ed5e87JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjI1NEJCNTMzOEQzRUJDNDYxN0U2RjM4OEFFQjk5QzcwNCUyMitnSWRIYXNoJTNhJTIyMjg4NjM1ODI3MCUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjIzNDczODQ0NTUwJTIyK0F1Y0NvbnRleHRHdWlkJTNhJTIyMCUyMitHcm91cEVudGl0eUlkJTNhJTIyNTRCQjUzMzhEM0VCQzQ2MTdFNkYzODhBRUI5OUM3MDQlMjIrTm9uU3BvbnNvcmVkT2ZmZXIlM2ElMjJUcnVlJTIyJnByb2R1Y3RwYWdlPXRydWUmRk9STT1TSFBQRFAmYnJvd3NlPXRydWU&ntb=1",
+"title":
+"Pilon Gourmet Espresso Dark Roast Ground Coffee - 10Oz",
+"thumbnails":
+[
+"https://th.bing.com/th?id=OPHS.9FBFH%2fFS3883RQ474C474&w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th?id=OPHS.5l5dF%2bn4yStpPQ474C474&w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th?id=OPHS.K6ELP%2b7gNZcVeA474C474&w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th/id/OPHS.BexpzjAVhW5ImA474C474?w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th/id/OPHS.UMMwMmXEzbthdw474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"Target",
+"price":
+"$4.49",
+"extracted_price":
+4.49,
+"rating":
+4.5,
+"reviews":
+"103",
+"free_shipping":
+true,
+"external_link":
+"https://www.target.com/p/pilon-roast-gourmet-espresso-dark-roast-ground-coffee-10oz/-/A-14412751?TCID=OGS"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=95ba3a69c20290f4e18c968b3d5a0ce4e0f9b2910dbb46383362d2638d1ffe07JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMTIlMjIrZ0lkJTNhJTIyMzAzODY5ODI0MDM5JTIyK2dJZEhhc2glM2ElMjIwJTIyK2dHbG9iYWxPZmZlcklkcyUzYSUyMjMwMzg2OTgyNDAzOSUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMjMwMzg2OTgyNDAzOSUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+"title":
+"Folgers Ground Classic Roast Coffee - Medium - 40.3 Oz Per Canister - Ground - Mountain Grown, Classic Roast - Kosher/ - 35 / Pallet",
+"thumbnails":
+[
+"https://th.bing.com/th?id=OPHS.L%2fv%2fXPE3YayeRQ474C474&w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"Office Depot",
+"price":
+"$7,873.09",
+"extracted_price":
+7873.09,
+"rating":
+4.1,
+"reviews":
+"1K+",
+"external_link":
+"https://www.officedepot.com/a/products/7182399/Folgers-Ground-Canister-Classic-Roast-Coffee/"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=6764777dbe66a2a594a5e3b5c56aac6cefa3f1ea5d4391b42c99a86d99204846JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjIyOTIxNDFBMUNEQzMzREI5MjhDMjI0RjNFREQ5RURDQSUyMitnSWRIYXNoJTNhJTIyMzk2MzYzODQ1NiUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjI3NDcwMjExNTc4MiUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMjI5MjE0MUExQ0RDMzNEQjkyOEMyMjRGM0VERDlFRENBJTIyK05vblNwb25zb3JlZE9mZmVyJTNhJTIyVHJ1ZSUyMiZwcm9kdWN0cGFnZT10cnVlJkZPUk09U0hQUERQJmJyb3dzZT10cnVl&ntb=1",
+"title":
+"Gevalia Traditional Roast Light Roast Ground Coffee 12 Oz",
+"thumbnails":
+[
+"https://th.bing.com/th?id=OPHS.gp%2btJezRC2RnYA474C474&w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"Kroger",
+"price":
+"$9.99",
+"extracted_price":
+9.99,
+"old_price":
+"$12.49",
+"extracted_old_price":
+12.49,
+"rating":
+4.6,
+"reviews":
+"119",
+"external_link":
+"http://www.kroger.com/p/gevalia-traditional-roast-light-roast-ground-coffee/0004300004296?fulfillment=PICKUP&storecode="
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=c0608cd937f6addcd951faa2bc9284dea19bb49d940fa639b38717a0ec817d59JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjI4RDI1NTYwNDhGQTFDNTVDMDM2RjQ0MDQ2QTMyNDZDOCUyMitnSWRIYXNoJTNhJTIyMTY3ODg2MzYxOSUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjI5MDEzMTIxNzI3MyUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMjhEMjU1NjA0OEZBMUM1NUMwMzZGNDQwNDZBMzI0NkM4JTIyK05vblNwb25zb3JlZE9mZmVyJTNhJTIyVHJ1ZSUyMiZwcm9kdWN0cGFnZT10cnVlJkZPUk09U0hQUERQJmJyb3dzZT10cnVl&ntb=1",
+"title":
+"12 Oz. Out Of This World Variety Pack Ground Coffee (Pack Of 4)",
+"thumbnails":
+[
+"https://th.bing.com/th/id/OPHS.XAFEnyWj5PxfOQ474C474?w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th/id/OPHS.dJqfolQxtDsnSQ474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"Home Depot",
+"price":
+"$38.99",
+"extracted_price":
+38.99,
+"rating":
+4.5,
+"reviews":
+"14",
+"free_shipping":
+true,
+"external_link":
+"https://www.homedepot.com/p/COPPER-MOON-12-oz-Out-of-This-World-Variety-Pack-Ground-Coffee-Pack-of-4-205363/320881125"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=db961f538fd0e2e435a69b232a8bfa17e8e402160f1bbe93cba2423524fcd6f3JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMTIlMjIrZ0lkJTNhJTIyODQ2OTcwMjA1MjglMjIrZ0lkSGFzaCUzYSUyMjAlMjIrZ0dsb2JhbE9mZmVySWRzJTNhJTIyODQ2OTcwMjA1MjglMjIrQXVjQ29udGV4dEd1aWQlM2ElMjIwJTIyK0dyb3VwRW50aXR5SWQlM2ElMjI4NDY5NzAyMDUyOCUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+"title":
+"Cafe Bustelo Espresso Ground Coffee Packet 2 Oz. - 30/Case",
+"thumbnails":
+[
+"https://th.bing.com/th?id=OPHS.GJiQVk%2feq66P0g474C474&w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"WebstaurantStore",
+"price":
+"$56.99",
+"extracted_price":
+56.99,
+"rating":
+4.6,
+"reviews":
+"1K+",
+"external_link":
+"https://www.webstaurantstore.com/cafe-bustelo-espresso-ground-coffee-packet-2-oz-case/110BSPK1014.html"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=fda0120f300a9191e76a32401bce3362cb8711861d23deed7802052d74cea268JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjJENDE3QzcxQzhDRTFFM0RBQzQ2RDFFNjkwMkU2OTVCNyUyMitnSWRIYXNoJTNhJTIyMjY1NjczMTgyMCUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjIyMDE5MTU5MzYzMTQlMjIrQXVjQ29udGV4dEd1aWQlM2ElMjIwJTIyK0dyb3VwRW50aXR5SWQlM2ElMjJENDE3QzcxQzhDRTFFM0RBQzQ2RDFFNjkwMkU2OTVCNyUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+"title":
+"Lavazza Italian Roast Ground Coffee 12 Oz.",
+"thumbnails":
+[
+"https://th.bing.com/th?id=OPHS.MAl729Qt%2bHkM%2fg474C474&w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th?id=OPHS.3V0df0%2bR9Q5uCA474C474&w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th/id/OPHS.cFiEfjOu0FOR8A474C474?w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th/id/OPHS.7qyUykq1X7j9Xg474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"WebstaurantStore",
+"price":
+"$14.49",
+"extracted_price":
+14.49,
+"rating":
+4.5,
+"reviews":
+"66",
+"external_link":
+"https://www.webstaurantstore.com/coffee-ground-italian-roast-12-oz-lavazza/110LVITALIAN.html"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=42ca12247b87831cb5c2726b8dfa7806b14edc810c5463f6fc7cad2ff0ebd595JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjIzQTQyQUExOEM2QzVCQUZEQjI5RTc2N0NGQjBEN0VGOCUyMitnSWRIYXNoJTNhJTIyNzA5MTQ4Njc3JTIyK2dHbG9iYWxPZmZlcklkcyUzYSUyMjMzMzMwMDM5NDExJTIyK0F1Y0NvbnRleHRHdWlkJTNhJTIyMCUyMitHcm91cEVudGl0eUlkJTNhJTIyM0E0MkFBMThDNkM1QkFGREIyOUU3NjdDRkIwRDdFRjglMjIrTm9uU3BvbnNvcmVkT2ZmZXIlM2ElMjJUcnVlJTIyJnByb2R1Y3RwYWdlPXRydWUmRk9STT1TSFBQRFAmYnJvd3NlPXRydWU&ntb=1",
+"title":
+"Folgers 100% Colombian Coffee K-Cups, Medium Roast, 24/Box GMT6659",
+"thumbnails":
+[
+"https://th.bing.com/th?id=OPHS.rV6pgG%2fQHzGPRQ474C474&w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"OfficeSupply.com",
+"price":
+"$23.38",
+"extracted_price":
+23.38,
+"rating":
+4.5,
+"reviews":
+"491",
+"external_link":
+"https://www.officesupply.com/cleaning-breakroom/food-beverage-supplies/foods-beverages/coffee/folgers-colombian-coffee-cups-medium-roast/p393994.html?ref=pla&utm_source=bing&utm_medium=cpc&utm_campaign=PLA&scid=scbplp393994&sc_intid=393994"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=76bd9d41cbfb077909d958e7a0bd478fbfd265955035205ab625b7a14dc7f1e9JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjI4OUFDMDFFMkRFOEIyNjNBNDJGRDZDMTc0QTVFNzMwOCUyMitnSWRIYXNoJTNhJTIyNDY1NTc5OTg4JTIyK2dHbG9iYWxPZmZlcklkcyUzYSUyMjE3NjAwMzUxOTYyJTIyK0F1Y0NvbnRleHRHdWlkJTNhJTIyMCUyMitHcm91cEVudGl0eUlkJTNhJTIyODlBQzAxRTJERThCMjYzQTQyRkQ2QzE3NEE1RTczMDglMjIrTm9uU3BvbnNvcmVkT2ZmZXIlM2ElMjJUcnVlJTIyJnByb2R1Y3RwYWdlPXRydWUmRk9STT1TSFBQRFAmYnJvd3NlPXRydWU&ntb=1",
+"title":
+"12 Oz. House Blend Medium-Dark Roast Premium Ground Coffee (6-Pack)",
+"thumbnails":
+[
+"https://th.bing.com/th?id=OPHS.%2fkzbyeii6HugdA474C474&w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th/id/OPHS.L7r0ruPBmgjWgg474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"Home Depot",
+"price":
+"$46.02",
+"extracted_price":
+46.02,
+"rating":
+4.7,
+"reviews":
+"849",
+"free_shipping":
+true,
+"external_link":
+"https://www.homedepot.com/p/Community-Coffee-12-oz-House-Blend-Medium-Dark-Roast-Premium-Ground-Coffee-6-Pack-1904/306821252"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=caaedcc050cc9d301e99b2f77904e35afe32473ae9afa57c8aa49c339c764567JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMTIlMjIrZ0lkJTNhJTIyMzU2ODM3MDI3MTcwJTIyK2dJZEhhc2glM2ElMjIwJTIyK2dHbG9iYWxPZmZlcklkcyUzYSUyMjM1NjgzNzAyNzE3MCUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMjM1NjgzNzAyNzE3MCUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+"title":
+"Regular Ground (12Oz Bag)",
+"thumbnails":
+[
+"https://th.bing.com/th?id=OPHS.ekG0Ny3%2bGsDXFA474C474&w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"Tylers Coffees",
+"price":
+"$24.97",
+"extracted_price":
+24.97,
+"rating":
+4.4,
+"reviews":
+"24",
+"external_link":
+"https://tylerscoffees.com/products/regular-ground-12oz-bag?_kx=B7tPko5MHieUIQVsZUdGF61Elairn3XOnQ8hoyqgdsvbZerLnSfpZ-A_YDSTrkXE.RE5Zyi"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=3014346585ff8141d54b0946aa5238ee2093cc59ef968720ee3788b077e8161bJmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjJTXzBBNzkwOEFDNzc3NURGNDM1NzU2NzBGQjVFOTY1NjA1JTIyK2dJZEhhc2glM2ElMjI0MTE0OTQyNiUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjI3NzE5MTM3MjM5NSUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMlNfMEE3OTA4QUM3Nzc1REY0MzU3NTY3MEZCNUU5NjU2MDUlMjIrTm9uU3BvbnNvcmVkT2ZmZXIlM2ElMjJUcnVlJTIyJnByb2R1Y3RwYWdlPXRydWUmRk9STT1TSFBQRFAmYnJvd3NlPXRydWU&ntb=1",
+"title":
+"Folgers Classic Decaf Coffee Filter Pack, Medium Roast, 0.9 Oz., 40/Carton (SMU06122)",
+"thumbnails":
+[
+"https://th.bing.com/th/id/OPHS.qdTrUyOa2cAZ8A474C474?w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th?id=OPHS.45NbONfO%2bwon8g474C474&w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"Staples",
+"price":
+"$77.69",
+"extracted_price":
+77.69,
+"rating":
+4.6,
+"reviews":
+"233",
+"free_shipping":
+true,
+"external_link":
+"https://www.staples.com/folgers-classic-decaf-coffee-filter-packs-medium-roast-0-9-oz-packets-40-carton-smu06122/product_495725"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=17aef72099b9c3fe276aff8cf295f08b7e73aa7517c70022c86041dd5c0e3f04JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjIyQThDQUVGMDdGNjdCQkY4MUE3RDNGNjNBQzk1NUI0RiUyMitnSWRIYXNoJTNhJTIyMjI0MDE0Njc3NyUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjIxNzYwMDEzNjg4MiUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMjJBOENBRUYwN0Y2N0JCRjgxQTdEM0Y2M0FDOTU1QjRGJTIyK05vblNwb25zb3JlZE9mZmVyJTNhJTIyVHJ1ZSUyMiZwcm9kdWN0cGFnZT10cnVlJkZPUk09U0hQUERQJmJyb3dzZT10cnVl&ntb=1",
+"title":
+"12 Oz. Breakfast Blend Medium Roast Premium Ground Coffee (6-Pack)",
+"thumbnails":
+[
+"https://th.bing.com/th/id/OPHS.w7Lmcu5bEo0wvQ474C474?w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th/id/OPHS.rFAlMEIOZIfutg474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"Home Depot",
+"price":
+"$30.13",
+"extracted_price":
+30.13,
+"rating":
+4.7,
+"reviews":
+"992",
+"free_shipping":
+true,
+"external_link":
+"https://www.homedepot.com/p/Community-Coffee-12-oz-Breakfast-Blend-Medium-Roast-Premium-Ground-Coffee-6-Pack-1820A/306817189"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=ba80c8c14b520d88e9924aab37999bed2e5c78c1504a3099d51f1a2f96d1c65bJmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMTIlMjIrZ0lkJTNhJTIyMzA0NTQ3NjAxMTkzJTIyK2dJZEhhc2glM2ElMjIwJTIyK2dHbG9iYWxPZmZlcklkcyUzYSUyMjMwNDU0NzYwMTE5MyUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMjMwNDU0NzYwMTE5MyUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+"title":
+"Espresso Sampler Decaf / Drip Grind",
+"thumbnails":
+[
+"https://th.bing.com/th/id/OPHS.0dADKJv4sjeWdQ474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"CoffeeAM",
+"price":
+"$34.95",
+"extracted_price":
+34.95,
+"external_link":
+"https://www.coffeeam.com/products/decaf-espresso-sampler?variant=31128656969830&country=US&currency=USD&utm_medium=product_sync&utm_source=bing&utm_content=sag_organic&utm_campaign=sag_organic"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=bcb236b16c783f6562a201adaa6d72d429b167ef655ee2b5676cb3b782a519c5JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjIxNjFEN0FDQkMwREQ5OUQyNzQ1N0E5NDFCMjJBNEM0RiUyMitnSWRIYXNoJTNhJTIyMjY5NDU1MTMyJTIyK2dHbG9iYWxPZmZlcklkcyUzYSUyMjE3NjAwMzUyMDM0JTIyK0F1Y0NvbnRleHRHdWlkJTNhJTIyMCUyMitHcm91cEVudGl0eUlkJTNhJTIyMTYxRDdBQ0JDMEREOTlEMjc0NTdBOTQxQjIyQTRDNEYlMjIrTm9uU3BvbnNvcmVkT2ZmZXIlM2ElMjJUcnVlJTIyJnByb2R1Y3RwYWdlPXRydWUmRk9STT1TSFBQRFAmYnJvd3NlPXRydWU&ntb=1",
+"title":
+"12 Oz. New Orleans Blend Special Dark Roast Premium Ground Coffee (6-Pack)",
+"thumbnails":
+[
+"https://th.bing.com/th/id/OPHS.CmOC5XqXLKkXnA474C474?w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th/id/OPHS.2sz2mOunIqvktQ474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"Home Depot",
+"price":
+"$46.02",
+"extracted_price":
+46.02,
+"rating":
+4.8,
+"reviews":
+"81",
+"free_shipping":
+true,
+"external_link":
+"https://www.homedepot.com/p/Community-Coffee-12-oz-New-Orleans-Blend-Special-Dark-Roast-Premium-Ground-Coffee-6-Pack-1913/306821931"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=ca28b10a0c2c9f6289d5b372e6edc1ab8ac5cfe8845035abb2b54e30fa70ce46JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjI4OTlCOEU5QzM4RTUyMTNDNTA1RTYyQzFCNTRGNUY2NyUyMitnSWRIYXNoJTNhJTIyNjgzMTc4MTY2JTIyK2dHbG9iYWxPZmZlcklkcyUzYSUyMjEwMDU4ODI2NTI4JTIyK0F1Y0NvbnRleHRHdWlkJTNhJTIyMCUyMitHcm91cEVudGl0eUlkJTNhJTIyODk5QjhFOUMzOEU1MjEzQzUwNUU2MkMxQjU0RjVGNjclMjIrTm9uU3BvbnNvcmVkT2ZmZXIlM2ElMjJUcnVlJTIyJnByb2R1Y3RwYWdlPXRydWUmRk9STT1TSFBQRFAmYnJvd3NlPXRydWU&ntb=1",
+"title":
+"Dunkin' Cold Brew Medium Roast Ground Coffee Packs - 8.46Oz",
+"thumbnails":
+[
+"https://th.bing.com/th?id=OPHS.86yKMl2TuuC%2fRw474C474&w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th/id/OPHS.YAZpXA6B0H07uw474C474?w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th/id/OPHS.zFy70bYM1pDjUg474C474?w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th/id/OPHS.ppPm7wQUW6NWHA474C474?w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th?id=OPHS.b5X%2fYAG%2fbC%2bpeA474C474&w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"Target",
+"price":
+"$7.39",
+"extracted_price":
+7.39,
+"rating":
+4,
+"reviews":
+"82",
+"free_shipping":
+true,
+"external_link":
+"https://www.target.com/p/dunkin-39-cold-brew-medium-roast-ground-coffee-packs-8-46oz/-/A-52462051?TCID=OGS"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=a0239642cc14017c527eb518ea96b009a6b3be4c7e09c639f270b2fca108487fJmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjIyNjI5RjcxRDExMzJEMDU4Q0YxMTVCM0E0RTA5OTVGNCUyMitnSWRIYXNoJTNhJTIyNjc5NDY0NDg4JTIyK2dHbG9iYWxPZmZlcklkcyUzYSUyMjQwMDAzMzU5MjYxJTIyK0F1Y0NvbnRleHRHdWlkJTNhJTIyMCUyMitHcm91cEVudGl0eUlkJTNhJTIyMjYyOUY3MUQxMTMyRDA1OENGMTE1QjNBNEUwOTk1RjQlMjIrTm9uU3BvbnNvcmVkT2ZmZXIlM2ElMjJUcnVlJTIyJnByb2R1Y3RwYWdlPXRydWUmRk9STT1TSFBQRFAmYnJvd3NlPXRydWU&ntb=1",
+"title":
+"Great Value Classic Medium Roast Instant Coffee, 8 Oz",
+"thumbnails":
+[
+"https://th.bing.com/th?id=OPHS.4GYOC%2bnPqDk4BQ474C474&w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th/id/OPHS.i21OAjOCgwKqAA474C474?w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th?id=OPHS.c4crg%2fy0a%2bc8jQ474C474&w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th/id/OPHS.8im2JqKOTBNGmQ474C474?w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th/id/OPHS.bcZDbMiH3BPKpg474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"Walmart",
+"price":
+"$5.42",
+"extracted_price":
+5.42,
+"rating":
+4,
+"reviews":
+"141",
+"external_link":
+"https://www.walmart.com/ip/Great-Value-Premium-Instant-Coffee-8-oz/10315303?wmlspartner=wlpa&selectedSellerId=0"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=13529d64950e471332a9600942b63894d715e4368d4de4e4fd2aa3be6a67dcdbJmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjIyNUI0N0NFMDRBMjY3MUQzMUE1NjQ3NTAxQzUwRDYwRiUyMitnSWRIYXNoJTNhJTIyMzQ3Nzg1OTIwMCUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjI0MjI5MTYxMzUwOSUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMjI1QjQ3Q0UwNEEyNjcxRDMxQTU2NDc1MDFDNTBENjBGJTIyK05vblNwb25zb3JlZE9mZmVyJTNhJTIyVHJ1ZSUyMiZwcm9kdWN0cGFnZT10cnVlJkZPUk09U0hQUERQJmJyb3dzZT10cnVl&ntb=1",
+"title":
+"Folgers Instant Coffee Crystals, Classic Roast, Medium Roast, 16 Oz, 1 Each FOL06922",
+"thumbnails":
+[
+"https://th.bing.com/th?id=OPHS.uX%2bK1WF0%2fHVbog474C474&w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"OfficeSupply.com",
+"price":
+"$19.08",
+"extracted_price":
+19.08,
+"rating":
+4.4,
+"reviews":
+"1K+",
+"external_link":
+"https://www.officesupply.com/cleaning-breakroom/food-beverage-supplies/foods-beverages/coffee/folgers-instant-coffee-crystals-classic-roast-medium-roast-each/p296479.html?ref=pla&utm_source=bing&utm_medium=cpc&utm_campaign=PLA&scid=scbplp296479&sc_intid=296479"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=4bed312f783c2bc0f8e113be9e0895bed98dd9737b47abe6fcf337cf9f6a50c4JmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjI0RDI4QjMyNjdFQjk5NTkyOTQ1N0E2Njk1Q0Y2MDkwMyUyMitnSWRIYXNoJTNhJTIyMTAwMzgzNzEzOSUyMitnR2xvYmFsT2ZmZXJJZHMlM2ElMjIzMDQ1NDc2MDMxNDAlMjIrQXVjQ29udGV4dEd1aWQlM2ElMjIwJTIyK0dyb3VwRW50aXR5SWQlM2ElMjI0RDI4QjMyNjdFQjk5NTkyOTQ1N0E2Njk1Q0Y2MDkwMyUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+"title":
+"New World Blend (Thanksgiving Theme) Decaf / Drip Grind / 0.5LB",
+"thumbnails":
+[
+"https://th.bing.com/th/id/OPHS.GDWv1UWTwS4dwQ474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"CoffeeAM",
+"price":
+"$11.95",
+"extracted_price":
+11.95,
+"external_link":
+"https://www.coffeeam.com/products/new-world-blend-thanksgiving-theme?variant=31128754421862&country=US&currency=USD&utm_medium=product_sync&utm_source=bing&utm_content=sag_organic&utm_campaign=sag_organic"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=0e005f3ac7d1f0d0126719e8165baf785d2db69c6b0242248e54ad52fabf7bdcJmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjJTXzE4MTM3Q0I3OEU0ODNENzdCMjZBOTdBRTVGOTFCNzJEJTIyK2dJZEhhc2glM2ElMjIyMzY2MDA5MjIwJTIyK2dHbG9iYWxPZmZlcklkcyUzYSUyMjI2MTIxMjQ2Njk4MCUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMlNfMTgxMzdDQjc4RTQ4M0Q3N0IyNkE5N0FFNUY5MUI3MkQlMjIrTm9uU3BvbnNvcmVkT2ZmZXIlM2ElMjJUcnVlJTIyJnByb2R1Y3RwYWdlPXRydWUmRk9STT1TSFBQRFAmYnJvd3NlPXRydWU&ntb=1",
+"title":
+"Classic Coffee | 12Oz Bag | Whole Bean | Medium Roast | Colombia Single-Origin Coffee | Bones Coffee Company",
+"thumbnails":
+[
+"https://th.bing.com/th/id/OPHS.w9ocXTov0MvMqw474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"Bones Coffee Company",
+"price":
+"$19.99",
+"extracted_price":
+19.99,
+"rating":
+4.5,
+"reviews":
+"1K+",
+"external_link":
+"https://www.bonescoffee.com/products/colombia-single-origin-coffee-by-bones-coffee-company-12oz?variant=1784423874590"
+},
+{
+"link":
+"https://www.bing.com/ck/a?!&&p=297d590882a47b8a3eeedbc18a5b4aea0e212f700ec8354d8312dfd55d156b7fJmltdHM9MTc2NzM5ODQwMA&ptn=3&ver=2&hsh=4&fclid=30df5995-620b-6af5-13c9-4f4363406bce&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1Db2ZmZWUmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMyUyMitnSWQlM2ElMjJTa3VfMUEwQjYwNTY3N0RDNzE5QTMxMTJDMjI1NDhCNDdCMDUlMjIrZ0lkSGFzaCUzYSUyMjQxMzg1NjU2MTglMjIrZ0dsb2JhbE9mZmVySWRzJTNhJTIyMjkwNjIwNjE5OTI3JTIyK0F1Y0NvbnRleHRHdWlkJTNhJTIyMCUyMitHcm91cEVudGl0eUlkJTNhJTIyU2t1XzFBMEI2MDU2NzdEQzcxOUEzMTEyQzIyNTQ4QjQ3QjA1JTIyK05vblNwb25zb3JlZE9mZmVyJTNhJTIyVHJ1ZSUyMiZwcm9kdWN0cGFnZT10cnVlJkZPUk09U0hQUERQJmJyb3dzZT10cnVl&ntb=1",
+"title":
+"Morning Reaper Medium Roast Coffee Pods 18CT",
+"thumbnails":
+[
+"https://th.bing.com/th/id/OPHS.QmRJUxXbbgQmTg474C474?w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th?id=OPHS.znjvZao%2fXuaODA474C474&w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th/id/OPHS.g3gr93xy0U9o6w474C474?w=220&h=220&c=17&o=5&pid=21.1",
+"https://th.bing.com/th/id/OPHS.Bj0wc22MpTy8tA474C474?w=220&h=220&c=17&o=5&pid=21.1"
+],
+"seller":
+"Blackout Coffee Co.",
+"price":
+"$22.95",
+"extracted_price":
+22.95,
+"external_link":
+"https://www.blackoutcoffee.com/products/morning-reaper-coffee-pods?variant=31273262710895&utm_medium=cpc&utm_source=bing&utm_campaign=Bing%20Shopping"
+}
+],
+"filters":
+[
+{
+"type":
+"Show Only",
+"options":
+[
+{
+"text":
+"Available nearby",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22MSxCYXNpYywyPTEsVHw7%22+scenario%3a%2215%22&fk=Show+Only&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522MSxCYXNpYywyPTEsVHw7%2522%2Bscenario%253A%252215%2522&q=Coffee"
+}
+]
+},
+{
+"type":
+"Brand",
+"options":
+[
+{
+"text":
+"Folgers",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22MzA4NDMyODMzMixCYXNpYywwPTMzMzY3NDM3ODcsVHwxNjY2MTAxNTU0LEZ8MzgyNTExMTM3MSxGfDIxNDgwMzgzNzIsRnwxNjg0NTg0NjU1LEZ8MTY0NDg3Mjc5MSxGfDE4MzA3NzY5MzcsRnwxODkxMzU4OTA4LEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Brand&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522MzA4NDMyODMzMixCYXNpYywwPTMzMzY3NDM3ODcsVHwxNjY2MTAxNTU0LEZ8MzgyNTExMTM3MSxGfDIxNDgwMzgzNzIsRnwxNjg0NTg0NjU1LEZ8MTY0NDg3Mjc5MSxGfDE4MzA3NzY5MzcsRnwxODkxMzU4OTA4LEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"Maxwell House",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22MzA4NDMyODMzMixCYXNpYywwPTMzMzY3NDM3ODcsRnwxNjY2MTAxNTU0LFR8MzgyNTExMTM3MSxGfDIxNDgwMzgzNzIsRnwxNjg0NTg0NjU1LEZ8MTY0NDg3Mjc5MSxGfDE4MzA3NzY5MzcsRnwxODkxMzU4OTA4LEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Brand&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522MzA4NDMyODMzMixCYXNpYywwPTMzMzY3NDM3ODcsRnwxNjY2MTAxNTU0LFR8MzgyNTExMTM3MSxGfDIxNDgwMzgzNzIsRnwxNjg0NTg0NjU1LEZ8MTY0NDg3Mjc5MSxGfDE4MzA3NzY5MzcsRnwxODkxMzU4OTA4LEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"Keurig",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22MzA4NDMyODMzMixCYXNpYywwPTMzMzY3NDM3ODcsRnwxNjY2MTAxNTU0LEZ8MzgyNTExMTM3MSxUfDIxNDgwMzgzNzIsRnwxNjg0NTg0NjU1LEZ8MTY0NDg3Mjc5MSxGfDE4MzA3NzY5MzcsRnwxODkxMzU4OTA4LEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Brand&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522MzA4NDMyODMzMixCYXNpYywwPTMzMzY3NDM3ODcsRnwxNjY2MTAxNTU0LEZ8MzgyNTExMTM3MSxUfDIxNDgwMzgzNzIsRnwxNjg0NTg0NjU1LEZ8MTY0NDg3Mjc5MSxGfDE4MzA3NzY5MzcsRnwxODkxMzU4OTA4LEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"Coffee Bean Direct",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22MzA4NDMyODMzMixCYXNpYywwPTMzMzY3NDM3ODcsRnwxNjY2MTAxNTU0LEZ8MzgyNTExMTM3MSxGfDIxNDgwMzgzNzIsVHwxNjg0NTg0NjU1LEZ8MTY0NDg3Mjc5MSxGfDE4MzA3NzY5MzcsRnwxODkxMzU4OTA4LEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Brand&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522MzA4NDMyODMzMixCYXNpYywwPTMzMzY3NDM3ODcsRnwxNjY2MTAxNTU0LEZ8MzgyNTExMTM3MSxGfDIxNDgwMzgzNzIsVHwxNjg0NTg0NjU1LEZ8MTY0NDg3Mjc5MSxGfDE4MzA3NzY5MzcsRnwxODkxMzU4OTA4LEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"Community Coffee",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22MzA4NDMyODMzMixCYXNpYywwPTMzMzY3NDM3ODcsRnwxNjY2MTAxNTU0LEZ8MzgyNTExMTM3MSxGfDIxNDgwMzgzNzIsRnwxNjg0NTg0NjU1LFR8MTY0NDg3Mjc5MSxGfDE4MzA3NzY5MzcsRnwxODkxMzU4OTA4LEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Brand&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522MzA4NDMyODMzMixCYXNpYywwPTMzMzY3NDM3ODcsRnwxNjY2MTAxNTU0LEZ8MzgyNTExMTM3MSxGfDIxNDgwMzgzNzIsRnwxNjg0NTg0NjU1LFR8MTY0NDg3Mjc5MSxGfDE4MzA3NzY5MzcsRnwxODkxMzU4OTA4LEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"Dunkin",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22MzA4NDMyODMzMixCYXNpYywwPTMzMzY3NDM3ODcsRnwxNjY2MTAxNTU0LEZ8MzgyNTExMTM3MSxGfDIxNDgwMzgzNzIsRnwxNjg0NTg0NjU1LEZ8MTY0NDg3Mjc5MSxUfDE4MzA3NzY5MzcsRnwxODkxMzU4OTA4LEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Brand&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522MzA4NDMyODMzMixCYXNpYywwPTMzMzY3NDM3ODcsRnwxNjY2MTAxNTU0LEZ8MzgyNTExMTM3MSxGfDIxNDgwMzgzNzIsRnwxNjg0NTg0NjU1LEZ8MTY0NDg3Mjc5MSxUfDE4MzA3NzY5MzcsRnwxODkxMzU4OTA4LEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"Bones Coffee Company",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22MzA4NDMyODMzMixCYXNpYywwPTMzMzY3NDM3ODcsRnwxNjY2MTAxNTU0LEZ8MzgyNTExMTM3MSxGfDIxNDgwMzgzNzIsRnwxNjg0NTg0NjU1LEZ8MTY0NDg3Mjc5MSxGfDE4MzA3NzY5MzcsVHwxODkxMzU4OTA4LEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Brand&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522MzA4NDMyODMzMixCYXNpYywwPTMzMzY3NDM3ODcsRnwxNjY2MTAxNTU0LEZ8MzgyNTExMTM3MSxGfDIxNDgwMzgzNzIsRnwxNjg0NTg0NjU1LEZ8MTY0NDg3Mjc5MSxGfDE4MzA3NzY5MzcsVHwxODkxMzU4OTA4LEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"Green Mountain Coffee",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22MzA4NDMyODMzMixCYXNpYywwPTMzMzY3NDM3ODcsRnwxNjY2MTAxNTU0LEZ8MzgyNTExMTM3MSxGfDIxNDgwMzgzNzIsRnwxNjg0NTg0NjU1LEZ8MTY0NDg3Mjc5MSxGfDE4MzA3NzY5MzcsRnwxODkxMzU4OTA4LFR8Ow%3d%3d%22+scenario%3a%2215%22&fk=Brand&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522MzA4NDMyODMzMixCYXNpYywwPTMzMzY3NDM3ODcsRnwxNjY2MTAxNTU0LEZ8MzgyNTExMTM3MSxGfDIxNDgwMzgzNzIsRnwxNjg0NTg0NjU1LEZ8MTY0NDg3Mjc5MSxGfDE4MzA3NzY5MzcsRnwxODkxMzU4OTA4LFR8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+}
+]
+},
+{
+"type":
+"Price",
+"options":
+[
+{
+"text":
+"Up to $20",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=rfilter%3a%22MzcyOTYxNDM5OSxQcmljZSxVcCB0byAkMjA9cG1pbjoxLjY4fHBtYXg6Nzg3My4wOXxzbWluOjF8c21heDoyMCxUOw%3d%3d%22+scenario%3a%2215%22&fk=Price&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=rfilter%253A%2522MzcyOTYxNDM5OSxQcmljZSxVcCB0byAkMjA9cG1pbjoxLjY4fHBtYXg6Nzg3My4wOXxzbWluOjF8c21heDoyMCxUOw%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"$20 - $40",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=rfilter%3a%22MzcyOTYxNDM5OSxQcmljZSwkMjAgLSAkNDA9cG1pbjoxLjY4fHBtYXg6Nzg3My4wOXxzbWluOjIwfHNtYXg6NDAsVDs%3d%22+scenario%3a%2215%22&fk=Price&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=rfilter%253A%2522MzcyOTYxNDM5OSxQcmljZSwkMjAgLSAkNDA9cG1pbjoxLjY4fHBtYXg6Nzg3My4wOXxzbWluOjIwfHNtYXg6NDAsVDs%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"$40 - $70",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=rfilter%3a%22MzcyOTYxNDM5OSxQcmljZSwkNDAgLSAkNzA9cG1pbjoxLjY4fHBtYXg6Nzg3My4wOXxzbWluOjQwfHNtYXg6NzAsVDs%3d%22+scenario%3a%2215%22&fk=Price&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=rfilter%253A%2522MzcyOTYxNDM5OSxQcmljZSwkNDAgLSAkNzA9cG1pbjoxLjY4fHBtYXg6Nzg3My4wOXxzbWluOjQwfHNtYXg6NzAsVDs%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"$70 - $390",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=rfilter%3a%22MzcyOTYxNDM5OSxQcmljZSwkNzAgLSAkMzkwPXBtaW46MS42OHxwbWF4Ojc4NzMuMDl8c21pbjo3MHxzbWF4OjM5MCxUOw%3d%3d%22+scenario%3a%2215%22&fk=Price&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=rfilter%253A%2522MzcyOTYxNDM5OSxQcmljZSwkNzAgLSAkMzkwPXBtaW46MS42OHxwbWF4Ojc4NzMuMDl8c21pbjo3MHxzbWF4OjM5MCxUOw%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"Over $390",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=rfilter%3a%22MzcyOTYxNDM5OSxQcmljZSxPdmVyICQzOTA9cG1pbjoxLjY4fHBtYXg6Nzg3My4wOXxzbWluOjM5MHxzbWF4Ojc4NzQsVDs%3d%22+scenario%3a%2215%22&fk=Price&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=rfilter%253A%2522MzcyOTYxNDM5OSxQcmljZSxPdmVyICQzOTA9cG1pbjoxLjY4fHBtYXg6Nzg3My4wOXxzbWluOjM5MHxzbWF4Ojc4NzQsVDs%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+}
+]
+},
+{
+"type":
+"Coffee Form",
+"options":
+[
+{
+"text":
+"Ground",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22MjA4NTU4MzY2NyxCYXNpYywwPTQwNzY2Mjg4MjksVHw7%22+scenario%3a%2215%22&fk=Coffee+Form&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522MjA4NTU4MzY2NyxCYXNpYywwPTQwNzY2Mjg4MjksVHw7%2522%2Bscenario%253A%252215%2522&q=Coffee"
+}
+]
+},
+{
+"type":
+"Seller",
+"options":
+[
+{
+"text":
+"Amazon.com",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsVHwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Seller&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsVHwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"Staples",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLFR8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Seller&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLFR8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"OfficeSupply.com",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxUfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Seller&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxUfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"Walmart",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsVHwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Seller&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsVHwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"Office Depot",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLFR8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Seller&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLFR8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"CoffeeAM",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxUfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Seller&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxUfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"Kroger",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksVHwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Seller&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksVHwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"Home Depot",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LFR8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Seller&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LFR8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"WebstaurantStore",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxUfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Seller&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxUfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"Sam's Club",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksVHwxMjg3NjU5MTIyLEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Seller&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksVHwxMjg3NjU5MTIyLEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+},
+{
+"text":
+"Target",
+"link":
+"https://www.bing.com/shop?q=Coffee&filters=gsfilter%3a%22Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLFR8Ow%3d%3d%22+scenario%3a%2215%22&fk=Seller&FORM=SHOPFL&originIGUID=EFA85405DAC34DDE997C58F8798B1197",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522Mzg1NzM1MjY0NyxCYXNpYywwPTE3Nzc2OTIyMzQsRnwyNzAwMjQzOTcyLEZ8NDE4OTg3NTM3OCxGfDMwNDI0MjIwODcsRnwzNzUzNDM1MDgyLEZ8MzAwMDg5OTc2MSxGfDEwODg4ODg0MjksRnwzNjEyNTI3OTI4LEZ8MjE0NTg4MjIwMyxGfDEzNTI4Mzc4NjksRnwxMjg3NjU5MTIyLFR8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=Coffee"
+}
+]
+}
+],
+"ads_results":
+[
+{
+"title":
+"Shop Coffee' Today | Amazon.com® Official Site",
+"link":
+"https://www.bing.com/aclick?ld=e8LT7QmFSjGJcToUkxbLVD1zVUCUwmXsQWXW5hGl-6GiQdZ8Jmx2jeDhjF2pkhJ5bO6-ab4a3FKgbLpqUvVcW1dYVuayJxA57QHEufK1XiO5nAEJZREuA1FaY0YGVWL6_-SzvCzIPN-VWwR0tWHw6zoX8w5EtmIUhN7J1t8KLWlEpAYax4qwIkkMm0jm-oXCqF4JaM6o8OroowZnrcAX4YUdZB4PI&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZnMlMmYlM2ZpZSUzZFVURjglMjZrZXl3b3JkcyUzZGNvZmZlZSUyNTI3JTI2aW5kZXglM2RhcHMlMjZ0YWclM2RtaDBiLTIwJTI2cmVmJTNkcGRfc2xfNWJlNTdkOGRma19lJTI2YWRncnBpZCUzZDEzMzM3MDgxNjY5OTkxNzElMjZodmFkaWQlM2Q4MzM1Njk3NTM2NzUzMCUyNmh2bmV0dyUzZG8lMjZodnFtdCUzZGUlMjZodmJtdCUzZGJlJTI2aHZkZXYlM2RjJTI2aHZsb2NpbnQlM2QlMjZodmxvY3BoeSUzZDg2NjY5JTI2aHZ0YXJnaWQlM2Rrd2QtODMzNTcwOTY4MDM3ODElM2Fsb2MtMTkwJTI2aHlkYWRjciUzZDI2NjEyXzExNjY0MjYzJTI2bWNpZCUzZDlkNTk3Y2ZmYWQ1MDMyNGI4MWVlY2M0YTQ0N2EyYTFk&rlid=4d584f5dc0421c8ff2982604e7061039&ntb=1",
+"displayed_link":
+"https://www.amazon.com",
+"snippet":
+"Fast Shipping · Deals of the Day · Read Ratings & Reviews · Shop Best Sellers",
+"extensions":
+[
+"Fast Shipping",
+"Deals of the Day",
+"Read Ratings & Reviews",
+"Shop Best Sellers"
+],
+"sitelinks":
+[
+{
+"title":
+"Amazon Deals",
+"link":
+"https://www.bing.com/aclick?ld=e8LuzOHyD5o_tC0dtp5TRYRDVUCUwZnS9pnYckbrWQaVibiP7_AHM4NxAe1vNWpNRr7z3VWVa8CKXKpn8QZzM8r4Er4OQ1mggnJrsvJBZPqF0uuQkXYzXoipjno_1AEaphOVgnp38X8kpq4JsCHHXhgaL6gykxfSkNXueon6TdfQJyGcwVU8Bbf0WnaDJfCk7rVPILKNrPZIZzg1QW7x50L2DS1IyCXq6EnjclBOd0j9A_Jc0d&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZmdwJTJmZ29sZGJveCUyZiUzZnJlZiUzZHBkX3NsXzd2NGppMWVpZzVfZSUyNnRhZyUzZG1oMGItMjAlMjZ0YWclM2RtaDBiLTIwJTI2cmVmJTNkcGRfc2xfNWJlNTdkOGRma19lJTI2YWRncnBpZCUzZDEzMzM3MDgxNjY5OTkxNzElMjZodmFkaWQlM2Q4MzM1Njk3NTM2NzUzMCUyNmh2bmV0dyUzZG8lMjZodnFtdCUzZGUlMjZodmJtdCUzZGJlJTI2aHZkZXYlM2RjJTI2aHZsb2NpbnQlM2QlMjZodmxvY3BoeSUzZDg2NjY5JTI2aHZ0YXJnaWQlM2Rrd2QtODMzNTcwOTY4MDM3ODElM2Fsb2MtMTkwJTI2aHlkYWRjciUzZDI2NjEyXzExNjY0MjYzJTI2bWNpZCUzZDlkNTk3Y2ZmYWQ1MDMyNGI4MWVlY2M0YTQ0N2EyYTFk&rlid=981ae8502ef31cca16ed810909b7e952&ntb=1"
+},
+{
+"title":
+"Amazon Music",
+"link":
+"https://www.bing.com/aclick?ld=e82Km2JVPGH0IBF-l8VZFl1DVUCUxHzqK1RLHRTjX_pJKCEmmF0mtOv3kGoHzBbpmvxtVTQkdnKaJ-mRrT76XT-7rDtGr7OdcZxMcR8I_xuDIOkki3IWFTTVHUEfFbqTlQwPmeBoAHD_smuP62gmhsYpWf83Bqjexy-dvCkb7AVJamhewZ3QFg9JRAXz-D0PPa9tFIS9ipfV8fnEpsJ0fXWh6C-GHjiR8S-pLy5K52I-EWB7wY&u=aHR0cCUzYSUyZiUyZnd3dy5hbWF6b24uY29tJTJmYiUyZiUzZmllJTNkVVRGOCUyNm5vZGUlM2RhbWF6b24tbXVzaWMtdW5saW1pdGVkLWFtYXpvbi1tdXNpYyUzYSolMjZleHQlM2Q1MTM2LTI4Nzk4JTI2cmVmJTNkcGRfc2xfNWJlNTdkOGRma19lJTI2dGFnJTNkbWgwYi0yMCUyNmh2cW10JTNkZSUyNmh2Ym10JTNkYmUlMjZodmRldiUzZGMlMjZ0YWclM2RtaDBiLTIwJTI2cmVmJTNkcGRfc2xfNWJlNTdkOGRma19lJTI2YWRncnBpZCUzZDEzMzM3MDgxNjY5OTkxNzElMjZodmFkaWQlM2Q4MzM1Njk3NTM2NzUzMCUyNmh2bmV0dyUzZG8lMjZodnFtdCUzZGUlMjZodmJtdCUzZGJlJTI2aHZkZXYlM2RjJTI2aHZsb2NpbnQlM2QlMjZodmxvY3BoeSUzZDg2NjY5JTI2aHZ0YXJnaWQlM2Rrd2QtODMzNTcwOTY4MDM3ODElM2Fsb2MtMTkwJTI2aHlkYWRjciUzZDI2NjEyXzExNjY0MjYzJTI2bWNpZCUzZDlkNTk3Y2ZmYWQ1MDMyNGI4MWVlY2M0YTQ0N2EyYTFk&rlid=c34bc472fe1c12055b60ad2bd9580373&ntb=1"
+},
+{
+"title":
+"Amazon Home & Kitchen",
+"link":
+"https://www.bing.com/aclick?ld=e8UfPXxKWkn7lze7jp7ZNPJDVUCUwipeWr2JR3IMKLyUm1Tayt5w_vxl4L9rlLCXVOl-jUWFFobH3gxSSdXP4cFo7vGqb19a9PDV6nwiZFP5bN-Qj5z83GgnBSwh-sf8SUfWQAH50zK-kjnEA9QkbwJ_nn8EnWbzdUantJJO-eLl_HbI99HLvhuef9-M6u7Gk2I8tQ_tLnC252UsYInsSJ3GVL3FTyPOdY5nQPEQz_GYRIU6Gt&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZmhvbWUtZ2FyZGVuLWtpdGNoZW4tZnVybml0dXJlLWJlZGRpbmclMmZiJTNmaWUlM2RVVEY4JTI2bm9kZSUzZDEwNTUzOTglMjZyZWYlM2RwZF9zbF83djRqaTFlaWc1X2UlMjZ0YWclM2RtaDBiLTIwJTI2dGFnJTNkbWgwYi0yMCUyNnJlZiUzZHBkX3NsXzViZTU3ZDhkZmtfZSUyNmFkZ3JwaWQlM2QxMzMzNzA4MTY2OTk5MTcxJTI2aHZhZGlkJTNkODMzNTY5NzUzNjc1MzAlMjZodm5ldHclM2RvJTI2aHZxbXQlM2RlJTI2aHZibXQlM2RiZSUyNmh2ZGV2JTNkYyUyNmh2bG9jaW50JTNkJTI2aHZsb2NwaHklM2Q4NjY2OSUyNmh2dGFyZ2lkJTNka3dkLTgzMzU3MDk2ODAzNzgxJTNhbG9jLTE5MCUyNmh5ZGFkY3IlM2QyNjYxMl8xMTY2NDI2MyUyNm1jaWQlM2Q5ZDU5N2NmZmFkNTAzMjRiODFlZWNjNGE0NDdhMmExZA&rlid=6e01efe67b1e1616f4ff86bf5c5ab779&ntb=1"
+},
+{
+"title":
+"Shop Kindle E-readers",
+"link":
+"https://www.bing.com/aclick?ld=e8JQgdBE35OOabL_2yIAPH2DVUCUxyz5X1BYG3bXo-F9fsBKL7pGLbPzP2F5J7-Fheef7CsM9FBhyslHJxpMO_uBOX-3BJUd1XhSNJjoOQwh_4wR_eRUi64-8OC5VgDKh1ChCQh_dM6PmhYBtbuOpEeEvJpc__oS1wwBbARRe0FCnUat_K7vQEqdoTkgKqCQC1fJiULYyZjs2JVI5wU7cSGLoj_ZuwbDdpzUQkfpWpPAynTOAd&u=aHR0cCUzYSUyZiUyZnd3dy5hbWF6b24uY29tJTJmYiUyZiUzZmllJTNkVVRGOCUyNm5vZGUlM2Q2NjY5NzAyMDExJTI2ZXh0JTNkNTEzNi0yODc5OSUyNnJlZiUzZHBkX3NsXzViZTU3ZDhkZmtfZSUyNnRhZyUzZG1oMGItMjAlMjZodnFtdCUzZGUlMjZodmJtdCUzZGJlJTI2aHZkZXYlM2RjJTI2dGFnJTNkbWgwYi0yMCUyNnJlZiUzZHBkX3NsXzViZTU3ZDhkZmtfZSUyNmFkZ3JwaWQlM2QxMzMzNzA4MTY2OTk5MTcxJTI2aHZhZGlkJTNkODMzNTY5NzUzNjc1MzAlMjZodm5ldHclM2RvJTI2aHZxbXQlM2RlJTI2aHZibXQlM2RiZSUyNmh2ZGV2JTNkYyUyNmh2bG9jaW50JTNkJTI2aHZsb2NwaHklM2Q4NjY2OSUyNmh2dGFyZ2lkJTNka3dkLTgzMzU3MDk2ODAzNzgxJTNhbG9jLTE5MCUyNmh5ZGFkY3IlM2QyNjYxMl8xMTY2NDI2MyUyNm1jaWQlM2Q5ZDU5N2NmZmFkNTAzMjRiODFlZWNjNGE0NDdhMmExZA&rlid=3b3ea733e5b0159e82f9ce6ac2f42f1c&ntb=1"
+}
+]
+},
+{
+"title":
+"Freshly brewed, day and night | 100% sustainably sourced",
+"link":
+"https://www.bing.com/aclick?ld=e86ig7b4J6jjF1K8ox8IGs4TVUCUyE4CSw8sj7w1U-KTyQOAcRvcyCOlVRbvCHEU7QB0T2mvlT11nAxFxLUpfSDiE2DzycEroMbDuKystgwetJWH8JxV42zTYbS1bQyi28L2_Vax33FUH9lXkz3KegCFRGYEG5WGSaa_gf7mWYK1YguVu334sibO2WFyl8sn9b5o24582ozAPFR8pwB-lIqdHziuE&u=aHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA3MzU1NTQxNjU4MiUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwODA5MTg4OTQwNiUyNmRzX2FfY2lkJTNkNzQ4NjIyODUwJTI2ZHNfYV9jYWlkJTNkMTg2MDQzNDA1NTIlMjZkc19hX2FnaWQlM2QxNDM4MjA3OTY0NzMlMjZkc19hX2xpZCUzZGt3ZC0xMDMwOTk2MSUyNiUyNmRzX2VfYWRpZCUzZDg0ODAwMzcyNTQwMjU1JTI2ZHNfZV90YXJnZXRfaWQlM2Rrd2QtODQ4MDEwNjE0OTM2NTUlM2Fsb2MtNzEyNzMlMjYlMjZkc19lX25ldHdvcmslM2RvJTI2ZHNfdXJsX3YlM2QyJTI2ZHNfZGVzdF91cmwlM2RodHRwcyUzYSUyZiUyZnd3dy53YXdhLmNvbSUyZmJldmVyYWdlcyUyZmNvZmZlZSUzZnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jb250ZW50JTNkODQ4MDAzNzI1NDAyNTUlMjZ1dG1fY2FtcGFpZ24lM2RDSCU3ZVNFQVJDSF9QQiU3ZUJJTkdfTVQlN2VFTV9DTiU3ZUJldmVyYWdlc19PQiU3ZUFDUV9DQSU3ZUVHX0lEJTdlQjAwMDBUVTJfWVIlN2UyMzI0X1JFJTdlTUFfTUElN2VBTExfU0ElN2UxOFBfRFQlN2VDUk9TU19LVCU3ZUdFTkVSSUNfRkYlN2VQcm9kdWN0JTI2dXRtX2FkZ3JvdXAlM2RBRyU3ZUNvZmZlZV9BVCU3ZUJBVEVYVF9QSyU3ZUNMQ0tfUlQlN2VDUEMlMjZ1dG1fdGVybSUzZGNvZmZlZSUyNmdjbGlkJTNkMDMyODZjMjAwOWIzMTVlMDhhNTcwNTc5MmVmN2IxYTElMjZnY2xzcmMlM2QzcC5kcyUyNiUyNm1zY2xraWQlM2QwMzI4NmMyMDA5YjMxNWUwOGE1NzA1NzkyZWY3YjFhMQ&rlid=03286c2009b315e08a5705792ef7b1a1&ntb=1",
+"displayed_link":
+"https://www.wawa.com",
+"sitelinks":
+[
+{
+"title":
+"Wawa cold beverages",
+"link":
+"https://www.bing.com/aclick?ld=e826G39P7Hb-YsqN8V7pLJNjVUCUy5NSwcG2KXTDnigSRjGOtuLjcnRWGtQE_Fb4QGK9LDjk09FahUOP8n73wU07424ntTT-iqLZ4Fre1HP2xvZuMEHfXk8b2rDPyOGGJkhlxF89oeQTBMqtJd3n-AXA3F58Y-NDi-InA69WpFfdnoeerEpYSikHCYeziVyyOnmBkXQ1dvI6lJjkx8vRnp97f4wC-WY9fZsuyTA-RRjRWd_sKJ&u=aHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA3MzU1NTQxNjU4MiUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwODA5MTg4OTQwNiUyNmRzX2FfY2lkJTNkNzQ4NjIyODUwJTI2ZHNfYV9jYWlkJTNkMTg2MDQzNDA1NTIlMjZkc19hX2FnaWQlM2QxNDM4MjA3OTY0NzMlMjZkc19hX2xpZCUzZGt3ZC0xMDMwOTk2MSUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAxNjg0MjQ1ODYxMSUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19hX2ZpaWQlM2QyNDkyNzI0NzYzNzclMjZkc19hX2NpZCUzZDc0ODYyMjg1MCUyNmRzX2FfZXh0aWQlM2Q3MDI0MzU5ODI4MiUyNmRzX2VfYWRpZCUzZDg0ODAwMzcyNTQwMjU1JTI2ZHNfZV90YXJnZXRfaWQlM2Rrd2QtODQ4MDEwNjE0OTM2NTUlM2Fsb2MtNzEyNzMlMjYlMjZkc19lX25ldHdvcmslM2RvJTI2ZHNfdXJsX3YlM2QyJTI2ZHNfZGVzdF91cmwlM2RodHRwcyUzYSUyZiUyZnd3dy53YXdhLmNvbSUyZmJldmVyYWdlcyUyZmZyb3plbiUzZnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jb250ZW50JTNkODQ4MDAzNzI1NDAyNTUlMjZ1dG1fY2FtcGFpZ24lM2RDSCU3ZVNFQVJDSF9QQiU3ZUJJTkdfTVQlN2VFTV9DTiU3ZUJldmVyYWdlc19PQiU3ZUFDUV9DQSU3ZUVHX0lEJTdlQjAwMDBUVTJfWVIlN2UyMzI0X1JFJTdlTUFfTUElN2VBTExfU0ElN2UxOFBfRFQlN2VDUk9TU19LVCU3ZUdFTkVSSUNfRkYlN2VQcm9kdWN0JTI2dXRtX2FkZ3JvdXAlM2RBRyU3ZUNvZmZlZV9BVCU3ZUJBVEVYVF9QSyU3ZUNMQ0tfUlQlN2VDUEMlMjZ1dG1fdGVybSUzZGNvZmZlZSUyNmdjbGlkJTNkYTA2NjY1YmFkMWEwMTNkYzFmOWIwY2UzZjZlNGIzZDIlMjZnY2xzcmMlM2QzcC5kcyUyNiUyNm1zY2xraWQlM2RhMDY2NjViYWQxYTAxM2RjMWY5YjBjZTNmNmU0YjNkMg&rlid=a06665bad1a013dc1f9b0ce3f6e4b3d2&ntb=1"
+},
+{
+"title":
+"Find a Wawa near you",
+"link":
+"https://www.bing.com/aclick?ld=e8dnZoBeqBEx2-VJG5aJY6ejVUCUx-ORvZhSY6A1DzB1Et3WQBrq4ZhKSRmPLqzANhE-N28hjiLWF4rAeEl-FEFLWzX2m0ELZ2CdkomFGXEhudo2E8afSMkBIhMfuACxVf7Agl6KttObnEZ4h_4lGtoj-rwuHgm2VeScoDp9nbirpLeZ_QBsfJAQTVZkQiIFCGB1EWpaHQ1AOyLk1OOcUZx5UM1Q6zYCzPgLu6WCPv1gtX8s8p&u=aHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA3MzU1NTQxNjU4MiUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwODA5MTg4OTQwNiUyNmRzX2FfY2lkJTNkNzQ4NjIyODUwJTI2ZHNfYV9jYWlkJTNkMTg2MDQzNDA1NTIlMjZkc19hX2FnaWQlM2QxNDM4MjA3OTY0NzMlMjZkc19hX2xpZCUzZGt3ZC0xMDMwOTk2MSUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAxNjg0MjQ1ODU5OSUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19hX2ZpaWQlM2QyNDkyNzI0NzYzNjUlMjZkc19hX2NpZCUzZDc0ODYyMjg1MCUyNmRzX2FfZXh0aWQlM2Q3MDI0MzU5ODI3MCUyNmRzX2VfYWRpZCUzZDg0ODAwMzcyNTQwMjU1JTI2ZHNfZV90YXJnZXRfaWQlM2Rrd2QtODQ4MDEwNjE0OTM2NTUlM2Fsb2MtNzEyNzMlMjYlMjZkc19lX25ldHdvcmslM2RvJTI2ZHNfdXJsX3YlM2QyJTI2ZHNfZGVzdF91cmwlM2RodHRwcyUzYSUyZiUyZnd3dy53YXdhLmNvbSUyZmFib3V0JTJmbG9jYXRpb25zJTJmc3RvcmUtbG9jYXRvciUzZnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jb250ZW50JTNkODQ4MDAzNzI1NDAyNTUlMjZ1dG1fY2FtcGFpZ24lM2RDSCU3ZVNFQVJDSF9QQiU3ZUJJTkdfTVQlN2VFTV9DTiU3ZUJldmVyYWdlc19PQiU3ZUFDUV9DQSU3ZUVHX0lEJTdlQjAwMDBUVTJfWVIlN2UyMzI0X1JFJTdlTUFfTUElN2VBTExfU0ElN2UxOFBfRFQlN2VDUk9TU19LVCU3ZUdFTkVSSUNfRkYlN2VQcm9kdWN0JTI2dXRtX2FkZ3JvdXAlM2RBRyU3ZUNvZmZlZV9BVCU3ZUJBVEVYVF9QSyU3ZUNMQ0tfUlQlN2VDUEMlMjZ1dG1fdGVybSUzZGNvZmZlZSUyNmdjbGlkJTNkM2Y4ZGU4ODMzMjA5MTM5ZjhkNjA4MWRhMTU0ZGE4MzQlMjZnY2xzcmMlM2QzcC5kcyUyNiUyNm1zY2xraWQlM2QzZjhkZTg4MzMyMDkxMzlmOGQ2MDgxZGExNTRkYTgzNA&rlid=3f8de8833209139f8d6081da154da834&ntb=1"
+},
+{
+"title":
+"Download the Wawa App",
+"link":
+"https://www.bing.com/aclick?ld=e8f2c08QvmEaOsu8grMngfETVUCUynDLArHZr1zRtv-Ycvzw8VMCCjY4qkywNsHCET5znlOmyn--VO3KTVE7xAZymQRFxxH0pUIljoLK9zuM7ZbWZpNlRlRZQDCrlVD8XzaD4Ic3rKWyZ3TkqXa2orYhPiVMuQ19YFo2Lu172_YFTbEYHbF4RGaRhZQCQcB8CRumQBWgWH-z4oPdhBJTLLHx9m40-hL2qTSnDRKImWCSkWbZ6J&u=aHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA3MzU1NTQxNjU4MiUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwODA5MTg4OTQwNiUyNmRzX2FfY2lkJTNkNzQ4NjIyODUwJTI2ZHNfYV9jYWlkJTNkMTg2MDQzNDA1NTIlMjZkc19hX2FnaWQlM2QxNDM4MjA3OTY0NzMlMjZkc19hX2xpZCUzZGt3ZC0xMDMwOTk2MSUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAxMTU2MzgyMDc4NyUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19hX2ZpaWQlM2QxOTA1MzUwODc5NzYlMjZkc19hX2NpZCUzZDc0ODYyMjg1MCUyNmRzX2FfZXh0aWQlM2Q3MDI0MzU5ODIwNCUyNmRzX2VfYWRpZCUzZDg0ODAwMzcyNTQwMjU1JTI2ZHNfZV90YXJnZXRfaWQlM2Rrd2QtODQ4MDEwNjE0OTM2NTUlM2Fsb2MtNzEyNzMlMjYlMjZkc19lX25ldHdvcmslM2RvJTI2ZHNfdXJsX3YlM2QyJTI2ZHNfZGVzdF91cmwlM2RodHRwcyUzYSUyZiUyZnd3dy53YXdhLmNvbSUyZm1vYmlsZS1hcHAlM2Z1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZ1dG1fY29udGVudCUzZDg0ODAwMzcyNTQwMjU1JTI2dXRtX2NhbXBhaWduJTNkQ0glN2VTRUFSQ0hfUEIlN2VCSU5HX01UJTdlRU1fQ04lN2VCZXZlcmFnZXNfT0IlN2VBQ1FfQ0ElN2VFR19JRCU3ZUIwMDAwVFUyX1lSJTdlMjMyNF9SRSU3ZU1BX01BJTdlQUxMX1NBJTdlMThQX0RUJTdlQ1JPU1NfS1QlN2VHRU5FUklDX0ZGJTdlUHJvZHVjdCUyNnV0bV9hZGdyb3VwJTNkQUclN2VDb2ZmZWVfQVQlN2VCQVRFWFRfUEslN2VDTENLX1JUJTdlQ1BDJTI2dXRtX3Rlcm0lM2Rjb2ZmZWUlMjZnY2xpZCUzZDQwZWNjYTA4ZWZhNjFjODVkMDU2YTM1MWM4ZTIxNzMzJTI2Z2Nsc3JjJTNkM3AuZHMlMjYlMjZtc2Nsa2lkJTNkNDBlY2NhMDhlZmE2MWM4NWQwNTZhMzUxYzhlMjE3MzM&rlid=40ecca08efa61c85d056a351c8e21733&ntb=1"
+},
+{
+"title":
+"Wawa Delivers",
+"link":
+"https://www.bing.com/aclick?ld=e8eMIUNqXb2SZrX8de8KHbrjVUCUxD3Fp-Cn4lZCeQtIMTY0lhIswGmZ1eoMzknRSCmSVATG69gpx1ktglTD2HEqOxGx2QHOReM-YQh6Hpala6npZZ2MC5Rusiql_NxGYnWtmoL1lxj446IEU-3hiDftXH48W5Hepo5JkbDpGgGZclCn5ZyYEhrbnJ3iFXSzdx9CW-6MpVXI6di039A7LN7q0wAQNppQNdBSYjhj4_aiiDypea&u=aHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA3MzU1NTQxNjU4MiUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwODA5MTg4OTQwNiUyNmRzX2FfY2lkJTNkNzQ4NjIyODUwJTI2ZHNfYV9jYWlkJTNkMTg2MDQzNDA1NTIlMjZkc19hX2FnaWQlM2QxNDM4MjA3OTY0NzMlMjZkc19hX2xpZCUzZGt3ZC0xMDMwOTk2MSUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAxNjg0MjQ1ODYwNSUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19hX2ZpaWQlM2QyNDkyNzI0NzYzNzElMjZkc19hX2NpZCUzZDc0ODYyMjg1MCUyNmRzX2FfZXh0aWQlM2Q3MDI0MzU5ODI3NiUyNmRzX2VfYWRpZCUzZDg0ODAwMzcyNTQwMjU1JTI2ZHNfZV90YXJnZXRfaWQlM2Rrd2QtODQ4MDEwNjE0OTM2NTUlM2Fsb2MtNzEyNzMlMjYlMjZkc19lX25ldHdvcmslM2RvJTI2ZHNfdXJsX3YlM2QyJTI2ZHNfZGVzdF91cmwlM2RodHRwcyUzYSUyZiUyZnd3dy53YXdhLmNvbSUyZmZyZXNoLWZvb2QlMmZ3YXdhLWRlbGl2ZXJ5JTNmdXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX2NvbnRlbnQlM2Q4NDgwMDM3MjU0MDI1NSUyNnV0bV9jYW1wYWlnbiUzZENIJTdlU0VBUkNIX1BCJTdlQklOR19NVCU3ZUVNX0NOJTdlQmV2ZXJhZ2VzX09CJTdlQUNRX0NBJTdlRUdfSUQlN2VCMDAwMFRVMl9ZUiU3ZTIzMjRfUkUlN2VNQV9NQSU3ZUFMTF9TQSU3ZTE4UF9EVCU3ZUNST1NTX0tUJTdlR0VORVJJQ19GRiU3ZVByb2R1Y3QlMjZ1dG1fYWRncm91cCUzZEFHJTdlQ29mZmVlX0FUJTdlQkFURVhUX1BLJTdlQ0xDS19SVCU3ZUNQQyUyNnV0bV90ZXJtJTNkY29mZmVlJTI2Z2NsaWQlM2QwMTU1NjZhNzBiOGIxZjc2YjVlNDBmZmUyY2NmM2MzNSUyNmdjbHNyYyUzZDNwLmRzJTI2JTI2bXNjbGtpZCUzZDAxNTU2NmE3MGI4YjFmNzZiNWU0MGZmZTJjY2YzYzM1&rlid=015566a70b8b1f76b5e40ffe2ccf3c35&ntb=1"
+}
+]
+},
+{
+"title":
+"The Starbucks Coffee Company | It's a Great Day for Coffee",
+"link":
+"https://www.bing.com/aclick?ld=e88aQhDvKmDX2F8LJTNZwoUjVUCUwM_wf_0aNN8ptYxAgIfvj8AwduIpC1yp7_VK2A1nB0qvIxk0BAy3QE2ZSGXFZOPB6Way8jHVrqg0mVxYO9TdvnWAsEzx3Hk-i74fJ4u7fSehbjkF6pNPFO2EBg2UCK_2iKQDRUBcNrBJg_a8PuoDWOQBo3Q7kAVAG9SfSuaEIFQUneyUZw5oPoPU-9iyn1JjY&u=aHR0cHMlM2ElMmYlMmY3MjM1LnhnNGtlbi5jb20lMmZ0cmslMmZ2MSUzZnByb2YlM2Q2MjMlMjZjYW1wJTNkNDM2ODclMjZrY3QlM2Rtc24lMjZrY2hpZCUzZDkwNzc1NyUyNmNyaXRlcmlhaWQlM2Rrd2QtNzcxNzIxMzU4NDE3MjklM2Fsb2MtMTkwJTI2Y2FtcGFpZ25pZCUzZDM3NjE4NzU3OCUyNmxvY3BoeSUzZDg2NjY5JTI2YWRncm91cGlkJTNkMTIzNDc1MTc0ODUxNTI3MyUyNmNpZCUzZDc3MTcyMTc0MDIzMDkyJTI2a2R2JTNkYyUyNmtleHQlM2QlMjZrcGclM2QlMjZrcGlkJTNkJTI2cXVlcnlTdHIlM2RDb2ZmZWUlMjZ1cmwlM2RodHRwcyUzYSUyZiUyZnd3dy5zdGFyYnVja3MuY29tJTJmbWVudSUzZnV0bV9jYW1wYWlnbiUzZGZ5MjJicmFuZDUwdGhfMjAyMTEwMDQlMjZ1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZ1dG1fdGVybSUzZHN0cmFidWNrJTI2dXRtX21hdGNodHlwZSUzZGUlMjZtc2Nsa2lkJTNkODY5ZmI2M2MxNjVhMTE3MzJjZTNkZjY1MzExZWMzNDMlMjZ1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZ1dG1fY2FtcGFpZ24lM2RCUiUyNTIwLSUyNTIwQnJhbmQlMjUyMC0lMjUyMEhpZ2glMjUyMFZvbHVtZSUyNTIwLSUyNTIwRGVza3RvcCUyNTIwLSUyNTIwRXhhY3QlMjZ1dG1fdGVybSUzZHN0cmFidWNrJTI2dXRtX2NvbnRlbnQlM2RCcmFuZCUyNTIwLSUyNTIwTWlzc3BlbGxpbmdz&rlid=869fb63c165a11732ce3df65311ec343&ntb=1",
+"displayed_link":
+"https://www.starbucks.com › menu"
+}
+],
+"inline_ads_results":
+[
+{
+"link":
+"https://www.bing.com/aclick?ld=e83wJlEjeJnT3yIe7Ginnn5jVUCUyUbYVMuTX0AbKQZxdisLrIV5HpwckZZueHT-MxyEgptcjsn9pn-Q6ABNEcRuhGsQkjc-SqCuJJZF8txA-OjtX75kkTRX4GeeamZs_4G7wYIaJ9OJXL7_BZ3RuIvqBGtQztiDxrg_uLn5yjbwjVFdcUHBSg6iOW_jGE3qrkbMZNDvPbdnyF0eI1dbfM3nAEAl0&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZlN1cGVyZm9vZHMtU2luZ2xlLVNlcnZlLUNvZmZlZS1Qb2RzJTJmZHAlMmZCMEJMUVJENjgxJTJmcmVmJTNkYXNjX2RmX0IwQkxRUkQ2ODElM2Z0YWclM2RiaW5nc2hvcHBpbmdhLTIwJTI2bGlua0NvZGUlM2RkZjAlMjZodmFkaWQlM2Q4MDg4Mjk1Njg2MjMwOCUyNmh2bmV0dyUzZG8lMjZodnFtdCUzZGUlMjZodmJtdCUzZGJlJTI2aHZkZXYlM2RjJTI2aHZsb2NpbnQlM2QlMjZodmxvY3BoeSUzZDg2NjY5JTI2aHZ0YXJnaWQlM2RwbGEtNDU4NDQ4MjQ3NTUyODAzNSUyNnBzYyUzZDE&rlid=a3905827c25c1b211a0f317ee518f55e&ntb=1",
+"external_link":
+"https://www.amazon.com/Superfoods-Single-Serve-Coffee-Pods/dp/B0BLQRD681/ref=asc_df_B0BLQRD681?tag=bingshoppinga-20&linkCode=df0&hvadid=80882956862308&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4584482475528035&psc=1",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.P4XNEzK2Bm3t4g474C474?w=200&h=220&c=17&pid=21.1",
+"price":
+"$159.00",
+"extracted_price":
+159,
+"unit_price":
+"$3.31 / 1 ct",
+"extracted_unit_price":
+3.31,
+"title":
+"Superfoods Company Amazing Coffee- 12 Natural Superfoods - French Roast - Weight Loss & Brain Boost - Gluten Free, Non-GMO, Sugar Free, Vegan & Keto",
+"seller":
+"Amazon.com",
+"rating":
+4,
+"reviews":
+"159",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8UY2UfkFB58R-oLBa1CRSSzVUCUwrNtUcKFQkOhELr8uYCqyEqf49-t1dketM_0OTPBDdSawuA0vCKkJSSY3CXINoJsO9TE9jOM09yJ2-twGX2hsJXNqBpD5W0HrUrGT0Dif7Xfp8103gPMipxjtrp_mdB_GK7bOJrPBI4XNcQW-woZTmnvdnT9_P0Djk6xqSgMyMPdmswxWTeFMeavoP1pZpciY&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZlBlZXRzLUNvZmZlZS1EaWNrYXNvbnMtQ29tcGxleC1MYXllcmVkJTJmZHAlMmZCMDBZVkRQNkxVJTJmcmVmJTNkYXNjX2RmX0IwMFlWRFA2TFUlM2Z0YWclM2RiaW5nc2hvcHBpbmdhLTIwJTI2bGlua0NvZGUlM2RkZjAlMjZodmFkaWQlM2Q4MDc0NTQzNzEzNDMxNCUyNmh2bmV0dyUzZG8lMjZodnFtdCUzZGUlMjZodmJtdCUzZGJlJTI2aHZkZXYlM2RjJTI2aHZsb2NpbnQlM2QlMjZodmxvY3BoeSUzZDg2NjY5JTI2aHZ0YXJnaWQlM2RwbGEtNDU4NDM0NTAxNjMzMzM4OCUyNnBzYyUzZDE&rlid=8115320961971cbb23085b5046d30310&ntb=1",
+"external_link":
+"https://www.amazon.com/Peets-Coffee-Dickasons-Complex-Layered/dp/B00YVDP6LU/ref=asc_df_B00YVDP6LU?tag=bingshoppinga-20&linkCode=df0&hvadid=80745437134314&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4584345016333388&psc=1",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.zUwUvF9FzCIPgQ474C474?w=200&h=220&c=17&pid=21.1",
+"price":
+"$23.99",
+"extracted_price":
+23.99,
+"unit_price":
+"$0.75 / 1 ct",
+"extracted_unit_price":
+0.75,
+"title":
+"Peet's Coffee, Dark Roast Keurig K-Cup Pods - Major Dickason's Blend 32 Count (1 Box Of 32 K-Cup Pods)",
+"seller":
+"Amazon.com",
+"tag":
+{
+"bottom":
+"1.4K+ viewed"
+},
+"rating":
+4.5,
+"reviews":
+"10K+",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8trlCkUj_SYf_Qkl-g0wMoDVUCUwBK9vz3I5wY8sICA7EOJpdEWuvlXPkQChehUio6V82QF-J0mlbyIXsijmQoSfSKne56qaSQtirpld95636bZnEL65E8aLvILieVi71vWcWRvr_DnxjpwRTl6Bdf0bbNGmCsHRGh2KIbPYSWJJPAVlGkGMjxZz4VZjTdHa8fbbuwc0HAH6cioI9tdJHE4BrzP4&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkRvbi1GcmFuY2lzY29zLUJsZW5kLUNvZmZlZS1NZWRpdW0lMmZkcCUyZkIwNzlaQlNIMkslMmZyZWYlM2Rhc2NfZGZfQjA3OVpCU0gySyUzZnRhZyUzZGJpbmdzaG9wcGluZ2EtMjAlMjZsaW5rQ29kZSUzZGRmMCUyNmh2YWRpZCUzZDgwMTk1NjgxMjA1Nzg0JTI2aHZuZXR3JTNkbyUyNmh2cW10JTNkZSUyNmh2Ym10JTNkYmUlMjZodmRldiUzZGMlMjZodmxvY2ludCUzZCUyNmh2bG9jcGh5JTNkODY2NjklMjZodnRhcmdpZCUzZHBsYS00NTgzNzk1MjYwNzczMTk2JTI2cHNjJTNkMQ&rlid=ced1b1d6483f10255e7fd88f6f7b9ff9&ntb=1",
+"external_link":
+"https://www.amazon.com/Don-Franciscos-Blend-Coffee-Medium/dp/B079ZBSH2K/ref=asc_df_B079ZBSH2K?tag=bingshoppinga-20&linkCode=df0&hvadid=80195681205784&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4583795260773196&psc=1",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.qKTuVqzNZ9WXHg474C474?w=200&h=220&c=17&pid=21.1",
+"price":
+"$46.99",
+"extracted_price":
+46.99,
+"unit_price":
+"$0.47 / 1 ct",
+"extracted_unit_price":
+0.47,
+"title":
+"Don Francisco's Kona Blend Coffee - 100 K-Cup Compatible Single-Serve Pods - 10% Kona - Recyclable Through Terracycle - Compatible With Keurig Brewers",
+"seller":
+"Amazon.com",
+"tag":
+{
+"bottom":
+"Aromatic · Cost-effective · Delicious Flavor · Medium · Premium Quality"
+},
+"rating":
+4.5,
+"reviews":
+"10K+",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8wxFWHMmhJ_U4p6q-a2PBvzVUCUwIDvwe6kgfHOWG9omzP0GN8umzXQ-ReOFDiiKg0_702DUKKyJ3JX5Cx5GD4Lu8RQFK-Z2m4fH-vDLa18jlfEqrAneY5pMZQ6u2MbhmefqsA0qVq92OUQp9iKCU3lODQOf1bKI3iaVHoqoAErEP0bz8RvRUXH53vG582ip051HkZpDSE-uJsZz3SzZpMvXKzcg&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkZvbGdlcnMtQ2xhc3NpYy1Sb2FzdC1Hcm91bmQtQ29mZmVlJTJmZHAlMmZCMDhMU1JKTkdLJTJmcmVmJTNkYXNjX2RmX0IwOExTUkpOR0slM2Z0YWclM2RiaW5nc2hvcHBpbmdhLTIwJTI2bGlua0NvZGUlM2RkZjAlMjZodmFkaWQlM2Q3OTg1MjIyMzQ2MzEwOCUyNmh2bmV0dyUzZG8lMjZodnFtdCUzZGUlMjZodmJtdCUzZGJlJTI2aHZkZXYlM2RjJTI2aHZsb2NpbnQlM2QlMjZodmxvY3BoeSUzZDg2NjY5JTI2aHZ0YXJnaWQlM2RwbGEtNDU4MzQ1MTY4NzgxMDc1MSUyNnBzYyUzZDElMjZtc2Nsa2lkJTNkOGFjNzc1ZjQ3MmVjMWQxZTNhMjUxY2FkNTVhOGY2ZTM&rlid=8ac775f472ec1d1e3a251cad55a8f6e3&ntb=1",
+"external_link":
+"https://www.amazon.com/Folgers-Classic-Roast-Ground-Coffee/dp/B08LSRJNGK/ref=asc_df_B08LSRJNGK?tag=bingshoppinga-20&linkCode=df0&hvadid=79852223463108&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4583451687810751&psc=1&msclkid=8ac775f472ec1d1e3a251cad55a8f6e3",
+"thumbnail":
+"https://th.bing.com/th?id=OPHS.mX%2bTWYSiVsJC3g474C474&w=160&h=220&c=17&pid=21.1",
+"price":
+"$99.99",
+"extracted_price":
+99.99,
+"unit_price":
+"$0.49 / 1 oz",
+"extracted_unit_price":
+0.49,
+"title":
+"AMWU Folgers Classic Roast Ground Coffee (51 Oz.)-Set Of 4",
+"seller":
+"Amazon.com",
+"rating":
+4.5,
+"reviews":
+"1K+",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8j43LwO9ujYGGO7WspzTpPjVUCUxaOgSpj8-VAicINsxgJoKZwKBSjopirEy_oHMwCRQ4gMtJRYdb0wM1J7_zJxwKU2gqvael2xL5kOV0h3DmC3U10GsykljhjhG60tgHrjzggi8T37hqm1gBQBNrdEZwkB9BiHYT8rB4lDbunkAr-IpamS2wlDoblONDweTFn7XeUPQF8d0jC6bjMMAIkjZRJLA&u=aHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q1ODcwMDAwODg0MTk5ODA3MyUyNmRzX2FfY2lkJTNkNDA1NTI2MzEwJTI2ZHNfYV9jYWlkJTNkMjIxNzMyODkzOTIlMjYlMjZkc19lX2FkaWQlM2Q3NDA3OTkxNTc0NjAzNiUyNmRzX2VfdGFyZ2V0X2lkJTNkcGxhLTIzMjU4Nzk0MTA0MjIyNTklMjZkc19lX3Byb2R1Y3RfZ3JvdXBfaWQlM2QyMzI1ODc5NDEwNDIyMjU5JTI2ZHNfZV9wcm9kdWN0X2lkJTNkNzU0MjE3JTI2ZHNfZV9wcm9kdWN0X2NvdW50cnklM2RVUyUyNmRzX2VfcHJvZHVjdF9sYW5ndWFnZSUzZEVOJTI2ZHNfZV9wcm9kdWN0X2NoYW5uZWwlM2RPbmxpbmUlMjZkc19lX25ldHdvcmslM2RvJTI2ZHNfdXJsX3YlM2QyJTI2ZHNfZGVzdF91cmwlM2RodHRwcyUzYSUyZiUyZnd3dy5vZmZpY2VkZXBvdC5jb20lMmZhJTJmcHJvZHVjdHMlMmY3NTQyMTclMmZEdW5raW4tRG9udXRzLVNpbmdsZS1TZXJ2ZS1Db2ZmZWUtSyUyZiUzZnV0bV9jYW1wYWlnbiUzZHBsYV9jb3JfZXZnX2NiZnNfZ2VuZXJhbF91bmlkX3ByY2hfbm9uLW1hdGNoJTI2bWVkaWFjYW1wYWlnbmlkJTNkMjIxNzMyODkzOTIlMjZ1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZnY2xpZCUzZDdlODcyNzg1N2Y4NjE1MjZlMzljNGVkYzU4YzI2MzZhJTI2Z2Nsc3JjJTNkM3AuZHMlMjZtc2Nsa2lkJTNkN2U4NzI3ODU3Zjg2MTUyNmUzOWM0ZWRjNThjMjYzNmElMjZ1dG1fdGVybSUzZDIzMjU4Nzk0MTA0MjIyNTklMjZ1dG1fY29udGVudCUzZENCRlMlMjUyMEdlbmVyYWw&rlid=7e8727857f861526e39c4edc58c2636a&ntb=1",
+"external_link":
+"https://www.officedepot.com/a/products/754217/Dunkin-Donuts-Single-Serve-Coffee-K/?utm_campaign=pla_cor_evg_cbfs_general_unid_prch_non-match&mediacampaignid=22173289392&utm_source=bing&utm_medium=cpc&gclid=7e8727857f861526e39c4edc58c2636a&gclsrc=3p.ds&msclkid=7e8727857f861526e39c4edc58c2636a&utm_term=2325879410422259&utm_content=CBFS%20General",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.H0kghe0TfDt8CQ474C474?w=200&h=220&c=17&pid=21.1",
+"price":
+"$35.99",
+"extracted_price":
+35.99,
+"title":
+"Dunkin' Donuts Single-Serve Coffee K-Cup Original Blend, Carton Of 44",
+"seller":
+"Office Depot",
+"tag":
+{
+"bottom":
+"Arabica · Aromatic · Cost-effective · Delicious Flavor · Generous Size"
+},
+"rating":
+4.5,
+"reviews":
+"1K+",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8u3Qr2Ho8M_Oa2n8TnUarRDVUCUyrJac7bzTqJ47fhw0cU1FWbitXEcaSjVNQzzfiP1O9naR1BcCuNF5yViUlubKf9-jRlWwVTCNT75AcmgMwk33pK-hrhOnPozhztJl0tbvCCthyqtywjRoPV4WJYXYGjaYlr1DJxAI_OALJ2NrMSLDwLzJN64qScfJ-V7eqKOqiWFsT6CcKzVvTcsxyG3J8W8w&u=aHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q1ODcwMDAwODg0MTk5ODA3MyUyNmRzX2FfY2lkJTNkNDA1NTI2MzEwJTI2ZHNfYV9jYWlkJTNkMjIxNzMyODkzOTIlMjYlMjZkc19lX2FkaWQlM2Q3NDA3OTkxNTc0NjAzNiUyNmRzX2VfdGFyZ2V0X2lkJTNkcGxhLTIzMjU4Nzk0MTA0MjIyNTklMjZkc19lX3Byb2R1Y3RfZ3JvdXBfaWQlM2QyMzI1ODc5NDEwNDIyMjU5JTI2ZHNfZV9wcm9kdWN0X2lkJTNkODgxNzgyMSUyNmRzX2VfcHJvZHVjdF9jb3VudHJ5JTNkVVMlMjZkc19lX3Byb2R1Y3RfbGFuZ3VhZ2UlM2RFTiUyNmRzX2VfcHJvZHVjdF9jaGFubmVsJTNkT25saW5lJTI2ZHNfZV9uZXR3b3JrJTNkbyUyNmRzX3VybF92JTNkMiUyNmRzX2Rlc3RfdXJsJTNkaHR0cHMlM2ElMmYlMmZ3d3cub2ZmaWNlZGVwb3QuY29tJTJmYSUyZnByb2R1Y3RzJTJmODgxNzgyMSUyZkR1bmtpbi1Eb251dHMtT3JpZ2luYWwtQmxlbmQtR3JvdW5kLUNvZmZlZSUyZiUzZnV0bV9jYW1wYWlnbiUzZHBsYV9jb3JfZXZnX2NiZnNfZ2VuZXJhbF91bmlkX3ByY2hfbm9uLW1hdGNoJTI2bWVkaWFjYW1wYWlnbmlkJTNkMjIxNzMyODkzOTIlMjZ1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZnY2xpZCUzZDM0M2Y3NDViY2IxNjFkMmJiNWNkMWQwMmVjNTI2OTU0JTI2Z2Nsc3JjJTNkM3AuZHMlMjZtc2Nsa2lkJTNkMzQzZjc0NWJjYjE2MWQyYmI1Y2QxZDAyZWM1MjY5NTQlMjZ1dG1fdGVybSUzZDIzMjU4Nzk0MTA0MjIyNTklMjZ1dG1fY29udGVudCUzZENCRlMlMjUyMEdlbmVyYWw&rlid=343f745bcb161d2bb5cd1d02ec526954&ntb=1",
+"external_link":
+"https://www.officedepot.com/a/products/8817821/Dunkin-Donuts-Original-Blend-Ground-Coffee/?utm_campaign=pla_cor_evg_cbfs_general_unid_prch_non-match&mediacampaignid=22173289392&utm_source=bing&utm_medium=cpc&gclid=343f745bcb161d2bb5cd1d02ec526954&gclsrc=3p.ds&msclkid=343f745bcb161d2bb5cd1d02ec526954&utm_term=2325879410422259&utm_content=CBFS%20General",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.whHmp32KabOqwQ474C474?w=162&h=220&c=17&pid=21.1",
+"price":
+"$28.49",
+"extracted_price":
+28.49,
+"title":
+"Dunkin' Donuts Original Blend Ground Coffee, Medium Roast, 1.87 Lb Per Bag",
+"seller":
+"Office Depot",
+"tag":
+{
+"bottom":
+"Aromatic · Cost-effective · Delicious Flavor · Generous Size · Medium"
+},
+"rating":
+4.5,
+"reviews":
+"377",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8wk0Sw28y-da16EKG3fP1GzVUCUzD68XS10obXlEtpUqd3H5y8uHERiLQwWBj0FheNquxkXe7ZazeG3LaLb5ykQczqD3AMuN9I4zPt2Jjbi2Zu7xXr37NuzjHYQspsmHNXbvzOaeJA6lsZCJ7AR6JyipHfenKNdwzQHRrfNVgTGhDEhuackmboL_WCxB0m7gItFfOtj6hdttld5-oiBOseCF3Xeg&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkNvbG9tYmlhbi1LZXVyaWctQnJld2Vycy1WaWN0b3ItQWxsZW5zJTJmZHAlMmZCMDdNVDVWMjFHJTJmcmVmJTNkYXNjX2RmX0IwN01UNVYyMUclM2Z0YWclM2RiaW5nc2hvcHBpbmdhLTIwJTI2bGlua0NvZGUlM2RkZjAlMjZodmFkaWQlM2Q4MDEyNjk2NTU0Mzk1NyUyNmh2bmV0dyUzZG8lMjZodnFtdCUzZGUlMjZodmJtdCUzZGJlJTI2aHZkZXYlM2RjJTI2aHZsb2NpbnQlM2QlMjZodmxvY3BoeSUzZDg2NjY5JTI2aHZ0YXJnaWQlM2RwbGEtNDU4MzcyNjU0NDE2NDUyMyUyNnBzYyUzZDE&rlid=6a45d5986bcf1483fedbbcc14c8b540f&ntb=1",
+"external_link":
+"https://www.amazon.com/Colombian-Keurig-Brewers-Victor-Allens/dp/B07MT5V21G/ref=asc_df_B07MT5V21G?tag=bingshoppinga-20&linkCode=df0&hvadid=80126965543957&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4583726544164523&psc=1",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.D4HFeloHlOJj3Q474C474?w=200&h=220&c=17&pid=21.1",
+"price":
+"$50.18",
+"extracted_price":
+50.18,
+"unit_price":
+"$0.41 / 1 ct",
+"extracted_unit_price":
+0.41,
+"title":
+"Victor Allen's Coffee 100% Colombian, Medium Roast, 120 Count, Single Serve Coffee Pods For Keurig K-Cup Brewers",
+"seller":
+"Amazon.com",
+"tag":
+{
+"bottom":
+"Aromatic · Cost-effective · Delicious Flavor · Medium · Premium Quality"
+},
+"rating":
+4.5,
+"reviews":
+"10K+",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8AOvA2NKCsukE00ISHqBgTzVUCUxd863C577FRzeN5dVqabe6Gp3elQanu6vy_wcgQMuM5kM2T_PzQvSshrUZfbxOXfB2BNH1WVftkqKEIlHO15lLeHaj3mI2nShRHoo5q8h5BTMNx7EFf9e1fIkE4hf_ocSVHX1SvBadI6ZcNz-Xmg6pb9CVVkdIQNqbMTGoZE9f79dpfttzhF-I80w8kvjW9kw&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZk9yaWdpbmFsLURvbnV0LVNob3AtU2luZ2xlLVNlcnZlLVJlZ3VsYXIlMmZkcCUyZkIwMEkwOEpBWUclMmZyZWYlM2Rhc2NfZGZfQjAwSTA4SkFZRyUzZnRhZyUzZGJpbmdzaG9wcGluZ2EtMjAlMjZsaW5rQ29kZSUzZGRmMCUyNmh2YWRpZCUzZDgwMTI2OTY1NTQzOTU3JTI2aHZuZXR3JTNkbyUyNmh2cW10JTNkZSUyNmh2Ym10JTNkYmUlMjZodmRldiUzZGMlMjZodmxvY2ludCUzZCUyNmh2bG9jcGh5JTNkODY2NjklMjZodnRhcmdpZCUzZHBsYS00NTgzNzI2NTQxMTYyNTg4JTI2cHNjJTNkMQ&rlid=1844bca6305811e0887cd5ff171c6f4a&ntb=1",
+"external_link":
+"https://www.amazon.com/Original-Donut-Shop-Single-Serve-Regular/dp/B00I08JAYG/ref=asc_df_B00I08JAYG?tag=bingshoppinga-20&linkCode=df0&hvadid=80126965543957&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4583726541162588&psc=1",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.uXX8EGSBqjS73w474C474?w=200&h=220&c=17&pid=21.1",
+"price":
+"$41.95",
+"extracted_price":
+41.95,
+"unit_price":
+"$0.58 / 1 ct",
+"extracted_unit_price":
+0.58,
+"title":
+"The Original Donut Shop Regular Keurig Single-Serve K-Cup Pods, Medium Roast Coffee, 72 Count",
+"seller":
+"Amazon.com",
+"rating":
+4.5,
+"reviews":
+"10K+",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8Wv10R3pA8imJ64F2Txh6UDVUCUyA-9Hp7mA5rLPUhiPnTNOpbi81qa38aKlatg_qvT9ZAe6TILAXK2mgrPz5_4cKLHkCXDFkdtjTs4zSnyPHSdBy-WJOvtTfMdB3lMzQTrzjggl5ZewNUF3GULt7AR2tqWtCutOqsntyCG0TN041RrrD2GLyNoLF1XocYdEW35y9TXE2vxJ50KWje7pZdVCsW78&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkZvbGdlcnMtQ2xhc3NpYy1Sb2FzdC1Hcm91bmQtQ29mZmVlJTJmZHAlMmZCMDBPWENNQlc2JTJmcmVmJTNkYXNjX2RmX0IwME9YQ01CVzYlM2Z0YWclM2RiaW5nc2hvcHBpbmdhLTIwJTI2bGlua0NvZGUlM2RkZjAlMjZodmFkaWQlM2Q3OTg1MjE1MTgyMjY0OSUyNmh2bmV0dyUzZG8lMjZodnFtdCUzZGUlMjZodmJtdCUzZGJlJTI2aHZkZXYlM2RjJTI2aHZsb2NpbnQlM2QlMjZodmxvY3BoeSUzZDg2NjY5JTI2aHZ0YXJnaWQlM2RwbGEtNDU4MzQ1MTY3NzczMzA0NyUyNnBzYyUzZDE&rlid=297b18b68d571798bfd771efaa13f1c2&ntb=1",
+"external_link":
+"https://www.amazon.com/Folgers-Classic-Roast-Ground-Coffee/dp/B00OXCMBW6/ref=asc_df_B00OXCMBW6?tag=bingshoppinga-20&linkCode=df0&hvadid=79852151822649&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4583451677733047&psc=1",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.JUAOS8XmMm5ygg474C474?w=200&h=220&c=17&pid=21.1",
+"price":
+"$45.00",
+"extracted_price":
+45,
+"unit_price":
+"$1.13 / 1 ct",
+"extracted_unit_price":
+1.13,
+"title":
+"Folgers Classic Roast Medium Roast Ground Coffee, 40-1.05 Ounce Filter Packs",
+"seller":
+"Amazon.com",
+"rating":
+4.5,
+"reviews":
+"10K+",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8y8C2pvMAwRI_GUmK8eKutTVUCUwqmRIalF2eOwiB3c-whXBLN-yAr36eSL6b3wM-Smyd5zRBL-vPO4I247WBNPc01vTlbTIG3eKZK2bctUrewfN_6Ju0TXvJQFxQ_mRXHRGwr9w-osFBL-KnczdlKnAHwlpLF_Nldg8kJSkhwbMyxcDcc2OkXwt-vYklAPC3ALyELyVKOSD73tm8Hp6LzFa9j64&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkR1bmtpbi1Eb251dHMtQ29mZmVlLUJyZXdlcnMtNjBDb3VudCUyZmRwJTJmQjA3WUJEODY0UCUyZnJlZiUzZGFzY19kZl9CMDdZQkQ4NjRQJTNmdGFnJTNkYmluZ3Nob3BwaW5nYS0yMCUyNmxpbmtDb2RlJTNkZGYwJTI2aHZhZGlkJTNkODAyNjQ0NDA2NjI0NDUlMjZodm5ldHclM2RvJTI2aHZxbXQlM2RlJTI2aHZibXQlM2RiZSUyNmh2ZGV2JTNkYyUyNmh2bG9jaW50JTNkJTI2aHZsb2NwaHklM2Q4NjY2OSUyNmh2dGFyZ2lkJTNkcGxhLTQ1ODM4NjM5ODgyNDcxMTglMjZwc2MlM2Qx&rlid=8d21badc1df01e933a84d3853ab4e812&ntb=1",
+"external_link":
+"https://www.amazon.com/Dunkin-Donuts-Coffee-Brewers-60Count/dp/B07YBD864P/ref=asc_df_B07YBD864P?tag=bingshoppinga-20&linkCode=df0&hvadid=80264440662445&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4583863988247118&psc=1",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.9zrRDVN7OOXveg474C474?w=200&h=220&c=17&pid=21.1",
+"price":
+"$43.97",
+"extracted_price":
+43.97,
+"unit_price":
+"$0.73 / 1 ct",
+"extracted_unit_price":
+0.73,
+"title":
+"Dunkin' Midnight Dark Roast Coffee, 60 Keurig K-Cup Pods",
+"seller":
+"Amazon.com",
+"tag":
+{
+"bottom":
+"Aromatic · Cost-effective · Delicious Flavor · Premium Quality"
+},
+"rating":
+4.5,
+"reviews":
+"1K+",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e87_fJUUL1exEyjyu0STQr-jVUCUxaKB9BIo5WKcujNbq3wRCg3EZ9qOQzJS0NFga2QBGyRDTkO3OhFo70mOUvcX_a4cFlNdh52ZpPfIKfZERkQcaaF-8rVbGGo5RjicOULePSQ4LBbK2uHRujy9FybkO8gLem58XMMANC6GRrGni2LCX-QAuk1U57XsBMHBQ3jva6HQzXy8zGkQrUBio7KjmKY2M&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkdyZWVuLU1vdW50YWluLUNvZmZlZS1Sb2FzdGVycy1TaW5nbGUtU2VydmUlMmZkcCUyZkIwMEk1RldXUEklMmZyZWYlM2Rhc2NfZGZfQjAwSTVGV1dQSSUzZnRhZyUzZGJpbmdzaG9wcGluZ2EtMjAlMjZsaW5rQ29kZSUzZGRmMCUyNmh2YWRpZCUzZDgwNzQ1NDM3MTM0NDEwJTI2aHZuZXR3JTNkbyUyNmh2cW10JTNkZSUyNmh2Ym10JTNkYmUlMjZodmRldiUzZGMlMjZodmxvY2ludCUzZCUyNmh2bG9jcGh5JTNkODY2NjklMjZodnRhcmdpZCUzZHBsYS00NTg0MzQ1MDM2NTA3MDEzJTI2cHNjJTNkMQ&rlid=a1fdc11627c11c383042a84f00854c46&ntb=1",
+"external_link":
+"https://www.amazon.com/Green-Mountain-Coffee-Roasters-Single-Serve/dp/B00I5FWWPI/ref=asc_df_B00I5FWWPI?tag=bingshoppinga-20&linkCode=df0&hvadid=80745437134410&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4584345036507013&psc=1",
+"thumbnail":
+"https://th.bing.com/th?id=OPHS.FH%2b9kjfDg4PQnA474C474&w=200&h=220&c=17&pid=21.1",
+"price":
+"$34.83",
+"extracted_price":
+34.83,
+"unit_price":
+"$0.48 / 1 ct",
+"extracted_unit_price":
+0.48,
+"title":
+"Green Mountain Coffee Roasters Dark Magic Keurig Single-Serve K-Cup Pods, Dark Roast Coffee, 72 Count",
+"seller":
+"Amazon.com",
+"rating":
+4.5,
+"reviews":
+"10K+",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e84QU8quOJsVj5rXihQs83yDVUCUxj4Y3OrMaYOulFF8llxQIgldaI-TSxqaqQ_Rmg7iStPqRigNIsKeJpFpig4Z9ZKMTU2qsAurbgCv8YCj2jWcVhzPhAJhdVDhRByzq7mQAa8vz1StAsjsmspd4UZDzD1GOaHG04n30QEGLlISD6wfz3bjgEgyQvo0suBEo5QUFmETaU3qpViZIbN5xoF2u0CS0&u=aHR0cHMlM2ElMmYlMmZ3d3cuY29mZmVlYW0uY29tJTJmcHJvZHVjdHMlMmZuZXctd29ybGQtYmxlbmQtdGhhbmtzZ2l2aW5nLXRoZW1lJTNmdmFyaWFudCUzZDMxMTI4NzU0MzIzNTU4JTI2Y291bnRyeSUzZFVTJTI2Y3VycmVuY3klM2RVU0QlMjZtc2Nsa2lkJTNkZjk0ZjM2NDFlZjk0MWExODY5YTE1ZjE4YzhkMDRhNzclMjZ1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZ1dG1fY2FtcGFpZ24lM2QqUCpQTWF4JTI1MjAtJTI1MjBBbGwlMjUyMFByb2R1Y3RzJTI1MjAtJTI1MjBDb2ZmZWUlMjUyMC0lMjUyME1DViUyNnV0bV90ZXJtJTNkMjMyNTk0ODEyOTg3NDI3NyUyNnV0bV9jb250ZW50JTNkQ29mZmVl&rlid=f94f3641ef941a1869a15f18c8d04a77&ntb=1",
+"external_link":
+"https://www.coffeeam.com/products/new-world-blend-thanksgiving-theme?variant=31128754323558&country=US&currency=USD&msclkid=f94f3641ef941a1869a15f18c8d04a77&utm_source=bing&utm_medium=cpc&utm_campaign=*P*PMax%20-%20All%20Products%20-%20Coffee%20-%20MCV&utm_term=2325948129874277&utm_content=Coffee",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.GDWv1UWTwS4dwQ474C474?w=200&h=220&c=17&pid=21.1",
+"price":
+"$11.95",
+"extracted_price":
+11.95,
+"title":
+"New World Blend (Thanksgiving Theme) Regular / Drip Grind / 0.5LB",
+"seller":
+"CoffeeAM",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8jsyn0OAb2aZN0eAvZ9oLWTVUCUxVqZlJmIEkZri7PUZQ_duUdYuqaTH4EtIHSddvnzw0U6FIrsMAhLOjYqkGzYwVReoibDKRlqDbAL8PYp4534gfk4HkpnD8a3ctbumUV4Nj5nGIxOuax-XIDMLmJiyri_jBo19KWAeYhuF8gdhxnhmCpL3yphkq2AbogigtM_3I56u0bHzDuCiLEYXtrlKADBU&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkFtYXpvbi1CcmFuZC1Db2xvbWJpYW4tQ29tcGF0aWJsZS1CcmV3ZXJzJTJmZHAlMmZCMDc5VjdRQ1g0JTJmcmVmJTNkYXNjX2RmX0IwNzlWN1FDWDQlM2Z0YWclM2RiaW5nc2hvcHBpbmdhLTIwJTI2bGlua0NvZGUlM2RkZjAlMjZodmFkaWQlM2Q4MDg4Mjg3NTc5ODU0MCUyNmh2bmV0dyUzZG8lMjZodnFtdCUzZGUlMjZodmJtdCUzZGJlJTI2aHZkZXYlM2RjJTI2aHZsb2NpbnQlM2QlMjZodmxvY3BoeSUzZDg2NjY5JTI2aHZ0YXJnaWQlM2RwbGEtNDU4NDQ4MjQ1NTE4MDE3MyUyNnBzYyUzZDE&rlid=692970f1f30410a7ffd719a8d44006df&ntb=1",
+"external_link":
+"https://www.amazon.com/Amazon-Brand-Colombian-Compatible-Brewers/dp/B079V7QCX4/ref=asc_df_B079V7QCX4?tag=bingshoppinga-20&linkCode=df0&hvadid=80882875798540&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4584482455180173&psc=1",
+"thumbnail":
+"https://th.bing.com/th?id=OPHS.nWF0WR9H1iNd%2fw474C474&w=200&h=220&c=17&pid=21.1",
+"price":
+"$35.75",
+"extracted_price":
+35.75,
+"unit_price":
+"$0.36 / 1 ct",
+"extracted_unit_price":
+0.36,
+"title":
+"Amazon Brand - Solimo Medium Roast Coffee Pods, Colombian, Compatible With Keurig 2.0 K-Cup Brewers, 100 Count",
+"seller":
+"Amazon.com",
+"tag":
+{
+"bottom":
+"Aromatic · Cost-effective · Delicious Flavor · Premium Quality"
+},
+"rating":
+4.5,
+"reviews":
+"10K+",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e82TypqkGCyS8AYlleLRwNyzVUCUxWIqMAo52biSx8-Fqqt3LIt1IQivvjFLeTmz3X1Zif6SjDVPYr-JueLUdX3AjWtf9PN3RycYe-A72FlR27ti3EjD84oFBeK-NQBbjt09TY-l7pb9yhx65keedCS7myJS_DGSplkS3np_O04Jhcgrpl_exleQOEyZO7zRp_SdYZChqOCFmityMO2xrCwEQYvI8&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkNvbW11bml0eS1Db2ZmZWUtTWVhc3VyZWQtQnJlYWtmYXN0LUZyYWN0aW9uYWwlMmZkcCUyZkIwMFlXT1c2SkklMmZyZWYlM2Rhc2NfZGZfQjAwWVdPVzZKSSUzZnRhZyUzZGJpbmdzaG9wcGluZ2EtMjAlMjZsaW5rQ29kZSUzZGRmMCUyNmh2YWRpZCUzZDgwMzMzMTIzNTg5MTg4JTI2aHZuZXR3JTNkbyUyNmh2cW10JTNkZSUyNmh2Ym10JTNkYmUlMjZodmRldiUzZGMlMjZodmxvY2ludCUzZCUyNmh2bG9jcGh5JTNkODY2NjklMjZodnRhcmdpZCUzZHBsYS00NTgzOTMyNzAwMjQzMTA5JTI2cHNjJTNkMQ&rlid=24ff751605ff17d7ba091c4f22bb14b3&ntb=1",
+"external_link":
+"https://www.amazon.com/Community-Coffee-Measured-Breakfast-Fractional/dp/B00YWOW6JI/ref=asc_df_B00YWOW6JI?tag=bingshoppinga-20&linkCode=df0&hvadid=80333123589188&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4583932700243109&psc=1",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.UKkIRxu5nmXb3Q474C474?w=160&h=220&c=17&pid=21.1",
+"price":
+"$51.11",
+"extracted_price":
+51.11,
+"unit_price":
+"$0.51 / 1 oz",
+"extracted_unit_price":
+0.51,
+"title":
+"Community Coffee Ground Coffee Packets, Breakfast Blend Medium Roast, Pre-Measured 2.5 Ounce Individual Coffee Packets, Box Of 40",
+"seller":
+"Amazon.com",
+"rating":
+4.5,
+"reviews":
+"376",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8EhQclRZCmNzIiXiQMjOzezVUCUxgquydwFPAhh8kJGKl3k5zp1qWrjF6uMht3b95G2y9v6n6xlkwk-7tt06SE9mDFfxqCHK03pdUnRDRm9Um2AhVm_CmKaO4ixeiBQixuWuw3ADLf3w4RkDrBV4i5WVtyCQypjvUk6Ifir-RnwF0qDeZO_xAJPPnN185cYABx2E-831WUUSZMQRL50hNwM1RuSw&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZk1heHdlbGwtSG91c2UtRGVjYWYtS2V1cmlnLUNvZmZlZSUyZmRwJTJmQjA3UTZDU1lDRiUyZnJlZiUzZGFzY19kZl9CMDdRNkNTWUNGJTNmdGFnJTNkYmluZ3Nob3BwaW5nYS0yMCUyNmxpbmtDb2RlJTNkZGYwJTI2aHZhZGlkJTNkODAxOTU3MDk3OTIzOTglMjZodm5ldHclM2RvJTI2aHZxbXQlM2RlJTI2aHZibXQlM2RiZSUyNmh2ZGV2JTNkYyUyNmh2bG9jaW50JTNkJTI2aHZsb2NwaHklM2Q4NjY2OSUyNmh2dGFyZ2lkJTNkcGxhLTQ1ODM3OTUyNjQ4NzMyMzQlMjZwc2MlM2Qx&rlid=90500b62eaef1f2d13d4623bcdab7921&ntb=1",
+"external_link":
+"https://www.amazon.com/Maxwell-House-Decaf-Keurig-Coffee/dp/B07Q6CSYCF/ref=asc_df_B07Q6CSYCF?tag=bingshoppinga-20&linkCode=df0&hvadid=80195709792398&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4583795264873234&psc=1",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.uMCYixJgZV2Dug474C474?w=200&h=220&c=17&pid=21.1",
+"price":
+"$50.00",
+"extracted_price":
+50,
+"unit_price":
+"$0.59 / 1 ct",
+"extracted_unit_price":
+0.59,
+"title":
+"Maxwell House Decaf House Blend Medium Roast K-Cup Coffee Pods, 84 Ct Box",
+"seller":
+"Amazon.com",
+"tag":
+{
+"bottom":
+"15 mg · Cost-effective · Delicious Flavor · Maxwell House · Medium"
+},
+"rating":
+4.5,
+"reviews":
+"5K+",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8yIBW_gKuQmS7GJIDI1LwKjVUCUz1Zk4mdrvW2APOJS3UVjWKp9xGriMv6qKrglpn0dCgN0pSHH4H8w7r5KqLD7r3RqYsHNwqaFi-6xusXfI63yDlLjSCwwwCc-3ftGRv8bnfyIVKkHvY_5W_GEc21FjgqrzjIwk8sLvZXSPxkrN2I5HTjtVFIPg45pk1MwpLpGRo4sLY1gd2cDnO-7FLBEoMRus&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkFtYXpvbi1CcmFuZC1Tb2xpbW8tQ29tcGF0aWJsZS1CcmV3ZXJzJTJmZHAlMmZCMDc5VjlKRFFCJTJmcmVmJTNkYXNjX2RmX0IwNzlWOUpEUUIlM2Z0YWclM2RiaW5nc2hvcHBpbmdhLTIwJTI2bGlua0NvZGUlM2RkZjAlMjZodmFkaWQlM2Q4MDc0NTQzNzEzNDQxMCUyNmh2bmV0dyUzZG8lMjZodnFtdCUzZGUlMjZodmJtdCUzZGJlJTI2aHZkZXYlM2RjJTI2aHZsb2NpbnQlM2QlMjZodmxvY3BoeSUzZDg2NjY5JTI2aHZ0YXJnaWQlM2RwbGEtNDU4NDM0NTAzNjUwNjc5MSUyNnBzYyUzZDE&rlid=e2396b1d0fee14727771024428aa2c1a&ntb=1",
+"external_link":
+"https://www.amazon.com/Amazon-Brand-Solimo-Compatible-Brewers/dp/B079V9JDQB/ref=asc_df_B079V9JDQB?tag=bingshoppinga-20&linkCode=df0&hvadid=80745437134410&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4584345036506791&psc=1",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.D2g2qltxfd7rhA474C474?w=200&h=220&c=17&pid=21.1",
+"price":
+"$35.75",
+"extracted_price":
+35.75,
+"unit_price":
+"$0.36 / 1 ct",
+"extracted_unit_price":
+0.36,
+"title":
+"Amazon Brand - Solimo Dark Roast Coffee Pods, French Roast, Compatible With Keurig 2.0 K-Cup Brewers, 100 Count",
+"seller":
+"Amazon.com",
+"tag":
+{
+"bottom":
+"Aromatic · Cost-effective · Delicious Flavor · Premium Quality"
+},
+"rating":
+4,
+"reviews":
+"10K+",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8H0Q-jzvxTLB8PBfkfcoiejVUCUyecjDYBRZgnzxYXXPRMhu1ZOZumLpSUYuZ0CnxWY58Fj5rUcLVn6qalFgDpfBR3obF2EOlTpZxVy0oCGN6VOM9vjU5gMobJaDBzftuXkBeoHbsLmhAYBZkAjV11r7OvpUCNBMlwwkmpNrFYFr68fFjxHkFjKpbMK4Jay06T7SPNrQ7402Rdz0vkXJwFohQg4I&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkdyb3VuZC1Db2ZmZWUtRmlsdGVyLUZvbGdlcnMtQ2xhc3NpYyUyZmRwJTJmQjBDUUtHTUo2VCUyZnJlZiUzZGFzY19kZl9CMENRS0dNSjZUJTNmdGFnJTNkYmluZ3Nob3BwaW5nYS0yMCUyNmxpbmtDb2RlJTNkZGYwJTI2aHZhZGlkJTNkNzk5MjA5NDE5MTI5OTclMjZodm5ldHclM2RvJTI2aHZxbXQlM2RlJTI2aHZibXQlM2RiZSUyNmh2ZGV2JTNkYyUyNmh2bG9jaW50JTNkJTI2aHZsb2NwaHklM2Q4NjY2OSUyNmh2dGFyZ2lkJTNkcGxhLTQ1ODM1MjA0MDYzMTEzNjAlMjZwc2MlM2QxJTI2bXNjbGtpZCUzZGM1NjRiMTFjNjkyMTFiMjU2ZmZhZDg0NTRlNjUzMTdh&rlid=c564b11c69211b256ffad8454e65317a&ntb=1",
+"external_link":
+"https://www.amazon.com/Ground-Coffee-Filter-Folgers-Classic/dp/B0CQKGMJ6T/ref=asc_df_B0CQKGMJ6T?tag=bingshoppinga-20&linkCode=df0&hvadid=79920941912997&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4583520406311360&psc=1&msclkid=c564b11c69211b256ffad8454e65317a",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.Y9cTnYjrk1LD5g474C474?w=200&h=220&c=17&pid=21.1",
+"price":
+"$52.99",
+"extracted_price":
+52.99,
+"unit_price":
+"$58.88 / 1 oz",
+"extracted_unit_price":
+58.88,
+"title":
+"Ground Coffee Filter Packs For Folger Classic Roast, Medium Roast, 40 Count Total",
+"seller":
+"Amazon.com",
+"rating":
+5,
+"reviews":
+"29",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e87GaqqlVGry-2myZ87sJ6KDVUCUz9YJmzPzvLHMHbwXcTk-_L5LPaIIEJUv8Xq4XAgms6k3jefmXaKipwrdBMM8Wgwk4g4jrYyR5b21GTyc2-SbYntzyc1exHRJc-BCNqD9CPm069tEgMBQIJOb3f1nXFB-4pLpeoXQRtj2UHMvKTb5PFO0543gxtG4k-Cu9mnX-7u5u2PLqKZf3uudSqh-bXtnQ&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkZvbGdlcnMtQ2xhc3NpYy1NZWRpdW0tR3JvdW5kLUNhbmlzdGVyJTJmZHAlMmZCMEJHVDdHRDQ3JTJmcmVmJTNkYXNjX2RmX0IwQkdUN0dENDclM2Z0YWclM2RiaW5nc2hvcHBpbmdhLTIwJTI2bGlua0NvZGUlM2RkZjAlMjZodmFkaWQlM2Q4MDYwODEzNzUxMzgyMSUyNmh2bmV0dyUzZG8lMjZodnFtdCUzZGUlMjZodmJtdCUzZGJlJTI2aHZkZXYlM2RjJTI2aHZsb2NpbnQlM2QlMjZodmxvY3BoeSUzZDg2NjY5JTI2aHZ0YXJnaWQlM2RwbGEtNDU4NDIwNzYwMjUzMTQzMiUyNnBzYyUzZDElMjZtc2Nsa2lkJTNkMmYwM2RiNzA1N2ZjMWUzZGJmMTFiMjI5NzBiOGI3OWU&rlid=2f03db7057fc1e3dbf11b22970b8b79e&ntb=1",
+"external_link":
+"https://www.amazon.com/Folgers-Classic-Medium-Ground-Canister/dp/B0BGT7GD47/ref=asc_df_B0BGT7GD47?tag=bingshoppinga-20&linkCode=df0&hvadid=80608137513821&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4584207602531432&psc=1&msclkid=2f03db7057fc1e3dbf11b22970b8b79e",
+"thumbnail":
+"https://th.bing.com/th?id=OPHS.7lOqtUDJo%2bCzXg474C474&w=166&h=220&c=17&pid=21.1",
+"price":
+"$24.95",
+"extracted_price":
+24.95,
+"unit_price":
+"$0.87 / 1 oz",
+"extracted_unit_price":
+0.87,
+"title":
+"Folgers Classic Roast Medium Dark Roast, Ground Coffee, 816G Canister",
+"seller":
+"Amazon.com",
+"tag":
+{
+"bottom":
+"700+ viewed"
+},
+"rating":
+4.5,
+"reviews":
+"1K+",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e81FzafIWUsBTei1wOpk2a4zVUCUw_-Jgle00uBXdNGIrOiU-bxeigh0_jxwtwLt_U_br8hg3Bsidj5dm1KxFqgiHvBrCzIME970ieQRr1tnYTFpCCHHKqO8-1y5db8j-bybbqh08hTWxWOm6Q_bSz-HRRJ354B7q6fRxRxd2OnRNk-UMLFUuzTHHt7vSeiGYTnDmdkMa2h7IN6wxyyLjWSKaqgaI&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZk1heHdlbGwtSG91c2UtQnJlYWtmYXN0LUJsZW5kLUNvZmZlZSUyZmRwJTJmQjAxTVhSQ1RJSCUyZnJlZiUzZGFzY19kZl9CMDFNWFJDVElIJTNmdGFnJTNkYmluZ3Nob3BwaW5nYS0yMCUyNmxpbmtDb2RlJTNkZGYwJTI2aHZhZGlkJTNkODA4ODI4NzU3OTg1NDAlMjZodm5ldHclM2RvJTI2aHZxbXQlM2RlJTI2aHZibXQlM2RiZSUyNmh2ZGV2JTNkYyUyNmh2bG9jaW50JTNkJTI2aHZsb2NwaHklM2Q4NjY2OSUyNmh2dGFyZ2lkJTNkcGxhLTQ1ODQ0ODI0NTU0MTE5NzMlMjZwc2MlM2Qx&rlid=bf5d8485d24b108a2b5beddcf50f6c95&ntb=1",
+"external_link":
+"https://www.amazon.com/Maxwell-House-Breakfast-Blend-Coffee/dp/B01MXRCTIH/ref=asc_df_B01MXRCTIH?tag=bingshoppinga-20&linkCode=df0&hvadid=80882875798540&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4584482455411973&psc=1",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.jgC1oNJzkXhxPw474C474?w=200&h=220&c=17&pid=21.1",
+"price":
+"$44.98",
+"extracted_price":
+44.98,
+"unit_price":
+"$0.54 / 1 ct",
+"extracted_unit_price":
+0.54,
+"title":
+"Maxwell House Breakfast Blend Mild Roast K-Cup Coffee Pods, 84 Ct Box",
+"seller":
+"Amazon.com",
+"tag":
+{
+"bottom":
+"Aromatic · Cost-effective · Delicious Flavor · Maxwell House · Premium Quality"
+},
+"rating":
+4.5,
+"reviews":
+"10K+",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8AYNzoy2GcVzFbUXz3JV0AzVUCUwT7qwxA_OMZZvBT8iIxFpZwHi5Grk70sT06sl4GkB4ARBbSO5qjFe6a667s6OAdZ9mDr1iPVD-VulleaTqoyQ7F3rzWlZORWXmoMd3izh_Vn1wFiEFW-oLpKHlqsERbA38mGikqbIzo_5Kbo_G9lM31V0-YhBHNq4_III-Jhf_vBy0OvYIxUBKoSB410yEuWM&u=aHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q5MjcwMDA4MDU4MzA3MDE0OSUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwODczOTYzOTEyMyUyNmRzX3NfaW52ZW50b3J5X2ZlZWRfaWQlM2Q5NzcwMDAwMDAwMzMzMzA1MyUyNmRzX2FfY2lkJTNkNDA1NTI2MzEwJTI2ZHNfYV9jYWlkJTNkMjE0MzIyMzI0NzUlMjZkc19hX2FnaWQlM2QxNjY1Njg3NDkzNjAlMjZkc19hX2xpZCUzZHBsYS0yMzM0NzMxNjAwMzQyJTI2JTI2ZHNfZV9hZGlkJTNkNzMyNTUyNzQyMjc2OTclMjZkc19lX3RhcmdldF9pZCUzZHBsYS00NTc2ODU0NTk3NjQ0MTEwJTI2ZHNfZV9wcm9kdWN0X2dyb3VwX2lkJTNkNDU3Njg1NDU5NzY0NDExMCUyNmRzX2VfcHJvZHVjdF9pZCUzZDI3OTY3MyUyNmRzX2VfcHJvZHVjdF9jb3VudHJ5JTNkVVMlMjZkc19lX3Byb2R1Y3RfbGFuZ3VhZ2UlM2RFTiUyNmRzX2VfcHJvZHVjdF9jaGFubmVsJTNkT25saW5lJTI2ZHNfZV9uZXR3b3JrJTNkbyUyNmRzX3VybF92JTNkMiUyNmRzX2Rlc3RfdXJsJTNkaHR0cHMlM2ElMmYlMmZ3d3cub2ZmaWNlZGVwb3QuY29tJTJmYSUyZnByb2R1Y3RzJTJmMjc5NjczJTJmU3RhcmJ1Y2tzLVNpbmdsZS1TZXJ2ZS1Db2ZmZWUtSy1DdXAlMmYlM2Z1dG1fY2FtcGFpZ24lM2RwbGFfY29yX2V2Z19Mb3dQZXJmb3JtZXJzX2dlbmVyYWxfdW5pZF9wcmNoX25vbi1tYXRjaCUyNm1lZGlhY2FtcGFpZ25pZCUzZDIxNDMyMjMyNDc1JTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkY3BjJTI2Z2NsaWQlM2Q5N2IwZThlYjkzNjgxNjJlMDAyODgxYjJiNDJjOTQxOSUyNmdjbHNyYyUzZDNwLmRzJTI2bXNjbGtpZCUzZDk3YjBlOGViOTM2ODE2MmUwMDI4ODFiMmI0MmM5NDE5JTI2dXRtX3Rlcm0lM2Q0NTc2ODU0NTk3NjQ0MTEwJTI2dXRtX2NvbnRlbnQlM2RMb3clMjUyMFJPQVM&rlid=97b0e8eb9368162e002881b2b42c9419&ntb=1",
+"external_link":
+"https://www.officedepot.com/a/products/279673/Starbucks-Single-Serve-Coffee-K-Cup/?utm_campaign=pla_cor_evg_LowPerformers_general_unid_prch_non-match&mediacampaignid=21432232475&utm_source=bing&utm_medium=cpc&gclid=97b0e8eb9368162e002881b2b42c9419&gclsrc=3p.ds&msclkid=97b0e8eb9368162e002881b2b42c9419&utm_term=4576854597644110&utm_content=Low%20ROAS",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.2XMkMlub3TI80g474C474?w=200&h=220&c=17&pid=21.1",
+"price":
+"$24.49",
+"extracted_price":
+24.49,
+"title":
+"Starbucks Single-Serve Coffee K-Cup Pike Place, Carton Of 24",
+"seller":
+"Office Depot",
+"tag":
+{
+"bottom":
+"Aromatic · Cost-effective · Delicious Flavor · Medium · Perfect for Gifting"
+},
+"rating":
+4.5,
+"reviews":
+"1K+",
+"block_position":
+"top"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8bzjPqdfFwROL_s0vYM4QzjVUCUyuqz2J8PhaMA-Uoi_pKm8n3pqAT4ApsOqe0JA1Zn_X2IR5K50i4higWvJxhpRijmobMv9CuUZq_d3Dbq3U9oj1Rku97rxg6pfDG36j79LIJYoykkzyOuSAFHvnypzo62Ta4FV-R4BWbx9VC1mBpu10Y7d-FX1igRd76R6kMfqGq17koIWgtv_y1iiit1XQpQg&u=aHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q1ODcwMDAwODg0MTk5ODA3MyUyNmRzX2FfY2lkJTNkNDA1NTI2MzEwJTI2ZHNfYV9jYWlkJTNkMjIxNzMyODkzOTIlMjYlMjZkc19lX2FkaWQlM2Q3NDA3OTkxNTc0NjAzNiUyNmRzX2VfdGFyZ2V0X2lkJTNkcGxhLTIzMjU4Nzk0MTA0MjIyNTklMjZkc19lX3Byb2R1Y3RfZ3JvdXBfaWQlM2QyMzI1ODc5NDEwNDIyMjU5JTI2ZHNfZV9wcm9kdWN0X2lkJTNkMjgxMTUzNCUyNmRzX2VfcHJvZHVjdF9jb3VudHJ5JTNkVVMlMjZkc19lX3Byb2R1Y3RfbGFuZ3VhZ2UlM2RFTiUyNmRzX2VfcHJvZHVjdF9jaGFubmVsJTNkT25saW5lJTI2ZHNfZV9uZXR3b3JrJTNkbyUyNmRzX3VybF92JTNkMiUyNmRzX2Rlc3RfdXJsJTNkaHR0cHMlM2ElMmYlMmZ3d3cub2ZmaWNlZGVwb3QuY29tJTJmYSUyZnByb2R1Y3RzJTJmMjgxMTUzNCUyZkZvbGdlcnMtU2luZ2xlLVNlcnZlLUNvZmZlZS1LLUN1cCUyZiUzZnV0bV9jYW1wYWlnbiUzZHBsYV9jb3JfZXZnX2NiZnNfZ2VuZXJhbF91bmlkX3ByY2hfbm9uLW1hdGNoJTI2bWVkaWFjYW1wYWlnbmlkJTNkMjIxNzMyODkzOTIlMjZ1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZnY2xpZCUzZGViYjgzNDBmYTMxZTFmYTY3ZDc1NWQ1Njg0NWEyYjk2JTI2Z2Nsc3JjJTNkM3AuZHMlMjZtc2Nsa2lkJTNkZWJiODM0MGZhMzFlMWZhNjdkNzU1ZDU2ODQ1YTJiOTYlMjZ1dG1fdGVybSUzZDIzMjU4Nzk0MTA0MjIyNTklMjZ1dG1fY29udGVudCUzZENCRlMlMjUyMEdlbmVyYWw&rlid=ebb8340fa31e1fa67d755d56845a2b96&ntb=1",
+"external_link":
+"https://www.officedepot.com/a/products/2811534/Folgers-Single-Serve-Coffee-K-Cup/?utm_campaign=pla_cor_evg_cbfs_general_unid_prch_non-match&mediacampaignid=22173289392&utm_source=bing&utm_medium=cpc&gclid=ebb8340fa31e1fa67d755d56845a2b96&gclsrc=3p.ds&msclkid=ebb8340fa31e1fa67d755d56845a2b96&utm_term=2325879410422259&utm_content=CBFS%20General",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.tt24SJngyQTqhg474C474?w=200&h=150&c=17&pid=21.1",
+"price":
+"$67.99",
+"extracted_price":
+67.99,
+"title":
+"Folgers Single-Serve Coffee K-Cup Classic Roast, Carton Of 96, 4 X 24 Per Box",
+"seller":
+"Office Depot",
+"tag":
+{
+"bottom":
+"Folgers · Medium · No bitter aftertaste"
+},
+"rating":
+4.5,
+"reviews":
+"15",
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8zgmCwCzYla7dWeKsVxLXgTVUCUzhpOQcfCcLEfpFn4GEhe9-dqGI34PCdmcHiHOUSyPWO09YroXtLnvZnRjwVw46N9D3MOaeq7zkfTFgjxzSK3dIMHSzh18FeIa9zQ7gkJ6cjo0D-4CPN5VNXD3R3z3t_gopI3gOyG-u-dqJa26p1JIZaBRVkvs1kGRX6bH5nnyfqEZ-nBxRD3jN4waCwzaI_tk&u=aHR0cHMlM2ElMmYlMmZhbmdlbGlub3MuY29tJTJmcHJvZHVjdHMlMmZiYWctbG93LWFjaWQtbWVkaXVtLXJvYXN0JTNmdmFyaWFudCUzZDQwMDk2MzIxMTc1NjE1JTI2Y291bnRyeSUzZFVTJTI2Y3VycmVuY3klM2RVU0QlMjZpcnBpZCUzZGdvb2dsZSUyNm5iX3NpJTNkJTdic291cmNlaWQlN2QlMjZuYnQlM2RuYiUyNTNBbWljcm9zb2Z0JTI1M0FvJTI1M0E2MDIwODg5MDglMjUzQTEzNDE0MDU4NzIyODUyMTAlMjUzQTgzODM4MTQxOTkzNDAwJTI2bmJfbXQlM2RlJTI2bmJfYm10JTNkYmUlMjZuYl9vaWklM2Q0NTg3NDM3Mzk3MjgxNTYwJTI2bmJfcXMlM2RDb2ZmZWUlMjZuYl9maWklM2QlMjZuYl9saV9tcyUzZCUyNm5iX2xwX21zJTNkODY2NjklMjZuYl9waSUzZHNob3BpZnlfVVNfNzE4NjMzODg3MzQwN180MDA5NjMyMTE3NTYxNSUyNm5iX3BjJTNkT25saW5lJTI2bmJfY2klM2Q0NTg3NDM3Mzk3MjgxNTYwJTI2QWRHcm91cGlkJTNkMTM0MTQwNTg3MjI4NTIxMCUyNkFkSWQlM2Q4MzgzODE0MTk5MzQwMCUyNkNhbXBhaWduSWQlM2Q2MDIwODg5MDglMjZUYXJnZXRJZCUzZHBsYS00NTg3NDM3Mzk3MjgxNTYwJTI2SWZTZWFyY2glM2FzdHJpbmclM2RzdHJpbmclMjZrZXl3b3JkJTNkJTI2bXNjbGtpZCUzZGM4ODliZTA4NTllODEwNTc0NTIwZDc1MTdlYWNmNDUxJTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX2NhbXBhaWduJTNkT01HJTI1MjAlMjU3QyUyNTIwQk5HJTI1MjAlMjU3QyUyNTIwU0glMjUyMCUyNTdDJTI1MjBTVCUyNnV0bV90ZXJtJTNkNDU4NzQzNzM5NzI4MTU2MCUyNnV0bV9jb250ZW50JTNkQk5HJTI1MjAlMjU3QyUyNTIwU0glMjUyMCUyNTdDJTI1MjBTVCUyNTIwJTI1N0MlMjUyMEFsbCUyNTIwUHJvZHVjdHM&rlid=c889be0859e810574520d7517eacf451&ntb=1",
+"external_link":
+"https://angelinos.com/products/bag-low-acid-medium-roast?variant=40096321175615&country=US&currency=USD&irpid=google&nb_si={sourceid}&nbt=nb%3Amicrosoft%3Ao%3A602088908%3A1341405872285210%3A83838141993400&nb_mt=e&nb_bmt=be&nb_oii=4587437397281560&nb_qs=Coffee&nb_fii=&nb_li_ms=&nb_lp_ms=86669&nb_pi=shopify_US_7186338873407_40096321175615&nb_pc=Online&nb_ci=4587437397281560&AdGroupid=1341405872285210&AdId=83838141993400&CampaignId=602088908&TargetId=pla-4587437397281560&IfSearch:string=string&keyword=&msclkid=c889be0859e810574520d7517eacf451&utm_source=bing&utm_medium=cpc&utm_campaign=OMG%20%7C%20BNG%20%7C%20SH%20%7C%20ST&utm_term=4587437397281560&utm_content=BNG%20%7C%20SH%20%7C%20ST%20%7C%20All%20Products",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.1LelbTQr4CK7mg474C474?w=160&h=150&c=17&pid=21.1",
+"price":
+"$16.95",
+"extracted_price":
+16.95,
+"title":
+"Low Acid Medium Roast 12 Oz Ground Coffee | Angelino's Coffee",
+"seller":
+"Angelino's Coffee",
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8Y4pwl0QgUsZH00BJa4AIsjVUCUxx8FJBfTuhGAqV961HQXYggJt9RATj0iuLtABMS_BNjS7D-tLw9FpnEMrdedFgybVXuHT4_l6XOmv86HKIUXRJFXrDB-LzurdhCl2ThRWPjQD2IOwaUWkr64k7jPJ_BbI0h04gXdJW_zqmrXgVpclbs1uerl2JZhBEzV3bhe9wwxzN92Fj71ZRLVa7ktL9olo&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkNvbW11bml0eS1Db2ZmZWUtQnJlYWtmYXN0LVByZW1pdW0tQXJhYmljYSUyZmRwJTJmQjA3Q1NDRFYyTCUyZnJlZiUzZGFzY19kZl9CMDdDU0NEVjJMJTNmdGFnJTNkYmluZ3Nob3BwaW5nYS0yMCUyNmxpbmtDb2RlJTNkZGYwJTI2aHZhZGlkJTNkODA1Mzk0MTYzNzE2MDglMjZodm5ldHclM2RvJTI2aHZxbXQlM2RlJTI2aHZibXQlM2RiZSUyNmh2ZGV2JTNkYyUyNmh2bG9jaW50JTNkJTI2aHZsb2NwaHklM2Q4NjY2OSUyNmh2dGFyZ2lkJTNkcGxhLTQ1ODQxMzg4ODQyNzcwMjglMjZwc2MlM2Qx&rlid=4377f427a0bf1579f2fe9d7e87fb3635&ntb=1",
+"external_link":
+"https://www.amazon.com/Community-Coffee-Breakfast-Premium-Arabica/dp/B07CSCDV2L/ref=asc_df_B07CSCDV2L?tag=bingshoppinga-20&linkCode=df0&hvadid=80539416371608&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4584138884277028&psc=1",
+"thumbnail":
+"https://th.bing.com/th?id=OPHS.lAbb%2bD6VNJRCMw474C474&w=160&h=150&c=17&pid=21.1",
+"price":
+"$53.56",
+"extracted_price":
+53.56,
+"unit_price":
+"$0.42 / 1 oz",
+"extracted_unit_price":
+0.42,
+"title":
+"Community Coffee Breakfast Blend, 128 Ounces Ground Coffee, Medium Roast, 32 Ounce Bag (Pack Of 4)",
+"seller":
+"Amazon.com",
+"rating":
+4.5,
+"reviews":
+"10K+",
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8z3zTvjM4xzCXrDcjshoOlDVUCUzc2ZWedRIcliJS1hcd2XUc7L_5tpuJsqeTVhxkHIcNi9IDlgKlxRRvAKK9zeibsJgcRqViy6C2UgGGU8VJwKq8THOt93Rc-6qkZ2jWcgYhT38l0Bhzir2D0tMo8KxCpeVOiqf7LEpwU59kOcNqD1SVoCbDvm9t4hL3wFVVyiGZP3ZUmmXLWqpst5fHBl6RTBQ&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkFtYXpvbi1CcmFuZC1Db2ZmZWUtQ29tcGF0aWJsZS1CcmV3ZXJzJTJmZHAlMmZCMDdOWVE2TUw3JTJmcmVmJTNkYXNjX2RmX0IwN05ZUTZNTDclM2Z0YWclM2RiaW5nc2hvcHBpbmdhLTIwJTI2bGlua0NvZGUlM2RkZjAlMjZodmFkaWQlM2Q4MDMzMzE0ODY4OTQ0MSUyNmh2bmV0dyUzZG8lMjZodnFtdCUzZGUlMjZodmJtdCUzZGJlJTI2aHZkZXYlM2RjJTI2aHZsb2NpbnQlM2QlMjZodmxvY3BoeSUzZDg2NjY5JTI2aHZ0YXJnaWQlM2RwbGEtNDU4MzkzMjcwOTExMTg1OCUyNnBzYyUzZDE&rlid=0cdfb469115f1c80a466dd30361bf50b&ntb=1",
+"external_link":
+"https://www.amazon.com/Amazon-Brand-Coffee-Compatible-Brewers/dp/B07NYQ6ML7/ref=asc_df_B07NYQ6ML7?tag=bingshoppinga-20&linkCode=df0&hvadid=80333148689441&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4583932709111858&psc=1",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.6w4wYgSnAgzdmg474C474?w=160&h=150&c=17&pid=21.1",
+"price":
+"$33.25",
+"extracted_price":
+33.25,
+"unit_price":
+"$0.33 / 1 ct",
+"extracted_unit_price":
+0.33,
+"title":
+"Amazon Brand - Happy Belly Dark Roast Coffee Pods, Compatible With Keurig 2.0 K-Cup Brewers, 100 Count",
+"seller":
+"Amazon.com",
+"tag":
+{
+"bottom":
+"770+ viewed"
+},
+"rating":
+4.5,
+"reviews":
+"10K+",
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8bAxc778pWBUjXo_E-lyXeDVUCUz79OeUs3PfIL72jpQoFpkmQpzLX1SoMFN5Jc-_oMUmq_qowyJsYzVhf1xQvIbPZwwwNkAukK01X0cm0w9-GtcYcbiwYvC8QJSBBv6_YqG8qLXaT_C8STiRcbhUHULXDtZZ6gH9zQJdkkWLKvCEJEpGeAykP8JnrLZUewrMduhG5gMVrTsl5y0dkYnBwpOSaac&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkFsdW1pbnVtLU5lc3ByZXNzby1PcmlnaW5hbExpbmUtQ29tcGF0aWJsZS1JbnRlbnNpdHklMmZkcCUyZkIwQ0dOTUhQS0wlMmZyZWYlM2Rhc2NfZGZfQjBDR05NSFBLTCUzZnRhZyUzZGJpbmdzaG9wcGluZ2EtMjAlMjZsaW5rQ29kZSUzZGRmMCUyNmh2YWRpZCUzZDc5OTIwOTQxNzAyMzQ1JTI2aHZuZXR3JTNkbyUyNmh2cW10JTNkZSUyNmh2Ym10JTNkYmUlMjZodmRldiUzZGMlMjZodmxvY2ludCUzZCUyNmh2bG9jcGh5JTNkODY2NjklMjZodnRhcmdpZCUzZHBsYS00NTgzNTIwNDA1ODE0MjM0JTI2cHNjJTNkMSUyNm1zY2xraWQlM2Q5N2ZkMTY2MTEyMDcxN2RiMjNlOTdmMzgzNTQzNmI1Yw&rlid=97fd1661120717db23e97f3835436b5c&ntb=1",
+"external_link":
+"https://www.amazon.com/Aluminum-Nespresso-OriginalLine-Compatible-Intensity/dp/B0CGNMHPKL/ref=asc_df_B0CGNMHPKL?tag=bingshoppinga-20&linkCode=df0&hvadid=79920941702345&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4583520405814234&psc=1&msclkid=97fd1661120717db23e97f3835436b5c",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.UrBkiJZYljPQ6A474C474?w=160&h=150&c=17&pid=21.1",
+"price":
+"$24.98",
+"extracted_price":
+24.98,
+"unit_price":
+"$0.62 / 1 ct",
+"extracted_unit_price":
+0.62,
+"title":
+"Café Bustelo Aluminum Espresso Capsules, Dark Roast Coffee, Nespresso Original Line Compatible, Intensity 11, 40 Count",
+"seller":
+"Amazon.com",
+"tag":
+{
+"bottom":
+"540+ viewed"
+},
+"rating":
+4.5,
+"reviews":
+"227",
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8Sf2kWM26qaahmSrYyONjFTVUCUzzra8IjkBuXzYs8hB0HyDUw-H4UMZgNCfN4oG7ioKU8zmBeQPsgEVizPed57BO5Mp7v57RDuVgWfl2-DLsk9LQVtR1X_zzOZXGhsmhqB74tdTluZOIBpPs5FTGhdIfOhk_VqRRRKAdisI3aPEYVFdmbOCKWvUoJAOEWMTciQifAcwhAhYGWsF3nFLMnFxtOdA&u=aHR0cHMlM2ElMmYlMmZ0cnkuamF2dnljb2ZmZWUuY29tJTJmcGM4NCUzZm5iX3NpJTNkJTdic291cmNlaWQlN2QlMjZuYnQlM2RuYiUyNTNBbWljcm9zb2Z0JTI1M0FvJTI1M0E2ODg4MTY1NDQlMjUzQTEzMjQ5MTQwNTU3NjMyMjclMjUzQTgyODA3MzY2Mzk0Njk5JTI2bmJfbXQlM2RlJTI2bmJfYm10JTNkYmUlMjZuYl9vaWklM2Q0NTg2NDA2NjAzMzAxMDI2JTI2bmJfcXMlM2RDb2ZmZWUlMjZuYl9maWklM2QlMjZuYl9saV9tcyUzZCUyNm5iX2xwX21zJTNkODY2NjklMjZuYl9waSUzZENvbGQlMjUyMC0lMjUyMDElMjUyMEJhZyUyNTIwUHJvdGVpbiUyNTIwQ29mZmVlJTI1MjAtJTI1MjAxMyUyNm5iX3BjJTNkT25saW5lJTI2bmJfY2klM2Q0NTg2NDA2NjAzMzAxMDI2JTI2bWVkaXVtJTNkY3BjJTI2Z2NsaWQlM2QlMjZjYW1wYWlnbmlkJTNkNjg4ODE2NTQ0JTI2YWRncm91cGlkJTNkMTMyNDkxNDA1NTc2MzIyNyUyNm5ldHdvcmslM2RvJTI2ZGV2aWNlJTNkYyUyNmtleXdvcmQlM2QlMjZwbGFjZW1lbnQlM2QlMjZ1dG1fYWRncm91cCUzZCUyNmFkTmFtZSUzZCUyNm1zY2xraWQlM2Q1YjY4ZmEyYzkwMzkxMjNiYzYxNzkzNzViNzdkNzk4OCUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jYW1wYWlnbiUzZFRPRiUyNTIwQ29sZCUyNTIwLSUyNTIwU3RhbmRhcmQlMjUyMFNob3BwaW5nJTI2dXRtX3Rlcm0lM2Q0NTg2NDA2NjAzMzAxMDI2JTI2dXRtX2NvbnRlbnQlM2RBZCUyNTIwZ3JvdXAlMjUyMCUyNTIzMQ&rlid=5b68fa2c9039123bc6179375b77d7988&ntb=1",
+"external_link":
+"https://try.javvycoffee.com/pc84?nb_si={sourceid}&nbt=nb%3Amicrosoft%3Ao%3A688816544%3A1324914055763227%3A82807366394699&nb_mt=e&nb_bmt=be&nb_oii=4586406603301026&nb_qs=Coffee&nb_fii=&nb_li_ms=&nb_lp_ms=86669&nb_pi=Cold%20-%201%20Bag%20Protein%20Coffee%20-%2013&nb_pc=Online&nb_ci=4586406603301026&medium=cpc&gclid=&campaignid=688816544&adgroupid=1324914055763227&network=o&device=c&keyword=&placement=&utm_adgroup=&adName=&msclkid=5b68fa2c9039123bc6179375b77d7988&utm_source=bing&utm_medium=cpc&utm_campaign=TOF%20Cold%20-%20Standard%20Shopping&utm_term=4586406603301026&utm_content=Ad%20group%20%231",
+"thumbnail":
+"https://th.bing.com/th?id=OPHS.F0QkBQazBT9%2f4A474C474&w=161&h=150&c=17&pid=21.1",
+"price":
+"$34.95",
+"extracted_price":
+34.95,
+"old_price":
+"$49.90",
+"extracted_old_price":
+49.9,
+"title":
+"$1.25 Per Serving - 20 Servings Per Bag - Exclusive Offer - Javvy Protein Coffee",
+"seller":
+"Javvy Coffee",
+"tag":
+{
+"top":
+"SALE",
+"bottom":
+"550+ viewed"
+},
+"free_shipping":
+true,
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8uksHbxcHeGQscX31LqCW7zVUCUwJEhk6CVRmYD8-eIYYdUB-sOGW04qP2DZBaKLyV75OSSjCjUOJMRHlyvp1vJUYh6OM0HHiUAmyAkQNpAE8GHSGztWaBZ5ec_IolhRmRiBO3LWSmEcMCaKIi6b43aIsfvg2ZdIlO4cAlEJlMsxss5DLGQQQs0REtqn-INg-tQPQrUFMVVtKpQ1KLtQ85E3vShc&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkZPTEdFUlMtQ29mZmVlLVJlZ3VsYXItNi1PdW5jZS1Cb3hlcyUyZmRwJTJmQjAwM1RSTzRVOCUyZnJlZiUzZGFzY19kZl9CMDAzVFJPNFU4JTNmdGFnJTNkYmluZ3Nob3BwaW5nYS0yMCUyNmxpbmtDb2RlJTNkZGYwJTI2aHZhZGlkJTNkNzk5ODk1MjYzNDg3NTUlMjZodm5ldHclM2RvJTI2aHZxbXQlM2RlJTI2aHZibXQlM2RiZSUyNmh2ZGV2JTNkYyUyNmh2bG9jaW50JTNkJTI2aHZsb2NwaHklM2Q4NjY2OSUyNmh2dGFyZ2lkJTNkcGxhLTQ1ODM1ODkxMDIzMTA1MzAlMjZwc2MlM2Qx&rlid=a835722dcb40149822461b74ec049778&ntb=1",
+"external_link":
+"https://www.amazon.com/FOLGERS-Coffee-Regular-6-Ounce-Boxes/dp/B003TRO4U8/ref=asc_df_B003TRO4U8?tag=bingshoppinga-20&linkCode=df0&hvadid=79989526348755&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4583589102310530&psc=1",
+"thumbnail":
+"https://th.bing.com/th?id=OPHS.oPTGWcyMTUD%2fVg474C474&w=189&h=150&c=17&pid=21.1",
+"price":
+"$125.50",
+"extracted_price":
+125.5,
+"unit_price":
+"$0.63 / 1 ct",
+"extracted_unit_price":
+0.63,
+"title":
+"FOLGER's Coffee Regular In Room, .6-Ounce Boxes (Pack Of 200)",
+"seller":
+"Amazon.com",
+"rating":
+5,
+"reviews":
+"41",
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8UIBdkRWxyd5GY1jIUHcKDzVUCUzcWlseU2JXj6PuYi0-T973P-l9nPDqLa7KhhT1ovROLMHO94gsxJSomOFaNfmhb5mDSLVRuNWVsV3WCQdI1M9T39Ep--MeGCC_mESmvi2sdGEw2rhoDLtfgIjAU9BOSaafr3VDD_JcJV_IAxltFcQGqdQOVmMil9mU6mp6r6eqxbZakl1pYQ9zrRhPyWvqaWY&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkZvbGdlcnMtQ2xhc3NpYy1NZWRpdW0tQ29mZmVlLUtldXJpZyUyZmRwJTJmQjA4MjM5Q1BMSCUyZnJlZiUzZGFzY19kZl9CMDgyMzlDUExIJTNmdGFnJTNkYmluZ3Nob3BwaW5nYS0yMCUyNmxpbmtDb2RlJTNkZGYwJTI2aHZhZGlkJTNkNzk4NTIyMjIwMDQxODYlMjZodm5ldHclM2RvJTI2aHZxbXQlM2RlJTI2aHZibXQlM2RiZSUyNmh2ZGV2JTNkYyUyNmh2bG9jaW50JTNkJTI2aHZsb2NwaHklM2Q4NjY2OSUyNmh2dGFyZ2lkJTNkcGxhLTQ1ODM0NTE2ODU3NDE1MTUlMjZwc2MlM2Qx&rlid=7d172124268119c0e770487d01c54725&ntb=1",
+"external_link":
+"https://www.amazon.com/Folgers-Classic-Medium-Coffee-Keurig/dp/B08239CPLH/ref=asc_df_B08239CPLH?tag=bingshoppinga-20&linkCode=df0&hvadid=79852222004186&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4583451685741515&psc=1",
+"thumbnail":
+"https://th.bing.com/th?id=OPHS.03boW%2fPpDvRCLA474C474&w=200&h=150&c=17&pid=21.1",
+"price":
+"$101.99",
+"extracted_price":
+101.99,
+"unit_price":
+"$0.53 / 1 ct",
+"extracted_unit_price":
+0.53,
+"title":
+"Folgers Classic Roast Medium Roast Coffee, 192 Keurig K-Cup Pods",
+"seller":
+"Amazon.com",
+"rating":
+4.5,
+"reviews":
+"10K+",
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8Kma5GKDP422fmvJfenj-_zVUCUwvrKn5JddILmNcFMGWgis21mg_uvjjw0cLWf76KjZ25jaawEWbp9g0LDM7GqEU6u-zxSQ7iDNuzArbMRYXkUNZBG4_2GY2TPDtKqf6CFffKCUMkQflHy15jSOyBh_IPHNKR_fo11lrhaou05bUnj1HNmjrqRcKIu3n2KutiIXGYT1BHraeCJctQmUQ3Eoi4X8&u=aHR0cHMlM2ElMmYlMmZ3d3cucm9hc3R0aGVvcnkuY29tJTJmcHJvZHVjdHMlMmYxMDAtamFtYWljYS1ibHVlLW1vdW50YWluLXNpbmdsZS1vcmlnaW4tY29mZmVlLXJvYXN0LXRoZW9yeSUzZnZhcmlhbnQlM2QzMzY5OTUzNTM1NTk0OSUyNm1zY2xraWQlM2Q2Njg4YmY3NjY1YjcxNzkxY2U3OWQ2MmY0MmYzMTczYyUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jYW1wYWlnbiUzZEphbWFpY2ElMjUyMEJsdWUlMjUyME1vdW50YWluJTI1MjAtJTI1MjBTaG9wcGluZy1HMTExMjc0NTk1MzklMjZ1dG1fdGVybSUzZDQ1ODY4ODc2NDM3OTEyNjYlMjZ1dG1fY29udGVudCUzZEphbWFpY2ElMjUyMEJsdWUlMjUyME1vdW50YWluJTI1MjAtJTI1MjBTaG9wcGluZw&rlid=6688bf7665b71791ce79d62f42f3173c&ntb=1",
+"external_link":
+"https://www.roasttheory.com/products/100-jamaica-blue-mountain-single-origin-coffee-roast-theory?variant=33699535355949&msclkid=6688bf7665b71791ce79d62f42f3173c&utm_source=bing&utm_medium=cpc&utm_campaign=Jamaica%20Blue%20Mountain%20-%20Shopping-G11127459539&utm_term=4586887643791266&utm_content=Jamaica%20Blue%20Mountain%20-%20Shopping",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.FBwiH8IOUAqnPA474C474?w=160&h=150&c=17&pid=21.1",
+"price":
+"$99.00",
+"extracted_price":
+99,
+"title":
+"Jamaica Blue Mountain 100% Single-Origin Coffee By Roast Theory Whole Bean Medium Roast 12 Oz",
+"seller":
+"Roast Theory",
+"free_shipping":
+true,
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8HwumdQoR5D1-U_EGr7syDTVUCUwddLteO-5iRyvQUEg8jcayWbQGDBpwuj_7mySYISnoc86a8a3aKkADZLi_4BEil4zipyb2yCKcK4o_aEABCyKmbuxhpMgEUMvlfiTVFahIQnPbQEWWnigJzcrCtXpF4GSPhz-XpBtJVfYiXTaqTsFyRYcoGrbJKHxWCOVquJUWI6mItlBMtO0G3bkjKaxyELE&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkZvbGdlcnMtSG91c2UtR3JvdW5kLUNvZmZlZS1NZWRpdW0lMmZkcCUyZkIwOUhDVkczTlklMmZyZWYlM2Rhc2NfZGZfQjA5SENWRzNOWSUzZnRhZyUzZGJpbmdzaG9wcGluZ2EtMjAlMjZsaW5rQ29kZSUzZGRmMCUyNmh2YWRpZCUzZDgwMDU4MzgzMDIzNTQxJTI2aHZuZXR3JTNkbyUyNmh2cW10JTNkZSUyNmh2Ym10JTNkYmUlMjZodmRldiUzZGMlMjZodmxvY2ludCUzZCUyNmh2bG9jcGh5JTNkODY2NjklMjZodnRhcmdpZCUzZHBsYS00NTgzNjU3ODU0MDk3NDUwJTI2cHNjJTNkMSUyNm1zY2xraWQlM2Q2ZTg0MTFlNDVhOWYxNzZiZjYwMDc4YmQ3ZGRiOWQ1ZQ&rlid=6e8411e45a9f176bf60078bd7ddb9d5e&ntb=1",
+"external_link":
+"https://www.amazon.com/Folgers-House-Ground-Coffee-Medium/dp/B09HCVG3NY/ref=asc_df_B09HCVG3NY?tag=bingshoppinga-20&linkCode=df0&hvadid=80058383023541&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4583657854097450&psc=1&msclkid=6e8411e45a9f176bf60078bd7ddb9d5e",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.O7qfFy1MGD8dJQ474C474?w=200&h=150&c=17&pid=21.1",
+"price":
+"$83.16",
+"extracted_price":
+83.16,
+"unit_price":
+"$0.54 / 1 oz",
+"extracted_unit_price":
+0.54,
+"title":
+"Folgers House Blend Medium Roast Ground Coffee, 25.9 Ounce (Pack Of 6)",
+"seller":
+"Amazon.com",
+"tag":
+{
+"bottom":
+"Cost-effective · Delicious Flavor · Folgers"
+},
+"free_shipping":
+true,
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e82MlnePaJR_SPl_49xJeelDVUCUyN2FeNyK8xzsH_dPR-KCaCVktcFfU65rsyI6wDqVlg64m9Iz5KS0fIS36D5a6KU2l24Y2YZy4XBXgmdX2xWEkrn3EsMFrQSV4vAiVLNBtZmgxF66WHMHixt9GdAmq8gvvJAr5Uf792ekR2PNUlifWx48tPoD2NVx1lfCw6DmuBgLzQL6y1T1htN0bF5MyTLRc&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkR1bmtpbi1Eb251dHMtTWVkaXVtLUNvZmZlZS1CcmV3ZXJzJTJmZHAlMmZCMDBYQTQxTzgwJTJmcmVmJTNkYXNjX2RmX0IwMFhBNDFPODAlM2Z0YWclM2RiaW5nc2hvcHBpbmdhLTIwJTI2bGlua0NvZGUlM2RkZjAlMjZodmFkaWQlM2Q4MDc0NTQ3NzA2NTMzOCUyNmh2bmV0dyUzZG8lMjZodnFtdCUzZGUlMjZodmJtdCUzZGJlJTI2aHZkZXYlM2RjJTI2aHZsb2NpbnQlM2QlMjZodmxvY3BoeSUzZDg2NjY5JTI2aHZ0YXJnaWQlM2RwbGEtNDU4NDM0NTAyOTIxMDQ3MiUyNnBzYyUzZDE&rlid=af4605307d681d8e0ded6c695a2cd38c&ntb=1",
+"external_link":
+"https://www.amazon.com/Dunkin-Donuts-Medium-Coffee-Brewers/dp/B00XA41O80/ref=asc_df_B00XA41O80?tag=bingshoppinga-20&linkCode=df0&hvadid=80745477065338&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4584345029210472&psc=1",
+"thumbnail":
+"https://th.bing.com/th?id=OPHS.I8gXjz%2fAcB3a6w474C474&w=200&h=150&c=17&pid=21.1",
+"price":
+"$45.66",
+"extracted_price":
+45.66,
+"unit_price":
+"$0.76 / 1 ct",
+"extracted_unit_price":
+0.76,
+"title":
+"Dunkin' Decaf Medium Roast Coffee, 60 Keurig K-Cup Pods",
+"seller":
+"Amazon.com",
+"tag":
+{
+"bottom":
+"Cost-effective · Delicious Flavor · Premium Quality"
+},
+"rating":
+5,
+"reviews":
+"5K+",
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8cvp0F1tesIp7k2m7Bw4IBTVUCUwByZmBBzsSSLwe7ryFnS_ytl6KybHV2PWTYPKLuLgsh3rrSh66py_JdXe-tWB-c3NTy0Qz2Tp1U8a80rbA7n6Cx1xaCGujmc9fur-fSxx0BmQZ1Xsarj-atsrsmSvLY_8k1wJ3R34BD9HuZczra-rSPzQ9EMIE6bXT4MCVoETw14h-kHzxaTl33fX0ZMhNQ5c&u=aHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q1ODcwMDAwODg0MTk5ODA3MyUyNmRzX2FfY2lkJTNkNDA1NTI2MzEwJTI2ZHNfYV9jYWlkJTNkMjIxNzMyODkzOTIlMjYlMjZkc19lX2FkaWQlM2Q3NDA3OTkxNTc0NjAzNiUyNmRzX2VfdGFyZ2V0X2lkJTNkcGxhLTIzMjU4Nzk0MTA0MjIyNTklMjZkc19lX3Byb2R1Y3RfZ3JvdXBfaWQlM2QyMzI1ODc5NDEwNDIyMjU5JTI2ZHNfZV9wcm9kdWN0X2lkJTNkODMzNDMxOSUyNmRzX2VfcHJvZHVjdF9jb3VudHJ5JTNkVVMlMjZkc19lX3Byb2R1Y3RfbGFuZ3VhZ2UlM2RFTiUyNmRzX2VfcHJvZHVjdF9jaGFubmVsJTNkT25saW5lJTI2ZHNfZV9uZXR3b3JrJTNkbyUyNmRzX3VybF92JTNkMiUyNmRzX2Rlc3RfdXJsJTNkaHR0cHMlM2ElMmYlMmZ3d3cub2ZmaWNlZGVwb3QuY29tJTJmYSUyZnByb2R1Y3RzJTJmODMzNDMxOSUyZk1jQ2FmZS1CcmVha2Zhc3QtQmxlbmQtQ29mZmVlLUstQ3VwcyUyZiUzZnV0bV9jYW1wYWlnbiUzZHBsYV9jb3JfZXZnX2NiZnNfZ2VuZXJhbF91bmlkX3ByY2hfbm9uLW1hdGNoJTI2bWVkaWFjYW1wYWlnbmlkJTNkMjIxNzMyODkzOTIlMjZ1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZnY2xpZCUzZDZmOTY3MjQ0NmQ4NDEyYjBkNmEwMWIxZDRhYzBlODM0JTI2Z2Nsc3JjJTNkM3AuZHMlMjZtc2Nsa2lkJTNkNmY5NjcyNDQ2ZDg0MTJiMGQ2YTAxYjFkNGFjMGU4MzQlMjZ1dG1fdGVybSUzZDIzMjU4Nzk0MTA0MjIyNTklMjZ1dG1fY29udGVudCUzZENCRlMlMjUyMEdlbmVyYWw&rlid=6f9672446d8412b0d6a01b1d4ac0e834&ntb=1",
+"external_link":
+"https://www.officedepot.com/a/products/8334319/McCafe-Breakfast-Blend-Coffee-K-Cups/?utm_campaign=pla_cor_evg_cbfs_general_unid_prch_non-match&mediacampaignid=22173289392&utm_source=bing&utm_medium=cpc&gclid=6f9672446d8412b0d6a01b1d4ac0e834&gclsrc=3p.ds&msclkid=6f9672446d8412b0d6a01b1d4ac0e834&utm_term=2325879410422259&utm_content=CBFS%20General",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.h0v47aG7SUNteA474C474?w=200&h=150&c=17&pid=21.1",
+"price":
+"$60.99",
+"extracted_price":
+60.99,
+"title":
+"Mccafe Breakfast Blend Coffee, K-Cups, Box Of 24 Pods, Case Of 4 Boxes",
+"seller":
+"Office Depot",
+"tag":
+{
+"bottom":
+"Aromatic · Cost-effective · Delicious Flavor · Premium Quality"
+},
+"rating":
+5,
+"reviews":
+"6",
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8yzJaMWe-pB3d0VmtNkpskDVUCUyxSZPZmqlc_SrA5nG2l7R4YTHib3RMLlU4DT3LKNd1Kt18z6c0tz6yuMDq-xwbSZUQxOJcH4iy8wbzDq6tJsT85iVh-EgJ3g5OCLvNsjhJAGRl9VkKvGOi6Jy14BgpKHWsKsFtjlO3vEHj8IxEMEaGp3sZVDWZQEtYzZQv2WEo2rLbJ7zKaMZR8N3HgS9z1Jk&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZmNvZmZlZS1iZWFucy1idWxrJTJmZHAlMmZCMDBGTTAzWENVJTJmcmVmJTNkYXNjX2RmX0IwMEZNMDNYQ1UlM2Z0YWclM2RiaW5nc2hvcHBpbmdhLTIwJTI2bGlua0NvZGUlM2RkZjAlMjZodmFkaWQlM2Q4MDg4Mjg3NTc5ODU0MCUyNmh2bmV0dyUzZG8lMjZodnFtdCUzZGUlMjZodmJtdCUzZGJlJTI2aHZkZXYlM2RjJTI2aHZsb2NpbnQlM2QlMjZodmxvY3BoeSUzZDg2NjY5JTI2aHZ0YXJnaWQlM2RwbGEtNDU4NDQ4MjQ1NTAwMjU3MCUyNnBzYyUzZDE&rlid=3e72bdc303eb13438dedd49a24af4b08&ntb=1",
+"external_link":
+"https://www.amazon.com/coffee-beans-bulk/dp/B00FM03XCU/ref=asc_df_B00FM03XCU?tag=bingshoppinga-20&linkCode=df0&hvadid=80882875798540&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4584482455002570&psc=1",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.XlGdOuqpPa4Oyg474C474?w=160&h=150&c=17&pid=21.1",
+"price":
+"$79.92",
+"extracted_price":
+79.92,
+"unit_price":
+"$1.00 / 1 oz",
+"extracted_unit_price":
+1,
+"title":
+"Death Wish Coffee Whole Bean Dark Roast - USA Organic Coffee Beans - Fair Trade Arabica & Robusta Coffee Beans - Dark Roast Coffee Beans (80 Oz.)",
+"seller":
+"Amazon.com",
+"tag":
+{
+"bottom":
+"Aromatic · Dark · Delicious Flavor · Premium Quality"
+},
+"rating":
+4.5,
+"reviews":
+"10K+",
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8G5BJhwVlaFjInIrjb_wUfjVUCUwLf0YaRNm4KSFb-_GOX2uxHVG7n7jgcVrXPFuLwNb3P3iXFjd9FFzi3oDwxjRbV4SibxCa8WD-2zrQd6V_zS0xfOQ9kqLacvDOhxUQ154Tz5zPuD5vhpxzMY-njRaJxGRDk3u3V5oGBjuxR9fA7IUmFqG6bWS2TvlUPTm8gWvwtTI4kz1iSmKu7I8-76LIRoE&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZktldXJpZy1LLUV4cHJlc3MtQ29mZmVlLVNpbmdsZS1CcmV3ZXIlMmZkcCUyZkIwQ1Q0M0Q0NkglMmZyZWYlM2Rhc2NfZGZfQjBDVDQzRDQ2SCUzZnRhZyUzZGJpbmdzaG9wcGluZ2EtMjAlMjZsaW5rQ29kZSUzZGRmMCUyNmh2YWRpZCUzZDgwODE0Mjk1MTYxNDExJTI2aHZuZXR3JTNkbyUyNmh2cW10JTNkZSUyNmh2Ym10JTNkYmUlMjZodmRldiUzZGMlMjZodmxvY2ludCUzZCUyNmh2bG9jcGh5JTNkODY2NjklMjZodnRhcmdpZCUzZHBsYS00NTg0NDEzNzY0NTU3MzIzJTI2cHNjJTNkMSUyNm1zY2xraWQlM2Q4MmFiYWNkOWQ5MmMxMGExMzQwZWM1ODBmZTY4NzdmNg&rlid=82abacd9d92c10a1340ec580fe6877f6&ntb=1",
+"external_link":
+"https://www.amazon.com/Keurig-K-Express-Coffee-Single-Brewer/dp/B0CT43D46H/ref=asc_df_B0CT43D46H?tag=bingshoppinga-20&linkCode=df0&hvadid=80814295161411&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4584413764557323&psc=1&msclkid=82abacd9d92c10a1340ec580fe6877f6",
+"thumbnail":
+"https://th.bing.com/th?id=OPHS.3PxhL4%2faOfPkgQ474C474&w=160&h=150&c=17&pid=21.1",
+"price":
+"$69.99",
+"extracted_price":
+69.99,
+"old_price":
+"$109.99",
+"extracted_old_price":
+109.99,
+"title":
+"Keurig K-Express Single Serve Coffee Maker - Strong Brew Option, 42Oz Reservoir, Sleek Design For Holiday Hosting & Gifting, Warm Stone",
+"seller":
+"Amazon.com",
+"tag":
+{
+"top":
+"SALE",
+"bottom":
+"1.5K+ viewed"
+},
+"rating":
+4.5,
+"reviews":
+"10K+",
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8j91k9-5YSr2dskH5BFAIRTVUCUzvY9gKSsw1upAFLX0PjN2aGeMzCsQVmB4UIopup63WGnJFHnhbcsQKXyFVL5M8dJHDavajoYUKhbVgLrT4sEF3tKo61s6jAIekRnJf4j6Ckl-q8QPr4xdXPm1mG6Obrrh3VPzemh96IB0v-DVQ5LHqfXawTV1imnZkKCwZUTbwGYjE5CajBzAp77By-fdDsGs&u=aHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q1ODcwMDAwODg0MTk5ODA3MyUyNmRzX2FfY2lkJTNkNDA1NTI2MzEwJTI2ZHNfYV9jYWlkJTNkMjIxNzMyODkzOTIlMjYlMjZkc19lX2FkaWQlM2Q3NDA3OTkxNTc0NjAzNiUyNmRzX2VfdGFyZ2V0X2lkJTNkcGxhLTIzMjU4Nzk0MTA0MjIyNTklMjZkc19lX3Byb2R1Y3RfZ3JvdXBfaWQlM2QyMzI1ODc5NDEwNDIyMjU5JTI2ZHNfZV9wcm9kdWN0X2lkJTNkNzM4ODkyNSUyNmRzX2VfcHJvZHVjdF9jb3VudHJ5JTNkVVMlMjZkc19lX3Byb2R1Y3RfbGFuZ3VhZ2UlM2RFTiUyNmRzX2VfcHJvZHVjdF9jaGFubmVsJTNkT25saW5lJTI2ZHNfZV9uZXR3b3JrJTNkbyUyNmRzX3VybF92JTNkMiUyNmRzX2Rlc3RfdXJsJTNkaHR0cHMlM2ElMmYlMmZ3d3cub2ZmaWNlZGVwb3QuY29tJTJmYSUyZnByb2R1Y3RzJTJmNzM4ODkyNSUyZkR1bmtpbi1Eb251dHMtU2luZ2xlLVNlcnZlLUNvZmZlZS1LJTJmJTNmdXRtX2NhbXBhaWduJTNkcGxhX2Nvcl9ldmdfY2Jmc19nZW5lcmFsX3VuaWRfcHJjaF9ub24tbWF0Y2glMjZtZWRpYWNhbXBhaWduaWQlM2QyMjE3MzI4OTM5MiUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNmdjbGlkJTNkMGUzZjZhMmJjZDJiMTEzM2I3MTYwMzcyZWE2ZjNkNmElMjZnY2xzcmMlM2QzcC5kcyUyNm1zY2xraWQlM2QwZTNmNmEyYmNkMmIxMTMzYjcxNjAzNzJlYTZmM2Q2YSUyNnV0bV90ZXJtJTNkMjMyNTg3OTQxMDQyMjI1OSUyNnV0bV9jb250ZW50JTNkQ0JGUyUyNTIwR2VuZXJhbA&rlid=0e3f6a2bcd2b1133b7160372ea6f3d6a&ntb=1",
+"external_link":
+"https://www.officedepot.com/a/products/7388925/Dunkin-Donuts-Single-Serve-Coffee-K/?utm_campaign=pla_cor_evg_cbfs_general_unid_prch_non-match&mediacampaignid=22173289392&utm_source=bing&utm_medium=cpc&gclid=0e3f6a2bcd2b1133b7160372ea6f3d6a&gclsrc=3p.ds&msclkid=0e3f6a2bcd2b1133b7160372ea6f3d6a&utm_term=2325879410422259&utm_content=CBFS%20General",
+"thumbnail":
+"https://th.bing.com/th?id=OPHS.epk%2fmk1ZNmVnIA474C474&w=160&h=150&c=17&pid=21.1",
+"price":
+"$82.99",
+"extracted_price":
+82.99,
+"title":
+"Dunkin' Donuts Single-Serve Coffee K-Cup Pods, Dark Roast, Case Of 88 K-Cup Pods",
+"seller":
+"Office Depot",
+"tag":
+{
+"bottom":
+"Arabica · Dark · Delicious Flavor"
+},
+"rating":
+4.5,
+"reviews":
+"56",
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8J1dmGFX3tMNzX3XiiEAUxTVUCUwUAMV7LNM1psnGMs8iPwLEi61UJqsPg68PR5URuziMQkd6n-cWy8kz8clPRp2nbe5fE2fH9V-4B1UIYnSIMQDDHdZsrv9XWH6E1xCAonqRJbiAr6JjMW_vNvdl5Jtt2T_aS4KOKRzrSXppksjbIBLsGAA__X_LPBp9flbbiDUo34xVcL-iqtgn01ud4fOXjng&u=aHR0cHMlM2ElMmYlMmZ3d3cudHdvcml2ZXJzZGlyZWN0LmNvbSUyZnByb2R1Y3RzJTJmdHdvLXJpdmVycy1jb2ZmZWUtc21vcmVzLXBsZWFzZS1mbGF2b3JlZC1ncm91bmQtY29mZmVlLTEwLW96JTNmdmFyaWFudCUzZDQ5OTM0Mzg4OTg2MTU0JTI2bXNjbGtpZCUzZGY2Yjc0NmM5N2YxMDExYjc1YTM0MmY5MDU4NTQ5YjRlJTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX2NhbXBhaWduJTNkU2hvcHBpbmdfU2VhcmNoX3YyJTI1MjAwOCUyNTJGMTQlMjUyRjI1JTI2dXRtX3Rlcm0lM2Q0NTgwMjkwNTgwODA0MzQ1JTI2dXRtX2NvbnRlbnQlM2RBZCUyNTIwZ3JvdXAlMjUyMCUyNTIzMQ&rlid=f6b746c97f1011b75a342f9058549b4e&ntb=1",
+"external_link":
+"https://www.tworiversdirect.com/products/two-rivers-coffee-smores-please-flavored-ground-coffee-10-oz?variant=49934388986154&msclkid=f6b746c97f1011b75a342f9058549b4e&utm_source=bing&utm_medium=cpc&utm_campaign=Shopping_Search_v2%2008%2F14%2F25&utm_term=4580290580804345&utm_content=Ad%20group%20%231",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.RizC7fQuIllijw474C474?w=160&h=150&c=17&pid=21.1",
+"price":
+"$11.95",
+"extracted_price":
+11.95,
+"title":
+"Two Rivers Coffee S'mores Please Flavored Ground Coffee - 10 Oz 10 Oz Ground Coffee",
+"seller":
+"Two Rivers Coffee Di…",
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e80HQTl08dSBUX_amYBdEpIDVUCUwHtsarTX3W2J4SNT2Jdnsbt6HFHfPTlgjxcWV1Lsyg8wJ8WV-hn_Vgj1-jBtHWzC_LZQmHDOJVmjlISI_RAOZ1Sb5JhD0d02OAd-JwWOS-vMVJjBYnd9hBzLXZvdrqVm0PLcyH2mjEjYLzV65GMGNY6gdWTvBgIXXTd2s2snR1bGI9_c_4HSkG5cPoGSpRpis&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkR1bmtpbi1Eb251dHMtT3JpZ2luYWwtQmxlbmQtSy1DdXAlMmZkcCUyZkIwMUZHOFQ3N0MlMmZyZWYlM2Rhc2NfZGZfQjAxRkc4VDc3QyUzZnRhZyUzZGJpbmdzaG9wcGluZ2EtMjAlMjZsaW5rQ29kZSUzZGRmMCUyNmh2YWRpZCUzZDgwNjA4MDAxNDE5NjQ1JTI2aHZuZXR3JTNkbyUyNmh2cW10JTNkZSUyNmh2Ym10JTNkYmUlMjZodmRldiUzZGMlMjZodmxvY2ludCUzZCUyNmh2bG9jcGh5JTNkODY2NjklMjZodnRhcmdpZCUzZHBsYS00NTg0MjA3NTc4NTk2MTc0JTI2cHNjJTNkMQ&rlid=b1ba8b913fd3170c0a93e2c818975018&ntb=1",
+"external_link":
+"https://www.amazon.com/Dunkin-Donuts-Original-Blend-K-Cup/dp/B01FG8T77C/ref=asc_df_B01FG8T77C?tag=bingshoppinga-20&linkCode=df0&hvadid=80608001419645&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4584207578596174&psc=1",
+"thumbnail":
+"https://th.bing.com/th?id=OPHS.%2b0KzYOUzKosCcw474C474&w=191&h=150&c=17&pid=21.1",
+"price":
+"$30.92",
+"extracted_price":
+30.92,
+"unit_price":
+"$0.70 / 1 ct",
+"extracted_unit_price":
+0.7,
+"title":
+"Dunkin' Donuts 2091512 Original Blend Coffee K-Cup Pods Medium Roast 44/Box (006933)",
+"seller":
+"Amazon.com",
+"rating":
+4.5,
+"reviews":
+"10K+",
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8VT5RLaJeOnubb9q6CBT59DVUCUwReY2vv8i52UPpm1ypsbfwbCWgcJgkgX_34YI3T00iu96faeRv0AdN6dU3PqP-y7_rbCzM8w6Uku2HT5y-45KpERsTcTNGwjyJC3fntKjc7pFFhm1At5DbQcarn-XmzSBKhIHHC1YJiLfnBfBV3pEnpgMCK3IN2qkVgv40xZrLNtFHSrLRmhBeOQ_Qq1y6d9w&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZlN0YXJidWNrcy1Db2ZmZWUtTWVkaXVtLUJyZXdlcnMtQXJhYmljYSUyZmRwJTJmQjBDNkZLSjRMWiUyZnJlZiUzZGFzY19kZl9CMEM2RktKNExaJTNmdGFnJTNkYmluZ3Nob3BwaW5nYS0yMCUyNmxpbmtDb2RlJTNkZGYwJTI2aHZhZGlkJTNkODAxOTU4MTkzODQ4NDElMjZodm5ldHclM2RvJTI2aHZxbXQlM2RlJTI2aHZibXQlM2RiZSUyNmh2ZGV2JTNkYyUyNmh2bG9jaW50JTNkJTI2aHZsb2NwaHklM2Q4NjY2OSUyNmh2dGFyZ2lkJTNkcGxhLTQ1ODM3OTUyODM5ODYyNTElMjZwc2MlM2QxJTI2bXNjbGtpZCUzZDhlNzhmODk1ODRiMTFlNGIxMjZhOTFjY2EzZjUzMDcx&rlid=8e78f89584b11e4b126a91cca3f53071&ntb=1",
+"external_link":
+"https://www.amazon.com/Starbucks-Coffee-Medium-Brewers-Arabica/dp/B0C6FKJ4LZ/ref=asc_df_B0C6FKJ4LZ?tag=bingshoppinga-20&linkCode=df0&hvadid=80195819384841&hvnetw=o&hvqmt=e&hvbmt=be&hvdev=c&hvlocint=&hvlocphy=86669&hvtargid=pla-4583795283986251&psc=1&msclkid=8e78f89584b11e4b126a91cca3f53071",
+"thumbnail":
+"https://th.bing.com/th?id=OPHS.%2bfVfSC7aVW297Q474C474&w=160&h=150&c=17&pid=21.1",
+"price":
+"$51.95",
+"extracted_price":
+51.95,
+"unit_price":
+"$0.69 / 1 ct",
+"extracted_unit_price":
+0.69,
+"title":
+"Starbucks K-Cup Coffee Pods, Medium Roast, House Blend For Keurig Coffee Makers, 100% Arabica, 1 Box (75 Pods)",
+"seller":
+"Amazon.com",
+"tag":
+{
+"bottom":
+"800+ viewed"
+},
+"rating":
+4.5,
+"reviews":
+"10K+",
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8ALIpKNVmTLMqwKin9fTrKDVUCUzikpTXQB3R64g6gJ9H9BYzc2en7hOYeqUFmRtX_nPvYyDJF57vhtMw3r3EqhFoIZlkAEcDM-2IkLK0jPVPXh-vj-Zoh5h4CHbfduboeqyO7Z78OCkwMKmYnK8YWuWkn1N6MSH_JZPZVNqb2VRi28NDn7WVja1oJTpkwdOwfuo3MA5z8_wW4KQty5x9lEHwHjQ&u=aHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q1ODcwMDAwODg0MTk5ODA3MyUyNmRzX2FfY2lkJTNkNDA1NTI2MzEwJTI2ZHNfYV9jYWlkJTNkMjIxNzMyODkzOTIlMjYlMjZkc19lX2FkaWQlM2Q3NDA3OTkxNTc0NjAzNiUyNmRzX2VfdGFyZ2V0X2lkJTNkcGxhLTIzMjU4Nzk0MTA0MjIyNTklMjZkc19lX3Byb2R1Y3RfZ3JvdXBfaWQlM2QyMzI1ODc5NDEwNDIyMjU5JTI2ZHNfZV9wcm9kdWN0X2lkJTNkMTI0NjMxJTI2ZHNfZV9wcm9kdWN0X2NvdW50cnklM2RVUyUyNmRzX2VfcHJvZHVjdF9sYW5ndWFnZSUzZEVOJTI2ZHNfZV9wcm9kdWN0X2NoYW5uZWwlM2RPbmxpbmUlMjZkc19lX25ldHdvcmslM2RvJTI2ZHNfdXJsX3YlM2QyJTI2ZHNfZGVzdF91cmwlM2RodHRwcyUzYSUyZiUyZnd3dy5vZmZpY2VkZXBvdC5jb20lMmZhJTJmcHJvZHVjdHMlMmYxMjQ2MzElMmZGb2xnZXJzLUNsYXNzaWMtUm9hc3QtQ29mZmVlLUZpbHRlci1QYWNrcyUyZiUzZnV0bV9jYW1wYWlnbiUzZHBsYV9jb3JfZXZnX2NiZnNfZ2VuZXJhbF91bmlkX3ByY2hfbm9uLW1hdGNoJTI2bWVkaWFjYW1wYWlnbmlkJTNkMjIxNzMyODkzOTIlMjZ1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZnY2xpZCUzZDM3NzM4NDJhMzM2OTE5NTA5OTE0ZWQ3MzE0MmRiNzFkJTI2Z2Nsc3JjJTNkM3AuZHMlMjZtc2Nsa2lkJTNkMzc3Mzg0MmEzMzY5MTk1MDk5MTRlZDczMTQyZGI3MWQlMjZ1dG1fdGVybSUzZDIzMjU4Nzk0MTA0MjIyNTklMjZ1dG1fY29udGVudCUzZENCRlMlMjUyMEdlbmVyYWw&rlid=3773842a336919509914ed73142db71d&ntb=1",
+"external_link":
+"https://www.officedepot.com/a/products/124631/Folgers-Classic-Roast-Coffee-Filter-Packs/?utm_campaign=pla_cor_evg_cbfs_general_unid_prch_non-match&mediacampaignid=22173289392&utm_source=bing&utm_medium=cpc&gclid=3773842a336919509914ed73142db71d&gclsrc=3p.ds&msclkid=3773842a336919509914ed73142db71d&utm_term=2325879410422259&utm_content=CBFS%20General",
+"thumbnail":
+"https://th.bing.com/th?id=OPHS.p7amHoJtUz%2f3vQ474C474&w=188&h=150&c=17&pid=21.1",
+"price":
+"$237.09",
+"extracted_price":
+237.09,
+"title":
+"Folgers Classic Roast Coffee Filter Packs, 0.9 Oz, Box Of 160 Packs",
+"seller":
+"Office Depot",
+"tag":
+{
+"bottom":
+"Delicious Flavor · Folgers · Medium"
+},
+"rating":
+4.5,
+"reviews":
+"20",
+"block_position":
+"bottom"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8-aepLyhCi_Hv8yFvZMhLLDVUCUzVPB8USjCa4FcaegSJ_vBCcAehCSZoWjIGFjw7igoiRRnt1I2wZ8T_F9RxN1UrRhl0SgBzyhbCz7hh6bzbykHdTfDnEXp7VpeE1SU8N8YL-6Ci-FR6ME5BnTzELB0jhJPZ_2oLFCNleCTszp47I48rWVQTDBPbdyqPklAqOpBYOqMl4-5T9WqjbM1gLvKi-WM&u=aHR0cHMlM2ElMmYlMmZ3d3cuc3RhcGxlcy5jb20lMmZwZWV0LXMtY29mZmVlLW1ham9yLWRpY2thc29uLXMtYmxlbmQtZ3JvdW5kLWNvZmZlZS1kYXJrLXJvYXN0LTEwLTUtb3otODM2MjYxJTJmcHJvZHVjdF83MjIxMCUzZmNpZCUzZHBzJTNhbXMlM2Fkb3QlM2FuYiUzYXBsYSUzYWZiJTI2bXNjbGtpZCUzZDMxMGQ3OGM3ZTkzNzFjNGM5M2VkMTE5ZWNlNzNlZmViJTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX2NhbXBhaWduJTNkJTI1MjNQTEElMjUyRl8oMSlfQk5HXygyKV9VU18oOSlfRm9vZCUyNTIwYW5kJTI1MjBCcmVha3Jvb20lMjU3QyUyNnV0bV90ZXJtJTNkNDU4MTU5NjI0NTIxOTYwNSUyNnV0bV9jb250ZW50JTNkQWxsJTI1MjBQcm9kdWN0cw&rlid=310d78c7e9371c4c93ed119ece73efeb&ntb=1",
+"external_link":
+"https://www.staples.com/peet-s-coffee-major-dickason-s-blend-ground-coffee-dark-roast-10-5-oz-836261/product_72210?cid=ps:ms:dot:nb:pla:fb&msclkid=310d78c7e9371c4c93ed119ece73efeb&utm_source=bing&utm_medium=cpc&utm_campaign=%23PLA%2F_(1)_BNG_(2)_US_(9)_Food%20and%20Breakroom%7C&utm_term=4581596245219605&utm_content=All%20Products",
+"thumbnail":
+"https://th.bing.com/th/id/OPHS.2TcTgMSoHx3rTg474C474?w=160&h=150&c=17&pid=21.1",
+"price":
+"$22.09",
+"extracted_price":
+22.09,
+"title":
+"Peet's Coffee Major Dickason's Blend Ground Coffee, Dark Roast, 10.5 Oz. (836261)",
+"seller":
+"Staples",
+"rating":
+4.5,
+"reviews":
+"10K+",
+"block_position":
+"bottom"
+}
+],
+"pagination":
+{
+"current":
+1,
+"next":
+"https://www.bing.com/shop?q=Coffee&filters=scenario%3a%2215%22+LookupKey%3a%223afeeee9db3d42ae8b982d9f56f7d1fa%22+ParentRguid%3a%223afeeee9db3d42ae8b982d9f56f7d1fa%22&originIGUID=EFA85405DAC34DDE997C58F8798B1197&page=2&efirst=37",
+"other_pages":
+{
+"2":
+"https://www.bing.com/shop?q=Coffee&filters=scenario%3a%2215%22+LookupKey%3a%223afeeee9db3d42ae8b982d9f56f7d1fa%22+ParentRguid%3a%223afeeee9db3d42ae8b982d9f56f7d1fa%22&originIGUID=EFA85405DAC34DDE997C58F8798B1197&page=2&efirst=37",
+"3":
+"https://www.bing.com/shop?q=Coffee&filters=scenario%3a%2215%22+LookupKey%3a%223afeeee9db3d42ae8b982d9f56f7d1fa%22+ParentRguid%3a%223afeeee9db3d42ae8b982d9f56f7d1fa%22&originIGUID=EFA85405DAC34DDE997C58F8798B1197&page=3&efirst=73",
+"4":
+"https://www.bing.com/shop?q=Coffee&filters=scenario%3a%2215%22+LookupKey%3a%223afeeee9db3d42ae8b982d9f56f7d1fa%22+ParentRguid%3a%223afeeee9db3d42ae8b982d9f56f7d1fa%22&originIGUID=EFA85405DAC34DDE997C58F8798B1197&page=4&efirst=109",
+"5":
+"https://www.bing.com/shop?q=Coffee&filters=scenario%3a%2215%22+LookupKey%3a%223afeeee9db3d42ae8b982d9f56f7d1fa%22+ParentRguid%3a%223afeeee9db3d42ae8b982d9f56f7d1fa%22&originIGUID=EFA85405DAC34DDE997C58F8798B1197&page=5&efirst=145"
+}
+},
+"serpapi_pagination":
+{
+"current":
+1,
+"next_link":
+"https://serpapi.com/search.json?device=desktop&efirst=37&engine=bing_shopping&filters=scenario%3A%2215%22+LookupKey%3A%223afeeee9db3d42ae8b982d9f56f7d1fa%22+ParentRguid%3A%223afeeee9db3d42ae8b982d9f56f7d1fa%22&page=2&q=Coffee",
+"next":
+"https://serpapi.com/search.json?device=desktop&efirst=37&engine=bing_shopping&filters=scenario%3A%2215%22+LookupKey%3A%223afeeee9db3d42ae8b982d9f56f7d1fa%22+ParentRguid%3A%223afeeee9db3d42ae8b982d9f56f7d1fa%22&page=2&q=Coffee",
+"other_pages":
+{
+"2":
+"https://serpapi.com/search.json?device=desktop&efirst=37&engine=bing_shopping&filters=scenario%3A%2215%22+LookupKey%3A%223afeeee9db3d42ae8b982d9f56f7d1fa%22+ParentRguid%3A%223afeeee9db3d42ae8b982d9f56f7d1fa%22&page=2&q=Coffee",
+"3":
+"https://serpapi.com/search.json?device=desktop&efirst=73&engine=bing_shopping&filters=scenario%3A%2215%22+LookupKey%3A%223afeeee9db3d42ae8b982d9f56f7d1fa%22+ParentRguid%3A%223afeeee9db3d42ae8b982d9f56f7d1fa%22&page=3&q=Coffee",
+"4":
+"https://serpapi.com/search.json?device=desktop&efirst=109&engine=bing_shopping&filters=scenario%3A%2215%22+LookupKey%3A%223afeeee9db3d42ae8b982d9f56f7d1fa%22+ParentRguid%3A%223afeeee9db3d42ae8b982d9f56f7d1fa%22&page=4&q=Coffee",
+"5":
+"https://serpapi.com/search.json?device=desktop&efirst=145&engine=bing_shopping&filters=scenario%3A%2215%22+LookupKey%3A%223afeeee9db3d42ae8b982d9f56f7d1fa%22+ParentRguid%3A%223afeeee9db3d42ae8b982d9f56f7d1fa%22&page=5&q=Coffee"
+}
+},
+"related_searches":
+[
+{
+"text":
+"Coffee Brands",
+"link":
+"https://www.bing.com/shop?q=Coffee+Brands&FORM=SHOPA2",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&q=Coffee+Brands",
+"highlighted_words":
+[
+"Brands"
+]
+},
+{
+"text":
+"Black Rifle Coffee",
+"link":
+"https://www.bing.com/shop?q=Black+Rifle+Coffee&FORM=SHOPA2",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&q=Black+Rifle+Coffee",
+"highlighted_words":
+[
+"Black",
+"Rifle"
+]
+},
+{
+"text":
+"K Cup Coffee",
+"link":
+"https://www.bing.com/shop?q=K+Cup+Coffee&FORM=SHOPA2",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&q=K+Cup+Coffee"
+},
+{
+"text":
+"Gourmet Coffee",
+"link":
+"https://www.bing.com/shop?q=Gourmet+Coffee&FORM=SHOPA2",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&q=Gourmet+Coffee",
+"highlighted_words":
+[
+"Gourmet"
+]
+},
+{
+"text":
+"K Cups",
+"link":
+"https://www.bing.com/shop?q=K+Cups&FORM=SHOPA2",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&q=K+Cups"
+},
+{
+"text":
+"Keurig Coffee",
+"link":
+"https://www.bing.com/shop?q=Keurig+Coffee&FORM=SHOPA2",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&q=Keurig+Coffee",
+"highlighted_words":
+[
+"Keurig"
+]
+},
+{
+"text":
+"Coffee Bean",
+"link":
+"https://www.bing.com/shop?q=Coffee+Bean&FORM=SHOPA2",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&q=Coffee+Bean",
+"highlighted_words":
+[
+"Bean"
+]
+},
+{
+"text":
+"Peet's Coffee",
+"link":
+"https://www.bing.com/shop?q=Peet%27s+Coffee&FORM=SHOPA2",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=bing_shopping&q=Peet%27s+Coffee",
+"highlighted_words":
+[
+"Peet's"
+]
+}
+]
+}
+
+GET
+
+
+https://serpapi.com/search.json?engine=bing_shopping&q=Coffee
+
+Code to integrate
+
+cURLRubyPythonJavaScriptGoPHPJavaRust.NETGoogle Sheets
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_shopping",
+  q: "Coffee",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+shopping_results = results[:shopping_results]
+API Parameters
+Search Query
+q
+
+Required
+
+Parameter defines the search query. You can use anything that you would use in a regular Bing Shopping search.
+
+Geographic Location
+mkt
+
+Optional
+
+The market where the results come from (e.g. en-US). Typically, mkt is the country where the user is making the request from. However, it could be a different country if the user is not located in a country where Bing Shopping API delivers results. The market must be in the form <language code>-<country code>. For example, en-US. The string is case insensitive. For a list of possible market values, see Market Codes.
+
+NOTE: If known, you are encouraged to always specify the market. Specifying the market helps Bing route the request and return an appropriate and optimal response. If you specify a market that is not listed in Market Codes, Bing Shopping API uses a best fit market code based on an internal mapping that is subject to change.
+
+This parameter and the cc query parameter are mutually exclusive—do not specify both.
+
+Localization
+cc
+
+Optional
+
+Parameter defines the country to search from. It follows the 2-character ISO_3166-1 format. (e.g., us for United States, de for Germany, gb for United Kingdom, etc.).
+
+Pagination
+efirst
+
+Optional
+
+Parameter controls the offset of the shopping results. (e.g., efirst=10 will move the 10th shopping result to the first position).
+
+Advanced Filters
+filters
+
+Optional
+
+Parameter allows usage of a more complex filtering options such as filtering by date range ex1:"ez5_18169_18230" or using a specific display filters such as ufn:"Wunderman+Thompson"+sid:"5bede9a2-1bda-9887-e6eb-30b1b8b6b513"+catguid:"5bede9a2-1bda-9887-e6eb-30b1b8b6b513_cfb02057"+segment:"generic.carousel"+entitysegment:"Organization". Exact values can be constructed by using Bing search and copying filters query parameter.
+
+Serpapi Parameters
+engine
+
+Required
+
+Set parameter to bing_shopping to use the Bing Shopping API engine.
+
+device
+
+Optional
+
+Parameter defines the device to use to get the results. It can be set to desktop (default) to use a regular browser, tablet to use a tablet browser (currently using iPads), or mobile to use a mobile browser.
+
+no_cache
+
+Optional
+
+Parameter will force SerpApi to fetch the Bing Shopping results even if a cached version is already present. A cache is served only if the query and all parameters are exactly the same. Cache expires after 1h. Cached searches are free, and are not counted towards your searches per month. It can be set to false (default) to allow results from the cache, or true to disallow results from the cache. no_cache and async parameters should not be used together.
+
+async
+
+Optional
+
+Parameter defines the way you want to submit your search to SerpApi. It can be set to false (default) to open an HTTP connection and keep it open until you got your search results, or true to just submit your search to SerpApi and retrieve them later. In this case, you'll need to use our Searches Archive API to retrieve your results. async and no_cache parameters should not be used together. async should not be used on accounts with Ludicrous Speed enabled.
+
+zero_trace
+
+Optional
+
+Enterprise only. Parameter enables ZeroTrace mode. It can be set to false (default) or true. Enable this mode to skip storing search parameters, search files, and search metadata on our servers. This may make debugging more difficult.
+
+api_key
+
+Required
+
+Parameter defines the SerpApi private key to use.
+
+output
+
+Optional
+
+Parameter defines the final output you want. It can be set to json (default) to get a structured JSON of the results, or html to get the raw html retrieved.
+
+API Results
+JSON Results
+JSON output includes structured data for Shopping Results.
+
+A search status is accessible through search_metadata.status. It flows this way: Processing -> Success || Error. If a search has failed, error will contain an error message. search_metadata.id is the search ID inside SerpApi.
+
+HTML Results
+HTML output is useful to debug JSON results or support features not supported yet by SerpApi.
+HTML output gives you the raw HTML results from Bing Shopping.
+
+API Examples
+Example results for 
+q
+:
+jacket
+GET
+
+
+https://serpapi.com/search.json?engine=bing_shopping&q=jacket
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_shopping",
+  q: "jacket",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+shopping_results = results[:shopping_results]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "66f97573a54d75222ff0d40d",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/e1f14520bbbd51b5/66f97573a54d75222ff0d40d.json",
+    "created_at": "2024-09-29 15:42:43 UTC",
+    "processed_at": "2024-09-29 15:42:44 UTC",
+    "bing_shopping_url": "https://www.bing.com/shop?q=jacket&mkt=en-us",
+    "raw_html_file": "https://serpapi.com/searches/e1f14520bbbd51b5/66f97573a54d75222ff0d40d.html",
+    "total_time_taken": 2.02
+  },
+  "search_parameters": {
+    "engine": "bing_shopping",
+    "q": "jacket",
+    "device": "desktop"
+  },
+  "shopping_results": [
+    {
+      "link": "https://www.bing.com/ck/a?!&&p=bf4baaa5a030c160JmltdHM9MTcyMjU1NjgwMCZpZ3VpZD0xYTk5ZGU1NC0xYTk0LTY2N2EtMGYwNC1jYTliMWI2NTY3ODEmaW5zaWQ9NTM1NQ&ptn=3&ver=2&hsh=3&fclid=1a99de54-1a94-667a-0f04-ca9b1b656781&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1qYWNrZXQmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMTIlMjIrZ0lkJTNhJTIyMTU1NzU1Nzc0NDUzJTIyK2dJZEhhc2glM2ElMjIwJTIyK2dHbG9iYWxPZmZlcklkcyUzYSUyMjE1NTc1NTc3NDQ1MyUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMjE1NTc1NTc3NDQ1MyUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+      "title": "Women's Packable Puffer Jacket - Blue - Medium - The Vermont Country Store",
+      "thumbnails": [
+        "https://th.bing.com/th?id=OPHS.5zn9oy9mimGm7A474C474&w=220&h=220&c=17&o=5&pid=21.1"
+      ],
+      "seller": "Vermont Country Store",
+      "price": "$99.95",
+      "extracted_price": 99.95,
+      "rating": 4.5,
+      "reviews": "3",
+      "free_shipping": true,
+      "special_offer": "Free Shipping on Orders $75+",
+      "external_link": "https://www.vermontcountrystore.com/womens-packable-puffer-jacket/product/90087?variantColorName=color&variantColorValue=Navy&variantSizeName=size&variantSizeValue=Medium+%2810-12%29",
+      "product_token": "FmnBRnicbVDJbpxAEJXyJ7lwG6mXAYcDB7OYJe62wc3Wlwi6ZwxMMyHjWQyfmq8JOGONFOVQ0qtX9V4tv7_oXzVtsOrtuq6qSq8ABgIaIOrVUQbEJEyMpEsh7V4vxOEDx9nAXfBesp3O_Zl3PjB4ZCWiyDsSv7xQB3YlUy3JQ0RZiZ9cr69yfary2KSMQBprw3FvYe28OVhIa96aGW-FaqUFK9OUG329msF6ZRh31QpswXolKrOGtaEbd9-gdrIq-Ijpzxrfn0UQnXmQdTKwG47SH4LBX2VOD7yIe96rN-lno5jgVKLsVBbRUI_pVL6k800ejlg4fkcy3RS2ihhtlpywUJEuPHCgdjduvnNaQgDqptNVF3GvaQR6VQR5i-Zy5YPaN9syf3_mPVdip3biNhNSJpbA1I0hGWeuPdoyp26NdMCLBiTLf53P_vuPXRIcnWVhP9T7ZJCBim71__o9zV5M-OZJIHPkefJ3j_aqUcko83Tx7f_5nSmDCPIX7jMY0eeMhumD7aUOb0VvYvFZj7X9sbbgHxpLuTE",
+      "serpapi_bing_product_api": "https://serpapi.com/search.json?engine=bing_product&product_token=FmnBRnicbVDJbpxAEJXyJ7lwG6mXAYcDB7OYJe62wc3Wlwi6ZwxMMyHjWQyfmq8JOGONFOVQ0qtX9V4tv7_oXzVtsOrtuq6qSq8ABgIaIOrVUQbEJEyMpEsh7V4vxOEDx9nAXfBesp3O_Zl3PjB4ZCWiyDsSv7xQB3YlUy3JQ0RZiZ9cr69yfary2KSMQBprw3FvYe28OVhIa96aGW-FaqUFK9OUG329msF6ZRh31QpswXolKrOGtaEbd9-gdrIq-Ijpzxrfn0UQnXmQdTKwG47SH4LBX2VOD7yIe96rN-lno5jgVKLsVBbRUI_pVL6k800ejlg4fkcy3RS2ihhtlpywUJEuPHCgdjduvnNaQgDqptNVF3GvaQR6VQR5i-Zy5YPaN9syf3_mPVdip3biNhNSJpbA1I0hGWeuPdoyp26NdMCLBiTLf53P_vuPXRIcnWVhP9T7ZJCBim71__o9zV5M-OZJIHPkefJ3j_aqUcko83Tx7f_5nSmDCPIX7jMY0eeMhumD7aUOb0VvYvFZj7X9sbbgHxpLuTE"
+    },
+    {
+      "link": "https://www.bing.com/ck/a?!&&p=ae764520149a27daJmltdHM9MTcyMjU1NjgwMCZpZ3VpZD0xYTk5ZGU1NC0xYTk0LTY2N2EtMGYwNC1jYTliMWI2NTY3ODEmaW5zaWQ9NTYwNA&ptn=3&ver=2&hsh=3&fclid=1a99de54-1a94-667a-0f04-ca9b1b656781&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1qYWNrZXQmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMTIlMjIrZ0lkJTNhJTIyMTk5MzY2ODI3NTYxJTIyK2dJZEhhc2glM2ElMjIwJTIyK2dHbG9iYWxPZmZlcklkcyUzYSUyMjE5OTM2NjgyNzU2MSUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMjE5OTM2NjgyNzU2MSUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+      "title": "Ralph Lauren Bi-Swing Jacket - Size M In Cooper Brown",
+      "thumbnails": [
+        "https://th.bing.com/th?id=OPHS.IohfWEIvr%2fQGnA474C474&w=220&h=220&c=17&o=5&pid=21.1"
+      ],
+      "seller": "Ralph Lauren",
+      "price": "$168.00",
+      "extracted_price": 168.0,
+      "external_link": "https://www.ralphlauren.com/men-clothing-jackets-coats-vests/bi-swing-jacket/0077527919.html?utm_source=CSE&utm_medium=BingPLA_0_0_0",
+      "product_token": "10K47XicbVDJbtswFAT6J73oZkCkFpcHHSxZ0dKQjhVq4yWQSCdaKFd1vEmf2q-plDowUOQ2bx5n3nD-fDO-K0pvFbulqRtQBToq4FIUYSePwscIUz7gJgakebtgh_VMS3q2Vq85bQ3mTbzzgdVHmkMC3SP28gtxQJNTWeM0gITm2mbtdkVqjEW6RdN8ISulP-4tTTnvDhZUqvdqwq9c1sICBUJiZ-iLCegL01wWC_VV1Re8QCUoTcNc_gDKySrAo0Z-ldrqzP3wzPykEb5dMRi_cAp-5yk5sGzbsU6-Cy8Z-AjGHCanPAv7cojH_Dme_uRqIQ2Gn1DEu8yWISXVPGMaSNwEB6bK9s61Bp4cNutAm_Jfb7qQuVXF4ZvE0J01lxvvlx6q8_T6xDomeStbfr9pbCiGU5cDGWOIZ64-2iIl6xIaKssqNZr7dT7frz6yRFp4Fpn9UO6jXvgyvO-_9NtMXpR76MQhGlga_ctR3zQyGkQaz77df90h4YeAPTOPgpA8JSSIH2w3dljNO6Txz_1W2R9LC_wF4ia5qA",
+      "serpapi_bing_product_api": "https://serpapi.com/search.json?engine=bing_product&product_token=10K47XicbVDJbtswFAT6J73oZkCkFpcHHSxZ0dKQjhVq4yWQSCdaKFd1vEmf2q-plDowUOQ2bx5n3nD-fDO-K0pvFbulqRtQBToq4FIUYSePwscIUz7gJgakebtgh_VMS3q2Vq85bQ3mTbzzgdVHmkMC3SP28gtxQJNTWeM0gITm2mbtdkVqjEW6RdN8ISulP-4tTTnvDhZUqvdqwq9c1sICBUJiZ-iLCegL01wWC_VV1Re8QCUoTcNc_gDKySrAo0Z-ldrqzP3wzPykEb5dMRi_cAp-5yk5sGzbsU6-Cy8Z-AjGHCanPAv7cojH_Dme_uRqIQ2Gn1DEu8yWISXVPGMaSNwEB6bK9s61Bp4cNutAm_Jfb7qQuVXF4ZvE0J01lxvvlx6q8_T6xDomeStbfr9pbCiGU5cDGWOIZ64-2iIl6xIaKssqNZr7dT7frz6yRFp4Fpn9UO6jXvgyvO-_9NtMXpR76MQhGlga_ctR3zQyGkQaz77df90h4YeAPTOPgpA8JSSIH2w3dljNO6Txz_1W2R9LC_wF4ia5qA"
+    },
+    {
+      "link": "https://www.bing.com/ck/a?!&&p=67180cbeb7094bffJmltdHM9MTcyMjU1NjgwMCZpZ3VpZD0xYTk5ZGU1NC0xYTk0LTY2N2EtMGYwNC1jYTliMWI2NTY3ODEmaW5zaWQ9NTYxMg&ptn=3&ver=2&hsh=3&fclid=1a99de54-1a94-667a-0f04-ca9b1b656781&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1qYWNrZXQmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMTIlMjIrZ0lkJTNhJTIyMTU1NzU1Nzc0NDQ2JTIyK2dJZEhhc2glM2ElMjIwJTIyK2dHbG9iYWxPZmZlcklkcyUzYSUyMjE1NTc1NTc3NDQ0NiUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMjE1NTc1NTc3NDQ0NiUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+      "title": "Men's Packable Puffer Jacket - Blue - Large - The Vermont Country Store",
+      "thumbnails": [
+        "https://th.bing.com/th?id=OPHS.73EFRfcxGAPJqA474C474&w=220&h=220&c=17&o=5&pid=21.1"
+      ],
+      "seller": "Vermont Country Store",
+      "price": "$99.95",
+      "extracted_price": 99.95,
+      "free_shipping": true,
+      "special_offer": "Free Shipping on Orders $75+",
+      "external_link": "https://www.vermontcountrystore.com/mens-packable-puffer-jacket/product/90088?variantColorName=color&variantColorValue=Navy&variantSizeName=size&variantSizeValue=Large",
+      "product_token": "m3_XaXicbVDLbqMwFJXmT2bDLpJtAqkXLAqhPKa4DTUBvBlhOwkQk2FS8oBP7dcMdFJFGs3iSueee8-5j49vxndNay1zAR-A4Bu-AHjOt9uwUZ30IxxR0Ud1Akm9u0QOa5m-btkSXHO6N5g38s4nBs80RwS5XeTlF-LAOqeqitIAEZrrL0u3KVJjKNIVHvNrtNPa7mDp2nlztJBWvpcj3gpVSQsWGMuNMZ-NYD4zzUUxA1swn4kCc8hNw1w8QO1kFfBZJ7-4_ngWfnhm_rqWvl0ylPwUFP7OU3Jk2aphjXqX3roXAxxytD7lWdjyPhnyt2S8ydVDGvQ_kEw2ma1CSsopj2igojo4MqD2d268c5hCALJcoZsuZG5ZCrRTEXInzeXG-9zDVZ5eX1nDlNirvbjPhISKKfTRB5Bq5KrOlilZcmQAlpUgnv7rfPU_fu4S6-FZZvYTP8St9FV4r__X72X0osLDJ4Fwz9L47x7VTaPiXqbJ5Nv88zss_RCyN-ZRGJLXNQmSJ9tNHFaJBuviq77SDh234B9Iyrkd",
+      "serpapi_bing_product_api": "https://serpapi.com/search.json?engine=bing_product&product_token=m3_XaXicbVDLbqMwFJXmT2bDLpJtAqkXLAqhPKa4DTUBvBlhOwkQk2FS8oBP7dcMdFJFGs3iSueee8-5j49vxndNay1zAR-A4Bu-AHjOt9uwUZ30IxxR0Ud1Akm9u0QOa5m-btkSXHO6N5g38s4nBs80RwS5XeTlF-LAOqeqitIAEZrrL0u3KVJjKNIVHvNrtNPa7mDp2nlztJBWvpcj3gpVSQsWGMuNMZ-NYD4zzUUxA1swn4kCc8hNw1w8QO1kFfBZJ7-4_ngWfnhm_rqWvl0ylPwUFP7OU3Jk2aphjXqX3roXAxxytD7lWdjyPhnyt2S8ydVDGvQ_kEw2ma1CSsopj2igojo4MqD2d268c5hCALJcoZsuZG5ZCrRTEXInzeXG-9zDVZ5eX1nDlNirvbjPhISKKfTRB5Bq5KrOlilZcmQAlpUgnv7rfPU_fu4S6-FZZvYTP8St9FV4r__X72X0osLDJ4Fwz9L47x7VTaPiXqbJ5Nv88zss_RCyN-ZRGJLXNQmSJ9tNHFaJBuviq77SDh234B9Iyrkd"
+
+    },
+    ...
+  ],
+  "filters": [
+    {
+      "type": "Show Only",
+      "options": [
+        {
+          "text": "Available nearby",
+          "link": "https://www.bing.com/shop?q=jacket&filters=gsfilter%3a%22MSxCYXNpYywyPTEsVHw7%22+scenario%3a%2215%22&fk=Show+Only&FORM=SHOPFL&originIGUID=85716ACA88F4418D9D04DB020B6D00F8",
+          "serpapi_link": "https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522MSxCYXNpYywyPTEsVHw7%2522%2Bscenario%253A%252215%2522&mkt=en-us&q=jacket"
+        }
+      ]
+    },
+    {
+      "type": "Department",
+      "options": [
+        {
+          "text": "Women",
+          "link": "https://www.bing.com/shop?q=jacket&filters=gsfilter%3a%22Mjk2MTA2MTUxNSxCYXNpYywwPTIzMzAyOTQxNDEsVHwxNDY5Njg5ODQzLEZ8MjIzODY4NjA2NixGfDQwNTQwMDc1MDIsRnw7%22+scenario%3a%2215%22&fk=Department&FORM=SHOPFL&originIGUID=85716ACA88F4418D9D04DB020B6D00F8",
+          "serpapi_link": "https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522Mjk2MTA2MTUxNSxCYXNpYywwPTIzMzAyOTQxNDEsVHwxNDY5Njg5ODQzLEZ8MjIzODY4NjA2NixGfDQwNTQwMDc1MDIsRnw7%2522%2Bscenario%253A%252215%2522&mkt=en-us&q=jacket"
+        },
+        {
+          "text": "Men",
+          "link": "https://www.bing.com/shop?q=jacket&filters=gsfilter%3a%22Mjk2MTA2MTUxNSxCYXNpYywwPTIzMzAyOTQxNDEsRnwxNDY5Njg5ODQzLFR8MjIzODY4NjA2NixGfDQwNTQwMDc1MDIsRnw7%22+scenario%3a%2215%22&fk=Department&FORM=SHOPFL&originIGUID=85716ACA88F4418D9D04DB020B6D00F8",
+          "serpapi_link": "https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522Mjk2MTA2MTUxNSxCYXNpYywwPTIzMzAyOTQxNDEsRnwxNDY5Njg5ODQzLFR8MjIzODY4NjA2NixGfDQwNTQwMDc1MDIsRnw7%2522%2Bscenario%253A%252215%2522&mkt=en-us&q=jacket"
+        },
+        ...
+      ]
+    },
+    ...
+  ],
+  "ads_results": [
+    {
+      "title": "Deals on jacket | Amazon.com® Official Site",
+      "link": "https://www.bing.com/aclick?ld=e83XnAWKUZAJLQCt7Iju6bmjVUCUxgBbGjGLq1NxVqIHwSo5F1idJYzs8wYmH64FzIyKboQDLemHBjwA6_pD1-much1G9S5LRnbCxU15Y58FzgXMI1-BgXj7pbEXX-4dj7-_VJjyUsc69I4RmTOx7y8HPXAX5F5c0G162o9V3JmvhN5mH_&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZnMlMmYlM2ZpZSUzZFVURjglMjZrZXl3b3JkcyUzZGphY2tldCUyNmluZGV4JTNkcGV0cyUyNnRhZyUzZG1oMGItMjAlMjZyZWYlM2RwZF9zbF80YmQwcXluNTh1X2UlMjZhZGdycGlkJTNkMTMzMDQxMDc5OTcyNTM2MCUyNmh2YWRpZCUzZDgzMTUwOTY0MTgzOTY0JTI2aHZuZXR3JTNkbyUyNmh2cW10JTNkZSUyNmh2Ym10JTNkYmUlMjZodmRldiUzZGMlMjZodmxvY2ludCUzZCUyNmh2bG9jcGh5JTNkODIxNDElMjZodnRhcmdpZCUzZGt3ZC04MzE1MTczNDIxNzk3OCUzYWxvYy0xOTAlMjZoeWRhZGNyJTNkMTU0NjFfMTM1Mzg4ODElMjZtc2Nsa2lkJTNkYTM5ZWFjZDExN2E2MTI1MzNiMjZjYTdkYTcyMDU2ZWY&rlid=a39eacd117a612533b26ca7da72056ef&ntb=1",
+      "displayed_link": "https://www.amazon.com/Shop/jacket",
+      "extensions": [
+        "Site visitors: Over 1M in the past month"
+      ]
+    },
+    {
+      "title": "Men's Jackets at JCPenney® | Extra 30% Off Coupon Ends Soon",
+      "link": "https://www.bing.com/aclick?ld=e8Zwt4M0PlkL4x3sWWoherYDVUCUwWJCktsf88yeYQfE9BIpkZFO6IeDtZreNIG8e13fjjIxvDE-v3l533Mpr8ZSw6TMdTcujy1YdDgN25_b3wiCUhH3q9o4Gk1gRnG8S9PJk7m0OnV6P5l5dzx7qZWOg1R0XxyMaAZosV_ZdCNxejRT79&u=aHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA0MDk5MTA0MzAyMSUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwNDc5MDIwMTAzNiUyNmRzX2FfY2lkJTNkNjY2NjYxMTU4JTI2ZHNfYV9jYWlkJTNkMTI0NzAxNzQ4NjQlMjZkc19hX2FnaWQlM2QxMjUzOTU3NjE5ODQlMjZkc19hX2xpZCUzZGt3ZC0zOTE5MjcyMzk3NzElMjYlMjZkc19lX2FkaWQlM2Q3NzY1MzIwODE1ODkyMiUyNmRzX2VfdGFyZ2V0X2lkJTNka3dkLTc3NjUzMjI2OTM4MDQ1JTNhbG9jLTQxMTglMjYlMjZkc19lX25ldHdvcmslM2RvJTI2ZHNfdXJsX3YlM2QyJTI2ZHNfZGVzdF91cmwlM2RodHRwcyUzYSUyZiUyZnd3dy5qY3Blbm5leS5jb20lMmZnJTJmbWVuJTJmbWVucy1jb2F0cy1qYWNrZXRzJTNmaWQlM2RjYXQxMDAyOTAwODclMjZ1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZ1dG1fY2FtcGFpZ24lM2RwYWlkJTI1MjBzZWFyY2glMjZjaWQlM2RwYWlkJTI1MjBzZWFyY2glN2NiaW5nJTdjTV9CYXNrZXRfTWVuc19PdXRlcndlYXIlN2NNX0Jhc2tldF9NZW5zX091dGVyd2Vhcl9KYWNrZXRzJTI2dXRtX2NvbnRlbnQlM2Rrd2QtNzc2NTMyMjY5MzgwNDUlM2Fsb2MtNDExOCUyNnV0bV9hZGdyb3VwaWQlM2QxMjQyNDQ4NTIwMDMxMDcyJTI2dXRtX2tleXdvcmQlM2QlMjUyQm1lbnMlMjUyMCUyNTJCamFja2V0cyUyNnV0bV9tYXRjaHR5cGUlM2RwJTI2dXRtX2RldmljZSUzZGMlMjZnY2xpZCUzZGFmZGYzNjNkNTBmMTE0Y2MzMzJkNTA5MWUwNzdiMDUwJTI2Z2Nsc3JjJTNkM3AuZHMlMjYlMjZtc2Nsa2lkJTNkYWZkZjM2M2Q1MGYxMTRjYzMzMmQ1MDkxZTA3N2IwNTA&rlid=afdf363d50f114cc332d5091e077b050&ntb=1",
+      "displayed_link": "https://www.jcpenney.com/MensJackets",
+      "snippet": "Save on Top Brands · Free Same Day Pickup · Save With Coupons",
+      "extensions": [
+        "Site visitors: Over 1M in the past month"
+      ],
+      "sitelinks": [
+        {
+          "title": "Men's Clothing",
+          "link": "https://www.bing.com/aclick?ld=e81hnCM3WirfJ1pa_qHMlUHjVUCUxFpTaU-qNjoCXMjqyqgKp-5mgtXnlyGQnxauAJ33QvOfJtXWIU4OKMRo7cW3BWQJN9gLHWfakykf0MRD0b5YaNxKsGYhoiaY_-_EPqLIon2JP0XxfO3PpLS_T0WtC1l4cAgJ9TmIat-HZvK1L1rhBdQOrKnjgtWXWr64dt7S7GAA&u=aHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA0MDk5MTA0MzAyMSUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwNDc5MDIwMTAzNiUyNmRzX2FfY2lkJTNkNjY2NjYxMTU4JTI2ZHNfYV9jYWlkJTNkMTI0NzAxNzQ4NjQlMjZkc19hX2FnaWQlM2QxMjUzOTU3NjE5ODQlMjZkc19hX2xpZCUzZGt3ZC0zOTE5MjcyMzk3NzElMjZkc194X2FkeGlkJTNkODM3MDAwMDM0NDA0NTQ2MjAlMjZkc194X2FkeHR5cGUlM2QxJTI2ZHNfYV9maWlkJTNkMTY1Mzg5NTk5NjEwJTI2ZHNfYV9jaWQlM2Q2NjY2NjExNTglMjZkc19hX2V4dGlkJTNkNjk3Mjc4NDQyNDUlMjZkc19lX2FkaWQlM2Q3NzY1MzIwODE1ODkyMiUyNmRzX2VfdGFyZ2V0X2lkJTNka3dkLTc3NjUzMjI2OTM4MDQ1JTNhbG9jLTQxMTglMjYlMjZkc19lX25ldHdvcmslM2RvJTI2ZHNfdXJsX3YlM2QyJTI2ZHNfZGVzdF91cmwlM2RodHRwcyUzYSUyZiUyZnd3dy5qY3Blbm5leS5jb20lMmZkJTJmbWVuJTNmdXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX2NhbXBhaWduJTNkcGFpZCUyNTIwc2VhcmNoJTI2Y2lkJTNkcGFpZCUyNTIwc2VhcmNoJTdjYmluZyU3Y01fQmFza2V0X01lbnNfT3V0ZXJ3ZWFyJTdjTV9CYXNrZXRfTWVuc19PdXRlcndlYXJfSmFja2V0cyUyNnV0bV9jb250ZW50JTNka3dkLTc3NjUzMjI2OTM4MDQ1JTNhbG9jLTQxMTglMjZ1dG1fYWRncm91cGlkJTNkMTI0MjQ0ODUyMDAzMTA3MiUyNnV0bV9rZXl3b3JkJTNkJTI1MkJtZW5zJTI1MjAlMjUyQmphY2tldHMlMjZ1dG1fbWF0Y2h0eXBlJTNkcCUyNnV0bV9kZXZpY2UlM2RjJTI2Z2NsaWQlM2Q4ODhlY2Y3MzY5ZTQxYjJlMjAyOWE5ZGZkOTYyMzc5ZiUyNmdjbHNyYyUzZDNwLmRzJTI2JTI2bXNjbGtpZCUzZDg4OGVjZjczNjllNDFiMmUyMDI5YTlkZmQ5NjIzNzlm&rlid=888ecf7369e41b2e2029a9dfd962379f"
+        },
+        {
+          "title": "Up to 80% Off Clearance",
+          "link": "https://www.bing.com/aclick?ld=e85eKWftBPWcKRc0VXYXIAkjVUCUxVMskXsFOlSM7xVBNhhRiyqwX_6k4Toal-tMzDmB7LTpsth0_fTh_4Vy5oOczw4Zil2udaqoJbnh47M6YK45xGNmP3QgulvA_3fVfmP71QfCl9Tl1OdheJZRwNJ25hklMrxKmZ3oZSk7K62NsP76fY88wxHbABt4talnsSIJc7_Q&u=aHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA0MDk5MTA0MzAyMSUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwNDc5MDIwMTAzNiUyNmRzX2FfY2lkJTNkNjY2NjYxMTU4JTI2ZHNfYV9jYWlkJTNkMTI0NzAxNzQ4NjQlMjZkc19hX2FnaWQlM2QxMjUzOTU3NjE5ODQlMjZkc19hX2xpZCUzZGt3ZC0zOTE5MjcyMzk3NzElMjZkc194X2FkeGlkJTNkODM3MDAwMTE1NjU1NjAxODIlMjZkc194X2FkeHR5cGUlM2QxJTI2ZHNfYV9maWlkJTNkMTkwNDE0MDU5OTI2JTI2ZHNfYV9jaWQlM2Q2NjY2NjExNTglMjZkc19hX2V4dGlkJTNkNjk3Mjc4NDQ1NjAlMjZkc19lX2FkaWQlM2Q3NzY1MzIwODE1ODkyMiUyNmRzX2VfdGFyZ2V0X2lkJTNka3dkLTc3NjUzMjI2OTM4MDQ1JTNhbG9jLTQxMTglMjYlMjZkc19lX25ldHdvcmslM2RvJTI2ZHNfdXJsX3YlM2QyJTI2ZHNfZGVzdF91cmwlM2RodHRwcyUzYSUyZiUyZnd3dy5qY3Blbm5leS5jb20lMmZnJTJmbWVuJTNmczFfZGVhbHNfYW5kX3Byb21vdGlvbnMlM2RDTEVBUkFOQ0UlMjZpZCUzZGRlcHQyMDAwMDAxNCUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jYW1wYWlnbiUzZHBhaWQlMjUyMHNlYXJjaCUyNmNpZCUzZHBhaWQlMjUyMHNlYXJjaCU3Y2JpbmclN2NNX0Jhc2tldF9NZW5zX091dGVyd2VhciU3Y01fQmFza2V0X01lbnNfT3V0ZXJ3ZWFyX0phY2tldHMlMjZ1dG1fY29udGVudCUzZGt3ZC03NzY1MzIyNjkzODA0NSUzYWxvYy00MTE4JTI2dXRtX2FkZ3JvdXBpZCUzZDEyNDI0NDg1MjAwMzEwNzIlMjZ1dG1fa2V5d29yZCUzZCUyNTJCbWVucyUyNTIwJTI1MkJqYWNrZXRzJTI2dXRtX21hdGNodHlwZSUzZHAlMjZ1dG1fZGV2aWNlJTNkYyUyNmdjbGlkJTNkNzQxYzFkM2NmZWEwMTc2ZmYzMzE3YjkwNGUyNjAxNzAlMjZnY2xzcmMlM2QzcC5kcyUyNiUyNm1zY2xraWQlM2Q3NDFjMWQzY2ZlYTAxNzZmZjMzMTdiOTA0ZTI2MDE3MA&rlid=741c1d3cfea0176ff3317b904e260170"
+        }
+      ]
+    },
+    ...
+  ],
+  "inline_ads_results": [
+    {
+      "link": "https://www.bing.com/aclick?ld=e8O27p-Erlcaed8Fvv7LRl3zVUCUxoYhgOGWhDc9NnagGu1okHCSsPpqDdHQ3gPSg9Squ0F_Lcd-GAIzRggaEaM7L1nkkjqDunuKL2hRUgAHOuBW8r72piLSr-hoeQEtADyu8gfU2BfgsduKq8IOMY-_g6LPra0WzHzhV2ezwAgPlcg0KZ&u=aHR0cHMlM2ElMmYlMmZ3d3cuZXZvLmNvbSUyZmphY2tldHMlMmZ0aGUtbm9ydGgtZmFjZS1hbHRhLXZpc3RhLWphY2tldCUzZmltYWdlJTNkMjE1ODUzJTJmOTkxMTY3JTJmdGhlLW5vcnRoLWZhY2UtYWx0YS12aXN0YS1qYWNrZXQtbWVuLXMtLmpwZyUzZm1zY2xraWQlM2RhNWRhYTRhOGU3NDAxZTZlMzg3NWMyMDQ1N2M2NTgzNiUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jYW1wYWlnbiUzZEdTQ19Tbm93c3BvcnRzX0FjY2Vzc29yaWVzJTI2dXRtX3Rlcm0lM2Q0NTgwNjM0MTcyMDIxNjU3JTI2dXRtX2NvbnRlbnQlM2RQTEFfU25vd3Nwb3J0c19BY2Nlc3Nvcmllcw&rlid=a5daa4a8e7401e6e3875c20457c65836&ntb=1",
+      "external_link": "https://www.evo.com/jackets/the-north-face-alta-vista-jacket?image=215853/991167/the-north-face-alta-vista-jacket-men-s-.jpg?msclkid=a5daa4a8e7401e6e3875c20457c65836&utm_source=bing&utm_medium=cpc&utm_campaign=GSC_Snowsports_Accessories&utm_term=4580634172021657&utm_content=PLA_Snowsports_Accessories",
+      "thumbnail": "https://th.bing.com/th?id=OPHS.RwoHoMYh3hJDQA474C474&w=160&h=220&c=17&pid=21.1",
+      "price": "$79.99",
+      "extracted_price": 79.99,
+      "old_price": "$139.95",
+      "extracted_old_price": 139.95,
+      "title": "The North Face Alta Vista Jacket Men's 2023 - Medium Green",
+      "seller": "evo",
+      "free_shipping": true,
+      "block_position": "top"
+    },
+    {
+      "link": "https://www.bing.com/aclick?ld=e8gMtIsdcH_Oj_ddTqQSdAgjVUCUw0QvXxaBibJxy5BLM8ymu0P1P3B-ewl3ot4eQ959bc0cAxuTrXV4QOGtVgWfghLEcF2xS4Sp1gv75GHd8sFCTWsWQbViyHDVhqLQg6LUvZ69QRtGmUFqk7is74-qJzifOOBn4il_9syinjUFiTX_JS&u=aHR0cHMlM2ElMmYlMmZ3d3cuZXZvLmNvbSUyZmphY2tldHMlMmZ0aGUtbm9ydGgtZmFjZS1hbHRhLXZpc3RhLWphY2tldCUzZmltYWdlJTNkMjE1ODUzJTJmMTAxMzg1NiUyZnRoZS1ub3J0aC1mYWNlLWFsdGEtdmlzdGEtamFja2V0LW1lbi1zLS5qcGclM2Ztc2Nsa2lkJTNkMjg0MTEyZGQ0YzIzMTViYjgyYjA3NDcxZmNhNThjYTglMjZ1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZ1dG1fY2FtcGFpZ24lM2RHU0NfU25vd3Nwb3J0c19BY2Nlc3NvcmllcyUyNnV0bV90ZXJtJTNkNDU4MDYzNDE3MjAyMTY1NyUyNnV0bV9jb250ZW50JTNkUExBX1Nub3dzcG9ydHNfQWNjZXNzb3JpZXM&rlid=284112dd4c2315bb82b07471fca58ca8&ntb=1",
+      "external_link": "https://www.evo.com/jackets/the-north-face-alta-vista-jacket?image=215853/1013856/the-north-face-alta-vista-jacket-men-s-.jpg?msclkid=284112dd4c2315bb82b07471fca58ca8&utm_source=bing&utm_medium=cpc&utm_campaign=GSC_Snowsports_Accessories&utm_term=4580634172021657&utm_content=PLA_Snowsports_Accessories",
+      "thumbnail": "https://th.bing.com/th?id=OPHS.R6H4rFm3w8Zjpg474C474&w=160&h=220&c=17&pid=21.1",
+      "price": "$109.99",
+      "extracted_price": 109.99,
+      "old_price": "$139.95",
+      "extracted_old_price": 139.95,
+      "title": "The North Face Alta Vista Jacket Men's 2024 - 2X-Large Black",
+      "seller": "evo",
+      "rating": 5,
+      "reviews": "1",
+      "block_position": "top"
+    },
+    ...
+  ],
+  "pagination": {
+    "current": 1,
+    "next": "https://www.bing.com/shop?q=jacket&filters=scenario%3a%2215%22+LookupKey%3a%2204378f3699614e63a4a44f5d93a4ece5%22+ParentRguid%3a%2204378f3699614e63a4a44f5d93a4ece5%22&originIGUID=8304D85B535A4B3FA28AC175CF31B77D&page=2&efirst=37",
+    "other_pages": {
+      "2": "https://www.bing.com/shop?q=jacket&filters=scenario%3a%2215%22+LookupKey%3a%2204378f3699614e63a4a44f5d93a4ece5%22+ParentRguid%3a%2204378f3699614e63a4a44f5d93a4ece5%22&originIGUID=8304D85B535A4B3FA28AC175CF31B77D&page=2&efirst=37",
+      "3": "https://www.bing.com/shop?q=jacket&filters=scenario%3a%2215%22+LookupKey%3a%2204378f3699614e63a4a44f5d93a4ece5%22+ParentRguid%3a%2204378f3699614e63a4a44f5d93a4ece5%22&originIGUID=8304D85B535A4B3FA28AC175CF31B77D&page=3&efirst=73",
+      "4": "https://www.bing.com/shop?q=jacket&filters=scenario%3a%2215%22+LookupKey%3a%2204378f3699614e63a4a44f5d93a4ece5%22+ParentRguid%3a%2204378f3699614e63a4a44f5d93a4ece5%22&originIGUID=8304D85B535A4B3FA28AC175CF31B77D&page=4&efirst=109",
+      "5": "https://www.bing.com/shop?q=jacket&filters=scenario%3a%2215%22+LookupKey%3a%2204378f3699614e63a4a44f5d93a4ece5%22+ParentRguid%3a%2204378f3699614e63a4a44f5d93a4ece5%22&originIGUID=8304D85B535A4B3FA28AC175CF31B77D&page=5&efirst=145"
+    }
+  },
+  "serpapi_pagination": {
+    "current": 1,
+    "next_link": "https://serpapi.com/search.json?device=desktop&efirst=37&engine=bing_shopping&filters=scenario%3A%2215%22+LookupKey%3A%2204378f3699614e63a4a44f5d93a4ece5%22+ParentRguid%3A%2204378f3699614e63a4a44f5d93a4ece5%22&page=2&q=jacket",
+    "next": "https://serpapi.com/search.json?device=desktop&efirst=37&engine=bing_shopping&filters=scenario%3A%2215%22+LookupKey%3A%2204378f3699614e63a4a44f5d93a4ece5%22+ParentRguid%3A%2204378f3699614e63a4a44f5d93a4ece5%22&page=2&q=jacket",
+    "other_pages": {
+      "2": "https://serpapi.com/search.json?device=desktop&efirst=37&engine=bing_shopping&filters=scenario%3A%2215%22+LookupKey%3A%2204378f3699614e63a4a44f5d93a4ece5%22+ParentRguid%3A%2204378f3699614e63a4a44f5d93a4ece5%22&page=2&q=jacket",
+      "3": "https://serpapi.com/search.json?device=desktop&efirst=73&engine=bing_shopping&filters=scenario%3A%2215%22+LookupKey%3A%2204378f3699614e63a4a44f5d93a4ece5%22+ParentRguid%3A%2204378f3699614e63a4a44f5d93a4ece5%22&page=3&q=jacket",
+      "4": "https://serpapi.com/search.json?device=desktop&efirst=109&engine=bing_shopping&filters=scenario%3A%2215%22+LookupKey%3A%2204378f3699614e63a4a44f5d93a4ece5%22+ParentRguid%3A%2204378f3699614e63a4a44f5d93a4ece5%22&page=4&q=jacket",
+      "5": "https://serpapi.com/search.json?device=desktop&efirst=145&engine=bing_shopping&filters=scenario%3A%2215%22+LookupKey%3A%2204378f3699614e63a4a44f5d93a4ece5%22+ParentRguid%3A%2204378f3699614e63a4a44f5d93a4ece5%22&page=5&q=jacket"
+    }
+  },
+  "related_searches": [
+    {
+      "text": "Carhartt Jackets",
+      "link": "https://www.bing.com/shop?q=Carhartt+Jackets&FORM=SHOPRZ",
+      "serpapi_link": "https://serpapi.com/search.json?device=desktop&engine=bing_shopping&q=Carhartt+Jackets",
+      "highlighted_words": [
+        "Carhartt",
+        "Jackets"
+      ]
+    },
+    ...
+  ]
+}
+Example results for 
+q
+:
+jacket
+with filter
+GET
+
+
+https://serpapi.com/search.json?engine=bing_shopping&q=jacket&filters=gsfilter%253A%2522Mjk2MTA2MTUxNSxCYXNpYywwPTIzMzAyOTQxNDEsRnwxNDY5Njg5ODQzLFR8MjIzODY4NjA2NixGfDQwNTQwMDc1MDIsRnwyMjI5OTY3NTczLEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_shopping",
+  q: "jacket",
+  filters: "gsfilter%253A%2522Mjk2MTA2MTUxNSxCYXNpYywwPTIzMzAyOTQxNDEsRnwxNDY5Njg5ODQzLFR8MjIzODY4NjA2NixGfDQwNTQwMDc1MDIsRnwyMjI5OTY3NTczLEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+shopping_results = results[:shopping_results]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "66ffd602a54d75963e42cda7",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/fc206ff1dd78d796/66ffd602a54d75963e42cda7.json",
+    "created_at": "2024-10-04 11:48:18 UTC",
+    "processed_at": "2024-10-04 11:48:18 UTC",
+    "bing_shopping_url": "https://www.bing.com/shop?q=jacket&filters=gsfilter%3A%22Mjk2MTA2MTUxNSxCYXNpYywwPTIzMzAyOTQxNDEsRnwxNDY5Njg5ODQzLFR8MjIzODY4NjA2NixGfDQwNTQwMDc1MDIsRnwyMjI5OTY3NTczLEZ8Ow%3D%3D%22+scenario%3A%2215%22",
+    "raw_html_file": "https://serpapi.com/searches/fc206ff1dd78d796/66ffd602a54d75963e42cda7.html",
+    "total_time_taken": 1.92
+  },
+  "search_parameters": {
+    "engine": "bing_shopping",
+    "q": "jacket",
+    "filters": "gsfilter%3A%22Mjk2MTA2MTUxNSxCYXNpYywwPTIzMzAyOTQxNDEsRnwxNDY5Njg5ODQzLFR8MjIzODY4NjA2NixGfDQwNTQwMDc1MDIsRnwyMjI5OTY3NTczLEZ8Ow%3D%3D%22+scenario%3A%2215%22",
+    "device": "desktop"
+  },
+  "shopping_results": [
+    {
+      "link": "https://www.bing.com/ck/a?!&&p=37e725aa84500997JmltdHM9MTcyODAwMDAwMCZpZ3VpZD0zYjAyMzFjYS04MWQzLTZmMTktMjZjMy0yNGM0ODBhYzZlOGYmaW5zaWQ9NTM2Nw&ptn=3&ver=2&hsh=3&fclid=3b0231ca-81d3-6f19-26c3-24c480ac6e8f&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1qYWNrZXQmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMTIlMjIrZ0lkJTNhJTIyMTg3MzY4ODQ5NTE4JTIyK2dJZEhhc2glM2ElMjIwJTIyK2dHbG9iYWxPZmZlcklkcyUzYSUyMjE4NzM2ODg0OTUxOCUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMjE4NzM2ODg0OTUxOCUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+      "title": "Men's Green Mountain Fleece-Lined Jacket - Navy - Medium - The Vermont Country Store",
+      "thumbnails": [
+        "https://th.bing.com/th?id=OPHS.MHJWCgxUKU0Mlw474C474&w=220&h=220&c=17&o=5&pid=21.1"
+      ],
+      "seller": "Vermont Country Store",
+      "price": "$79.95",
+      "extracted_price": 79.95,
+      "rating": 5,
+      "reviews": "2",
+      "free_shipping": true,
+      "external_link": "https://www.vermontcountrystore.com/mens-green-mountain-fleece-lined-jacket/product/80498?variantColorName=color&variantColorValue=Navy&variantSizeName=size&variantSizeValue=M",
+      "product_token": "D0wMF3icbVDLjptAEJTyJ7lwszTMgG0OHIzBYLIzLHh4zSWCGduAB4d4_Vj41HxNTOKVpdUeWuqu6qou9Z9v-ndF6Uw0286gXhRzTQfAMGZ-K8_CwwamvA_sxQ2PtWQdQ0nHbDDkzaLHw6rJN0DDaTi8UNZiejjjhjW4Bz1xMQhsq8oHJgM3b4tUH4o0NAjFkNyU7nw0kXLdnkyoVG_Vvd9xWQsTlQAilReTuSrQZLpTjQmccjSBGtfmoODT7XynXMxCfUHkV4kWV-75V-YljfCsisH4J6fq7zwlJ5aFLWvlm3CTng_qkMPkkmd-V_bxkG_iHjcO8um6_wFFvM0s6VNSjTOma4mb9YkBeXhie4SHXAvsUCfU0R46nzlVxeFeYuiMmtsD90rXqPP0_ZW1TPKDPPDnTY0MGAb2HgQ0fg-Wd6w-WyIldgl1wLIKRON_lx_7i39ZIuRfRWatymPUCU_6T_5Lv-DuRblrXDg0epZG_3PUD42MepHGo2_76XeG8HyVbZhLVZ-8JmQdrywnXrKatwbiH3yoHM-lqf4FDGG56A",
+      "serpapi_bing_product_api": "https://serpapi.com/search.json?engine=bing_product&product_token=D0wMF3icbVDLjptAEJTyJ7lwszTMgG0OHIzBYLIzLHh4zSWCGduAB4d4_Vj41HxNTOKVpdUeWuqu6qou9Z9v-ndF6Uw0286gXhRzTQfAMGZ-K8_CwwamvA_sxQ2PtWQdQ0nHbDDkzaLHw6rJN0DDaTi8UNZiejjjhjW4Bz1xMQhsq8oHJgM3b4tUH4o0NAjFkNyU7nw0kXLdnkyoVG_Vvd9xWQsTlQAilReTuSrQZLpTjQmccjSBGtfmoODT7XynXMxCfUHkV4kWV-75V-YljfCsisH4J6fq7zwlJ5aFLWvlm3CTng_qkMPkkmd-V_bxkG_iHjcO8um6_wFFvM0s6VNSjTOma4mb9YkBeXhie4SHXAvsUCfU0R46nzlVxeFeYuiMmtsD90rXqPP0_ZW1TPKDPPDnTY0MGAb2HgQ0fg-Wd6w-WyIldgl1wLIKRON_lx_7i39ZIuRfRWatymPUCU_6T_5Lv-DuRblrXDg0epZG_3PUD42MepHGo2_76XeG8HyVbZhLVZ-8JmQdrywnXrKatwbiH3yoHM-lqf4FDGG56A"
+    },
+    {
+      "link": "https://www.bing.com/ck/a?!&&p=931145ca63b3fc7dJmltdHM9MTcyODAwMDAwMCZpZ3VpZD0zYjAyMzFjYS04MWQzLTZmMTktMjZjMy0yNGM0ODBhYzZlOGYmaW5zaWQ9NTU3MQ&ptn=3&ver=2&hsh=3&fclid=3b0231ca-81d3-6f19-26c3-24c480ac6e8f&u=a1L3Nob3AvcHJvZHVjdHBhZ2U_cT1qYWNrZXQmZmlsdGVycz1zY2VuYXJpbyUzYSUyMjE3JTIyK2dUeXBlJTNhJTIyMTIlMjIrZ0lkJTNhJTIyMTU1NzU1Nzc0NDQ4JTIyK2dJZEhhc2glM2ElMjIwJTIyK2dHbG9iYWxPZmZlcklkcyUzYSUyMjE1NTc1NTc3NDQ0OCUyMitBdWNDb250ZXh0R3VpZCUzYSUyMjAlMjIrR3JvdXBFbnRpdHlJZCUzYSUyMjE1NTc1NTc3NDQ0OCUyMitOb25TcG9uc29yZWRPZmZlciUzYSUyMlRydWUlMjImcHJvZHVjdHBhZ2U9dHJ1ZSZGT1JNPVNIUFBEUCZicm93c2U9dHJ1ZQ&ntb=1",
+      "title": "Men's Packable Puffer Jacket - Blue - Small - The Vermont Country Store",
+      "thumbnails": [
+        "https://th.bing.com/th?id=OPHS.73EFRfcxGAPJqA474C474&w=220&h=220&c=17&o=5&pid=21.1"
+      ],
+      "seller": "Vermont Country Store",
+      "price": "$99.95",
+      "extracted_price": 99.95,
+      "free_shipping": true,
+      "external_link": "https://www.vermontcountrystore.com/mens-packable-puffer-jacket/product/90088?variantColorName=color&variantColorValue=Navy&variantSizeName=size&variantSizeValue=Small",
+      "product_token": "IjZDUXicbVDLjptAEJTyJ7lwszQP7JgDB2NsMNkZFjy85hLBjB3Ag0O8tneHT83XxOx6ZSnKoaTuqq7qVv_5Mv1qGL1tYQjNqShnuMJ78U0GnTpLn1iECR26i1cyYsl7jtOeu2Ao2oUmw7ottsAkWTQ8Md4RdjiTlrdEA009AkLXqYuBq9ArujKbDmUWWZQlmERGfz7a2LjuTjYy6pf6Vu-FaqSNK4AwFOVkDiWezPbQmqCZwBNkCnMOSjHbzffGxS7hE6a_Kry4Cj-4cj9tpe_UHCU_BIO_i4yeeB51vFMv0ku1GOBQoPRS5EFf6WQotokm7QoHbKO_I5nsckcFjNZjT9hGkXZz4kAdHlwC6TBCAOpG5t0X8FVdC_RTEbQaPa933q88qymyt2fecSUO6iAeOyFlYgS-5YBweeOasyMz6lZoCnheg3j87_JzfvF-S4yDq8yddXWMe-mr4KH_Ny-8ZTHhWReBLM2z-OOO5u5RsZZZMuZ2__zOkn4A-ZZ7DAb0OaWbZO2skiVvRGdh8alHxvFc2fAvoBG5rA",
+      "serpapi_bing_product_api": "https://serpapi.com/search.json?engine=bing_product&product_token=IjZDUXicbVDLjptAEJTyJ7lwszQP7JgDB2NsMNkZFjy85hLBjB3Ag0O8tneHT83XxOx6ZSnKoaTuqq7qVv_5Mv1qGL1tYQjNqShnuMJ78U0GnTpLn1iECR26i1cyYsl7jtOeu2Ao2oUmw7ottsAkWTQ8Md4RdjiTlrdEA009AkLXqYuBq9ArujKbDmUWWZQlmERGfz7a2LjuTjYy6pf6Vu-FaqSNK4AwFOVkDiWezPbQmqCZwBNkCnMOSjHbzffGxS7hE6a_Kry4Cj-4cj9tpe_UHCU_BIO_i4yeeB51vFMv0ku1GOBQoPRS5EFf6WQotokm7QoHbKO_I5nsckcFjNZjT9hGkXZz4kAdHlwC6TBCAOpG5t0X8FVdC_RTEbQaPa933q88qymyt2fecSUO6iAeOyFlYgS-5YBweeOasyMz6lZoCnheg3j87_JzfvF-S4yDq8yddXWMe-mr4KH_Ny-8ZTHhWReBLM2z-OOO5u5RsZZZMuZ2__zOkn4A-ZZ7DAb0OaWbZO2skiVvRGdh8alHxvFc2fAvoBG5rA"
+    },
+    ...
+  ],
+  "filters": [
+    {
+      "type": "Show Only",
+      "options": [
+        {
+          "text": "Available nearby",
+          "link": "https://www.bing.com/shop?q=jacket&filters=gsfilter%3a%22MSxCYXNpYywyPTEsVHw7Mjk2MTA2MTUxNSxCYXNpYywwPTIzMzAyOTQxNDEsRnwxNDY5Njg5ODQzLFR8MjIzODY4NjA2NixGfDQwNTQwMDc1MDIsRnwyMjI5OTY3NTczLEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Show+Only&FORM=SHOPFL&originIGUID=F936430F2264409A9BDF9ECCDCEA4AB4",
+          "serpapi_link": "https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522MSxCYXNpYywyPTEsVHw7Mjk2MTA2MTUxNSxCYXNpYywwPTIzMzAyOTQxNDEsRnwxNDY5Njg5ODQzLFR8MjIzODY4NjA2NixGfDQwNTQwMDc1MDIsRnwyMjI5OTY3NTczLEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=jacket"
+        }
+      ]
+    },
+    {
+      "type": "Department",
+      "options": [
+        {
+          "text": "Women",
+          "link": "https://www.bing.com/shop?q=jacket&filters=gsfilter%3a%22Mjk2MTA2MTUxNSxCYXNpYywwPTIzMzAyOTQxNDEsVHwxNDY5Njg5ODQzLFR8MjIzODY4NjA2NixGfDQwNTQwMDc1MDIsRnwyMjI5OTY3NTczLEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Department&FORM=SHOPFL&originIGUID=F936430F2264409A9BDF9ECCDCEA4AB4",
+          "serpapi_link": "https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522Mjk2MTA2MTUxNSxCYXNpYywwPTIzMzAyOTQxNDEsVHwxNDY5Njg5ODQzLFR8MjIzODY4NjA2NixGfDQwNTQwMDc1MDIsRnwyMjI5OTY3NTczLEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=jacket"
+        },
+        {
+          "text": "Men",
+          "link": "https://www.bing.com/shop?q=jacket&filters=gsfilter%3a%22Mjk2MTA2MTUxNSxCYXNpYywwPTIzMzAyOTQxNDEsRnwxNDY5Njg5ODQzLEZ8MjIzODY4NjA2NixGfDQwNTQwMDc1MDIsRnwyMjI5OTY3NTczLEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Department&FORM=SHOPFL&originIGUID=F936430F2264409A9BDF9ECCDCEA4AB4",
+          "serpapi_link": "https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522Mjk2MTA2MTUxNSxCYXNpYywwPTIzMzAyOTQxNDEsRnwxNDY5Njg5ODQzLEZ8MjIzODY4NjA2NixGfDQwNTQwMDc1MDIsRnwyMjI5OTY3NTczLEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=jacket"
+        },
+        {
+          "text": "Unisex",
+          "link": "https://www.bing.com/shop?q=jacket&filters=gsfilter%3a%22Mjk2MTA2MTUxNSxCYXNpYywwPTIzMzAyOTQxNDEsRnwxNDY5Njg5ODQzLFR8MjIzODY4NjA2NixUfDQwNTQwMDc1MDIsRnwyMjI5OTY3NTczLEZ8Ow%3d%3d%22+scenario%3a%2215%22&fk=Department&FORM=SHOPFL&originIGUID=F936430F2264409A9BDF9ECCDCEA4AB4",
+          "serpapi_link": "https://serpapi.com/search.json?device=desktop&engine=bing_shopping&filters=gsfilter%253A%2522Mjk2MTA2MTUxNSxCYXNpYywwPTIzMzAyOTQxNDEsRnwxNDY5Njg5ODQzLFR8MjIzODY4NjA2NixUfDQwNTQwMDc1MDIsRnwyMjI5OTY3NTczLEZ8Ow%253D%253D%2522%2Bscenario%253A%252215%2522&q=jacket"
+        },
+        ...
+      ]
+    },
+    ...
+  ],
+  ...
+}
+Example results for 
+q
+:
+iphone
+GET
+
+
+https://serpapi.com/search.json?engine=bing_shopping&q=iphone
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_shopping",
+  q: "iphone",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+shopping_results = results[:shopping_results]
+
+JSON Example
+
+{
+  ...
+  "shopping_results": [
+    ...
+    {
+      "link": "https://www.bing.com/shop/productpage?q=iphone&filters=scenario%3a%2217%22+gType%3a%2212%22+gId%3a%22136779445735%22+gIdHash%3a%220%22+gGlobalOfferIds%3a%22136779445735%22+AucContextGuid%3a%220%22+GroupEntityId%3a%22136779445735%22+NonSponsoredOffer%3a%22True%22&productpage=true&FORM=SHPPDP&browse=true",
+      "title": "Apple - iPhone 13 5G 128GB (Unlocked) - Midnight",
+      "thumbnails": [
+        "https://th.bing.com/th?id=OPHS.DcZL4vstGY1SAw474C474&w=220&h=210&c=17&o=5&pid=21.1",
+        "https://th.bing.com/th?id=OPHS.qK4anCeQJ8fKng474C474&w=220&h=210&c=17&o=5&pid=21.1",
+        "https://th.bing.com/th?id=OPHS.bm80Uv5iNfM%2fVw474C474&w=220&h=210&c=17&o=5&pid=21.1",
+        "https://th.bing.com/th?id=OPHS.GdXo063ZHeAXFg474C474&w=220&h=210&c=17&o=5&pid=21.1",
+        "https://th.bing.com/th?id=OPHS.j97MsCNpgrJpRQ474C474&w=220&h=210&c=17&o=5&pid=21.1"
+      ],
+      "seller": "Best Buy",
+      "sale": true,
+      "price": "$579.99",
+      "extracted_price": 579.99,
+      "old_price": "$629.99",
+      "extracted_old_price": 629.99,
+      "rating": 5,
+      "reviews": "60",
+      "external_link": "https://www.bestbuy.com/site/apple-iphone-13-5g-128gb-unlocked-midnight/6417788.p?skuId=6417788&contractId=unactivated&utm_source=feed",
+      "product_token": "X34HmHicdY27DoJAFERj6Ye4jY3ykFhQGB9AoRDhBxb2ApuQves-ovyqXyMBCgtt5mbO3Mm8F8tHyGWLAkjNOwNKh7oCQRXHlUtXjrMNBlk3RS9hBs4IEjZbdxcEe8_zA9efg5jqdgo3I4k6LGmX1jWohOnftYOtjigMvExkOftqRwqtPAvDTf9v8oYilyg0KmDjyvRWKAvDIVIhs5WRtIHQDIxc0vs1zOMsO2WkVPjUE_8AEJZQgA"
+      "serpapi_bing_product_api": "https://serpapi.com/search.json?engine=bing_product&product_token=X34HmHicdY27DoJAFERj6Ye4jY3ykFhQGB9AoRDhBxb2ApuQves-ovyqXyMBCgtt5mbO3Mm8F8tHyGWLAkjNOwNKh7oCQRXHlUtXjrMNBlk3RS9hBs4IEjZbdxcEe8_zA9efg5jqdgo3I4k6LGmX1jWohOnftYOtjigMvExkOftqRwqtPAvDTf9v8oYilyg0KmDjyvRWKAvDIVIhs5WRtIHQDIxc0vs1zOMsO2WkVPjUE_8AEJZQgA"
+    },
+    ...
+    {
+      "link": "https://www.bing.com/shop/productpage?q=iphone&filters=scenario%3a%2217%22+gType%3a%2212%22+gId%3a%22163424462076%22+gIdHash%3a%220%22+gGlobalOfferIds%3a%22163424462076%22+AucContextGuid%3a%220%22+GroupEntityId%3a%22163424462076%22+NonSponsoredOffer%3a%22True%22&productpage=true&FORM=SHPPDP&browse=true",
+      "title": "Apple iPhone 14 512GB - (PRODUCT) Red",
+      "thumbnails": [
+        "https://th.bing.com/th?id=OPHS.e8NvZbc9QROVmw474C474&w=220&h=210&c=17&o=5&pid=21.1",
+      ],
+      "seller": "Best Buy Canada",
+      "price": "$1,449.99",
+      "external_link": "https://www.bestbuy.ca/en-ca/product/apple-iphone-14-512gb-product-red-unlocked/16472797",
+      "product_token": "ef8uQHicdY29DoJAEIRj6YNAY4MHgYrC-AMUChFe4OAWuITcnvcT5VV9GglQWGgzm_lmJ_PebB8xlz0KcFs-GFA61g0Iqjg6PnUI2UeT7LpqlLACMoOMrTb0AxIEIfGicA1Sqvsl9GaSDFjTIW9bUBnTv2sH2xxRGHiZxHL21U4UWnkWhpvx3-QNRSlRaFTA5pXlrVIWpuNKhcw2RtIOYjMx95Lfr3GZFsWpcGuFT73wD_Y0UFA"
+      "serpapi_bing_product_api": "https://serpapi.com/search.json?engine=bing_product&product_token=ef8uQHicdY29DoJAEIRj6YNAY4MHgYrC-AMUChFe4OAWuITcnvcT5VV9GglQWGgzm_lmJ_PebB8xlz0KcFs-GFA61g0Iqjg6PnUI2UeT7LpqlLACMoOMrTb0AxIEIfGicA1Sqvsl9GaSDFjTIW9bUBnTv2sH2xxRGHiZxHL21U4UWnkWhpvx3-QNRSlRaFTA5pXlrVIWpuNKhcw2RtIOYjMx95Lfr3GZFsWpcGuFT73wD_Y0UFA"
+    },
+  ]
+  ...
+}
+Example results for 
+q
+:
+coffee
+GET
+
+
+https://serpapi.com/search.json?engine=bing_shopping&q=coffee
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_shopping",
+  q: "coffee",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+shopping_results = results[:shopping_results]
+
+JSON Example
+
+{
+  ...
+  "shopping_results": [
+    {
+      "link": "https://www.bing.com/shop/productpage?q=coffee&filters=scenario%3a%2217%22+gType%3a%2212%22+gId%3a%2295792966313%22+gIdHash%3a%220%22+gGlobalOfferIds%3a%2295792966313%22+AucContextGuid%3a%220%22+GroupEntityId%3a%2295792966313%22+NonSponsoredOffer%3a%22True%22&productpage=true&FORM=SHPPDP&browse=true",
+      "title": "Amazon Fresh, Colombia Ground Coffee, Medium Roast, 32 Oz",
+      "thumbnails": [
+        "https://th.bing.com/th?id=OPHS.6xrcRlWQSmxwiA474C474&w=220&h=210&c=17&o=5&pid=21.1"
+      ],
+      "seller": "Amazon.com",
+      "price": "$18.82",
+      "extracted_price": 18.82,
+      "rating": 4.5,
+      "reviews": "344",
+      "external_link": "https://www.amazon.com/AmazonFresh-Colombia-Ground-Coffee-Medium/dp/B072MQ5BRX?source=ps-sl-shoppingads-lpcontext&ref_=bing_fplfs&psc=1",
+      "product_token": "cffFLHicdY27DoJAEEVj459AYyMQIRRbGB9AoRDhBxZ2QBKys-4jyq_6NW6AwkKbmcy5c3Peq_WDNNi2AG7bDxqkIqoBTmWPTkAd3_ciOzZdNQpYgD-BjM1nvItiPw7DwAsWnlJ1n7PtRJIBazrk1iEzpn629qY5INfw0onp2Vc5kWjEietej3-EV-SlQK5QApsc81clDdjlConMNFrQDoi2zD3ntwsp06I4Fm4t8alm_gE1G0_P"
+      "serpapi_bing_product_api": "https://serpapi.com/search.json?engine=bing_product&product_token=cffFLHicdY27DoJAEEVj459AYyMQIRRbGB9AoRDhBxZ2QBKys-4jyq_6NW6AwkKbmcy5c3Peq_WDNNi2AG7bDxqkIqoBTmWPTkAd3_ciOzZdNQpYgD-BjM1nvItiPw7DwAsWnlJ1n7PtRJIBazrk1iEzpn629qY5INfw0onp2Vc5kWjEietej3-EV-SlQK5QApsc81clDdjlConMNFrQDoi2zD3ntwsp06I4Fm4t8alm_gE1G0_P"
+    },
+    {
+      "link": "https://www.bing.com/shop/productpage?q=coffee&filters=scenario%3a%2217%22+gType%3a%2212%22+gId%3a%2297863611774%22+gIdHash%3a%220%22+gGlobalOfferIds%3a%2297863611774%22+AucContextGuid%3a%220%22+GroupEntityId%3a%2297863611774%22+NonSponsoredOffer%3a%22True%22&productpage=true&FORM=SHPPDP&browse=true",
+      "title": "Classic Roast Ground Coffee",
+      "thumbnails": [
+        "https://th.bing.com/th?id=OPHS.NFUw0u%2f%2f69sZaw474C474&w=220&h=210&c=17&o=5&pid=21.1"
+      ],
+      "seller": "Bed Bath & Beyond",
+      "price": "$113.49",
+      "extracted_price": 113.49,
+      "external_link": "https://www.bedbathandbeyond.com/Home-Garden/Classic-Roast-Ground-Coffee/36294072/product.html?utm_source=connexity&utm_medium=cpc&track=bizrate&cid=283047",
+      "product_token": "gEJDuHicdY27DoJAEEVj459AYyNgQIstjA-gUIjwAws7IAnZWfcR5Vf9GglLYaHNTObcuTnvxfJBamwaALfpeg1SEVUDp7JDJ6CO73vROFZtOQiYgT-BlNlzF23DIPS8KNrMPKHqbrP1ROIeK9pno0OmTP1s7U19QK7hpWPTsa9yLNGIE9edHv4Ir8gLgVyhBDY57FcpDYzLFRKZqbWgLRA9Mvec3S6kSPL8mLuVxKey_AMzQE_M"
+      "serpapi_bing_product_api": "https://serpapi.com/search.json?engine=bing_product&product_token=gEJDuHicdY27DoJAEEVj459AYyNgQIstjA-gUIjwAws7IAnZWfcR5Vf9GglLYaHNTObcuTnvxfJBamwaALfpeg1SEVUDp7JDJ6CO73vROFZtOQiYgT-BlNlzF23DIPS8KNrMPKHqbrP1ROIeK9pno0OmTP1s7U19QK7hpWPTsa9yLNGIE9edHv4Ir8gLgVyhBDY57FcpDYzLFRKZqbWgLRA9Mvec3S6kSPL8mLuVxKey_AMzQE_M"
+    },
+    {
+      "link": "https://www.bing.com/shop/productpage?q=coffee&filters=scenario%3a%2217%22+gType%3a%2212%22+gId%3a%22130388728183%22+gIdHash%3a%220%22+gGlobalOfferIds%3a%22130388728183%22+AucContextGuid%3a%220%22+GroupEntityId%3a%22130388728183%22+NonSponsoredOffer%3a%22True%22&productpage=true&FORM=SHPPDP&browse=true",
+      "title": "Folgers Classic Roast Ground Coffee, Medium - 25.9 Oz - 1 Each",
+      "thumbnails": [
+        "https://th.bing.com/th?id=OPHS.MDpBPPoxWrUvzg474C474&w=220&h=210&c=17&o=5&pid=21.1"
+      ],
+      "seller": "Office Depot",
+      "price": "$22.99",
+      "extracted_price": 22.99,
+      "rating": 3.5,
+      "reviews": "56",
+      "top_pick": true,
+      "external_link": "https://www.officedepot.com/a/products/765737/Folgers-Classic-Roast-Ground-Coffee-Medium/?utm_source=bing&utm_medium=sag",
+      "product_token": "y0xDtnicdY27DoJAEEVj6YewjQ2wBTQUxgdQKET4gYUdkITsrPuI8qt-jRugsNBmJnPu3Jz3ZvtIWuw6ANINowGlE92CYGpAjzIvDIPIjV1fTxJWEM4g5-tJfRrHURgHMV2DjOn7EvozSUds2Fg4icq5_l3b2_aAwsDLpHbgX-1UoZUnYQYz_VNeUVQShUYFfLYsb7Wy4BaRCrltjWQ9JMYxci5ul6TKyvJYkkbhUy_8A-X_UEo"
+      "serpapi_bing_product_api": "https://serpapi.com/search.json?engine=bing_product&product_token=y0xDtnicdY27DoJAEEVj6YewjQ2wBTQUxgdQKET4gYUdkITsrPuI8qt-jRugsNBmJnPu3Jz3ZvtIWuw6ANINowGlE92CYGpAjzIvDIPIjV1fTxJWEM4g5-tJfRrHURgHMV2DjOn7EvozSUds2Fg4icq5_l3b2_aAwsDLpHbgX-1UoZUnYQYz_VNeUVQShUYFfLYsb7Wy4BaRCrltjWQ9JMYxci5ul6TKyvJYkkbhUy_8A-X_UEo"
+    },
+    ...
+  ]
+  ...
+}
+Example results for 
+q
+:
+switch
+GET
+
+
+https://serpapi.com/search.json?engine=bing_shopping&q=switch
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_shopping",
+  q: "switch",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+inline_ads_results = results[:inline_ads_results]
+
+JSON Example
+
+{
+  ...
+  "inline_ads_results": [
+    {
+      "link": "https://www.bing.com/shop/productpage?q=switch&filters=scenario%3a%2217%22+gType%3a%2212%22+gId%3a%22118517069797%22+gIdHash%3a%220%22+gGlobalOfferIds%3a%22118517069797%22+AucContextGuid%3a%220%22+GroupEntityId%3a%22118517069797%22+NonSponsoredOffer%3a%22True%22&productpage=true&FORM=SHPPDP&browse=true",
+      "title": "Nintendo Switch W/ Neon Blue & Neon Red Joy-Con",
+      "thumbnails": [
+        "https://th.bing.com/th?id=OPHS.JWpsGA7sBcEbjw474C474&w=220&h=220&c=17&o=5&pid=21.1"
+      ],
+      "seller": "Walmart",
+      "price": "$299.00",
+      "extracted_price": 299.0,
+      "rating": 4.5,
+      "reviews": "108",
+      "free_shipping": true,
+      "popular": true,
+      "external_link": "https://www.walmart.com/ip/Nintendo-Switch-w-Neon-Blue-Neon-Red-Joy-Con/321765329?wmlspartner=wlpa&selectedSellerId=0"
+    },
+    {
+      "link": "https://www.bing.com/shop/productpage?q=switch&filters=scenario%3a%2217%22+gType%3a%2212%22+gId%3a%22213830128438%22+gIdHash%3a%220%22+gGlobalOfferIds%3a%22213830128438%22+AucContextGuid%3a%220%22+GroupEntityId%3a%22213830128438%22+NonSponsoredOffer%3a%22True%22&productpage=true&FORM=SHPPDP&browse=true",
+      "title": "Nintendo Switch Console Version 2 With Gray Joy Con",
+      "thumbnails": [
+        "https://th.bing.com/th?id=OPHS.tfsi9rqbN8MlOw474C474&w=220&h=220&c=17&o=5&pid=21.1",
+        "https://th.bing.com/th?id=OPHS.8Bo2dj%2fFa%2bDIHQ474C474&w=220&h=220&c=17&o=5&pid=21.1"
+      ],
+      "seller": "Ted Electronics",
+      "sale": true,
+      "price": "$245.99",
+      "extracted_price": 245.99,
+      "old_price": "$290.99",
+      "extracted_old_price": 290.99,
+      "free_shipping": true,
+      "external_link": "https://www.thetedstore.com/products/nin-v2-gray-us?currency=USD&variant=41337646219325&utm_source=bing&utm_medium=cpc&utm_campaign=Google%20Shopping&stkn=b659bcb48606"
+    }
+    ...
+  ]
+  ...
+}
+JSON structure overview
+{
+  ...
+  "shopping_results": [
+    {
+      "title": "String - Title of the item result",
+      "link": "String - URL to the item",
+      "thumbnails": "Array - List of URLs to the item thumbnails",
+      "seller": "String - Seller's name of the item",
+      "price": "String - Item price (Ex : '$14.99')",
+      "extracted_price": "Numeric - Item price as a float or integer (Ex: '14.99')".,
+      "old_price": "String - Item's price before discount (Ex: '$15.99')",
+      "extracted_old_price": "Numeric - Item's old price as float or integer (Ex: '15.99')",
+      "sale": "Boolean - Is the item on sale",
+      "price_drop": "String - The percentage of the price drop",
+      "installments": {
+        "price": "String - Displayed price, e.g. $0",
+        "text": "String - Instalment text, e.g. now",
+        "installments": "String - Instalment price to the item, e.g. $41.67/mo",
+        "duration": "String - Instalment duration in months, e.g. 24",
+      }
+      "rating": "Float - Rating of the item",
+      "reviews": "String - Number of reviews of the item",
+      "price_history_link": "String - Link to the price history",
+      "compare_sellers_link": "String - Link to comparing sellers",
+      "free_shipping": "Boolean - Is the item shipping for free",
+      "top_pick": "Boolean - Is the item on top pick",
+      "popular": "Boolean - Is the item popular",
+      "great_deal": "Boolean - Is the item on great deal",
+      "special_offer": "String - The content of item's special offer",
+      "ethical_choice": "String - The 'Good On You' rating for the item's brand",
+      "external_link": "String - External product link",
+      "product_token": "String - Product token of the item",
+      "serpapi_bing_product_api": "String - Link to the Bing Product API results of the product"
+    }
+  ],
+  "filters": [
+    {
+      "type": "String - Type of the filter",
+      "options": [
+        {
+          "text": "String - Name of the filter",
+          "link": "String - Link to the filter results in Bing Shopping",
+          "serpapi_link": "String - Link to the Bing Shopping results of the filter in JSON format by SerpApi",
+        }
+      ]
+    }
+  ],
+  "inline_ads_results": [
+    {
+      "title": "String - Title of the item result",
+      "link": "String - URL to the item",
+      "external_link": "String - External product link",
+      "thumbnail": "String - URL to the item's thumbnail",
+      "seller": "String - Seller's name of the item",
+      "price": "String - Item price (Ex : '$14.99')",
+      "extracted_price": "Numeric - Item price as a float or integer (Ex: '14.99')".,
+      "old_price": "String - Item's price before discount (Ex: '$15.99')",
+      "extracted_old_price": "Numeric - Item's old price as float or integer (Ex: '15.99')",
+      "block_position": "String - Position of the item on the page, one of 'top', 'middle' and 'bottom'",
+      "unit_price": "String - The unit price to the item",
+      "installments": {
+        "price": "String - Displayed price, e.g. $0",
+        "text": "String - Instalment text, e.g. now",
+        "installments": "String - Instalment price to the item, e.g. $41.67/mo",
+        "duration": "String - Instalment duration in months, e.g. 24",
+      }
+      "rating": "Float - Rating of the item",
+      "reviews": "String - Number of reviews of the item",
+      "free_shipping": "Boolean - Is the item shipping for free",
+      "tag": {
+        "top": "String - The tag to the item on the top",
+        "bottom": "String - The tag to the item on the bottom",
+      }
+    }
+  ],
+  "ads_results": [
+    {
+      "title": "String - Title of the item result",
+      "link": "String - URL to the item",
+      "displayed_link": "String - Displayed link to the item",
+      "price": "String - Price to the item",
+      "snippet": "String - Snippet to the item",
+      "extensions": "Array - List of extensions to the item result",
+      "sitelinks": [
+        {
+          "title": "Title to the sitelink",
+          "link": "URL to the sitelink",
+        }
+      ]
+    }
+  ],
+  ...
+}

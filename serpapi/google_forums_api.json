@@ -1,0 +1,911 @@
+{
+"search_metadata":
+{
+"id":
+"695928698c24bd247f1be803",
+"status":
+"Success",
+"json_endpoint":
+"https://serpapi.com/searches/6ad5c033573c88a8/695928698c24bd247f1be803.json",
+"created_at":
+"2026-01-03 14:32:09 UTC",
+"processed_at":
+"2026-01-03 14:32:09 UTC",
+"google_forums_url":
+"https://www.google.com/search?q=how+to+make+the+best+coffee&device=desktop&udm=18",
+"raw_html_file":
+"https://serpapi.com/searches/6ad5c033573c88a8/695928698c24bd247f1be803.html",
+"total_time_taken":
+0.91
+},
+"search_parameters":
+{
+"q":
+"how to make the best coffee",
+"engine":
+"google_forums",
+"device":
+"desktop"
+},
+"search_information":
+{
+"organic_results_state":
+"Results for exact spelling"
+},
+"organic_results":
+[
+{
+"position":
+1,
+"title":
+"I made a (fairly) comprehensive guide to brewing good ...",
+"link":
+"https://www.reddit.com/r/Coffee/comments/igyuv/i_made_a_fairly_comprehensive_guide_to_brewing/",
+"redirect_link":
+"https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.reddit.com/r/Coffee/comments/igyuv/i_made_a_fairly_comprehensive_guide_to_brewing/&ved=2ahUKEwiA64-Iy--RAxVyTTABHdvXOaYQFnoECB0QAQ",
+"displayed_meta":
+"40+ comments · 14 years ago",
+"favicon":
+"https://serpapi.com/searches/695928698c24bd247f1be803/images/d5b0838e21a82a95a4796be20f3d6946a148b9461282d26d132c780ecd10b524.png",
+"snippet":
+"An automatic drip coffee maker (sometimes called a dripolator) attempts to automate the pour over process. Choose an auto drip that get the ...",
+"snippet_highlighted_words":
+[
+"coffee"
+],
+"sitelinks":
+{
+"list":
+[
+{
+"title":
+"How to get started making my own coffee? - Reddit",
+"link":
+"https://www.reddit.com/r/Coffee/comments/9r05ca/how_to_get_started_making_my_own_coffee/",
+"answer_count":
+25,
+"date":
+"Oct 24, 2018"
+},
+{
+"title":
+"LPT: Make Better Tasting Coffee : r/LifeProTips - Reddit",
+"link":
+"https://www.reddit.com/r/LifeProTips/comments/1af1so/lpt_make_better_tasting_coffee/",
+"answer_count":
+578,
+"date":
+"Mar 16, 2013"
+}
+]
+},
+"source":
+"Reddit · r/Coffee"
+},
+{
+"position":
+2,
+"title":
+"How To Make The Best Coffee, According To Science ...",
+"link":
+"https://www.home-barista.com/knockbox/how-to-make-best-coffee-according-to-science-t89371.html",
+"redirect_link":
+"https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.home-barista.com/knockbox/how-to-make-best-coffee-according-to-science-t89371.html&ved=2ahUKEwiA64-Iy--RAxVyTTABHdvXOaYQFnoECBkQAQ",
+"displayed_link":
+"https://www.home-barista.com › knockbox › how-to-m...",
+"favicon":
+"https://serpapi.com/searches/695928698c24bd247f1be803/images/d5b0838e21a82a95a4796be20f3d694695520236d0a7ed5c25391c94443a739e.png",
+"date":
+"Sep 14, 2023",
+"snippet":
+"The paper referred to on the various sweet spots for espresso and reducing variation by grinding coarser is covered in an actionable way.",
+"source":
+"Home-Barista.com"
+},
+{
+"position":
+3,
+"title":
+"Which coffee brewing methods yield the best flavor?",
+"link":
+"https://www.facebook.com/groups/ILoveCoffeeMore/posts/4145416659011133/?locale=gl_ES",
+"redirect_link":
+"https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.facebook.com/groups/ILoveCoffeeMore/posts/4145416659011133/%3Flocale%3Dgl_ES&ved=2ahUKEwiA64-Iy--RAxVyTTABHdvXOaYQFnoECB8QAQ",
+"displayed_meta":
+"150+ comments · 1 month ago",
+"favicon":
+"https://serpapi.com/searches/695928698c24bd247f1be803/images/d5b0838e21a82a95a4796be20f3d6946a02675e18514444db71dea31deb35c0c.png",
+"snippet":
+"Don't skimp on the grind. Burr grinders are top rated for the most even grind, which creates the best brew and flavor. Paper traps bitterness.",
+"snippet_highlighted_words":
+[
+"Burr grinders are top rated for the most even grind"
+],
+"source":
+"Facebook · I Love Coffee"
+},
+{
+"position":
+4,
+"title":
+"What is the least expensive technique for an at-home ...",
+"link":
+"https://coffee.stackexchange.com/questions/6067/what-is-the-least-expensive-technique-for-an-at-home-coffee-brewing-novice",
+"redirect_link":
+"https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://coffee.stackexchange.com/questions/6067/what-is-the-least-expensive-technique-for-an-at-home-coffee-brewing-novice&ved=2ahUKEwiA64-Iy--RAxVyTTABHdvXOaYQFnoECCMQAQ",
+"displayed_link":
+"https://coffee.stackexchange.com › questions › what-is-t...",
+"favicon":
+"https://serpapi.com/searches/695928698c24bd247f1be803/images/d5b0838e21a82a95a4796be20f3d69469b6f25cad88ade5ab848f7b4725d23f7.png",
+"date":
+"Nov 4, 2022",
+"snippet":
+"Different brewing methods produce different flavor profiles, and work best with certain kinds of roasts and grinds because of the mechanics of ...",
+"snippet_highlighted_words":
+[
+"Different brewing methods produce different flavor profiles"
+],
+"source":
+"Coffee Stack Exchange"
+},
+{
+"position":
+5,
+"title":
+"What is the best coffee-making method?",
+"link":
+"https://www.quora.com/What-is-the-best-coffee-making-method",
+"redirect_link":
+"https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.quora.com/What-is-the-best-coffee-making-method&ved=2ahUKEwiA64-Iy--RAxVyTTABHdvXOaYQFnoECCQQAQ",
+"displayed_meta":
+"3 answers · 3 years ago",
+"favicon":
+"https://serpapi.com/searches/695928698c24bd247f1be803/images/d5b0838e21a82a95a4796be20f3d69460a1f773c502d21bbefc7f1efc8e272b9.png",
+"snippet":
+"Take 2 spoon of sugar and 1 spoon of coffee in a mug. 2. Add 1 spoon water in it. Make sure the mixture does not becomes watery. Mixture should ...",
+"snippet_highlighted_words":
+[
+"Take 2 spoon of sugar and 1 spoon of coffee in a mug"
+],
+"source":
+"Quora"
+},
+{
+"position":
+6,
+"title":
+"Best way to make coffee (not espresso)",
+"link":
+"https://forums.egullet.org/topic/27586-best-way-to-make-coffee-not-espresso/",
+"redirect_link":
+"https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://forums.egullet.org/topic/27586-best-way-to-make-coffee-not-espresso/&ved=2ahUKEwiA64-Iy--RAxVyTTABHdvXOaYQFnoECBoQAQ",
+"displayed_link":
+"https://forums.egullet.org › ... › Coffee & Tea",
+"favicon":
+"https://serpapi.com/searches/695928698c24bd247f1be803/images/d5b0838e21a82a95a4796be20f3d6946b1de9376880b70cf6ddec4644f4bb633.png",
+"date":
+"Sep 10, 2003",
+"snippet":
+"In my opinion, the best way to make regular coffee is also one of the simplest: the French press. It requires minimal equipment (press, kettle, ...",
+"snippet_highlighted_words":
+[
+"French press"
+],
+"source":
+"eGullet Forums"
+},
+{
+"position":
+7,
+"title":
+"How to make the world's best coffee",
+"link":
+"https://www.quora.com/How-do-you-make-the-worlds-best-coffee",
+"redirect_link":
+"https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.quora.com/How-do-you-make-the-worlds-best-coffee&ved=2ahUKEwiA64-Iy--RAxVyTTABHdvXOaYQFnoECC4QAQ",
+"displayed_meta":
+"2 answers · 2 years ago",
+"favicon":
+"https://serpapi.com/searches/695928698c24bd247f1be803/images/d5b0838e21a82a95a4796be20f3d6946b671c5234fdc378dba0cc70294dac116.png",
+"snippet":
+"Start with a completely clean coffee maker. Use good quality water and a filter. Buy a high quality coffee ground to the correct fineness. So, ...",
+"snippet_highlighted_words":
+[
+"Start with a completely clean coffee maker"
+],
+"source":
+"Quora"
+},
+{
+"position":
+8,
+"title":
+"What is your favorite way to brew coffee?",
+"link":
+"https://www.home-barista.com/brewing/what-is-your-favorite-way-to-brew-coffee-t21062.html",
+"redirect_link":
+"https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.home-barista.com/brewing/what-is-your-favorite-way-to-brew-coffee-t21062.html&ved=2ahUKEwiA64-Iy--RAxVyTTABHdvXOaYQFnoECEgQAQ",
+"displayed_link":
+"https://www.home-barista.com › brewing › what-is-you...",
+"favicon":
+"https://serpapi.com/searches/695928698c24bd247f1be803/images/d5b0838e21a82a95a4796be20f3d69468af7271ca8398519b00045949f2ea00c.png",
+"date":
+"Mar 23, 2012",
+"snippet":
+"What is your favorite way to brew coffee? · Cupping - simple prep that can be made anywhere, good desert island method · Ibrik/Cezve - rare ...",
+"snippet_highlighted_words":
+[
+"Cupping - simple prep that can be made anywhere"
+],
+"source":
+"Home-Barista.com"
+},
+{
+"position":
+9,
+"title":
+"What coffee beans do you get to make the best cold brew?",
+"link":
+"https://www.facebook.com/groups/237920857699504/posts/1201031894721724/",
+"redirect_link":
+"https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.facebook.com/groups/237920857699504/posts/1201031894721724/&ved=2ahUKEwiA64-Iy--RAxVyTTABHdvXOaYQFnoECE8QAQ",
+"displayed_meta":
+"1 comment · 10 months ago",
+"favicon":
+"https://serpapi.com/searches/695928698c24bd247f1be803/images/d5b0838e21a82a95a4796be20f3d6946a224f7facf1946bc9bef06c2d255efbb.png",
+"snippet":
+"Light or medium roasts produce the nicest cold brew. Darker roasts give a smokier flavor due to the large oil content on the surface of the ...",
+"snippet_highlighted_words":
+[
+"Light or medium roasts produce the nicest cold brew"
+],
+"source":
+"Facebook · Iced Coffee Lovers"
+},
+{
+"position":
+10,
+"title":
+"What is the best coffee brewing method to learn at home? ...",
+"link":
+"https://coffee.stackexchange.com/questions/4115/what-is-the-best-coffee-brewing-method-to-learn-at-home-what-equipment-shall-i",
+"redirect_link":
+"https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://coffee.stackexchange.com/questions/4115/what-is-the-best-coffee-brewing-method-to-learn-at-home-what-equipment-shall-i&ved=2ahUKEwiA64-Iy--RAxVyTTABHdvXOaYQFnoECEwQAQ",
+"displayed_link":
+"https://coffee.stackexchange.com › questions › what-is-t...",
+"favicon":
+"https://serpapi.com/searches/695928698c24bd247f1be803/images/d5b0838e21a82a95a4796be20f3d6946a3e579740201851e9b03f1bbe8a22682.png",
+"date":
+"Mar 29, 2018",
+"snippet":
+"For brewing at home i think you should master the french press which is a very inexpensive method to brew coffee (french press being like $20 ...",
+"snippet_highlighted_words":
+[
+"french press"
+],
+"source":
+"Coffee Stack Exchange"
+}
+],
+"related_searches":
+[
+{
+"block_position":
+1,
+"query":
+"How to make the best coffee in the world",
+"link":
+"https://www.google.com/search?sca_esv=82729a62d7e47fe1&udm=18&q=How+to+make+the+best+coffee+in+the+world&sa=X&ved=2ahUKEwiA64-Iy--RAxVyTTABHdvXOaYQ1QJ6BAhBEAE",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=google_forums&q=How+to+make+the+best+coffee+in+the+world"
+},
+{
+"block_position":
+1,
+"query":
+"How to make the best coffee at home",
+"link":
+"https://www.google.com/search?sca_esv=82729a62d7e47fe1&udm=18&q=How+to+make+the+best+coffee+at+home&sa=X&ved=2ahUKEwiA64-Iy--RAxVyTTABHdvXOaYQ1QJ6BAhGEAE",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=google_forums&q=How+to+make+the+best+coffee+at+home"
+},
+{
+"block_position":
+1,
+"query":
+"How to make the best coffee for beginners",
+"link":
+"https://www.google.com/search?sca_esv=82729a62d7e47fe1&udm=18&q=How+to+make+the+best+coffee+for+beginners&sa=X&ved=2ahUKEwiA64-Iy--RAxVyTTABHdvXOaYQ1QJ6BAhHEAE",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=google_forums&q=How+to+make+the+best+coffee+for+beginners"
+},
+{
+"block_position":
+1,
+"query":
+"4 best coffee brewing methods",
+"link":
+"https://www.google.com/search?sca_esv=82729a62d7e47fe1&udm=18&q=4+best+coffee+brewing+methods&sa=X&ved=2ahUKEwiA64-Iy--RAxVyTTABHdvXOaYQ1QJ6BAhFEAE",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=google_forums&q=4+best+coffee+brewing+methods"
+},
+{
+"block_position":
+1,
+"query":
+"How to make good coffee at home with machine",
+"link":
+"https://www.google.com/search?sca_esv=82729a62d7e47fe1&udm=18&q=How+to+make+good+coffee+at+home+with+machine&sa=X&ved=2ahUKEwiA64-Iy--RAxVyTTABHdvXOaYQ1QJ6BAhCEAE",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=google_forums&q=How+to+make+good+coffee+at+home+with+machine"
+},
+{
+"block_position":
+1,
+"query":
+"How to make the Best coffee at home James Hoffmann",
+"link":
+"https://www.google.com/search?sca_esv=82729a62d7e47fe1&udm=18&q=How+to+make+the+Best+coffee+at+home+James+Hoffmann&sa=X&ved=2ahUKEwiA64-Iy--RAxVyTTABHdvXOaYQ1QJ6BAhAEAE",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=google_forums&q=How+to+make+the+Best+coffee+at+home+James+Hoffmann"
+},
+{
+"block_position":
+1,
+"query":
+"How to make the best coffee at home PDF",
+"link":
+"https://www.google.com/search?sca_esv=82729a62d7e47fe1&udm=18&q=How+to+make+the+best+coffee+at+home+PDF&sa=X&ved=2ahUKEwiA64-Iy--RAxVyTTABHdvXOaYQ1QJ6BAhDEAE",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=google_forums&q=How+to+make+the+best+coffee+at+home+PDF"
+},
+{
+"block_position":
+1,
+"query":
+"How to make the Best coffee at home Barnes and Noble",
+"link":
+"https://www.google.com/search?sca_esv=82729a62d7e47fe1&udm=18&q=How+to+make+the+Best+coffee+at+home+Barnes+and+Noble&sa=X&ved=2ahUKEwiA64-Iy--RAxVyTTABHdvXOaYQ1QJ6BAhEEAE",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=google_forums&q=How+to+make+the+Best+coffee+at+home+Barnes+and+Noble"
+}
+],
+"serpapi_pagination":
+{
+"current":
+1,
+"next":
+"https://serpapi.com/search.json?device=desktop&engine=google_forums&q=how+to+make+the+best+coffee&start=10"
+}
+}
+
+GET
+
+
+https://serpapi.com/search.json?engine=google_forums&q=how+to+make+the+best+coffee
+
+Code to integrate
+
+cURLRubyPythonJavaScriptGoPHPJavaRust.NETGoogle Sheets
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_forums",
+  q: "how to make the best coffee",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+organic_results = results[:organic_results]
+API Parameters
+Search Query
+q
+
+Required
+
+Parameter defines the query you want to search. To search for events in a specific location, just include the location inside your search query (e.g. Events in Austin, TX).
+
+Geographic Location
+location
+
+Optional
+
+Parameter defines from where you want the search to originate. If several locations match the location requested, we'll pick the most popular one. Head to the /locations.json API if you need more precise control. The location and uule parameters can't be used together. It is recommended to specify location at the city level in order to simulate a real user’s search. If location is omitted, the search may take on the location of the proxy.
+
+uule
+
+Optional
+
+Parameter is the Google encoded location you want to use for the search. uule and location parameters can't be used together.
+
+Localization
+gl
+
+Optional
+
+Parameter defines the country to use for the Google Forums search. It's a two-letter country code. (e.g., us for the United States, uk for United Kingdom, or fr for France). Head to the Google countries page for a full list of supported Google countries.
+
+hl
+
+Optional
+
+Parameter defines the language to use for the Google Forums search. It's a two-letter language code. (e.g., en for English, es for Spanish, or fr for French). Head to the Google languages page for a full list of supported Google languages.
+
+Pagination
+start
+
+Optional
+
+Parameter defines the result offset. It skips the given number of results. It's used for pagination. (e.g., 0 (default) is the first page of results, 10 is the 2nd page of results, 20 is the 3rd page of results, etc.).
+
+Advanced Filters
+nfpr
+
+Optional
+
+Parameter defines the exclusion of results from an auto-corrected query when the original query is spelled wrong. It can be set to 1 to exclude these results, or 0 to include them (default). Note that this parameter may not prevent Google from returning results for an auto-corrected query if no other results are available.
+
+filter
+
+Optional
+
+Parameter defines if the filters for 'Similar Results' and 'Omitted Results' are on or off. It can be set to 1 (default) to enable these filters, or 0 to disable these filters.
+
+Serpapi Parameters
+engine
+
+Required
+
+Set parameter to google_forums to use the Google Forums API engine.
+
+device
+
+Optional
+
+Parameter defines the device to use to get the results. It can be set to desktop (default) to use a regular browser, tablet to use a tablet browser (currently using iPads), or mobile to use a mobile browser.
+
+no_cache
+
+Optional
+
+Parameter will force SerpApi to fetch the Google Forums results even if a cached version is already present. A cache is served only if the query and all parameters are exactly the same. Cache expires after 1h. Cached searches are free, and are not counted towards your searches per month. It can be set to false (default) to allow results from the cache, or true to disallow results from the cache. no_cache and async parameters should not be used together.
+
+async
+
+Optional
+
+Parameter defines the way you want to submit your search to SerpApi. It can be set to false (default) to open an HTTP connection and keep it open until you got your search results, or true to just submit your search to SerpApi and retrieve them later. In this case, you'll need to use our Searches Archive API to retrieve your results. async and no_cache parameters should not be used together. async should not be used on accounts with Ludicrous Speed enabled.
+
+zero_trace
+
+Optional
+
+Enterprise only. Parameter enables ZeroTrace mode. It can be set to false (default) or true. Enable this mode to skip storing search parameters, search files, and search metadata on our servers. This may make debugging more difficult.
+
+api_key
+
+Required
+
+Parameter defines the SerpApi private key to use.
+
+output
+
+Optional
+
+Parameter defines the final output you want. It can be set to json (default) to get a structured JSON of the results, or html to get the raw html retrieved.
+
+API Results
+JSON Results
+JSON output includes structured data for organic_results, related_searches and more.
+
+A search status is accessible through search_metadata.status. It flows this way: Processing -> Success || Error. If a search has failed, error will contain an error message. search_metadata.id is the search ID inside SerpApi.
+
+HTML Results
+HTML output is useful to debug JSON results or support features not supported yet by SerpApi.
+HTML output gives you the raw HTML results from the search engine results page.
+
+API Examples
+Google Forums organic results for 
+q
+:
+what is the best programming language
+GET
+
+
+https://serpapi.com/search.json?engine=google_forums&q=what+is+the+best+programming+language&hl=en&gl=us
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_forums",
+  q: "what is the best programming language",
+  hl: "en",
+  gl: "us",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+organic_results = results[:organic_results]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "68dc031cce4eb046952a4052",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/cc5858ffbec72cce/68dc031cce4eb046952a4052.json",
+    "created_at": "2025-09-30 16:19:40 UTC",
+    "processed_at": "2025-09-30 16:19:40 UTC",
+    "google_forums_url": "https://www.google.com/search?q=what+is+the+best+programming+language&hl=en&gl=us&device=desktop&udm=18",
+    "raw_html_file": "https://serpapi.com/searches/cc5858ffbec72cce/68dc031cce4eb046952a4052.html",
+    "total_time_taken": 0.88
+  },
+  "search_parameters": {
+    "q": "what is the best programming language",
+    "engine": "google_forums",
+    "device": "desktop",
+    "hl": "en",
+    "gl": "us"
+  },
+  "search_information": {
+    "organic_results_state": "Results for exact spelling"
+  },
+  "organic_results": [
+    {
+      "position": 1,
+      "title": "For you what is the best programming language?",
+      "link": "https://www.reddit.com/r/learnprogramming/comments/14o4uqz/for_you_what_is_the_best_programming_language_w/",
+      "redirect_link": "https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.reddit.com/r/learnprogramming/comments/14o4uqz/for_you_what_is_the_best_programming_language_w/&ved=2ahUKEwjz8K708YCQAxXc48kDHfKaF1UQFnoECCQQAQ",
+      "displayed_meta": "70+ comments · 2 years ago",
+      "favicon": "https://serpapi.com/searches/68dc031cce4eb046952a4052/images/6ceae1b4b367a7f99615770ad8e7a3bb37587e4179555162e076f18e3976ab9e.png",
+      "snippet": "C++ It's the biggest language in the world until now (because of how many features and libraries it has), it's hella fast and it's the most used ...",
+      "snippet_highlighted_words": [
+        "C"
+      ],
+      "sitelinks": {
+        "list": [
+          {
+            "title": "Best programming language to learn? : r ...",
+            "link": "https://www.reddit.com/r/AskProgramming/comments/18yyyfc/best_programming_language_to_learn/",
+            "answer_count": 128,
+            "date": "Jan 5, 2024"
+          },
+          {
+            "title": "What programming language is best to learn if you ...",
+            "link": "https://www.reddit.com/r/learnprogramming/comments/1dluq04/what_programming_language_is_best_to_learn_if_you/",
+            "answer_count": 171,
+            "date": "Jun 22, 2024"
+          }
+        ]
+      },
+      "source": "Reddit · r/learnprogramming"
+    },
+    {
+      "position": 2,
+      "title": "Which programming language should I start learning with?",
+      "link": "https://www.quora.com/Which-programming-language-should-I-start-learning-with",
+      "redirect_link": "https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.quora.com/Which-programming-language-should-I-start-learning-with&ved=2ahUKEwjz8K708YCQAxXc48kDHfKaF1UQFnoECCYQAQ",
+      "displayed_meta": "1.1K+ answers · 8 years ago",
+      "favicon": "https://serpapi.com/searches/68dc031cce4eb046952a4052/images/6ceae1b4b367a7f99615770ad8e7a3bb7715c61184511740e1dc224c853768e4.png",
+      "snippet": "If you want to want to write backend software or desktop applications, both C# and Java would be good choices. C# is better, but Java is more popular. They're ...",
+      "snippet_highlighted_words": [
+        "better"
+      ],
+      "sitelinks": {
+        "list": [
+          {
+            "title": "Which programming language would you ...",
+            "link": "https://www.quora.com/Which-programming-language-would-you-recommend-a-beginner-to-learn-first",
+            "answer_count": 559,
+            "date": "Apr 24, 2017"
+          },
+          {
+            "title": "What are the best programming languages to study if ...",
+            "link": "https://www.quora.com/What-are-the-best-programming-languages-to-study-if-I-generally-want-to-improve-my-programming-skills",
+            "answer_count": 4,
+            "date": "Sep 1, 2023"
+          }
+        ]
+      },
+      "source": "Quora"
+    },
+    {
+      "position": 3,
+      "title": "What is the best programming language?",
+      "link": "https://www.lesswrong.com/posts/4vXLzG4Ydxo4gqnzb/what-is-the-best-programming-language",
+      "redirect_link": "https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.lesswrong.com/posts/4vXLzG4Ydxo4gqnzb/what-is-the-best-programming-language&ved=2ahUKEwjz8K708YCQAxXc48kDHfKaF1UQFnoECBkQAQ",
+      "displayed_link": "https://www.lesswrong.com › posts › what-is-the-best-p...",
+      "favicon": "https://serpapi.com/searches/68dc031cce4eb046952a4052/images/6ceae1b4b367a7f99615770ad8e7a3bba520fe5735db05ad1f0b1875ca1615dc.png",
+      "date": "May 25, 2012",
+      "snippet": "Everyone says you should start with Python. Everyone's right. It's a beautiful language in which you can write good, concise, elegant code. Lots ...",
+      "snippet_highlighted_words": [
+        "Python"
+      ],
+      "source": "LessWrong"
+    },
+    ...
+  ],
+}
+Google Forums organic results for 
+q
+:
+what is the best programming language
+on 
+device
+:
+mobile
+GET
+
+
+https://serpapi.com/search.json?engine=google_forums&q=what+is+the+best+programming+language&device=mobile&hl=en&gl=us
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_forums",
+  q: "what is the best programming language",
+  device: "mobile",
+  hl: "en",
+  gl: "us",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+organic_results = results[:organic_results]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "68c4627ace4eb06c7df716a3",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/1933ca8be7bd2e2e/68c4627ace4eb06c7df716a3.json",
+    "created_at": "2025-09-12 18:12:10 UTC",
+    "processed_at": "2025-09-12 18:12:10 UTC",
+    "google_forums_url": "https://www.google.com/search?q=How+to+brew+the+best+coffee&device=desktop&udm=18",
+    "raw_html_file": "https://serpapi.com/searches/1933ca8be7bd2e2e/68c4627ace4eb06c7df716a3.html",
+    "total_time_taken": 0.91
+  },
+  "search_parameters": {
+    "q": "what is the best programming language",
+    "engine": "google_forums",
+    "device": "mobile",
+    "hl": "en",
+    "gl": "us"
+  },
+  "search_information": {
+    "organic_results_state": "Results for exact spelling"
+  },
+  "organic_results": [
+    {
+      "position": 1,
+      "title": "For you what is the best programming language? : r/learnprogramming",
+      "link": "https://www.reddit.com/r/learnprogramming/comments/14o4uqz/for_you_what_is_the_best_programming_language/",
+      "redirect_link": "https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.reddit.com/r/learnprogramming/comments/14o4uqz/for_you_what_is_the_best_programming_language/&ved=2ahUKEwjbzeGb7ICQAxVwLtAFHSKjDm8QFnoECCEQAQ&usg=AOvVaw1PAEP-N0uG5UORpd1BriPr",
+      "displayed_meta": "70+ comments · 2 years ago",
+      "favicon": "https://serpapi.com/searches/68dbfd24ce4eb04729dbd0cd/images/71be2daad74a6962feb801cfe61dfde23c9a973e577f213fafbb31a752693b9a.png",
+      "snippet": "I dont have an opinion yet because im not a programmer, but im thinking in start",
+      "answers": [
+        {
+          "link": "https://www.reddit.com/r/learnprogramming/comments/14o4uqz/for_you_what_is_the_best_programming_language/jqavz0s/",
+          "answer": "C - Because it teaches you like your mother taught you languages after birth. And you ...",
+          "top_answer": true,
+          "votes": 43
+        },
+        {
+          "link": "https://www.reddit.com/r/learnprogramming/comments/14o4uqz/for_you_what_is_the_best_programming_language/jqb1y3w/",
+          "answer": "HTML",
+          "votes": 17
+        },
+        {
+          "link": "https://www.reddit.com/r/learnprogramming/comments/14o4uqz/for_you_what_is_the_best_programming_language/jqawlou/",
+          "answer": "Javascript gets a bad rap, but when I see well-organized, DRY Javascript code, I think it's ...",
+          "votes": 13
+        },
+        ...
+      ],
+      "sitelinks": {
+        "expanded": [
+          {
+            "title": "Best programming language to learn? : r/AskProgramming - Redditr/AskProgramming·120+ comments·1y",
+            "link": "https://www.reddit.com/r/learnprogramming/comments/14o4uqz/for_you_what_is_the_best_programming_language/"
+          },
+          {
+            "title": "What programming language is best to learn if you want a career in ITr/learnprogramming·170+ comments·1y",
+            "link": "https://www.reddit.com/r/learnprogramming/comments/14o4uqz/for_you_what_is_the_best_programming_language/"
+          }
+        ]
+      },
+      "about_this_result": {
+        "source": {
+          "icon": "UGC_WEB_RESULT_ATTRIBUTION"
+        }
+      },
+      "source": "Reddit · r/learnprogramming"
+    },
+    {
+      "position": 2,
+      "title": "What is the best programming language?",
+      "link": "https://www.lesswrong.com/posts/4vXLzG4Ydxo4gqnzb/what-is-the-best-programming-language",
+      "redirect_link": "https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.lesswrong.com/posts/4vXLzG4Ydxo4gqnzb/what-is-the-best-programming-language&ved=2ahUKEwjbzeGb7ICQAxVwLtAFHSKjDm8QFnoECB0QAQ&usg=AOvVaw2ITLL-bYosUyyc3VXT6O2A",
+      "displayed_link": "https://www.lesswrong.com",
+      "favicon": "https://serpapi.com/searches/68dbfd24ce4eb04729dbd0cd/images/71be2daad74a6962feb801cfe61dfde205fdc1b64e1de21489d45c78847d132c.png",
+      "date": "May 25, 2012",
+      "snippet": "Everyone says you should start with Python. Everyone's right. It's a beautiful language in which you can write good, concise, elegant code. Lots ...",
+      "source": "LessWrong"
+    },
+    {
+      "position": 3,
+      "title": "Which programming language should I start learning with?",
+      "link": "https://www.quora.com/Which-programming-language-should-I-start-learning-with",
+      "redirect_link": "https://www.google.com/url?sa=t&source=web&rct=j&opi=89978449&url=https://www.quora.com/Which-programming-language-should-I-start-learning-with&ved=2ahUKEwjbzeGb7ICQAxVwLtAFHSKjDm8QFnoECCMQAQ&usg=AOvVaw3Rhi9ajTnCPWSybFrAsNoV",
+      "displayed_meta": "1.1K+ answers · 8 years ago",
+      "favicon": "https://serpapi.com/searches/68dbfd24ce4eb04729dbd0cd/images/71be2daad74a6962feb801cfe61dfde2227bd2bc0e9cc66e60ea36a663992426.png",
+      "snippet": "Which programming language should I start learning with?",
+      "answers": [
+        {
+          "link": "https://www.quora.com/Which-programming-language-should-I-start-learning-with?top_ans=108102404",
+          "answer": "A lot of people ask me why I encouraged my kids to learn Python, as opposed to any other programming ...",
+          "top_answer": true,
+          "votes": 2988
+        },
+        {
+          "link": "https://www.quora.com/Which-programming-language-should-I-start-learning-with?top_ans=1211153",
+          "answer": "It ultimately depends on your personality. You might be the kind of person that can learn C ...",
+          "votes": 1921
+        },
+        {
+          "link": "https://www.quora.com/Which-programming-language-should-I-start-learning-with?top_ans=84349168",
+          "answer": "I'm a huge fan of Go for beginners: * It's very simple, with few features to learn. * It's ...",
+          "votes": 334
+        },
+        ...
+      ],
+      "sitelinks": {
+        "expanded": [
+          {
+            "title": "Which programming language would you recommend a beginner to learn ...550+ answers·8y",
+            "link": "https://www.quora.com/Which-programming-language-should-I-start-learning-with"
+          },
+          {
+            "title": "What are the best programming languages to study if I generally ...4 answers·2y",
+            "link": "https://www.quora.com/Which-programming-language-should-I-start-learning-with"
+          }
+        ]
+      },
+      "about_this_result": {
+        "source": {
+          "icon": "UGC_WEB_RESULT_ATTRIBUTION"
+        }
+      },
+      "source": "Quora"
+    },
+    ...
+  ],
+}
+Google Forums 'Related Searches' results
+GET
+
+
+https://serpapi.com/search.json?engine=google_forums&q=how+to+brew+the+best+coffee&hl=en&gl=us
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_forums",
+  q: "how to brew the best coffee",
+  hl: "en",
+  gl: "us",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+related_searches = results[:related_searches]
+
+JSON Example
+
+{
+  ...
+  "related_searches": [
+    {
+      "block_position": 1,
+      "query": "How to make the best coffee in the world",
+      "link": "https://www.google.com/search?sca_esv=9d5cec95e536de49&udm=18&hl=en&gl=us&q=How+to+make+the+best+coffee+in+the+world&sa=X&ved=2ahUKEwja9aHP9ICQAxXmliYFHc7_DmsQ1QJ6BAhBEAE",
+      "serpapi_link": "https://serpapi.com/search.json?device=desktop&engine=google_forums&gl=us&hl=en&q=How+to+make+the+best+coffee+in+the+world"
+    },
+    {
+      "block_position": 1,
+      "query": "How to make the best coffee for beginners",
+      "link": "https://www.google.com/search?sca_esv=9d5cec95e536de49&udm=18&hl=en&gl=us&q=How+to+make+the+best+coffee+for+beginners&sa=X&ved=2ahUKEwja9aHP9ICQAxXmliYFHc7_DmsQ1QJ6BAhFEAE",
+      "serpapi_link": "https://serpapi.com/search.json?device=desktop&engine=google_forums&gl=us&hl=en&q=How+to+make+the+best+coffee+for+beginners"
+    },
+    {
+      "block_position": 1,
+      "query": "How to make the best coffee beans",
+      "link": "https://www.google.com/search?sca_esv=9d5cec95e536de49&udm=18&hl=en&gl=us&q=How+to+make+the+best+coffee+beans&sa=X&ved=2ahUKEwja9aHP9ICQAxXmliYFHc7_DmsQ1QJ6BAhGEAE",
+      "serpapi_link": "https://serpapi.com/search.json?device=desktop&engine=google_forums&gl=us&hl=en&q=How+to+make+the+best+coffee+beans"
+    },
+    ...
+  ],
+}
+JSON structure overview
+{
+  ...
+  "organic_results": [
+    {
+      "position": "Integer - Position of the organic result on the search page",
+      "title": "String - Title of the organic result",
+      "link": "String - Link of the organic result",
+      "redirect_link": "String - Redirect link of the organic result",
+      "displayed_link": "String - Displayed link of the organic result",
+      "displayed_meta": "String - Displayed meta content of the organic result",
+      "thumbnail": "String - Thumbnail of the organic result",
+      "date": "String - Date of the organic result",
+      "favicon": "String - Favicon of the organic result",
+      "snippet": "String - Snippet of the organic result",
+      "snippet_highlighted_words": [
+        "String - Snippet highlighted word of the organic result",
+      ],
+      "sitelinks": {
+        "expanded": [
+          {
+            "title": "String - Title of the expanded sitelink",
+            "link": "String - Link of the expanded sitelink",
+            "snippet": "String - Snippet of the expanded sitelink"
+          },
+        ],
+        "list": [
+          {
+            "title": "String - Title of the list sitelink",
+            "link": "String - Link of the list sitelink",
+            "snippet": "String - Snippet of the list sitelink"
+          },
+        ]
+      },
+      "about_this_result": {
+        "source": {
+          "icon": "String - Icon of the about_this_result of the organic result"
+        },
+      },
+      "source": "String - Source of the organic result",
+      "answers": [
+        {
+          "link": "String - Link of the answer",
+          "answer": "String - Answer of the answer",
+          "top_answer": "Boolean - Is the top answer",
+          "votes": "Integer - Votes of the answer"
+        }
+      ],
+    }
+  ],
+  "related_searches": [
+    {
+      "block_position": "Integer - Index of related search container",
+      "query": "String - Query of the related search",
+      "link":  "String - Link to the Google Forums search",
+      "serpapi_link":  "String - SerpApi Link of the Google Forums search",
+    },
+  ],,
+  "serpapi_pagination": {
+    "current": "Integer - Current page number",
+    "next": "String - Link to the query for the next SerpApi Google Forums results page",
+    "previous": "String - Link to the query for the previous SerpApi Google Forums results page",
+  }
+  ...
+}

@@ -724,19 +724,33 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["workspace_projects"] = get_workspace_projects(self.request.user)
         context["workspace_project_summaries"] = get_workspace_project_summaries(self.request.user)
         context["project_form"] = WorkspaceProjectForm(
+            prefix="project",
             initial={
                 "business_type": getattr(project, "business_type", "") if getattr(project, "pk", None) else "",
+                "business_subtype": getattr(project, "business_subtype", "") if getattr(project, "pk", None) else "",
+                "target_audience": getattr(project, "target_audience", "") if getattr(project, "pk", None) else "",
+                "location_mode": getattr(project, "location_mode", "targeted") if getattr(project, "pk", None) else "targeted",
+                "location_country": getattr(project, "location_country", "") if getattr(project, "pk", None) else "",
+                "location_scope": getattr(project, "location_scope", "") if getattr(project, "pk", None) else "",
+                "location_area": getattr(project, "location_area", "") if getattr(project, "pk", None) else "",
                 "location": getattr(project, "location", "") if getattr(project, "pk", None) else "",
                 "target_goal": getattr(project, "target_goal", "") if getattr(project, "pk", None) else "",
                 "primary_service": getattr(project, "primary_service", "") if getattr(project, "pk", None) else "",
             }
         )
         context["audit_start_form"] = WorkspaceAuditStartForm(
+            prefix="audit",
             initial={
                 "email": self.request.user.email,
                 "company_name": project.name if getattr(project, "pk", None) else "",
                 "website": getattr(project, "website", "") if getattr(project, "pk", None) else "",
                 "business_type": getattr(project, "business_type", "") if getattr(project, "pk", None) else "",
+                "business_subtype": getattr(project, "business_subtype", "") if getattr(project, "pk", None) else "",
+                "target_audience": getattr(project, "target_audience", "") if getattr(project, "pk", None) else "",
+                "location_mode": getattr(project, "location_mode", "targeted") if getattr(project, "pk", None) else "targeted",
+                "location_country": getattr(project, "location_country", "") if getattr(project, "pk", None) else "",
+                "location_scope": getattr(project, "location_scope", "") if getattr(project, "pk", None) else "",
+                "location_area": getattr(project, "location_area", "") if getattr(project, "pk", None) else "",
                 "location": getattr(project, "location", "") if getattr(project, "pk", None) else "",
                 "target_goal": getattr(project, "target_goal", "") if getattr(project, "pk", None) else "",
                 "primary_service": getattr(project, "primary_service", "") if getattr(project, "pk", None) else "",
@@ -767,7 +781,7 @@ class WorkspaceProjectSelectView(LoginRequiredMixin, View):
 
 class WorkspaceProjectCreateView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
-        form = WorkspaceProjectForm(request.POST)
+        form = WorkspaceProjectForm(request.POST, prefix="project")
         if not form.is_valid():
             dashboard_view = WorkspaceDashboardView()
             dashboard_view.request = request
@@ -781,9 +795,15 @@ class WorkspaceProjectCreateView(LoginRequiredMixin, View):
             name=form.cleaned_data["name"],
             website=form.cleaned_data["website"],
             business_type=form.cleaned_data.get("business_type", ""),
+            business_subtype=form.cleaned_data.get("business_subtype", ""),
             location=form.cleaned_data.get("location", ""),
+            location_mode=form.cleaned_data.get("location_mode", "targeted"),
+            location_country=form.cleaned_data.get("location_country", ""),
+            location_scope=form.cleaned_data.get("location_scope", ""),
+            location_area=form.cleaned_data.get("location_area", ""),
             target_goal=form.cleaned_data.get("target_goal", ""),
             primary_service=form.cleaned_data.get("primary_service", ""),
+            target_audience=form.cleaned_data.get("target_audience", ""),
         )
         set_active_workspace_project(request, project)
         if created:
@@ -796,7 +816,7 @@ class WorkspaceProjectCreateView(LoginRequiredMixin, View):
 class WorkspaceAuditStartView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         active_project = resolve_workspace_project(request, request.user)
-        form = WorkspaceAuditStartForm(request.POST)
+        form = WorkspaceAuditStartForm(request.POST, prefix="audit")
         if not form.is_valid():
             dashboard_view = WorkspaceDashboardView()
             dashboard_view.request = request

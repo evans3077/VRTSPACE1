@@ -260,19 +260,70 @@
                     </div>
                     <form method="post" action="{% url 'tools:workspace-audit-start' %}" style="display: grid; gap: 0.85rem;">
                         {% csrf_token %}
-                        {% for field in audit_start_form %}
-                        {% if field.is_hidden %}
-                        {{ field }}
-                        {% else %}
                         <label style="display: grid; gap: 0.3rem;">
-                            <span style="font-weight: 700;">{{ field.label }}</span>
-                            {{ field }}
-                            {% if field.errors %}
-                            <span style="color: #991b1b; font-size: 0.82rem;">{{ field.errors|join:", " }}</span>
-                            {% endif %}
+                            <span style="font-weight: 700;">Company</span>
+                            {{ audit_start_form.company_name }}
+                            {% if audit_start_form.company_name.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.company_name.errors|join:", " }}</span>{% endif %}
                         </label>
-                        {% endif %}
-                        {% endfor %}
+                        {{ audit_start_form.email }}
+                        {{ audit_start_form.location }}
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Website</span>
+                            {{ audit_start_form.website }}
+                            {% if audit_start_form.website.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.website.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Business type</span>
+                            {{ audit_start_form.business_type }}
+                            {% if audit_start_form.business_type.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.business_type.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Specific niche</span>
+                            {{ audit_start_form.business_subtype }}
+                            {% if audit_start_form.business_subtype.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.business_subtype.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Target audience</span>
+                            {{ audit_start_form.target_audience }}
+                            {% if audit_start_form.target_audience.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.target_audience.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Market type</span>
+                            {{ audit_start_form.location_mode }}
+                            {% if audit_start_form.location_mode.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.location_mode.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <div id="workspace-audit-location-fields" style="display: grid; gap: 0.85rem; padding: 0.85rem; border: 1px solid rgba(148, 163, 184, 0.18); border-radius: 1rem; background: rgba(15, 23, 42, 0.18);">
+                            <label style="display: grid; gap: 0.3rem;">
+                                <span style="font-weight: 700;">Country</span>
+                                {{ audit_start_form.location_country }}
+                                {% if audit_start_form.location_country.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.location_country.errors|join:", " }}</span>{% endif %}
+                            </label>
+                            <label style="display: grid; gap: 0.3rem;">
+                                <span style="font-weight: 700;">Market level</span>
+                                {{ audit_start_form.location_scope }}
+                                {% if audit_start_form.location_scope.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.location_scope.errors|join:", " }}</span>{% endif %}
+                            </label>
+                            <label style="display: grid; gap: 0.3rem;">
+                                <span id="workspace-audit-location-area-label" style="font-weight: 700;">Location name</span>
+                                {{ audit_start_form.location_area }}
+                                {% if audit_start_form.location_area.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.location_area.errors|join:", " }}</span>{% endif %}
+                            </label>
+                        </div>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Target goal</span>
+                            {{ audit_start_form.target_goal }}
+                            {% if audit_start_form.target_goal.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.target_goal.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Primary offer</span>
+                            {{ audit_start_form.primary_service }}
+                            {% if audit_start_form.primary_service.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.primary_service.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Audit focus</span>
+                            {{ audit_start_form.notes }}
+                            {% if audit_start_form.notes.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.notes.errors|join:", " }}</span>{% endif %}
+                        </label>
                         <button type="submit" class="button button-primary">Start audit</button>
                     </form>
                 </div>
@@ -292,15 +343,64 @@
                     </div>
                     <form method="post" action="{% url 'tools:workspace-project-create' %}" style="display: grid; gap: 0.85rem;">
                         {% csrf_token %}
-                        {% for field in project_form %}
                         <label style="display: grid; gap: 0.3rem;">
-                            <span style="font-weight: 700;">{{ field.label }}</span>
-                            {{ field }}
-                            {% if field.errors %}
-                            <span style="color: #991b1b; font-size: 0.82rem;">{{ field.errors|join:", " }}</span>
-                            {% endif %}
+                            <span style="font-weight: 700;">Project name</span>
+                            {{ project_form.name }}
+                            {% if project_form.name.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.name.errors|join:", " }}</span>{% endif %}
                         </label>
-                        {% endfor %}
+                        {{ project_form.location }}
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Website</span>
+                            {{ project_form.website }}
+                            {% if project_form.website.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.website.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Business type</span>
+                            {{ project_form.business_type }}
+                            {% if project_form.business_type.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.business_type.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Specific niche</span>
+                            {{ project_form.business_subtype }}
+                            {% if project_form.business_subtype.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.business_subtype.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Target audience</span>
+                            {{ project_form.target_audience }}
+                            {% if project_form.target_audience.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.target_audience.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Market type</span>
+                            {{ project_form.location_mode }}
+                            {% if project_form.location_mode.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.location_mode.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <div id="workspace-project-location-fields" style="display: grid; gap: 0.85rem; padding: 0.85rem; border: 1px solid rgba(148, 163, 184, 0.18); border-radius: 1rem; background: rgba(15, 23, 42, 0.18);">
+                            <label style="display: grid; gap: 0.3rem;">
+                                <span style="font-weight: 700;">Country</span>
+                                {{ project_form.location_country }}
+                                {% if project_form.location_country.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.location_country.errors|join:", " }}</span>{% endif %}
+                            </label>
+                            <label style="display: grid; gap: 0.3rem;">
+                                <span style="font-weight: 700;">Market level</span>
+                                {{ project_form.location_scope }}
+                                {% if project_form.location_scope.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.location_scope.errors|join:", " }}</span>{% endif %}
+                            </label>
+                            <label style="display: grid; gap: 0.3rem;">
+                                <span id="workspace-project-location-area-label" style="font-weight: 700;">Location name</span>
+                                {{ project_form.location_area }}
+                                {% if project_form.location_area.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.location_area.errors|join:", " }}</span>{% endif %}
+                            </label>
+                        </div>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Target goal</span>
+                            {{ project_form.target_goal }}
+                            {% if project_form.target_goal.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.target_goal.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Primary offer</span>
+                            {{ project_form.primary_service }}
+                            {% if project_form.primary_service.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.primary_service.errors|join:", " }}</span>{% endif %}
+                        </label>
                         <button type="submit" class="button button-primary">Create workspace</button>
                     </form>
                 </div>
@@ -352,7 +452,65 @@
                         <div class="command-priority-num">1</div>
                         <div class="command-priority-text"><strong>Run SEO intelligence</strong> &mdash; audit is ready. <a href="{% url 'seo:workspace-seo' %}" style="color: #fb923c;">Open SEO workspace</a>, add competitor URLs, and refresh.</div>
                     </div>
-                    {% endif %}
+{% endif %}
+{{ audit_start_form.country_ui_metadata|json_script:"workspace-audit-country-ui" }}
+{{ project_form.country_ui_metadata|json_script:"workspace-project-country-ui" }}
+<script>
+(() => {
+    const initStructuredLocation = ({ modeId, countryId, scopeId, areaId, panelId, labelId, metadataId }) => {
+        const modeField = document.getElementById(modeId);
+        const countryField = document.getElementById(countryId);
+        const scopeField = document.getElementById(scopeId);
+        const areaField = document.getElementById(areaId);
+        const panel = document.getElementById(panelId);
+        const label = document.getElementById(labelId);
+        const metadataNode = document.getElementById(metadataId);
+        if (!modeField || !countryField || !scopeField || !areaField || !panel || !label || !metadataNode) {
+            return;
+        }
+        const countryMeta = JSON.parse(metadataNode.textContent || "{}");
+        const defaultScopeLabel = (countryCode) => {
+            const item = countryMeta[countryCode] || {};
+            return item.admin_label || "Region / province";
+        };
+        const scopeText = () => {
+            const selected = scopeField.options[scopeField.selectedIndex];
+            return selected && selected.value ? selected.text : defaultScopeLabel(countryField.value);
+        };
+        const sync = () => {
+            const worldwide = modeField.value === "worldwide";
+            panel.style.display = worldwide ? "none" : "grid";
+            countryField.disabled = worldwide;
+            scopeField.disabled = worldwide;
+            areaField.disabled = worldwide;
+            label.textContent = worldwide ? "Location name" : `${scopeText()} name`;
+            areaField.placeholder = worldwide ? "" : `Enter the ${scopeText().toLowerCase()} inside the selected country`;
+        };
+        modeField.addEventListener("change", sync);
+        countryField.addEventListener("change", sync);
+        scopeField.addEventListener("change", sync);
+        sync();
+    };
+    initStructuredLocation({
+        modeId: "id_audit-location_mode",
+        countryId: "id_audit-location_country",
+        scopeId: "id_audit-location_scope",
+        areaId: "id_audit-location_area",
+        panelId: "workspace-audit-location-fields",
+        labelId: "workspace-audit-location-area-label",
+        metadataId: "workspace-audit-country-ui",
+    });
+    initStructuredLocation({
+        modeId: "id_project-location_mode",
+        countryId: "id_project-location_country",
+        scopeId: "id_project-location_scope",
+        areaId: "id_project-location_area",
+        panelId: "workspace-project-location-fields",
+        labelId: "workspace-project-location-area-label",
+        metadataId: "workspace-project-country-ui",
+    });
+})();
+</script>
                     {% if not latest_aeo_audit %}
                     <div class="command-priority-item">
                         <div class="command-priority-num">{% if not latest_seo_snapshot %}2{% else %}1{% endif %}</div>

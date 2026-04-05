@@ -173,6 +173,13 @@ DEFAULT_RULE = {
     "goal_focus": "high-intent organic discovery tied to the declared business goal",
 }
 
+HOSPITALITY_EVENT_KEYWORDS = {"event", "events", "garden", "gardens", "venue", "wedding", "conference", "meeting"}
+HOSPITALITY_EVENT_RULE = {
+    "label": "Event Venue / Hospitality",
+    "priority_page_types": ["event", "pricing", "location", "faq", "amenity"],
+    "goal_focus": "local event-booking intent, venue comparison, and conversion-ready package searches",
+}
+
 PAGE_TYPE_PATTERNS = {
     "faq": ["faq", "faqs", "questions"],
     "contact": ["contact", "contact-us", "reach-us"],
@@ -198,6 +205,25 @@ PAGE_TYPE_PATTERNS = {
 
 def get_industry_rule(business_type):
     return INDUSTRY_RULES.get((business_type or "").strip().lower(), DEFAULT_RULE)
+
+
+def _is_event_focused_hospitality(profile):
+    if getattr(profile, "business_type", "") != "hotel":
+        return False
+    haystack = " ".join(
+        [
+            getattr(profile, "primary_service", "") or "",
+            getattr(profile, "target_audience", "") or "",
+            getattr(profile, "target_goal", "") or "",
+        ]
+    ).lower()
+    return any(token in haystack for token in HOSPITALITY_EVENT_KEYWORDS)
+
+
+def _industry_rule_for_profile(profile):
+    if _is_event_focused_hospitality(profile):
+        return HOSPITALITY_EVENT_RULE
+    return get_industry_rule(getattr(profile, "business_type", ""))
 
 
 def infer_business_type_for_project(project, *, audit_run=None, primary_service=""):
@@ -245,12 +271,32 @@ def _service_seed(profile):
 
 
 def _keyword_template_group(profile):
+    if _is_event_focused_hospitality(profile):
+        return {
+            "core": [
+                "{service} in {location}",
+                "{service} {location}",
+                "event venue {location}",
+                "wedding venue {location}",
+                "conference venue {location}",
+            ],
+            "page_types": {
+                "event": "{service} {location}",
+                "pricing": "{service} packages {location}",
+                "location": "event venue in {location}",
+                "faq": "{service} {location} faq",
+                "amenity": "{service} amenities {location}",
+                "comparison": "best {service} {location}",
+            },
+        }
     return BUSINESS_TYPE_KEYWORD_TEMPLATES.get(profile.business_type, {})
 
 
 def _profile_topic_terms(profile):
     terms = []
     raw_terms = [_service_seed(profile), profile.business_type.replace("_", " ")]
+    if _is_event_focused_hospitality(profile):
+        raw_terms.extend(["event venue", "wedding venue", "conference venue", "event gardens", "venue packages"])
     raw_terms.extend(BUSINESS_TYPE_KEYWORDS.get(profile.business_type, []))
     for raw in raw_terms:
         value = " ".join(str(raw or "").replace("/", " ").replace("-", " ").split()).strip().lower()
@@ -422,7 +468,10 @@ def _score_competitor_payload_fit(payload, profile):
     domain = extract_domain(payload.get("url", ""))
     summary = payload.get("summary", {}) or {}
     page_scores = [_score_competitor_page_fit(page, profile) for page in pages]
-    matching_pages = [item for item in page_scores if item["score"] >= 4]
+    event_focused_hospitality = _is_event_focused_hospitality(profile)
+    matching_threshold = 3 if event_focused_hospitality else 4
+    acceptance_threshold = 4 if event_focused_hospitality else 6
+    matching_pages = [item for item in page_scores if item["score"] >= matching_threshold]
     best_score = max((item["score"] for item in page_scores), default=0)
     total_topic = sum(item["topic_score"] for item in page_scores)
     total_local = sum(item["local_score"] for item in page_scores)
@@ -436,7 +485,7 @@ def _score_competitor_payload_fit(payload, profile):
             else:
                 signal_counter[signal] += 1
     accepted = bool(
-        best_score >= 6
+        best_score >= acceptance_threshold
         and matching_pages
         and total_topic > total_penalty
         and not any(domain == hint or domain.endswith(f".{hint}") for hint in NON_COMPETITOR_HOST_HINTS)
@@ -1049,7 +1098,7 @@ def _build_edit_targets(*, profile, site_structure, urls, page_type, keyword, is
 
 
 def build_structural_recommendations(*, profile, site_structure, competitor_snapshots):
-    rule = get_industry_rule(profile.business_type)
+    rule = _industry_rule_for_profile(profile)
     site_summary = site_structure.get("summary", {})
     recommendations = []
     available_competitors = _accepted_competitor_snapshots(competitor_snapshots, profile)
@@ -1252,7 +1301,7 @@ def build_context_recommendations(audit_run, profile, site_structure, competitor
                 "category_key": category_key,
                 "priority_score": recommendation.get("priority_score", 0),
                 "why_it_matters": (
-                    f"For a {get_industry_rule(profile.business_type)['label'].lower()} business in {profile.location}, "
+                        f"For a {_industry_rule_for_profile(profile)['label'].lower()} business in {profile.location}, "
                     f"this weakens {breakdown.get('label', recommendation.get('category', 'SEO')).lower()} visibility against {profile.target_goal}."
                 ),
                 "recommended_fix": recommendation.get("recommended_fix", ""),
@@ -1302,7 +1351,7 @@ def build_context_recommendations(audit_run, profile, site_structure, competitor
 
 
 def build_priority_pages(profile, site_structure):
-    rule = get_industry_rule(profile.business_type)
+    rule = _industry_rule_for_profile(profile)
     current_types = set(site_structure.get("summary", {}).get("counts_by_type", {}).keys())
     ordered = []
     for page_type in rule["priority_page_types"]:
@@ -1552,7 +1601,7 @@ def _pattern_title_terms(pages, location=""):
 def build_competitor_patterns(profile, competitor_snapshots):
     available_competitors = _competitor_summaries(_accepted_competitor_snapshots(competitor_snapshots, profile))
     items = []
-    for page_type in get_industry_rule(profile.business_type)["priority_page_types"]:
+    for page_type in _industry_rule_for_profile(profile)["priority_page_types"]:
         pages = [
             page
             for payload in available_competitors
@@ -1637,7 +1686,7 @@ def build_page_comparisons(profile, site_structure, competitor_snapshots):
 
 
 def build_page_map(profile, site_structure, competitor_snapshots):
-    rule = get_industry_rule(profile.business_type)
+    rule = _industry_rule_for_profile(profile)
     site_summary = site_structure.get("summary", {})
     site_counts = site_summary.get("counts_by_type", {})
     site_word_counts = site_summary.get("avg_word_count_by_type", {})
@@ -1700,7 +1749,7 @@ def build_page_map(profile, site_structure, competitor_snapshots):
                 "action": action,
                 "reason": (
                     f"This page type matters for {profile.target_goal.lower()} in {profile.location} "
-                    f"and is part of the {get_industry_rule(profile.business_type)['label']} structure profile."
+                    f"and is part of the {_industry_rule_for_profile(profile)['label']} structure profile."
                 ),
                 "competitor_evidence": evidence,
             }
@@ -1942,7 +1991,15 @@ def build_seo_context_payload(project, profile, audit_run):
         site_structure,
         accepted_competitor_snapshots,
     )
-    industry_rule = get_industry_rule(effective_business_type)
+    industry_rule = _industry_rule_for_profile(
+        SimpleNamespace(
+            business_type=effective_business_type,
+            location=profile.location,
+            target_goal=profile.target_goal,
+            primary_service=profile.primary_service,
+            target_audience=profile.target_audience,
+        )
+    )
     return {
         "context": {
             "project": project.name,

@@ -1,0 +1,434 @@
+GET
+
+
+https://serpapi.com/search.json?engine=google_events&q=Events+in+Austin&hl=en&gl=us
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_events",
+  q: "Events in Austin",
+  hl: "en",
+  gl: "us",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+events_results = results[:events_results]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "6935589bfc8a2b38f6ea30a0",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/6a5185898c8c34e4/6935589bfc8a2b38f6ea30a0.json",
+    "created_at": "2025-12-07 10:36:11 UTC",
+    "processed_at": "2025-12-07 10:36:11 UTC",
+    "google_events_url": "https://www.google.com/search?q=Events+in+Austin&ibp=htl;events&hl=en&gl=us",
+    "raw_html_file": "https://serpapi.com/searches/6a5185898c8c34e4/6935589bfc8a2b38f6ea30a0.html",
+    "total_time_taken": 1.12
+  },
+  "search_parameters": {
+    "q": "Events in Austin",
+    "engine": "google_events",
+    "hl": "en",
+    "gl": "us"
+  },
+  "search_information": {
+    "events_results_state": "Results for exact spelling"
+  },
+  "events_results": [
+    {
+      "title": "Austin Comedy Killers",
+      "date": {
+        "start_date": "Dec 7",
+        "when": "Dec 2, 9:00 PM – Dec 30, 10:30 PM CST"
+      },
+      "address": [
+        "Sunset Strip Comedy & Entertainment, 214 E 6th St unit c",
+        "Austin, TX"
+      ],
+      "link": "https://www.statesman.com/austin360/things-to-do/?_evDiscoveryPath=/event/122196v-austin-comedy-killers",
+      "event_location_map": {
+        "image": "https://www.google.com/maps/vt/data=PTUM43HXdjd-zcbPUhM7oblmTLTUq0nNCznrdbD4RF7zLHSc5KEgv2aY8a3-EhPS39shys4ethWNdrMDVhaqix4zw-tCz5lIUkJOdbEmIJT5cQGFRUY",
+        "link": "https://www.google.com/maps/place//data=!4m2!3m1!1s0x8644b51226ee594b:0x94c03421174f98a6?sa=X&ved=2ahUKEwjTz837o6uRAxUiHNAFHTPENcgQ9eIBegQIAxAA&hl=en&gl=us",
+        "serpapi_link": "https://serpapi.com/search.json?data=%214m2%213m1%211s0x8644b51226ee594b%3A0x94c03421174f98a6&engine=google_maps&gl=us&google_domain=google.com&hl=en&q=Events+in+Austin&type=place"
+      },
+      "description": "Every Tuesday at 9:00 PM to Dec 30 Don’t miss Austin Comedy Killers—a no-holds-barred stand-up comedy showcase happens every Tuesday, at 9:00 PM at Sunset Strip Comedy Club in downtown Austin...",
+      "ticket_info": [
+        {
+          "source": "Eventvesta.com",
+          "link": "https://www.eventvesta.com/events/122196/t/tickets",
+          "link_type": "tickets"
+        },
+        {
+          "source": "Austin American-Statesman",
+          "link": "https://www.statesman.com/austin360/things-to-do/?_evDiscoveryPath=/event/122196v-austin-comedy-killers",
+          "link_type": "more info"
+        },
+        {
+          "source": "The University Star",
+          "link": "https://universitystar.com/events/?_evDiscoveryPath=/event%2F122196v-austin-comedy-killers",
+          "link_type": "more info"
+        },
+        {
+          "source": "Herald-Zeitung",
+          "link": "https://herald-zeitung.com/community_calendar/?_evDiscoveryPath=/event/122196v-austin-comedy-killers",
+          "link_type": "more info"
+        },
+        {
+          "source": "Evvnt",
+          "link": "https://evvnt.com/events/?_evDiscoveryPath=/event/122196v-austin-comedy-killers",
+          "link_type": "more info"
+        }
+      ],
+      "venue": {
+        "name": "Sunset Strip Comedy & Entertainment",
+        "rating": 4.6,
+        "reviews": 132,
+        "link": "https://www.google.com/search?sca_esv=4a629f346b2b51c0&gl=us&hl=en&q=Sunset+Strip+Comedy+%26+Entertainment&ludocid=10718624429871437990&ibp=gwp%3B0,7"
+      },
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQJJWXxq-JOWgofIh9Qv7QXeXp-N6xSA15q3A5VbTep6dcBQBXeF04tlbw&s",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTNU8ejTDsUE9Yvnv8_kgYD32vgKdpI7k1Dk4CZdr6LpYHDaxmb2-kDkRJuHQ&s=10"
+    },
+    {
+      "title": "The Market at Zach",
+      "date": {
+        "start_date": "Dec 7",
+        "when": "Nov 22, 4 PM – Dec 20, 8 PM CST"
+      },
+      "address": [
+        "Zach Theater, 202 S Lamar Blvd",
+        "Austin, TX"
+      ],
+      "link": "https://www.statesman.com/austin360/things-to-do/?_evDiscoveryPath=/event/117965v-the-market-at-zach",
+      "event_location_map": {
+        "image": "https://www.google.com/maps/vt/data=VzESWwpi1Z84OA0Sk5gYQ7FfbjVnjBeuofAb4vIx67xxbew0CmcDkSlNmqnmw3MYPKEE5l3RgOeLLKLtWSVAIYbLm3vuaZC6nSmqrnHsuxYBJIsg3Ac",
+        "link": "https://www.google.com/maps/place//data=!4m2!3m1!1s0x8644b5175cf3ea09:0x556f6ce3788d1367?sa=X&ved=2ahUKEwjTz837o6uRAxUiHNAFHTPENcgQ9eIBegQICxAA&hl=en&gl=us",
+        "serpapi_link": "https://serpapi.com/search.json?data=%214m2%213m1%211s0x8644b5175cf3ea09%3A0x556f6ce3788d1367&engine=google_maps&gl=us&google_domain=google.com&hl=en&q=Events+in+Austin&type=place"
+      },
+      "description": "Occurring on: Nov 22 at 4:00 PM Nov 29 at 4:00 PM Dec 6 at 11:30 AM Dec 13 at 4:00 PM Dec 20 at 4:00 PM An all-new experience at Zach: a vibrant, open-air pop-up featuring Austin and Central...",
+      "ticket_info": [
+        {
+          "source": "Eventbrite.com",
+          "link": "https://www.eventbrite.com/e/the-market-at-zach-holiday-series-tickets-1557542434349",
+          "link_type": "tickets"
+        },
+        {
+          "source": "Austin American-Statesman",
+          "link": "https://www.statesman.com/things-to-do/events/?_evDiscoveryPath=/event%2F117965v-the-market-at-zach",
+          "link_type": "more info"
+        },
+        {
+          "source": "The University Star",
+          "link": "https://universitystar.com/events/?_evDiscoveryPath=/event%2F117965v-the-market-at-zach",
+          "link_type": "more info"
+        },
+        {
+          "source": "Event Vesta",
+          "link": "https://eventvesta.com/events/117965-the-market-at-zach",
+          "link_type": "more info"
+        },
+        {
+          "source": "Herald-Zeitung",
+          "link": "https://herald-zeitung.com/local-events/?_evDiscoveryPath=/event%2F117965v-the-market-at-zach",
+          "link_type": "more info"
+        }
+      ],
+      "venue": {
+        "name": "Zach Theater",
+        "rating": 4.8,
+        "reviews": 1480,
+        "link": "https://www.google.com/search?sca_esv=4a629f346b2b51c0&gl=us&hl=en&q=Zach+Theater&ludocid=6156258939874644839&ibp=gwp%3B0,7"
+      },
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQaH6GfID80b3J3CYsmzDxZ0EP-Smgmji29_iN42SSIJfd5z9xixQnLdc4&s",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQFGU_zuNLh3AbItP1EUMxnU2Pe9dxeTqjN0PDa2huiYQ&s=10"
+    },
+    {
+      "title": "Kody West",
+      "date": {
+        "start_date": "Dec 7",
+        "when": "Sun, Dec 7, 8:00 – 9:30 PM CST"
+      },
+      "address": [
+        "Antone's Nightclub, 305 E 5th St.",
+        "Austin, TX"
+      ],
+      "link": "https://open.spotify.com/concert/3v1YTE4nhHZxxjhHkWn9Ul",
+      "event_location_map": {
+        "image": "https://www.google.com/maps/vt/data=wJxZY1yzabdXo2CPNtim_lqdX-Q8xzWkyssqUarlKi2mivT3yqEnMarz80fGHQq2XhQc4KEM-SxYOtj6jNPF_O4ck_fUldsOgucvv6BupRjzq5rsWgQ",
+        "link": "https://www.google.com/maps/place//data=!4m2!3m1!1s0x8644b5091bd69d65:0x945d683a5e34b71f?sa=X&ved=2ahUKEwjTz837o6uRAxUiHNAFHTPENcgQ9eIBegQIExAA&hl=en&gl=us",
+        "serpapi_link": "https://serpapi.com/search.json?data=%214m2%213m1%211s0x8644b5091bd69d65%3A0x945d683a5e34b71f&engine=google_maps&gl=us&google_domain=google.com&hl=en&q=Events+in+Austin&type=place"
+      },
+      "description": "Find tickets for Kody West at Antone's Nightclub in Austin on 12/7/2025 at 8:00 PM",
+      "ticket_info": [
+        {
+          "source": "Spotify.com",
+          "link": "https://open.spotify.com/concert/3v1YTE4nhHZxxjhHkWn9Ul",
+          "link_type": "tickets"
+        },
+        {
+          "source": "Tix4cause.com",
+          "link": "https://www.tix4cause.com/event/kody-west/7199582",
+          "link_type": "tickets"
+        },
+        {
+          "source": "Ticketmaster.com",
+          "link": "https://www.ticketmaster.com/kody-west-austin-texas-12-07-2025/event/3A0062C514815A28",
+          "link_type": "tickets"
+        },
+        {
+          "source": "Tixel.com",
+          "link": "https://tixel.com/us/music-tickets/2025/12/07/kody-west",
+          "link_type": "tickets"
+        },
+        {
+          "source": "Seatgeek.com",
+          "link": "https://seatgeek.com/kody-west-tickets/austin-texas-antone-s-nightclub-2025-12-07-8-pm/concert/17557953?gclsrc=%7BGOOGLE-ADS-CLICK-SOURCE%7D&refob=mta&ref_price=35.00",
+          "link_type": "tickets"
+        }
+      ],
+      "venue": {
+        "name": "Antone's Nightclub",
+        "rating": 4.5,
+        "reviews": 1753,
+        "link": "https://www.google.com/search?sca_esv=4a629f346b2b51c0&gl=us&hl=en&q=Antone%27s+Nightclub&ludocid=10690815690345330463&ibp=gwp%3B0,7"
+      },
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQPsp_PaosxUm-TfN1pNX6UoIuc4-_3EZuVbhi7qNshADD3HY7lWBAaAgo&s",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQf6QQ76BddMgICQm0LUYq-woAeG0_HiTeocEfz99VLbyWkebz08IymOA2Bbg&s=10"
+    },
+    {
+      "title": "True Crime Murder Mystery Dinner Show",
+      "date": {
+        "start_date": "Dec 7",
+        "when": "Dec 6, 6 PM – Dec 20, 9 PM CST"
+      },
+      "address": [
+        "Hotel Indigo Austin Downtown - University by IHG, 810 Red River St",
+        "Austin, TX"
+      ],
+      "link": "https://www.statesman.com/event/117508v-the-dinner-detective-true-crime-murder-mystery-dinner-show-austin-tx",
+      "event_location_map": {
+        "image": "https://www.google.com/maps/vt/data=Kj6DPR9APJWcxFfX8t2Dh9_Ei8Uth0ZOiMFkjAuJw4gdm77JeRlQvSsgliPbydd0UUsUa6TCX0CEWuXoX2eGVF7JMhWSlawdK207ycN9HFHb_g_3oJI",
+        "link": "https://www.google.com/maps/place//data=!4m2!3m1!1s0x8644b5a69e6e1e83:0x6968d4161ce423d8?sa=X&ved=2ahUKEwjTz837o6uRAxUiHNAFHTPENcgQ9eIBegQIGxAA&hl=en&gl=us",
+        "serpapi_link": "https://serpapi.com/search.json?data=%214m2%213m1%211s0x8644b5a69e6e1e83%3A0x6968d4161ce423d8&engine=google_maps&gl=us&google_domain=google.com&hl=en&q=Events+in+Austin&type=place"
+      },
+      "description": "Occurring on: Dec 6 at 6:00 PM Dec 20 at 6:00 PM North America's largest interactive comedy murder mystery dinner theatre show is now playing in Austin, TX! Solve a hilarious true crime murder...",
+      "ticket_info": [
+        {
+          "source": "Eventvesta.com",
+          "link": "https://www.eventvesta.com/events/117508/t/tickets",
+          "link_type": "tickets"
+        },
+        {
+          "source": "Austin American-Statesman",
+          "link": "https://www.statesman.com/event/117508v-the-dinner-detective-true-crime-murder-mystery-dinner-show-austin-tx",
+          "link_type": "more info"
+        },
+        {
+          "source": "Austin Monthly Magazine",
+          "link": "https://www.austinmonthly.com/events/the-dinner-detective-true-crime-murder-mystery-dinner-show-austin-tx-3/",
+          "link_type": "more info"
+        },
+        {
+          "source": "AARP Local",
+          "link": "https://local.aarp.org/event/the-dinner-detective-true-crime-murder-mystery-dinner-show-2025-12-06-austin-tx.html",
+          "link_type": "more info"
+        },
+        {
+          "source": "Patch",
+          "link": "https://patch.com/texas/downtownaustin/calendar/event/20251206/efcddcc3-934f-4382-8c20-9f86f288bc10/the-dinner-detective-true-crime-murder-mystery-dinner-show-austin-tx",
+          "link_type": "more info"
+        }
+      ],
+      "venue": {
+        "name": "Hotel Indigo Austin Downtown - University by IHG",
+        "rating": 4.1,
+        "reviews": 1457,
+        "link": "https://www.google.com/search?sca_esv=4a629f346b2b51c0&gl=us&hl=en&q=Hotel+Indigo+Austin+Downtown+-+University+by+IHG&ludocid=7595553962999423960&ibp=gwp%3B0,7"
+      },
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTp224wRPzteNNRp6b9LAHCxaGixT4vRQs5jbY0fss3qnhT875F7oiT9tA&s",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5zJ0_qF_W1r_4rt-q5YCEH7zgyfej7nTaMxPyH7LUhA&s=10"
+    },
+    {
+      "title": "The Nutcracker",
+      "date": {
+        "start_date": "Dec 7",
+        "when": "Sat, Dec 6, 7:30 PM – Sun, Dec 7, 6:00 PM CST"
+      },
+      "address": [
+        "The Long Center for the Performing Arts, 701 W Riverside Dr",
+        "Austin, TX"
+      ],
+      "link": "https://www.statesman.com/austin360/things-to-do/?_evDiscoveryPath=/event/990426s-the-nutcracker",
+      "event_location_map": {
+        "image": "https://www.google.com/maps/vt/data=3Eb1_6d_fKnkLDKze8PGIGZMj_f5rWvN_lmKFevFhxz4WQtp41sKEvbWKpJkUuwNXtP4RKSyzlbb2y4-EaohHOky1wgRvhbcEXsWaaW8_HSmt8iERT8",
+        "link": "https://www.google.com/maps/place//data=!4m2!3m1!1s0x8644b504febb0b39:0xd41d7a37bd8f6b60?sa=X&ved=2ahUKEwjTz837o6uRAxUiHNAFHTPENcgQ9eIBegQIIxAA&hl=en&gl=us",
+        "serpapi_link": "https://serpapi.com/search.json?data=%214m2%213m1%211s0x8644b504febb0b39%3A0xd41d7a37bd8f6b60&engine=google_maps&gl=us&google_domain=google.com&hl=en&q=Events+in+Austin&type=place"
+      },
+      "description": "Christmas simply wouldn’t be complete without a trip to the theatre to experience the magic of the world’s most beloved ballet – The Nutcracker. With snow flurries, sweets, princes, magic, and...",
+      "ticket_info": [
+        {
+          "source": "Stubhub.com",
+          "link": "https://www.stubhub.com/the-nutcracker-ballet-austin-tickets-12-6-2025/event/158300273/",
+          "link_type": "tickets"
+        },
+        {
+          "source": "Eventticketscenter.com",
+          "link": "https://www.eventticketscenter.com/ballet-austin-the-nutcracker-austin-12-07-2025/7318328/t",
+          "link_type": "tickets"
+        },
+        {
+          "source": "Austin American-Statesman",
+          "link": "https://www.statesman.com/austin360/things-to-do/?_evDiscoveryPath=/event/990592s-the-nutcracker",
+          "link_type": "more info"
+        },
+        {
+          "source": "En Face Magazine",
+          "link": "https://enfacemagazine.com/event/austin-nutcracker/2025-12-06/2/",
+          "link_type": "more info"
+        },
+        {
+          "source": "AXS",
+          "link": "https://www.axs.com/events/990347/the-nutcracker-tickets",
+          "link_type": "more info"
+        }
+      ],
+      "venue": {
+        "name": "The Long Center for the Performing Arts",
+        "rating": 4.7,
+        "reviews": 1359,
+        "link": "https://www.google.com/search?sca_esv=4a629f346b2b51c0&gl=us&hl=en&q=The+Long+Center+for+the+Performing+Arts&ludocid=15284507090187414368&ibp=gwp%3B0,7"
+      },
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcS_Bunol7VvnZI9GPSOy5GrenrOT2mdNLK79AHYuBFru1SIG_5H1HWqHYM&s",
+      "image": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSVENKh7-k9AnSlDBB53xunA2xSKidvwabFE0AV2CkWfw&s=10"
+    },
+    ...
+  ]
+}
+Google Events search results for 
+q
+:
+Events in Chicago
+,  
+htichips
+:
+event_type:Virtual-Event,date:today
+The Google Events Results API allows advanced filtering to get the results you specifically filter.
+For example, the parameters above provide only today's online events.
+
+GET
+
+
+https://serpapi.com/search.json?engine=google_events&q=Events+in+Chicago&hl=en&gl=us&htichips=event_type:Virtual-Event,date:today
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_events",
+  q: "Events in Chicago",
+  hl: "en",
+  gl: "us",
+  htichips: "event_type:Virtual-Event,date:today",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+events_results = results[:events_results]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "63401715e7d08a25e1a7cbf0",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/f721c4de919ae9f7/63401715e7d08a25e1a7cbf0.json",
+    "created_at": "2022-10-07 12:09:57 UTC",
+    "processed_at": "2022-10-07 12:09:58 UTC",
+    "google_events_url": "https://www.google.com/search?q=Events+in+Chicago&ibp=htl;events&hl=en&htichips=event_type:Virtual-Event,date:today",
+    "raw_html_file": "https://serpapi.com/searches/f721c4de919ae9f7/63401715e7d08a25e1a7cbf0.html",
+    "total_time_taken": 8.87
+  },
+  "search_parameters": {
+    "q": "Events in Chicago",
+    "engine": "google_events",
+    "htichips": "event_type:Virtual-Event,date:today"
+  },
+  "search_information": {
+    "events_results_state": "Results for exact spelling"
+  },
+  "events_results": [
+    {
+      "title": "Chicago, IL - Build your branded custom app in 30...",
+      "date": {
+        "start_date": "Oct 7",
+        "when": "Fri, Oct 7, 7 – 8 AM"
+      },
+      "address": [
+        "Hosted by Software Architect"
+      ],
+      "link": "https://allevents.in/online/chicago-il-build-your-branded-custom-app-in-30-minutes-with-no-coding/10000404585264417",
+      "description": "Build custom app for your business. Use push notifications to share #coupons, #deals, or holidays to engage your customers for free. About this Event Easily build your custom app Boost your sales...",
+      "ticket_info": [
+        {
+          "source": "AllEvents.in",
+          "link": "https://allevents.in/online/chicago-il-build-your-branded-custom-app-in-30-minutes-with-no-coding/10000404585264417",
+          "link_type": "more info"
+        }
+      ],
+      "thumbnail": "https://encrypted-tbn2.gstatic.com/faviconV2?url=https://allevents.in&client=HORIZON&size=96&type=FAVICON&fallback_opts=TYPE,SIZE,URL&nfrp=2"
+    },
+    {
+      "title": "Chicago Date Night | Video Speed Dating",
+      "date": {
+        "start_date": "Oct 7",
+        "when": "Fri, Oct 7, 4 – 5 PM"
+      },
+      "address": [
+        "Hosted by Singles Speed Dating"
+      ],
+      "link": "https://www.meetup.com/speed-dating/events/287657912/",
+      "description": "Chicago date night! Your matches will be based on your age and gender preference. This is an online event. We use Filteroff for our virtual events. You can join the event on the web...",
+      "ticket_info": [
+        {
+          "source": "Meetup",
+          "link": "https://www.meetup.com/speed-dating/events/287657912/",
+          "link_type": "more info"
+        }
+      ],
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQktBWaJyjBvKoQJnEdKjOoolnq6BO_YAj8eQSWWSfOqCu08WU4kddGV6I&s"
+    },
+    {
+      "title": "Presentation Skills-Professional 1 Day Virtual...",
+      "date": {
+        "start_date": "Oct 7",
+        "when": "Fri, Oct 7, 7 AM – 3 PM"
+      },
+      "address": [
+        "Hosted by Mangates"
+      ],
+      "link": "https://www.eventbrite.com/e/presentation-skills-professional-1-day-virtual-training-in-chicago-il-tickets-144735970183",
+      "description": "Catering to the demands of busy professionals, our virtual training programs are as effective as face-to-face learning.",
+      "ticket_info": [
+        {
+          "source": "Eventbrite.comFrom $445.00",
+          "link": "https://www.eventbrite.com/e/presentation-skills-professional-1-day-virtual-training-in-chicago-il-tickets-144735970183",
+          "link_type": "tickets"
+        }
+      ],
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRDLwrkpm_mwDtWUgjK2LeJOA4NAfCCN0UMXH_ZPdUWB1LFzYTQnRfxQyo&s"
+    },
+    ...
+  ]
+}

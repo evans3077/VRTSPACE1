@@ -1,6 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.test import TestCase, override_settings
 from django.urls import reverse
+from unittest.mock import patch
 
 from apps.core.plan_catalog import get_plan_definition
 from apps.tools.models import AuditRun
@@ -76,7 +77,18 @@ class LeadFlowTests(TestCase):
         self.assertEqual(response.status_code, 400)
         self.assertContains(response, "This field is required.", status_code=400)
 
-    def test_audit_request_normalizes_website_and_scores_request(self):
+    @patch("apps.leads.forms.get_country_choices", return_value=[("", "Select country"), ("KE", "Kenya")])
+    @patch("apps.leads.forms.get_country_ui_metadata", return_value={"KE": {"name": "Kenya", "admin_label": "County"}})
+    @patch("apps.leads.forms.validate_location_selection")
+    def test_audit_request_normalizes_website_and_scores_request(self, mocked_location_validation, _mocked_ui, _mocked_choices):
+        mocked_location_validation.return_value = {
+            "display": "Machakos, Kenya",
+            "country_code": "KE",
+            "country_name": "Kenya",
+            "scope": "city_town",
+            "scope_label": "City / town",
+            "area": "Machakos",
+        }
         response = self.client.post(
             reverse("leads:free-aeo-audit"),
             {
@@ -84,7 +96,12 @@ class LeadFlowTests(TestCase):
                 "email": "ops@example.com",
                 "website": "northwind.example.com",
                 "business_type": "automotive",
-                "location": "Nairobi, Kenya",
+                "business_subtype": "Used car dealership",
+                "target_audience": "Buyers in Machakos",
+                "location_mode": "targeted",
+                "location_country": "KE",
+                "location_scope": "city_town",
+                "location_area": "Machakos",
                 "target_goal": "Increase qualified leads",
                 "primary_service": "Used car sales",
                 "monthly_leads_goal": 60,
@@ -97,11 +114,44 @@ class LeadFlowTests(TestCase):
         audit_request = AuditRequest.objects.get()
         self.assertEqual(audit_request.website, "https://northwind.example.com")
         self.assertEqual(audit_request.business_type, "automotive")
-        self.assertEqual(audit_request.location, "Nairobi, Kenya")
+        self.assertEqual(audit_request.business_subtype, "Used car dealership")
+        self.assertEqual(audit_request.target_audience, "Buyers in Machakos")
+        self.assertEqual(audit_request.location, "Machakos, Kenya")
+        self.assertEqual(audit_request.location_country, "KE")
+        self.assertEqual(audit_request.location_scope, "city_town")
+        self.assertEqual(audit_request.location_area, "Machakos")
         self.assertEqual(audit_request.target_goal, "Increase qualified leads")
         self.assertEqual(audit_request.primary_service, "Used car sales")
         self.assertEqual(audit_request.status, AuditRequest.Status.QUALIFIED)
         self.assertEqual(audit_request.submission_context, {})
+
+    @patch("apps.leads.forms.get_country_choices", return_value=[("", "Select country"), ("US", "United States")])
+    @patch("apps.leads.forms.get_country_ui_metadata", return_value={"US": {"name": "United States", "admin_label": "State"}})
+    def test_audit_request_supports_worldwide_mode_for_global_services(self, _mocked_ui, _mocked_choices):
+        response = self.client.post(
+            reverse("leads:free-aeo-audit"),
+            {
+                "company_name": "Northwind",
+                "email": "ops@example.com",
+                "website": "northwind.example.com",
+                "business_type": "saas",
+                "business_subtype": "Product analytics platform",
+                "target_audience": "Revenue teams",
+                "location_mode": "worldwide",
+                "target_goal": "Increase qualified demos",
+                "primary_service": "Analytics platform",
+                "monthly_leads_goal": 60,
+                "notes": "We sell globally and do not want a fake local market applied to the audit.",
+            },
+        )
+
+        self.assertEqual(response.status_code, 302)
+        audit_request = AuditRequest.objects.get(company_name="Northwind")
+        self.assertEqual(audit_request.location_mode, "worldwide")
+        self.assertEqual(audit_request.location, "Worldwide")
+        self.assertEqual(audit_request.location_country, "")
+        self.assertEqual(audit_request.location_scope, "")
+        self.assertEqual(audit_request.location_area, "")
 
     def test_sync_client_project_from_audit_run_creates_project_snapshot(self):
         audit_request = AuditRequest.objects.create(

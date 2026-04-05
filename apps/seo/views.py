@@ -264,6 +264,7 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             "location": getattr(project, "location", ""),
             "target_goal": getattr(project, "target_goal", ""),
             "primary_service": getattr(project, "primary_service", ""),
+            "target_audience": getattr(project, "target_audience", ""),
         }
         if not getattr(profile, "business_type", ""):
             initial["business_type"] = getattr(project, "business_type", "") or infer_business_type_for_project(project)

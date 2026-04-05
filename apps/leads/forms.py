@@ -3,22 +3,64 @@ from django.contrib.auth.forms import AuthenticationForm, PasswordChangeForm
 from django.contrib.auth import get_user_model
 
 from .models import AuditRequest, ClientProject, Lead
+from .intake_options import BUSINESS_TYPE_CHOICES, LOCATION_MODE_CHOICES, LOCATION_SCOPE_CHOICES
+from .location_services import get_country_choices, get_country_ui_metadata, validate_location_selection
 
 
-BUSINESS_TYPE_CHOICES = (
-    ("", "Select business type"),
-    ("automotive", "Automotive"),
-    ("agency", "Agency / Professional Services"),
-    ("saas", "SaaS"),
-    ("hotel", "Hotel / Hospitality"),
-    ("ecommerce", "Ecommerce"),
-    ("healthcare", "Healthcare"),
-    ("real_estate", "Real Estate"),
-    ("local_service", "Local Service Business"),
-    ("education", "Education"),
-    ("finance", "Finance / Fintech"),
-    ("other", "Other"),
-)
+class StructuredLocationMixin:
+    location_mode = forms.ChoiceField(choices=LOCATION_MODE_CHOICES, initial="targeted", required=False)
+    location_country = forms.ChoiceField(choices=(), required=False)
+    location_scope = forms.ChoiceField(choices=LOCATION_SCOPE_CHOICES, required=False)
+    location_area = forms.CharField(required=False)
+    location = forms.CharField(required=False, widget=forms.HiddenInput())
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["location_country"].choices = get_country_choices()
+        self.country_ui_metadata = get_country_ui_metadata()
+
+    def clean_location(self):
+        return self.cleaned_data.get("location", "").strip()
+
+    def clean(self):
+        cleaned_data = super().clean()
+        location_mode = (cleaned_data.get("location_mode") or "targeted").strip().lower()
+        cleaned_data["location_mode"] = location_mode
+        if location_mode == "worldwide":
+            cleaned_data["location"] = "Worldwide"
+            cleaned_data["location_country"] = ""
+            cleaned_data["location_scope"] = ""
+            cleaned_data["location_area"] = ""
+            return cleaned_data
+
+        country_code = cleaned_data.get("location_country", "")
+        scope = cleaned_data.get("location_scope", "")
+        area = cleaned_data.get("location_area", "")
+        if not any([country_code, scope, area, cleaned_data.get("location", "")]):
+            cleaned_data["location"] = ""
+            return cleaned_data
+        try:
+            validated = validate_location_selection(country_code, scope, area)
+        except forms.ValidationError as exc:
+            self.add_error("location_area", exc)
+            return cleaned_data
+        cleaned_data["location"] = validated["display"]
+        cleaned_data["location_country"] = validated["country_code"]
+        cleaned_data["location_scope"] = validated["scope"]
+        cleaned_data["location_area"] = validated["area"]
+        return cleaned_data
+
+
+class BusinessContextMixin:
+    business_type = forms.ChoiceField(choices=BUSINESS_TYPE_CHOICES, required=False)
+    business_subtype = forms.CharField(required=False)
+    target_audience = forms.CharField(required=False)
+
+    def clean_business_subtype(self):
+        return self.cleaned_data.get("business_subtype", "").strip()
+
+    def clean_target_audience(self):
+        return self.cleaned_data.get("target_audience", "").strip()
 
 
 class LeadCaptureForm(forms.ModelForm):
@@ -52,9 +94,8 @@ class LeadCaptureForm(forms.ModelForm):
         return website
 
 
-class AuditRequestForm(forms.ModelForm):
+class AuditRequestForm(BusinessContextMixin, StructuredLocationMixin, forms.ModelForm):
     website = forms.CharField()
-    business_type = forms.ChoiceField(choices=BUSINESS_TYPE_CHOICES, required=False)
     competitor_urls = forms.CharField(
         required=False,
         widget=forms.Textarea(
@@ -72,6 +113,12 @@ class AuditRequestForm(forms.ModelForm):
             "email",
             "website",
             "business_type",
+            "business_subtype",
+            "target_audience",
+            "location_mode",
+            "location_country",
+            "location_scope",
+            "location_area",
             "location",
             "target_goal",
             "primary_service",
@@ -84,7 +131,9 @@ class AuditRequestForm(forms.ModelForm):
             "company_name": forms.TextInput(attrs={"placeholder": "Company or brand"}),
             "email": forms.EmailInput(attrs={"placeholder": "team@company.com"}),
             "website": forms.TextInput(attrs={"placeholder": "example.com"}),
-            "location": forms.TextInput(attrs={"placeholder": "Nairobi, Kenya"}),
+            "business_subtype": forms.TextInput(attrs={"placeholder": "Used car dealership, wedding venue, dermatology clinic"}),
+            "target_audience": forms.TextInput(attrs={"placeholder": "People looking for event gardens in Machakos"}),
+            "location_area": forms.TextInput(attrs={"placeholder": "Machakos"}),
             "target_goal": forms.TextInput(attrs={"placeholder": "Increase qualified leads from search"}),
             "primary_service": forms.TextInput(attrs={"placeholder": "Used car sales"}),
             "market_context": forms.Textarea(attrs={"rows": 3, "placeholder": "Market, audience, location, or commercial context that should shape the audit."}),
@@ -96,9 +145,6 @@ class AuditRequestForm(forms.ModelForm):
         if not website.startswith(("http://", "https://")):
             website = f"https://{website}"
         return website
-
-    def clean_location(self):
-        return self.cleaned_data.get("location", "").strip()
 
     def clean_target_goal(self):
         return self.cleaned_data.get("target_goal", "").strip()
@@ -149,7 +195,7 @@ class WorkspaceLoginForm(AuthenticationForm):
         return self.cleaned_data["username"].strip().lower()
 
 
-class WorkspaceProjectForm(forms.ModelForm):
+class WorkspaceProjectForm(BusinessContextMixin, StructuredLocationMixin, forms.ModelForm):
     website = forms.CharField(widget=forms.TextInput(attrs={"placeholder": "example.com"}))
 
     class Meta:
@@ -158,6 +204,12 @@ class WorkspaceProjectForm(forms.ModelForm):
             "name",
             "website",
             "business_type",
+            "business_subtype",
+            "target_audience",
+            "location_mode",
+            "location_country",
+            "location_scope",
+            "location_area",
             "location",
             "target_goal",
             "primary_service",
@@ -165,7 +217,9 @@ class WorkspaceProjectForm(forms.ModelForm):
         widgets = {
             "name": forms.TextInput(attrs={"placeholder": "Project name or brand"}),
             "business_type": forms.Select(choices=BUSINESS_TYPE_CHOICES),
-            "location": forms.TextInput(attrs={"placeholder": "Nairobi, Kenya"}),
+            "business_subtype": forms.TextInput(attrs={"placeholder": "Used car dealership, wedding venue, dermatology clinic"}),
+            "target_audience": forms.TextInput(attrs={"placeholder": "The buyers or users you want this project to reach"}),
+            "location_area": forms.TextInput(attrs={"placeholder": "Machakos"}),
             "target_goal": forms.TextInput(attrs={"placeholder": "Increase qualified leads from search"}),
             "primary_service": forms.TextInput(attrs={"placeholder": "Used car sales"}),
         }
@@ -179,9 +233,6 @@ class WorkspaceProjectForm(forms.ModelForm):
             website = f"https://{website}"
         return website
 
-    def clean_location(self):
-        return self.cleaned_data.get("location", "").strip()
-
     def clean_target_goal(self):
         return self.cleaned_data.get("target_goal", "").strip()
 
@@ -189,9 +240,8 @@ class WorkspaceProjectForm(forms.ModelForm):
         return self.cleaned_data.get("primary_service", "").strip()
 
 
-class WorkspaceAuditStartForm(forms.ModelForm):
+class WorkspaceAuditStartForm(BusinessContextMixin, StructuredLocationMixin, forms.ModelForm):
     email = forms.EmailField(widget=forms.HiddenInput())
-    business_type = forms.ChoiceField(choices=BUSINESS_TYPE_CHOICES, required=False)
 
     class Meta:
         model = AuditRequest
@@ -200,6 +250,12 @@ class WorkspaceAuditStartForm(forms.ModelForm):
             "email",
             "website",
             "business_type",
+            "business_subtype",
+            "target_audience",
+            "location_mode",
+            "location_country",
+            "location_scope",
+            "location_area",
             "location",
             "target_goal",
             "primary_service",
@@ -208,7 +264,9 @@ class WorkspaceAuditStartForm(forms.ModelForm):
         widgets = {
             "company_name": forms.TextInput(attrs={"placeholder": "Company or brand"}),
             "website": forms.TextInput(attrs={"placeholder": "example.com"}),
-            "location": forms.TextInput(attrs={"placeholder": "Nairobi, Kenya"}),
+            "business_subtype": forms.TextInput(attrs={"placeholder": "Used car dealership, wedding venue, dermatology clinic"}),
+            "target_audience": forms.TextInput(attrs={"placeholder": "The buyers or users you want this project to reach"}),
+            "location_area": forms.TextInput(attrs={"placeholder": "Machakos"}),
             "target_goal": forms.TextInput(attrs={"placeholder": "Increase qualified leads from search"}),
             "primary_service": forms.TextInput(attrs={"placeholder": "Used car sales"}),
             "notes": forms.Textarea(attrs={"rows": 3, "placeholder": "What should this first audit focus on?"}),
@@ -225,9 +283,6 @@ class WorkspaceAuditStartForm(forms.ModelForm):
         if website and not website.startswith(("http://", "https://")):
             website = f"https://{website}"
         return website
-
-    def clean_location(self):
-        return self.cleaned_data.get("location", "").strip()
 
     def clean_target_goal(self):
         return self.cleaned_data.get("target_goal", "").strip()

@@ -7,6 +7,7 @@ from django.utils import timezone
 from apps.tools.services import extract_domain, normalize_url
 
 from .models import AuditRequest, ClientProject, Lead
+from .intake_options import get_business_type_label
 
 ACTIVE_WORKSPACE_PROJECT_SESSION_KEY = "active_workspace_project_id"
 
@@ -24,7 +25,18 @@ def score_lead(*, company, website, message, interest_area):
     return min(score, 100)
 
 
-def score_audit_request(*, website, monthly_leads_goal, notes, business_type="", location="", target_goal="", primary_service=""):
+def score_audit_request(
+    *,
+    website,
+    monthly_leads_goal,
+    notes,
+    business_type="",
+    business_subtype="",
+    location="",
+    target_goal="",
+    primary_service="",
+    target_audience="",
+):
     score = 30 if website else 0
     if monthly_leads_goal >= 50:
         score += 30
@@ -32,12 +44,16 @@ def score_audit_request(*, website, monthly_leads_goal, notes, business_type="",
         score += 20
     if business_type:
         score += 10
+    if business_subtype:
+        score += 5
     if location:
         score += 10
     if target_goal:
         score += 10
     if primary_service:
         score += 10
+    if target_audience:
+        score += 5
     if notes and len(notes.strip()) >= 60:
         score += 20
     return min(score, 100)
@@ -92,9 +108,11 @@ def create_audit_request_from_form(form, *, request=None):
         monthly_leads_goal=audit_request.monthly_leads_goal,
         notes=audit_request.notes,
         business_type=audit_request.business_type,
+        business_subtype=audit_request.business_subtype,
         location=audit_request.location,
         target_goal=audit_request.target_goal,
         primary_service=audit_request.primary_service,
+        target_audience=audit_request.target_audience,
     )
     if audit_request.score >= 75:
         audit_request.status = AuditRequest.Status.QUALIFIED
@@ -122,7 +140,7 @@ def get_workspace_projects(user):
 
 
 def summarize_workspace_project(project):
-    business_type_label = str(project.business_type or "").replace("_", " ").strip().title()
+    business_type_label = get_business_type_label(project.business_type)
     focus_tags = ["Audit"]
     if getattr(project, "seo_snapshot_count", 0) or getattr(project, "seo_profile_id", None):
         focus_tags.append("SEO")
@@ -149,7 +167,9 @@ def summarize_workspace_project(project):
         "location": project.location,
         "business_type": project.business_type,
         "business_type_label": business_type_label,
+        "business_subtype": project.business_subtype,
         "primary_service": project.primary_service,
+        "target_audience": project.target_audience,
         "latest_score": project.latest_score,
         "stage": project.stage,
         "stage_label": project.get_stage_display(),
@@ -198,7 +218,22 @@ def set_active_workspace_project(request, project):
     request.session[ACTIVE_WORKSPACE_PROJECT_SESSION_KEY] = project.pk
 
 
-def create_workspace_project_for_user(user, *, name, website, business_type="", location="", target_goal="", primary_service=""):
+def create_workspace_project_for_user(
+    user,
+    *,
+    name,
+    website,
+    business_type="",
+    business_subtype="",
+    location="",
+    location_mode="targeted",
+    location_country="",
+    location_scope="",
+    location_area="",
+    target_goal="",
+    primary_service="",
+    target_audience="",
+):
     normalized_website = normalize_url(website)
     normalized_domain = extract_domain(normalized_website)
     existing = (
@@ -214,9 +249,15 @@ def create_workspace_project_for_user(user, *, name, website, business_type="", 
         existing.website = normalized_website
         existing.contact_email = user.email or existing.contact_email
         existing.business_type = business_type or existing.business_type
+        existing.business_subtype = business_subtype or existing.business_subtype
         existing.location = location or existing.location
+        existing.location_mode = location_mode or existing.location_mode
+        existing.location_country = location_country or existing.location_country
+        existing.location_scope = location_scope or existing.location_scope
+        existing.location_area = location_area or existing.location_area
         existing.target_goal = target_goal or existing.target_goal
         existing.primary_service = primary_service or existing.primary_service
+        existing.target_audience = target_audience or existing.target_audience
         existing.save()
         return existing, False
 
@@ -227,9 +268,15 @@ def create_workspace_project_for_user(user, *, name, website, business_type="", 
         normalized_domain=normalized_domain,
         contact_email=user.email,
         business_type=business_type,
+        business_subtype=business_subtype,
         location=location,
+        location_mode=location_mode,
+        location_country=location_country,
+        location_scope=location_scope,
+        location_area=location_area,
         target_goal=target_goal,
         primary_service=primary_service,
+        target_audience=target_audience,
     )
     return project, True
 
@@ -241,9 +288,15 @@ def sync_client_project_from_audit_run(audit_run):
     email = audit_request.email if audit_request else ""
     name = (audit_request.company_name if audit_request and audit_request.company_name else normalized_domain or website)
     business_type = audit_request.business_type if audit_request else ""
+    business_subtype = audit_request.business_subtype if audit_request else ""
     location = audit_request.location if audit_request else ""
+    location_mode = audit_request.location_mode if audit_request else "targeted"
+    location_country = audit_request.location_country if audit_request else ""
+    location_scope = audit_request.location_scope if audit_request else ""
+    location_area = audit_request.location_area if audit_request else ""
     target_goal = audit_request.target_goal if audit_request else ""
     primary_service = audit_request.primary_service if audit_request else ""
+    target_audience = audit_request.target_audience if audit_request else ""
 
     if audit_request:
         project = ClientProject.objects.filter(audit_request=audit_request).first()
@@ -267,9 +320,15 @@ def sync_client_project_from_audit_run(audit_run):
                     normalized_domain=normalized_domain,
                     contact_email=email,
                     business_type=business_type,
+                    business_subtype=business_subtype,
                     location=location,
+                    location_mode=location_mode,
+                    location_country=location_country,
+                    location_scope=location_scope,
+                    location_area=location_area,
                     target_goal=target_goal,
                     primary_service=primary_service,
+                    target_audience=target_audience,
                 )
     else:
         project = ClientProject.objects.filter(
@@ -283,9 +342,15 @@ def sync_client_project_from_audit_run(audit_run):
                 normalized_domain=normalized_domain,
                 contact_email=email,
                 business_type=business_type,
+                business_subtype=business_subtype,
                 location=location,
+                location_mode=location_mode,
+                location_country=location_country,
+                location_scope=location_scope,
+                location_area=location_area,
                 target_goal=target_goal,
                 primary_service=primary_service,
+                target_audience=target_audience,
             )
 
     project.name = name or project.name
@@ -294,12 +359,24 @@ def sync_client_project_from_audit_run(audit_run):
     project.contact_email = email or project.contact_email
     if business_type:
         project.business_type = business_type
+    if business_subtype:
+        project.business_subtype = business_subtype
     if location:
         project.location = location
+    if location_mode:
+        project.location_mode = location_mode
+    if location_country:
+        project.location_country = location_country
+    if location_scope:
+        project.location_scope = location_scope
+    if location_area:
+        project.location_area = location_area
     if target_goal:
         project.target_goal = target_goal
     if primary_service:
         project.primary_service = primary_service
+    if target_audience:
+        project.target_audience = target_audience
     project.latest_audit_run = audit_run
     project.latest_score = audit_run.overall_score or 0
     if email:

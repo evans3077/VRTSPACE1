@@ -1,0 +1,1293 @@
+GET
+
+
+https://serpapi.com/search.json?engine=google_flights&departure_id=PEK&arrival_id=AUS&outbound_date=2026-04-04&return_date=2026-04-10&currency=USD&hl=en
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_flights",
+  departure_id: "PEK",
+  arrival_id: "AUS",
+  outbound_date: "2026-04-04",
+  return_date: "2026-04-10",
+  currency: "USD",
+  hl: "en",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "651a585815afff2d53eb9a5e",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/e65fd34e00db9b2b/651a585815afff2d53eb9a5e.json",
+    "created_at": "2023-10-02 05:42:48 UTC",
+    "processed_at": "2023-10-02 05:42:48 UTC",
+    "google_flights_url": "https://www.google.com/travel/flights?hl=en",
+    "raw_html_file": "https://serpapi.com/searches/e65fd34e00db9b2b/651a585815afff2d53eb9a5e.html",
+    "prettify_html_file": "https://serpapi.com/searches/e65fd34e00db9b2b/651a585815afff2d53eb9a5e.prettify",
+    "total_time_taken": 0.71
+  },
+  "search_parameters": {
+    "engine": "google_flights",
+    "hl": "en",
+    "departure_id": "PEK",
+    "arrival_id": "AUS",
+    "outbound_date": "2023-10-03",
+    "return_date": "2023-10-09",
+    "currency": "USD"
+  },
+  "best_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Beijing Capital International Airport",
+            "id": "PEK",
+            "time": "2023-10-03 15:10"
+          },
+          "arrival_airport": {
+            "name": "Haneda Airport",
+            "id": "HND",
+            "time": "2023-10-03 19:35"
+          },
+          "duration": 205,
+          "airplane": "Boeing 787",
+          "airline": "ANA",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/NH.png",
+          "travel_class": "Economy",
+          "flight_number": "NH 962",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 133 kg"
+          ]
+        },
+        {
+          "departure_airport": {
+            "name": "Haneda Airport",
+            "id": "HND",
+            "time": "2023-10-03 21:05"
+          },
+          "arrival_airport": {
+            "name": "Los Angeles International Airport",
+            "id": "LAX",
+            "time": "2023-10-03 15:10"
+          },
+          "duration": 605,
+          "airplane": "Boeing 787",
+          "airline": "ANA",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/NH.png",
+          "travel_class": "Economy",
+          "flight_number": "NH 126",
+          "ticket_also_sold_by": [
+            "United"
+          ],
+          "legroom": "32 in",
+          "extensions": [
+            "Above average legroom (32 in)",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 836 kg"
+          ],
+          "overnight": true
+        },
+        {
+          "departure_airport": {
+            "name": "Los Angeles International Airport",
+            "id": "LAX",
+            "time": "2023-10-03 19:01"
+          },
+          "arrival_airport": {
+            "name": "Austin-Bergstrom International Airport",
+            "id": "AUS",
+            "time": "2023-10-03 23:59"
+          },
+          "duration": 178,
+          "airplane": "Boeing 737MAX 9 Passenger",
+          "airline": "United",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/UA.png",
+          "travel_class": "Economy",
+          "flight_number": "UA 2175",
+          "legroom": "30 in",
+          "extensions": [
+            "Average legroom (30 in)",
+            "Wi-Fi for a fee",
+            "In-seat power outlet",
+            "Stream media to your device",
+            "Carbon emissions estimate: 135 kg"
+          ]
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 90,
+          "name": "Haneda Airport",
+          "id": "HND"
+        },
+        {
+          "duration": 231,
+          "name": "Los Angeles International Airport",
+          "id": "LAX"
+        }
+      ],
+      "total_duration": 1309,
+      "carbon_emissions": {
+        "this_flight": 1106000,
+        "typical_for_this_route": 949000,
+        "difference_percent": 17
+      },
+      "price": 2512,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/multi.png",
+      "departure_token": "W1siUEVLIiwiMjAyMy0xMC0wMyIsIkhORCIsbnVsbCwiTkgiLCI5NjIiXSxbIkhORCIsIjIwMjMtMTAtMDMiLCJMQVgiLG51bGwsIk5IIiwiMTI2Il0sWyJMQVgiLCIyMDIzLTEwLTAzIiwiQVVTIixudWxsLCJVQSIsIjIxNzUiXV0="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Beijing Capital International Airport",
+            "id": "PEK",
+            "time": "2023-10-03 10:40"
+          },
+          "arrival_airport": {
+            "name": "Incheon International Airport",
+            "id": "ICN",
+            "time": "2023-10-03 13:50"
+          },
+          "duration": 130,
+          "airplane": "Airbus A330",
+          "airline": "Asiana",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/OZ.png",
+          "travel_class": "Economy",
+          "flight_number": "OZ 332",
+          "legroom": "32 in",
+          "extensions": [
+            "Above average legroom (32 in)",
+            "In-seat power outlet",
+            "On-demand video",
+            "Carbon emissions estimate: 84 kg"
+          ]
+        },
+        {
+          "departure_airport": {
+            "name": "Incheon International Airport",
+            "id": "ICN",
+            "time": "2023-10-03 20:55"
+          },
+          "arrival_airport": {
+            "name": "San Francisco International Airport",
+            "id": "SFO",
+            "time": "2023-10-03 15:30"
+          },
+          "duration": 635,
+          "airplane": "Airbus A350",
+          "airline": "Asiana",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/OZ.png",
+          "travel_class": "Economy",
+          "flight_number": "OZ 212",
+          "legroom": "32 in",
+          "extensions": [
+            "Above average legroom (32 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 619 kg"
+          ],
+          "overnight": true,
+          "often_delayed_by_over_30_min": true
+        },
+        {
+          "departure_airport": {
+            "name": "San Francisco International Airport",
+            "id": "SFO",
+            "time": "2023-10-04 07:40"
+          },
+          "arrival_airport": {
+            "name": "Austin-Bergstrom International Airport",
+            "id": "AUS",
+            "time": "2023-10-04 13:10"
+          },
+          "duration": 210,
+          "airplane": "Boeing 737",
+          "airline": "Alaska",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/AS.png",
+          "travel_class": "Economy",
+          "flight_number": "AS 512",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "Stream media to your device",
+            "Carbon emissions estimate: 175 kg"
+          ]
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 425,
+          "name": "Incheon International Airport",
+          "id": "ICN"
+        },
+        {
+          "duration": 970,
+          "name": "San Francisco International Airport",
+          "id": "SFO",
+          "overnight": true
+        }
+      ],
+      "total_duration": 2370,
+      "carbon_emissions": {
+        "this_flight": 880000,
+        "typical_for_this_route": 949000,
+        "difference_percent": -7
+      },
+      "price": 2513,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/multi.png",
+      "departure_token": "W1siUEVLIiwiMjAyMy0xMC0wMyIsIklDTiIsbnVsbCwiT1oiLCIzMzIiXSxbIklDTiIsIjIwMjMtMTAtMDMiLCJTRk8iLG51bGwsIk9aIiwiMjEyIl0sWyJTRk8iLCIyMDIzLTEwLTA0IiwiQVVTIixudWxsLCJBUyIsIjUxMiJdXQ=="
+    },
+    ...
+  ],
+  "other_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Beijing Capital International Airport",
+            "id": "PEK",
+            "time": "2023-10-03 18:30"
+          },
+          "arrival_airport": {
+            "name": "Incheon International Airport",
+            "id": "ICN",
+            "time": "2023-10-03 21:40"
+          },
+          "duration": 130,
+          "airplane": "Boeing 737MAX 8 Passenger",
+          "airline": "Korean Air",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/KE.png",
+          "travel_class": "Economy",
+          "flight_number": "KE 860",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "Stream media to your device",
+            "Carbon emissions estimate: 81 kg"
+          ]
+        },
+        {
+          "departure_airport": {
+            "name": "Incheon International Airport",
+            "id": "ICN",
+            "time": "2023-10-04 09:20"
+          },
+          "arrival_airport": {
+            "name": "Dallas/Fort Worth International Airport",
+            "id": "DFW",
+            "time": "2023-10-04 08:00"
+          },
+          "duration": 760,
+          "airplane": "Boeing 787",
+          "airline": "Korean Air",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/KE.png",
+          "travel_class": "Economy",
+          "flight_number": "KE 31",
+          "legroom": "33 in",
+          "extensions": [
+            "Above average legroom (33 in)",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 807 kg"
+          ],
+          "overnight": true
+        },
+        {
+          "departure_airport": {
+            "name": "Dallas/Fort Worth International Airport",
+            "id": "DFW",
+            "time": "2023-10-04 09:35"
+          },
+          "arrival_airport": {
+            "name": "Austin-Bergstrom International Airport",
+            "id": "AUS",
+            "time": "2023-10-04 10:40"
+          },
+          "duration": 65,
+          "airplane": "Embraer 175",
+          "airline": "American",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/AA.png",
+          "travel_class": "Economy",
+          "flight_number": "AA 3489",
+          "legroom": "30 in",
+          "extensions": [
+            "Average legroom (30 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "Stream media to your device",
+            "Carbon emissions estimate: 60 kg"
+          ]
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 700,
+          "name": "Incheon International Airport",
+          "id": "ICN",
+          "overnight": true
+        },
+        {
+          "duration": 95,
+          "name": "Dallas/Fort Worth International Airport",
+          "id": "DFW"
+        }
+      ],
+      "total_duration": 1750,
+      "carbon_emissions": {
+        "this_flight": 949000,
+        "typical_for_this_route": 949000,
+        "difference_percent": 0
+      },
+      "price": 3521,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/multi.png",
+      "departure_token": "W1siUEVLIiwiMjAyMy0xMC0wMyIsIklDTiIsbnVsbCwiS0UiLCI4NjAiXSxbIklDTiIsIjIwMjMtMTAtMDQiLCJERlciLG51bGwsIktFIiwiMzEiXSxbIkRGVyIsIjIwMjMtMTAtMDQiLCJBVVMiLG51bGwsIkFBIiwiMzQ4OSJdXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Beijing Capital International Airport",
+            "id": "PEK",
+            "time": "2023-10-03 18:30"
+          },
+          "arrival_airport": {
+            "name": "Incheon International Airport",
+            "id": "ICN",
+            "time": "2023-10-03 21:40"
+          },
+          "duration": 130,
+          "airplane": "Boeing 737MAX 8 Passenger",
+          "airline": "Korean Air",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/KE.png",
+          "travel_class": "Economy",
+          "flight_number": "KE 860",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "Stream media to your device",
+            "Carbon emissions estimate: 81 kg"
+          ]
+        },
+        {
+          "departure_airport": {
+            "name": "Incheon International Airport",
+            "id": "ICN",
+            "time": "2023-10-04 09:20"
+          },
+          "arrival_airport": {
+            "name": "Hartsfield-Jackson Atlanta International Airport",
+            "id": "ATL",
+            "time": "2023-10-04 09:50"
+          },
+          "duration": 810,
+          "airplane": "Boeing 747",
+          "airline": "Korean Air",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/KE.png",
+          "travel_class": "Economy",
+          "flight_number": "KE 35",
+          "legroom": "33 in",
+          "extensions": [
+            "Above average legroom (33 in)",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 954 kg"
+          ],
+          "overnight": true
+        },
+        {
+          "departure_airport": {
+            "name": "Hartsfield-Jackson Atlanta International Airport",
+            "id": "ATL",
+            "time": "2023-10-04 12:59"
+          },
+          "arrival_airport": {
+            "name": "Austin-Bergstrom International Airport",
+            "id": "AUS",
+            "time": "2023-10-04 14:18"
+          },
+          "duration": 139,
+          "airplane": "Airbus A321",
+          "airline": "Delta",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/DL.png",
+          "travel_class": "Economy",
+          "flight_number": "DL 1384",
+          "ticket_also_sold_by": [
+            "Korean Air"
+          ],
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Free Wi-Fi",
+            "In-seat power & USB outlets",
+            "Live TV",
+            "Carbon emissions estimate: 109 kg"
+          ]
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 700,
+          "name": "Incheon International Airport",
+          "id": "ICN",
+          "overnight": true
+        },
+        {
+          "duration": 189,
+          "name": "Hartsfield-Jackson Atlanta International Airport",
+          "id": "ATL"
+        }
+      ],
+      "total_duration": 1968,
+      "carbon_emissions": {
+        "this_flight": 1146000,
+        "typical_for_this_route": 949000,
+        "difference_percent": 21
+      },
+      "price": 3521,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/multi.png",
+      "departure_token": "W1siUEVLIiwiMjAyMy0xMC0wMyIsIklDTiIsbnVsbCwiS0UiLCI4NjAiXSxbIklDTiIsIjIwMjMtMTAtMDQiLCJBVEwiLG51bGwsIktFIiwiMzUiXSxbIkFUTCIsIjIwMjMtMTAtMDQiLCJBVVMiLG51bGwsIkRMIiwiMTM4NCJdXQ=="
+    },
+    ...
+  ],
+  "price_insights": {
+    "lowest_price": 2512,
+    "price_level": "high",
+    "typical_price_range": [
+      1500,
+      1900
+    ],
+    "price_history": [
+      [
+        1691424000,
+        1877
+      ],
+      [
+        1691510400,
+        1915
+      ],
+      ...,
+      [
+        1696089600,
+        2309
+      ],
+      [
+        1696176000,
+        2512
+      ]
+    ]
+  },
+  "airports": [
+    {
+      "departure": [
+        {
+          "airport": {
+            "name": "Beijing Capital International Airport",
+            "id": "PEK"
+          },
+          "city": "Beijing",
+          "country": "China",
+          "country_code": "CN",
+          "image": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ9v_tNYxaummsU2qbFn8zuYzkcG0x6qCvqB2gbBnx-2FVlZZPsnkvUXGk07vxotk-0vRQMUYCjj2d4Wg",
+          "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSzsj_yw6o3vb8i54_D21VgI5rTohxexQkZ0TrZKDKJwTSKw2yqnRYLoIcBWIY50BlHo-OPMm68zbUO-qnFvmQmm6jvtWPwo7WOzjNGX_A"
+        }
+      ],
+      "arrival": [
+        {
+          "airport": {
+            "name": "Austin-Bergstrom International Airport",
+            "id": "AUS"
+          },
+          "city": "Austin",
+          "country": "United States",
+          "country_code": "US",
+          "image": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRKdjkMcBZuGRD1MjnuLQvdGtpTk0RyjdYs0Z8JsPtfIjer-6VvmfmMLxzvBkeyUrhf_focikfda4rVHg",
+          "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSQ73FSj9E8pKaNvjWKyEDQGfLV-pky_onARvOY-zHWvQ-hOuPJSqyyXzvyg4-kGGAcZxdO6T5SYGWBzrX8x6MSPq7gBHsSLzX9MYjFJWA"
+        }
+      ]
+    },
+    {
+      "departure": [
+        {
+          "airport": {
+            "name": "John F. Kennedy International Airport",
+            "id": "JFK"
+          },
+          "city": "New York",
+          "country": "United States",
+          "country_code": "US",
+          "image": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQXj9frEFT6DZoIoTn-QoPoV3oZxBBgHclLt7dHsHG6B1AGu8zJzYmj_4rFxyc",
+          "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSO9yu_buXnYWg4cXn3J8RU6YZyOG59BovV4PfIt8x5_lc5F8-9l9Yxv9oIH8"
+        }
+      ],
+      "arrival": [
+        {
+          "airport": {
+            "name": "London Heathrow Airport",
+            "id": "LHR"
+          },
+          "city": "London",
+          "country": "United Kingdom",
+          "country_code": "GB",
+          "image": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcS1nKcZksZTFlL5sKtK3HZf2wPzU-QdOcE6XQulTyP5WBGXlb1D-8FbfyCTFbU",
+          "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcS_kdUQHgJlIUl0c3uHq6LfVRfHRyKP9dJUpge3DEx8HmxldzLZQw1xCdLfYM"
+        }
+      ]
+    }
+  ],
+  ...
+}
+Example with 
+departure_id
+:
+CDG,ORY
+(multiple departure airports)
+GET
+
+
+https://serpapi.com/search.json?engine=google_flights&departure_id=CDG,ORY&arrival_id=LAX&outbound_date=2026-04-04&return_date=2026-04-10&currency=USD&hl=en
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_flights",
+  departure_id: "CDG,ORY",
+  arrival_id: "LAX",
+  outbound_date: "2026-04-04",
+  return_date: "2026-04-10",
+  currency: "USD",
+  hl: "en",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+
+JSON Example
+
+{
+  ...
+  "best_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Paris Charles de Gaulle Airport",
+            "id": "CDG",
+            "time": "2024-03-20 18:50"
+          },
+          "arrival_airport": {
+            "name": "Istanbul Airport",
+            "id": "IST",
+            "time": "2024-03-21 00:20"
+          },
+          ...
+        },
+        {
+          "departure_airport": {
+            "name": "Istanbul Airport",
+            "id": "IST",
+            "time": "2024-03-21 08:00"
+          },
+          "arrival_airport": {
+            "name": "Los Angeles International Airport",
+            "id": "LAX",
+            "time": "2024-03-21 11:55"
+          },
+          ...
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 460,
+          "name": "Istanbul Airport",
+          "id": "IST",
+          "overnight": true
+        }
+      ],
+      "total_duration": 1505,
+      "price": 887,
+      "type": "Round trip",
+      ...
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Paris-Orly Airport",
+            "id": "ORY",
+            "time": "2024-03-20 07:00"
+          },
+          "arrival_airport": {
+            "name": "London Gatwick Airport",
+            "id": "LGW",
+            "time": "2024-03-20 07:10"
+          },
+          ...
+        },
+        {
+          "departure_airport": {
+            "name": "London Gatwick Airport",
+            "id": "LGW",
+            "time": "2024-03-20 10:35"
+          },
+          "arrival_airport": {
+            "name": "Los Angeles International Airport",
+            "id": "LAX",
+            "time": "2024-03-20 15:10"
+          },
+          ...
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 205,
+          "name": "London Gatwick Airport",
+          "id": "LGW"
+        }
+      ],
+      "total_duration": 970,
+      "price": 890,
+      "type": "Round trip",
+      ...
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Paris Charles de Gaulle Airport",
+            "id": "CDG",
+            "time": "2024-03-20 13:15"
+          },
+          "arrival_airport": {
+            "name": "Dublin Airport",
+            "id": "DUB",
+            "time": "2024-03-20 14:05"
+          },
+          ...
+        },
+        {
+          "departure_airport": {
+            "name": "Dublin Airport",
+            "id": "DUB",
+            "time": "2024-03-20 15:20"
+          },
+          "arrival_airport": {
+            "name": "Los Angeles International Airport",
+            "id": "LAX",
+            "time": "2024-03-20 19:35"
+          },
+          ...
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 75,
+          "name": "Dublin Airport",
+          "id": "DUB"
+        }
+      ],
+      "total_duration": 860,
+      "price": 1240,
+      "type": "Round trip",
+      ...
+    }
+  ],
+  "airports": [
+    {
+      "departure": [
+        {
+          "airport": {
+            "name": "Paris Charles de Gaulle Airport",
+            "id": "CDG"
+          },
+          "city": "Paris",
+          "country": "France",
+          "country_code": "FR",
+          "image": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ9v_tNYxaummsU2qbFn8zuYzkcG0x6qCvqB2gbBnx-2FVlZZPsnkvUXGk07vxotk-0vRQMUYCjj2d4Wg",
+          "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSzsj_yw6o3vb8i54_D21VgI5rTohxexQkZ0TrZKDKJwTSKw2yqnRYLoIcBWIY50BlHo-OPMm68zbUO-qnFvmQmm6jvtWPwo7WOzjNGX_A"
+        },
+        {
+          "airport": {
+            "name": "Paris-Orly Airport",
+            "id": "ORY"
+          },
+          "city": "Paris",
+          "country": "France",
+          "country_code": "FR",
+          "image": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcQGx8ii2KbSDdbdzfKye5oDN2bwBA6audqI7XUEf2iMRZezpn_ZbQe1ZIuvUSH-8XOMe958umDwSsAF1w",
+          "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSyQJ-woNs0iO22mPSkmRUM5gcsTbbYeypQ6BBTeFxXr90mqTxZl57Fdq2CDuLn4w7cKZ8TT9_zZhOpF57rIpA7yWKQnqKvkKIf9Y-qJDo"
+        },
+        ...
+      ],
+      "arrival": [
+        {
+          "airport": {
+            "name": "Los Angeles International Airport",
+            "id": "LAX"
+          },
+          "city": "Los Angeles",
+          "country": "United States",
+          "country_code": "US",
+          "image": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRKdjkMcBZuGRD1MjnuLQvdGtpTk0RyjdYs0Z8JsPtfIjer-6VvmfmMLxzvBkeyUrhf_focikfda4rVHg",
+          "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSQ73FSj9E8pKaNvjWKyEDQGfLV-pky_onARvOY-zHWvQ-hOuPJSqyyXzvyg4-kGGAcZxdO6T5SYGWBzrX8x6MSPq7gBHsSLzX9MYjFJWA"
+        },
+        ...
+      ]
+    },
+    ...
+  ],
+  ...
+}
+Multi-city example
+Use departure_token to select the flight and get flights for the next leg of itinerary.
+
+GET
+
+
+https://serpapi.com/search.json?engine=google_flights&currency=USD&hl=en&type=3&multi_city_json=[{"departure_id":"CDG","arrival_id":"NRT","date":"2026-04-10"},{"departure_id":"NRT","arrival_id":"LAX,SEA","date":"2026-04-17"},{"departure_id":"LAX,SEA","arrival_id":"AUS","date":"2026-04-24","times":"8,18,9,23"}]
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_flights",
+  currency: "USD",
+  hl: "en",
+  type: "3",
+  multi_city_json: "[{"departure_id":"CDG","arrival_id":"NRT","date":"2026-04-10"},{"departure_id":"NRT","arrival_id":"LAX,SEA","date":"2026-04-17"},{"departure_id":"LAX,SEA","arrival_id":"AUS","date":"2026-04-24","times":"8,18,9,23"}]",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+
+JSON Example
+
+{
+  ...
+  "best_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Paris Charles de Gaulle Airport",
+            "id": "CDG",
+            "time": "2024-07-16 09:10"
+          },
+          "arrival_airport": {
+            "name": "Montréal-Pierre Elliott Trudeau International Airport",
+            "id": "YUL",
+            "time": "2024-07-16 10:45"
+          },
+          ...
+        },
+        {
+          "departure_airport": {
+            "name": "Montréal-Pierre Elliott Trudeau International Airport",
+            "id": "YUL",
+            "time": "2024-07-16 12:50"
+          },
+          "arrival_airport": {
+            "name": "Narita International Airport",
+            "id": "NRT",
+            "time": "2024-07-17 15:25"
+          },
+          ...
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 125,
+          "name": "Montréal-Pierre Elliott Trudeau International Airport",
+          "id": "YUL"
+        }
+      ],
+      "total_duration": 1395,
+      "price": 3124,
+      "type": "Multi-city",
+      ...
+      "departure_token": "WyJDalJJU21sa1NWOWZibGMwVGpCQlEwZGplbmRDUnkwdExTMHRMUzB0TFhWcWFHMHpNMEZCUVVGQlIyRk5lVUZqU2tKbFJXRkJFZ2xCUXpnM05YeEJRelVhQ3dqUGlCTVFBaG9EVlZORU9CeHd6NGdUIixbWyJDREciLCIyMDI0LTA3LTE2IiwiWVVMIixudWxsLCJBQyIsIjg3NSJdLFsiWVVMIiwiMjAyNC0wNy0xNiIsIk5SVCIsbnVsbCwiQUMiLCI1Il1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Paris Charles de Gaulle Airport",
+            "id": "CDG",
+            "time": "2024-07-16 13:25"
+          },
+          "arrival_airport": {
+            "name": "Shanghai Pudong International Airport",
+            "id": "PVG",
+            "time": "2024-07-17 07:00"
+          },
+          ...
+        },
+        {
+          "departure_airport": {
+            "name": "Shanghai Pudong International Airport",
+            "id": "PVG",
+            "time": "2024-07-17 09:05"
+          },
+          "arrival_airport": {
+            "name": "Narita International Airport",
+            "id": "NRT",
+            "time": "2024-07-17 12:50"
+          },
+          ...
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 125,
+          "name": "Shanghai Pudong International Airport",
+          "id": "PVG"
+        }
+      ],
+      "total_duration": 985,
+      "price": 4174,
+      "type": "Multi-city",
+      ...
+      "departure_token": "WyJDalJJU21sa1NWOWZibGMwVGpCQlEwZGplbmRDUnkwdExTMHRMUzB0TFhWcWFHMHpNMEZCUVVGQlIyRk5lVUZqU2tKbFJXRkJFZ3ROVlRVMU5IeE5WVFV5TXhvTENQYThHUkFDR2dOVlUwUTRISEQydkJrPSIsW1siQ0RHIiwiMjAyNC0wNy0xNiIsIlBWRyIsbnVsbCwiTVUiLCI1NTQiXSxbIlBWRyIsIjIwMjQtMDctMTciLCJOUlQiLG51bGwsIk1VIiwiNTIzIl1dXQ=="
+    }
+  ],
+  "other_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Paris Charles de Gaulle Airport",
+            "id": "CDG",
+            "time": "2024-07-16 21:20"
+          },
+          "arrival_airport": {
+            "name": "Shanghai Pudong International Airport",
+            "id": "PVG",
+            "time": "2024-07-17 14:40"
+          },
+          ...
+        },
+        {
+          "departure_airport": {
+            "name": "Shanghai Pudong International Airport",
+            "id": "PVG",
+            "time": "2024-07-17 16:55"
+          },
+          "arrival_airport": {
+            "name": "Narita International Airport",
+            "id": "NRT",
+            "time": "2024-07-17 20:55"
+          },
+          ...
+        }
+      ],
+      "layovers": [
+        {
+          "duration": 135,
+          "name": "Shanghai Pudong International Airport",
+          "id": "PVG"
+        }
+      ],
+      "total_duration": 995,
+      "price": 4174,
+      "type": "Multi-city",
+      ...
+      "departure_token": "WyJDalJJU21sa1NWOWZibGMwVGpCQlEwZGplbmRDUnkwdExTMHRMUzB0TFhWcWFHMHpNMEZCUVVGQlIyRk5lVUZqU2tKbFJXRkJFZ3ROVlRVM01IeE5WVEkzTVJvTENQYThHUkFDR2dOVlUwUTRISEQydkJrPSIsW1siQ0RHIiwiMjAyNC0wNy0xNiIsIlBWRyIsbnVsbCwiTVUiLCI1NzAiXSxbIlBWRyIsIjIwMjQtMDctMTciLCJOUlQiLG51bGwsIk1VIiwiMjcxIl1dXQ=="
+    },
+    ...
+  ],
+  "airports": [
+    {
+      "departure": [
+        {
+          "airport": {
+            "name": "Paris Charles de Gaulle Airport",
+            "id": "CDG"
+          },
+          "city": "Paris",
+          "country": "France",
+          "country_code": "FR",
+          "image": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQ9v_tNYxaummsU2qbFn8zuYzkcG0x6qCvqB2gbBnx-2FVlZZPsnkvUXGk07vxotk-0vRQMUYCjj2d4Wg",
+          "thumbnail": "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcSzsj_yw6o3vb8i54_D21VgI5rTohxexQkZ0TrZKDKJwTSKw2yqnRYLoIcBWIY50BlHo-OPMm68zbUO-qnFvmQmm6jvtWPwo7WOzjNGX_A"
+        },
+        {
+          "airport": {
+            "name": "Narita International Airport",
+            "id": "NRT"
+          },
+          "city": "Tokyo",
+          "country": "Japan",
+          "country_code": "JP",
+          "image": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRLnIToEgwiM_jV3cbw5eQZoUAIg6XqdrJAiClDyyg0w-JBSRN5ZeOT-iFb3SvwkwP1uoBCmT-gKE5VcyCYf-xq4guL4NAFICSaNyOnYOA",
+          "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRLnIToEgwiM_jV3cbw5eQZoUAIg6XqdrJAiClDyyg0w-JBSRN5ZeOT-iFb3SvwkwP1uoBCmT-gKE5VcyCYf-xq4guL4NAFICSaNyOnYOA"
+        },
+        ...
+      ],
+      "arrival": [
+        {
+          "airport": {
+            "name": "Austin-Bergstrom International Airport",
+            "id": "AUS"
+          },
+          "city": "Austin",
+          "country": "United States",
+          "country_code": "US",
+          "image": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcRKdjkMcBZuGRD1MjnuLQvdGtpTk0RyjdYs0Z8JsPtfIjer-6VvmfmMLxzvBkeyUrhf_focikfda4rVHg",
+          "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcSQ73FSj9E8pKaNvjWKyEDQGfLV-pky_onARvOY-zHWvQ-hOuPJSqyyXzvyg4-kGGAcZxdO6T5SYGWBzrX8x6MSPq7gBHsSLzX9MYjFJWA"
+        },
+        ...
+      ]
+    },
+    ...
+  ],
+  ...
+}
+Example with 
+exclude_basic
+:
+true
+(Economy (exclude basic))
+Use exclude_basic to filter Economy flights which include carry-on bags and free seat selection.
+
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "68d55f17fc8a2b590a866dc5",
+    "status": "Success",
+    "json_endpoint": "https://www.serpapi.com/searches/247809397c7209a6/68d55f17fc8a2b590a866dc5.json",
+    "created_at": "2025-09-25 15:26:15 UTC",
+    "processed_at": "2025-09-25 15:26:15 UTC",
+    "google_flights_url": "https://www.google.com/travel/flights?hl=en&gl=us&curr=USD&tfs=CBwQAhoeEgoyMDI1LTEwLTE0agcIARIDTEFYcgcIARIDQVVTGh4SCjIwMjUtMTAtMjFqBwgBEgNBVVNyBwgBEgNMQVhCAQFIAXABmAEByAEB&tfu=EgIIAQ",
+    "raw_html_file": "https://www.serpapi.com/searches/247809397c7209a6/68d55f17fc8a2b590a866dc5.html",
+    "prettify_html_file": "https://www.serpapi.com/searches/247809397c7209a6/68d55f17fc8a2b590a866dc5.prettify",
+    "total_time_taken": 1.37
+  },
+  "search_parameters": {
+    "engine": "google_flights",
+    "hl": "en",
+    "gl": "us",
+    "departure_id": "LAX",
+    "arrival_id": "AUS",
+    "outbound_date": "2025-10-14",
+    "return_date": "2025-10-21",
+    "travel_class": 1,
+    "currency": "USD",
+    "exclude_basic": true
+  },
+  "best_flights": [
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Los Angeles International Airport",
+            "id": "LAX",
+            "time": "2025-10-14 11:30"
+          },
+          "arrival_airport": {
+            "name": "Austin-Bergstrom International Airport",
+            "id": "AUS",
+            "time": "2025-10-14 16:25"
+          },
+          "duration": 175,
+          "airplane": "Boeing 737MAX 8 Passenger",
+          "airline": "Southwest",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/WN.png",
+          "travel_class": "Economy",
+          "flight_number": "WN 649",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Wi-Fi",
+            "In-seat USB outlet",
+            "Stream media to your device",
+            "Carbon emissions estimate: 150 kg"
+          ]
+        }
+      ],
+      "total_duration": 175,
+      "carbon_emissions": {
+        "this_flight": 151000,
+        "typical_for_this_route": 187000,
+        "difference_percent": -19
+      },
+      "price": 393,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/WN.png",
+      "extensions": [
+        "Checked baggage for a fee",
+        "Bag and fare conditions depend on the return flight"
+      ],
+      "departure_token": "WyJDalJJUW05cFJuUndUakJuTFZWQlJrRXdTbEZDUnkwdExTMHRMUzB0TFhkaVltWm1Na0ZCUVVGQlIycFdXSGhyUzI1TWJIbEJFZ1ZYVGpZME9Sb0xDUGF5QWhBQ0dnTlZVMFE0SEhEMnNnST0iLFtbIkxBWCIsIjIwMjUtMTAtMTQiLCJBVVMiLG51bGwsIldOIiwiNjQ5Il1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Los Angeles International Airport",
+            "id": "LAX",
+            "time": "2025-10-14 10:04"
+          },
+          "arrival_airport": {
+            "name": "Austin-Bergstrom International Airport",
+            "id": "AUS",
+            "time": "2025-10-14 15:10"
+          },
+          "duration": 186,
+          "airplane": "Boeing 737",
+          "airline": "Delta",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/DL.png",
+          "travel_class": "Economy",
+          "flight_number": "DL 986",
+          "legroom": "31 in",
+          "extensions": [
+            "Average legroom (31 in)",
+            "Free Wi-Fi",
+            "In-seat power & USB outlets",
+            "Live TV",
+            "Carbon emissions estimate: 175 kg"
+          ]
+        }
+      ],
+      "total_duration": 186,
+      "carbon_emissions": {
+        "this_flight": 176000,
+        "typical_for_this_route": 187000,
+        "difference_percent": -6
+      },
+      "price": 464,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/DL.png",
+      "extensions": [
+        "Checked baggage for a fee",
+        "Bag and fare conditions depend on the return flight"
+      ],
+      "departure_token": "WyJDalJJUW05cFJuUndUakJuTFZWQlJrRXdTbEZDUnkwdExTMHRMUzB0TFhkaVltWm1Na0ZCUVVGQlIycFdXSGhyUzI1TWJIbEJFZ1ZFVERrNE5ob0xDTDdxQWhBQ0dnTlZVMFE0SEhDKzZnST0iLFtbIkxBWCIsIjIwMjUtMTAtMTQiLCJBVVMiLG51bGwsIkRMIiwiOTg2Il1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Los Angeles International Airport",
+            "id": "LAX",
+            "time": "2025-10-14 07:45"
+          },
+          "arrival_airport": {
+            "name": "Austin-Bergstrom International Airport",
+            "id": "AUS",
+            "time": "2025-10-14 12:44"
+          },
+          "duration": 179,
+          "airplane": "Boeing 737",
+          "airline": "American",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/AA.png",
+          "travel_class": "Economy",
+          "flight_number": "AA 821",
+          "ticket_also_sold_by": [
+            "Alaska"
+          ],
+          "legroom": "30 in",
+          "extensions": [
+            "Average legroom (30 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "Stream media to your device",
+            "Carbon emissions estimate: 185 kg"
+          ]
+        }
+      ],
+      "total_duration": 179,
+      "carbon_emissions": {
+        "this_flight": 186000,
+        "typical_for_this_route": 187000,
+        "difference_percent": -1
+      },
+      "price": 473,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/AA.png",
+      "extensions": [
+        "Checked baggage for a fee",
+        "Bag and fare conditions depend on the return flight"
+      ],
+      "departure_token": "WyJDalJJUW05cFJuUndUakJuTFZWQlJrRXdTbEZDUnkwdExTMHRMUzB0TFhkaVltWm1Na0ZCUVVGQlIycFdXSGhyUzI1TWJIbEJFZ1ZCUVRneU1Sb0xDTUh4QWhBQ0dnTlZVMFE0SEhEQjhRST0iLFtbIkxBWCIsIjIwMjUtMTAtMTQiLCJBVVMiLG51bGwsIkFBIiwiODIxIl1dXQ=="
+    },
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "Los Angeles International Airport",
+            "id": "LAX",
+            "time": "2025-10-14 10:35"
+          },
+          "arrival_airport": {
+            "name": "Austin-Bergstrom International Airport",
+            "id": "AUS",
+            "time": "2025-10-14 15:38"
+          },
+          "duration": 183,
+          "airplane": "Boeing 737MAX 8 Passenger",
+          "airline": "United",
+          "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/UA.png",
+          "travel_class": "Economy",
+          "flight_number": "UA 1990",
+          "legroom": "30 in",
+          "extensions": [
+            "Average legroom (30 in)",
+            "Wi-Fi for a fee",
+            "In-seat power & USB outlets",
+            "On-demand video",
+            "Carbon emissions estimate: 197 kg"
+          ]
+        }
+      ],
+      "total_duration": 183,
+      "carbon_emissions": {
+        "this_flight": 197000,
+        "typical_for_this_route": 187000,
+        "difference_percent": 5
+      },
+      "price": 473,
+      "type": "Round trip",
+      "airline_logo": "https://www.gstatic.com/flights/airline_logos/70px/UA.png",
+      "extensions": [
+        "Checked baggage for a fee",
+        "Bag and fare conditions depend on the return flight"
+      ],
+      "departure_token": "WyJDalJJUW05cFJuUndUakJuTFZWQlJrRXdTbEZDUnkwdExTMHRMUzB0TFhkaVltWm1Na0ZCUVVGQlIycFdXSGhyUzI1TWJIbEJFZ1pWUVRFNU9UQWFDd2pCOFFJUUFob0RWVk5FT0J4d3dmRUMiLFtbIkxBWCIsIjIwMjUtMTAtMTQiLCJBVVMiLG51bGwsIlVBIiwiMTk5MCJdXV0="
+    }
+  ],
+  ...
+}
+JSON structure overview
+{
+  ...
+  "best_flights": [
+    // best_flights is not always returned
+    {
+      "flights": [
+        {
+          "departure_airport": {
+            "name": "String - Departure airport name",
+            "id": "String - Departure airport code",
+            "time": "String - Departure time"
+          },
+          "arrival_airport": {
+            "name": "String - Arrival airport name",
+            "id": "String - Arrival airport code",
+            "time": "String - Arrival time"
+          },
+          "duration": "Integer - Flight duration, in minutes",
+          "airplane": "String - Airplane model",
+          "airline": "String - Name of the airline",
+          "airline_logo": "String - URL to the logo of the airline",
+          "travel_class": "String - Travel class",
+          "flight_number": "String - The flight number",
+          "extensions": "Array - A list of flight features",
+          "ticket_also_sold_by": "Array - A list of other sellers",
+          "legroom": "String - The legroom, including unit",
+          "overnight": "Boolean - Returns 'true' if the flight is overnight",
+          "often_delayed_by_over_30_min": "Boolean - Returns 'true' if the flight is often delayed by 30+ min.",
+          "plane_and_crew_by": "String - Information about operating airline that provides the plane and the crew",
+        }
+      ],
+      "layovers": [
+        {
+          "duration": "Integer - Duration of the layover, in minutes",
+          "name": "String - Name of the airport for the layover",
+          "id": "String - The airport code for the layover",
+          "overnight": "Boolean - Returns 'true' if the layover is overnight",
+        }
+      ],
+      "total_duration": "Integer - Total minutes of all flights and layovers",
+      "carbon_emissions": {
+        "this_flight": "Integer - The amount of carbon emissions of the flight, in grams",
+        "typical_for_this_route": "Integer - Typical amount of carbon emissions for the route, in grams",
+        "difference_percent": "Integer - The carbon emissions difference between the flight and typical value, in percent",
+      },
+      "price": "Integer - This ticket price in the selected currency, the default currency is USD",
+      "type": "String - The type of the flight. It's a reflection of the request parameter `type`",
+      "airline_logo": "String - URL to the logo of mixed airlines",
+      "extensions": "Array - A list of features of the entire flight",
+      "departure_token": "String - The token for retrieving returning flights when the flight type is 'Round trip'",
+      "booking_token": "String - The token for retrieving booking options for selected flights",
+    }
+  ],
+  "other_flights": [
+    // The same structure as best_flights
+    // When the results are not separated into best_flights and other_flights, they are in other_flights
+  ]
+  "price_insights": {
+    "lowest_price": "Integer - The lowest price among the returned flights",
+    "price_level": "String - Price level of the lowest_price",
+    "typical_price_range": "Array - A two-integer array, indicating the low bound and high bound of 'typical' price of this flight",
+    "price_history": "Array - A two-integer array, where the first element is the timestamp, and the second one is the price",
+  },
+  "airports": [
+    {
+      "departure": [
+        {
+          "airport": {
+            "name": "String - Departure airport name",
+            "id": "String - Departure airport code"
+          },
+          "city": "String - Departure city",
+          "country": "String - Departure country name",
+          "country_code": "String - Departure country code",
+          "image": "String - URL to the image of the departure city",
+          "thumbnail": "String - URL to the thumbnail image of the departure city"
+        },
+      ],
+      "arrival": [
+        {
+          "airport": {
+            "name": "String - Arrival airport name",
+            "id": "String - Arrival airport code"
+          },
+          "city": "String - Arrival city",
+          "country": "String - Arrival country name",
+          "country_code": "String - Arrival country code",
+          "image": "String - URL to the image of the arrival city",
+          "thumbnail": "String - URL to the thumbnail image of the arrival city"
+        },
+      ]
+    },
+  ],
+  ...
+}

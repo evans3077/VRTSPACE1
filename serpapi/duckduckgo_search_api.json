@@ -1,0 +1,1537 @@
+{
+"search_metadata":
+{
+"id":
+"696802971748c033b65e2efa",
+"status":
+"Success",
+"json_endpoint":
+"https://serpapi.com/searches/5fcf07693972f233/696802971748c033b65e2efa.json",
+"created_at":
+"2026-01-14 20:54:47 UTC",
+"processed_at":
+"2026-01-14 20:54:47 UTC",
+"duckduckgo_url":
+"https://duckduckgo.com/?q=Apple&kl=us-en",
+"raw_html_file":
+"https://serpapi.com/searches/5fcf07693972f233/696802971748c033b65e2efa.html",
+"prettify_html_file":
+"https://serpapi.com/searches/5fcf07693972f233/696802971748c033b65e2efa.prettify",
+"total_time_taken":
+0.89
+},
+"search_parameters":
+{
+"engine":
+"duckduckgo",
+"q":
+"Apple",
+"kl":
+"us-en"
+},
+"search_information":
+{
+"organic_results_state":
+"Results for exact spelling"
+},
+"search_assist":
+{
+"answer":
+"Apple Inc. is an American multinational technology company known for its consumer electronics, software, and online services, founded in 1976 by Steve Jobs, Steve Wozniak, and Ronald Wayne. Its popular products include the iPhone, iPad, Mac, and Apple Watch, and it is headquartered in Cupertino, California.",
+"expanded_answer":
+"## Overview of Apple Inc.
+
+Apple Inc. is a leading American multinational technology company, headquartered in Cupertino, California. It was founded on April 1, 1976, by Steve Jobs, Steve Wozniak, and Ronald Wayne. Initially named Apple Computer Company, it was renamed Apple Inc. in 2007 to reflect its broader focus beyond computers.
+
+## Key Products and Services
+
+Apple is renowned for its innovative consumer electronics and software. Its main products include:
+
+| Product Category | Examples |
+|-----------------------|-----------------------------------|
+| Smartphones | iPhone |
+| Tablets | iPad |
+| Laptops | MacBook Air, MacBook Pro |
+| Wearables | Apple Watch |
+| Home Devices | Apple TV, HomePod |
+| Accessories | AirPods, AirTag |
+
+In addition to hardware, Apple offers various services such as:
+
+| Service Category | Examples |
+|-----------------------|-----------------------------------|
+| Streaming | Apple Music, Apple TV+ |
+| Cloud Services | iCloud |
+| Payment Services | Apple Pay |
+| App Store | App distribution platform |
+
+## Financial Performance
+
+As of 2025, Apple reported impressive financial figures:
+
+- **Revenue**: $416 billion
+- **Operating Income**: $133 billion
+- **Number of Employees**: 166,000
+
+## Corporate Structure
+
+Apple operates globally with approximately 540 retail stores. The company is publicly traded on the Nasdaq under the ticker symbol AAPL. Tim Cook serves as the CEO, and Arthur Levinson is the chairman.
+
+Apple continues to be a dominant player in the technology sector, known for its commitment to innovation and customer loyalty.",
+"sources":
+[
+{
+"link":
+"https://en.wikipedia.org/wiki/Apple_Inc.",
+"site":
+"Wikipedia",
+"text":
+"Apple Inc."
+}
+]
+},
+"ads":
+[
+{
+"position":
+1,
+"title":
+"Apple - Official Site - Explore new products",
+"link":
+"https://duckduckgo.com/y.js?ad_domain=apple.com&ad_provider=bingv7aa&ad_type=txad&click_metadata=mmpzEUH7RsYnOv7ry1%2DvLlWlPN0jf3uF2YdT5lDBtM4r_CMDh8izMMPrKe7AKg0a4_cIF20tPBBKaqH%2Da8cT2_CXPS9vaxR%2DTZdACsdZrmfbX9Mx8b4KtkhTw8m_bzNZKuU4q%2DMI5gDr6GFHIM4ZqcIRZ8E_CV7XuudNHqZmk92RFR%2DMEgrgtAS1tNVdCTmV.egWBLQDLc4ZUqWfo9OBorg&eddgt=appfVtrprDF0FgakCTOyQA%3D%3D&rut=30bcccea8c57046739602d0db9c004c34afe40be6aaeb7396f13ed6ecd102132&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De8%2DFIIFrevMNi1EUUgNvqOJTVUCUzGkQyDbhWu_qHfA0231dkUpHXOtJUJ6TV3xl2H8K1kfDZaAHN2TXn3bxRBry3TAMmlkcs1OubzSH0KTYt36IkWUTQK18rqMxTJ83%2DZukTdeKzUQSEiJRCdtt_V9wxvcYMHjhzCAax5cbiuK4BaR_Bb%2DwrDNDjzyCu544laBZPGg03s6CUIA9%2DwHMepnof4Be_bA9RYU3_j_DyeISW69ZGxuacHRMyzwX46hW2%2D75GX6b2J_lawQYdCXCxh9fKyX6bKB18EcpBSVTvpbUnUBg77vMSdmOEhapew%2D56_KM8nS7rkbyV0h8yxGBlSWhXRs9J8g9Qgk%2DLFJu03epXUJdiButxoNIs_Y2n8bCCafXHpeVyRCLz2xlyjb8TGd7P46K2mjIrIDEhGThUwCoEaFj1yZlyOtCIbRoZWGn87kH5EBAO6hwM3x3h6XV0CmVmZUP7K7Oud3HxAW0XntisaItc2sTLGl8Hpb8YL7THctF1fGdTcA_F4Rs5B0azCeMFvTtwmUCoNymYTZ2s8w_cf1qc51ThxGtwmQauz7e30dHgLwinHtPYqq3et%2DbkSxtEh_hqZq90Hx8F%2DEVvDt8FrFGnKx4dg9g30a3D5ccMm0IHbmZSbgFnjMEh8vJI_msIl2wRMQ1rRQNJa76_pVbUnAsH0NbExsPAM_2HfrwCMpCvA%2DOTUZc5_nqFAoB6vjTBlbwdAMbGv_ocjdvIC42lPcUdxZNNkJXdjSvtjXPQTzMn_6T8uSqDX%2DUFR5bP5XSvuHGg%26u%3DaHR0cHMlM2ElMmYlMmZ3d3cuYXBwbGUuY29tJTJmdXMlMmZzaG9wJTJmZ28lMmZzdG9yZSUzZmNpZCUzZGFvcy11cy1rd2JpLWJyYW5kLXVwZGF0ZS0xMTAzMjUtJTI2YW9zaWQlM2RwMjQwJTI2a2VuX3BpZCUzZGJpJTdlY21wLTY5ODE5OTYyMyU3ZWFkZy0xMjQ1NzQ4MDExOTE2NDE5JTdlYWQtNzc4NTkzODczMjkwMDBfa3dkLTc3ODU5NjIzNTIyMDUwJTNhbG9jLTE5MCU3ZWRldi1jJTdlZXh0LSU3ZXByZC0lN2VudC1zZWFyY2glN2VjcmlkLSUyNnRva2VuJTNkOGMxYTc2YWItY2ZlNS00MzgwLWI1NTEtZTc1NWEzYjQ4YmM4%26rlid%3Da6e4aa0403c81b15189cc36c01513617&vqd=4-63619280557438329653044946133612834697&iurl=%7B1%7DIG%3D04FD9FE35BD4446C8EA925921A5B876E%26CID%3D01ED74FBACA16010324C621AAD0C6184%26ID%3DDevEx%2C5058.1",
+"source":
+"apple.com",
+"snippet":
+"Get to know iPhone 17 Pro, iPhone 17, and the all-new iPhone Air. Buy now. Also shop Mac, iPad, Apple Watch, AirPods and more.",
+"sitelinks":
+[
+{
+"title":
+"iPhone",
+"link":
+"https://duckduckgo.com/y.js?ad_domain=apple.com&ad_provider=bingv7aa&ad_type=txad&click_metadata=5H4%2DIEtMhsMNIQ3eDpqaTzfV6UYxPHzNRn4rTcomYr6yKk09VPrQ8E%2D%2DzaCO5rb1wJp9DPNoPU1Yosp4xhGArTuusJ7bnnKHQGPtfN1cgq7i13ojsy1e9JVyGXzych0AoMkxnWSImIc3CHy7vgk3crlI4kCYOlsEItfAqMLcPa1r47W8iuAcQOlJCEg_ml82.DWUrv2tITDSH24aS9RcK5A&eddgt=appfVtrprDF0FgakCTOyQA%3D%3D&rut=d8f360b2d63369ea3bc5d8cc30d80e2e01e41043867691a5cd7f3654f81520db&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De88NTvaMHhICeBVwzRgVuWtDVUCUwRXpAN6_47qkYmP9bN83kkh3ZjKW4g7AL5GTj2weBprSt4t0wT7kR%2DxEmhn%2DKFgTmx8s7re7EK7orVU8M0ZV5WTds100KmRdSetWKTtBdSJG1WJBRf22W_uV%2DgOuyIRj7e29uLtG9mjqjFHlNAGcGfC2nIyy0pDvbZV9fGt3wKvmYnzHBgavsvo_JmiltLaYHHZicnejOGxVvR0Tizs2du1iZppXbaQHhmvaXkluUHoCWnE4Z6T0D0r93Z7vYfDRvmB5cTC1fhlYTSqscFieLvQZvq4qZsMWYV2iH9vIwCM75UeNWwsIZLZ93m61YV6D2o7UqiO4abOfP0jaE0sSQgfBKdlSlPctVJRTZzVcSOQrIm7eX9CAF8WBzxo3PTa8HZocnMye1FiQH3zvgG5NxjU1aqpMRQwv6JDnamSCBvDddyLSzQP%2DzSTCnIIX%2DeAvhFH8ArPnRYmGVso786Kqd0V%2Dj7oPzM3TyFfES1OLkKgWDhF1b%2DinouzkV_IYxZCWZkVfTQHSZapoczB9XerjXvOF0l0bpUlp0xBRJ4TfN8QYFgvdN5249YQMcsoTpHGe44OfSVvGCryu6t5Fp9UQ_kPRT03gJ%2DImhlRRiGCyYiDu8eDAE_iZyljp%2DAJrJ55MneQdqFZvaqUwBVbMHtSWs98gIx6v62I1dDrAgKu%2DFe7NMThtONTZDXODuDKj%2Dt58DN4aCglqwwrAT2YOS42TnKwjxC9UpFVdwhS6bNwHDNnwy3T8jEmeJeH1aJDO3B3h4%26u%3DaHR0cHMlM2ElMmYlMmZ3d3cuYXBwbGUuY29tJTJmdXMlMmZzaG9wJTJmZ28lMmZpcGhvbmUlM2ZjaWQlM2Rhb3MtdXMta3diaS1icmFuZC11cGRhdGUtMTEwMzI1LSUyNmFvc2lkJTNkcDI0MCUyNmtlbl9waWQlM2RiaSU3ZWNtcC02OTgxOTk2MjMlN2VhZGctMTI0NTc0ODAxMTkxNjQxOSU3ZWFkLTc3ODU5Mzg3MzI5MDAwX2t3ZC03Nzg1OTYyMzUyMjA1MCUzYWxvYy0xOTAlN2VkZXYtYyU3ZWV4dC04MzE1MTk2MDM2MTIwJTdlcHJkLSU3ZW50LXNlYXJjaCU3ZWNyaWQtJTI2dG9rZW4lM2Q4YzFhNzZhYi1jZmU1LTQzODAtYjU1MS1lNzU1YTNiNDhiYzg%26rlid%3D3f85c236e0ef1463b42aab5ee276934c&vqd=4-113178918039035580188665580054981570906&iurl=%7B1%7DIG%3D04FD9FE35BD4446C8EA925921A5B876E%26CID%3D01ED74FBACA16010324C621AAD0C6184%26ID%3DDevEx%2C5063.1",
+"snippet":
+"Shop the new iPhone 17 Pro, iPhone 17, and iPhone Air."
+},
+{
+"title":
+"iPad",
+"link":
+"https://duckduckgo.com/y.js?ad_domain=apple.com&ad_provider=bingv7aa&ad_type=txad&click_metadata=eOnYPukeUq%2D7eDleplQ4ibGYKJftEou_iekEfl61yVlTQLEbJybaHZzFZK2S_Sod5ZEHCMhKXZdPYtmZorSvyR4jr7wk5KXGgdX9xkIzDxvTkF_OZkzf_YlH1xsLSv0TNfpOrt84PrmDAcRoAixSwWCn2VZMnN0te_ruGrxAKRk_akVn3c2R2sdMsmzTHTZE.tf9ZgQ5hNwBU%2DggQJsXoGg&eddgt=appfVtrprDF0FgakCTOyQA%3D%3D&rut=3e5ed567cf7fac575db108d3a2096f0ed57f01d5e2feff09d3d772106a3bf44f&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De8Sl2s5eZH0alFD%2D_Hah_ZBzVUCUzYF1sGIneC%2DqF9B07GwMkeBlDk8XOcC3Jc68P12oHTzM1eHWmrg3yQhr8LVWa2aaQ7CgUxXn5sLhz81dQ%2DvWNuvlt1Dl8xuSH5VGEIKUvp%2DCVJhbcOorQG7Vx2gEbCWmhI3SaurhzfyJeK1Tvr1sAH8bIQggb_vtSZug7jHFLtnDjiYHPGxKvCfwHfXdSh9qH2PpKycURcIOoMEAo4husNjB2Pb51KNHOSn3LDf3RgPtB2utyfILCOtZCuu5LQymIcubJ9MpDgbeIY1iQk%2DANaF6pjjsmdWnA790bd6t0nFZAYukK6pA3be2JFFebYCDdAudB1UysU3PAKYTJLjhkxXZ4a8__fHNU7EzZiPwV3jGiM_3gIt2_d1EmPxEXQP3Q2w_ujWzcMV8ZK2d_6b3xx_ojztKtg_kdOCiEW5fJ27VupsPRwLN_%2DOOg8dZ9ExhqBpFxhEZRM3HHyNvZLpZ7Mordru7XYNBUeUhH1O02G%2DhrW3jbM9mQzF2KJtXdjTBQhgFSkXssc2fJajq6lbdsTZceifUpQbc5kE8RSW0TLRZof%2D1jx_zH9CkMAazX2zznV%2DAPZS2HvyWL53B8y6l0bdZvnie4voSYusxhKdUVRUDNZDT1UB%2Dvzo1Cj3yCkn5ub_1TDgEerJeRqL%2DNjcjiTUQs4ZrM5xxtilh7neldKnOO0G%2D%2DExqD2xtWvYuE2%2Dhmz0R9aOtaBRAlZYCHSI2P3GJhQoVJRyoJ2wmFwv%2D5F1GsvFQcgIBXixulRGBIaIPI%26u%3DaHR0cHMlM2ElMmYlMmZ3d3cuYXBwbGUuY29tJTJmdXMlMmZzaG9wJTJmZ28lMmZidXlfaXBhZCUzZmNpZCUzZGFvcy11cy1rd2JpLWlwYWQtdXBkYXRlLTExMDMyNS0lMjZhb3NpZCUzZHAyNDAlMjZrZW5fcGlkJTNkYmklN2VjbXAtNjk4MTk5NjIzJTdlYWRnLTEyNDU3NDgwMTE5MTY0MTklN2VhZC03Nzg1OTM4NzMyOTAwMF9rd2QtNzc4NTk2MjM1MjIwNTAlM2Fsb2MtMTkwJTdlZGV2LWMlN2VleHQtODMxNTE5NTM1MDUyOSU3ZXByZC0lN2VudC1zZWFyY2glN2VjcmlkLSUyNnRva2VuJTNkOGMxYTc2YWItY2ZlNS00MzgwLWI1NTEtZTc1NWEzYjQ4YmM4%26rlid%3D9d3cb74eb95212021825de26bbcbf5ec&vqd=4-311623189199829182739691405575034132503&iurl=%7B1%7DIG%3D04FD9FE35BD4446C8EA925921A5B876E%26CID%3D01ED74FBACA16010324C621AAD0C6184%26ID%3DDevEx%2C5065.1",
+"snippet":
+"iPad Pro, iPad Air, iPad 11" and iPad mini. Explore the lineup."
+},
+{
+"title":
+"Apple Watch",
+"link":
+"https://duckduckgo.com/y.js?ad_domain=apple.com&ad_provider=bingv7aa&ad_type=txad&click_metadata=SKcewDKMjaDoWvOstGPqV5Di3dBjDipM3fmyJtIiu4La%2Djt0cN%2DS46eMwxSnF_TosNbPDqRQdtiWqLDTxl8rb_hom7Lk376LVkYwWIiEiii9vLJx4Q0sDFSxbZ9n1UVn6Z_u_WlSxabXNGCqkMbg_Si3y6qO2sw3Ws1LXCgV4TryUl%2Dywf5aNkxpsyYmgqTP.n8OFqHVxQVJRXCX%2DvXy_qw&eddgt=appfVtrprDF0FgakCTOyQA%3D%3D&rut=bfd8006c32cf9cb5b7f85f61b9de9998475300055631c9296a92278370c25e9f&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De8DZV05Dz05kqkMqKeDOu8izVUCUw5RW1H5CPoVHzaLltXHhHUm5hkdxc5%2DmwuQj9zSRonsPVkhy1wFD3uVK1ara1ScneVccI9KDoZOMdD_sRssm5xu09bjCaInWVE3ROGkaRrAkqDiPOXOQO8TEObyc6GcijaLBPYP8NUK7fwTf7S8ACvrVoJGbZ9733f8R0tAe5RDcC%2DOdihWnquiuSD6g65xGvCIMA49A316yLK9CVYshDTkgoyIl61O4U_dTzyN6pn19oDA5_%2DTxs7kmvKfayUEdvvrLeYoxAW03LYieADEQlh_GnJROgoQSDzSCBOlkcWZc9yZ5oO_8EaQ893p7fQubyfNbQM08LzMedNS36Fsh_J%2Dg9NnqOPs8JZPRdMFe_DhWALeQi9u3E0cgshP7TfwaUKaROGHQF4za8WVkVRAVG0%2D3UizGV2Nj21nKLoiG7SUKWELob2IoI4PC8fVt2TaZDk5GMUyLdnMEto9prXK5YqySgQ3MAlzMVEOpZtkmJNtiKlAYetdIO_YcXQMQUKurUdz2s3qbqdiMu_HPxjEusqKJAsm6f4Uo0ublPdiK_aWpTlRfg92qGXbvO1H%2DXl5MUXECXhn10oJBPucd1aUHauvDWNF9mIXOwaSfLexAOq%2DeLzGZ%2DZoIUxjaL39kHwlfx8DHyilzY0dtIruafrmMVPYefsplwZ59kkU8Mt6o1yiyEmSShRY4Odh_7KuoJ9wnyjCeIo9%2DgAWV067dCgGsJL660YtBfbPLomYy8NuGDzyzrGI%2DYDxEwIEj7sTrKmRrs%26u%3DaHR0cHMlM2ElMmYlMmZ3d3cuYXBwbGUuY29tJTJmdXMlMmZzaG9wJTJmZ28lMmZ3YXRjaCUyZiUzZmNpZCUzZGFvcy11cy1rd2JpLWJyYW5kLXVwZGF0ZS0xMTAzMjUtJTI2YW9zaWQlM2RwMjQwJTI2a2VuX3BpZCUzZGJpJTdlY21wLTY5ODE5OTYyMyU3ZWFkZy0xMjQ1NzQ4MDExOTE2NDE5JTdlYWQtNzc4NTkzODczMjkwMDBfa3dkLTc3ODU5NjIzNTIyMDUwJTNhbG9jLTE5MCU3ZWRldi1jJTdlZXh0LTgzMTUxOTYwMzQxODklN2VwcmQtJTdlbnQtc2VhcmNoJTdlY3JpZC0lMjZ0b2tlbiUzZDhjMWE3NmFiLWNmZTUtNDM4MC1iNTUxLWU3NTVhM2I0OGJjOA%26rlid%3Daaf5ab2daa321b781c94c245a8abd14b&vqd=4-327905854773990454802701980051263487423&iurl=%7B1%7DIG%3D04FD9FE35BD4446C8EA925921A5B876E%26CID%3D01ED74FBACA16010324C621AAD0C6184%26ID%3DDevEx%2C5067.1",
+"snippet":
+"New Apple Watch Series 11, Apple Watch Ultra 3 and Apple Watch SE 3."
+},
+{
+"title":
+"AirPods",
+"link":
+"https://duckduckgo.com/y.js?ad_domain=apple.com&ad_provider=bingv7aa&ad_type=txad&click_metadata=UC72rGUUnAksmhSepOOSyVPppOJ8OzS_54DuMRUfpy7j56nwY6jY8DvwmxLmJ8eNwNgE5fgXBF07NPuLfWcudNnD_HQtTHhut%2DjfVuBMu8NcPdFmkgNRYBdbGjyJOn1xz3Ait06BdNiQQ1dLvrWfzu3wXbRgAlkq48cD6g%2D5Fy19YquPU6vsS2aROk8vDHlj.BBzoAxoD7Syqd2hcOA_VVA&eddgt=appfVtrprDF0FgakCTOyQA%3D%3D&rut=3791f217b51c77772315c426dcda3ca79b2a6d93d8ddf267cca722755d7a7858&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De8oZp4WLSTRpLYBCl0PmwyVzVUCUxRQEJoqQsrdEkTUDiS61RG3KvnulEp1hJq5hI708B1QhX6pjGNxtOO%2DMoE8p6yL1ZSRexZo9JD269JefNSu6uhP5xuLV98PBZyWZXfa7GQwCuHdedaai7P6Hfm9idh8ARYc6Donmyx0gkkrHF_owb0WWj6XdEz97FseQVnoBUv18Zpq_6I_94TSzhoy_ppIVsibAmlbCcU_DHmPJgtK0cOj2ZtbMC67oZvgBGUwgSRNU8RG82n0SiM6VUV3L29i7EOhhrI0IVbjPAms5WJXtaNzmzVUWngsSdIHzdUNtUYVt3rdLNDWVPvUXoifbgWgBDnckzpZ6FtMUArFpM91Xz6fOx%2DzXd3uDeRFOsuGLE2frEB6Nnbp7dRRH_CmavPex8zHV0g6IRTtqUzod2MjeI76asEIA_KjbxUGzHW0YekcZGyoAIqt91WUmUh%2D4DX1MICBwSIkrwB3iDD_SCUPzI2_AdmUmxBGbSJMx0IHlpCR71ZrklxgfLOPd3X36RMWS_fkC1Nc0zGnE5nVvYo07TGN4EWgVREgNWdYmfSTdeXUzwRyUnKxV%2DioUUW4oMmrx_VnYE8bv2Dm2CgW2GSF01beOzKUa3sAHjtuvnthWZ6S2SWNzvddoOEKULJMYxXZNlcH_suA3Vnn4CnCzvoeDlMzeI0uMzXV9uORukGnuaDJlhJzys95OACA5VinWDbC6jECAm1alrUR3B1ptvYj3couuWJMdEaX3_xTbFIxynzFW4NMIDQ8lgdPI5Bmh7Jn_g%26u%3DaHR0cHMlM2ElMmYlMmZ3d3cuYXBwbGUuY29tJTJmdXMlMmZzaG9wJTJmZ28lMmZhaXJwb2RzJTJmcHJvZHVjdCUzZmNpZCUzZGFvcy11cy1rd2JpLWJyYW5kLXVwZGF0ZS0xMTAzMjUtJTI2YW9zaWQlM2RwMjQwJTI2a2VuX3BpZCUzZGJpJTdlY21wLTY5ODE5OTYyMyU3ZWFkZy0xMjQ1NzQ4MDExOTE2NDE5JTdlYWQtNzc4NTkzODczMjkwMDBfa3dkLTc3ODU5NjIzNTIyMDUwJTNhbG9jLTE5MCU3ZWRldi1jJTdlZXh0LTgzMTUxOTYzMDI1MzIlN2VwcmQtJTdlbnQtc2VhcmNoJTdlY3JpZC0lMjZ0b2tlbiUzZDhjMWE3NmFiLWNmZTUtNDM4MC1iNTUxLWU3NTVhM2I0OGJjOA%26rlid%3D1cb8c0723b2c1eb2aa80a91a39b58782&vqd=4-236331534705774449442657009573365566343&iurl=%7B1%7DIG%3D04FD9FE35BD4446C8EA925921A5B876E%26CID%3D01ED74FBACA16010324C621AAD0C6184%26ID%3DDevEx%2C5069.1",
+"snippet":
+"Personalize AirPods with free engraving. Only at Apple."
+}
+]
+},
+{
+"position":
+2,
+"title":
+"Online Offers on Phones - AT&T® Online Shopping",
+"link":
+"https://duckduckgo.com/y.js?ad_domain=att.com&ad_provider=bingv7aa&ad_type=txad&click_metadata=8hcAyAxH%2DAUuIFtvEC%2DLlwNVf22aIRwsSuNfytI8aj0SWFm72x1H_zXC1Yf83vB9To_OqV074XLlVi7_ez3bwWywPnwF6Upky6Q31bhe0f1Qiq7Sb6f46tHVNRcjTFaaGrDUxtJOKYXtmTUEQqK4_WBfPv5HR9GPh2Z4ketGSjBOUzbKgzJvgfFYIiPkTmIa.s7zq4SPGsXY%2DlfytueVS5w&eddgt=appfVtrprDF0FgakCTOyQA%3D%3D&rut=7c936f0695f88496319c0c85ee0f43feaa6f81179d2397c9fdbd2307e5834e4f&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De83ACGLVbOo9zTF0BZqgnT4jVUCUwwsiaIi_TrM%2DEoB1FXU3r%2D07LfuUr1%2DloIZMi2Jz%2DVZA83D6mwqICUPuLZs0zq5NBADqVT5gSVXmY_FG2si6ut1BgXLlrBVeMGwAheSNsglsWWbHAcDgiORw91SGKUMr_pc7LQZSMj9f_rVHBZMX51mQ4mYn%2DjlJcp5aI1sW29%2DoYup1IuL6%2DbqOSPdYgLoF8SGcZFImIDP84fSo5EEQ_40M_Xp4TjG9BIKxNjd4ClJQhvtoSYDmTLGZHjBo_LshKXeaa%2DN1sDIwAXFgP06Rdke7lDl07xMH3fYMuweamcHXSzmyi%2DaHZ4lcP37reCIFNGp%2DLQTR3H3YZ9iN1Q4L01DoXzbKWkFEO4zhr6f7bw2Bzb_cmQKaWx9lCABamiCFtr6cFV2ozlrospVL7fO6fRYvDu2xVljzFIzkSI57l5STWy65U7PhEF_9cX0vsGPXwHSwvfcCUW0Mh7PME59tisbpkrevLtdQFc41FyAYyL1744lEM74IsOEGHmcoaZyIT%2DYeEC%2DeXq9VlzucPWZwTT6NAZA6GOQi8hBAmg0biYO3gLrdMTc2jENd0RopoZe5HQ2SyWcc9Gk_diV5cPpPIXmsc0xErAetVnjNw5R1VoWmJKTPFLHGfTpxgjTAkpPFzRPNHoiTDERcN8Wy214GA53XBdoMBE89wGNI9nBsPTsPvH66uvCzmLCY48M_w8EglIPPHLlmi4QmgknbrBH1f55DpOUMBigsezzfMYeGgy_Boi%2DU27ukUxUmY66405JDM%26u%3DaHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA4MjMwMTk4Mjg1NyUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwODE1MDkwMDQ0OCUyNmRzX2FfY2lkJTNkOTgxODMxOTg2JTI2ZHNfYV9jYWlkJTNkMTg3ODcyMjUzNDclMjZkc19hX2FnaWQlM2QxNDYwNDQ4NDE5OTQlMjZkc19hX2xpZCUzZGt3ZC0xNzY3NzcxMCUyNiUyNmRzX2VfYWRpZCUzZDc3MzA5NjA3MDUzODA3JTI2ZHNfZV90YXJnZXRfaWQlM2Rrd2QtNzczMDk4OTEzMTQ1NzElM2Fsb2MtMTkwJTI2JTI2ZHNfZV9uZXR3b3JrJTNkbyUyNmRzX3VybF92JTNkMiUyNmRzX2Rlc3RfdXJsJTNkaHR0cHMlM2ElMmYlMmZkLmFna24uY29tJTJmcGl4ZWwlMmY0MTAyJTJmJTNmY2hlJTNkJTI2Y29sJTNkMTg3ODcyMjUzNDclMmMyMjA5NDU2NTMzJTJjMTQ2MDQ0ODQxOTk0JTJjMCUyYzAlMmNkMGIzZGMyMWExZTExY2YxNWVjZmI1NDlhMzc4OWFmYSUyNmwxJTNkaHR0cHMlMjUzQSUyNTJGJTI1MkZ3d3cuYXR0LmNvbSUyNTJGd2lyZWxlc3MlMjUyRiUyNTNGc291cmNlJTI1M0RFQzFOTkJtbHAwMDAwMDAwUCUyNTI2dGZuJTI1M0Rob21lc29sdXRpb25zJTI1MjZXVC5zcmNoJTI1M0QxJTI1MjZ3dEV4dG5kU291cmNlJTI1M0RjZWxscGhvbmVzJTI1MjZkc19laWQlMjUzRDIyMDk0NTY1MzMlMjUyNmRzX2NpZCUyNTNEMTg3ODcyMjUzNDclMjUyNmRzX2FnaWQlMjUzRDE0NjA0NDg0MTk5NCUyNTI2ZHNfa2lkcyUyNTNEMTc2Nzc3MTAlMjUyNmdjbGlkJTI1M0RkMGIzZGMyMWExZTExY2YxNWVjZmI1NDlhMzc4OWFmYSUyNTI2Z2Nsc3JjJTI1M0QzcC5kcyUyNTI2JTI2Z2NsaWQlM2RkMGIzZGMyMWExZTExY2YxNWVjZmI1NDlhMzc4OWFmYSUyNmdjbHNyYyUzZDNwLmRzJTI2bXNjbGtpZCUzZGQwYjNkYzIxYTFlMTFjZjE1ZWNmYjU0OWEzNzg5YWZh%26rlid%3Dd0b3dc21a1e11cf15ecfb549a3789afa&vqd=4-76272817997705541035977380605417101104&iurl=%7B1%7DIG%3D04FD9FE35BD4446C8EA925921A5B876E%26CID%3D01ED74FBACA16010324C621AAD0C6184%26ID%3DDevEx%2C5072.1",
+"source":
+"att.com",
+"snippet":
+"Shop Online Deals on Smartphones, Tablets, Watches and More at AT&T®. Learn How New & Existing AT&T® Customers Get Our Best Deals on the Latest 5G Smartphones.",
+"sitelinks":
+[
+{
+"title":
+"AT&T Unlimited Premium PL",
+"link":
+"https://duckduckgo.com/y.js?ad_domain=att.com&ad_provider=bingv7aa&ad_type=txad&click_metadata=xR6tY4HmqhJvwOle9P1IjaUs6wsQo3teXjn_AeRuygdxAwUJQ_gM7fmbXUm4to67O6z1ZR5UAKGCXCaMFMtLquGmr5kkYQa55TB15DMGmR2jK%2DHtXcZ5NYq5eAdeLmzKR8ewkDzSlPdk5SOC%2Djeg5OfRPfe6d0N0pO5r2Jm2x4NBIAq0R7IqyYAITEOQIty6.ycNmANOvIovAWPeWb03A9g&eddgt=appfVtrprDF0FgakCTOyQA%3D%3D&rut=d721055ac34a1d048062f5763ac1462a341c6d2d7dde9eb17ea1da6d952633f9&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De8lWy5F%2DAKlZORQxXAzvI9nzVUCUw7UpWdWhLE5Uqx9CwdN8kunF27Hj3OnCxN1j4ji%2Damu0iiCTuVrgFS5CcLusaHK4VkbId4U%2DgVZd6a8iOvdOo4o2R87dD_F_QCGv9ZE9mXEzHmOFMuM8dXbwOJC3Np6ZTgFzCa0TQCEh6chdCyHgf6hSYlwue%2DrYn3DSGn1AqP8SyDCzkGJjm9aRccoXvGmRGd7otX65Z3Lk1SQ2BaX86dQmMuBdDoQdAZdWFBxVzVTghLvNq_9bcfe0we2W%2DBIryglqd%2DRKA85d3oQ9cl50LtFbSySQonAvZaOgH1YLMYidJyuiJ1cKnHvtGI2XFKX4d4YBPbPEZIh4dkajveTyWqzBnj2gp8G_38GefaGpBVHnuC54RUO%2D9jj3ISQZvaRL1DPrHUAqWWMoiiKJ_4a2R3L56HK35NbzS3pxeESoxRTLyMjTcv6ZnyFiYJdLjdAGp3MQXXfLEwJsAQXuAfMeEX3c6vfsmhuwUsuwJARJxj4fpDCx4%2DW9mHkX85iT%2DFiAYIZAg_lMc_QQ0%2DkB8QwHpVDDGhP34AmqxrDQZlqU6TG9alVrUJizMRMBZLl0dg6thmstE_qKaJfCqy4kBU2bg0Ne1uhtvbCTba3m1FXkXAWXxEtyWf1vouiSJ2bkCf0t3S2GLay7yS_y9gklxORhjwt6fHDP1N7zsF22fxpAQOlIm0OllTnjJ_nCMmGJlbRUGxgFIS8dHpEBAako%2Dy8qN5zg6iJtJ_zW7f33i3enRNIjcm5JH1yQGlHkrtJPCcK%2Dc%26u%3DaHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA4MjMwMTk4Mjg1NyUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwODE1MDkwMDQ0OCUyNmRzX2FfY2lkJTNkOTgxODMxOTg2JTI2ZHNfYV9jYWlkJTNkMTg3ODcyMjUzNDclMjZkc19hX2FnaWQlM2QxNDYwNDQ4NDE5OTQlMjZkc19hX2xpZCUzZGt3ZC0xNzY3NzcxMCUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAyNDYxNjYxODYzOSUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19hX2NpZCUzZDk4MTgzMTk4NiUyNmRzX2FfZXh0aWQlM2QxMjA1MTQ3Nzk3OTclMjZkc19lX2FkaWQlM2Q3NzMwOTYwNzA1MzgwNyUyNmRzX2VfdGFyZ2V0X2lkJTNka3dkLTc3MzA5ODkxMzE0NTcxJTNhbG9jLTE5MCUyNiUyNmRzX2VfbmV0d29yayUzZG8lMjZkc191cmxfdiUzZDIlMjZkc19kZXN0X3VybCUzZGh0dHBzJTNhJTJmJTJmZC5hZ2tuLmNvbSUyZnBpeGVsJTJmNDEwMiUyZiUzZmNoZSUzZCUyNmNvbCUzZDE4Nzg3MjI1MzQ3JTJjMjIwOTQ1NjUzMyUyYzE0NjA0NDg0MTk5NCUyYzAlMmMwJTJjOGZlNTUxNTBjZDlhMTc0YjA3ODIzODM4Y2YwM2RhNGQlMjZsMSUzZGh0dHBzJTI1M0ElMjUyRiUyNTJGd3d3LmF0dC5jb20lMjUyRnBsYW5zJTI1MkZ1bmxpbWl0ZWQtZGF0YS1wbGFucyUyNTJGJTI1M0Zzb3VyY2UlMjUzREVDMU5OQm1scDAwMDAwMDBQJTI1MjZ0Zm4lMjUzRGhvbWVzb2x1dGlvbnMlMjUyNldULnNyY2glMjUzRDElMjUyNnd0RXh0bmRTb3VyY2UlMjUzRGNlbGxwaG9uZXMlMjUyNmRzX2VpZCUyNTNEMjIwOTQ1NjUzMyUyNTI2ZHNfY2lkJTI1M0QxODc4NzIyNTM0NyUyNTI2ZHNfYWdpZCUyNTNEMTQ2MDQ0ODQxOTk0JTI1MjZkc19raWRzJTI1M0QxNzY3NzcxMCUyNTI2Z2NsaWQlMjUzRDhmZTU1MTUwY2Q5YTE3NGIwNzgyMzgzOGNmMDNkYTRkJTI1MjZnY2xzcmMlMjUzRDNwLmRzJTI1MjYlMjZnY2xpZCUzZDhmZTU1MTUwY2Q5YTE3NGIwNzgyMzgzOGNmMDNkYTRkJTI2Z2Nsc3JjJTNkM3AuZHMlMjZtc2Nsa2lkJTNkOGZlNTUxNTBjZDlhMTc0YjA3ODIzODM4Y2YwM2RhNGQ%26rlid%3D8fe55150cd9a174b07823838cf03da4d&vqd=4-251074993533879256519677567056324210455&iurl=%7B1%7DIG%3D04FD9FE35BD4446C8EA925921A5B876E%26CID%3D01ED74FBACA16010324C621AAD0C6184%26ID%3DDevEx%2C5077.1"
+},
+{
+"title":
+"Learn How to Get $200 Off",
+"link":
+"https://duckduckgo.com/y.js?ad_domain=att.com&ad_provider=bingv7aa&ad_type=txad&click_metadata=hmpvOpqAyvFyNrOxmhKgMzYgjQj1HHmVfHGZ%2Dsq_FY7S5ez9d0MNl3DlB2mVm%2DE1jmcP5RcFETeeUso5yX3VVurB1L0IESbh1AHzLTlbv6sqPLUour0JdyTCpv6zDYoEBkaseXU7jMHkcH7J_DT20ooxj4k569wi74U2Qxn7he8pWZ4l_f6RjZUXfij8xMpn.MbV8HNumGjvijWFlffRkug&eddgt=appfVtrprDF0FgakCTOyQA%3D%3D&rut=42b7d515f47eaa95cd56cb0201147e52edd3da76eb016dcf797d545c4d735b52&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De8%2DSTimlzY8Ayj%2DRsUEuquHTVUCUzCbPsd_qwvP2I3D3mMQyWRqmfnUa88cT4046xlt39Qyx_JYaVp%2D9cEkST97k0tO4L4K6ZJq3np4Z0AJCcFPJFyf7avyj_pzvB9i%2DKwqBm2i0Bmum%2Dy18FMz2J1who8y50FoJKUT7ngDYt5OAB4elaL2pc7M_5GCOyq9M_IlR6prPcwdFLKXvAuc9liAzXZBZIGP8XyISRjrdwW041yFD3kLzD7ry4hsalwx9vWSoruMLrBBrifKgG5Q1TurO0fd2wLDoEyk7o7GiZg6tl5YjtMqJdn3fXNJq1cTM5Uo4GVJMusJIaNkW%2DFBtDLs6ESMqo8%2DVUtH1joi6aSd9OYgMfZwYdKkmMh0ySYx2AHY0ZQMRVbWlbodzxmFSgftlt4i0lisru8pXmtG8X_LtGdKQ_ozvuFkTvUcIrltEj0GqrLv0lWezlKN6rvUS7QOmuR2xMt1uEewZrgOnNTj6gR1W_FlQcaWURyM8jUQ%2DIC5n0ByWH57doRHC9E%2DbKWix5bfQLB8P1Ukbyp02rj%2DbT61dmotNbFuHK6yk8Brk7JCsWdnbidgvb%2DV%2D_pwDOM%2DE60QbIf5x8a3utpahMGRAMlnjTjP5zakDfBAsuz5zWdDwiGibamH7u8IpR53IrlSWXzs_uBTRsFIh8%2DCUIvS0niFWSRpLyRY0l3SKUG1GtpmGgydCyUiQLjFvtrTqxvspbVa8cV88yyIR_cenZ49lCv1qk_hz8dbG0ClAPInqcShsYB0zb1urFZkYzRtKxe7rqMIOw%26u%3DaHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA4MjMwMTk4Mjg1NyUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwODE1MDkwMDQ0OCUyNmRzX2FfY2lkJTNkOTgxODMxOTg2JTI2ZHNfYV9jYWlkJTNkMTg3ODcyMjUzNDclMjZkc19hX2FnaWQlM2QxNDYwNDQ4NDE5OTQlMjZkc19hX2xpZCUzZGt3ZC0xNzY3NzcxMCUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAyNTcxMjExNjA1OSUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19hX2NpZCUzZDk4MTgzMTk4NiUyNmRzX2FfZXh0aWQlM2QxODUyNjY2ODk0MTklMjZkc19lX2FkaWQlM2Q3NzMwOTYwNzA1MzgwNyUyNmRzX2VfdGFyZ2V0X2lkJTNka3dkLTc3MzA5ODkxMzE0NTcxJTNhbG9jLTE5MCUyNiUyNmRzX2VfbmV0d29yayUzZG8lMjZkc191cmxfdiUzZDIlMjZkc19kZXN0X3VybCUzZGh0dHBzJTNhJTJmJTJmZC5hZ2tuLmNvbSUyZnBpeGVsJTJmNDEwMiUyZiUzZmNoZSUzZCUyNmNvbCUzZDE4Nzg3MjI1MzQ3JTJjMjIwOTQ1NjUzMyUyYzE0NjA0NDg0MTk5NCUyYzAlMmMwJTJjZTk1YTkzZTcxY2VlMWRiMTY1OGVmYThmMWU3NzI0MmIlMjZsMSUzZGh0dHBzJTI1M0ElMjUyRiUyNTJGd3d3LmF0dC5jb20lMjUyRndpcmVsZXNzJTI1MkYlMjUzRnNvdXJjZSUyNTNERUMxTk5CbWxwMDAwMDAwMFAlMjUyNnRmbiUyNTNEaG9tZXNvbHV0aW9ucyUyNTI2V1Quc3JjaCUyNTNEMSUyNTI2d3RFeHRuZFNvdXJjZSUyNTNEY2VsbHBob25lcyUyNTI2ZHNfZWlkJTI1M0QyMjA5NDU2NTMzJTI1MjZkc19jaWQlMjUzRDE4Nzg3MjI1MzQ3JTI1MjZkc19hZ2lkJTI1M0QxNDYwNDQ4NDE5OTQlMjUyNmRzX2tpZHMlMjUzRDE3Njc3NzEwJTI1MjZnY2xpZCUyNTNEZTk1YTkzZTcxY2VlMWRiMTY1OGVmYThmMWU3NzI0MmIlMjUyNmdjbHNyYyUyNTNEM3AuZHMlMjUyNiUyNmdjbGlkJTNkZTk1YTkzZTcxY2VlMWRiMTY1OGVmYThmMWU3NzI0MmIlMjZnY2xzcmMlM2QzcC5kcyUyNm1zY2xraWQlM2RlOTVhOTNlNzFjZWUxZGIxNjU4ZWZhOGYxZTc3MjQyYg%26rlid%3De95a93e71cee1db1658efa8f1e77242b&vqd=4-305774885905042813949772783745704090254&iurl=%7B1%7DIG%3D04FD9FE35BD4446C8EA925921A5B876E%26CID%3D01ED74FBACA16010324C621AAD0C6184%26ID%3DDevEx%2C5079.1"
+},
+{
+"title":
+"First & Only",
+"link":
+"https://duckduckgo.com/y.js?ad_domain=att.com&ad_provider=bingv7aa&ad_type=txad&click_metadata=XJWboZPAVmrxY9_jwYaxi%2D9%2DTP4wkRdyFuZrxXyGpcXWUdSE5sIEEVpGTfWO9gkJhBlzf_4J89unFRNisS_PAts5DS4jHr_9Ikg45VaW4teFYtBzw_Cnp6lBR3HiXAlFSUlr3QAPsa75A_8zJLD2EuCds1WzQAcMWGubNa34hEVRfGMGVGqjseDasisCermg.XgEHTjn_3zmzK%2DPUqsb1KQ&eddgt=appfVtrprDF0FgakCTOyQA%3D%3D&rut=64f055f4fc43dd2125c4572e045150d0051ba6662f7ff10e19bf942689d2842b&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De8AnPxWj0Ue9deifhzrLvV_TVUCUxwds5d_7aZCsWpPvY9eyeVYdRmm61IAM_gnoo364V6AIUyDqfyUoWxD5t8ZiQFQ8k24yKZuBZUbNf3j9iAuLmsrZzQBMCt1K8hIbfQDHIw6O6Dv_CDsWr8ag62xHx4%2DxvZxT48k3fEnvoEPrCek_9SfpQA_HTm%2Df%2D3bbqP1nyCwX3sLANwz1488YPGau2Kf85rhNnVQ7%2DNmqT4oI0qSYi_H2PGhMbEmax2aEC73uFqNAIf_OxT5ldH0aaCUdLJWM5KJFOnzLs6AcFdyEzGb3tp4ocL4b9Zg_HqsEv5JSrOUn9Rjc0URRIXF9uj6nQeCp5T%2D1MAgj25ZMegYgzeybUrK_wiVWV_taBstoyqG9T%2D9DpdWo1UCuj8_axjRq4VcGyINTXVeZhgpkOnoXRgHxqHWD0p47bQ4ppmQCPfMlzrJuvsVhav6vtOzWoT7DX0p_pZ5HiUE9jIYPs5EXMxqlbIxYYygiRestdD%2DcAja5DeTnxzoyB4rQ3JuJzdL26X0uQ5pu5yB0ooCWlFWtA9Sjy0mRZwhIvmhwx9SqT4vvRgBRmJSbFX7dhEqDztbdODplrFPLhC4awZ%2DEMRrbtvXL7NO7526AF9OskW7LR0sDrIK3iRp7X24D79MWsrJtb%2DckEtNHlvg6viA1T1uo3gxBBdUCPreQOe0CJ6sgkdo8CYBdQQNg3oxGJkOwpNrZexZC3VixDxQI7BVfxLfp4ZG36Iumg4tu9hl5CmtCcl9W9o_gXlKJHC2j4FgwrDh89U_mg%26u%3DaHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA4MjMwMTk4Mjg1NyUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwODE1MDkwMDQ0OCUyNmRzX2FfY2lkJTNkOTgxODMxOTg2JTI2ZHNfYV9jYWlkJTNkMTg3ODcyMjUzNDclMjZkc19hX2FnaWQlM2QxNDYwNDQ4NDE5OTQlMjZkc19hX2xpZCUzZGt3ZC0xNzY3NzcxMCUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAyNjQyODY4NTI5OCUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19hX2NpZCUzZDk4MTgzMTk4NiUyNmRzX2FfZXh0aWQlM2QyNjAwMjU0MTQxODYlMjZkc19lX2FkaWQlM2Q3NzMwOTYwNzA1MzgwNyUyNmRzX2VfdGFyZ2V0X2lkJTNka3dkLTc3MzA5ODkxMzE0NTcxJTNhbG9jLTE5MCUyNiUyNmRzX2VfbmV0d29yayUzZG8lMjZkc191cmxfdiUzZDIlMjZkc19kZXN0X3VybCUzZGh0dHBzJTNhJTJmJTJmZC5hZ2tuLmNvbSUyZnBpeGVsJTJmNDEwMiUyZiUzZmNoZSUzZCUyNmNvbCUzZDE4Nzg3MjI1MzQ3JTJjMjIwOTQ1NjUzMyUyYzE0NjA0NDg0MTk5NCUyYzAlMmMwJTJjZTk3NmVhMjc3NzJkMTU1YzUyMDM4MzRmNzViNGFjODYlMjZsMSUzZGh0dHBzJTI1M0ElMjUyRiUyNTJGd3d3LmF0dC5jb20lMjUyRkd1YXJhbnRlZSUyNTNGc291cmNlJTI1M0RFQzFOTkJtbHAwMDAwMDAwUCUyNTI2dGZuJTI1M0Rob21lc29sdXRpb25zJTI1MjZXVC5zcmNoJTI1M0QxJTI1MjZ3dEV4dG5kU291cmNlJTI1M0RjZWxscGhvbmVzJTI1MjZkc19laWQlMjUzRDIyMDk0NTY1MzMlMjUyNmRzX2NpZCUyNTNEMTg3ODcyMjUzNDclMjUyNmRzX2FnaWQlMjUzRDE0NjA0NDg0MTk5NCUyNTI2ZHNfa2lkcyUyNTNEMTc2Nzc3MTAlMjUyNmdjbGlkJTI1M0RlOTc2ZWEyNzc3MmQxNTVjNTIwMzgzNGY3NWI0YWM4NiUyNTI2Z2Nsc3JjJTI1M0QzcC5kcyUyNTI2JTI2Z2NsaWQlM2RlOTc2ZWEyNzc3MmQxNTVjNTIwMzgzNGY3NWI0YWM4NiUyNmdjbHNyYyUzZDNwLmRzJTI2bXNjbGtpZCUzZGU5NzZlYTI3NzcyZDE1NWM1MjAzODM0Zjc1YjRhYzg2%26rlid%3De976ea27772d155c5203834f75b4ac86&vqd=4-199857335544943223194349131567744207221&iurl=%7B1%7DIG%3D04FD9FE35BD4446C8EA925921A5B876E%26CID%3D01ED74FBACA16010324C621AAD0C6184%26ID%3DDevEx%2C5081.1"
+}
+]
+}
+],
+"organic_results":
+[
+{
+"position":
+1,
+"title":
+"Apple",
+"link":
+"https://www.apple.com/",
+"snippet":
+"Discover the innovative world of Apple and shop everything iPhone, iPad, Apple Watch, Mac, and Apple TV, plus explore accessories, entertainment, and expert device support.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.apple.com.ico"
+},
+{
+"position":
+2,
+"title":
+"iCloud",
+"link":
+"https://www.icloud.com/",
+"snippet":
+"Log in to iCloud to access your photos, mail, notes, documents and more. Sign in with your Apple Account or create a new account to start using Apple services.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.icloud.com.ico"
+},
+{
+"position":
+3,
+"title":
+"Apple Inc. - Wikipedia",
+"link":
+"https://en.wikipedia.org/wiki/Apple_Inc.",
+"snippet":
+"Apple Inc. is an American multinational technology company headquartered in Cupertino, California, in Silicon Valley, best known for its consumer electronics, software and online services. Founded in 1976 as Apple Computer Company by Steve Jobs, Steve Wozniak and Ronald Wayne, the company was incorporated by Jobs and Wozniak as Apple Computer, Inc. the following year. It was renamed to its ...",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/en.wikipedia.org.ico"
+},
+{
+"position":
+4,
+"title":
+"Official Apple Support",
+"link":
+"https://support.apple.com/",
+"snippet":
+"Get help for your Apple devices, subscriptions, and services. Find out how to contact Apple experts, access warranty information, repair options, and more.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/support.apple.com.ico"
+},
+{
+"position":
+5,
+"title":
+"New Apple iPhones for Sale: See Pricing & More or Buy Today | T-Mobile",
+"link":
+"https://www.t-mobile.com/cell-phones/brand/apple",
+"snippet":
+"Shop Apple iPhones for sale today. Explore pricing and features for all available models, and get our best deals on a new iPhone from T-Mobile.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.t-mobile.com.ico"
+},
+{
+"position":
+6,
+"title":
+"Apple, Google strike Gemini deal for revamped Siri in major win for ...",
+"link":
+"https://www.reuters.com/business/google-apple-enter-into-multi-year-ai-deal-gemini-models-2026-01-12/",
+"date_raw":
+"2026-01-12T00:00:00.0000000",
+"date":
+"Jan 12, 2026",
+"snippet":
+"Jan 12 (Reuters) - Apple (AAPL.O) will use Google's Gemini models for its revamped Siri coming later this year under a ‌multi-year deal that deepens the tech giants' alliance in the artificial ...",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.reuters.com.ico"
+},
+{
+"position":
+7,
+"title":
+"Apple calls on Google to help smarten up Siri and bring other AI ...",
+"link":
+"https://apnews.com/article/apple-google-artificial-intelligence-partnership-865dfa575279c292bc729a2dfa4e1583",
+"date_raw":
+"2026-01-12T19:01:38.0000000",
+"date":
+"Jan 12, 2026",
+"snippet":
+"Apple will lean on Google to help finish its bungled attempts to smarten up its virtual assistant Siri and bring other artificial intelligence features to the iPhone as the trendsetting company plays catch up in technology's latest craze.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/apnews.com.ico"
+},
+{
+"position":
+8,
+"title":
+"Apple teams up with Google Gemini for AI-powered Siri",
+"link":
+"https://www.cnn.com/2026/01/12/tech/apple-google-gemini-siri",
+"date_raw":
+"2026-01-12T00:00:00.0000000",
+"date":
+"Jan 12, 2026",
+"snippet":
+"Apple plans to use Google's Gemini artificial intelligence model to power its updated version of Siri, which is set to launch later this year, the two companies announced Monday.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.cnn.com.ico"
+},
+{
+"position":
+9,
+"title":
+"Apple Store Online",
+"link":
+"https://www.apple.com/store",
+"snippet":
+"Shop the latest Apple products, accessories and offers. Compare models, get expert shopping help, plus flexible payment and delivery options.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.apple.com.ico"
+},
+{
+"position":
+10,
+"title":
+"Apple Event — September 9 - YouTube",
+"link":
+"https://www.youtube.com/watch?v=H3KnMyojEQU",
+"snippet":
+"Watch the special Apple Event to learn about iPhone 17, iPhone Air, and iPhone 17 Pro. Plus Apple Watch Series 11, Apple Watch SE 3, Apple Watch Ultra 3, Air...",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.youtube.com.ico"
+},
+{
+"position":
+11,
+"title":
+"Apple says its new AI-powered Siri will use Google's Gemini language ...",
+"link":
+"https://arstechnica.com/apple/2026/01/apple-says-its-new-ai-powered-siri-will-use-googles-gemini-language-models/",
+"date_raw":
+"2026-01-12T00:00:00.0000000",
+"date":
+"Jan 12, 2026",
+"snippet":
+"The "more intelligent" version of Siri that Apple plans to release later this year will be backed by Google's Gemini language models, the company announced today. CNBC reports that the deal ...",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/arstechnica.com.ico"
+},
+{
+"position":
+12,
+"title":
+"The New Apple iPhone 17 is Out! Shop Prices & Plans | AT&T",
+"link":
+"https://www.att.com/buy/phones/apple-iphone-17.html",
+"snippet":
+"The new iPhone 17 is available now! Everyone gets our best deals at AT&T. Check out the new iPhone price, specs, colors, and features.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.att.com.ico"
+},
+{
+"position":
+13,
+"title":
+"Apple taps Google to power a new Siri and future AI tools",
+"link":
+"https://www.washingtonpost.com/technology/2026/01/12/apple-google-gemini-ai-siri/",
+"date_raw":
+"2026-01-12T21:23:00.0000000",
+"date":
+"Jan 12, 2026",
+"snippet":
+"Apple taps Google to power a new Siri and future AI tools Google's technology provides the "most capable foundation" for Apple's future in AI, the companies said.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.washingtonpost.com.ico"
+},
+{
+"position":
+14,
+"title":
+"Apple Store - Find a Store - Apple",
+"link":
+"https://www.apple.com/retail/",
+"snippet":
+"Find an Apple Store and shop for Mac, iPhone, iPad, Apple Watch, and more. Sign up for Today at Apple programs. Or get support at the Genius Bar.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.apple.com.ico"
+},
+{
+"position":
+15,
+"title":
+"iPhone - Apple",
+"link":
+"https://www.apple.com/iphone/",
+"snippet":
+"Designed for Apple Intelligence. Discover iPhone 17 Pro, iPhone Air, and iPhone 17, along with iPhone 16 and iPhone 16e.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.apple.com.ico"
+},
+{
+"position":
+16,
+"title":
+"Manage your Apple Account",
+"link":
+"https://account.apple.com/",
+"snippet":
+"Your Apple Account is the account you use for all Apple services.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/account.apple.com.ico"
+},
+{
+"position":
+17,
+"title":
+"AppleCare - Apple",
+"link":
+"https://www.apple.com/applecare/",
+"snippet":
+"AppleCare offers one-stop support and service for all of your Apple products — from the people who know them best. Get easy, fast repairs for accidents like drops and spills. A replacement if your iPhone, iPad, or Apple Watch is lost or stolen. And 24/7 priority care with just a chat, call, or tap. 1 Get coverage",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.apple.com.ico"
+},
+{
+"position":
+18,
+"title":
+"Apple Support",
+"link":
+"https://getsupport.apple.com/",
+"snippet":
+"Quick Links If you forgot your Apple Account password If you forgot your iPhone passcode or your iPhone is disabled If you want to cancel a subscription from Apple Update your iPhone or iPad Find your lost Apple device",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/getsupport.apple.com.ico"
+},
+{
+"position":
+19,
+"title":
+"Contact - Official Apple Support",
+"link":
+"https://support.apple.com/contact",
+"snippet":
+"Contact Apple support by phone or chat, set up a repair, or make a Genius Bar appointment for iPhone, iPad, Mac and more.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/support.apple.com.ico"
+},
+{
+"position":
+20,
+"title":
+"‎Apple Music - Web Player",
+"link":
+"https://music.apple.com/us/new",
+"snippet":
+"Listen to millions of songs, watch music videos, and experience live performances all on Apple Music. Play on web, in app, or on Android with your subscription.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/music.apple.com.ico"
+},
+{
+"position":
+21,
+"title":
+"account.apple.com",
+"link":
+"https://account.apple.com/account/home",
+"snippet":
+"account.apple.com",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/account.apple.com.ico"
+},
+{
+"position":
+22,
+"title":
+"Contact - How to Contact Us - Apple",
+"link":
+"https://www.apple.com/contact/",
+"snippet":
+"We aim to provide great customer service. For product inquiries, technical support, and legal questions, here are all the ways you can contact Apple.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.apple.com.ico"
+},
+{
+"position":
+23,
+"title":
+"‎Apple Store App - App Store",
+"link":
+"https://apps.apple.com/us/app/apple-store/id375380948",
+"snippet":
+"Download Apple Store by Apple on the App Store. See screenshots, ratings and reviews, user tips, and more games like Apple Store.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/apps.apple.com.ico"
+},
+{
+"position":
+24,
+"title":
+"Apple - Find Locations",
+"link":
+"https://locate.apple.com/",
+"snippet":
+"Find locations for Apple products, services, and support in the United States. Explore sales, service, and consulting locations for Apple Stores, Authorized Resellers, and Consultants.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/locate.apple.com.ico"
+},
+{
+"position":
+25,
+"title":
+"Store List - Apple Store - Apple",
+"link":
+"https://www.apple.com/retail/storelist/",
+"snippet":
+"Browse a list of every Apple Store throughout the world and view store hours, get directions, and more.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.apple.com.ico"
+},
+{
+"position":
+26,
+"title":
+"Genius Bar Reservation and Apple Support Options - Apple",
+"link":
+"https://www.apple.com/retail/geniusbar/",
+"snippet":
+"Make a Genius Bar reservation or get help now with Apple Support. Answer a few questions and we'll connect you with the right expert, right away.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.apple.com.ico"
+},
+{
+"position":
+27,
+"title":
+"Buy iPhone - Apple",
+"link":
+"https://www.apple.com/shop/buy-iphone",
+"snippet":
+"Shop the latest iPhone models and accessories. Save with Apple Trade In, carrier offers, and flexible monthly payment options. Get expert help today.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.apple.com.ico"
+},
+{
+"position":
+28,
+"title":
+"iPhone - Official Apple Support",
+"link":
+"https://support.apple.com/iphone",
+"snippet":
+"Get help with your iPhone, from resetting your password to updating your software. Learn how to use eSIM, manage subscriptions, and access AppleCare+.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/support.apple.com.ico"
+},
+{
+"position":
+29,
+"title":
+"Skyworks Solutions to buy Greensboro chipmaker Qorvo to form $22 ...",
+"link":
+"https://businessnc.com/skyworks-solutions-to-buy-greensboro-chipmaker-qorvo-to-form-22-billion-company/",
+"snippet":
+"Greensboro-based Qorvo will merge with the larger Irvine, California-based Skyworks Solutions in a cash-and-stock deal that values the combined company at $22 billion. The two companies provide radio-frequency chips to Apple and other smartphone manufacturers.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/businessnc.com.ico"
+},
+{
+"position":
+30,
+"title":
+"Suspect in Greensboro murder appears in court | FOX8 WGHP",
+"link":
+"https://myfox8.com/news/north-carolina/greensboro/suspect-in-greensboro-murder-appears-in-court/",
+"date_raw":
+"2026-01-13T23:59:00.0000000",
+"date":
+"Jan 13, 2026",
+"snippet":
+"GREENSBORO, N.C. (WGHP) — The search for a missing person turned into a homicide investigation in Greensboro, and the suspect accused of killing 42-year-old Alexander Reichman faced a judge on ...",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/myfox8.com.ico"
+},
+{
+"position":
+31,
+"title":
+"Police investigate case of NC mother who vanished after making ...",
+"link":
+"https://abc7.com/post/marissa-carmichael-north-carolina-police-investigate-case-mother-vanished-making-distressed-911-call/18401640/",
+"date_raw":
+"2026-01-14T00:00:00.0000000",
+"date":
+"Jan 14, 2026",
+"snippet":
+"Greensboro police are urging the public for tips on Marissa Carmichael, who vanished on Jan. 14, 2024, after making a distressed call to 911.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/abc7.com.ico"
+}
+],
+"knowledge_graph":
+{
+"title":
+"Apple Inc.",
+"description":
+"Apple Inc. is an American multinational technology company headquartered in Cupertino, California, in Silicon Valley, best known for its consumer electronics, software and online services. Founded in 1976 as Apple Computer Company by Steve Jobs, Steve Wozniak and Ronald Wayne, the company was incorporated by Jobs and Wozniak as Apple Computer, Inc. the following year. It was renamed to its current name in 2007 as the company had expanded its focus from computers to consumer electronics. Apple has been described as a Big Tech company. The company was founded in 1976 to market Wozniak's Apple I personal computer. Its successor, the Apple II, became one of the first successful mass-produced microcomputers. Apple introduced the Lisa in 1983 and the Macintosh in 1984 as some of the first computers to use a graphical user interface and a mouse.",
+"website":
+"https://www.apple.com/",
+"thumbnail":
+"https://duckduckgo.com/i/18a06a68f04022de.jpg",
+"facts":
+{
+"formerly_called":
+"Apple Computer Company (1976–1977), Apple Computer, Inc. (1977–2007)",
+"type":
+"Public",
+"traded_as":
+"NASDAQ: AAPL, Nasdaq-100 component, DJIA component, S&P 100 component, S&P 500 component",
+"isin":
+"[ ISIN: [ US0378331005]]",
+"industry":
+"Consumer electronics, Software services, Online services",
+"founded":
+"April 01, 1976, in Los Altos, California, US",
+"founders":
+"Steve Jobs, Steve Wozniak, Ronald Wayne",
+"number_of_locations":
+"540 Apple Stores(2025)",
+"area_served":
+"Worldwide",
+"key_people":
+"Tim Cook (CEO), Arthur Levinson (chairman)",
+"products":
+"AirPods, AirTag, Apple TV, Apple Vision Pro, Apple Watch, HomePod, iPad, iPhone, Mac",
+"services":
+"App Store, Apple Arcade, Apple Card, Apple Music, Apple Pay, Apple TV, CarPlay, iCloud, Pixelmator, Shazam",
+"number_of_employees":
+"166,000(2025)",
+"subsidiaries":
+"Apple Financing, Apple Studios, Beats Electronics, Beddit, Braeburn Capital, Claris, Globalstar (20%)",
+"website":
+"apple.com"
+},
+"profiles":
+[
+{
+"name":
+"Wikipedia",
+"link":
+"https://en.wikipedia.org/wiki/Apple_Inc.",
+"thumbnail":
+"https://duckduckgo.com/assets/icons/thirdparty/wikipedia.svg"
+},
+{
+"name":
+"Website",
+"link":
+"https://www.apple.com/",
+"thumbnail":
+"https://duckduckgo.com/assets/icons/thirdparty/website.svg"
+},
+{
+"name":
+"GitHub profile",
+"link":
+"https://github.com/apple",
+"thumbnail":
+"https://duckduckgo.com/assets/icons/thirdparty/github.svg"
+},
+{
+"name":
+"Instagram profile",
+"link":
+"https://instagram.com/apple",
+"thumbnail":
+"https://duckduckgo.com/assets/icons/thirdparty/instagram.svg"
+},
+{
+"name":
+"Facebook profile",
+"link":
+"https://facebook.com/apple",
+"thumbnail":
+"https://duckduckgo.com/assets/icons/thirdparty/facebook.svg"
+}
+],
+"related_topics":
+[
+{
+"query":
+"Apple Inc. Category",
+"link":
+"https://duckduckgo.com/c/Apple_Inc."
+},
+{
+"query":
+"Outline of Apple Inc. - The following outline of Apple Inc. is a topical guide to the products, history, retail stores, corporate acquisitions, and personnel under the purview of the American multinational corporation: Apple Inc. was founded as Apple Computer Company on April 1, 1976, to produce and market Steve...",
+"link":
+"https://duckduckgo.com/Outline_of_Apple_Inc."
+},
+{
+"query":
+"Criticism of Apple Inc. - Apple Inc. has been the subject of criticism and legal action.",
+"link":
+"https://duckduckgo.com/Criticism_of_Apple_Inc."
+},
+{
+"query":
+"Companies in the PRISM network",
+"link":
+"https://duckduckgo.com/c/Companies_in_the_PRISM_network"
+},
+{
+"query":
+"Companies based in Cupertino, California",
+"link":
+"https://duckduckgo.com/c/Companies_based_in_Cupertino%2C_California"
+},
+{
+"query":
+"Steve Jobs",
+"link":
+"https://duckduckgo.com/c/Steve_Jobs"
+},
+{
+"query":
+"Companies in the Dow Jones Industrial Average",
+"link":
+"https://duckduckgo.com/c/Companies_in_the_Dow_Jones_Industrial_Average"
+},
+{
+"query":
+"Portable audio player manufacturers",
+"link":
+"https://duckduckgo.com/c/Portable_audio_player_manufacturers"
+},
+{
+"query":
+"Home computer hardware companies",
+"link":
+"https://duckduckgo.com/c/Home_computer_hardware_companies"
+},
+{
+"query":
+"Virtual reality companies",
+"link":
+"https://duckduckgo.com/c/Virtual_reality_companies"
+},
+{
+"query":
+"Display technology companies",
+"link":
+"https://duckduckgo.com/c/Display_technology_companies"
+},
+{
+"query":
+"Mobile phone manufacturers",
+"link":
+"https://duckduckgo.com/c/Mobile_phone_manufacturers"
+},
+{
+"query":
+"Networking hardware companies",
+"link":
+"https://duckduckgo.com/c/Networking_hardware_companies"
+},
+{
+"query":
+"Multinational companies headquartered in the United States",
+"link":
+"https://duckduckgo.com/c/Multinational_companies_headquartered_in_the_United_States"
+},
+{
+"query":
+"Software companies based in the San Francisco Bay Area",
+"link":
+"https://duckduckgo.com/c/Software_companies_based_in_the_San_Francisco_Bay_Area"
+},
+{
+"query":
+"Retail companies of the United States",
+"link":
+"https://duckduckgo.com/c/Retail_companies_of_the_United_States"
+},
+{
+"query":
+"Technology companies of the United States",
+"link":
+"https://duckduckgo.com/c/Technology_companies_of_the_United_States"
+},
+{
+"query":
+"Technology companies based in the San Francisco Bay Area",
+"link":
+"https://duckduckgo.com/c/Technology_companies_based_in_the_San_Francisco_Bay_Area"
+},
+{
+"query":
+"Electronics companies of the United States",
+"link":
+"https://duckduckgo.com/c/Electronics_companies_of_the_United_States"
+},
+{
+"query":
+"Computer companies of the United States",
+"link":
+"https://duckduckgo.com/c/Computer_companies_of_the_United_States"
+},
+{
+"query":
+"Computer hardware companies",
+"link":
+"https://duckduckgo.com/c/Computer_hardware_companies"
+}
+]
+},
+"news_results":
+[
+{
+"position":
+1,
+"title":
+"Apple Is Borrowing Google's AI For iPhone — But Not For Long",
+"link":
+"https://www.forbes.com/sites/davidphelan/2026/01/14/apple-is-borrowing-googles-ai-for-iphone---but-not-for-long/",
+"snippet":
+"The deal between Google and Apple where Google delivers next-gen Apple Intelligence for the iPhone, for a new Siri, for instance, is only a stopgap, a new report has said.",
+"source":
+"Forbes",
+"date":
+"5 hours ago",
+"thumbnail":
+"https://imageio.forbes.com/specials-images/imageserve/6967c536dca9862a4e5e05bd/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds"
+},
+{
+"position":
+2,
+"title":
+"Civilization VII is coming to Apple Arcade",
+"link":
+"https://www.theverge.com/news/861816/civilization-vii-apple-arcade-launch",
+"snippet":
+"Sid Meier's Civilization VII is headed to the Apple Arcade on February 5th, allowing you to play the strategy game across your iPhone, iPad, or Mac through the company's $6.99 / month subscription. The game has the same premise as the original PC title, where you're tasked with expanding your empire as historic leaders from across the globe.",
+"source":
+"The Verge",
+"date":
+"44 minutes ago",
+"thumbnail":
+"https://platform.theverge.com/wp-content/uploads/sites/2/2026/01/Civ-VII_Apple-Arcade-Edition_iPhone-Screenshot-4.png?quality=90&strip=all&crop=6.0460251046025%2C0%2C87.907949790795%2C100&w=1200"
+},
+{
+"position":
+3,
+"title":
+"New report sheds light on how Gemini fits into Apple's Siri revamp",
+"link":
+"https://www.digitaltrends.com/phones/new-report-sheds-light-on-how-gemini-fits-into-apples-siri-revamp/",
+"snippet":
+"An Apple insider has revealed some details about Gemini's role in Apple's upcoming Siri upgrade and AI features.",
+"source":
+"Digital Trends",
+"date":
+"10 hours ago",
+"thumbnail":
+"https://www.digitaltrends.com/tachyon/2025/11/apple-siri-collab-google-gemini-ai-upgrade.jpg?resize=1200%2C630"
+},
+{
+"position":
+4,
+"title":
+"Apple Stock: Why The iPhone Giant Could Fall",
+"link":
+"https://www.forbes.com/sites/greatspeculations/2026/01/14/apple-stock-why-the-iphone-giant-could-fall/",
+"snippet":
+"Apple (AAPL) has faced challenges in the past. Its stock fell over 30% within a period of less than two months in 2018, resulting in billions lost in market value and eliminating substantial gains in a single correction. If we look at historical trends, AAPL stock is not safeguarded against abrupt, substantial downturns.",
+"source":
+"Forbes",
+"date":
+"8 hours ago",
+"thumbnail":
+"https://imageio.forbes.com/specials-images/imageserve/696777f6a2f69ee388d075ba/0x0.jpg?format=jpg&height=900&width=1600&fit=bounds"
+}
+],
+"news_results_link":
+"https://duckduckgo.com/?q=Apple&kl=us-en&iar=news&ia=news",
+"inline_images":
+[
+{
+"position":
+1,
+"title":
+"Apple Store 在线商店 - Apple (中国大陆)",
+"link":
+"https://www.apple.com.cn/store",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.THwrEk08GNFVNHG94TX2PwHaD4?pid=Api",
+"image":
+"https://store.storeimages.cdn-apple.com/1/as-images.apple.com/is/og-default?wid=1200&hei=630&fmt=jpeg&qlt=95&.v=1525370171638"
+},
+{
+"position":
+2,
+"title":
+"Apple announces $500 billion investment in U.S. amid tariff threats ...",
+"link":
+"https://www.pbs.org/newshour/nation/apple-announces-500-billion-investment-in-u-s-amid-tariff-threats-that-could-affect-the-iphone",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.JVnyLBL2oBi07sFqt0c2MAHaE_?pid=Api",
+"image":
+"https://d3i6fh83elv35t.cloudfront.net/static/2024/03/Apple-1024x690.jpg"
+},
+{
+"position":
+3,
+"title":
+"apple - MEWS",
+"link":
+"https://mews.in/apple/",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.Um-SOFLvTwhYzijF4DJ-ngHaE8?pid=Api",
+"image":
+"https://mews.in/wp-content/uploads/2021/09/apple.jpg"
+},
+{
+"position":
+4,
+"title":
+"Apple 活动 - Apple (中国大陆)",
+"link":
+"https://www.apple.com.cn/apple-events/",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.Rj-16lyy3a8lQRrGYdHSOgHaD4?pid=Api",
+"image":
+"https://www.apple.com/v/apple-events/home/af/images/meta/overview__bcphzsdb4fpu_og.png?202407011710"
+},
+{
+"position":
+5,
+"title":
+"Apple Enhances Accessibility with Vision & Hearing Tools",
+"link":
+"https://brandingforum.org/news/tech/apple-enhances-accessibility-with-vision-hearing-tools/",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.qxoZrSEXe6Qldanvuv39vQHaFj?pid=Api",
+"image":
+"https://brandingforum.org/wp-content/uploads/2024/02/Depositphotos_45177201_XL-scaled.jpg"
+},
+{
+"position":
+6,
+"title":
+"iPhone 15 production reportedly begins in India | Cult of Mac",
+"link":
+"https://www.cultofmac.com/827287/iphone-15-production-reportedly-begins-in-india/",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.YABjxiF2Teerfl42ihzs1gHaEK?pid=Api",
+"image":
+"https://www.cultofmac.com/wp-content/uploads/2023/04/Apple-BKC-Mumbai-India-media-preview-hero-1536x864.jpg"
+},
+{
+"position":
+7,
+"title":
+"Apple PNG images free download, apple PNG",
+"link":
+"http://pngimg.com/img/fruits/apple",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.-gIOAOj6Lq-sgbQfVh_C2gHaF7?pid=Api",
+"image":
+"http://pngimg.com/uploads/apple/apple_PNG12436.png"
+},
+{
+"position":
+8,
+"title":
+"Apple PNG images free download, apple PNG",
+"link":
+"https://pngimg.com/img/fruits/apple/?p=6",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.A1JjNu8jIRxaTJHbD_EtFwHaIJ?pid=Api",
+"image":
+"https://pngimg.com/uploads/apple/apple_PNG12405.png"
+},
+{
+"position":
+9,
+"title":
+"500+ Great Apple Photos · Pexels · Free Stock Photos",
+"link":
+"https://www.pexels.com/search/apple/",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.kori7Y8NQzmHi4RLlD-T9AHaE5?pid=Api",
+"image":
+"https://images.pexels.com/photos/39803/pexels-photo-39803.jpeg?cs=srgb&dl=food-healthy-apple-39803.jpg&fm=jpg"
+},
+{
+"position":
+10,
+"title":
+"File:Red Apple.jpg - Wikipedia, the free encyclopedia",
+"link":
+"http://en.wikipedia.org/wiki/File:Red_Apple.jpg",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.j1_y6Mjvzy5ORzCzm5GVHQHaGt?pid=Api",
+"image":
+"http://upload.wikimedia.org/wikipedia/commons/1/15/Red_Apple.jpg"
+},
+{
+"position":
+11,
+"title":
+"Images of Apple Store - JapaneseClass.jp",
+"link":
+"https://japaneseclass.jp/img/Apple_Store",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.pdHMjASTPVrG4i9Cl9pnmgHaE7?pid=Api",
+"image":
+"https://images.adsttc.com/media/images/5907/ad6e/e58e/ce9d/7800/0224/large_jpg/Apple_Store_Stanford_05.jpg?1493675352"
+},
+{
+"position":
+12,
+"title":
+"Apple's First Store In India Opens In Mumbai",
+"link":
+"https://currentaffairs.adda247.com/apples-first-store-in-india-opens-in-mumbai/",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.MgHWhJplrJHhW2vZboxZnQHaE5?pid=Api",
+"image":
+"https://st.adda247.com/https://wpassets.adda247.com/wp-content/uploads/multisite/sites/5/2023/04/20110155/first-apple-store-in-india.jpg"
+},
+{
+"position":
+13,
+"title":
+"Apple needs to release a budget iPhone to grow its sales - Gizmochina",
+"link":
+"https://www.gizmochina.com/2024/04/22/apple-needs-release-budget-iphone-grow-its-sales/",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.46JzqDbVZjqlLfwVqM5SRAHaEc?pid=Api",
+"image":
+"https://www.gizmochina.com/wp-content/uploads/2024/04/Apple-2.webp"
+},
+{
+"position":
+14,
+"title":
+"5 new rules for creating effective product names",
+"link":
+"https://www.inkl.com/news/5-new-rules-for-creating-effective-product-names",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.yqgLivf540Q3JWcapaiMkwHaEK?pid=Api",
+"image":
+"https://cdn.mos.cms.futurecdn.net/HKxrvVPLLoe3EDHhrNB6Nd.jpg"
+},
+{
+"position":
+15,
+"title":
+"Apple's AI Push Sets Stage for Everything From Glasses to Robots ...",
+"link":
+"https://www.hindustantimes.com/business/apples-ai-push-sets-stage-for-everything-from-glasses-to-robots-101717937911293.html",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.Th4p2G0pypisDAGGoxFQagHaEK?pid=Api",
+"image":
+"https://www.hindustantimes.com/ht-img/img/2024/06/09/1600x900/China-Apple-0_1694512630475_1717939911206.jpg"
+},
+{
+"position":
+16,
+"title":
+"Here's a first look of the Apple store that opens in Mumbai tomorrow ...",
+"link":
+"https://www.business-standard.com/companies/news/here-s-a-first-look-of-the-apple-store-that-opens-in-mumbai-tomorrow-123041700422_1.html",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.4MT9ySTqnxEDNn4m5FQUqQHaFj?pid=Api",
+"image":
+"https://bsmedia.business-standard.com/_media/bs/img/article/2023-04/17/full/1681718797-2692.jpg"
+},
+{
+"position":
+17,
+"title":
+"iPhone - 电池性能测试信息 - Apple (中国大陆)",
+"link":
+"https://www.apple.com.cn/iphone/battery.html",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.lYTV47quOt1v-lfmvTRYewHaHa?pid=Api",
+"image":
+"https://www.apple.com.cn/home/images/og.jpg"
+},
+{
+"position":
+18,
+"title":
+"苹果公司 苹果 苹果商店 - Pixabay上的免费照片",
+"link":
+"https://pixabay.com/zh/photos/apple-inc-mac-apple-store-store-508812/",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.27hiJFrMpxLGUhVw5IpP8gHaFj?pid=Api",
+"image":
+"https://cdn.pixabay.com/photo/2014/10/30/00/28/apple-inc-508812_640.jpg"
+},
+{
+"position":
+19,
+"title":
+"Apple Pencilの先はどこに売ってる？販売店はApple Store! | どこで買える？どこに売ってる？",
+"link":
+"https://doko-shop.jp/apple-pen/",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.ojfeD7nAGo0PNOqzAyqYRwAAAA?pid=Api",
+"image":
+"https://digitalassets-retail.cdn-apple.com/retail-image-server/fc9/b01/9fe/174/c0b/cbb/226/0f8/744/9e4/a237de0f-b9c0-3a8d-8f34-eab3032a9847_R134_672_small_2x.jpg"
+},
+{
+"position":
+20,
+"title":
+"Apple Unveils New iPhone, iPad, Watch",
+"link":
+"https://www.pymnts.com/apple/2021/apple-unveils-new-iphone-ipad-watch/",
+"thumbnail":
+"https://tse1.mm.bing.net/th/id/OIP.Rkl-EvZEGtw3Pa5dh10RbAHaEc?pid=Api",
+"image":
+"https://www.pymnts.com/wp-content/uploads/2021/09/apple-1.jpg"
+}
+],
+"inline_images_link":
+"https://duckduckgo.com/?q=Apple&kl=us-en&iax=images&ia=images",
+"related_searches":
+[
+{
+"query":
+"apple store online shopping",
+"link":
+"https://duckduckgo.com/?q=apple%20store%20online%20shopping"
+},
+{
+"query":
+"apple inc",
+"link":
+"https://duckduckgo.com/?q=apple%20inc"
+},
+{
+"query":
+"apple store locator",
+"link":
+"https://duckduckgo.com/?q=apple%20store%20locator"
+},
+{
+"query":
+"apple about us",
+"link":
+"https://duckduckgo.com/?q=apple%20about%20us"
+},
+{
+"query":
+"apple play store",
+"link":
+"https://duckduckgo.com/?q=apple%20play%20store"
+},
+{
+"query":
+"apple iphone support",
+"link":
+"https://duckduckgo.com/?q=apple%20iphone%20support"
+},
+{
+"query":
+"apple products",
+"link":
+"https://duckduckgo.com/?q=apple%20products"
+},
+{
+"query":
+"apple homepage",
+"link":
+"https://duckduckgo.com/?q=apple%20homepage"
+}
+],
+"serpapi_pagination":
+{
+"next":
+"https://serpapi.com/search.json?engine=duckduckgo&kl=us-en&q=Apple&start=31"
+}
+}
+
+GET
+
+
+https://serpapi.com/search.json?engine=duckduckgo&q=Apple&kl=us-en
+
+Code to integrate
+
+cURLRubyPythonJavaScriptGoPHPJavaRust.NETGoogle Sheets
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "duckduckgo",
+  q: "Apple",
+  kl: "us-en",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+organic_results = results[:organic_results]
+API Parameters
+Search Query
+q
+
+Required
+
+Parameter defines the query you want to search. You can use anything that you would use in a regular DuckDuckGo search. (e.g., inurl:, site:, intitle:, etc.)
+
+Parameter length can not exceed 500 characters.
+
+Localization
+kl
+
+Optional
+
+Parameter defines the region to use for the DuckDuckGo search. Region code examples: us-en for the United States, uk-en for United Kingdom, or fr-fr for France. Head to the DuckDuckGo regions for a full list of supported regions.
+
+Advanced Parameters
+search_assist
+
+Optional
+
+Parameter determines if DuckDuckGo's AI Search Assist will be returned in the response. It can be set to true or false (default).
+
+search_assist and m can't be used together.
+
+Advanced Duckduckgo Filters
+safe
+
+Optional
+
+Parameter defines the level of filtering for adult content. It can be set to 1 (Strict), -1 (Moderate - default), or -2 (Off).
+
+df
+
+Optional
+
+Parameter defines results filtered by date.
+
+It can be set to:
+d: Past day,
+w: Past week,
+m: Past month,
+y: Past year,
+
+or you can pass a custom date following the next format: from_date + .. + to_date (e.g. 2021-06-15..2024-06-16).
+
+Pagination
+start
+
+Optional
+
+Parameter defines the result offset. It skips the given number of results.
+
+When offset is not being used (initial search request, start parameter is set to 0 or left blank), up to 35 organic_results can be returned.
+
+When offset is being used (start parameter is greater than 0), up to 50 organic_results can be returned.
+
+DuckDuckGo may return duplicated results or a variable number of results. This is more likely to happen with higher start and m parameters.
+
+m
+
+Optional
+
+Parameter defines the maximum number of results to return.
+
+Default value:50
+Min. value:1
+Max. value:50
+
+When offset is not being used (initial search request, start parameter is set to 0 or left blank), up to 35 organic_results can be returned.
+
+DuckDuckGo may return duplicated results or a variable number of results. This is more likely to happen with higher start and m parameters.
+m and search_assist can't be used together.
+
+Serpapi Parameters
+engine
+
+Required
+
+Set parameter to duckduckgo to use the DuckDuckGo API engine.
+
+no_cache
+
+Optional
+
+Parameter will force SerpApi to fetch the DuckDuckGo results even if a cached version is already present. A cache is served only if the query and all parameters are exactly the same. Cache expires after 1h. Cached searches are free, and are not counted towards your searches per month. It can be set to false (default) to allow results from the cache, or true to disallow results from the cache. no_cache and async parameters should not be used together.
+
+async
+
+Optional
+
+Parameter defines the way you want to submit your search to SerpApi. It can be set to false (default) to open an HTTP connection and keep it open until you got your search results, or true to just submit your search to SerpApi and retrieve them later. In this case, you'll need to use our Searches Archive API to retrieve your results. async and no_cache parameters should not be used together. async should not be used on accounts with Ludicrous Speed enabled.
+
+zero_trace
+
+Optional
+
+Enterprise only. Parameter enables ZeroTrace mode. It can be set to false (default) or true. Enable this mode to skip storing search parameters, search files, and search metadata on our servers. This may make debugging more difficult.
+
+api_key
+
+Required
+
+Parameter defines the SerpApi private key to use.
+
+output
+
+Optional
+
+Parameter defines the final output you want. It can be set to json (default) to get a structured JSON of the results, or html to get the raw html retrieved.
+
+API Results
+JSON Results
+JSON output includes structured data for organic results, ads, knowledge graph, news results, inline images, inline videos, related searches, and more.
+
+A search status is accessible through search_metadata.status. It flows this way: Processing -> Success || Error. If a search has failed, error will contain an error message. search_metadata.id is the search ID inside SerpApi.
+
+HTML Results
+This API does not have html response, just a text. search_metadata.prettify_html_file contains prettified version of result. It is displayed in playground.
+
+API Examples
+Example results for 
+q
+:
+apple
+GET
+
+
+https://serpapi.com/search.json?engine=duckduckgo&q=apple&kl=us-en
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "duckduckgo",
+  q: "apple",
+  kl: "us-en",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+organic_results = results[:organic_results]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "60cc8866de9834008ca37cb7",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/42494655f019bca9/60cc8866de9834008ca37cb7.json",
+    "created_at": "2021-06-18 11:49:58 UTC",
+    "processed_at": "2021-06-18 11:49:58 UTC",
+    "duckduckgo_url": "https://duckduckgo.com/?q=apple+inc.&kl=us-en",
+    "raw_html_file": "https://serpapi.com/searches/42494655f019bca9/60cc8866de9834008ca37cb7.html",
+    "prettify_html_file": "https://serpapi.com/searches/42494655f019bca9/60cc8866de9834008ca37cb7.prettify",
+    "total_time_taken": 1.93
+  },
+  "search_parameters": {
+    "engine": "duckduckgo",
+    "q": "apple inc.",
+    "kl": "us-en"
+  },
+  "search_information": {
+    "organic_results_state": "Results for exact spelling"
+  },
+  "ads": [
+    {
+      "position": 1,
+      "title": "Apple Products - Shop from the Experts at CDW",
+      "link": "https://duckduckgo.com/y.js?ad_provider=bingv7aa&eddgt=NRy2AmQk5ChhjWTO1JLeqw%3D%3D&rut=077067ea9b71fd19c486bee5c1cf46f54110ccf49ec86c614c170749bbf58001&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De86FpQlwlbOEBVxnzU4%2D19LjVUCUzostic6nMWnWMj2UKtE7POVS6ObZdwMV_bBYtaMED_BFZB1vRfAQAzq5Q1YVcS4%2D7Y1wk67vUSnob3uYbkh4%2DYJpE8PHa56WNw_bN%2D0LEyIj6iW4er_YMVAmCV30r65_V6rJ7TL6ndHSM%2D3FiVNgFDwm7gEsRRmclEVhPbQZcDHg%26u%3DaHR0cHMlM2ElMmYlMmZwaXhlbC5ldmVyZXN0dGVjaC5uZXQlMmY0MjIzJTJmY3ElM2Zldl9zaWQlM2QxMCUyNmV2X2xuJTNkQXBwbGUlMjUyMGlQYWQlMjUyMG1pbmklMjUyMDUlMjUyMFdpLUZpJTI1MjA1dGglMjUyMGdlbmVyYXRpb24lMjUyMHRhYmxldCUyNTIwNjQlMjUyMEdCJTI2ZXZfbHR4JTNkJTI2ZXZfbHglM2Rrd2QtNzQwNzk3NzQ3ODQ4NzklM2Fsb2MtMzIlMjZldl9jcnglM2Q3NDA3OTcyNDg5NjAxNiUyNmV2X210JTNkYiUyNmV2X2R2YyUzZGMlMjZldl9waHklM2Q1MjQ0JTI2ZXZfbG9jJTNkJTI2ZXZfY3glM2Q1MjU2ODkyMCUyNmV2X2F4JTNkMTE4NTI3NDA5MzA3ODQyOCUyNmV2X2V4JTNkJTI2ZXZfZWZpZCUzZDM5NDgwYjhmMTg0YzE0YWVhMjFkNmI0MzkwMjZlYmUwJTNhRyUzYXMlMjZ1cmwlM2QhaHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZkZG0lMmZ0cmFja2NsayUyZk4xMjYwLjI3OTZDRFcuQ09NJTJmQjI1MTMyMDM3LjI5MTMwNTczNSUzYmRjX3Rya19haWQlM2Q0ODQ3NTM5OTglM2JkY190cmtfY2lkJTNkNjU4Mzk0MTAlM2JkY19sYXQlM2QlM2JkY19yZGlkJTNkJTNidGFnX2Zvcl9jaGlsZF9kaXJlY3RlZF90cmVhdG1lbnQlM2QlM2J0ZnVhJTNkaHR0cCUzYSUyZiUyZnd3dy5jZHcuY29tJTJmc2hvcCUyZnByb2R1Y3RzJTJmZGVmYXVsdC5hc3B4JTNmZWRjJTNkNTQ5NzAwNSUyNmNtX3ZlbiUzZGFjcXVpcmd5JTI2Y21fY2F0JTNkYmluZyUyNmNtX3BsYSUzZE5BLU5BLUFwcGxlX1JEJTI2Y21faXRlJTNkNTQ5NzAwNSUyNnNfa3djaWQlM2RBTCE0MjIzITEwITc0MDc5NzI0ODk2MDE2ITc0MDc5Nzc0Nzg0ODc5JTI2ZWZfaWQlM2QzOTQ4MGI4ZjE4NGMxNGFlYTIxZDZiNDM5MDI2ZWJlMCUzYUclM2FzJTI2bXNjbGtpZCUzZDM5NDgwYjhmMTg0YzE0YWVhMjFkNmI0MzkwMjZlYmUwJTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX2NhbXBhaWduJTNkQXBwbGUlMjUyME5vdGVib29rcyUyNTJGRGVza3RvcHMlMjUyMEVQTiUyNnV0bV90ZXJtJTNkQXBwbGUlMjUyMGlQYWQlMjUyMG1pbmklMjUyMDUlMjUyMFdpLUZpJTI1MjA1dGglMjUyMGdlbmVyYXRpb24lMjUyMHRhYmxldCUyNTIwNjQlMjUyMEdCJTI2dXRtX2NvbnRlbnQlM2RBcHBsZSUyNTIwVGFibGV0cw%26rlid%3D39480b8f184c14aea21d6b439026ebe0&vqd=3-166061562382093520072291462683820894222-283150986689285183769544183719738836436&iurl=%7B1%7DIG%3DF8F7ADC57A174B3897E185D54DE8FFC2%26CID%3D048A00CC8BA26C162FF410968A446D12%26ID%3DDevEx%2C5737.1",
+      "source": "cdw.com",
+      "snippet": "Apple Tablets in Stock. From the People Who Get IT.",
+      "sitelinks": [
+        {
+          "title": "Macbook",
+          "link": "https://duckduckgo.com/y.js?ad_provider=bingv7aa&eddgt=NRy2AmQk5ChhjWTO1JLeqw%3D%3D&rut=8bb9a3f6db742366df05412ef63a9b155f945ff71a77c8d8a7b09f959bbaaace&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De8vOJacsjeU5cpJ2d0Odt1qjVUCUzuG7PLsLvSp5sRU%2Dia_XBEbs4atDQtIwyZTitqRlcvyAHt0Z6jibNV8XKHslo0SMtRAXfdrqsti9q410St4Ds7WXd88ZxSA%2DNvAvAPeILqZz8TEljo6mbQFFX6bW15Ie0lOvQDXVjlORcAtYFiVrWV0YhUZl0bBM7ib1VcNlGT2Q%26u%3DaHR0cHMlM2ElMmYlMmZwaXhlbC5ldmVyZXN0dGVjaC5uZXQlMmY0MjIzJTJmY3ElM2Zldl9zaWQlM2QxMCUyNmV2X2xuJTNkQXBwbGUlMjUyMGlQYWQlMjUyMG1pbmklMjUyMDUlMjUyMFdpLUZpJTI1MjA1dGglMjUyMGdlbmVyYXRpb24lMjUyMHRhYmxldCUyNTIwNjQlMjUyMEdCJTI2ZXZfbHR4JTNkc2wlM2FNYWNib29rJTI2ZXZfbHglM2Rrd2QtNzQwNzk3NzQ3ODQ4NzklM2Fsb2MtMzIlMjZldl9jcnglM2Q3NDA3OTcyNDg5NjAxNiUyNmV2X210JTNkYiUyNmV2X2R2YyUzZGMlMjZldl9waHklM2Q1MjQ0JTI2ZXZfbG9jJTNkJTI2ZXZfY3glM2Q1MjU2ODkyMCUyNmV2X2F4JTNkMTE4NTI3NDA5MzA3ODQyOCUyNmV2X2V4JTNkJTI2ZXZfZWZpZCUzZGRjZTNlMTgxZjM3MDE1Y2Y1YWI4ODE0ZDdiMWE5ZDIwJTNhRyUzYXMlMjZ1cmwlM2QhaHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZkZG0lMmZ0cmFja2NsayUyZk4xMjYwLjI3OTZDRFcuQ09NJTJmQjI1MTMyMDM3LjI5MTMwNTczNSUzYmRjX3Rya19haWQlM2Q0ODQ3NTM5OTglM2JkY190cmtfY2lkJTNkNjU4Mzk0MTAlM2JkY19sYXQlM2QlM2JkY19yZGlkJTNkJTNidGFnX2Zvcl9jaGlsZF9kaXJlY3RlZF90cmVhdG1lbnQlM2QlM2J0ZnVhJTNkaHR0cCUzYSUyZiUyZnd3dy5jZHcuY29tJTJmc2hvcCUyZnNlYXJjaCUyZkNvbXB1dGVycyUyZk5vdGVib29rLUNvbXB1dGVycyUyZnJlc3VsdC5hc3B4JTNmdyUzZEMzJTI2cEN1cnJlbnQlM2QxJTI2YiUzZEFQTCUyNmxuJTNkMSUyNmNtX3ZlbiUzZGFjcXVpcmd5JTI2Y21fY2F0JTNkYmluZyUyNmNtX3BsYSUzZEFwcGxlJTJiJTI2Y21faXRlJTNkTWFjYm9vayUyNnNfa3djaWQlM2RBTCE0MjIzITEwITc0MDc5NzI0ODk2MDE2ITc0MDc5Nzc0Nzg0ODc5JTI2c19rd2NpZCUzZEFMITQyMjMhMTAhNzQwNzk3MjQ4OTYwMTYhNzQwNzk3NzQ3ODQ4NzklMjZlZl9pZCUzZGRjZTNlMTgxZjM3MDE1Y2Y1YWI4ODE0ZDdiMWE5ZDIwJTNhRyUzYXMlMjZtc2Nsa2lkJTNkZGNlM2UxODFmMzcwMTVjZjVhYjg4MTRkN2IxYTlkMjAlMjZ1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZ1dG1fY2FtcGFpZ24lM2RBcHBsZSUyNTIwTm90ZWJvb2tzJTI1MkZEZXNrdG9wcyUyNTIwRVBOJTI2dXRtX3Rlcm0lM2RBcHBsZSUyNTIwaVBhZCUyNTIwbWluaSUyNTIwNSUyNTIwV2ktRmklMjUyMDV0aCUyNTIwZ2VuZXJhdGlvbiUyNTIwdGFibGV0JTI1MjA2NCUyNTIwR0IlMjZ1dG1fY29udGVudCUzZEFwcGxlJTI1MjBUYWJsZXRz%26rlid%3Ddce3e181f37015cf5ab8814d7b1a9d20&vqd=3-54128778947485703375926033354337232345-283150986689285183769544183719738836436&iurl=%7B1%7DIG%3DF8F7ADC57A174B3897E185D54DE8FFC2%26CID%3D048A00CC8BA26C162FF410968A446D12%26ID%3DDevEx%2C5741.1"
+        },
+        {
+          "title": "iMacs",
+          "link": "https://duckduckgo.com/y.js?ad_provider=bingv7aa&eddgt=NRy2AmQk5ChhjWTO1JLeqw%3D%3D&rut=09d9adbf7efa01180d3021c70b9c1608aab0f538e189cc2023b8c73297a40c26&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De8BerEP08un8L4CU5wywxFWDVUCUwRXPDwLIWq6HdzCwNZgEgXzfx2E5m2cq5QGPYG3qSO8OcKYpGQYZUe2vS0MnHEVbNp93GKu173fzBrddcqQdkoGPflARoYrewrFuGGnHr7Ic8SqxCirJxzM_MPQTebzVlhd19Q4y4cMnRr4ko%2DDkCzb0N3ZRdFYoPODgPGsEO1cg%26u%3DaHR0cHMlM2ElMmYlMmZwaXhlbC5ldmVyZXN0dGVjaC5uZXQlMmY0MjIzJTJmY3ElM2Zldl9zaWQlM2QxMCUyNmV2X2xuJTNkQXBwbGUlMjUyMGlQYWQlMjUyMG1pbmklMjUyMDUlMjUyMFdpLUZpJTI1MjA1dGglMjUyMGdlbmVyYXRpb24lMjUyMHRhYmxldCUyNTIwNjQlMjUyMEdCJTI2ZXZfbHR4JTNkc2wlM2FpTWFjcyUyNmV2X2x4JTNka3dkLTc0MDc5Nzc0Nzg0ODc5JTNhbG9jLTMyJTI2ZXZfY3J4JTNkNzQwNzk3MjQ4OTYwMTYlMjZldl9tdCUzZGIlMjZldl9kdmMlM2RjJTI2ZXZfcGh5JTNkNTI0NCUyNmV2X2xvYyUzZCUyNmV2X2N4JTNkNTI1Njg5MjAlMjZldl9heCUzZDExODUyNzQwOTMwNzg0MjglMjZldl9leCUzZCUyNmV2X2VmaWQlM2Q2NjI2NzQzNzYwYTUxZGU5Y2ZiMDE0ZmJlOGNmYmNhOSUzYUclM2FzJTI2dXJsJTNkIWh0dHBzJTNhJTJmJTJmYWQuZG91YmxlY2xpY2submV0JTJmZGRtJTJmdHJhY2tjbGslMmZOMTI2MC4yNzk2Q0RXLkNPTSUyZkIyNTEzMjAzNy4yOTEzMDU3MzUlM2JkY190cmtfYWlkJTNkNDg0NzUzOTk4JTNiZGNfdHJrX2NpZCUzZDY1ODM5NDEwJTNiZGNfbGF0JTNkJTNiZGNfcmRpZCUzZCUzYnRhZ19mb3JfY2hpbGRfZGlyZWN0ZWRfdHJlYXRtZW50JTNkJTNidGZ1YSUzZGh0dHAlM2ElMmYlMmZ3d3cuY2R3LmNvbSUyZnNob3AlMmZzZWFyY2glMmZyZXN1bHRzLmFzcHglM2ZsbiUzZDIlMjZ3Y2xzcyUzZEMyJTI2QnJhbmQlM2RBUEwlMjZrZXklM2RpTWFjJTI2Y21fdmVuJTNkYWNxdWlyZ3klMjZjbV9jYXQlM2RiaW5nJTI2Y21fcGxhJTNkQXBwbGUlMmIlMjZjbV9pdGUlM2RpTWFjcyUyNnNfa3djaWQlM2RBTCE0MjIzITEwITc0MDc5NzI0ODk2MDE2ITc0MDc5Nzc0Nzg0ODc5JTI2c19rd2NpZCUzZEFMITQyMjMhMTAhNzQwNzk3MjQ4OTYwMTYhNzQwNzk3NzQ3ODQ4NzklMjZlZl9pZCUzZDY2MjY3NDM3NjBhNTFkZTljZmIwMTRmYmU4Y2ZiY2E5JTNhRyUzYXMlMjZtc2Nsa2lkJTNkNjYyNjc0Mzc2MGE1MWRlOWNmYjAxNGZiZThjZmJjYTklMjZ1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZ1dG1fY2FtcGFpZ24lM2RBcHBsZSUyNTIwTm90ZWJvb2tzJTI1MkZEZXNrdG9wcyUyNTIwRVBOJTI2dXRtX3Rlcm0lM2RBcHBsZSUyNTIwaVBhZCUyNTIwbWluaSUyNTIwNSUyNTIwV2ktRmklMjUyMDV0aCUyNTIwZ2VuZXJhdGlvbiUyNTIwdGFibGV0JTI1MjA2NCUyNTIwR0IlMjZ1dG1fY29udGVudCUzZEFwcGxlJTI1MjBUYWJsZXRz%26rlid%3D6626743760a51de9cfb014fbe8cfbca9&vqd=3-187835162650500504359138865596566844417-283150986689285183769544183719738836436&iurl=%7B1%7DIG%3DF8F7ADC57A174B3897E185D54DE8FFC2%26CID%3D048A00CC8BA26C162FF410968A446D12%26ID%3DDevEx%2C5743.1"
+        },
+        {
+          "title": "Desktops",
+          "link": "https://duckduckgo.com/y.js?ad_provider=bingv7aa&eddgt=NRy2AmQk5ChhjWTO1JLeqw%3D%3D&rut=a8036b65941d62a7256e06747d5429ec8075bd0b096c2fa96326dc561f9d0d1c&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De8MDQ6g2r8E0YnTcjj0TZ29zVUCUxYMj12jqgX6hCVabt%2D9tbqn6rNJ6QALyLTqAEkIqsd%2DSGAyH8nYEEPxFwXyL3DovJA%2DYwZBxpXTlGl2w6%2D4Sv_fwWQY53nbeWriQDwyLFbe2gqRqj2V3q4Cwp3Kkm10ryqmLIlw8mQXm0XJOgyJ6e88XIEeOro9z_TrjZk43CmwQ%26u%3DaHR0cHMlM2ElMmYlMmZwaXhlbC5ldmVyZXN0dGVjaC5uZXQlMmY0MjIzJTJmY3ElM2Zldl9zaWQlM2QxMCUyNmV2X2xuJTNkQXBwbGUlMjUyMGlQYWQlMjUyMG1pbmklMjUyMDUlMjUyMFdpLUZpJTI1MjA1dGglMjUyMGdlbmVyYXRpb24lMjUyMHRhYmxldCUyNTIwNjQlMjUyMEdCJTI2ZXZfbHR4JTNkc2wlM2FEZXNrdG9wcyUyNmV2X2x4JTNka3dkLTc0MDc5Nzc0Nzg0ODc5JTNhbG9jLTMyJTI2ZXZfY3J4JTNkNzQwNzk3MjQ4OTYwMTYlMjZldl9tdCUzZGIlMjZldl9kdmMlM2RjJTI2ZXZfcGh5JTNkNTI0NCUyNmV2X2xvYyUzZCUyNmV2X2N4JTNkNTI1Njg5MjAlMjZldl9heCUzZDExODUyNzQwOTMwNzg0MjglMjZldl9leCUzZCUyNmV2X2VmaWQlM2RlZDU3NzFlZmU4NTgxYzYzNmQyMjExMjM2MDMyOTY2MyUzYUclM2FzJTI2dXJsJTNkIWh0dHBzJTNhJTJmJTJmYWQuZG91YmxlY2xpY2submV0JTJmZGRtJTJmdHJhY2tjbGslMmZOMTI2MC4yNzk2Q0RXLkNPTSUyZkIyNTEzMjAzNy4yOTEzMDU3MzUlM2JkY190cmtfYWlkJTNkNDg0NzUzOTk4JTNiZGNfdHJrX2NpZCUzZDY1ODM5NDEwJTNiZGNfbGF0JTNkJTNiZGNfcmRpZCUzZCUzYnRhZ19mb3JfY2hpbGRfZGlyZWN0ZWRfdHJlYXRtZW50JTNkJTNidGZ1YSUzZGh0dHAlM2ElMmYlMmZ3d3cuY2R3LmNvbSUyZnNob3AlMmZzZWFyY2glMmZDb21wdXRlcnMlMmZEZXNrdG9wLUNvbXB1dGVycyUyZnJlc3VsdC5hc3B4JTNmdyUzZEMyJTI2cEN1cnJlbnQlM2QxJTI2YiUzZEFQTCUyNmxuJTNkMSUyNmNtX3ZlbiUzZGFjcXVpcmd5JTI2Y21fY2F0JTNkYmluZyUyNmNtX3BsYSUzZEFwcGxlJTJiJTI2Y21faXRlJTNkRGVza3RvcHMlMjZzX2t3Y2lkJTNkQUwhNDIyMyExMCE3NDA3OTcyNDg5NjAxNiE3NDA3OTc3NDc4NDg3OSUyNnNfa3djaWQlM2RBTCE0MjIzITEwITc0MDc5NzI0ODk2MDE2ITc0MDc5Nzc0Nzg0ODc5JTI2ZWZfaWQlM2RlZDU3NzFlZmU4NTgxYzYzNmQyMjExMjM2MDMyOTY2MyUzYUclM2FzJTI2bXNjbGtpZCUzZGVkNTc3MWVmZTg1ODFjNjM2ZDIyMTEyMzYwMzI5NjYzJTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX2NhbXBhaWduJTNkQXBwbGUlMjUyME5vdGVib29rcyUyNTJGRGVza3RvcHMlMjUyMEVQTiUyNnV0bV90ZXJtJTNkQXBwbGUlMjUyMGlQYWQlMjUyMG1pbmklMjUyMDUlMjUyMFdpLUZpJTI1MjA1dGglMjUyMGdlbmVyYXRpb24lMjUyMHRhYmxldCUyNTIwNjQlMjUyMEdCJTI2dXRtX2NvbnRlbnQlM2RBcHBsZSUyNTIwVGFibGV0cw%26rlid%3Ded5771efe8581c636d22112360329663&vqd=3-315715772352437320900303735082742048723-283150986689285183769544183719738836436&iurl=%7B1%7DIG%3DF8F7ADC57A174B3897E185D54DE8FFC2%26CID%3D048A00CC8BA26C162FF410968A446D12%26ID%3DDevEx%2C5745.1"
+        },
+        {
+          "title": "MacBook Air",
+          "link": "https://duckduckgo.com/y.js?ad_provider=bingv7aa&eddgt=NRy2AmQk5ChhjWTO1JLeqw%3D%3D&rut=3c09457d1c86b32c5d8bb9aac825156efe38fde6769abc9150a54c57a97ed1b7&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De8a0AyfgYkDj38EG28JidF9jVUCUxFnVMbFQJujkT7lvHyXacj%2D08w13W4v0u6maZro88aA_KDskncZjIxZ9iCPK5paYycYO0R3MGULJxdIjKDoZ0qC_XPmvIpqLX9LM34Yx1oDgS3QYZOuidE7kn9WGuqmwL6yt0S8u2ULd6Ibbb46NqdulSvKeKFHQfXml4lgvtt3Q%26u%3DaHR0cHMlM2ElMmYlMmZwaXhlbC5ldmVyZXN0dGVjaC5uZXQlMmY0MjIzJTJmY3ElM2Zldl9zaWQlM2QxMCUyNmV2X2xuJTNkQXBwbGUlMjUyMGlQYWQlMjUyMG1pbmklMjUyMDUlMjUyMFdpLUZpJTI1MjA1dGglMjUyMGdlbmVyYXRpb24lMjUyMHRhYmxldCUyNTIwNjQlMjUyMEdCJTI2ZXZfbHR4JTNkc2wlM2FNYWNCb29rJTI1MjBBaXIlMjZldl9seCUzZGt3ZC03NDA3OTc3NDc4NDg3OSUzYWxvYy0zMiUyNmV2X2NyeCUzZDc0MDc5NzI0ODk2MDE2JTI2ZXZfbXQlM2RiJTI2ZXZfZHZjJTNkYyUyNmV2X3BoeSUzZDUyNDQlMjZldl9sb2MlM2QlMjZldl9jeCUzZDUyNTY4OTIwJTI2ZXZfYXglM2QxMTg1Mjc0MDkzMDc4NDI4JTI2ZXZfZXglM2QlMjZldl9lZmlkJTNkYzFiYTI0ZjQ0MWRhMWUzOTQ4OWQ0NDM4YzliMGRlYWElM2FHJTNhcyUyNnVybCUzZCFodHRwcyUzYSUyZiUyZmFkLmRvdWJsZWNsaWNrLm5ldCUyZmRkbSUyZnRyYWNrY2xrJTJmTjEyNjAuMjc5NkNEVy5DT00lMmZCMjUxMzIwMzcuMjkxMzA1NzM1JTNiZGNfdHJrX2FpZCUzZDQ4NDc1Mzk5OCUzYmRjX3Rya19jaWQlM2Q2NTgzOTQxMCUzYmRjX2xhdCUzZCUzYmRjX3JkaWQlM2QlM2J0YWdfZm9yX2NoaWxkX2RpcmVjdGVkX3RyZWF0bWVudCUzZCUzYnRmdWElM2RodHRwJTNhJTJmJTJmd3d3LmNkdy5jb20lMmZzaG9wJTJmc2VhcmNoJTJmcmVzdWx0cy5hc3B4JTNmbG4lM2QyJTI2d2Nsc3MlM2RDMyUyNkJyYW5kJTNkQVBMJTI2a2V5JTNkTWFjQm9vayUyNTIwYWlyJTI2Y21fdmVuJTNkYWNxdWlyZ3klMjZjbV9jYXQlM2RiaW5nJTI2Y21fcGxhJTNkQXBwbGUlMmIlMjZjbV9pdGUlM2RNYWNCb29rJTJiQWlyJTI2c19rd2NpZCUzZEFMITQyMjMhMTAhNzQwNzk3MjQ4OTYwMTYhNzQwNzk3NzQ3ODQ4NzklMjZzX2t3Y2lkJTNkQUwhNDIyMyExMCE3NDA3OTcyNDg5NjAxNiE3NDA3OTc3NDc4NDg3OSUyNmVmX2lkJTNkYzFiYTI0ZjQ0MWRhMWUzOTQ4OWQ0NDM4YzliMGRlYWElM2FHJTNhcyUyNm1zY2xraWQlM2RjMWJhMjRmNDQxZGExZTM5NDg5ZDQ0MzhjOWIwZGVhYSUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jYW1wYWlnbiUzZEFwcGxlJTI1MjBOb3RlYm9va3MlMjUyRkRlc2t0b3BzJTI1MjBFUE4lMjZ1dG1fdGVybSUzZEFwcGxlJTI1MjBpUGFkJTI1MjBtaW5pJTI1MjA1JTI1MjBXaS1GaSUyNTIwNXRoJTI1MjBnZW5lcmF0aW9uJTI1MjB0YWJsZXQlMjUyMDY0JTI1MjBHQiUyNnV0bV9jb250ZW50JTNkQXBwbGUlMjUyMFRhYmxldHM%26rlid%3Dc1ba24f441da1e39489d4438c9b0deaa&vqd=3-225489738277111721978353918001980689388-283150986689285183769544183719738836436&iurl=%7B1%7DIG%3DF8F7ADC57A174B3897E185D54DE8FFC2%26CID%3D048A00CC8BA26C162FF410968A446D12%26ID%3DDevEx%2C5747.1"
+        }
+      ]
+    },
+    {
+      "position": 2,
+      "title": "Apple Macbook Air Overstock™ - Free Shipping on Everything*",
+      "link": "https://duckduckgo.com/y.js?ad_provider=bingv7aa&eddgt=NRy2AmQk5ChhjWTO1JLeqw%3D%3D&rut=27bba96555fb02c88880878bbe3a7986d3a212708239cd5b3157cd2fa1f3234a&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De8IpkwXaGjbvsPQGOX6fg%2DfjVUCUwKFGPJ4JRm6QV012Z%2DZ6RHK6t7UzjTSo3H8MKXSfvRlZyK04jMi8e%2Dyor8oCBkR2L3cDf5Gt5Sl%2DQTKqTqsNsK6nnne4MP98u_m8fQCG7hwJjpwWPabEV0tV9nWaCPMcTDmleb0b5eLLGtqcEHe3j2rNg_MC7IZE_j4IrZpiVzrA%26u%3DaHR0cHMlM2ElMmYlMmZ3d3cub3ZlcnN0b2NrLmNvbSUyZkVsZWN0cm9uaWNzJTJmQ29tcHV0ZXJzLVRhYmxldHMlMmZBcHBsZSUyYyUyZmJyYW5kJTJjJTJmNDczJTJmZGVwdC5odG1sJTNmY2lkJTNkMjk1NDM4JTI2a2lkJTNkZHN0cmFja2VyaWQlMjZ0cmFjayUzZHBzbXNuJTI2cG9zJTNkJTI2dGFyZ2V0aWQlM2Rrd2QtNzM5NDIzMzQ0MzEzMzIlM2Fsb2MtMzIlMjZnY2xzcmMlM2Rhdy5kcyUyNiUyNm5ldHdvcmslM2RzJTI2bXNjbGtpZCUzZDFlNTA1ZGU4YjRlODE0MmRhNWI1M2QyNDNjODJjOTA2JTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX2NhbXBhaWduJTNkR2VuZXJpY19TdGFuZGFyZF9FbGVjdHJvbmljcyUyNnV0bV90ZXJtJTNkQXBwbGUlMjUyME1hY2Jvb2slMjUyMEFpciUyNnV0bV9jb250ZW50JTNkQXBwbGUlMjUyMCUyNTdDJTI1MjBNYWNib29rJTI1MjAlMjU3QyUyNTIwQWly%26rlid%3D1e505de8b4e8142da5b53d243c82c906&vqd=3-37430560230694636391628222942010942437-283150986689285183769544183719738836436&iurl=%7B1%7DIG%3DF8F7ADC57A174B3897E185D54DE8FFC2%26CID%3D048A00CC8BA26C162FF410968A446D12%26ID%3DDevEx%2C5749.1",
+      "source": "overstock.com",
+      "snippet": "Over 20 Years of Experience To Give You Great Deals on Quality Home Products and More. Shop Items You Love at Overstock, with Free Shipping on Everything* and Easy Returns."
+    }
+  ],
+  "organic_results": [
+    {
+      "position": 1,
+      "title": "Apple",
+      "link": "https://www.apple.com/",
+      "snippet": "Apple. Shop online and get Specialist help, free no-contact delivery, and more. Shop with a Specialist, get credit with Apple Trade In, choose free delivery or pickup, and more at the Apple Store Online .",
+      "favicon": "https://external-content.duckduckgo.com/ip3/www.apple.com.ico",
+      "sitelinks": [
+        {
+          "title": "Support",
+          "link": "https://support.apple.com/",
+          "snippet": "If you need a replacement adapter to charge your Apple device, we recommend getting an Apple power adapter. Also non-genuine replacement displays may have compromised visual quality and may fail to work correctly. Apple-certified screen repairs are performed by trusted experts who use genuine Apple parts."
+        },
+        {
+          "title": "Mac",
+          "link": "https://www.apple.com/mac/",
+          "snippet": "Apple reserves the right to refuse or limit the quantity of any device for any reason. In the Apple Store: Offer only available on presentation of a valid, government-issued photo ID (local law may require saving this information). Value of your current device may be applied toward purchase of a new Apple device."
+        },
+        {
+          "title": "iPhone",
+          "link": "https://www.apple.com/iphone/",
+          "snippet": "* Apple Card Monthly Installments (ACMI) is a payment option available to select at checkout for certain Apple products purchased at Apple Store locations, apple.com, the Apple Store app, or by calling 1-800-MY-APPLE, and is subject to credit approval and credit limit."
+        },
+        ...
+      ]
+    },
+    {
+      "position": 2,
+      "title": "Apple Inc. - Wikipedia",
+      "link": "https://en.wikipedia.org/wiki/Apple_Inc.",
+      "snippet": "Apple Inc. is an American multinational technology company that specializes in consumer electronics, computer software, and online services.Apple is the world's largest technology company by revenue (totalling $274.5 billion in 2020) and, since January 2021, the world's most valuable company.As of 2021, Apple is the world's fourth-largest PC vendor by unit sales, and fourth-largest smartphone ...",
+      "favicon": "https://external-content.duckduckgo.com/ip3/en.wikipedia.org.ico"
+    },
+    {
+      "position": 3,
+      "title": "Apple Inc. | History, Products, Headquarters, & Facts ...",
+      "link": "https://www.britannica.com/topic/Apple-Inc",
+      "snippet": "Apple Inc., formerly Apple Computer, Inc., American manufacturer of personal computers, smartphones, tablet computers, computer peripherals, and computer software. It was the first successful personal computer company and the popularizer of the graphical user interface. Headquarters are located in Cupertino, California. Computers host websites ...",
+      "favicon": "https://external-content.duckduckgo.com/ip3/www.britannica.com.ico"
+    },
+    ...
+  ],
+  "knowledge_graph": {
+    "title": "Apple Inc.",
+    "description": "Apple Inc. is an American multinational technology company that specializes in consumer electronics, computer software, and online services. Apple is the world's largest technology company by revenue and, since January 2021, the world's most valuable company. As of 2021, Apple is the world's fourth-largest PC vendor by unit sales, and fourth-largest smartphone manufacturer. It is one of the Big Five American information technology companies, along with Amazon, Google, Microsoft, and Facebook. Apple was founded by Steve Jobs, Steve Wozniak, and Ronald Wayne in 1976 to develop and sell Wozniak's Apple I personal computer. It was incorporated by Jobs and Wozniak as Apple Computer, Inc. in 1977, and sales of its computers, including the Apple II, grew quickly. They went public in 1980 to instant financial success.",
+    "thumbnail": "https://duckduckgo.com/i/b2e38b1b.png",
+    "facts": {
+      "formerly_called": "Apple Computer Company, (1976–1977), Apple Computer, Inc, (1977–2007)",
+      "type": "Public",
+      "traded_as": "NASDAQ: aapl AAPL, Nasdaq 100 component, DJIA component, S&P 100 component, S&P 500 component",
+      "isin": "[ US0378331005]",
+      "industry": "Computer hardware, Computer software, Consumer electronics, Cloud computing, Digital distribution, Fabless silicon design, Semiconductors, Media, Retail, Financial technology",
+      "founded": "April 01, 1976",
+      "founders": "Steve Jobs, Steve Wozniak, Ronald Wayne",
+      "number_of_locations": "511 retail stores(2021)",
+      "area_served": "Worldwide",
+      "key_people": "Chairman: Arthur D. Levinson, CEO: Tim Cook, COO: Jeff Williams",
+      "revenue": "US$ 274.515 billion (2020)",
+      "operating_income": "US$ 66.288 billion (2020)",
+      "total_assets": "US$ 323.888 billion (2020)",
+      "total_equity": "US$ 65.339 billion (2020)",
+      "number_of_employees": "147,000(2020)",
+      "subsidiaries": "Braeburn Capital, Beats Electronics, Claris, Apple Energy, LLC, Apple Sales International, Apple Services, Apple Worldwide Video, Anobit, Beddit"
+    },
+    "profiles": [
+      {
+        "name": "Wikipedia",
+        "link": "https://en.wikipedia.org/wiki/Apple_Inc.",
+        "thumbnail": "https://duckduckgo.com/assets/icons/thirdparty/wikipedia.svg"
+      },
+      {
+        "name": "GitHub profile",
+        "link": "https://github.com/apple",
+        "thumbnail": "https://duckduckgo.com/assets/icons/thirdparty/github.svg"
+      },
+      {
+        "name": "Twitter profile",
+        "link": "https://twitter.com/Apple",
+        "thumbnail": "https://duckduckgo.com/assets/icons/thirdparty/twitter.svg"
+      },
+      ...
+    ],
+    "related_topics": [
+      {
+        "query": "Apple Inc. Category",
+        "link": "https://duckduckgo.com/c/Apple_Inc."
+      },
+      {
+        "query": "Pixar - Pixar Animation Studios is an American computer animation studio known for its critically and commercially successful computer animated feature films. It is based in Emeryville, California, and is a subsidiary of Walt Disney Studios owned by The Walt Disney Company.",
+        "link": "https://duckduckgo.com/Pixar"
+      },
+      {
+        "query": "Companies based in Cupertino, California",
+        "link": "https://duckduckgo.com/c/Companies_based_in_Cupertino%2C_California"
+      },
+      ...
+    ]
+  },
+  "news_results": [
+    {
+      "position": 1,
+      "title": "Apple Supplier Biel Weighs Up to $2 Billion Hong Kong IPO",
+      "link": "https://www.msn.com/en-us/money/other/apple-supplier-biel-weighs-up-to-dollar2-billion-hong-kong-ipo/ar-AALau6B",
+      "snippet": "Biel Crystal Manufactory Ltd., a supplier of cover glass to Apple Inc., is planning a Hong Kong initial public offering that could raise as much as $2 billion, according to people with knowledge of the matter.",
+      "source": "Bloomberg on MSN.com",
+      "date": "8 hours ago",
+      "thumbnail": "https://img-s-msn-com.akamaized.net/tenant/amp/entityid/AALaDnW.img?h=630&w=1200&m=6&q=60&o=t&l=f&f=jpg"
+    },
+    {
+      "position": 2,
+      "title": "When Will Apple Release The New MacBook Pro?",
+      "link": "https://www.forbes.com/sites/ewanspence/2021/06/17/apple-macbook-pro-14-inch-release-date-specs-availability/",
+      "snippet": "So, how long will we have to wait for the new MacBooks? The biggest issue looks to be the new mini-LED displays. The general silicon shortage has impacted some of the components used in the display, and the knock-on effects have seen delays in production not just of the unreleased Macs,",
+      "source": "Forbes",
+      "date": "12 hours ago",
+      "thumbnail": "https://thumbor.forbes.com/thumbor/fit-in/1200x0/filters%3Aformat%28jpg%29/https%3A%2F%2Fspecials-images.forbesimg.com%2Fimageserve%2F60cbd97632b9d98aac133343%2F0x0.jpg"
+    },
+    {
+      "position": 3,
+      "title": "Why Apple Stock Looks Ready To Break Out In The Weeks Ahead",
+      "link": "https://markets.businessinsider.com/news/etf/why-apple-stock-looks-ready-to-break-out-in-the-weeks-ahead-1030533790",
+      "snippet": "Apple Inc. (NASDAQ: AAPL) shares were trading higher Thursday after the Federal Reserve held its rates constant but raised its inflation expectations for the years 2021-2023. Seven Fed officials expect increases in rates in 2022,",
+      "source": "Business Insider",
+      "date": "13 hours ago",
+      "thumbnail": "https://cdn.benzinga.com/files/imagecache/1024x768xUP/images/story/2012/apple_wwdc20-keynote-tim-cook_06222020_14.jpg"
+    },
+    ...
+  ],
+  "related_searches": [
+    {
+      "query": "apple inc company overview",
+      "link": "https://duckduckgo.com/?q=apple%20inc%20company%20overview"
+    },
+    {
+      "query": "apple inc website",
+      "link": "https://duckduckgo.com/?q=apple%20inc%20website"
+    },
+    {
+      "query": "apple inc news today",
+      "link": "https://duckduckgo.com/?q=apple%20inc%20news%20today"
+    },
+    ...
+  ],
+  "serpapi_pagination": {
+    "next": "https://serpapi.com/search.json?engine=duckduckgo&kl=us-en&q=apple&start=27"
+  }
+}

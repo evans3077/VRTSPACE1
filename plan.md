@@ -280,6 +280,11 @@ Turn the current platform into a production-grade decision system that is clearl
   - hospitality, local-service, ecommerce, SaaS, healthcare, and real-estate profiles no longer share the exact same discovery-family mix
   Value:
   This reduces vague results, improves crawl precision, and creates richer downstream data for page maps, action packs, backlink workflows, citations, and stakeholder reports.
+- [x] Expand audit and workspace intake with structured niche and market fields
+  Why:
+  Precision starts at intake. Weak business context or flat location text makes the downstream discovery pipeline guess too much.
+  Delivered result:
+  Audit and workspace creation now capture business subtype, target audience, targeted-vs-worldwide market mode, and structured country plus validated area inputs. Those values are synced into the project layer so SEO and later modules inherit better context instead of rebuilding it from scratch.
 - [ ] Add provider-level vertical source integration
   Why:
   Route families are now separated, but they still retrieve primarily through generic web-search providers.
@@ -290,6 +295,43 @@ Turn the current platform into a production-grade decision system that is clearl
   - shopping/product sources for ecommerce
   - related questions, autocomplete, and trend sources for demand shaping and content expansion
   - review and directory sources for citation and reputation context
+  SEO source-integration order:
+  - `google_local`
+    Role:
+    benchmark-candidate enrichment, local entity validation, citation discovery, and local-pack evidence.
+    Why first:
+    It exposes business title, category, address, ratings, review volume, coordinates, and place IDs. That is stronger local competitor evidence than generic snippets.
+  - `google_local_services`
+    Role:
+    local-service competitor discovery and trust-signal enrichment.
+    Why second:
+    It exposes service type, service area, years in business, rating, and review volume. Use it for service businesses, not as a universal source.
+  - `google_events`
+    Role:
+    event-venue visibility surfaces, event-intent validation, and citation/backlink discovery.
+    Why third:
+    It helps event-led hospitality and venue businesses, but venues and ticket surfaces should not become benchmark peers by default.
+  - `google_hotels`
+    Role:
+    hospitality market-surface enrichment, amenity/pricing comparison, and visibility-channel analysis.
+    Why fourth:
+    Useful for hospitality, but it should remain a market-surface source rather than a peer benchmark source.
+  - `yelp`
+    Role:
+    citation and reputation signals.
+    Why:
+    Good for local listing and review intelligence, but Yelp pages should stay out of benchmark peers.
+  - `tripadvisor`
+    Role:
+    hospitality market-surface, review, and citation context.
+    Why:
+    High value for hotels, venues, restaurants, and attractions, but it is still a surface, not a benchmark competitor.
+  Defer for initial SEO source routing:
+  - `youtube`
+  - `yahoo`
+  - `yandex`
+  Reason:
+  These can help later with distribution, regional research, or content support, but they do not improve first-pass peer-competitor precision enough to be in the first SEO integration slice.
 - [ ] Add cache and reuse rules for expensive benchmark artifacts
   Why:
   The system should not refetch or recompute everything on every refresh.

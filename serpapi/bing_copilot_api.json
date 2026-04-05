@@ -1,0 +1,952 @@
+{
+"search_metadata":
+{
+"id":
+"699eaa46a3f48363165f1830",
+"status":
+"Success",
+"json_endpoint":
+"https://serpapi.com/searches/EPt6Raiti5CJBTceFbyyEA/699eaa46a3f48363165f1830.json",
+"created_at":
+"2026-02-25 07:52:38 UTC",
+"processed_at":
+"2026-02-25 07:52:38 UTC",
+"bing_copilot_url":
+"https://www.bing.com/copilotsearch?q=new+shopping+things&FORM=CSSCOP",
+"raw_html_file":
+"https://serpapi.com/searches/EPt6Raiti5CJBTceFbyyEA/699eaa46a3f48363165f1830.html",
+"total_time_taken":
+0.85
+},
+"search_parameters":
+{
+"q":
+"new shopping things",
+"engine":
+"bing_copilot"
+},
+"search_information":
+{ },
+"header":
+"Explore the latest shopping trends with new fashion, tech, beauty, wellness, and home products launching this month, including innovative gadgets, stylish wardrobe pieces, and wellness essentials.",
+"text_blocks":
+[
+{
+"type":
+"heading",
+"snippet":
+"Fashion and Apparel",
+"level":
+2
+},
+{
+"type":
+"paragraph",
+"snippet":
+"Retailers like Nordstrom and Vogue highlight many new designer fashion arrivals for spring, with bright pastels, clean silhouettes, statement accessories, and standout collections from brands like Chloé, Dolce & Gabbana, and NikeSKIMS Nordstrom+1 . Notable items include:",
+"snippet_highlighted_words":
+[
+"designer fashion arrivals"
+],
+"reference_indexes":
+[
+0,
+2
+]
+},
+{
+"type":
+"list",
+"list":
+[
+{
+"snippet":
+"Floral print maxi dresses and curated handbags"
+},
+{
+"snippet":
+"Spring wardrobe essentials featuring versatile dresses, tops, and activewear"
+},
+{
+"snippet":
+"Athleta Elation leggings and pants collection with multiple fits and styles 1",
+"reference_indexes":
+[
+1
+]
+}
+]
+},
+{
+"type":
+"paragraph",
+"snippet":
+"New footwear launches include:"
+},
+{
+"type":
+"list",
+"list":
+[
+{
+"snippet":
+"Hoka Transport 2 with enhanced cushioning and comfort",
+"snippet_highlighted_words":
+[
+"Hoka Transport 2"
+]
+},
+{
+"snippet":
+"Brooks Glycerin 23, suitable for long commutes or heavy activity",
+"snippet_highlighted_words":
+[
+"Brooks Glycerin 23"
+]
+},
+{
+"snippet":
+"Puma Deviate Nitro 4 and Deviate Nitro Elite 4, lightweight, performance-focused running shoes 1",
+"snippet_highlighted_words":
+[
+"Puma Deviate Nitro 4",
+"Deviate Nitro Elite 4"
+],
+"reference_indexes":
+[
+1
+]
+}
+]
+},
+{
+"type":
+"heading",
+"snippet":
+"Tech and Gadgets",
+"level":
+2
+},
+{
+"type":
+"paragraph",
+"snippet":
+"Several innovative devices are hitting the market:"
+},
+{
+"type":
+"list",
+"list":
+[
+{
+"snippet":
+"Samsung Galaxy Z TriFold, a desktop-sized foldable phone with IP48 dust/water resistance and dual folding design 1",
+"snippet_highlighted_words":
+[
+"Samsung Galaxy Z TriFold"
+],
+"reference_indexes":
+[
+1
+]
+},
+{
+"snippet":
+"Dyson PencilVac, a compact, lightweight vacuum designed for efficient home cleaning",
+"snippet_highlighted_words":
+[
+"Dyson PencilVac"
+]
+},
+{
+"snippet":
+"Sony WF-1000XM6, premium wireless earbuds with advanced noise cancellation",
+"snippet_highlighted_words":
+[
+"Sony WF-1000XM6"
+]
+},
+{
+"snippet":
+"Other smart home devices like Dreame X60 Max Ultra Robot Vacuum and Ecovacs Goat A3000 Lidar Pro Robot Lawn Mower 1",
+"snippet_highlighted_words":
+[
+"Dreame X60 Max Ultra Robot Vacuum",
+"Ecovacs Goat A3000 Lidar Pro Robot Lawn Mower"
+],
+"reference_indexes":
+[
+1
+]
+}
+]
+},
+{
+"type":
+"heading",
+"snippet":
+"Beauty and Wellness",
+"level":
+2
+},
+{
+"type":
+"paragraph",
+"snippet":
+"New skincare and haircare innovations include:"
+},
+{
+"type":
+"list",
+"list":
+[
+{
+"snippet":
+"Rhode Peptide Lip Boost, moisturizing and softening lips with peptides and ceramides",
+"snippet_highlighted_words":
+[
+"Rhode Peptide Lip Boost"
+]
+},
+{
+"snippet":
+"Rhode Caffeine Reset, a revitalizing face mask with caffeine for hydration and de-puffing",
+"snippet_highlighted_words":
+[
+"Rhode Caffeine Reset"
+]
+},
+{
+"snippet":
+"Dyson Amino Leave-In Scalp Bubble Treatment, strengthening hair and scalp",
+"snippet_highlighted_words":
+[
+"Dyson Amino Leave-In Scalp Bubble Treatment"
+]
+},
+{
+"snippet":
+"Unove Hair Care, a Korean brand offering repair-focused products like masks, conditioners, and heat protectants 1",
+"snippet_highlighted_words":
+[
+"Unove Hair Care"
+],
+"reference_indexes":
+[
+1
+]
+}
+]
+},
+{
+"type":
+"heading",
+"snippet":
+"Home and Kitchen",
+"level":
+2
+},
+{
+"type":
+"paragraph",
+"snippet":
+"Recent kitchen and home arrivals focus on practicality and quality:",
+"snippet_highlighted_words":
+[
+"practicality and quality"
+]
+},
+{
+"type":
+"list",
+"list":
+[
+{
+"snippet":
+"Caraway Bakeware+ Collection, including cookie sheets, pizza pans, and fluted cake pans with non-toxic, non-stick coatings",
+"snippet_highlighted_words":
+[
+"Caraway Bakeware+ Collection"
+]
+},
+{
+"snippet":
+"New mechanical, battery-free kitchen timers with dual displays for precision cooking 1",
+"reference_indexes":
+[
+1
+]
+}
+]
+},
+{
+"type":
+"heading",
+"snippet":
+"Summary",
+"level":
+2
+},
+{
+"type":
+"paragraph",
+"snippet":
+"For shoppers in Punxsutawney, Pennsylvania, and nationwide, February 2026 offers a variety of new and trending shopping options, from fashion and footwear to tech, beauty, and home essentials. These launches provide opportunities to refresh your wardrobe, upgrade gadgets, and explore innovative wellness and home products, making it a good time to discover standout items tailored to the season and lifestyle needs Nordstrom+2 .",
+"snippet_highlighted_words":
+[
+"new and trending shopping options"
+],
+"reference_indexes":
+[
+0,
+1,
+2
+]
+}
+],
+"references":
+[
+{
+"index":
+0,
+"title":
+"New Arrivals | Nordstrom",
+"link":
+"https://www.nordstrom.com/browse/new",
+"snippet":
+"New spring wardrobe essentials at prices you'll love. Shop new designer arrivals, investment-worthy accessories and standout collections. Curated for the modern woman: new arrivals from Chloé in clothing, handbags and shoes. Grace in motion. Strength in form.",
+"source":
+"Nordstrom"
+},
+{
+"index":
+1,
+"title":
+"51+ Best New Products in February, Hand-Picked by Editors",
+"link":
+"https://www.nbcnews.com/select/shopping/new-notable-feburary-2026-rcna258929",
+"snippet":
+"Shopping editors recommend the best new products in February 2026, like Rhode Peptide Lip Boost, Hoka Transport 2 and Samsung Galaxy Z TriFold.",
+"source":
+"NBC News"
+},
+{
+"index":
+2,
+"title":
+"These Are the 28 Best New Fashion Items Right Now | Who What Wear",
+"link":
+"https://www.whowhatwear.com/best-new-fashion-items",
+"snippet":
+"Shop our editor's list of the best new fashion items to add to your shopping cart right now.",
+"source":
+"Who What Wear"
+},
+{
+"index":
+3,
+"title":
+"Amazon.com New Releases: The best-selling new & future releases on Amazon",
+"link":
+"https://www.amazon.com/gp/new-releases/",
+"snippet":
+"These lists, updated frequently, contain bestselling items.",
+"source":
+"Amazon"
+},
+{
+"index":
+4,
+"title":
+"New Arrivals at Target",
+"link":
+"https://www.target.com/c/what-s-new/-/N-o9rnh",
+"snippet":
+"Get New Arrivals from Target at great low prices. Choose from Same Day Delivery, Drive Up or Order Pickup. Free Standard shipping with $35 orders. Expect More. Pay Less.",
+"source":
+"Target"
+},
+{
+"index":
+5,
+"title":
+"New Arrivals - Nordstrom Rack",
+"link":
+"https://www.nordstromrack.com/shop/new-arrivals",
+"snippet":
+"Our new arrivals never disappoint! Shop a wide range of products for men, women, kids and more. You can find options for up to 70% off and get free shipping on orders over $89.",
+"source":
+"Nordstrom Rack"
+},
+{
+"index":
+6,
+"title":
+"45+ New Arrivals to Shop Right Now | Vogue",
+"link":
+"https://www.vogue.com/shopping/new-arrivals",
+"snippet":
+"Designers are giving us new fashion arrivals to look forward to all year long, with goodies landing in stores and online every week—from got-to-have-it handbags to wear-forever dresses.",
+"source":
+"Vogue"
+},
+{
+"index":
+7,
+"title":
+"Downtown Punxsutawney, Pennsylvania - Shop Downtown",
+"link":
+"https://shopdowntown.org/pages/shop-downtown-Punxsutawney-Pennsylvania",
+"snippet":
+"Discover shopping, dining, and accommodation in downtown Punxsutawney. Moving to Punxsutawney? their downtowns and launch immersive virtual cities together. The ShopDowntown.org Discount Card Program encourages local shopping by offering exclusive savings at participating downtown businesses.",
+"source":
+"shopdowntown.org"
+},
+{
+"index":
+8,
+"title":
+"Fashion Nova New | Shop New Arrival Fashion | Fashion Nova",
+"link":
+"https://www.fashionnova.com/collections/new",
+"snippet":
+"Get this season's latest styles with Fashion Nova's new arrival dresses, tops, jeans, shoes, and more. Find new women's clothing styles updated every day!",
+"source":
+"Fashion Nova"
+},
+{
+"index":
+9,
+"title":
+"Baby Checklist: 64 Baby Essentials - TheBump.com",
+"link":
+"https://www.thebump.com/a/checklist-baby-essentials",
+"snippet":
+"Discover baby essentials and must-haves with The Bump baby checklist, including all the newborn essentials and new baby products to stock up on.",
+"source":
+"TheBump.com"
+},
+{
+"index":
+10,
+"title":
+"Amazon.in: New Things",
+"link":
+"https://www.amazon.in/new-things/s?k=new+things",
+"snippet":
+"Explore the latest products and deals on top online shopping platforms like Amazon, Flipkart, CityMall, Lifestyle Stores, and ShopClues. 1 Amazon India: Offers a wide range of new products including baby care items, personal care, electronics, and home essentials. You can check product pages for size, color, and price variations, and find trending items in multiple categories. 2 Flipkart: One of India’s largest online stores, Flipkart features new arrivals in mobiles, electronics, fashion, home appliances, books, and more. It provides multiple payment options including COD, EMI, and credit/debit cards. 3 CityMall: Offers up to 50% off on first orders and stocks groceries, lifestyle products, electronics, fashion, and kitchen items. Fast delivery across India makes it convenient for discovering new products. 4 Lifestyle Stores: Focuses on fashion and accessories for men, women, and kids. It regularly updates its collection with new arrivals and offers easy returns and online shopping convenience. 5 ShopClues: Known for its budget-friendly marketplace, ShopClues features over 2.8 crore products, including electronics, fashion, home & kitchen, and unique items like garden tools or hardware. It also runs weekly sales events like Sunday Flea Market and Triple Value Friday Sale, making it ideal for discovering new and unusual products. 1 Check for New Arrivals Sections: Most platforms have dedicated sections for recently launched products. 2 Look for Deals and Discounts: Platforms like CityMall and ShopClues offer first-order discounts and weekly sales. 3 Read Product Reviews: Ratings and reviews help identify trending and high-quality new products. 4 Subscribe to Newsletters: Stores like Lifestyle and Flipkart send updates on new collections and exclusive offers. 5 Explore Niche Categories: ShopClues and Amazon often feature unique or hard-to-find items that are not available in regular stores. By exploring these platforms, you can stay updated on the latest shopping trends, discover new products, and take advantage of ongoing deals and offers.",
+"source":
+"www.amazon.in"
+}
+]
+}
+
+GET
+
+
+https://serpapi.com/search.json?engine=bing_copilot&q=new+shopping+things
+
+Code to integrate
+
+cURLRubyPythonJavaScriptGoPHPJavaRust.NETGoogle Sheets
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_copilot",
+  q: "new shopping things",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+text_blocks = results[:text_blocks]
+API Parameters
+Search Query
+q
+
+Required
+
+Parameter defines the search query for Bing Copilot. You can use anything that you would use in a regular Bing Copilot search.
+
+Serpapi Parameters
+engine
+
+Required
+
+Set parameter to bing_copilot to use the Bing Copilot API engine.
+
+no_cache
+
+Optional
+
+Parameter will force SerpApi to fetch the Bing Copilot results even if a cached version is already present. A cache is served only if the query and all parameters are exactly the same. Cache expires after 1h. Cached searches are free, and are not counted towards your searches per month. It can be set to false (default) to allow results from the cache, or true to disallow results from the cache. no_cache and async parameters should not be used together.
+
+async
+
+Optional
+
+Parameter defines the way you want to submit your search to SerpApi. It can be set to false (default) to open an HTTP connection and keep it open until you got your search results, or true to just submit your search to SerpApi and retrieve them later. In this case, you'll need to use our Searches Archive API to retrieve your results. async and no_cache parameters should not be used together. async should not be used on accounts with Ludicrous Speed enabled.
+
+zero_trace
+
+Optional
+
+Enterprise only. Parameter enables ZeroTrace mode. It can be set to false (default) or true. Enable this mode to skip storing search parameters, search files, and search metadata on our servers. This may make debugging more difficult.
+
+api_key
+
+Required
+
+Parameter defines the SerpApi private key to use.
+
+output
+
+Optional
+
+Parameter defines the final output you want. It can be set to json (default) to get a structured JSON of the results, or html to get the raw html retrieved.
+
+API Results
+JSON Results
+JSON output includes structured data for text_blocks and references.
+
+A search status is accessible through search_metadata.status. It flows this way: Processing -> Success || Error. If a search has failed, error will contain an error message. search_metadata.id is the search ID inside SerpApi.
+
+HTML Results
+HTML output is useful to debug JSON results or support features not supported yet by SerpApi. HTML output gives you the raw HTML results from Bing Copilot.
+
+API Examples
+Example for
+table
+in
+text_blocks
+GET
+
+
+https://serpapi.com/search.json?engine=bing_copilot&q=GDP+by+country,+table
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_copilot",
+  q: "GDP by country, table",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+text_blocks = results[:text_blocks]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "...",
+    "status": "Success",
+    "bing_copilot_url": "https://www.bing.com/copilotsearch?q=GDP+by+country%2C+table&FORM=CSSCOP",
+    "json_endpoint": "...",
+    "raw_html_file": "...",
+    "total_time_taken": 12.55
+  },
+  "search_parameters": {
+    "engine": "bing_copilot",
+    "q": "GDP by country, table"
+  },
+  "header": "The United States has the largest nominal GDP at $27.72 trillion, followed by China at $17.79 trillion, with Germany, Japan, and India rounding out the top five.",
+  "header_video": {
+    "title": "GDP by Country (1960–2025): Global Economic Growth",
+    "link": "https://www.youtube.com/watch?v=uUth2BKgAp8",
+    "duration": "03:01",
+    "thumbnail": "https://th.bing.com/th/id/OVP.qD_scwJNYuaGYeS5zYKMswEsDh?w=312&h=176&c=7&rs=1&qlt=90&o=6&pid=1.7",
+    "channel": "Alien Art Maps",
+    "views": "2.1K views",
+    "published": "5 months ago"
+  },
+  "text_blocks": [
+    {
+      "type": "heading",
+      "snippet": "Top 20 Countries by Nominal GDP Worldometer+1",
+      "level": 2,
+      "snippet_links": [
+        { "text": "Top 20 Countries by Nominal GDP", "link": "https://www.worldometers.info/gdp/gdp-by-country/" }
+      ],
+      "reference_indexes": [1, 2]
+    },
+    {
+      "type": "table",
+      "headers": [
+        "Rank", "Country", "GDP (USD)", "GDP Growth", "Population", "GDP per Capita", "Share of World GDP"
+      ],
+      "table": [
+        ["1", "United States", "$27,720,700,000,000", "2.89%", "343,477,335", "$80,706", "26.11%"],
+        ["2", "China", "$17,794,800,000,000", "5.25%", "1,422,584,933", "$12,509", "16.76%"],
+        ...
+      ],
+      "formatted": [
+        {"rank": "1", "country": "United States", "gdp_usd": "$27,720,700,000,000", "gdp_growth": "2.89%", "population": "343,477,335", "gdp_per_capita": "$80,706", "share_of_world_gdp": "26.11%"},
+        {"rank": "2", "country": "China", "gdp_usd": "$17,794,800,000,000", "gdp_growth": "5.25%", "population": "1,422,584,933", "gdp_per_capita": "$12,509", "share_of_world_gdp": "16.76%"},
+        ...
+      ]
+    },
+    {
+      "type": "list",
+      "list": [
+        {
+          "snippet": "Nominal GDP values represent the total market value of goods and services produced, calculated at official exchange rates.",
+          "snippet_highlighted_words": ["Nominal GDP", "calculated at official exchange rates"]
+        },
+        {
+          "snippet": "GDP per capita indicates the average economic output per person. Higher values usually correlate with higher living standards.",
+          "snippet_highlighted_words": ["GDP per capita"]
+        },
+        {
+          "snippet": "These figures are compiled from World Bank, UN, and other statistical agencies 2.",
+          "snippet_links": [
+            { "text": "These figures are compiled from World Bank, UN, and other statistical agencies", "link": "https://www.worldometers.info/gdp/gdp-by-country/" }
+          ],
+          "reference_indexes": [1, 2]
+        }
+      ]
+    },
+    {
+      "type": "paragraph",
+      "snippet": "You can access a full global table of countries ranked by GDP here: Wikipedia: List of countries by GDP (nominal)Wikipedia .",
+      "snippet_links": [
+        { "text": "You can access a full global table of countries ranked by GDP here: Wikipedia: List of countries by GDP (nominal)", "link": "https://en.wikipedia.org/wiki/List_of_countries_by_GDP_%28nominal%29" }
+      ],
+      "snippet_highlighted_words": ["full global table of countries ranked by GDP"],
+      "reference_indexes": [0]
+    }
+  ],
+  "references": [
+    { "index": 0, "title": "wikipedia.org", "link": "https://en.wikipedia.org/wiki/List_of_countries_by_GDP_%28nominal%29", "source": "Wikipedia" },
+    { "index": 1, "title": "GDP by Country - Worldometer", "link": "https://www.worldometers.info/gdp/gdp-by-country/", "snippet": "Countries in the world ranked by Gross Domestic Product (GDP). ...", "source": "Worldometer" },
+    { "index": 2, "title": "GDP - Countries - List - TRADING ECONOMICS", "link": "https://tradingeconomics.com/country-list/gdp", "snippet": "This page provides values for GDP reported in several countries. ...", "source": "TRADING ECONOMICS" }
+  ]
+}
+Example for
+code_block
+in
+text_blocks
+GET
+
+
+https://serpapi.com/search.json?engine=bing_copilot&q=python+bubble+sort+example
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_copilot",
+  q: "python bubble sort example",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+text_blocks = results[:text_blocks]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "...",
+    "status": "Success",
+    "bing_copilot_url": "https://www.bing.com/copilotsearch?q=python+bubble+sort+example&FORM=CSSCOP",
+    "json_endpoint": "...",
+    "raw_html_file": "...",
+    "total_time_taken": 8.64
+  },
+  "search_parameters": {
+    "engine": "bing_copilot",
+    "q": "python bubble sort example"
+  },
+  "header_video": {
+    "title": "Bubble Sort in Python – Step-by-Step Explanation #python #bubblesort (Python for beginners)",
+    "link": "https://www.bing.com/...",
+    "duration": "1:34",
+    "thumbnail": "https://th.bing.com/th/id/OVP.944uoCW0Lo4Wa8XhDbAJUgDKFo?w=312&h=424&c=7&rs=1&qlt=90&o=6&pid=1.7",
+    "channel": "AshMit Academy",
+    "views": "4.7K views",
+    "published": "7 months ago"
+  },
+  "text_blocks": [
+    {
+      "type": "paragraph",
+      "snippet": "Bubble Sort is a simple sorting algorithm that repeatedly steps through the list, compares adjacent elements, and swaps them if they are in the wrong order. This process is repeated until the list is sorted."
+    },
+    {
+      "type": "code_block",
+      "language": "python",
+      "code": "# Python implementation of Bubble Sort
+
+def bubble_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        # Track if any swaps are made during this pass
+        swapped = False
+        # Last i elements are already in place
+        for j in range(0, n - i - 1):
+            if arr[j] > arr[j + 1]:
+                # Swap if elements are in wrong order
+                arr[j], arr[j + 1] = arr[j + 1], arr[j]
+                swapped = True
+        # If no two elements were swapped, the array is already sorted
+        if not swapped:
+            break
+    return arr
+
+# Usage example
+if __name__ == "__main__":
+    sample_list = [64, 34, 25, 12, 22, 11, 90]
+    print("Original list:", sample_list)
+    sorted_list = bubble_sort(sample_list)
+    print("Sorted list:", sorted_list)"
+    },
+    { "type": "heading", "snippet": "Key Points:", "level": 3 },
+    {
+      "type": "list",
+      "list": [
+        { "snippet": "Time Complexity:", "snippet_highlighted_words": ["Time Complexity:"] },
+        { "snippet": "Space Complexity: O(1) (in-place sorting)", "snippet_highlighted_words": ["Space Complexity:"] },
+        { "snippet": "Optimization: The swapped flag helps to stop early if the list is already sorted, reducing unnecessary comparisons.", "snippet_highlighted_words": ["Optimization:"] },
+        { "snippet": "Usage Example Output:", "snippet_highlighted_words": ["Usage Example Output:"] }
+      ]
+    },
+    { "type": "paragraph", "snippet": "Bubble Sort is intuitive and easy to understand but not efficient for large datasets. For larger or performance-critical tasks, consider more advanced algorithms like Quick Sort or Merge Sort." }
+  ],
+  "references": [
+    { "index": 0, "title": "Bubble Sort - Python - GeeksforGeeks", "link": "https://www.geeksforgeeks.org/python/python-program-for-bubble-sort/", "snippet": "The algorithm iterates through the array multiple times, with each pass pushing the largest unsorted element to its correct position at the end. Code includes an optimization: if n…", "source": "GeeksForGeeks" },
+    { "index": 1, "title": "Bubble Sort with Python - W3Schools", "link": "https://www.w3schools.com/python/python_dsa_bubblesort.asp", "snippet": "Run the simulation to see how it looks like when the Bubble Sort algorithm sorts an array of values. Each value in the array is represented by a column. The word 'Bubble' comes fro…", "source": "W3School" },
+    { "index": 2, "title": "Bubble Sort Program In Python", "link": "https://pythonguides.com/python-program-for-bubble-sort/", "snippet": "Learn how to implement Bubble Sort in Python with step-by-step practical examples. Simple explanations, multiple methods, and full code for beginners and pros.", "source": "Python Guides" }
+  ]
+}
+Example for
+nested lists
+in
+text_blocks
+GET
+
+
+https://serpapi.com/search.json?engine=bing_copilot&q=how+do+I+calculate+the+velocity+of+a+train+...+nested+list
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_copilot",
+  q: "how do I calculate the velocity of a train ... nested list",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+text_blocks = results[:text_blocks]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "...",
+    "status": "Success",
+    "bing_copilot_url": "https://www.bing.com/copilotsearch?q=how+do+I+calculate+the+velocity+of+a+train+...+nested+list&FORM=CSSCOP",
+    "json_endpoint": "...",
+    "raw_html_file": "...",
+    "total_time_taken": 8.02
+  },
+  "search_parameters": {
+    "engine": "bing_copilot",
+    "q": "how do I calculate the velocity of a train if i know it's mass and acceleration and time, return result instructions formatted as a nested list (top ordered one, unordered for children of each)"
+  },
+  "images_link": "https://www.bing.com/ck/a?!...",
+  "videos_link": "https://www.bing.com/ck/a?!...",
+  "text_blocks": [
+    { "type": "paragraph", "snippet": "To calculate the velocity of a train when you know its mass, acceleration, and time, follow these steps:" },
+    {
+      "type": "list",
+      "list": [
+        {
+          "snippet": "Understand the relationship between velocity, acceleration, and time",
+          "snippet_highlighted_words": ["Understand the relationship between velocity, acceleration, and time"],
+          "list": [
+            { "snippet": "Velocity is the rate at which an object changes its position." },
+            {
+              "snippet": "The formula connecting velocity (v), initial velocity (v_0), acceleration (a), and time (t) is:",
+              "list": [
+                { "snippet": "\(v = v_0 + a \cdot t\)", "snippet_highlighted_words": ["\(v = v_0 + a \cdot t\)"] }
+              ]
+            },
+            {
+              "snippet": "Here, v_0 is the initial velocity of the train.",
+              "list": [ { "snippet": "If the train starts from rest, v_0 = 0." } ]
+            }
+          ]
+        },
+        {
+          "snippet": "Apply the velocity formula",
+          "snippet_highlighted_words": ["Apply the velocity formula"],
+          "list": [
+            { "snippet": "Multiply the acceleration by the time:", "list": [ { "snippet": "a \cdot t" } ] },
+            { "snippet": "Add the initial velocity (v_0) to this result:", "list": [ { "snippet": "v = v_0 + (a \cdot t)" } ] }
+          ]
+        },
+        {
+          "snippet": "Calculate final velocity",
+          "list": [
+            { "snippet": "Substitute the values of a and t into the formula." },
+            { "snippet": "Example calculation:", "list": [ { "snippet": "If v_0 = 0, a = 1.5 m/s^2, and t = 20 s:", "list": [ { "snippet": "v = 30 m/s" } ] } ] }
+          ]
+        }
+      ]
+    }
+  ],
+  "references": [
+    { "index": 0, "title": "Speed of Train | How to Calculate the Motion or Speed of a Train?", "link": "https://www.bing.com/ck/a?!...", "source": "www.learncbse.in" },
+    { "index": 1, "title": "Velocity Calculator v = u + at", "link": "https://www.bing.com/ck/a?!...", "source": "Calculator Soup" },
+    { "index": 2, "title": "Kinematic Equations - The Physics Classroom", "link": "https://www.bing.com/ck/a?!...", "source": "The Physics Classroom" },
+    { "index": 3, "title": "Calculating Train Velocity ...", "link": "https://www.bing.com/ck/a?!...", "source": "YouTube" }
+  ]
+}
+Example for
+header_video
+GET
+
+
+https://serpapi.com/search.json?engine=bing_copilot&q=how+to+tie+a+tie
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_copilot",
+  q: "how to tie a tie",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+header_video = results[:header_video]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "...",
+    "status": "Success",
+    "bing_copilot_url": "https://www.bing.com/copilotsearch?q=how+to+tie+a+tie&FORM=CSSCOP",
+    "json_endpoint": "...",
+    "raw_html_file": "...",
+    "total_time_taken": 10.94
+  },
+  "search_parameters": {
+    "engine": "bing_copilot",
+    "q": "how to tie a tie"
+  },
+  "header": "Tying a tie involves following simple steps to create a neat, symmetrical knot that complements your outfit, with the Windsor, Half Windsor, and Four-in-Hand being the most common knots.",
+  "header_video": {
+    "title": "How to tie a tie EASY WAY (Slowly & Mirrored) Windsor knot",
+    "link": "https://www.youtube.com/watch?v=4fHMbXWcoq0",
+    "duration": "03:33",
+    "thumbnail": "https://th.bing.com/th/id/OVP.QoEtXG9S8m2p9pIBbBJAMAHgFo?w=312&h=200&c=7&rs=1&qlt=90&o=6&pid=1.7",
+    "source": "YouTube",
+    "channel": "How to tie a tie",
+    "views": "47.9M views",
+    "published": "Sep 3, 2020"
+  },
+  "text_blocks": [
+    { "type": "heading", "snippet": "Choosing the Knot", "level": 2 },
+    {
+      "type": "list",
+      "list": [
+        { "snippet": "Four-in-Hand Knot: Simple, slightly asymmetrical, works for most occasions and collar types.", "snippet_highlighted_words": ["Four-in-Hand Knot"] },
+        { "snippet": "Half Windsor Knot: Medium size, symmetrical, suitable for work or formal events.", "snippet_highlighted_words": ["Half Windsor Knot"] },
+        ...
+      ]
+    },
+    { "type": "heading", "snippet": "Step-by-Step: Four-in-Hand Knot (Beginner-Friendly)", "level": 2 },
+    { "type": "list", "list": [ { "snippet": "Start Position: Drape the tie around your neck with the wide end on your right extending about 12 inches below the narrow end.", "snippet_highlighted_words": ["Start Position", "wide end on your right"] }, ... ] }
+  ]
+}
+JSON structure overview
+{
+  ...
+  "header": "String - main answer heading",
+  "header_video": {
+    "title": "String - Title of the video",
+    "link": "String - URL to the video",
+    "duration": "String - Duration of the video",
+    "thumbnail": "String - URL to the video thumbnail",
+    "source": "String - Source of the video (e.g., YouTube)",
+    "channel": "String - Channel name",
+    "views": "String - Number of views",
+    "published": "String - Published date"
+  },
+  "images_link": "String (URL) - link to Bing Images for the query",
+  "videos_link": "String (URL) - link to Bing Videos for the query",
+  "text_blocks": [
+    {
+      "type": "paragraph",
+      "snippet": "String",
+      "snippet_links": [
+        {
+          "text": "String",
+          "link": "String"
+        }
+      ],
+      "snippet_highlighted_words": "Array - Array of highlighted words",
+      "reference_indexes": "Array - Array of reference indexes"
+    },
+    {
+      "type": "heading", 
+      "level": "Integer (1..6)",
+      "snippet": "String",
+      "snippet_links": "Array",
+      "snippet_highlighted_words": "Array - Array of highlighted words",
+      "reference_indexes": "Array - Array of reference indexes"
+    },
+    {
+      "type": "list",
+      "list": [
+        {
+          "snippet": "String", 
+          "snippet_links": "Array",
+          "snippet_highlighted_words": "Array - Array of highlighted words",
+          "reference_indexes": "Array - Array of reference indexes",
+        }
+      ]
+    },
+    {
+      "type": "code_block",
+      "code": "String",
+      "language": "String - Optional language"
+    },
+    {
+      "type": "table",
+      "headers": "Array - Array of header strings",
+      "table": "Array - Array of table rows (each row is an array of strings)"
+      "formatted": "Array"
+    }
+  ],
+  "references": [
+    {
+      "index": "Integer (zero-based)",
+      "title": "String - Optional title",
+      "link": "String - URL to the reference",
+      "snippet": "String - Optional snippet text",
+      "source": "String - Optional source"
+    }
+  ],
+  ...
+}

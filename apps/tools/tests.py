@@ -41,7 +41,7 @@ class PublicAuditFlowTests(TestCase):
                 "email": "ops@example.com",
                 "website": "example.com",
                 "business_type": "saas",
-                "location": "Nairobi, Kenya",
+                "location_mode": "worldwide",
                 "target_goal": "Increase demo requests",
                 "primary_service": "Revenue operations platform",
                 "monthly_leads_goal": 40,
@@ -78,7 +78,7 @@ class PublicAuditFlowTests(TestCase):
                 "email": "ops@example.com",
                 "website": "example.com",
                 "business_type": "agency",
-                "location": "Nairobi, Kenya",
+                "location_mode": "worldwide",
                 "target_goal": "Increase qualified leads",
                 "primary_service": "SEO consulting",
                 "monthly_leads_goal": 40,
@@ -1465,14 +1465,14 @@ class WorkspaceProjectSelectionTests(TestCase):
         response = self.client.post(
             reverse("tools:workspace-audit-start"),
             {
-                "company_name": "Project Three",
-                "email": self.user.email,
-                "website": "three.example.com",
-                "business_type": "saas",
-                "location": "Nairobi, Kenya",
-                "target_goal": "Increase qualified leads",
-                "primary_service": "SEO automation",
-                "notes": "Start from SEO and attach the workspace automatically.",
+                "audit-company_name": "Project Three",
+                "audit-email": self.user.email,
+                "audit-website": "three.example.com",
+                "audit-business_type": "saas",
+                "audit-location_mode": "worldwide",
+                "audit-target_goal": "Increase qualified leads",
+                "audit-primary_service": "SEO automation",
+                "audit-notes": "Start from SEO and attach the workspace automatically.",
             },
         )
 
@@ -1491,12 +1491,12 @@ class WorkspaceProjectSelectionTests(TestCase):
         response = self.client.post(
             reverse("tools:workspace-project-create"),
             {
-                "name": "Project Three",
-                "website": "three.example.com",
-                "business_type": "saas",
-                "location": "Nairobi, Kenya",
-                "target_goal": "Increase qualified leads",
-                "primary_service": "SEO automation",
+                "project-name": "Project Three",
+                "project-website": "three.example.com",
+                "project-business_type": "saas",
+                "project-location_mode": "worldwide",
+                "project-target_goal": "Increase qualified leads",
+                "project-primary_service": "SEO automation",
             },
         )
 
@@ -1513,12 +1513,12 @@ class WorkspaceProjectSelectionTests(TestCase):
         response = self.client.post(
             reverse("tools:workspace-project-create"),
             {
-                "name": "Project Two Updated",
-                "website": "two.example.com",
-                "business_type": "saas",
-                "location": "Mombasa, Kenya",
-                "target_goal": "Increase SQLs",
-                "primary_service": "Automation",
+                "project-name": "Project Two Updated",
+                "project-website": "two.example.com",
+                "project-business_type": "saas",
+                "project-location_mode": "worldwide",
+                "project-target_goal": "Increase SQLs",
+                "project-primary_service": "Automation",
             },
         )
 

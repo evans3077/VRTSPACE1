@@ -1,0 +1,111 @@
+GET
+
+
+https://serpapi.com/search.json?engine=google_ads_transparency_center&advertiser_id=AR14197312639457034241&political_ads=true&region=2840
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_ads_transparency_center",
+  advertiser_id: "AR14197312639457034241",
+  political_ads: "true",
+  region: "2840",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+ad_creatives = results[:ad_creatives]
+
+JSON Example
+
+{
+  ...
+  "ad_creatives": [
+    {
+      "advertiser_id": "AR14197312639457034241",
+      "advertiser": "CTE ALABAS FARHAT",
+      "ad_creative_id": "CR09884812359241826305",
+      "format": "text",
+      "link": "https://displayads-formats.googleusercontent.com/ads/preview/content.js?client=ads-integrity-transparency&obfuscatedCustomerId=1681453162&creativeId=705339188772&uiFeatures=12,54&adGroupId=164125220589&overlay=%3DH4sIAAAAAAAAAPMy4RJLTEnJLMnMz0vMCU5NLErOcExxSSxJFJJSkpjFLsol6BziquDo4-jkGKzg5hjk4RgiwQgAVMV1ljYAAAA&sig=ACiVB_y1wOMDzITtrhOef2t9KndU7XC-qg&htmlParentId=fletch-render-17361589772437553948&responseCallback=fletchCallback17361589772437553948",
+      "total_days_shown": 25,
+      "first_shown": 1720808563,
+      "last_shown": 1723002141,
+      "minimum_views_count": 2000,
+      "maximum_views_count": 3000,
+      "minimum_budget_spent": "1000 USD",
+      "maximum_budget_spent": "1500 USD",
+      "details_link": "https://adstransparency.google.com/advertiser/AR14197312639457034241/creative/CR09884812359241826305?region=US",
+      "serpapi_details_link": "https://serpapi.com/search.json?engine=google_ads_transparency_center_ad_details&advertiser_id=AR14197312639457034241&creative_id=CR09884812359241826305&region=2840"
+    },
+    {
+      "advertiser_id": "AR14197312639457034241",
+      "advertiser": "CTE ALABAS FARHAT",
+      "ad_creative_id": "CR16841151948320145409",
+      "format": "text",
+      "link": "https://displayads-formats.googleusercontent.com/ads/preview/content.js?client=ads-integrity-transparency&obfuscatedCustomerId=1681453162&creativeId=706078958294&uiFeatures=12,54&adGroupId=164557647003&overlay=%3DH4sIAAAAAAAAAPMy4RJLTEnJLMnMz0vMCU5NLErOcExxSSxJFJJSkpjFLsol6BziquDo4-jkGKzg5hjk4RgiwQgAVMV1ljYAAAA&sig=ACiVB_zCIFvvC8cJZB0rvlVAGh2axGHUdw&htmlParentId=fletch-render-2883881405119810567&responseCallback=fletchCallback2883881405119810567",
+      "total_days_shown": 19,
+      "first_shown": 1721411071,
+      "last_shown": 1723001617,
+      "minimum_views_count": 0,
+      "maximum_views_count": 1000,
+      "minimum_budget_spent": "300 USD",
+      "maximum_budget_spent": "400 USD",
+      "details_link": "https://adstransparency.google.com/advertiser/AR14197312639457034241/creative/CR16841151948320145409?region=US",
+      "serpapi_details_link": "https://serpapi.com/search.json?engine=google_ads_transparency_center_ad_details&advertiser_id=AR14197312639457034241&creative_id=CR16841151948320145409&region=2840"
+    },
+    {
+      "advertiser_id": "AR14197312639457034241",
+      "advertiser": "CTE ALABAS FARHAT",
+      "ad_creative_id": "CR05447095468607668225",
+      "format": "video",
+      "link": "https://displayads-formats.googleusercontent.com/ads/preview/content.js?client=ads-integrity-transparency&obfuscatedCustomerId=1681453162&creativeId=705760768481&uiFeatures=12,54&adGroupId=162613381817&overlay=%3DH4sIAAAAAAAAAPNS4OJPrShJLcpLzAnLTEnN90wR4uXiTsnzcE7OMg-N9zYAAHnpTO8iAAAA&sig=ACiVB_xU-o5gvimi09yo9w27IwwSCTB1WQ&htmlParentId=fletch-render-17176109577402558459&responseCallback=fletchCallback17176109577402558459",
+      "total_days_shown": 23,
+      "first_shown": 1720896970,
+      "last_shown": 1722916769,
+      "minimum_views_count": 40000,
+      "maximum_views_count": 45000,
+      "minimum_budget_spent": "600 USD",
+      "maximum_budget_spent": "700 USD",
+      "details_link": "https://adstransparency.google.com/advertiser/AR14197312639457034241/creative/CR05447095468607668225?region=US",
+      "serpapi_details_link": "https://serpapi.com/search.json?engine=google_ads_transparency_center_ad_details&advertiser_id=AR14197312639457034241&creative_id=CR05447095468607668225&region=2840"
+    },
+    ...
+  },
+  ...
+}
+
+JSON structure overview
+{
+  ...
+  "ad_creatives": [
+    {
+      "advertiser_id": "String - Advertiser ID of the creative",
+      "advertiser": "String - Advertiser name of the creative",
+      "ad_creative_id": "String - ID of the creative",
+      "format": "String - Format of the creative (e.g. 'text', 'image' and 'video')",
+      "link": "String - URL to the creative",
+      "target_domain": "String - Domain target of the creative",
+      "image": "String - URL to the creative image",
+      "width": "Integer - Width of the creative image",
+      "height": "Integer - Height of the creative image",
+      "total_days_shown": "Integer - Number of days the ad was actually shown within the first day and the last day the ad was shown",
+      "first_shown": "Integer - Timestamp of the first time ad was shown (Unix epoch format)",
+      "last_shown": "Integer - Timestamp of the last time ad was shown (Unix epoch format)",
+      "minimum_views_count": "Integer - The lowest number of times the political ad was displayed to users (only available for Political Ads)",
+      "maximum_views_count": "Integer - The highest number of times the political ad was displayed to users (only available for Political Ads)",
+      "minimum_budget_spent": "String - The smallest amount of money that was spent on the political ad campaign and its currency (Ex: '4500 USD' - only available for Political Ads)",
+      "maximum_budget_spent": "String - The largest amount of money that was spent on the political ad campaign and its currency (Ex: '5000 USD' - only available for Political Ads)",
+      "details_link": "String - URL to the ad details in Google Ads Transparency Center",
+      "serpapi_details_link": "String - SerpApi link to Google Ads Transparency Center Ad Details results"
+    }
+  ],
+  "serpapi_pagination": {
+    "next_page_token": "String - Token to retrieve next page results",
+    "next": "String - SerpApi's URL for the next page results"
+  }
+}
