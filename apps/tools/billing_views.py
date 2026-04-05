@@ -38,12 +38,12 @@ class WorkspaceCheckoutCreateView(LoginRequiredMixin, View):
         return_to = data.get("return_to", "").strip()
         
         if not plan_slug:
-            return redirect("tools:workspace-dashboard")
+            return redirect("tools:account-dashboard")
 
         plan = get_plan_by_slug(plan_slug)
         if not plan:
             messages.error(request, "That plan is not available.")
-            return redirect("tools:workspace-dashboard")
+            return redirect("tools:account-dashboard")
 
         if plan.slug == "enterprise":
             messages.info(request, "Enterprise work is handled through a direct custom scope.")
@@ -67,7 +67,7 @@ class WorkspaceCheckoutCreateView(LoginRequiredMixin, View):
             )
         except BillingError as exc:
             messages.error(request, str(exc))
-            return redirect("tools:workspace-dashboard")
+            return redirect("tools:account-dashboard")
 
         return redirect(session["url"])
 
@@ -83,7 +83,7 @@ class WorkspaceBillingPortalView(LoginRequiredMixin, View):
         subscription = get_workspace_subscription(request.user)
         return_to = data.get("return_to", "").strip()
         try:
-            return_url = reverse("tools:workspace-dashboard")
+            return_url = reverse("tools:account-dashboard")
             if return_to.startswith("/"):
                 return_url = return_to
             session = create_billing_portal_session(
@@ -92,7 +92,7 @@ class WorkspaceBillingPortalView(LoginRequiredMixin, View):
             )
         except BillingError as exc:
             messages.error(request, str(exc))
-            return redirect("tools:workspace-dashboard")
+            return redirect("tools:account-dashboard")
         return redirect(session["url"])
 
 
@@ -136,7 +136,7 @@ class WorkspaceAuditRerunView(LoginRequiredMixin, View):
             audit_run = create_workspace_rerun_for_user(request.user, project=project)
         except BillingError as exc:
             messages.error(request, str(exc))
-            return redirect("tools:workspace-dashboard")
+            return redirect("tools:account-dashboard")
 
         enqueue_public_site_audit(audit_run.pk)
         messages.success(request, "Workspace rerun started.")
@@ -169,7 +169,7 @@ class WorkspaceAuditScheduleView(LoginRequiredMixin, View):
             )
         except BillingError as exc:
             messages.error(request, str(exc))
-            return redirect("tools:workspace-dashboard")
+            return redirect("tools:account-dashboard")
 
         if schedule.is_active:
             messages.success(request, f"Recurring audits are active on a {schedule.get_cadence_display().lower()} cadence.")

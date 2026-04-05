@@ -43,7 +43,7 @@
             <div class="nav-actions">
                 <nav class="nav-links" aria-label="Primary">
                     <a href="{% url 'core:services' %}">Services</a>
-                    <a href="{% url 'core:home' %}#packages">Packages</a>
+                    <a href="{% url 'core:packages' %}">Packages</a>
                     <a href="{% url 'core:home' %}#audit">Audit</a>
                     <a href="{% url 'core:home' %}#method">Method</a>
                     {% if user.is_staff %}
@@ -111,7 +111,7 @@
             <div class="footer-links">
                 <a href="{% url 'core:services' %}">Solutions</a>
                 <a href="{% url 'core:home' %}#tools">Tools</a>
-                <a href="{% url 'core:home' %}#packages">Packages</a>
+                <a href="{% url 'core:packages' %}">Packages</a>
                 <a href="{% url 'core:home' %}#contact">Custom Work</a>
             </div>
         </div>
@@ -123,7 +123,7 @@
         <div class="nav-mobile-brand">VRT SPACE AGENCY</div>
         <nav class="nav-mobile-links" aria-label="Mobile primary">
             <a href="{% url 'core:services' %}">Services</a>
-            <a href="{% url 'core:home' %}#packages">Packages</a>
+            <a href="{% url 'core:packages' %}">Packages</a>
             <a href="{% url 'core:home' %}#audit">Audit</a>
             <a href="{% url 'core:home' %}#method">Method</a>
             {% if user.is_staff %}

@@ -176,34 +176,7 @@
 </section>
 {% endfor %}
 
-<section class="packages-section" id="packages">
-    <div class="container section-heading">
-        <p class="eyebrow">Plans and packaging</p>
-        <h2>Keep the upgrade path visible while testing stays frictionless.</h2>
-        <p class="section-text">Free access stays open for now. The visible tiers show where monitoring, automation, and advanced guidance will live once enforcement starts.</p>
-    </div>
-    <div class="container package-grid">
-        {% for package in packages %}
-        <article class="package-card {% if package.name == 'Authority' %}package-card-featured{% endif %}">
-            <div>
-                <p class="package-label">{{ package.label }}</p>
-                <h3>{{ package.name }}</h3>
-                <strong class="package-price">{{ package.price }}</strong>
-            </div>
-            <ul class="bullet-list">
-                {% for feature in package.features %}
-                <li>{{ feature }}</li>
-                {% endfor %}
-            </ul>
-            {% if package.name == "Enterprise" %}
-            <a class="package-link" href="#contact">Request {{ package.name }} custom scope</a>
-            {% else %}
-            <a class="package-link" href="{% url 'tools:workspace-signup' %}?package={{ package.name|lower }}">Start {{ package.name }}</a>
-            {% endif %}
-        </article>
-        {% endfor %}
-    </div>
-</section>
+
 
 <section class="journey-section">
     <div class="container section-heading">

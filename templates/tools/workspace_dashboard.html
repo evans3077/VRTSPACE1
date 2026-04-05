@@ -64,6 +64,61 @@
 
 <section class="packages-section" style="padding-top: 0;">
     <div class="container page-stack">
+        {% if project.pk and latest_audit %}
+        <article class="system-card" style="margin-bottom: 2rem; border-color: rgba(139, 92, 246, 0.3); background: rgba(139, 92, 246, 0.05);">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1.5rem;">
+                <p class="eyebrow" style="color: var(--signal);">Command Center</p>
+                <h2 style="font-size: 2rem;">Priority Execution</h2>
+            </div>
+            
+            <div class="command-module-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                <div class="system-card" style="padding: 1.25rem;">
+                    <p class="eyebrow">SEO Module</p>
+                    <h3 style="font-size: 1.5rem; margin-top: 0.25rem;">{{ seo_active_campaign_count|default:0 }} Active</h3>
+                    <p style="font-size: 0.85rem; margin-top: 0.25rem;">Live competitor campaigns</p>
+                </div>
+                <div class="system-card" style="padding: 1.25rem;">
+                   <p class="eyebrow">Content Module</p>
+                   <h3 style="font-size: 1.5rem; margin-top: 0.25rem;">{{ content_draft_count|default:0 }} Drafts</h3>
+                   <p style="font-size: 0.85rem; margin-top: 0.25rem;">Saved inside asset library</p>
+                </div>
+                <div class="system-card" style="padding: 1.25rem;">
+                   <p class="eyebrow">Technical Baseline</p>
+                   <h3 style="font-size: 1.5rem; margin-top: 0.25rem;">{{ seo_execution_item_count|default:0 }} Issues</h3>
+                   <p style="font-size: 0.85rem; margin-top: 0.25rem;">Found in latest sync</p>
+                </div>
+            </div>
+
+            <div class="command-priority-list">
+                {% if seo_execution_item_count > 0 %}
+                <div class="command-priority-item">
+                    <div class="command-priority-num">1</div>
+                    <div class="command-priority-text">
+                        <strong>Fix technical baseline:</strong> Review the {{ seo_execution_item_count }} critical gaps identified in the current audit before initiating external content campaigns. <a href="{% url 'tools:audit-result' latest_audit.pk %}" style="color: var(--signal);">Open Base Audit &rarr;</a>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if seo_active_campaign_count == 0 %}
+                <div class="command-priority-item">
+                    <div class="command-priority-num">{% if seo_execution_item_count > 0 %}2{% else %}1{% endif %}</div>
+                    <div class="command-priority-text">
+                        <strong>Launch Competitor Pipeline:</strong> No active SEO campaigns found. Map your target clusters and dispatch the engine to trace competitor entities. <a href="{% url 'seo:workspace-seo' %}#seo-opportunities" style="color: var(--signal);">Go to SEO Hub &rarr;</a>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if content_draft_count > 0 %}
+                <div class="command-priority-item">
+                    <div class="command-priority-num">{% if seo_active_campaign_count == 0 and seo_execution_item_count > 0 %}3{% elif seo_active_campaign_count == 0 or seo_execution_item_count > 0 %}2{% else %}1{% endif %}</div>
+                    <div class="command-priority-text">
+                        <strong>Publish Pending Drafts:</strong> You have {{ content_draft_count }} generated asset(s) ready in the queue. Review and deploy them to clear pipeline friction. <a href="{% url 'content:workspace-content' %}#drafts" style="color: var(--signal);">Open Asset Library &rarr;</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </article>
+        {% endif %}
         {% if workspace_project_summaries %}
         <article id="project-portfolio" class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">

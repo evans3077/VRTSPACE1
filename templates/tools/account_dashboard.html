@@ -20,7 +20,7 @@
                     <button type="submit" class="button button-secondary">Manage billing</button>
                 </form>
                 {% else %}
-                <a class="button button-secondary" href="#billing">Choose plan</a>
+                <a class="button button-secondary" href="#plans">Choose plan</a>
                 {% endif %}
             </div>
         </div>
@@ -142,8 +142,58 @@
                         <button type="submit" class="button button-primary">Open billing portal</button>
                     </form>
                     {% else %}
-                    <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}#plans">Open plans</a>
+                    <a class="button button-primary" href="#plans">Choose a plan below</a>
                     {% endif %}
+                </div>
+            </article>
+
+            <article id="plans" class="system-card" style="grid-column: 1 / -1;">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1.5rem;">
+                    <p class="eyebrow">Plans</p>
+                    <h2 style="font-size: 2rem;">Available upgrades</h2>
+                </div>
+                <div class="system-grid">
+                    {% for plan in billing_state.plans %}
+                    <div style="padding: 1.5rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); border: 1px solid {% if plan.is_current %}var(--signal){% else %}rgba(255,255,255,0.1){% endif %}; position: relative;">
+                        {% if plan.is_current %}
+                        <div style="position: absolute; top: -0.75rem; right: 1.5rem; background: var(--signal); color: #fff; font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 999px;">Current Plan</div>
+                        {% endif %}
+                        <h3 style="margin: 0 0 0.25rem;">{{ plan.name }}</h3>
+                        <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">
+                            {{ plan.price }}
+                        </div>
+                        <p style="color: #94a3b8; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.5rem;">{{ plan.description }}</p>
+                        
+                        <div style="margin-bottom: 1.5rem;">
+                            <strong style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">Included features:</strong>
+                            <ul style="list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; font-size: 0.85rem; color: #cbd5e1;">
+                                {% for limit in plan.limits_summary %}
+                                <li style="display: flex; gap: 0.5rem;"><i class="fas fa-check" style="color: #16a34a; margin-top: 0.2rem;"></i> <span>{{ limit }}</span></li>
+                                {% endfor %}
+                                {% for feature in plan.features %}
+                                <li style="display: flex; gap: 0.5rem;"><i class="fas fa-check" style="color: #16a34a; margin-top: 0.2rem;"></i> <span>{{ feature }}</span></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        
+                        {% if plan.is_current %}
+                        <button class="button button-secondary" disabled style="width: 100%; opacity: 0.7;">Active Plan</button>
+                        {% elif plan.is_custom %}
+                        <a href="{% url 'core:home' %}#contact" class="button button-secondary" style="width: 100%; text-align: center; display: block;">Contact Sales</a>
+                        {% elif plan.is_free %}
+                        <div style="text-align: center; color: #94a3b8; font-size: 0.85rem;">Included by default</div>
+                        {% else %}
+                        <form method="post" action="{% url 'tools:workspace-billing-checkout' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="plan" value="{{ plan.slug }}">
+                            <input type="hidden" name="return_to" value="{% url 'tools:workspace-dashboard' %}">
+                            <button type="submit" class="button {% if plan.action_direction == 'upgrade' %}button-primary{% else %}button-secondary{% endif %}" style="width: 100%;">
+                                {{ plan.action_label }}
+                            </button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
                 </div>
             </article>
 

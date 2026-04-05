@@ -193,12 +193,9 @@
                     SEO exports use {{ seo_export_action.credits }} credits.
                     {{ seo_export_action.next_unlock_message|default:seo_export_action.blocked_message }}
                     {% if seo_export_action.direct_checkout_available %}
-                    <form method="post" action="{% url 'tools:workspace-billing-checkout' %}" style="margin-top: 0.85rem;">
-                        {% csrf_token %}
-                        <input type="hidden" name="plan" value="{{ seo_export_action.next_plan_slug }}">
-                        <input type="hidden" name="return_to" value="{{ request.get_full_path }}">
-                        <button type="submit" class="button button-primary">Unlock SEO exports</button>
-                    </form>
+                    <div style="margin-top: 0.85rem;">
+                        <a href="{% url 'tools:account-dashboard' %}#plans" class="button button-primary">Open plans in Account</a>
+                    </div>
                     {% endif %}
                 </div>
                 {% endif %}
@@ -212,12 +209,9 @@
                     Stakeholder sharing uses {{ seo_share_action.credits }} credits.
                     {{ seo_share_action.next_unlock_message|default:seo_share_action.blocked_message }}
                     {% if seo_share_action.direct_checkout_available %}
-                    <form method="post" action="{% url 'tools:workspace-billing-checkout' %}" style="margin-top: 0.85rem;">
-                        {% csrf_token %}
-                        <input type="hidden" name="plan" value="{{ seo_share_action.next_plan_slug }}">
-                        <input type="hidden" name="return_to" value="{{ request.get_full_path }}">
-                        <button type="submit" class="button button-primary">Unlock SEO sharing</button>
-                    </form>
+                    <div style="margin-top: 0.85rem;">
+                        <a href="{% url 'tools:account-dashboard' %}#plans" class="button button-primary">Open plans in Account</a>
+                    </div>
                     {% endif %}
                 </div>
                 {% endif %}
@@ -1199,12 +1193,9 @@
                 Backlink prospecting typically uses {{ backlink_action.credits }} workspace credits on top of the SEO refresh.
                 {{ backlink_action.next_unlock_message|default:backlink_action.blocked_message }}
                 {% if backlink_action.direct_checkout_available %}
-                <form method="post" action="{% url 'tools:workspace-billing-checkout' %}" style="margin-top: 0.85rem;">
-                    {% csrf_token %}
-                    <input type="hidden" name="plan" value="{{ backlink_action.next_plan_slug }}">
-                    <input type="hidden" name="return_to" value="{{ request.get_full_path }}">
-                    <button type="submit" class="button button-primary">Unlock backlink intelligence</button>
-                </form>
+                <div style="margin-top: 0.85rem;">
+                    <a href="{% url 'tools:account-dashboard' %}#plans" class="button button-primary">Open plans in Account</a>
+                </div>
                 {% endif %}
             </div>
         </article>

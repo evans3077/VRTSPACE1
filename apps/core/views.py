@@ -6,6 +6,7 @@ from django.views.generic import TemplateView
 
 from apps.case_studies.models import CaseStudy
 from apps.leads.forms import AuditRequestForm, LeadCaptureForm
+from apps.leads.billing import build_plan_cards
 
 from .site_content import (
     ENGAGEMENT_STEPS,
@@ -118,4 +119,15 @@ class ServiceDetailView(TemplateView):
             "meta_description": service["summary"],
             "service": service,
             "service_page_list": SERVICE_PAGE_LIST,
+        }
+
+
+class PackagesView(TemplateView):
+    template_name = "core/packages.html"
+
+    def get_context_data(self, **kwargs):
+        return {
+            "page_title": "Plans & Pricing | VRT SPACE AGENCY",
+            "meta_description": "Flexible plans designed to evolve with your business.",
+            "plans": build_plan_cards(self.request.user),
         }

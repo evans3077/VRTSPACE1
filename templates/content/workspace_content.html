@@ -1,13 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="hero" style="padding-bottom: 2rem;">
-    <div class="container">
+<section class="hero" style="position: relative; overflow: visible; padding-bottom: 2rem;">
+    <div class="ambient-glow-violet" style="top: -15%; left: -5%; opacity: 0.5;"></div>
+    <div class="ambient-glow-cyan" style="bottom: 0; right: -5%; opacity: 0.4;"></div>
+    <div class="container" style="position: relative; z-index: 1;">
         <div class="section-heading">
-            <p class="eyebrow">AI Content Engine</p>
-            <h1 style="max-width: none;">Generate draft content from your workspace context</h1>
+            <p class="eyebrow" style="color: var(--accent-cyan); letter-spacing: 0.15em;">AI Content Engine</p>
+            <h1 style="max-width: none; background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Generate draft content from your workspace context</h1>
             <p class="section-text" style="max-width: 760px;">
-                Create structured drafts for service pages, landing pages, articles, and answer blocks using the current audit plus the latest SEO and business context.
+                Create structured drafts for service pages, landing pages, articles, and answer blocks using the current audit plus the latest SEO and tracking context.
             </p>
         </div>
     </div>
@@ -15,235 +17,231 @@
 
 {% include "includes/workspace_nav.html" %}
 
-<section class="packages-section" style="padding-top: 0;">
+<section class="packages-section" style="padding-top: 0; position: relative; z-index: 2;">
     <div class="container page-stack">
-        <div class="system-grid">
-            <article class="system-card">
-                <p class="eyebrow">Workspace</p>
-                <h3>{{ project.name|default:"No linked project" }}</h3>
-                <p>
-                    {% if not project %}
-                    Create a project first to keep this content work independent.
-                    {% elif not project.latest_audit_run %}
-                    Run the first audit for this project before generating content.
-                    {% else %}
-                    {{ project.normalized_domain|default:"Connect an audit-backed project to generate content." }}
-                    {% endif %}
-                </p>
-            </article>
-            <article class="system-card">
-                <p class="eyebrow">Latest Audit</p>
-                <h3>{% if project and project.latest_audit_run %}{{ project.latest_audit_run.overall_score }}{% else %}-{% endif %}</h3>
-                <p>Generation uses the latest saved recommendations and score breakdown.</p>
-            </article>
-            <article class="system-card">
-                <p class="eyebrow">Drafts</p>
-                <h3>{{ generated_content_list|length }}</h3>
-                <p>Stored drafts stay editable and separate from published content.</p>
-            </article>
-            <article class="system-card">
-                <p class="eyebrow">Editorial Queue</p>
-                <h3>{{ editorial_tasks|length }}</h3>
-                <p>Tracked SEO-driven content operations with queue status and draft progress.</p>
-            </article>
+        
+        <!-- Metric Hero Strip -->
+        <div class="metric-hero-strip">
+            <div class="metric-cell">
+                <span class="metric-label">Workspace</span>
+                <span class="metric-value" style="font-size: 1.1rem; padding-top: 0.2rem;">{{ project.name|default:"No linked project" }}</span>
+            </div>
+            <div class="metric-cell">
+                <span class="metric-label">Base Audit Score</span>
+                <span class="metric-value">{% if project and project.latest_audit_run %}{{ project.latest_audit_run.overall_score }}{% else %}-{% endif %}</span>
+            </div>
+            <div class="metric-cell">
+                <span class="metric-label">Drafts</span>
+                <span class="metric-value">{{ generated_content_list|length }}</span>
+            </div>
+            <div class="metric-cell">
+                <span class="metric-label">Editorial Queue</span>
+                <span class="metric-value">{{ editorial_tasks|length }}</span>
+            </div>
         </div>
 
-        <div class="layout-split-wide">
-            <article class="system-card">
-                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                    <p class="eyebrow">Generate Draft</p>
-                    <h2 style="font-size: 2rem;">Build a new structured output</h2>
+        <div class="layout-split-wide" style="margin-top: 1.5rem;">
+            
+            <article class="system-card" id="generate">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1.5rem;">
+                    <p class="eyebrow">Generator</p>
+                    <h2 style="font-size: 1.7rem;">Build structured output</h2>
                 </div>
+                
                 {% if not project %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8; line-height: 1.6;">
-                    <div>Create a project first. Content generation should live inside a specific project so drafts, audits, SEO briefs, and credit usage stay consistent.</div>
+                <div class="evidence-card" style="margin: 0;">
+                    <div class="evidence-card-text">Create a project first. Content generation should live inside a specific project so drafts, audits, SEO briefs, and credit usage stay consistent.</div>
                     <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
                         <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}#start-audit">Start with audit</a>
                         <a class="button button-secondary" href="{% url 'tools:workspace-dashboard' %}#new-project">Create workspace</a>
                     </div>
                 </div>
                 {% elif not project.latest_audit_run %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8; line-height: 1.6;">
-                    <div>This project needs its first audit before content generation. The content engine uses the audit as the base context for page decisions, internal links, and score gaps.</div>
-                    <div style="margin-top: 1rem;">
-                        <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
-                            {% csrf_token %}
-                            <button type="submit" class="button button-primary">Run first audit</button>
-                        </form>
-                    </div>
+                <div class="evidence-card" style="margin: 0;">
+                    <div class="evidence-card-text">This project needs its first audit before content generation. The content engine uses the audit as the base context for page decisions, internal links, and score gaps.</div>
+                    <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin-top: 1rem;">
+                        {% csrf_token %}
+                        <button type="submit" class="button button-primary">Run first audit</button>
+                    </form>
                 </div>
                 {% else %}
+                
                 {% if workspace_credit_actions %}
-                {% for item in workspace_credit_actions %}
-                {% if item.slug == "content" %}
-                <div style="margin-bottom: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #f8fafc; line-height: 1.5;">
-                    Content generation is currently estimated at <strong>{{ item.credits }} credits</strong>. {{ item.next_step }}
-                </div>
+                    {% for item in workspace_credit_actions %}
+                        {% if item.slug == "content" %}
+                        <div class="evidence-card" style="background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.3); margin-top: 0; margin-bottom: 1.5rem;">
+                            <div class="evidence-card-text">
+                                Generation is currently estimated at <strong>{{ item.credits }} credits</strong>. {{ item.next_step }}
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
                 {% endif %}
-                {% endfor %}
-                {% endif %}
-                <form method="post" action="{% url 'content:workspace-content-generate' %}" style="display: grid; gap: 1rem;">
+                
+                <form method="post" action="{% url 'content:workspace-content-generate' %}" style="display: grid; gap: 1.25rem;">
                     {% csrf_token %}
                     {% for field in form %}
-                    <label style="display: grid; gap: 0.35rem;">
-                        <span style="font-weight: 700;">{{ field.label }}</span>
+                    <label style="display: grid; gap: 0.5rem;">
+                        <span style="font-weight: 700; color: var(--ink);">{{ field.label }}</span>
                         {{ field }}
                         {% if field.help_text %}
-                        <span style="font-size: 0.85rem; color: #94a3b8;">{{ field.help_text }}</span>
+                        <span style="font-size: 0.82rem; color: var(--text-muted);">{{ field.help_text }}</span>
                         {% endif %}
                         {% for error in field.errors %}
-                        <span style="font-size: 0.85rem; color: #b91c1c;">{{ error }}</span>
+                        <span style="font-size: 0.82rem; color: #fca5a5;">{{ error }}</span>
                         {% endfor %}
                     </label>
                     {% endfor %}
-                    <button type="submit" class="button button-primary">Generate draft</button>
+                    <button type="submit" class="button button-primary" style="margin-top: 0.5rem; justify-self: start;">Generate Engine Draft</button>
                 </form>
                 {% endif %}
             </article>
 
-            <article class="system-card">
-                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                    <p class="eyebrow">Output Contract</p>
-                    <h2 style="font-size: 2rem;">What the generator stores</h2>
-                </div>
-                <div style="display: grid; gap: 0.75rem; color: #94a3b8;">
-                    <div>SEO fields: title, meta title, meta description, schema JSON</div>
-                    <div>Body structure: answer-first intro, section layout, FAQ, CTA</div>
-                    <div>Workspace context: audit recommendations, score gaps, internal links</div>
-                    <div>SEO briefing: title options, outline, FAQ targets, keyword targets, competitor evidence</div>
-                    <div>Validation: keyword coverage, CTA presence, FAQ count, generic-risk check</div>
-                </div>
-            </article>
+            <div class="system-card" style="background: transparent; box-shadow: none; border: none; padding: 0;">
+                <article class="system-card" style="margin-bottom: 2rem;">
+                    <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                        <p class="eyebrow">Generator Architecture</p>
+                        <h2 style="font-size: 1.5rem;">What the engine produces</h2>
+                    </div>
+                    <div style="display: grid; gap: 0.85rem;">
+                        <div class="evidence-card" style="margin:0;"><span class="evidence-card-label">SEO Package</span><div class="evidence-card-text">Title, meta title, meta description, schema JSON</div></div>
+                        <div class="evidence-card" style="margin:0;"><span class="evidence-card-label">Execution Structuring</span><div class="evidence-card-text">Answer-first intro, section layout, strict FAQ block formatting, CTA integrations</div></div>
+                        <div class="evidence-card" style="margin:0;"><span class="evidence-card-label">Briefing Layer</span><div class="evidence-card-text">Keyword targets, competitor evidence bridging, internal link routing</div></div>
+                    </div>
+                </article>
+            </div>
         </div>
 
-        <article class="system-card">
-            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                <p class="eyebrow">Editorial Queue</p>
-                <h2 style="font-size: 2rem;">Generate from the SEO roadmap</h2>
-            </div>
-            <div style="margin-bottom: 1rem;">
+        <article class="system-card" id="editorial-queue">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                <div class="section-heading" style="text-align: left; margin: 0;">
+                    <p class="eyebrow">Editorial Pipeline</p>
+                    <h2 style="font-size: 1.7rem; margin-bottom: 0;">Generate directly from SEO cluster briefs</h2>
+                </div>
                 {% if project and project.latest_audit_run %}
                 <form method="post" action="{% url 'content:workspace-content-editorial-sync' %}">
                     {% csrf_token %}
-                    <button type="submit" class="button button-secondary">Sync editorial queue</button>
+                    <button type="submit" class="button button-secondary">Sync Pipeline from SEO Hub</button>
                 </form>
                 {% endif %}
             </div>
-            <div class="panel-scroll panel-scroll-tall">
+            
+            <div class="panel-scroll panel-scroll-tall" style="padding-right: 0.5rem;">
                 {% if not project %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
-                    Create a project first before building a content queue.
-                </div>
+                <div class="evidence-card"><div class="evidence-card-text">Create a project first before building a content pipeline.</div></div>
                 {% elif not project.latest_audit_run %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
-                    Run the first audit to unlock the editorial queue for this project.
-                </div>
+                <div class="evidence-card"><div class="evidence-card-text">Run the first audit to unlock the editorial queue for this project.</div></div>
                 {% else %}
-                {% for task in editorial_tasks %}
-                {% with brief=task.brief_json %}
-                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: rgba(255, 255, 255, 0.03);">
-                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
-                        <strong>{{ brief.primary_keyword }}</strong>
-                        <span class="score-pill score-high">{{ task.get_status_display }}</span>
-                    </div>
-                    <div style="margin-top: 0.35rem; color: #94a3b8; font-size: 0.82rem;">
-                        Output: {{ brief.output_type_label|title }} | Priority {{ task.priority_score }}
-                    </div>
-                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.9rem; line-height: 1.5;">
-                        {{ brief.reason }}
-                    </div>
-                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
-                        <strong style="color: #f8fafc;">Recommended action:</strong> {{ brief.action }}
-                    </div>
-                    {% if task.seo_campaign %}
-                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
-                        <strong style="color: #f8fafc;">Campaign:</strong>
-                        {{ task.seo_campaign.title }} | {{ task.seo_campaign.get_status_display }} | {{ task.seo_campaign.get_validation_status_display }}
-                    </div>
-                    {% endif %}
-                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
-                        <strong style="color: #f8fafc;">Title options:</strong> {{ brief.title_options|join:", " }}
-                    </div>
-                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
-                        <strong style="color: #f8fafc;">Brief refinement:</strong>
-                        {% if task.metadata.brief_refinement.applied %}
-                        {{ task.metadata.brief_refinement.provider|title }}{% if task.metadata.brief_refinement.model %} / {{ task.metadata.brief_refinement.model }}{% endif %}
-                        {% else %}
-                        Deterministic fallback
-                        {% endif %}
-                    </div>
-                    {% if brief.target_urls %}
-                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem; line-height: 1.5;">
-                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Target URLs</strong>
-                        {% for url in brief.target_urls %}
-                        <div class="url-wrap-mono" style="font-size: 0.76rem; color: #94a3b8; margin-top: 0.15rem;">{{ url }}</div>
-                        {% endfor %}
-                    </div>
-                    {% endif %}
-                    {% if brief.competitor_evidence %}
-                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
-                        <strong style="color: #f8fafc;">Competitor evidence:</strong>
-                        {{ brief.competitor_evidence.0.title|default:brief.competitor_evidence.0.url }}
-                    </div>
-                    {% endif %}
-                    {% if task.latest_generated_content %}
-                    <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
-                        Latest draft:
-                        <a href="{% url 'content:workspace-content-detail' task.latest_generated_content.pk %}" style="color: var(--signal);">
-                            {{ task.latest_generated_content.title }}
-                        </a>
-                    </div>
-                    {% endif %}
-                    <div style="margin-top: 1rem;">
-                        <form method="post" action="{% url 'content:workspace-content-generate-from-seo' %}">
-                            {% csrf_token %}
-                            <input type="hidden" name="brief_key" value="{{ task.brief_key }}">
-                            <button type="submit" class="button button-primary">
-                                {% if task.status == "queued" or task.status == "stale" %}
-                                Generate draft from SEO brief
-                                {% else %}
-                                Regenerate draft from SEO brief
+                <div style="display: grid; gap: 1rem;">
+                    {% for task in editorial_tasks %}
+                    {% with brief=task.brief_json %}
+                    <div style="padding: 1.5rem; border-radius: 18px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);">
+                        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                            <h3 style="margin: 0; font-size: 1.2rem; color: var(--ink);">{{ brief.primary_keyword }}</h3>
+                            
+                            {% if task.status == "queued" %}
+                                <span class="score-pill score-medium">Queued</span>
+                            {% elif task.status == "drafting" %}
+                                <span class="score-pill score-high" style="background: rgba(6, 182, 212, 0.15); color: #22d3ee; border-color: rgba(6, 182, 212, 0.4); box-shadow: 0 0 10px rgba(6, 182, 212, 0.1);">Drafting</span>
+                            {% elif task.status == "completed" %}
+                                <span class="score-pill score-high">Completed</span>
+                            {% else %}
+                                <span class="score-pill score-low">Stale / Need Review</span>
+                            {% endif %}
+                        </div>
+                        
+                        <div style="display: grid; gap: 0.75rem; color: var(--text-muted); font-size: 0.9rem;">
+                            
+                            <!-- Context Grid -->
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 0.5rem;">
+                                <div><strong style="color: var(--ink); display:block; margin-bottom:0.15rem; font-size: 0.75rem; text-transform: uppercase;">Format</strong> {{ brief.output_type_label|title }}</div>
+                                <div><strong style="color: var(--ink); display:block; margin-bottom:0.15rem; font-size: 0.75rem; text-transform: uppercase;">Priority</strong> {{ task.priority_score }} / 100</div>
+                                
+                                {% if task.seo_campaign %}
+                                <div>
+                                    <strong style="color: var(--ink); display:block; margin-bottom:0.15rem; font-size: 0.75rem; text-transform: uppercase;">Campaign Connection</strong> 
+                                    {{ task.seo_campaign.title|truncatechars:25 }}
+                                </div>
                                 {% endif %}
-                            </button>
-                        </form>
+                            </div>
+
+                            <div style="line-height: 1.55; padding: 0.75rem; background: rgba(0,0,0,0.2); border-radius: 8px;">
+                                <strong style="color: var(--ink);">System Rationale:</strong> {{ brief.reason }}
+                            </div>
+
+                            <div style="line-height: 1.55;">
+                                <strong style="color: var(--ink);">Target Action:</strong> {{ brief.action }}
+                            </div>
+
+                            <!-- Draft Generator Block -->
+                            <div style="margin-top: 1rem; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+                                
+                                {% if task.latest_generated_content %}
+                                <div>
+                                    <span style="font-size: 0.8rem; color: var(--text-muted); display: block;">Latest Iteration</span>
+                                    <a href="{% url 'content:workspace-content-detail' task.latest_generated_content.pk %}" style="color: var(--signal); font-weight: 700; text-decoration: none;">
+                                        &rarr; Review: {{ task.latest_generated_content.title }}
+                                    </a>
+                                </div>
+                                {% else %}
+                                <div style="font-size: 0.85rem;">Draft waiting to be generated seamlessly.</div>
+                                {% endif %}
+
+                                <form method="post" action="{% url 'content:workspace-content-generate-from-seo' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="brief_key" value="{{ task.brief_key }}">
+                                    <button type="submit" class="button button-primary">
+                                        {% if task.status == "queued" or task.status == "stale" %}
+                                        Auto-Generate Draft
+                                        {% else %}
+                                        Regenerate Iteration
+                                        {% endif %}
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
                     </div>
+                    {% endwith %}
+                    
+                    {% empty %}
+                    <div class="evidence-card"><div class="evidence-card-text">Refresh the SEO hub first to build the content brief queue from the current page map and keyword opportunities.</div></div>
+                    {% endfor %}
                 </div>
-                {% endwith %}
-                {% empty %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
-                    Refresh the SEO hub first to build the content brief queue from the current page map and keyword opportunities.
-                </div>
-                {% endfor %}
                 {% endif %}
             </div>
         </article>
 
-        <article class="system-card">
-            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                <p class="eyebrow">Saved Drafts</p>
-                <h2 style="font-size: 2rem;">Generated content history</h2>
+        <article class="system-card" id="drafts">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1.5rem;">
+                <p class="eyebrow">Asset Library</p>
+                <h2 style="font-size: 1.7rem;">Saved Engine Drafts</h2>
             </div>
             <div class="panel-scroll">
                 {% for item in generated_content_list %}
-                <a href="{% url 'content:workspace-content-detail' item.pk %}" style="display: block; padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); text-decoration: none; color: inherit;">
+                <a href="{% url 'content:workspace-content-detail' item.pk %}" style="display: block; padding: 1.25rem; border-radius: 16px; background: rgba(255, 255, 255, 0.02); text-decoration: none; color: inherit; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 0.75rem; transition: border-color 0.2s, background 0.2s;">
                     <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
-                        <strong>{{ item.title }}</strong>
+                        <strong style="color: var(--ink); font-size: 1.1rem;">{{ item.title }}</strong>
                         <span class="score-pill score-high">{{ item.get_output_type_display }}</span>
                     </div>
-                    <div style="margin-top: 0.35rem; color: #94a3b8; font-size: 0.9rem;">
-                        {{ item.business_type }}{% if item.location %} in {{ item.location }}{% endif %} | Status: {{ item.get_status_display }}
+                    <div style="margin-top: 0.5rem; color: var(--text-muted); font-size: 0.88rem;">
+                        {{ item.business_type }}{% if item.location %} targeting {{ item.location }}{% endif %}
                     </div>
-                    {% if item.source_seo_campaign %}
-                    <div style="margin-top: 0.45rem; color: #94a3b8; font-size: 0.82rem;">
-                        <strong style="color: #f8fafc;">Campaign:</strong>
-                        {{ item.source_seo_campaign.title }} | {{ item.source_seo_campaign.get_status_display }}
+                    
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem;">
+                        {% if item.source_seo_campaign %}
+                        <div style="color: var(--text-muted); font-size: 0.82rem;">
+                            <strong style="color: var(--ink);">System Source:</strong>
+                            {{ item.source_seo_campaign.title }} ({{ item.source_seo_campaign.get_status_display }})
+                        </div>
+                        {% else %}
+                        <div></div>
+                        {% endif %}
+                        
+                        <div style="font-size: 0.82rem; color: var(--signal); font-weight: 700;">View Draft &rarr;</div>
                     </div>
-                    {% endif %}
                 </a>
                 {% empty %}
-                <div style="padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8;">
-                    No generated drafts yet.
-                </div>
+                <div class="evidence-card"><div class="evidence-card-text">No generated drafts saved in the Asset Library yet.</div></div>
                 {% endfor %}
             </div>
         </article>
