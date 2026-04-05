@@ -109,6 +109,15 @@ NON_COMPETITOR_HOST_HINTS = {
     "wordpress.com",
     "blogspot.com",
     "scribd.com",
+    "trivago.com",
+    "kayak.com",
+    "travelocity.com",
+    "hotels.com",
+    "agoda.com",
+    "airbnb.com",
+    "priceline.com",
+    "google.com",
+    "google.co.ke",
 }
 
 FOREIGN_GEO_HINTS = {
@@ -370,11 +379,22 @@ def _score_competitor_page_fit(page, profile):
     local_score = 0
     penalty = 0
     signals = []
+    primary_service_tokens = [
+        token
+        for token in _tokenize_phrase(getattr(profile, "primary_service", "") or "")
+        if token not in _tokenize_phrase(getattr(profile, "business_type", "") or "")
+    ]
+    primary_service_matches = 0
 
     for term in _profile_topic_terms(profile):
         if term and term in haystack:
             topic_score += 3 if " " in term else 1
             signals.append(f"topic:{term}")
+    for token in primary_service_tokens[:5]:
+        if token in haystack:
+            topic_score += 3
+            primary_service_matches += 1
+            signals.append(f"primary_service:{token}")
     for token in _tokenize_phrase(profile.location):
         if token in haystack:
             local_score += 2
@@ -385,6 +405,9 @@ def _score_competitor_page_fit(page, profile):
     if _has_foreign_geo_conflict(haystack, profile.location):
         penalty += 6
         signals.append("foreign_location_conflict")
+    if primary_service_tokens and primary_service_matches == 0:
+        penalty += 6
+        signals.append("missing_primary_service_alignment")
     return {
         "score": topic_score + local_score - penalty,
         "topic_score": topic_score,
@@ -1289,7 +1312,7 @@ def build_priority_pages(profile, site_structure):
     return ordered[:6]
 
 
-def build_benchmark_summary(site_structure, competitor_snapshots):
+def build_benchmark_summary(site_structure, competitor_snapshots, discovery=None):
     profile = None
     if competitor_snapshots:
         project = getattr(competitor_snapshots[0].competitor, "project", None)
@@ -1306,6 +1329,9 @@ def build_benchmark_summary(site_structure, competitor_snapshots):
             "average_relevance": 0,
             "top_match_signals": [],
             "manual_overrides": 0,
+            "market_surfaces_observed": len((discovery or {}).get("market_surfaces", []) or []),
+            "citation_sources_observed": len((discovery or {}).get("citation_sources", []) or []),
+            "backlink_sources_observed": len((discovery or {}).get("backlink_prospects", []) or []),
         }
     page_type_counter = Counter()
     match_signal_counter = Counter()
@@ -1340,7 +1366,54 @@ def build_benchmark_summary(site_structure, competitor_snapshots):
         "average_relevance": round(sum(relevance_values) / max(len(relevance_values), 1), 1) if relevance_values else 0,
         "top_match_signals": [signal for signal, _count in match_signal_counter.most_common(6)],
         "manual_overrides": len([item for item in traces if item.get("review_decision") != "auto"]),
+        "market_surfaces_observed": len((discovery or {}).get("market_surfaces", []) or []),
+        "citation_sources_observed": len((discovery or {}).get("citation_sources", []) or []),
+        "backlink_sources_observed": len((discovery or {}).get("backlink_prospects", []) or []),
     }
+
+
+def build_discovery_workspace_sections(discovery):
+    discovery = discovery or {}
+    def _humanize(value):
+        return str(value or "").replace("_", " ").replace("-", " ").strip().title()
+
+    sections = []
+    section_specs = [
+        (
+            "market_surfaces",
+            "Market surfaces",
+            "Ranked discovery surfaces that shape the market but should not enter peer benchmarking.",
+        ),
+        (
+            "citation_sources",
+            "Citation sources",
+            "Directory and local listing surfaces that can support local trust, citations, and entity coverage.",
+        ),
+        (
+            "backlink_prospects",
+            "Backlink prospects",
+            "Editorial or resource surfaces that can be reused later for link acquisition and authority work.",
+        ),
+    ]
+    for key, label, description in section_specs:
+        items = [item for item in (discovery.get(key) or []) if isinstance(item, dict)]
+        sections.append(
+            {
+                "key": key,
+                "label": label,
+                "description": description,
+                "count": len(items),
+                "items": [
+                    {
+                        **item,
+                        "bucket_label": item.get("bucket_label") or _humanize(item.get("bucket")),
+                        "bucket_reason_label": _humanize(item.get("bucket_reason")),
+                    }
+                    for item in items[:6]
+                ],
+            }
+        )
+    return sections
 
 
 def build_serp_evidence_history(project, limit=6):
@@ -1791,7 +1864,7 @@ def build_execution_queue(profile, site_structure, recommendations, page_map, ke
     return tasks[:10]
 
 
-def build_value_summary(competitor_snapshots, keyword_opportunities, page_map, execution_queue):
+def build_value_summary(competitor_snapshots, keyword_opportunities, page_map, execution_queue, discovery=None):
     profile = None
     if competitor_snapshots:
         project = getattr(competitor_snapshots[0].competitor, "project", None)
@@ -1819,6 +1892,9 @@ def build_value_summary(competitor_snapshots, keyword_opportunities, page_map, e
         "competitors_benchmarked": len(profiled_competitors),
         "auto_discovered_competitors": auto_discovered,
         "filtered_out_competitors": max(0, len(competitor_snapshots) - len(accepted_competitors)),
+        "market_surfaces": len((discovery or {}).get("market_surfaces", []) or []),
+        "citation_sources": len((discovery or {}).get("citation_sources", []) or []),
+        "backlink_sources": len((discovery or {}).get("backlink_prospects", []) or []),
         "competitor_pages_profiled": competitor_pages,
         "competitor_images_profiled": competitor_images,
         "competitor_scripts_profiled": competitor_scripts,
@@ -1856,7 +1932,7 @@ def build_seo_context_payload(project, profile, audit_run):
     competitor_trace = [_build_competitor_trace(snapshot, profile) for snapshot in competitor_snapshots]
     accepted_competitor_snapshots = _accepted_competitor_snapshots(competitor_snapshots, profile)
     site_structure = site_structure_snapshot.output_json
-    benchmark_summary = build_benchmark_summary(site_structure, competitor_snapshots)
+    benchmark_summary = build_benchmark_summary(site_structure, competitor_snapshots, discovery=discovery)
     competitor_patterns = build_competitor_patterns(profile, accepted_competitor_snapshots)
     page_comparisons = build_page_comparisons(profile, site_structure, accepted_competitor_snapshots)
     recommendations = build_context_recommendations(
@@ -1939,7 +2015,13 @@ def build_seo_opportunity_payload(project, profile, audit_run, context_snapshot=
     keyword_opportunities = build_keyword_opportunities(profile, site_structure, competitor_snapshots, page_map)
     execution_queue = build_execution_queue(profile, site_structure, recommendations, page_map, keyword_opportunities)
     return {
-        "value_summary": build_value_summary(competitor_snapshots, keyword_opportunities, page_map, execution_queue),
+        "value_summary": build_value_summary(
+            competitor_snapshots,
+            keyword_opportunities,
+            page_map,
+            execution_queue,
+            discovery=context_payload.get("discovery", {}),
+        ),
         "keyword_opportunities": keyword_opportunities,
         "page_map": page_map,
         "execution_queue": execution_queue,

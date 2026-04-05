@@ -228,6 +228,9 @@
             <div class="system-grid">
                 <article class="system-card"><p class="eyebrow">Competitors</p><h3>{{ seo_value_summary.competitors_benchmarked|default:0 }}</h3><p>Real competitor sites fetched and benchmarked</p></article>
                 <article class="system-card"><p class="eyebrow">Auto-Discovered</p><h3>{{ seo_value_summary.auto_discovered_competitors|default:0 }}</h3><p>Competitors found directly from global SERPs</p></article>
+                <article class="system-card"><p class="eyebrow">Market Surfaces</p><h3>{{ seo_value_summary.market_surfaces|default:0 }}</h3><p>Observed search or marketplace surfaces kept out of peer benchmarking</p></article>
+                <article class="system-card"><p class="eyebrow">Citation Sources</p><h3>{{ seo_value_summary.citation_sources|default:0 }}</h3><p>Directory and local listing sources tracked separately from competitors</p></article>
+                <article class="system-card"><p class="eyebrow">Backlink Prospects</p><h3>{{ seo_value_summary.backlink_sources|default:0 }}</h3><p>Editorial and resource surfaces saved for later authority work</p></article>
                 <article class="system-card"><p class="eyebrow">Competitor Pages</p><h3>{{ seo_value_summary.competitor_pages_profiled|default:0 }}</h3><p>Pages profiled across those competitor sites</p></article>
                 <article class="system-card"><p class="eyebrow">Images Profiled</p><h3>{{ seo_value_summary.competitor_images_profiled|default:0 }}</h3><p>Competitor visual assets captured for analysis</p></article>
                 <article class="system-card"><p class="eyebrow">Scripts Profiled</p><h3>{{ seo_value_summary.competitor_scripts_profiled|default:0 }}</h3><p>Third-party and app stack signals captured</p></article>
@@ -259,6 +262,69 @@
             {% elif snapshot %}
             <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8; line-height: 1.6;">
                 Automatic SERP discovery is not configured yet. Manual competitors are still benchmarked directly.
+            </div>
+            {% endif %}
+
+            {% if seo_discovery.routing_policy %}
+            <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(255, 255, 255, 0.03); color: #94a3b8; line-height: 1.6;">
+                <strong style="display: block; color: #f8fafc; margin-bottom: 0.35rem;">Discovery routing policy</strong>
+                <div>
+                    Benchmark peers are selected for
+                    <strong style="color: #f8fafc;">{{ seo_discovery.routing_policy.business_type|default:"general" }}</strong>
+                    with service focus on
+                    <strong style="color: #f8fafc;">{{ seo_discovery.routing_policy.primary_service|default:"the declared offer" }}</strong>.
+                </div>
+                {% if seo_discovery.routing_policy.source_families %}
+                <div style="margin-top: 0.65rem;" class="seo-inline-tags">
+                    {% for family in seo_discovery.routing_policy.source_families %}
+                    <span class="seo-inline-tag">{{ family }}</span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+            {% endif %}
+
+            {% if seo_discovery_sections %}
+            <div class="compact-grid" style="margin-top: 1rem;">
+                {% for section in seo_discovery_sections %}
+                {% if section.count %}
+                <article class="system-card">
+                    <p class="eyebrow">{{ section.label }}</p>
+                    <h3>{{ section.count }}</h3>
+                    <p>{{ section.description }}</p>
+                    <div class="panel-scroll" style="margin-top: 0.9rem; max-height: 240px;">
+                        {% for item in section.items %}
+                        <div style="padding: 0.9rem; border-radius: 16px; background: rgba(255, 255, 255, 0.04);">
+                            <div style="display: flex; justify-content: space-between; gap: 0.75rem; align-items: baseline; flex-wrap: wrap;">
+                                <strong>{{ item.label|default:item.normalized_domain }}</strong>
+                                <span class="score-pill score-medium" style="font-size: 0.7rem;">{{ item.bucket_label }}</span>
+                            </div>
+                            {% if item.homepage_url %}
+                            <div style="margin-top: 0.25rem; color: #94a3b8; font-size: 0.8rem; word-break: break-word;">{{ item.homepage_url }}</div>
+                            {% endif %}
+                            <div class="seo-inline-tags" style="margin-top: 0.65rem;">
+                                {% if item.best_position %}
+                                <span class="seo-inline-tag">Best position: {{ item.best_position }}</span>
+                                {% endif %}
+                                <span class="seo-inline-tag">Queries: {{ item.query_count|default:0 }}</span>
+                                <span class="seo-inline-tag">Relevance: {{ item.average_relevance|default:0 }}</span>
+                            </div>
+                            {% if item.bucket_reason %}
+                            <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">
+                                <strong style="color: #f8fafc;">Why bucketed here:</strong> {{ item.bucket_reason_label }}
+                            </div>
+                            {% endif %}
+                            {% if item.queries %}
+                            <div style="margin-top: 0.4rem; color: #94a3b8; font-size: 0.82rem;">
+                                <strong style="color: #f8fafc;">Observed queries:</strong> {{ item.queries|join:", " }}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </article>
+                {% endif %}
+                {% endfor %}
             </div>
             {% endif %}
         </article>

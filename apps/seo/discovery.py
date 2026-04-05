@@ -26,6 +26,15 @@ BLOCKED_COMPETITOR_DOMAINS = {
     "mapquest.com",
     "maps.google.com",
     "google.com",
+    "google.co.ke",
+    "googleusercontent.com",
+    "trivago.com",
+    "kayak.com",
+    "travelocity.com",
+    "hotels.com",
+    "agoda.com",
+    "airbnb.com",
+    "priceline.com",
 }
 
 DISCOVERY_STOPWORDS = {
@@ -80,6 +89,13 @@ NON_COMPETITOR_DOMAIN_HINTS = {
     "wordpress.com",
     "blogspot.com",
     "scribd.com",
+    "trivago.com",
+    "kayak.com",
+    "travelocity.com",
+    "hotels.com",
+    "agoda.com",
+    "airbnb.com",
+    "priceline.com",
 }
 
 FOREIGN_GEO_HINTS = {
@@ -166,6 +182,36 @@ DISCOVERY_QUERY_TEMPLATES = {
         "{service} pricing {location}",
         "best {service} {location}",
     ],
+}
+
+DISCOVERY_BUCKET_LABELS = {
+    "benchmark_competitor": "Benchmark Competitor",
+    "market_surface": "Market Surface",
+    "citation_source": "Citation Source",
+    "backlink_prospect": "Backlink Prospect",
+    "discard": "Discard",
+}
+
+LOCAL_CITATION_HOST_HINTS = {
+    "yellowpages.com",
+    "mapquest.com",
+    "yelp.com",
+}
+
+MARKET_SURFACE_HOST_HINTS = {
+    "tripadvisor.com",
+    "booking.com",
+    "expedia.com",
+    "trivago.com",
+    "kayak.com",
+    "travelocity.com",
+    "hotels.com",
+    "agoda.com",
+    "airbnb.com",
+    "priceline.com",
+    "google.com",
+    "google.co.ke",
+    "googleusercontent.com",
 }
 
 
@@ -264,6 +310,26 @@ def _profile_service_terms(profile):
     return terms
 
 
+def _primary_service_tokens(profile):
+    service = str(getattr(profile, "primary_service", "") or "")
+    business_type = str(getattr(profile, "business_type", "") or "").replace("_", " ")
+    business_tokens = set(_tokenize_terms(business_type))
+    tokens = []
+    for token in _tokenize_terms(service):
+        if token in business_tokens:
+            continue
+        if token not in tokens:
+            tokens.append(token)
+    return tokens[:5]
+
+
+def _is_hospitality_event_focus(profile):
+    if getattr(profile, "business_type", "") != "hotel":
+        return False
+    service = str(getattr(profile, "primary_service", "") or "").lower()
+    return any(token in service for token in ("event", "events", "garden", "venue", "wedding", "conference"))
+
+
 def _has_foreign_geo_conflict(haystack, location):
     location_tokens = _tokenize_terms(location)
     if any(token in haystack for token in location_tokens):
@@ -278,6 +344,15 @@ def build_discovery_queries(profile, project=None):
     goal = (profile.target_goal or "").strip().lower()
     industry_terms = INDUSTRY_DISCOVERY_TERMS.get(profile.business_type, [])
     templates = DISCOVERY_QUERY_TEMPLATES.get(profile.business_type, DISCOVERY_QUERY_TEMPLATES["default"])
+    if _is_hospitality_event_focus(profile):
+        templates = [
+            "{service} {location}",
+            "event venue {location}",
+            "wedding venue {location}",
+            "conference venue {location}",
+            "{service} booking {location}",
+            "{service} contact {location}",
+        ]
     queries = [
         template.format(
             service=service,
@@ -382,9 +457,33 @@ def _candidate_link(result):
 def _is_blocked_domain(domain, own_domain):
     if not domain or domain == own_domain:
         return True
-    if any(domain == blocked or domain.endswith(f".{blocked}") for blocked in NON_COMPETITOR_DOMAIN_HINTS):
-        return True
-    return any(domain == blocked or domain.endswith(f".{blocked}") for blocked in BLOCKED_COMPETITOR_DOMAINS)
+    return False
+
+
+def _matches_domain_hint(domain, hints):
+    return any(domain == hint or domain.endswith(f".{hint}") for hint in hints)
+
+
+def _classify_result_bucket(*, domain, haystack, profile):
+    if not domain:
+        return "discard", "no-domain"
+    if _matches_domain_hint(domain, MARKET_SURFACE_HOST_HINTS):
+        return "market_surface", "market-surface-host"
+    if _matches_domain_hint(domain, LOCAL_CITATION_HOST_HINTS):
+        return "citation_source", "citation-host"
+    if _matches_domain_hint(domain, NON_COMPETITOR_DOMAIN_HINTS):
+        if any(token in haystack for token in ("association", "resource", "guide", "news", "magazine", "journal")):
+            return "backlink_prospect", "editorial-host"
+        return "discard", "non-competitor-host"
+    if any(hint in haystack for hint in ("directory", "directories", "listing", "listings", "profiles")):
+        return "citation_source", "directory-surface"
+    if any(hint in haystack for hint in ("review", "reviews", "compare", "comparison", "prices", "deals")):
+        return "market_surface", "comparison-surface"
+    if any(hint in haystack for hint in ("blog", "guide", "resource", "news", "magazine", "journal", "association")):
+        return "backlink_prospect", "editorial-surface"
+    if any(hint in haystack for hint in ("lead finder", "lead generation", "classifieds", "document", "pdf")):
+        return "discard", "noise-surface"
+    return "benchmark_competitor", "peer-site"
 
 
 def _domain_root_url(link):
@@ -407,6 +506,15 @@ def _parse_result(result, *, query, own_domain):
         position = int(position)
     except (TypeError, ValueError):
         position = 99
+    result_dict = result if isinstance(result, dict) else {}
+    haystack = " ".join(
+        [
+            str(result_dict.get("title", "") or ""),
+            str(result_dict.get("snippet", "") or result_dict.get("description", "") or ""),
+            str(link or ""),
+        ]
+    ).replace("/", " ").replace("-", " ").replace("_", " ").lower()
+    bucket, bucket_reason = _classify_result_bucket(domain=domain, haystack=haystack, profile=None)
     return {
         "homepage_url": _domain_root_url(link) or normalize_url(link),
         "normalized_domain": domain,
@@ -415,6 +523,8 @@ def _parse_result(result, *, query, own_domain):
         "snippet": (result_dict.get("snippet") or result_dict.get("description") or "").strip(),
         "query": query,
         "result_url": link,
+        "bucket": bucket,
+        "bucket_reason": bucket_reason,
     }
 
 
@@ -438,6 +548,8 @@ def _aggregate_candidates(raw_candidates):
         lambda: {
             "homepage_url": "",
             "normalized_domain": "",
+            "bucket": "benchmark_competitor",
+            "bucket_reason": "",
             "positions": [],
             "queries": [],
             "titles": [],
@@ -448,9 +560,11 @@ def _aggregate_candidates(raw_candidates):
         }
     )
     for item in raw_candidates:
-        entry = aggregated[item["normalized_domain"]]
+        entry = aggregated[(item["normalized_domain"], item.get("bucket", "benchmark_competitor"))]
         entry["homepage_url"] = item["homepage_url"]
         entry["normalized_domain"] = item["normalized_domain"]
+        entry["bucket"] = item.get("bucket", "benchmark_competitor")
+        entry["bucket_reason"] = item.get("bucket_reason", "")
         entry["positions"].append(item["position"])
         if item["query"] not in entry["queries"]:
             entry["queries"].append(item["query"])
@@ -467,7 +581,8 @@ def _aggregate_candidates(raw_candidates):
                 entry["match_signals"].append(signal)
 
     discovered = []
-    for domain, item in aggregated.items():
+    bucketed_items = defaultdict(list)
+    for (_domain, _bucket), item in aggregated.items():
         appearances = len(item["positions"])
         average_position = round(sum(item["positions"]) / max(appearances, 1), 1)
         best_position = min(item["positions"]) if item["positions"] else 99
@@ -476,11 +591,14 @@ def _aggregate_candidates(raw_candidates):
             1,
         ) if item["relevance_scores"] else 0
         discovery_score = appearances * 20 + max(0, 15 - best_position) + average_relevance
-        discovered.append(
+        bucketed_items[item["bucket"]].append(
             {
                 "homepage_url": item["homepage_url"],
-                "normalized_domain": domain,
-                "label": domain,
+                "normalized_domain": item["normalized_domain"],
+                "label": item["normalized_domain"],
+                "bucket": item["bucket"],
+                "bucket_label": DISCOVERY_BUCKET_LABELS.get(item["bucket"], item["bucket"].replace("_", " ").title()),
+                "bucket_reason": item["bucket_reason"],
                 "queries": item["queries"],
                 "query_count": len(item["queries"]),
                 "best_position": best_position,
@@ -496,15 +614,22 @@ def _aggregate_candidates(raw_candidates):
 
     discovered = [
         item
-        for item in discovered
+        for item in bucketed_items["benchmark_competitor"]
         if (
-            item["average_relevance"] >= 7
+            (
+                item["average_relevance"] >= 7
+                and "non_competitor_host" not in item["match_signals"]
+                and "missing_primary_service_alignment" not in item["match_signals"]
+            )
             or (
                 item["query_count"] >= 2
                 and item["average_relevance"] >= 5
+                and "non_competitor_host" not in item["match_signals"]
+                and "missing_primary_service_alignment" not in item["match_signals"]
                 and any(
                     signal.startswith("service:")
                     or signal.startswith("industry:")
+                    or signal.startswith("primary_service:")
                     or signal.startswith("location:")
                     for signal in item["match_signals"]
                 )
@@ -512,7 +637,14 @@ def _aggregate_candidates(raw_candidates):
         )
     ]
     discovered.sort(key=lambda item: (-item["discovery_score"], item["average_position"]))
-    return discovered
+    for bucket_name in ("market_surface", "citation_source", "backlink_prospect"):
+        bucketed_items[bucket_name].sort(key=lambda item: (-item["discovery_score"], item["average_position"]))
+    return {
+        "competitors": discovered,
+        "market_surfaces": bucketed_items["market_surface"][:8],
+        "citation_sources": bucketed_items["citation_source"][:8],
+        "backlink_prospects": bucketed_items["backlink_prospect"][:8],
+    }
 
 
 def _should_disable_provider(exc):
@@ -598,12 +730,21 @@ def _relevance_signals(result, profile):
         if token.lower() in haystack:
             score += 2
             signals.append(f"industry:{token.lower()}")
+    primary_matches = 0
+    for token in _primary_service_tokens(profile):
+        if token in haystack:
+            primary_matches += 1
+            score += 4
+            signals.append(f"primary_service:{token}")
     if any(hint in haystack for hint in GENERIC_RESULT_HINTS):
         score -= 4
         signals.append("generic_noise")
     if any(hint in haystack for hint in NON_COMPETITOR_RESULT_HINTS):
         score -= 7
         signals.append("non_competitor_pattern")
+    if any(hint in haystack for hint in NON_COMPETITOR_DOMAIN_HINTS):
+        score -= 8
+        signals.append("non_competitor_host")
     if _has_foreign_geo_conflict(haystack, profile.location):
         score -= 8
         signals.append("foreign_location_conflict")
@@ -612,6 +753,9 @@ def _relevance_signals(result, profile):
     ):
         score -= 5
         signals.append("missing_industry_match")
+    if _primary_service_tokens(profile) and primary_matches == 0:
+        score -= 5
+        signals.append("missing_primary_service_alignment")
     if (
         (not result_dict.get("title") and not result_dict.get("snippet") and not result_dict.get("description"))
         and any(signal.startswith("service:") or signal.startswith("industry:") for signal in signals)
@@ -672,11 +816,27 @@ def discover_serp_competitors(project, profile):
             errors.append({"query": query, "message": f"SERP parsing error: {exc}"})
             continue
 
-    competitors = _aggregate_candidates(raw_candidates)
+    aggregated = _aggregate_candidates(raw_candidates)
+    competitors = aggregated.get("competitors", [])
     return {
         "provider": ",".join(_provider_order()),
         "enabled": True,
         "queries": queries,
         "competitors": competitors,
+        "market_surfaces": aggregated.get("market_surfaces", []),
+        "citation_sources": aggregated.get("citation_sources", []),
+        "backlink_prospects": aggregated.get("backlink_prospects", []),
+        "routing_policy": {
+            "business_type": getattr(profile, "business_type", ""),
+            "primary_service": getattr(profile, "primary_service", ""),
+            "event_focused_hospitality": _is_hospitality_event_focus(profile),
+            "source_families": [
+                "web_search",
+                "benchmark_competitors",
+                "market_surfaces",
+                "citation_sources",
+                "backlink_prospects",
+            ],
+        },
         "errors": errors,
     }

@@ -149,6 +149,63 @@ class SEOContextServiceTests(TestCase):
                     "discovery_score": 33,
                 }
             ],
+            "market_surfaces": [
+                {
+                    "homepage_url": "https://www.google.com/maps",
+                    "normalized_domain": "www.google.com",
+                    "label": "www.google.com",
+                    "bucket": "market_surface",
+                    "bucket_label": "Market Surface",
+                    "bucket_reason": "comparison-surface",
+                    "queries": ["used car dealership Nairobi"],
+                    "query_count": 1,
+                    "best_position": 1,
+                    "average_position": 1.0,
+                    "average_relevance": 9.0,
+                }
+            ],
+            "citation_sources": [
+                {
+                    "homepage_url": "https://www.yelp.com/",
+                    "normalized_domain": "www.yelp.com",
+                    "label": "www.yelp.com",
+                    "bucket": "citation_source",
+                    "bucket_label": "Citation Source",
+                    "bucket_reason": "citation-host",
+                    "queries": ["used car dealership Nairobi"],
+                    "query_count": 1,
+                    "best_position": 4,
+                    "average_position": 4.0,
+                    "average_relevance": 6.0,
+                }
+            ],
+            "backlink_prospects": [
+                {
+                    "homepage_url": "https://industryblog.example.com/",
+                    "normalized_domain": "industryblog.example.com",
+                    "label": "industryblog.example.com",
+                    "bucket": "backlink_prospect",
+                    "bucket_label": "Backlink Prospect",
+                    "bucket_reason": "editorial-surface",
+                    "queries": ["used car dealership Nairobi"],
+                    "query_count": 1,
+                    "best_position": 6,
+                    "average_position": 6.0,
+                    "average_relevance": 5.0,
+                }
+            ],
+            "routing_policy": {
+                "business_type": "automotive",
+                "primary_service": "used car dealership",
+                "event_focused_hospitality": False,
+                "source_families": [
+                    "web_search",
+                    "benchmark_competitors",
+                    "market_surfaces",
+                    "citation_sources",
+                    "backlink_prospects",
+                ],
+            },
         }
         mocked_fetch_many.return_value = {
             "https://competitor.com/": {
@@ -191,6 +248,10 @@ class SEOContextServiceTests(TestCase):
         self.assertTrue(payload["page_comparisons"])
         self.assertGreaterEqual(payload["benchmark_summary"]["available_competitors"], 1)
         self.assertIn("used car dealership Nairobi", payload["benchmark_summary"]["discovery_queries"])
+        self.assertEqual(payload["benchmark_summary"]["market_surfaces_observed"], 1)
+        self.assertEqual(payload["benchmark_summary"]["citation_sources_observed"], 1)
+        self.assertEqual(payload["benchmark_summary"]["backlink_sources_observed"], 1)
+        self.assertEqual(payload["discovery"]["routing_policy"]["business_type"], "automotive")
         self.assertTrue(SEOCompetitor.objects.filter(project=project, is_active=True).exists())
 
         opportunity_payload = build_seo_opportunity_payload(project, profile, audit_run)
@@ -198,6 +259,9 @@ class SEOContextServiceTests(TestCase):
         self.assertTrue(opportunity_payload["page_map"])
         self.assertTrue(opportunity_payload["execution_queue"])
         self.assertGreaterEqual(opportunity_payload["value_summary"]["competitors_benchmarked"], 1)
+        self.assertEqual(opportunity_payload["value_summary"]["market_surfaces"], 1)
+        self.assertEqual(opportunity_payload["value_summary"]["citation_sources"], 1)
+        self.assertEqual(opportunity_payload["value_summary"]["backlink_sources"], 1)
         first_task = opportunity_payload["execution_queue"][0]
         self.assertTrue(first_task["edit_targets"])
         self.assertTrue(first_task["edit_targets"][0]["changes"])
@@ -1682,6 +1746,22 @@ class SEOCompetitorDiscoveryTests(TestCase):
         self.assertIn("best used car dealership Nairobi", queries)
         self.assertIn("used car dealership near me", queries)
 
+    def test_build_discovery_queries_prefers_venue_intent_for_event_focused_hospitality(self):
+        profile = SEOProjectProfile(
+            business_type="hotel",
+            location="Machakos, Kenya",
+            target_goal="Increase quality leads",
+            primary_service="events gardens",
+            target_audience="people looking for events gardens in machakos",
+        )
+
+        queries = build_discovery_queries(profile)
+
+        self.assertIn("events gardens Machakos, Kenya", queries)
+        self.assertIn("event venue Machakos, Kenya", queries)
+        self.assertIn("wedding venue Machakos, Kenya", queries)
+        self.assertNotIn("rooms in Machakos, Kenya", queries)
+
     @override_settings(
         SERP_DISCOVERY_ENABLED=True,
         SERP_DISCOVERY_PROVIDER="serpapi",
@@ -1750,6 +1830,74 @@ class SEOCompetitorDiscoveryTests(TestCase):
         self.assertEqual(discovery["competitors"][0]["query_count"], 2)
         self.assertEqual(discovery["competitors"][0]["best_position"], 1)
         self.assertTrue(discovery["competitors"][0]["average_relevance"] >= 4)
+
+    @override_settings(
+        SERP_DISCOVERY_ENABLED=True,
+        SERP_DISCOVERY_PROVIDER="serpapi",
+        SERPAPI_API_KEY="test-key",
+        SERP_DISCOVERY_QUERY_LIMIT=1,
+        SERP_DISCOVERY_RESULTS_PER_QUERY=6,
+    )
+    @patch("apps.seo.discovery.fetch_serpapi_results")
+    def test_discover_serp_competitors_buckets_non_peer_surfaces(self, mocked_serp_fetch):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="ops@example.com",
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="local_service",
+            location="Nairobi",
+            target_goal="Increase qualified leads",
+            primary_service="event venue",
+            target_audience="event planners",
+        )
+        mocked_serp_fetch.return_value = {
+            "organic_results": [
+                {
+                    "position": 1,
+                    "title": "Premier Event Venue Nairobi",
+                    "link": "https://venue-example.co.ke/",
+                    "snippet": "Event venue in Nairobi for weddings and conferences.",
+                },
+                {
+                    "position": 2,
+                    "title": "Nairobi venues on Tripadvisor",
+                    "link": "https://www.tripadvisor.com/Attractions-g294207-Activities-Nairobi.html",
+                    "snippet": "Compare venues and hotels in Nairobi.",
+                },
+                {
+                    "position": 3,
+                    "title": "Event venues near you | Yelp",
+                    "link": "https://www.yelp.com/search?find_desc=Event+Venue&find_loc=Nairobi",
+                    "snippet": "Local business listings and reviews.",
+                },
+                {
+                    "position": 4,
+                    "title": "Association guide to event venues in Nairobi",
+                    "link": "https://eventsassociation.or.ke/guides/nairobi-event-venues/",
+                    "snippet": "Guide to planning venues and vendors in Nairobi.",
+                },
+            ],
+            "local_results": [],
+        }
+
+        discovery = discover_serp_competitors(project, profile)
+
+        self.assertEqual(discovery["competitors"][0]["normalized_domain"], "venue-example.co.ke")
+        self.assertEqual(discovery["market_surfaces"][0]["normalized_domain"], "www.tripadvisor.com")
+        self.assertEqual(discovery["citation_sources"][0]["normalized_domain"], "www.yelp.com")
+        self.assertEqual(discovery["backlink_prospects"][0]["normalized_domain"], "eventsassociation.or.ke")
+        self.assertEqual(discovery["routing_policy"]["business_type"], "local_service")
+        self.assertIn("market_surfaces", discovery["routing_policy"]["source_families"])
 
     @override_settings(
         SERP_DISCOVERY_ENABLED=True,
@@ -1921,6 +2069,66 @@ class SEOCompetitorDiscoveryTests(TestCase):
         self.assertIn("relevant-cars.co.ke", domains)
         self.assertNotIn("nairobionlineblog.wordpress.com", domains)
         self.assertNotIn("d7leadfinder.com", domains)
+
+    @override_settings(
+        SERP_DISCOVERY_ENABLED=True,
+        SERP_DISCOVERY_PROVIDER="serpapi",
+        SERPAPI_API_KEY="test-key",
+        SERP_DISCOVERY_QUERY_LIMIT=1,
+        SERP_DISCOVERY_RESULTS_PER_QUERY=5,
+    )
+    @patch("apps.seo.discovery.fetch_serpapi_results")
+    def test_discover_serp_competitors_filters_hospitality_aggregators_for_event_venue_profiles(self, mocked_serp_fetch):
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="ops@example.com",
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="hotel",
+            location="Machakos, Kenya",
+            target_goal="Increase quality leads",
+            primary_service="events gardens",
+            target_audience="people looking for events gardens in machakos",
+        )
+        mocked_serp_fetch.return_value = {
+            "organic_results": [
+                {
+                    "position": 1,
+                    "title": "Zamar Springs Gardens | Event Venue in Machakos",
+                    "link": "https://zamar-example.co.ke/events-gardens/",
+                    "snippet": "Event venue and gardens in Machakos for weddings and conferences.",
+                },
+                {
+                    "position": 2,
+                    "title": "Hotels in Machakos - search by Trivago",
+                    "link": "https://www.trivago.com/en-KE/lm/hotels-machakos-kenya",
+                    "snippet": "Compare hotel prices in Machakos.",
+                },
+                {
+                    "position": 3,
+                    "title": "Machakos Hotels | KAYAK",
+                    "link": "https://www.kayak.com/Machakos-Hotels.12345.hotel.ksp",
+                    "snippet": "Search and compare Machakos hotels.",
+                },
+            ],
+            "local_results": [],
+        }
+
+        discovery = discover_serp_competitors(project, profile)
+
+        domains = [item["normalized_domain"] for item in discovery["competitors"]]
+        self.assertIn("zamar-example.co.ke", domains)
+        self.assertNotIn("www.trivago.com", domains)
+        self.assertNotIn("www.kayak.com", domains)
 
     @override_settings(
         SERP_DISCOVERY_ENABLED=True,

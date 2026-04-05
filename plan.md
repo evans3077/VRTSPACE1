@@ -244,6 +244,8 @@ Turn the current platform into a production-grade decision system that is clearl
   Weak competitor or crawl evidence should not leak into visible advice.
   Delivered result:
   Shared evidence scoring now decorates audit, SEO, and AEO recommendations and filters weak SEO/AEO advice before it reaches the visible roadmap.
+  Refinement:
+  Hospitality and venue-style profiles now block OTAs, metasearch travel sites, and generic search surfaces from entering the benchmark set when they match the search query but not the actual service being sold.
 - [ ] Add cross-module decision summaries
   Why:
   Audit, SEO, AEO, content, and backlink work now exist, but the user still has to join the dots across separate screens.
@@ -254,6 +256,30 @@ Turn the current platform into a production-grade decision system that is clearl
   Long runs damage trust even when the output is good.
   Needed result:
   Discovery, crawl, pattern extraction, backlink prospecting, and report generation each run with bounded scope, visible stage state, and safe fallback behavior.
+- [x] Add the first source-routing and business-class discovery-policy slice
+  Why:
+  The platform serves many business types, so discovery cannot treat every query as a generic web-search problem.
+  Delivered result:
+  Discovery now classifies surfaced domains into benchmark competitors, market surfaces, citation sources, backlink prospects, or discard, and the SEO workspace shows those buckets explicitly so non-peer surfaces stop contaminating peer benchmarks.
+  Current design:
+  - `benchmark competitors`: true peer operators or product sites for the same business class
+  - `market surfaces`: directories, marketplaces, metasearch, review surfaces, app stores, and answer surfaces that matter for visibility but are not true competitors
+  - `citation sources`: local/business listing sources and profile ecosystems
+  - `backlink prospects`: publishers, associations, partners, media, and niche resources
+  - `discard`: irrelevant, foreign, low-fit, or noisy domains
+- [ ] Expand source-family specialization beyond generic web search
+  Why:
+  The bucket model is now in place, but source selection still leans on generic web-search providers first.
+  Needed result:
+  Discovery chooses more appropriate API families by business type before peer qualification, for example:
+  - generic web search for broad competitor discovery
+  - local/maps sources for local-service and location-led businesses
+  - hotels/events/travel sources for hospitality only when they are treated as market surfaces or visibility channels, not benchmark peers
+  - shopping/product sources for ecommerce
+  - related questions, autocomplete, and trend sources for demand shaping and content expansion
+  - review and directory sources for citation and reputation context
+  Value:
+  This reduces vague results, improves crawl precision, and creates richer downstream data for page maps, action packs, backlink workflows, citations, and stakeholder reports.
 - [ ] Add cache and reuse rules for expensive benchmark artifacts
   Why:
   The system should not refetch or recompute everything on every refresh.
@@ -448,19 +474,23 @@ Start here, in this exact order:
    Reason:
    This strengthens the real wedge: exact, implementable actioning.
 
-2. Runtime stage budgets and caching
+2. Source routing and business-class discovery policies
+   Reason:
+   Better results depend on knowing which APIs and domain classes belong to each business type before more crawl or recommendation work is added.
+
+3. Runtime stage budgets and caching
    Reason:
    This reduces long wait times without weakening output quality.
 
-3. Executive-level outcome summaries
+4. Executive-level outcome summaries
    Reason:
    The internal command center exists now; the next gap is stakeholder-facing clarity.
 
-4. Homepage conversion cleanup
+5. Homepage conversion cleanup
    Reason:
    The mobile shell and progressive disclosure baseline are present, but the public entry flow still needs refinement.
 
-5. Operational safeguards for heavy SEO work
+6. Operational safeguards for heavy SEO work
    Reason:
    The UI is stronger now, so the next production risk is long-running or weak-data jobs under real usage.
 
