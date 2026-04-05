@@ -281,6 +281,16 @@
                     {% endfor %}
                 </div>
                 {% endif %}
+                {% if seo_discovery.routing_policy.routes %}
+                <div style="margin-top: 0.7rem; color: #94a3b8; font-size: 0.84rem;">
+                    {% for route in seo_discovery.routing_policy.routes %}
+                    <div>
+                        <strong style="color: #f8fafc;">{{ route.family_label }}:</strong>
+                        {{ route.queries|join:", " }}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
             </div>
             {% endif %}
 
@@ -308,6 +318,9 @@
                                 {% endif %}
                                 <span class="seo-inline-tag">Queries: {{ item.query_count|default:0 }}</span>
                                 <span class="seo-inline-tag">Relevance: {{ item.average_relevance|default:0 }}</span>
+                                {% for label in item.source_family_labels %}
+                                <span class="seo-inline-tag">{{ label }}</span>
+                                {% endfor %}
                             </div>
                             {% if item.bucket_reason %}
                             <div style="margin-top: 0.55rem; color: #94a3b8; font-size: 0.82rem;">

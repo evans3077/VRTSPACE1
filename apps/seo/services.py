@@ -1408,6 +1408,7 @@ def build_discovery_workspace_sections(discovery):
                         **item,
                         "bucket_label": item.get("bucket_label") or _humanize(item.get("bucket")),
                         "bucket_reason_label": _humanize(item.get("bucket_reason")),
+                        "source_family_labels": [_humanize(value) for value in (item.get("source_families") or [])],
                     }
                     for item in items[:6]
                 ],

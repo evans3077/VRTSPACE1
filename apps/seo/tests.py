@@ -26,7 +26,7 @@ from .models import (
     SEOShareLink,
     SEOSiteStructureSnapshot,
 )
-from .discovery import build_discovery_queries, discover_serp_competitors, fetch_search_results
+from .discovery import build_discovery_queries, build_discovery_routes, discover_serp_competitors, fetch_search_results
 from .services import (
     build_campaign_workspace_items,
     build_competitor_trend_summary,
@@ -1762,6 +1762,25 @@ class SEOCompetitorDiscoveryTests(TestCase):
         self.assertIn("wedding venue Machakos, Kenya", queries)
         self.assertNotIn("rooms in Machakos, Kenya", queries)
 
+    def test_build_discovery_routes_varies_by_business_type(self):
+        profile = SEOProjectProfile(
+            business_type="local_service",
+            location="Nairobi",
+            target_goal="Increase qualified leads",
+            primary_service="event venue",
+            target_audience="event planners",
+        )
+
+        routes = build_discovery_routes(profile)
+        families = [item["family_key"] for item in routes]
+
+        self.assertIn("benchmark_competitors", families)
+        self.assertIn("citation_sources", families)
+        self.assertIn("market_surfaces", families)
+        self.assertIn("backlink_prospects", families)
+        citation_route = next(item for item in routes if item["family_key"] == "citation_sources")
+        self.assertTrue(any("directory" in query or "reviews" in query for query in citation_route["queries"]))
+
     @override_settings(
         SERP_DISCOVERY_ENABLED=True,
         SERP_DISCOVERY_PROVIDER="serpapi",
@@ -1791,8 +1810,22 @@ class SEOCompetitorDiscoveryTests(TestCase):
             primary_service="used car dealership",
             target_audience="price-sensitive car buyers",
         )
-        mocked_serp_fetch.side_effect = [
-            {
+        def fake_serp_payload(query, location=""):
+            if any(token in query for token in ("directory", "reviews", "listing", "guide", "resources", "association")):
+                return {"organic_results": [], "local_results": []}
+            if "best" in query:
+                return {
+                    "organic_results": [
+                        {
+                            "position": 3,
+                            "title": "Best Used Cars Nairobi",
+                            "link": "https://competitor-a.com/pricing/",
+                            "snippet": "Pricing for used cars",
+                        }
+                    ],
+                    "local_results": [],
+                }
+            return {
                 "organic_results": [
                     {
                         "position": 1,
@@ -1808,24 +1841,16 @@ class SEOCompetitorDiscoveryTests(TestCase):
                     },
                 ],
                 "local_results": [],
-            },
-            {
-                "organic_results": [
-                    {
-                        "position": 3,
-                        "title": "Best Used Cars Nairobi",
-                        "link": "https://competitor-a.com/pricing/",
-                        "snippet": "Pricing for used cars",
-                    }
-                ],
-                "local_results": [],
-            },
-        ]
+            }
+
+        mocked_serp_fetch.side_effect = fake_serp_payload
 
         discovery = discover_serp_competitors(project, profile)
 
         self.assertTrue(discovery["enabled"])
-        self.assertEqual(len(discovery["queries"]), 2)
+        self.assertGreaterEqual(len(discovery["queries"]), 2)
+        benchmark_route = next(item for item in discovery["routing_policy"]["routes"] if item["family_key"] == "benchmark_competitors")
+        self.assertEqual(len(benchmark_route["queries"]), 2)
         self.assertEqual(discovery["competitors"][0]["normalized_domain"], "competitor-a.com")
         self.assertEqual(discovery["competitors"][0]["query_count"], 2)
         self.assertEqual(discovery["competitors"][0]["best_position"], 1)
@@ -1898,6 +1923,8 @@ class SEOCompetitorDiscoveryTests(TestCase):
         self.assertEqual(discovery["backlink_prospects"][0]["normalized_domain"], "eventsassociation.or.ke")
         self.assertEqual(discovery["routing_policy"]["business_type"], "local_service")
         self.assertIn("market_surfaces", discovery["routing_policy"]["source_families"])
+        self.assertTrue(any(route["family_key"] == "market_surfaces" for route in discovery["routing_policy"]["routes"]))
+        self.assertIn("market_surfaces", discovery["market_surfaces"][0]["source_families"])
 
     @override_settings(
         SERP_DISCOVERY_ENABLED=True,

@@ -214,6 +214,55 @@ MARKET_SURFACE_HOST_HINTS = {
     "googleusercontent.com",
 }
 
+DISCOVERY_SOURCE_FAMILY_LABELS = {
+    "benchmark_competitors": "Benchmark Competitors",
+    "market_surfaces": "Market Surfaces",
+    "citation_sources": "Citation Sources",
+    "backlink_prospects": "Backlink Prospects",
+}
+
+DISCOVERY_SOURCE_FAMILY_RULES = {
+    "default": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
+        {"key": "citation_sources", "target_bucket": "citation_source"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+    "local_service": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
+        {"key": "citation_sources", "target_bucket": "citation_source"},
+        {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+    "healthcare": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
+        {"key": "citation_sources", "target_bucket": "citation_source"},
+        {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+    "real_estate": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
+        {"key": "citation_sources", "target_bucket": "citation_source"},
+        {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+    "hotel": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
+        {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "citation_sources", "target_bucket": "citation_source"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+    "ecommerce": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
+        {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+    "saas": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
+        {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+}
+
 
 def _provider_order():
     providers = [
@@ -337,7 +386,7 @@ def _has_foreign_geo_conflict(haystack, location):
     return any(token in haystack for token in FOREIGN_GEO_HINTS)
 
 
-def build_discovery_queries(profile, project=None):
+def _build_benchmark_queries(profile, project=None):
     service = (profile.primary_service or profile.business_type.replace("_", " ") or "service").strip()
     location = (profile.location or "").strip()
     audience = (profile.target_audience or "").strip()
@@ -369,13 +418,98 @@ def build_discovery_queries(profile, project=None):
         queries.append(f"{term} {location}".strip())
     for hint in _audit_query_hints(project)[:2]:
         queries.append(f"{hint} {location}".strip())
+    return queries
 
-    unique = []
-    for query in queries:
-        query = " ".join(query.split())
-        if query and query not in unique:
-            unique.append(query)
-    return unique[: settings.SERP_DISCOVERY_QUERY_LIMIT]
+
+def _family_query_templates(profile):
+    service = (profile.primary_service or profile.business_type.replace("_", " ") or "service").strip()
+    location = (profile.location or "").strip()
+    benchmark_queries = _build_benchmark_queries(profile)
+    families = {
+        "benchmark_competitors": benchmark_queries,
+        "citation_sources": [
+            f"{service} {location} directory".strip(),
+            f"{service} {location} reviews".strip(),
+            f"{service} {location} listing".strip(),
+        ],
+        "market_surfaces": [
+            f"best {service} {location}".strip(),
+            f"{service} {location} reviews".strip(),
+            f"{service} {location} comparison".strip(),
+        ],
+        "backlink_prospects": [
+            f"{service} {location} guide".strip(),
+            f"{service} {location} resources".strip(),
+            f"{service} {location} association".strip(),
+        ],
+    }
+    if profile.business_type == "ecommerce":
+        families["market_surfaces"] = [
+            f"{service} {location} shop".strip(),
+            f"{service} {location} products".strip(),
+            f"{service} {location} comparison".strip(),
+        ]
+    elif profile.business_type == "saas":
+        families["market_surfaces"] = [
+            f"{service} software reviews".strip(),
+            f"{service} alternatives".strip(),
+            f"{service} pricing comparison".strip(),
+        ]
+    elif profile.business_type == "hotel":
+        families["market_surfaces"] = [
+            f"{service} {location} reviews".strip(),
+            f"{service} {location} booking".strip(),
+            f"{service} {location} comparison".strip(),
+        ]
+        families["citation_sources"] = [
+            f"{service} {location} reviews".strip(),
+            f"{service} {location} listing".strip(),
+            f"{service} {location} directions".strip(),
+        ]
+    return families
+
+
+def _discovery_source_family_rules(profile):
+    return DISCOVERY_SOURCE_FAMILY_RULES.get(getattr(profile, "business_type", ""), DISCOVERY_SOURCE_FAMILY_RULES["default"])
+
+
+def build_discovery_routes(profile, project=None):
+    families = _family_query_templates(profile)
+    audit_hints = _audit_query_hints(project)
+    routes = []
+    for rule in _discovery_source_family_rules(profile):
+        family_key = rule["key"]
+        target_bucket = rule["target_bucket"]
+        queries = list(families.get(family_key, []))
+        if family_key == "benchmark_competitors":
+            for hint in audit_hints[:2]:
+                hint_query = f"{hint} {(profile.location or '').strip()}".strip()
+                if hint_query and hint_query not in queries:
+                    queries.append(hint_query)
+        unique_queries = []
+        for query in queries:
+            query = " ".join(str(query or "").split())
+            if query and query not in unique_queries:
+                unique_queries.append(query)
+        routes.append(
+            {
+                "family_key": family_key,
+                "family_label": DISCOVERY_SOURCE_FAMILY_LABELS.get(
+                    family_key,
+                    family_key.replace("_", " ").title(),
+                ),
+                "target_bucket": target_bucket,
+                "queries": unique_queries[: settings.SERP_DISCOVERY_QUERY_LIMIT],
+            }
+        )
+    return routes
+
+
+def build_discovery_queries(profile, project=None):
+    for route in build_discovery_routes(profile, project=project):
+        if route["family_key"] == "benchmark_competitors":
+            return route["queries"]
+    return []
 
 
 def _serpapi_params(query, location):
@@ -493,7 +627,7 @@ def _domain_root_url(link):
     return normalize_url(f"{parsed.scheme}://{parsed.netloc}/")
 
 
-def _parse_result(result, *, query, own_domain):
+def _parse_result(result, *, query, own_domain, source_family="", target_bucket="benchmark_competitor"):
     link = _candidate_link(result)
     if not link:
         return None
@@ -515,6 +649,9 @@ def _parse_result(result, *, query, own_domain):
         ]
     ).replace("/", " ").replace("-", " ").replace("_", " ").lower()
     bucket, bucket_reason = _classify_result_bucket(domain=domain, haystack=haystack, profile=None)
+    if bucket == "benchmark_competitor" and target_bucket != "benchmark_competitor":
+        bucket = target_bucket
+        bucket_reason = f"{source_family or target_bucket}-route"
     return {
         "homepage_url": _domain_root_url(link) or normalize_url(link),
         "normalized_domain": domain,
@@ -525,6 +662,7 @@ def _parse_result(result, *, query, own_domain):
         "result_url": link,
         "bucket": bucket,
         "bucket_reason": bucket_reason,
+        "source_family": source_family or "benchmark_competitors",
     }
 
 
@@ -550,6 +688,7 @@ def _aggregate_candidates(raw_candidates):
             "normalized_domain": "",
             "bucket": "benchmark_competitor",
             "bucket_reason": "",
+            "source_families": [],
             "positions": [],
             "queries": [],
             "titles": [],
@@ -565,6 +704,8 @@ def _aggregate_candidates(raw_candidates):
         entry["normalized_domain"] = item["normalized_domain"]
         entry["bucket"] = item.get("bucket", "benchmark_competitor")
         entry["bucket_reason"] = item.get("bucket_reason", "")
+        if item.get("source_family") and item["source_family"] not in entry["source_families"]:
+            entry["source_families"].append(item["source_family"])
         entry["positions"].append(item["position"])
         if item["query"] not in entry["queries"]:
             entry["queries"].append(item["query"])
@@ -599,6 +740,7 @@ def _aggregate_candidates(raw_candidates):
                 "bucket": item["bucket"],
                 "bucket_label": DISCOVERY_BUCKET_LABELS.get(item["bucket"], item["bucket"].replace("_", " ").title()),
                 "bucket_reason": item["bucket_reason"],
+                "source_families": item["source_families"][:4],
                 "queries": item["queries"],
                 "query_count": len(item["queries"]),
                 "best_position": best_position,
@@ -776,45 +918,75 @@ def discover_serp_competitors(project, profile):
         }
 
     own_domain = project.normalized_domain or extract_domain(project.website or "")
-    queries = build_discovery_queries(profile, project=project)
+    routes = build_discovery_routes(profile, project=project)
+    queries = []
     raw_candidates = []
     errors = []
-    runtime_state = {"disabled_providers": set()}
+    runtime_state = {"disabled_providers": set(), "providers_exhausted": False}
+    seen_error_keys = set()
 
-    for query in queries:
-        search_response = fetch_search_results(query, location=profile.location, runtime_state=runtime_state)
-        payload = search_response.get("payload") or {}
-        if search_response.get("errors"):
-            for item in search_response["errors"]:
+    for route in routes:
+        if runtime_state.get("providers_exhausted"):
+            break
+        for query in route["queries"]:
+            if query not in queries:
+                queries.append(query)
+            search_response = fetch_search_results(query, location=profile.location, runtime_state=runtime_state)
+            payload = search_response.get("payload") or {}
+            if search_response.get("errors"):
+                for item in search_response["errors"]:
+                    error_key = (route["family_key"], item.get("provider", ""), item.get("message", ""))
+                    if error_key not in seen_error_keys:
+                        seen_error_keys.add(error_key)
+                        errors.append(
+                            {
+                                "query": query,
+                                "route_family": route["family_key"],
+                                "provider": item.get("provider", ""),
+                                "message": item.get("message", ""),
+                            }
+                        )
+            if not payload:
+                if search_response.get("providers_exhausted"):
+                    runtime_state["providers_exhausted"] = True
+                    break
+                continue
+            try:
+                for result in _result_items(payload, "organic_results"):
+                    parsed = _parse_result(
+                        result,
+                        query=query,
+                        own_domain=own_domain,
+                        source_family=route["family_key"],
+                        target_bucket=route["target_bucket"],
+                    )
+                    if parsed:
+                        relevance_score, match_signals = _relevance_signals(result, profile)
+                        parsed["relevance_score"] = relevance_score
+                        parsed["match_signals"] = match_signals
+                        raw_candidates.append(parsed)
+                for result in _result_items(payload, "local_results"):
+                    parsed = _parse_result(
+                        result,
+                        query=query,
+                        own_domain=own_domain,
+                        source_family=route["family_key"],
+                        target_bucket=route["target_bucket"],
+                    )
+                    if parsed:
+                        relevance_score, match_signals = _relevance_signals(result, profile)
+                        parsed["relevance_score"] = relevance_score
+                        parsed["match_signals"] = match_signals
+                        raw_candidates.append(parsed)
+            except Exception as exc:
                 errors.append(
                     {
                         "query": query,
-                        "provider": item.get("provider", ""),
-                        "message": item.get("message", ""),
+                        "route_family": route["family_key"],
+                        "message": f"SERP parsing error: {exc}",
                     }
                 )
-        if not payload:
-            if search_response.get("providers_exhausted"):
-                break
-            continue
-        try:
-            for result in _result_items(payload, "organic_results"):
-                parsed = _parse_result(result, query=query, own_domain=own_domain)
-                if parsed:
-                    relevance_score, match_signals = _relevance_signals(result, profile)
-                    parsed["relevance_score"] = relevance_score
-                    parsed["match_signals"] = match_signals
-                    raw_candidates.append(parsed)
-            for result in _result_items(payload, "local_results"):
-                parsed = _parse_result(result, query=query, own_domain=own_domain)
-                if parsed:
-                    relevance_score, match_signals = _relevance_signals(result, profile)
-                    parsed["relevance_score"] = relevance_score
-                    parsed["match_signals"] = match_signals
-                    raw_candidates.append(parsed)
-        except Exception as exc:
-            errors.append({"query": query, "message": f"SERP parsing error: {exc}"})
-            continue
+                continue
 
     aggregated = _aggregate_candidates(raw_candidates)
     competitors = aggregated.get("competitors", [])
@@ -830,13 +1002,8 @@ def discover_serp_competitors(project, profile):
             "business_type": getattr(profile, "business_type", ""),
             "primary_service": getattr(profile, "primary_service", ""),
             "event_focused_hospitality": _is_hospitality_event_focus(profile),
-            "source_families": [
-                "web_search",
-                "benchmark_competitors",
-                "market_surfaces",
-                "citation_sources",
-                "backlink_prospects",
-            ],
+            "source_families": [route["family_key"] for route in routes],
+            "routes": routes,
         },
         "errors": errors,
     }

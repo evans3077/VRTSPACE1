@@ -267,19 +267,27 @@ Turn the current platform into a production-grade decision system that is clearl
   - `citation sources`: local/business listing sources and profile ecosystems
   - `backlink prospects`: publishers, associations, partners, media, and niche resources
   - `discard`: irrelevant, foreign, low-fit, or noisy domains
-- [ ] Expand source-family specialization beyond generic web search
+- [x] Add the first source-family specialization slice
   Why:
-  The bucket model is now in place, but source selection still leans on generic web-search providers first.
+  The bucket model is now in place, but discovery still needs business-type routing before peer qualification happens.
+  Delivered result:
+  Discovery now builds route families by business type, with benchmark, market-surface, citation, and backlink-oriented query tracks instead of one generic query set.
+  Current source-family behavior:
+  - generic web search remains the retrieval layer
+  - route families now separate benchmark, market-surface, citation, and editorial/resource discovery
+  - hospitality, local-service, ecommerce, SaaS, healthcare, and real-estate profiles no longer share the exact same discovery-family mix
+  Value:
+  This reduces vague results, improves crawl precision, and creates richer downstream data for page maps, action packs, backlink workflows, citations, and stakeholder reports.
+- [ ] Add provider-level vertical source integration
+  Why:
+  Route families are now separated, but they still retrieve primarily through generic web-search providers.
   Needed result:
-  Discovery chooses more appropriate API families by business type before peer qualification, for example:
-  - generic web search for broad competitor discovery
+  Discovery can use more suitable source APIs by business type when they materially improve precision, for example:
   - local/maps sources for local-service and location-led businesses
   - hotels/events/travel sources for hospitality only when they are treated as market surfaces or visibility channels, not benchmark peers
   - shopping/product sources for ecommerce
   - related questions, autocomplete, and trend sources for demand shaping and content expansion
   - review and directory sources for citation and reputation context
-  Value:
-  This reduces vague results, improves crawl precision, and creates richer downstream data for page maps, action packs, backlink workflows, citations, and stakeholder reports.
 - [ ] Add cache and reuse rules for expensive benchmark artifacts
   Why:
   The system should not refetch or recompute everything on every refresh.
