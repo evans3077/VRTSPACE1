@@ -3,6 +3,7 @@ from unittest.mock import patch
 
 import requests
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from django.test import TestCase
 from django.urls import reverse
 from django.test.utils import override_settings
@@ -1979,3 +1980,73 @@ class SEOCompetitorDiscoveryTests(TestCase):
         self.assertEqual(result["provider"], "duckduckgo")
         self.assertTrue(result["payload"]["organic_results"])
         self.assertEqual(result["errors"][0]["provider"], "serpapi")
+
+    @override_settings(
+        SERP_DISCOVERY_ENABLED=True,
+        SERP_DISCOVERY_PROVIDER="serpapi",
+        SERPAPI_API_KEY="test-key",
+        SERP_PROVIDER_COOLDOWN_SECONDS=60,
+    )
+    @patch("apps.seo.discovery.fetch_serpapi_results")
+    def test_fetch_search_results_disables_serpapi_after_429(self, mocked_serpapi):
+        cache.clear()
+        response = requests.Response()
+        response.status_code = 429
+        error = requests.HTTPError("429 Client Error: Too Many Requests")
+        error.response = response
+        mocked_serpapi.side_effect = error
+
+        runtime_state = {"disabled_providers": set()}
+        first = fetch_search_results("events gardens Machakos, Kenya", location="Machakos, Kenya", runtime_state=runtime_state)
+        second = fetch_search_results("hotel Machakos, Kenya", location="Machakos, Kenya", runtime_state=runtime_state)
+
+        self.assertEqual(mocked_serpapi.call_count, 1)
+        self.assertEqual(first["errors"][0]["provider"], "serpapi")
+        self.assertTrue(second["providers_exhausted"])
+        self.assertIn("cooled down", second["errors"][0]["message"])
+
+    @override_settings(
+        SERP_DISCOVERY_ENABLED=True,
+        SERP_DISCOVERY_PROVIDER="serpapi,duckduckgo",
+        SERPAPI_API_KEY="test-key",
+        SERP_DISCOVERY_QUERY_LIMIT=4,
+        SERP_PROVIDER_COOLDOWN_SECONDS=60,
+        SERP_DUCKDUCKGO_COOLDOWN_SECONDS=60,
+    )
+    @patch("apps.seo.discovery.fetch_duckduckgo_results", side_effect=requests.Timeout("duckduckgo timeout"))
+    @patch("apps.seo.discovery.fetch_serpapi_results")
+    def test_discover_serp_competitors_stops_repeating_provider_failures(self, mocked_serpapi, mocked_duckduckgo):
+        cache.clear()
+        response = requests.Response()
+        response.status_code = 429
+        error = requests.HTTPError("429 Client Error: Too Many Requests")
+        error.response = response
+        mocked_serpapi.side_effect = error
+
+        audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://example.com",
+        )
+        project = ClientProject.objects.create(
+            audit_request=audit_request,
+            name="Northwind",
+            website="https://example.com",
+            normalized_domain="example.com",
+            contact_email="ops@example.com",
+        )
+        profile = SEOProjectProfile.objects.create(
+            project=project,
+            business_type="hotel",
+            location="Machakos, Kenya",
+            primary_service="events gardens",
+            target_goal="Increase bookings",
+            target_audience="travellers and event planners",
+        )
+
+        discovery = discover_serp_competitors(project, profile)
+
+        self.assertEqual(mocked_serpapi.call_count, 1)
+        self.assertEqual(mocked_duckduckgo.call_count, 1)
+        self.assertEqual(discovery["competitors"], [])
+        self.assertLessEqual(len(discovery["errors"]), 4)

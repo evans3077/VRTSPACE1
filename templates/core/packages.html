@@ -32,7 +32,7 @@
                         <strong style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">Included features:</strong>
                         <ul style="list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; font-size: 0.85rem; color: #cbd5e1;">
                             {% for limit in plan.limits_summary %}
-                            <li style="display: flex; gap: 0.5rem;"><i class="fas fa-check" style="color: #16a34a; margin-top: 0.2rem;"></i> <span>{{ limit }}</span></li>
+                            <li style="display: flex; gap: 0.5rem;"><i class="fas fa-check" style="color: #16a34a; margin-top: 0.2rem;"></i> <span><strong>{{ limit.label }}:</strong> {{ limit.display }}</span></li>
                             {% endfor %}
                             {% for feature in plan.features %}
                             <li style="display: flex; gap: 0.5rem;"><i class="fas fa-check" style="color: #16a34a; margin-top: 0.2rem;"></i> <span>{{ feature }}</span></li>

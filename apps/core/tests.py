@@ -8,13 +8,13 @@ class HomePageTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "VRT SPACE AGENCY")
-        self.assertContains(response, "VRT Authority Engine")
+        self.assertContains(response, "Turn your website into a measurable growth system.")
         self.assertContains(response, "Run Free Audit")
         self.assertContains(response, "Core Growth Modules")
         self.assertContains(response, "Starter")
         self.assertContains(response, "Product experience")
         self.assertContains(response, "User journey")
-        self.assertContains(response, "?package=starter")
+        self.assertContains(response, "Create Free Workspace")
         self.assertContains(response, "Request custom build")
 
     def test_services_index_and_detail_pages_render(self):
@@ -29,3 +29,12 @@ class HomePageTests(TestCase):
         self.assertContains(detail_response, "Run Free Audit")
         self.assertEqual(custom_detail_response.status_code, 200)
         self.assertContains(custom_detail_response, "Request custom scope")
+
+    def test_packages_page_renders_human_readable_plan_limits(self):
+        response = self.client.get(reverse("core:packages"))
+
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "Plans & Packages")
+        self.assertContains(response, "Audit runs:")
+        self.assertContains(response, "Saved runs:")
+        self.assertNotContains(response, "display&#x27;")

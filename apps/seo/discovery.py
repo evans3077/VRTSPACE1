@@ -4,6 +4,7 @@ from urllib.parse import urlparse
 import requests
 from bs4 import BeautifulSoup
 from django.conf import settings
+from django.core.cache import cache
 
 from apps.tools.services import extract_domain, normalize_url
 
@@ -177,6 +178,47 @@ def _provider_order():
     return providers or ["duckduckgo"]
 
 
+def _provider_timeout(provider):
+    if provider == "duckduckgo":
+        return max(3, int(getattr(settings, "SERP_DUCKDUCKGO_TIMEOUT_SECONDS", 8)))
+    return max(3, int(getattr(settings, "SERP_PROVIDER_TIMEOUT_SECONDS", 10)))
+
+
+def _provider_cooldown_seconds(provider):
+    if provider == "duckduckgo":
+        return max(30, int(getattr(settings, "SERP_DUCKDUCKGO_COOLDOWN_SECONDS", 180)))
+    return max(30, int(getattr(settings, "SERP_PROVIDER_COOLDOWN_SECONDS", 300)))
+
+
+def _provider_cooldown_cache_key(provider):
+    return f"seo:provider-cooldown:{provider}"
+
+
+def _provider_cooldown_message(provider):
+    seconds = _provider_cooldown_seconds(provider)
+    return f"{provider} temporarily cooled down after repeated failures. Retry in about {seconds} seconds."
+
+
+def _provider_is_cooled_down(provider):
+    return bool(cache.get(_provider_cooldown_cache_key(provider)))
+
+
+def _mark_provider_cooldown(provider):
+    cache.set(_provider_cooldown_cache_key(provider), 1, _provider_cooldown_seconds(provider))
+
+
+def _disable_provider(runtime_state, provider):
+    if runtime_state is None:
+        return
+    runtime_state.setdefault("disabled_providers", set()).add(provider)
+
+
+def _provider_is_disabled(runtime_state, provider):
+    if runtime_state is None:
+        return False
+    return provider in runtime_state.setdefault("disabled_providers", set())
+
+
 def _tokenize_terms(text):
     tokens = []
     for raw in (text or "").replace("/", " ").replace("-", " ").split():
@@ -277,7 +319,7 @@ def fetch_serpapi_results(query, location=""):
     response = requests.get(
         "https://serpapi.com/search.json",
         params=_serpapi_params(query, location),
-        timeout=20,
+        timeout=_provider_timeout("serpapi"),
     )
     response.raise_for_status()
     return response.json()
@@ -288,7 +330,7 @@ def fetch_duckduckgo_results(query, location=""):
     response = requests.get(
         "https://html.duckduckgo.com/html/",
         params={"q": search_query},
-        timeout=20,
+        timeout=_provider_timeout("duckduckgo"),
         headers={
             "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/145.0.0.0 Safari/537.36"
         },
@@ -473,28 +515,59 @@ def _aggregate_candidates(raw_candidates):
     return discovered
 
 
-def fetch_search_results(query, location=""):
+def _should_disable_provider(exc):
+    response = getattr(exc, "response", None)
+    if response is not None and getattr(response, "status_code", None) == 429:
+        return True
+    return isinstance(exc, (requests.Timeout, requests.ConnectionError))
+
+
+def fetch_search_results(query, location="", runtime_state=None):
     providers = _provider_order()
     errors = []
+    attempted_provider = False
     for provider in providers:
+        if _provider_is_cooled_down(provider):
+            errors.append({"provider": provider, "message": _provider_cooldown_message(provider)})
+            _disable_provider(runtime_state, provider)
+            continue
+        if _provider_is_disabled(runtime_state, provider):
+            continue
         if provider == "serpapi":
             if not settings.SERPAPI_API_KEY:
                 errors.append({"provider": provider, "message": "SERPAPI_API_KEY is not configured."})
+                _disable_provider(runtime_state, provider)
                 continue
             try:
+                attempted_provider = True
                 payload = fetch_serpapi_results(query, location=location)
                 return {"provider": provider, "payload": payload, "errors": errors}
             except requests.RequestException as exc:
                 errors.append({"provider": provider, "message": str(exc)})
+                if _should_disable_provider(exc):
+                    _mark_provider_cooldown(provider)
+                    _disable_provider(runtime_state, provider)
                 continue
         if provider == "duckduckgo":
             try:
+                attempted_provider = True
                 payload = fetch_duckduckgo_results(query, location=location)
                 return {"provider": provider, "payload": payload, "errors": errors}
             except requests.RequestException as exc:
                 errors.append({"provider": provider, "message": str(exc)})
+                if _should_disable_provider(exc):
+                    _mark_provider_cooldown(provider)
+                    _disable_provider(runtime_state, provider)
                 continue
-    return {"provider": "", "payload": {}, "errors": errors}
+    return {
+        "provider": "",
+        "payload": {},
+        "errors": errors,
+        "providers_exhausted": not attempted_provider or all(
+            _provider_is_disabled(runtime_state, provider) or _provider_is_cooled_down(provider)
+            for provider in providers
+        ),
+    }
 
 
 def _relevance_signals(result, profile):
@@ -539,6 +612,12 @@ def _relevance_signals(result, profile):
     ):
         score -= 5
         signals.append("missing_industry_match")
+    if (
+        (not result_dict.get("title") and not result_dict.get("snippet") and not result_dict.get("description"))
+        and any(signal.startswith("service:") or signal.startswith("industry:") for signal in signals)
+    ):
+        score += 3
+        signals.append("sparse_result_url_match")
     return score, signals
 
 
@@ -556,9 +635,10 @@ def discover_serp_competitors(project, profile):
     queries = build_discovery_queries(profile, project=project)
     raw_candidates = []
     errors = []
+    runtime_state = {"disabled_providers": set()}
 
     for query in queries:
-        search_response = fetch_search_results(query, location=profile.location)
+        search_response = fetch_search_results(query, location=profile.location, runtime_state=runtime_state)
         payload = search_response.get("payload") or {}
         if search_response.get("errors"):
             for item in search_response["errors"]:
@@ -570,6 +650,8 @@ def discover_serp_competitors(project, profile):
                     }
                 )
         if not payload:
+            if search_response.get("providers_exhausted"):
+                break
             continue
         try:
             for result in _result_items(payload, "organic_results"):
