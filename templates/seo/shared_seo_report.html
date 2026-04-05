@@ -47,7 +47,7 @@
                 <div class="system-grid">
                     <article class="system-card"><p class="eyebrow">Precision</p><h3>{{ report_payload.benchmark_summary.average_relevance|default:0 }}</h3><p>Average competitor relevance</p></article>
                     <article class="system-card"><p class="eyebrow">Filtered Out</p><h3>{{ report_payload.benchmark_summary.filtered_out_competitors|default:0 }}</h3><p>Low-fit competitors excluded</p></article>
-                    <article class="system-card"><p class="eyebrow">SERP Queries</p><h3>{{ report_payload.discovery.queries|length }}</h3><p>Localized discovery queries used</p></article>
+                    <article class="system-card"><p class="eyebrow">SERP Queries</p><h3>{{ report_payload.discovery.queries|length }}</h3><p>Global discovery queries used</p></article>
                 </div>
                 {% if report_payload.discovery.queries %}
                 <div style="margin-top: 1rem; color: #94a3b8; line-height: 1.6;">

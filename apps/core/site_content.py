@@ -81,10 +81,10 @@ SERVICE_GROUPS = [
                 "summary": "Important for the Kenya market and service area capture.",
                 "bullets": [
                     "Google Business Profile optimization",
-                    "Local citations",
+                    "Entity Citations",
                     "Maps ranking",
                 ],
-                "system_feature": "Local audit tool and NAP consistency checker",
+                "system_feature": "Regional audit tool and entity footprint consistency checker",
             },
             {
                 "name": "Analytics and Tracking Setup",

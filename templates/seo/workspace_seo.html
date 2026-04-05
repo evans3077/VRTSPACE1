@@ -233,7 +233,7 @@
             {% endif %}
             <div class="system-grid">
                 <article class="system-card"><p class="eyebrow">Competitors</p><h3>{{ seo_value_summary.competitors_benchmarked|default:0 }}</h3><p>Real competitor sites fetched and benchmarked</p></article>
-                <article class="system-card"><p class="eyebrow">Auto-Discovered</p><h3>{{ seo_value_summary.auto_discovered_competitors|default:0 }}</h3><p>Competitors found directly from localized SERPs</p></article>
+                <article class="system-card"><p class="eyebrow">Auto-Discovered</p><h3>{{ seo_value_summary.auto_discovered_competitors|default:0 }}</h3><p>Competitors found directly from global SERPs</p></article>
                 <article class="system-card"><p class="eyebrow">Competitor Pages</p><h3>{{ seo_value_summary.competitor_pages_profiled|default:0 }}</h3><p>Pages profiled across those competitor sites</p></article>
                 <article class="system-card"><p class="eyebrow">Images Profiled</p><h3>{{ seo_value_summary.competitor_images_profiled|default:0 }}</h3><p>Competitor visual assets captured for analysis</p></article>
                 <article class="system-card"><p class="eyebrow">Scripts Profiled</p><h3>{{ seo_value_summary.competitor_scripts_profiled|default:0 }}</h3><p>Third-party and app stack signals captured</p></article>
@@ -492,7 +492,7 @@
                             <span class="seo-inline-tag">Avg words: {{ item.avg_word_count }}</span>
                             <span class="seo-inline-tag">FAQ coverage: {{ item.faq_rate }}%</span>
                             <span class="seo-inline-tag">Schema coverage: {{ item.schema_rate }}%</span>
-                            <span class="seo-inline-tag">Local modifiers: {{ item.location_rate }}%</span>
+                            <span class="seo-inline-tag">Geo modifiers: {{ item.location_rate }}%</span>
                             <span class="seo-inline-tag">Avg internal links: {{ item.avg_internal_links }}</span>
                         </div>
                         {% if item.common_terms %}
@@ -1144,7 +1144,7 @@
                         <div class="seo-inline-tags" style="margin-top: 0.55rem;">
                             <span class="seo-inline-tag">Relevance {{ prospect.relevance_score }}</span>
                             <span class="seo-inline-tag">Authority fit {{ prospect.authority_fit_score }}</span>
-                            <span class="seo-inline-tag">Local fit {{ prospect.local_fit_score }}</span>
+                            <span class="seo-inline-tag">Audience fit {{ prospect.local_fit_score }}</span>
                             <span class="seo-inline-tag">Outreach {{ prospect.outreach_likelihood_score }}</span>
                         </div>
                         {% if prospect.outreach_packet %}

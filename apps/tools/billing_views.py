@@ -27,9 +27,19 @@ from .jobs import enqueue_public_site_audit
 
 
 class WorkspaceCheckoutCreateView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        return self._handle(request, request.GET)
+
     def post(self, request, *args, **kwargs):
-        plan_slug = request.POST.get("plan", "").strip().lower()
-        return_to = request.POST.get("return_to", "").strip()
+        return self._handle(request, request.POST)
+
+    def _handle(self, request, data):
+        plan_slug = data.get("plan", "").strip().lower()
+        return_to = data.get("return_to", "").strip()
+        
+        if not plan_slug:
+            return redirect("tools:workspace-dashboard")
+
         plan = get_plan_by_slug(plan_slug)
         if not plan:
             messages.error(request, "That plan is not available.")
@@ -63,9 +73,15 @@ class WorkspaceCheckoutCreateView(LoginRequiredMixin, View):
 
 
 class WorkspaceBillingPortalView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        return self._handle(request, request.GET)
+
     def post(self, request, *args, **kwargs):
+        return self._handle(request, request.POST)
+
+    def _handle(self, request, data):
         subscription = get_workspace_subscription(request.user)
-        return_to = request.POST.get("return_to", "").strip()
+        return_to = data.get("return_to", "").strip()
         try:
             return_url = reverse("tools:workspace-dashboard")
             if return_to.startswith("/"):

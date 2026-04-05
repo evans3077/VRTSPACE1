@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 
 from .billing_views import (
     StripeWebhookView,
@@ -62,7 +62,7 @@ urlpatterns = [
     path("workspace/audits/<int:pk>/share/", WorkspaceAuditShareCreateView.as_view(), name="workspace-audit-share"),
     path("auth/google/start/", GoogleOAuthStartView.as_view(), name="google-oauth-start"),
     path("auth/google/callback/", GoogleOAuthCallbackView.as_view(), name="google-oauth-callback"),
-    path("billing/stripe/webhook/", StripeWebhookView.as_view(), name="stripe-webhook"),
+    re_path(r"^billing/stripe/webhook/?$", StripeWebhookView.as_view(), name="stripe-webhook"),
     path("share/audits/<slug:token>/", SharedAuditReportView.as_view(), name="shared-audit-report"),
     path("share/audits/<slug:token>/report.pdf", SharedAuditReportPdfView.as_view(), name="shared-audit-report-pdf"),
     path("workspace/", WorkspaceDashboardView.as_view(), name="workspace-dashboard"),

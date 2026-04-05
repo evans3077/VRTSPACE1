@@ -49,7 +49,7 @@ def build_home_context(request, **extra):
                 "name": "VRT SPACE AGENCY",
                 "description": "SEO audit, AI visibility, workspace, analytics, and custom implementation platform.",
                 "url": request.build_absolute_uri("/"),
-                "areaServed": ["Kenya", "Global"],
+                "areaServed": ["Global"],
                 "sameAs": [],
             }
         ),
@@ -73,8 +73,8 @@ def build_home_context(request, **extra):
             "Turn tools, audit summaries, dashboards, and follow-up sequences into an always-on growth engine.",
             "Use reporting, performance, and AI visibility monitoring to keep users informed and expand them into higher-value modules when needed.",
         ],
-        "trust_signals": ["SEO foundation", "AI citation edge", "Kenya-ready local SEO", "Enterprise-capable delivery"],
-        "audiences": ["Founders", "Growth teams", "Enterprise brands", "Local Kenyan businesses"],
+        "trust_signals": ["SEO foundation", "AI citation edge", "Global Search Dominance", "Enterprise-capable delivery"],
+        "audiences": ["Founders", "Growth teams", "Enterprise brands", "Global Agencies"],
         "case_study": case_study,
         "critical_insight": (
             "Most sites still stop at lead capture and manual follow-up. VRT SPACE is being built "
