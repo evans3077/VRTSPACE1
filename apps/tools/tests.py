@@ -1307,7 +1307,7 @@ class WorkspaceBillingTests(TestCase):
         response = self.client.post(reverse("tools:workspace-audit-rerun"))
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response["Location"], reverse("tools:workspace-dashboard"))
+        self.assertEqual(response["Location"], reverse("tools:account-dashboard"))
 
     @patch("apps.tools.billing_views.enqueue_public_site_audit")
     def test_workspace_rerun_uses_selected_project(self, mocked_enqueue):
@@ -1549,6 +1549,9 @@ class AccountDashboardTests(TestCase):
         self.assertContains(response, "Personal details")
         self.assertContains(response, "Login details")
         self.assertContains(response, "Subscription and plan access")
+        self.assertContains(response, "Audit runs:")
+        self.assertContains(response, "workspace credits each month")
+        self.assertNotContains(response, "display&#x27;")
 
     def test_account_profile_update_keeps_username_in_sync_with_email(self):
         self.client.force_login(self.user)

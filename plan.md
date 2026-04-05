@@ -214,6 +214,10 @@ The purpose of Phase 11 is to do four things:
 - make the value of each paid tier explicit
 - make the full chain easier to understand for both operators and stakeholders
 
+Antigravity's April 5 UI/UX review adds a fifth requirement that is now part of the same phase:
+
+- make the visual shell, navigation, and conversion flow feel as production-grade as the backend already is
+
 That is the bridge between the original build plan and the current strategy plan.
 
 ---
@@ -394,31 +398,69 @@ Turn the current platform into a production-grade decision system that is clearl
   Needed result:
   Reports and dashboards summarize work completed, evidence gathered, pages improved, assets created, links pursued, and validation status in plain business terms.
 
+#### Track E: UI shell, conversion flow, and module presentation
+
+- [x] Fix shared UI foundation gaps
+  Why:
+  Antigravity found design-system gaps that weaken clarity even when the backend data is strong.
+  Delivered result:
+  The shared shell now loads the intended font, defines score-pill variants, includes a mobile drawer navigation, and has reusable command-card, evidence-card, progress-bar, metric-strip, and jump-nav primitives in the global CSS.
+- [x] Rebuild the SEO workspace hierarchy
+  Why:
+  The SEO page is data-rich but too long and visually flat, which hides important sections and weakens the sense of progress.
+  Delivered result:
+  The SEO workspace now has section anchors, in-page jump navigation, stronger visual grouping, live refresh presentation, richer export/share states, and clearer placement of campaign and backlink sections.
+- [x] Expand the AEO workspace to match product importance
+  Why:
+  AEO is part of the product wedge, but the current AEO surface is still too thin compared to SEO.
+  Delivered result:
+  The AEO workspace now includes scorecards, run states, entity context, audit-base context, recommendation cards, history, and cross-links into SEO and content execution.
+- [x] Add a cross-module command center to the workspace
+  Why:
+  Users still need a single summary showing how audit, SEO, AEO, content, and backlinks connect.
+  Delivered result:
+  The workspace dashboard now includes a command center that surfaces module state, priority actions, and next-step routing across audit, SEO, AEO, and content.
+- [x] Shorten the payment and conversion path
+  Why:
+  UI and flow changes to checkout should reduce friction, not leave users hunting through account and workspace surfaces.
+  Delivered result:
+  Billing now lives primarily in the account dashboard, plan cards can go directly to checkout, billing portal actions accept direct return paths, and checkout success synchronizes credits immediately on return.
+- [x] Refine the account billing surface for readability and scan speed
+  Why:
+  The payment page was showing raw plan-limit objects, the visual treatment was too heavy, and long plan cards forced unnecessary scrolling.
+  Delivered result:
+  The account billing page now renders structured limit labels correctly, uses a lighter local surface, and collapses plan cards into a direct checkout accordion so users can compare plans without reading through one long static wall.
+- [ ] Improve public homepage conversion flow
+  Why:
+  The audit form and mobile navigation still carry conversion risk when the page gets long.
+  Needed result:
+  Add progressive disclosure, cleaner mobile navigation behavior, and stronger CTA continuity without making the homepage heavier.
+
 ---
 
 ## Next Start Order
 
 Start here, in this exact order:
 
-1. Recommendation clustering and evidence scoring
-   Reason:
-   This directly reduces noisy output and makes the system feel more deliberate.
-
-2. Page-level action packs
+1. Page-level action packs
    Reason:
    This strengthens the real wedge: exact, implementable actioning.
 
-3. Runtime stage budgets and caching
+2. Runtime stage budgets and caching
    Reason:
    This reduces long wait times without weakening output quality.
 
-4. Cross-module decision summaries
+3. Executive-level outcome summaries
    Reason:
-   This makes the combined value of audit, SEO, AEO, content, and backlinks easier to understand.
+   The internal command center exists now; the next gap is stakeholder-facing clarity.
 
-5. Executive-level outcome summaries
+4. Homepage conversion cleanup
    Reason:
-   Once the decision system is tighter internally, stakeholder reporting should summarize it in plain business language.
+   The mobile shell and progressive disclosure baseline are present, but the public entry flow still needs refinement.
+
+5. Operational safeguards for heavy SEO work
+   Reason:
+   The UI is stronger now, so the next production risk is long-running or weak-data jobs under real usage.
 
 ---
 
@@ -426,18 +468,31 @@ Start here, in this exact order:
 
 The next work block should be:
 
-### Block 3: Recommendation Clustering and Evidence Scoring
+### Antigravity UI/Flow Audit
 
 Status: complete
 
 Delivered:
 
-- Audit recommendations now carry root-cause labels, evidence scores, confidence labels, and grouped issue traces
-- SEO roadmap and execution queue items now carry the same evidence contract and filter out weak benchmark advice before render
-- AEO recommendations now expose root-cause grouping, evidence confidence, exact target pages, and ordered action steps from the saved payload
-- The workspace fix queue now reflects the tighter recommendation contract instead of flat repeated issue text
+- External Antigravity review captured the current frontend, module, and payment-flow gaps
+- The main problems identified were design-system drift, overlong SEO layout, under-built AEO/content surfaces, and checkout friction
+- The Antigravity priorities are now merged into this repo plan instead of living as a separate thread
 
-### Block 4: Page-Level Action Packs and Success Criteria
+### Block 4: UI Foundation and Payment-Flow Alignment
+
+Status: complete
+
+Delivered:
+
+- Shared UI primitives were added for score pills, progress bars, evidence cards, metric strips, command cards, mobile navigation, and jump navigation
+- The SEO workspace now has the long-page navigation and stronger hierarchy required for the current product depth
+- The AEO workspace now has a fuller module surface instead of a thin placeholder
+- Account and billing responsibilities are more clearly separated from workspace execution
+- Checkout and billing portal entry paths are shorter and support cleaner return routing
+- Stripe success now reflects credits immediately instead of waiting entirely on webhook timing
+- The account billing page now renders plan details correctly, uses a lighter account-specific surface, and collapses plan cards to reduce scroll fatigue while keeping direct checkout on each card
+
+### Block 5: Page-Level Action Packs and Success Criteria
 
 Target:
 
