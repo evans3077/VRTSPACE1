@@ -9,13 +9,13 @@ VRTSPACE is a sophisticated Django-based platform designed for modern search opt
 
 | Route | Function | UI Status | Performance |
 | :--- | :--- | :--- | :--- |
-| `/` | Agency Homepage | [ ] Standard | [ ] Sync |
-| `/tools/workspace-dashboard/` | Client Dashboard | [ ] Standard | [ ] Sync |
-| `/seo/workspace-seo/` | SEO Intelligence Hub | [/] In Progress | [ ] Sync |
-| `/aeo/workspace-aeo/` | AI Visibility (AEO) | [ ] Pending | [ ] Pending |
+| `/` | Agency Homepage | [x] Improved | [x] Photon location live |
+| `/tools/workspace-dashboard/` | Client Dashboard | [x] Improved | [x] Location autocomplete live |
+| `/seo/workspace-seo/` | SEO Intelligence Hub | [/] In Progress | [x] Engine upgraded |
+| `/aeo/workspace-aeo/` | AI Visibility (AEO) | [ ] Pending | [/] Pipeline wired |
 | `/content/workspace-content/` | Content Optimizer | [ ] Pending | [ ] Pending |
-| `/tools/account-dashboard/` | User Account/Billing | [ ] Standard | [ ] Sync |
-| `/analytics/ops/` | Admin Operations | [ ] Standard | [ ] Sync |
+| `/tools/account-dashboard/` | User Account/Billing | [x] Standard | [x] Sync |
+| `/analytics/ops/` | Admin Operations | [x] Standard | [x] Sync |
 
 ## 3. The Core Problems
 1. **UI Lag & Aesthetics**: Significant contrast issues and performance bottlenecks in the frontend templates.
@@ -24,11 +24,19 @@ VRTSPACE is a sophisticated Django-based platform designed for modern search opt
 
 ## 3. Strategic Roadmap
 
-### Phase A: UI/UX Premium Overhaul (Visual Excellence)
-- **Design System**: Implement the `vrt-space-ui-system` tokens consistently.
-- **Aesthetics**: Shift to a high-contrast, modern "Dark Mode first" dashboard with glassmorphism and smooth transitions.
-- **Performance**: Optimize templates with HTMX/Alpine.js to reduce lag on data-heavy reporting pages.
-- **Accessibility**: Fix contrast issues and ensure WCAG compliance.
+### Phase A: UI/UX Premium Overhaul — [x] COMPLETE
+- [x] Location autocomplete using free Photon/OSM API (no credit cost)
+- [x] Widened to cities, towns, counties, states, regions
+- [x] All form inputs readable, dark-mode contrast fixed
+
+### Phase B: Search Algorithm Optimization — [x] COMPLETE
+- [x] Replaced hardcoded `FOREIGN_GEO_HINTS` with dynamic `_parse_canonical_location()` + `_is_foreign_location()` working globally for any location
+- [x] SerpApi now receives `gl` (country code) and `hl` (language) params derived from the selected canonical location — restricts SERP results to the right geography
+- [x] City-level location scoring: `+6` for city match, `+3` region, `+2` country (vs old flat `+3` for any token)
+- [x] Foreign geo-conflict penalty raised from `-8` to `-10`
+- [x] City-only query variants added (`"{service} in {city}"`) for tighter local discovery
+- [x] `intelligence.py` pipeline wired into `jobs.py` — triggers automatically after every completed audit
+- [x] Intelligence results (AEO overview, related questions, local pack) stored in `profile.metadata["intelligence"]`
 
 ### Phase B: Search Algorithm Optimization (The Intelligence Engine)
 - **SerpApi Multi-Engine Strategy**: Transition from single `google` engine to a hybrid approach (supporting `google_maps`, `google_local`, and `google_scholar` where appropriate).
@@ -36,18 +44,19 @@ VRTSPACE is a sophisticated Django-based platform designed for modern search opt
 - **Dynamic Filtering**: Refine `BLOCKED_COMPETITOR_DOMAINS` and `NON_COMPETITOR_RESULT_HINTS` to be context-aware based on the business type (e.g., allow certain directory sites for local services).
 - **Weighted Scoring**: Enhance `discovery_score` to prioritize "Direct Competitors" over "Market Surfaces" to fulfill the user's need for "best results".
 
-### Phase C: AEO (Answer Engine Optimization) & AI Visibility
-- **SGE Tracking**: Implement logic to detect and scrape Search Generative Experience (SGE) placeholders.
-- **Citability Index**: Measure the likelihood of a domain being cited in AI answers based on semantic structure.
-- **Knowledge Graph Integration**: Check if the user's business appears in the Google Knowledge Graph.
+### Phase C: AEO (Answer Engine Optimization) — [/] Next Up
+- [ ] Surface `intelligence.metadata["intelligence"]` data in AEO workspace UI
+- [ ] SGE / AI Overview tracking and citability scoring
+- [ ] Related Questions display and gap analysis
+- [ ] Google Knowledge Graph presence check
 
-### Phase D: Content Optimization Engine
-- **Gap Analysis**: Build a tool to compare the user's site content density against top-ranking competitors.
-- **Keyword Clustering**: Automated keyword groups based on semantic relevance.
+### Phase D: Content Optimization Engine — [ ] Pending
+- [ ] Gap analysis against top-ranking competitors
+- [ ] Keyword clustering from Related Questions + SERP data
 
-### Phase E: Monetization & Growth
-- **Stripe & Auth**: Seamlessly integrate billing cycles with account quotas.
-- **Lead Capture**: Enhance the "Free Audit" tool to maximize conversion.
+### Phase E: Monetization & Growth — [ ] Pending
+- [ ] Billing cycle integration with credit quotas
+- [ ] Lead capture conversion optimisation
 
 ## 4. Immediate Next Steps
 - [ ] Audit `apps/seo/services.py` for SerpApi call efficiency.
