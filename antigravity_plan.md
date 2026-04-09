@@ -4,10 +4,20 @@ This document serves as the master blueprint for the Antigravity overhaul of VRT
 
 ## 1. Project Analysis Summary
 VRTSPACE is a sophisticated Django-based platform designed for modern search optimization. 
-- **Tech Stack**: Django (Monolith), PostgreSQL, SerpApi, Stripe, Google Auth.
-- **Current State**: functional core but lagging in UI/UX and result precision.
 
-## 2. The Core Problems
+## 2. Platform Routes & Status (Visual & Performance Tracker)
+
+| Route | Function | UI Status | Performance |
+| :--- | :--- | :--- | :--- |
+| `/` | Agency Homepage | [ ] Standard | [ ] Sync |
+| `/tools/workspace-dashboard/` | Client Dashboard | [ ] Standard | [ ] Sync |
+| `/seo/workspace-seo/` | SEO Intelligence Hub | [/] In Progress | [ ] Sync |
+| `/aeo/workspace-aeo/` | AI Visibility (AEO) | [ ] Pending | [ ] Pending |
+| `/content/workspace-content/` | Content Optimizer | [ ] Pending | [ ] Pending |
+| `/tools/account-dashboard/` | User Account/Billing | [ ] Standard | [ ] Sync |
+| `/analytics/ops/` | Admin Operations | [ ] Standard | [ ] Sync |
+
+## 3. The Core Problems
 1. **UI Lag & Aesthetics**: Significant contrast issues and performance bottlenecks in the frontend templates.
 2. **Search Precision**: SerpApi results are not yet optimized for the "best" competitive intelligence.
 3. **Feature Gaps**: AEO and Content Optimization modules are pending.

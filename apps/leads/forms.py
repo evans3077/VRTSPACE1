@@ -8,46 +8,25 @@ from .location_services import get_country_choices, get_country_ui_metadata, val
 
 
 class StructuredLocationMixin:
-    location_mode = forms.ChoiceField(choices=LOCATION_MODE_CHOICES, initial="targeted", required=False)
-    location_country = forms.ChoiceField(choices=(), required=False)
-    location_scope = forms.ChoiceField(choices=LOCATION_SCOPE_CHOICES, required=False)
-    location_area = forms.CharField(required=False)
     location = forms.CharField(required=False, widget=forms.HiddenInput())
-
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.fields["location_country"].choices = get_country_choices()
-        self.country_ui_metadata = get_country_ui_metadata()
+    location_display = forms.CharField(required=False)
 
     def clean_location(self):
         return self.cleaned_data.get("location", "").strip()
 
     def clean(self):
         cleaned_data = super().clean()
-        location_mode = (cleaned_data.get("location_mode") or "targeted").strip().lower()
-        cleaned_data["location_mode"] = location_mode
-        if location_mode == "worldwide":
+        
+        # If user cleared the field or Worldwide is selected
+        val = cleaned_data.get("location_display", "").strip()
+        if not val or val.lower() == "worldwide":
             cleaned_data["location"] = "Worldwide"
-            cleaned_data["location_country"] = ""
-            cleaned_data["location_scope"] = ""
-            cleaned_data["location_area"] = ""
-            return cleaned_data
-
-        country_code = cleaned_data.get("location_country", "")
-        scope = cleaned_data.get("location_scope", "")
-        area = cleaned_data.get("location_area", "")
-        if not any([country_code, scope, area, cleaned_data.get("location", "")]):
-            cleaned_data["location"] = ""
-            return cleaned_data
-        try:
-            validated = validate_location_selection(country_code, scope, area)
-        except forms.ValidationError as exc:
-            self.add_error("location_area", exc)
-            return cleaned_data
-        cleaned_data["location"] = validated["display"]
-        cleaned_data["location_country"] = validated["country_code"]
-        cleaned_data["location_scope"] = validated["scope"]
-        cleaned_data["location_area"] = validated["area"]
+        
+        # Keep legacy fields empty for backwards database compatibility
+        cleaned_data["location_mode"] = "targeted"
+        cleaned_data["location_country"] = ""
+        cleaned_data["location_scope"] = ""
+        cleaned_data["location_area"] = ""
         return cleaned_data
 
 
@@ -133,7 +112,6 @@ class AuditRequestForm(BusinessContextMixin, StructuredLocationMixin, forms.Mode
             "website": forms.TextInput(attrs={"placeholder": "example.com"}),
             "business_subtype": forms.TextInput(attrs={"placeholder": "Used car dealership, wedding venue, dermatology clinic"}),
             "target_audience": forms.TextInput(attrs={"placeholder": "People looking for event gardens in Machakos"}),
-            "location_area": forms.TextInput(attrs={"placeholder": "Machakos"}),
             "target_goal": forms.TextInput(attrs={"placeholder": "Increase qualified leads from search"}),
             "primary_service": forms.TextInput(attrs={"placeholder": "Used car sales"}),
             "market_context": forms.Textarea(attrs={"rows": 3, "placeholder": "Market, audience, location, or commercial context that should shape the audit."}),
@@ -219,7 +197,6 @@ class WorkspaceProjectForm(BusinessContextMixin, StructuredLocationMixin, forms.
             "business_type": forms.Select(choices=BUSINESS_TYPE_CHOICES),
             "business_subtype": forms.TextInput(attrs={"placeholder": "Used car dealership, wedding venue, dermatology clinic"}),
             "target_audience": forms.TextInput(attrs={"placeholder": "The buyers or users you want this project to reach"}),
-            "location_area": forms.TextInput(attrs={"placeholder": "Machakos"}),
             "target_goal": forms.TextInput(attrs={"placeholder": "Increase qualified leads from search"}),
             "primary_service": forms.TextInput(attrs={"placeholder": "Used car sales"}),
         }
@@ -266,7 +243,6 @@ class WorkspaceAuditStartForm(BusinessContextMixin, StructuredLocationMixin, for
             "website": forms.TextInput(attrs={"placeholder": "example.com"}),
             "business_subtype": forms.TextInput(attrs={"placeholder": "Used car dealership, wedding venue, dermatology clinic"}),
             "target_audience": forms.TextInput(attrs={"placeholder": "The buyers or users you want this project to reach"}),
-            "location_area": forms.TextInput(attrs={"placeholder": "Machakos"}),
             "target_goal": forms.TextInput(attrs={"placeholder": "Increase qualified leads from search"}),
             "primary_service": forms.TextInput(attrs={"placeholder": "Used car sales"}),
             "notes": forms.Textarea(attrs={"rows": 3, "placeholder": "What should this first audit focus on?"}),

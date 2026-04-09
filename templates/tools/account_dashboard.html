@@ -1,15 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="hero account-hero" style="padding-bottom: 2rem;">
+<section class="hero-premium account-hero" style="padding-bottom: 2rem;">
     <div class="container">
         <div class="section-heading">
-            <p class="eyebrow">Account</p>
-            <h1 style="max-width: none;">Personal dashboard</h1>
-            <p class="section-text account-page-text" style="max-width: 760px;">
+            <p class="eyebrow text-accent">Account</p>
+            <h1 class="gradient-text" style="max-width: none;">Personal dashboard</h1>
+            <p class="section-text account-page-text text-muted" style="max-width: 760px;">
                 Manage personal details, billing access, password updates, and subscription state separately from workspace operations.
             </p>
-            <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center;">
                 <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}">Open workspace</a>
                 <a class="button button-secondary" href="#billing">Billing</a>
                 <a class="button button-secondary" href="#credits">Credits</a>
@@ -83,16 +83,16 @@
                     <p class="eyebrow">Profile</p>
                     <h2 style="font-size: 2rem;">Personal details</h2>
                 </div>
-                <form method="post" action="{% url 'tools:account-profile-update' %}" style="display: grid; gap: 1rem;">
+                <form method="post" action="{% url 'tools:account-profile-update' %}" class="premium-form">
                     {% csrf_token %}
                     {% for field in profile_form %}
-                    <label style="display: grid; gap: 0.35rem;">
-                        <span class="account-form-label">{{ field.label }}</span>
+                    <div class="form-group">
+                        <label class="account-form-label">{{ field.label }}</label>
                         {{ field }}
                         {% if field.errors %}
-                        <span style="font-size: 0.82rem; color: #991b1b;">{{ field.errors|join:", " }}</span>
+                        <span style="font-size: 0.82rem; color: #fca5a5;">{{ field.errors|join:", " }}</span>
                         {% endif %}
-                    </label>
+                    </div>
                     {% endfor %}
                     <button type="submit" class="button button-primary">Save profile</button>
                 </form>
@@ -103,19 +103,19 @@
                     <p class="eyebrow">Security</p>
                     <h2 style="font-size: 2rem;">Login details</h2>
                 </div>
-                <form method="post" action="{% url 'tools:account-password-update' %}" style="display: grid; gap: 1rem;">
+                <form method="post" action="{% url 'tools:account-password-update' %}" class="premium-form">
                     {% csrf_token %}
                     {% for field in password_form %}
-                    <label style="display: grid; gap: 0.35rem;">
-                        <span class="account-form-label">{{ field.label }}</span>
+                    <div class="form-group">
+                        <label class="account-form-label">{{ field.label }}</label>
                         {{ field }}
                         {% if field.help_text %}
-                        <span class="account-help-text">{{ field.help_text|safe }}</span>
+                        <span class="account-help-text text-muted">{{ field.help_text|safe }}</span>
                         {% endif %}
                         {% if field.errors %}
-                        <span style="font-size: 0.82rem; color: #991b1b;">{{ field.errors|join:", " }}</span>
+                        <span style="font-size: 0.82rem; color: #fca5a5;">{{ field.errors|join:", " }}</span>
                         {% endif %}
-                    </label>
+                    </div>
                     {% endfor %}
                     <button type="submit" class="button button-primary">Update password</button>
                 </form>

@@ -17,13 +17,19 @@ html {
 
 body {
     margin: 0;
-    font-family: "Space Grotesk", "Segoe UI", sans-serif;
-    color: var(--ink);
-    background:
-        radial-gradient(circle at top right, rgba(139, 92, 246, 0.05), transparent 35%),
-        
-        linear-gradient(180deg, #ffffff 0%, #f8fafc 45%, #f1f5f9 100%);
+    font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+    color: #f8fafc !important;
+    background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.05), transparent 35%),
+        #020617;
     min-height: 100vh;
+}
+
+p, span, li, a {
+    color: rgba(248, 250, 252, 0.85);
+}
+
+h1,h2,h3,h4,h5,h6 {
+    color: #ffffff;
 }
 
 a {
@@ -104,19 +110,21 @@ a {
     gap: 0.35rem;
     padding: 0.75rem;
     border-radius: 22px;
-    background: #ffffff; border: 1px solid #e2e8f0; box-shadow: 0 10px 30px -10px rgba(0,0,0,0.1);
-    border: 1px solid #e2e8f0;
-    box-shadow: 0 20px 55px rgba(255, 255, 255, 0.12);
+    background: rgba(15, 23, 42, 0.95);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 20px 55px rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(12px);
 }
 
 .workspace-menu-panel a {
     padding: 0.75rem 0.9rem;
     border-radius: 14px;
-    color: var(--ink);
+    color: rgba(255, 255, 255, 0.85);
 }
 
 .workspace-menu-panel a:hover {
-    background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
 }
 
 .workspace-nav-shell {
@@ -166,7 +174,8 @@ a {
     gap: 0.45rem;
     padding: 0.85rem 1rem;
     border-radius: 999px;
-    background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: rgba(255, 255, 255, 0.72);
     font-weight: 700;
 }
@@ -229,7 +238,8 @@ a {
     gap: 0.5rem;
     padding: 0.8rem 1rem;
     border-radius: 18px;
-    background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
     color: rgba(255, 255, 255, 0.76);
     line-height: 1.5;
 }
@@ -243,8 +253,8 @@ a {
     border-radius: 20px;
     background:
         linear-gradient(135deg, rgba(249, 115, 22, 0.14), rgba(14, 165, 233, 0.12)),
-        rgba(255, 255, 255, 0.8);
-    border: 1px solid #e2e8f0;
+        rgba(15, 23, 42, 0.5);
+    border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .workspace-credit-balance-meta {
@@ -557,9 +567,8 @@ a {
 .service-band-head h2,
 .case-study-card h2 {
     font-size: clamp(2.35rem, 4vw, 4.8rem);
-    line-height: 0.94;
+    line-height: 1.1;
     margin: 0 0 1rem;
-    max-width: 12ch;
 }
 
 .hero-text,
@@ -637,10 +646,6 @@ a {
     font-size: 0.9rem;
 }
 
-.audience-row span {
-    background: #ffffff; border: 1px solid rgba(255, 255, 255, 0.1);
-    border: 1px solid #e2e8f0;
-}
 
 .hero-side {
     display: grid;
@@ -794,10 +799,6 @@ textarea:focus {
     font-weight: 800;
     letter-spacing: -0.02em;
     margin-bottom: 0.25rem;
-    background: linear-gradient(135deg, var(--ink) 0%, var(--deep) 100%);
-    -webkit-background-clip: text;
-    background-clip: text;
-    -webkit-text-fill-color: transparent;
 }
 
 .results-strip {
@@ -966,13 +967,12 @@ textarea:focus {
 }
 
 .tone-dark {
-    background: linear-gradient(180deg, rgba(19, 34, 56, 0.98) 0%, rgba(23, 43, 69, 0.98) 100%);
     color: white;
 }
 
 .tone-dark .service-card {
-    background: rgba(255, 255, 255, 0.06);
-    border-color: #e2e8f0;
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.1);
     box-shadow: none;
 }
 
@@ -983,11 +983,9 @@ textarea:focus {
 }
 
 .tone-mist {
-    background: rgba(217, 228, 236, 0.4);
 }
 
 .tone-signal {
-    background: linear-gradient(180deg, rgba(249, 115, 22, 0.08) 0%, rgba(10, 10, 15, 0.78) 100%);
 }
 
 .package-card-featured {
@@ -1284,7 +1282,8 @@ textarea:focus {
     align-items: center;
     gap: 0.75rem;
     padding: 0.75rem;
-    background: #f1f5f9; color: #475569; border: 1px solid #e2e8f0;
+    background: rgba(255, 255, 255, 0.05);
+    color: rgba(255, 255, 255, 0.75);
     border-radius: 12px;
     border: 1px solid rgba(255, 255, 255, 0.1);
 }
@@ -1644,9 +1643,9 @@ textarea:focus {
     border-radius: 14px;
     font-weight: 700;
     font-size: 1rem;
-    background: #ffffff;
+    background: rgba(255, 255, 255, 0.05);
     display: block;
-    color: var(--ink);
+    color: rgba(255, 255, 255, 0.9);
 }
 
 .nav-mobile-links a:hover {
@@ -1995,6 +1994,7 @@ textarea:focus {
     max-height: 1200px;
     opacity: 1;
     pointer-events: auto;
+    overflow: visible;
 }
 
 .audit-form-expand-btn {
@@ -2058,7 +2058,7 @@ select {
     background: rgba(10, 15, 28, 0.6) !important;
     border: 1px solid rgba(255, 255, 255, 0.25) !important;
     border-radius: 12px;
-    color: #0f172a !important;
+    color: #f8fafc !important;
     font-size: 0.95rem;
     font-family: inherit;
     transition: all 0.2s ease;
@@ -2081,7 +2081,7 @@ textarea::placeholder {
 }
 
 select option {
-    background: #ffffff;
+    background: #0f172a;
     color: #f8fafc;
 }
 

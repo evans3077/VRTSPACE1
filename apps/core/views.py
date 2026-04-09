@@ -1,6 +1,7 @@
 import json
 
-from django.http import Http404
+import requests
+from django.http import Http404, JsonResponse
 from django.db import OperationalError, ProgrammingError
 from django.views.generic import TemplateView
 
@@ -131,3 +132,33 @@ class PackagesView(TemplateView):
             "meta_description": "Flexible plans designed to evolve with your business.",
             "plans": build_plan_cards(self.request.user),
         }
+
+def location_autocomplete(request):
+    query = request.GET.get("q", "").strip()
+    if len(query) < 2:
+        return JsonResponse({"results": []})
+    
+    try:
+        response = requests.get(
+            "https://serpapi.com/locations.json", 
+            params={"q": query, "limit": 10}, 
+            timeout=5
+        )
+        if response.status_code == 200:
+            data = response.json()
+            if isinstance(data, list):
+                results = [
+                    {
+                        "id": item.get("id"),
+                        "name": item.get("name"),
+                        "canonical_name": item.get("canonical_name"),
+                        "country_code": item.get("country_code"),
+                        "target_type": item.get("target_type")
+                    }
+                    for item in data if "name" in item and "canonical_name" in item
+                ][:10]
+                return JsonResponse({"results": results})
+    except Exception:
+        pass
+    
+    return JsonResponse({"results": []})

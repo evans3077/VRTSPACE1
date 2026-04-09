@@ -176,7 +176,6 @@
             if (e.key === 'Escape') closeDrawer();
         });
 
-        // Audit Form Progressive Disclosure
         var auditExpandBtn = document.getElementById('audit-form-expand');
         var auditAdvancedSection = document.getElementById('audit-form-advanced');
         if (auditExpandBtn && auditAdvancedSection) {
@@ -186,12 +185,15 @@
                     auditExpandBtn.setAttribute('aria-expanded', 'true');
                     auditAdvancedSection.classList.add('is-open');
                     auditAdvancedSection.setAttribute('aria-hidden', 'false');
+                    auditAdvancedSection.style.display = 'flex';
+                    auditAdvancedSection.style.flexDirection = 'column';
                     var label = document.getElementById('audit-expand-label');
                     if (label) label.textContent = 'Hide advanced context';
                 } else {
                     auditExpandBtn.setAttribute('aria-expanded', 'false');
                     auditAdvancedSection.classList.remove('is-open');
                     auditAdvancedSection.setAttribute('aria-hidden', 'true');
+                    auditAdvancedSection.style.display = 'none';
                     var label = document.getElementById('audit-expand-label');
                     if (label) label.textContent = 'Add context for a richer report';
                 }

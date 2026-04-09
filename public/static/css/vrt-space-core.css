@@ -71,7 +71,7 @@ body {
     -webkit-backdrop-filter: var(--glass-blur) !important;
     border: 1px solid var(--border-glass) !important;
     border-radius: var(--radius-lg) !important;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5) !important;
 }
 
 .glass-panel:hover,
@@ -84,15 +84,16 @@ body {
 .experience-card:hover,
 .journey-card:hover,
 .faq-card:hover {
-    border-color: var(--border-active) !important;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), var(--brand-glow) !important;
+    border-color: var(--brand-primary) !important;
+    box-shadow: 0 0 25px rgba(56, 189, 248, 0.25), 0 0 10px rgba(129, 140, 248, 0.2) !important;
 }
 
 /* Typography Enhancements */
 h1, h2, h3, h4, h5 {
     color: var(--text-primary);
-    font-weight: 700;
-    letter-spacing: -0.02em;
+    font-weight: 800; /* Extra Bold like the screenshots */
+    letter-spacing: -0.04em; /* Tight like the screenshots */
+    line-height: 1.1;
 }
 
 .gradient-text {
@@ -103,28 +104,58 @@ h1, h2, h3, h4, h5 {
 }
 
 /* Button Overrides */
-.button-primary {
+.button-primary,
+.btn-primary {
     background: var(--brand-gradient) !important;
     border: none !important;
     color: white !important;
-    box-shadow: var(--brand-glow);
+    padding: 0.8rem 2rem !important; /* Chunkier padding */
+    font-weight: 700 !important;
+    border-radius: 999px !important; /* Fully rounded like the buttons in the screenshot */
+    box-shadow: 0 0 15px rgba(56, 189, 248, 0.4) !important;
+    text-transform: none !important;
+    letter-spacing: -0.01em !important;
 }
 
-.button-primary:hover {
+.button-primary:hover,
+.btn-primary:hover {
     filter: brightness(1.1);
     transform: translateY(-2px);
-    box-shadow: 0 0 30px rgba(56, 189, 248, 0.5);
+    box-shadow: 0 0 25px rgba(56, 189, 248, 0.6);
 }
 
-.button-secondary {
-    background: transparent !important;
+.button-secondary,
+.btn-secondary {
+    background: rgba(255, 255, 255, 0.05) !important;
     border: 1px solid var(--border-glass) !important;
     color: var(--text-primary) !important;
+    padding: 0.8rem 1.8rem !important;
+    border-radius: 999px !important;
+    backdrop-filter: blur(4px);
 }
 
-.button-secondary:hover {
-    background: var(--border-glass) !important;
+.button-secondary:hover,
+.btn-secondary:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
     border-color: var(--text-secondary) !important;
+}
+
+/* Premium Pills (from Screenshot 3) */
+.pill-group {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+}
+
+.premium-pill {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid var(--border-glass);
+    padding: 0.6rem 1.2rem;
+    border-radius: 999px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    font-weight: 500;
 }
 
 /* Navigation Overrides */
@@ -159,7 +190,134 @@ input:focus, select:focus, textarea:focus {
     box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2) !important;
 }
 
-/* Utility Classes */
-.text-muted { color: var(--text-muted) !important; }
-.text-accent { color: var(--text-accent) !important; }
-.bg-surface { background-color: var(--bg-surface) !important; }
+/* Dashboard & Layout */
+.dashboard-stack {
+    padding: 2rem 0;
+    min-height: 80vh;
+}
+
+.hero-premium {
+    padding: 6rem 0 4rem 0;
+    text-align: center;
+    border-bottom: 1px solid var(--border-glass);
+    margin-bottom: 2rem;
+}
+
+.layout-split-sidebar {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 2rem;
+}
+
+@media (max-width: 1024px) {
+    .layout-split-sidebar { grid-template-columns: 1fr; }
+}
+
+/* Card Components */
+.card-head {
+    margin-bottom: 1.5rem;
+}
+
+.empty-state-panel {
+    padding: 2rem;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-md);
+    text-align: center;
+    color: var(--text-secondary);
+}
+
+.button-row {
+    margin-top: 1.5rem;
+    display: flex;
+    gap: 1rem;
+    justify-content: center;
+}
+
+.credit-notice {
+    margin-bottom: 1.5rem;
+    padding: 1rem;
+    background: rgba(56, 189, 248, 0.1);
+    border-left: 4px solid var(--brand-primary);
+    border-radius: var(--radius-sm);
+    color: var(--text-primary);
+}
+
+/* Form Styling & Inputs Global Overrides */
+input, select, textarea, .form-control {
+    background: rgba(15, 23, 42, 0.6) !important;
+    border: 1px solid var(--border-glass) !important;
+    color: var(--text-primary) !important;
+    border-radius: var(--radius-sm) !important;
+    padding: 0.85rem 1rem !important;
+    font-family: inherit;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus, select:focus, textarea:focus {
+    outline: none !important;
+    border-color: var(--brand-primary) !important;
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2) !important;
+    background: rgba(15, 23, 42, 0.9) !important;
+}
+
+input::placeholder, textarea::placeholder {
+    color: var(--text-muted) !important;
+}
+
+.premium-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.form-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-group label {
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+}
+
+/* Metrics & Data */
+.metric-grid-premium {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.metric-card-premium {
+    background: rgba(255, 255, 255, 0.05);
+    padding: 1.5rem;
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-glass);
+}
+
+.focus-box {
+    padding: 1rem;
+    background: var(--bg-surface);
+    border-radius: var(--radius-sm);
+    border-left: 4px solid var(--brand-secondary);
+    margin-top: 1rem;
+}
+
+.tag-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
+.pill-accent {
+    background: rgba(56, 189, 248, 0.1);
+    color: var(--brand-primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 999px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    border: 1px solid var(--border-active);
+}
