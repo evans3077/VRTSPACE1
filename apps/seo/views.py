@@ -250,6 +250,7 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
     def _initial_form_data(self, project, profile=None):
         if not project:
             return {}
+
         competitor_urls = [
             competitor.homepage_url
             for competitor in project.seo_competitors.filter(
@@ -259,11 +260,15 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
         ]
         if not competitor_urls and getattr(project, "audit_request", None):
             competitor_urls = getattr(project.audit_request, "competitor_urls", [])
+
+        # Attempt to pull intelligence from latest audit if available
+        intel = (profile.metadata or {}).get("intelligence", {}) if profile else {}
+        
         initial = {
             "competitor_urls": "\n".join(competitor_urls),
-            "location": getattr(project, "location", ""),
+            "location": getattr(project, "location", "") or intel.get("location", ""),
             "target_goal": getattr(project, "target_goal", ""),
-            "primary_service": getattr(project, "primary_service", ""),
+            "primary_service": getattr(project, "primary_service", "") or intel.get("query", ""),
             "target_audience": getattr(project, "target_audience", ""),
         }
         if not getattr(profile, "business_type", ""):

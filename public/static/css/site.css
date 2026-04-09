@@ -3,7 +3,7 @@
     --sand: rgba(255, 255, 255, 0.02);
     --signal: #8b5cf6;
     --mist: #f1f5f9;
-    --panel: #ffffff;
+    --panel: var(--bg-surface);
     --deep: #e2e8f0;
 }
 
@@ -137,7 +137,7 @@ a {
     padding: 1.25rem;
     border-radius: 28px;
     border: 1px solid #e2e8f0;
-    background: #ffffff; border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg-glass) !important;
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
 }
@@ -664,7 +664,7 @@ a {
 .faq-card,
 .case-study-card,
 .contact-form {
-    background: #ffffff; box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.06), 0 4px 6px -1px rgba(0,0,0,0.03);;
+    background: var(--bg-glass); box-shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.4);
     backdrop-filter: blur(12px);
     -webkit-backdrop-filter: blur(12px);
     border: 1px solid #e2e8f0;
@@ -738,7 +738,7 @@ textarea {
     border-radius: 16px;
     padding: 0.85rem 1rem;
     font: inherit;
-    background: #ffffff; border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--bg-surface); border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 input:focus,

@@ -219,15 +219,13 @@
                 {% endif %}
             </div>
             {% if latest_seo_share_url %}
-            {% if latest_seo_share_url %}
-            <div style="margin-bottom: 1.5rem; padding: 1.5rem; border-radius: 18px; background: rgba(14, 165, 233, 0.08); border: 1px solid rgba(14, 165, 233, 0.2); color: var(--text-primary); line-height: 1.6;">
-                <strong style="display: block; margin-bottom: 0.5rem;">Active Stakeholder Report</strong>
-                <div class="url-wrap-mono" style="font-size: 0.82rem; color: var(--text-secondary); background: rgba(0,0,0,0.2); padding: 0.5rem; border-radius: 8px;">{{ latest_seo_share_url }}</div>
-                <div style="margin-top: 1rem;">
-                    <a href="{{ latest_seo_share_url }}" target="_blank" rel="noopener" class="button button-secondary" style="font-size: 0.85rem;">Open Shared Report</a>
+            <div style="margin-bottom: 2rem; padding: 1.5rem; border-radius: var(--radius-lg); background: rgba(14, 165, 233, 0.08); border: 1px solid rgba(14, 165, 233, 0.2); color: var(--text-primary); line-height: 1.6;">
+                <strong style="display: block; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: var(--brand-primary);">Active Stakeholder Report</strong>
+                <div class="url-wrap-mono" style="font-size: 0.82rem; color: var(--text-secondary); background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-glass); margin-bottom: 1rem;">{{ latest_seo_share_url }}</div>
+                <div style="display: flex; gap: 1rem;">
+                    <a href="{{ latest_seo_share_url }}" target="_blank" rel="noopener" class="button button-primary" style="font-size: 0.85rem;">Open Shared Report</a>
                 </div>
             </div>
-            {% endif %}
             {% endif %}
             <div class="system-grid" style="gap: 1.5rem;">
                 <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Competitors</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_value_summary.competitors_benchmarked|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Real competitor sites fetched and benchmarked</p></article>
@@ -251,42 +249,53 @@
                 <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow">Acquired Links</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_chain_value_summary.acquired_link_count|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Linked campaigns that already converted into acquired backlinks</p></article>
             </div>
             {% if seo_discovery.queries %}
-            {% if seo_discovery.queries %}
-            <div style="margin-top: 1.5rem; padding: 1.5rem; border-radius: 18px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); color: var(--text-secondary); line-height: 1.6;">
-                <strong style="display: block; color: var(--text-primary); margin-bottom: 0.5rem; font-size: 0.9rem;">SERP Discovery Queries</strong>
-                {{ seo_discovery.queries|join:", " }}
+            <div style="margin-top: 2rem; padding: 1.5rem; border-radius: var(--radius-lg); background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); color: var(--text-secondary); line-height: 1.6;">
+                <strong style="display: block; color: var(--text-primary); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem;">SERP Discovery Queries</strong>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    {% for q in seo_discovery.queries %}
+                    <span class="pill-accent" style="font-size: 0.75rem; background: rgba(56, 189, 248, 0.05);">{{ q }}</span>
+                    {% endfor %}
+                </div>
+
+                {% if seo_discovery.errors %}
+                <div style="margin-top: 1.5rem; padding: 1.25rem; border-radius: var(--radius-md); background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.15); color: var(--text-secondary);">
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
+                        <i class="fas fa-exclamation-triangle" style="color: var(--error);"></i>
+                        <strong style="color: var(--text-primary); font-size: 0.85rem;">Intelligence Feed Warnings</strong>
+                    </div>
+                    <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.85rem; display: grid; gap: 0.5rem;">
+                        {% for item in seo_discovery.errors %}
+                        <li>
+                            <span style="color: var(--text-primary); font-weight: 600;">{{ item.query }}</span>: 
+                            <span style="opacity: 0.8;">{{ item.message }}</span>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                {% endif %}
             </div>
-            {% if seo_discovery.errors %}
-            <div style="margin-top: 1rem; padding: 1.25rem; border-radius: 16px; background: rgba(220, 38, 38, 0.05); border: 1px solid rgba(220, 38, 38, 0.2); color: var(--text-secondary); line-height: 1.6;">
-                <strong style="display: block; margin-bottom: 0.4rem; color: #ef4444;">Discovery Warnings</strong>
-                {% for item in seo_discovery.errors %}
-                <div style="font-size: 0.85rem;">{{ item.query }}: {{ item.message }}</div>
-                {% endfor %}
-            </div>
-            {% endif %}
             {% elif snapshot %}
-            <div style="margin-top: 1.5rem; padding: 1.5rem; border-radius: 18px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); color: var(--text-muted); line-height: 1.6;">
+            <div style="margin-top: 2rem; padding: 1.5rem; border-radius: var(--radius-lg); background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); color: var(--text-muted); line-height: 1.6; text-align: center;">
+                <i class="fas fa-search" style="display: block; margin-bottom: 0.5rem; opacity: 0.5; font-size: 1.2rem;"></i>
                 Automatic SERP discovery is not configured. Benchmarking manual competitors directly.
             </div>
             {% endif %}
 
             {% if seo_discovery.routing_policy %}
-            {% if seo_discovery.routing_policy %}
-            <div style="margin-top: 1.5rem; padding: 1.5rem; border-radius: 18px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); color: var(--text-secondary); line-height: 1.6;">
-                <strong style="display: block; color: var(--text-primary); margin-bottom: 0.5rem; font-size: 0.9rem;">Intelligence Routing Policy</strong>
-                <div style="font-size: 0.9rem;">
-                    Benchmarking <strong style="color: var(--text-primary);">{{ seo_context.industry_label|default:"General" }}</strong> 
+            <div style="margin-top: 2rem; padding: 1.5rem; border-radius: var(--radius-lg); background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); color: var(--text-secondary); line-height: 1.6;">
+                <strong style="display: block; color: var(--text-primary); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem;">Intelligence Routing Policy</strong>
+                <div style="font-size: 0.95rem;">
+                    Targeting <strong style="color: var(--text-primary);">{{ seo_context.industry_label|default:"General" }}</strong> 
                     peers for <strong style="color: var(--text-primary);">{{ seo_discovery.routing_policy.primary_service|default:"the declared offer" }}</strong>.
                 </div>
                 {% if seo_discovery.routing_policy.routes %}
-                <div style="margin-top: 1rem; display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                <div style="margin-top: 1.25rem; display: flex; flex-wrap: wrap; gap: 0.65rem;">
                     {% for route in seo_discovery.routing_policy.routes %}
-                    <span class="seo-inline-tag" style="background: rgba(255,255,255,0.05);">{{ route.family_label }}</span>
+                    <span class="premium-pill" style="font-size: 0.75rem; background: rgba(255,255,255,0.03); color: var(--text-primary);">{{ route.family_label }}</span>
                     {% endfor %}
                 </div>
                 {% endif %}
             </div>
-            {% endif %}
             {% endif %}
 
             {% if seo_discovery_sections %}

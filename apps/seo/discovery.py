@@ -326,7 +326,7 @@ def _provider_cooldown_cache_key(provider):
 
 def _provider_cooldown_message(provider):
     seconds = _provider_cooldown_seconds(provider)
-    return f"{provider} temporarily cooled down after repeated failures. Retry in about {seconds} seconds."
+    return f"Intelligence provider ({provider}) is under heavy load. Resuming automated discovery in about {seconds // 60} minutes."
 
 
 def _provider_is_cooled_down(provider):
@@ -989,6 +989,16 @@ def _should_disable_provider(exc):
     return isinstance(exc, (requests.Timeout, requests.ConnectionError))
 
 
+def _clean_error_message(exc, provider):
+    if isinstance(exc, requests.Timeout):
+        return f"The {provider} lookup timed out. This usually happens during peak global search traffic; system will retry automatically."
+    if isinstance(exc, requests.ConnectionError):
+        return f"Could not connect to {provider} intelligence feed. Please check your network or wait a few minutes."
+    msg = str(exc)
+    if "Max retries exceeded" in msg or "ConnectTimeoutError" in msg:
+        return f"Connection to {provider} was interrupted or timed out. System is cooling down for a moment."
+    return msg
+
 def fetch_search_results(query, location="", runtime_state=None, country_code=""):
     providers = _provider_order()
     errors = []
@@ -1002,7 +1012,7 @@ def fetch_search_results(query, location="", runtime_state=None, country_code=""
             continue
         if provider == "serpapi":
             if not settings.SERPAPI_API_KEY:
-                errors.append({"provider": provider, "message": "SERPAPI_API_KEY is not configured."})
+                errors.append({"provider": provider, "message": "Global search discovery is not configured (missing API key)."})
                 _disable_provider(runtime_state, provider)
                 continue
             try:
@@ -1010,7 +1020,7 @@ def fetch_search_results(query, location="", runtime_state=None, country_code=""
                 payload = fetch_serpapi_results(query, location=location, country_code=country_code)
                 return {"provider": provider, "payload": payload, "errors": errors}
             except requests.RequestException as exc:
-                errors.append({"provider": provider, "message": str(exc)})
+                errors.append({"provider": provider, "message": _clean_error_message(exc, provider)})
                 if _should_disable_provider(exc):
                     _mark_provider_cooldown(provider)
                     _disable_provider(runtime_state, provider)
@@ -1021,7 +1031,7 @@ def fetch_search_results(query, location="", runtime_state=None, country_code=""
                 payload = fetch_duckduckgo_results(query, location=location)
                 return {"provider": provider, "payload": payload, "errors": errors}
             except requests.RequestException as exc:
-                errors.append({"provider": provider, "message": str(exc)})
+                errors.append({"provider": provider, "message": _clean_error_message(exc, provider)})
                 if _should_disable_provider(exc):
                     _mark_provider_cooldown(provider)
                     _disable_provider(runtime_state, provider)
