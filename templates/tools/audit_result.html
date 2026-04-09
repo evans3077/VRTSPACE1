@@ -80,36 +80,36 @@ setTimeout(function () {
         </div>
 
         <div class="layout-split-sidebar" style="margin-top: 3rem; align-items: center;">
-            <div class="audit-gauge-card" style="padding: 3rem; background: #ffffff; border: 1px solid #e2e8f0; border: 2px solid var(--signal);">
+            <div class="system-card" style="padding: 3rem; border: 2px solid var(--signal);">
                 <div class="gauge-circle" style="width: 180px; height: 180px;">
                     <svg class="gauge-svg" width="180" height="180">
-                        <circle class="gauge-bg" cx="90" cy="90" r="82" style="stroke-width: 12;"></circle>
+                        <circle class="gauge-bg" cx="90" cy="90" r="82" style="stroke-width: 12; stroke: rgba(255,255,255,0.05);"></circle>
                         <circle class="gauge-fill" cx="90" cy="90" r="82"
                                 style="stroke-width: 12; stroke: var(--signal);
                                        stroke-dasharray: 515.22;
                                        stroke-dashoffset: {{ audit_run.summary.gauge_offsets.overall|default:515 }};">
                         </circle>
                     </svg>
-                    <div class="gauge-value" style="font-size: 3rem;">{{ audit_run.overall_score|default:"-" }}</div>
+                    <div class="gauge-value" style="font-size: 3rem; color: var(--text-primary);">{{ audit_run.overall_score|default:"-" }}</div>
                 </div>
-                <div class="gauge-label" style="font-size: 1.1rem; color: var(--ink);">Overall Intelligence</div>
+                <div class="gauge-label" style="font-size: 1.1rem; color: var(--text-secondary); margin-top: 1rem;">Overall Intelligence</div>
             </div>
 
-            <div class="metric-strip">
+            <div class="metric-strip" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem;">
                 {% for gauge in gauge_list %}
-                <div class="audit-gauge-card" style="padding: 1.25rem 1rem; flex-direction: row; gap: 1rem; justify-content: flex-start;">
+                <div class="system-card" style="padding: 1rem; flex-direction: column; gap: 0.5rem; justify-content: center; align-items: center; text-align: center;">
                     <div class="gauge-circle" style="width: 50px; height: 50px; margin-bottom: 0;">
                         <svg class="gauge-svg" width="50" height="50">
-                            <circle class="gauge-bg" cx="25" cy="25" r="22" style="stroke-width: 4;"></circle>
+                            <circle class="gauge-bg" cx="25" cy="25" r="22" style="stroke-width: 4; stroke: rgba(255,255,255,0.05);"></circle>
                             <circle class="gauge-fill" cx="25" cy="25" r="22"
                                     style="stroke-width: 4; stroke: {{ gauge.color }};
                                            stroke-dasharray: 138.23;
                                            stroke-dashoffset: {{ gauge.offset }};">
                             </circle>
                         </svg>
-                        <div class="gauge-value" style="font-size: 0.9rem;">{{ gauge.score }}</div>
+                        <div class="gauge-value" style="font-size: 0.9rem; color: var(--text-primary);">{{ gauge.score }}</div>
                     </div>
-                    <div class="gauge-label" style="font-size: 0.75rem; text-align: left;">{{ gauge.label }}</div>
+                    <div class="gauge-label" style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">{{ gauge.label }}</div>
                 </div>
                 {% endfor %}
             </div>
@@ -130,17 +130,17 @@ setTimeout(function () {
         {% for metric in audit_run.summary.performance_metrics %}
         <article class="system-card" style="border-top: 4px solid {% if metric.status == 'critical' %}#dc2626{% elif metric.status == 'warning' %}#ea580c{% else %}#16a34a{% endif %};">
             <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 0.5rem;">
-                <p class="eyebrow" style="margin: 0;">{{ metric.short_label }}</p>
+                <p class="eyebrow" style="margin: 0; color: var(--brand-primary);">{{ metric.short_label }}</p>
                 <span class="score-pill {% if metric.status == 'critical' %}score-low{% elif metric.status == 'warning' %}score-med{% else %}score-high{% endif %}" style="font-size: 0.65rem;">
                     {{ metric.status|title }}
                 </span>
             </div>
-            <h3 style="margin-bottom: 0.35rem;">{{ metric.value }}</h3>
-            <div style="font-weight: 700; color: var(--ink); margin-bottom: 0.5rem;">{{ metric.label }}</div>
-            <div style="font-size: 0.82rem; color: #64748b; margin-bottom: 0.75rem;">Target: {{ metric.target_label }}</div>
-            <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.5rem; line-height: 1.5;">{{ metric.description }}</p>
-            <div style="font-size: 0.82rem; color: #64748b; line-height: 1.5;">
-                <strong style="display: block; color: var(--ink); margin-bottom: 0.2rem;">Why it matters</strong>
+            <h3 style="margin-bottom: 0.35rem; color: var(--text-primary);">{{ metric.value }}</h3>
+            <div style="font-weight: 700; color: var(--text-secondary); margin-bottom: 0.5rem;">{{ metric.label }}</div>
+            <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.75rem;">Target: {{ metric.target_label }}</div>
+            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; line-height: 1.5;">{{ metric.description }}</p>
+            <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
+                <strong style="display: block; color: var(--text-primary); margin-bottom: 0.2rem;">Why it matters</strong>
                 {{ metric.impact }}
             </div>
         </article>
@@ -151,30 +151,30 @@ setTimeout(function () {
 
 {% if audit_run.summary.has_vitals_failure %}
 <section class="container" style="margin-bottom: 2rem;">
-    <div style="background: #fef2f2; border: 2px solid #ef4444; padding: 2rem; border-radius: 20px; box-shadow: 0 10px 15px -3px rgba(239, 68, 68, 0.1);">
+    <div style="background: rgba(239, 68, 68, 0.1); border: 2px solid #ef4444; padding: 2rem; border-radius: var(--radius-lg); backdrop-filter: var(--glass-blur);">
         <div style="display: flex; gap: 1.5rem; align-items: center;">
-            <div style="font-size: 0.75rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #b91c1c;">Alert</div>
+            <div style="font-size: 0.75rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #ef4444;">Alert</div>
             <div>
-                <h2 style="color: #991b1b; margin-bottom: 0.5rem; font-size: 1.5rem;">Critical Web Vitals Failure Detected</h2>
-                <p style="color: #b91c1c; margin-bottom: 1rem; font-weight: 500;">Our engine identified performance bottlenecks that are actively damaging search visibility and user conversion.</p>
+                <h2 style="color: #f8fafc; margin-bottom: 0.5rem; font-size: 1.5rem;">Critical Web Vitals Failure Detected</h2>
+                <p style="color: var(--text-secondary); margin-bottom: 1rem; font-weight: 500;">Our engine identified performance bottlenecks that are actively damaging search visibility and user conversion.</p>
             </div>
         </div>
 
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
             {% for failure in audit_run.summary.vitals_failures %}
-            <div style="background: #ffffff; border: 1px solid #e2e8f0; padding: 1.25rem; border-radius: 12px; border-left: 4px solid #ef4444;">
-                <div style="font-weight: 800; color: #1e293b; font-size: 0.9rem; margin-bottom: 0.25rem;">{{ failure.metric }}</div>
+            <div class="system-card" style="border-left: 4px solid #ef4444; padding: 1.25rem;">
+                <div style="font-weight: 800; color: var(--text-primary); font-size: 0.9rem; margin-bottom: 0.25rem;">{{ failure.metric }}</div>
                 <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 0.5rem;">
-                    <span style="color: #dc2626; font-weight: 900; font-size: 1.25rem;">{{ failure.value }}</span>
-                    <span style="color: #64748b; font-size: 0.75rem;">(Limit: {{ failure.threshold }})</span>
+                    <span style="color: #ef4444; font-weight: 900; font-size: 1.25rem;">{{ failure.value }}</span>
+                    <span style="color: var(--text-muted); font-size: 0.75rem;">(Limit: {{ failure.threshold }})</span>
                 </div>
-                <p style="font-size: 0.8rem; color: #64748b; margin: 0; line-height: 1.4;">{{ failure.impact }}</p>
+                <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">{{ failure.impact }}</p>
             </div>
             {% endfor %}
         </div>
 
         <div style="margin-top: 2rem; text-align: center;">
-            <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" style="display: inline-flex; align-items: center; gap: 10px; background: #ef4444; color: white; padding: 0.75rem 1.5rem; border-radius: 50px; text-decoration: none; font-weight: 700; transition: transform 0.2s;">
+            <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-primary">
                 Unlock Performance Workflows <span>&rarr;</span>
             </a>
         </div>
@@ -182,55 +182,55 @@ setTimeout(function () {
 </section>
 {% endif %}
 
-<section class="packages-section" style="background: #ffffff; border: 1px solid #e2e8f0; border-top: 1px solid rgba(255, 255, 255,0.05);">
+<section class="packages-section" style="border-top: 1px solid var(--border-glass);">
     <div class="container">
         <div class="section-heading">
             <p class="eyebrow">Recommended Modules</p>
-            <h2>What to unlock inside the product</h2>
-            <p class="section-text">These upgrades map directly to the score gaps detected in your audit and keep the work inside the platform.</p>
+            <h2 style="color: var(--text-primary);">What to unlock inside the product</h2>
+            <p class="section-text" style="color: var(--text-secondary);">These upgrades map directly to the score gaps detected in your audit and keep the work inside the platform.</p>
         </div>
 
         <div class="system-grid">
             {% for module in product_modules %}
             <article class="system-card" style="border-top: 4px solid var(--signal);">
-                <div class="advice-icon" style="margin-bottom: 1rem;">{{ module.icon|default:"VRT" }}</div>
+                <div class="advice-icon" style="margin-bottom: 1rem; color: var(--brand-primary); font-weight: 800;">{{ module.icon|default:"VRT" }}</div>
                 <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 0.5rem;">
-                    <h3 style="margin: 0;">{{ module.title }}</h3>
+                    <h3 style="margin: 0; color: var(--text-primary);">{{ module.title }}</h3>
                     <span class="score-pill score-high" style="font-size: 0.65rem;">{{ module.plan|default:"Plan" }}</span>
                 </div>
-                <p style="font-weight: 600; color: var(--ink); margin-bottom: 0.5rem; line-height: 1.4;">
+                <p style="font-weight: 600; color: var(--text-secondary); margin-bottom: 0.5rem; line-height: 1.4;">
                     {{ module.reason }}
                 </p>
                 <div style="background: rgba(16, 185, 129, 0.08); padding: 1rem; border-radius: 12px; font-size: 0.85rem; border-left: 3px solid #10b981;">
-                    <strong style="display: block; color: #059669; margin-bottom: 4px; font-size: 0.75rem; text-transform: uppercase;">In-Product Outcome:</strong>
+                    <strong style="display: block; color: #10b981; margin-bottom: 4px; font-size: 0.75rem; text-transform: uppercase;">In-Product Outcome:</strong>
                     {{ module.impact }}
                 </div>
                 <div style="margin-top: 1.5rem;">
-                    <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" style="font-size: 0.85rem; color: var(--signal); font-weight: 700; text-decoration: none; display: flex; align-items: center; gap: 5px;">
+                    <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
                         {{ module.cta_label|default:"Unlock in workspace" }} <span>&rarr;</span>
                     </a>
                 </div>
             </article>
             {% empty %}
             <article class="system-card">
-                <h3>Baseline product fit is healthy</h3>
-                <p>Your current infrastructure is in a healthy range. The next step is scale, history tracking, and automation rather than urgent repair.</p>
+                <h3 style="color: var(--text-primary);">Baseline product fit is healthy</h3>
+                <p style="color: var(--text-secondary);">Your current infrastructure is in a healthy range. The next step is scale, history tracking, and automation rather than urgent repair.</p>
             </article>
             {% endfor %}
         </div>
     </div>
 </section>
 
-<section class="experience-section">
+<section class="experience-section" style="border-top: 1px solid var(--border-glass);">
     <div class="container">
         <div class="section-heading">
             <p class="eyebrow">Priority Recommendations</p>
-            <h2>What to fix first</h2>
+            <h2 style="color: var(--text-primary);">What to fix first</h2>
         </div>
         <div class="advice-grid" style="margin-top: 2rem;">
             {% for recommendation in featured_recommendations %}
-            <article class="advice-card severity-{{ recommendation.severity|upper }}" style="padding: 1.5rem;">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1rem;">
+            <article class="system-card severity-{{ recommendation.severity|upper }}" style="padding: 2rem; border-left: 6px solid {% if recommendation.priority_score >= 80 %}#ef4444{% elif recommendation.priority_score >= 60 %}#ea580c{% else %}#10b981{% endif %};">
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem;">
                     <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
                         <span class="score-pill {% if recommendation.priority_score >= 80 %}score-low{% elif recommendation.priority_score >= 60 %}score-med{% else %}score-high{% endif %}" style="font-size: 0.65rem;">
                             {{ recommendation.category }}
@@ -243,94 +243,72 @@ setTimeout(function () {
                         <span class="score-pill score-high" style="font-size: 0.65rem;">
                             {{ recommendation.category_issue_count }} {{ recommendation.category|lower }} issue{{ recommendation.category_issue_count|pluralize }}
                         </span>
-                        <span class="score-pill score-med" style="font-size: 0.65rem;">
-                            {{ recommendation.suggested_plan }}
-                        </span>
-                        <span class="score-pill {% if recommendation.evidence_status == 'strong' %}score-high{% elif recommendation.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.65rem;">
-                            {{ recommendation.confidence_label }}
-                        </span>
                     </div>
-                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--signal);">Priority {{ recommendation.priority_score }}</span>
+                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--brand-primary); letter-spacing: 0.05em; text-transform: uppercase;">Priority {{ recommendation.priority_score }}</span>
                 </div>
-                <h4 style="margin-bottom: 0.75rem; font-size: 1rem; color: var(--ink);">{{ recommendation.title }}</h4>
-                <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 0.75rem; line-height: 1.5;">{{ recommendation.description }}</p>
-                <div style="background: rgba(14, 165, 233, 0.05); padding: 1rem; border-radius: 12px; font-size: 0.85rem; border-left: 3px solid var(--signal);">
-                    <strong style="display: block; color: var(--signal); margin-bottom: 4px; font-size: 0.75rem; text-transform: uppercase;">Strategic Fix:</strong>
-                    {{ recommendation.recommended_fix }}
+                <h4 style="margin-bottom: 0.75rem; font-size: 1.25rem; color: var(--text-primary);">{{ recommendation.title }}</h4>
+                <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.6;">{{ recommendation.description }}</p>
+                <div style="background: rgba(56, 189, 248, 0.08); padding: 1.25rem; border-radius: 16px; font-size: 0.9rem; border-left: 4px solid var(--brand-primary); margin-bottom: 1.5rem;">
+                    <strong style="display: block; color: var(--brand-primary); margin-bottom: 6px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Strategic Fix:</strong>
+                    <span style="color: var(--text-primary); line-height: 1.6;">{{ recommendation.recommended_fix }}</span>
                 </div>
-                <div style="margin-top: 1rem; font-size: 0.78rem; color: #64748b; line-height: 1.5;">
-                    <strong style="display: block; margin-bottom: 0.25rem; color: var(--ink);">Expected Impact</strong>
-                    {{ recommendation.estimated_impact }}
-                </div>
-                <div style="margin-top: 1rem; font-size: 0.78rem; color: #64748b; line-height: 1.5;">
-                    <strong style="display: block; margin-bottom: 0.25rem; color: var(--ink);">Evidence</strong>
-                    {{ recommendation.evidence_summary }}{% if recommendation.evidence_score %} | Score {{ recommendation.evidence_score }}{% endif %}
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
+                        <strong style="display: block; margin-bottom: 0.35rem; color: var(--text-primary); text-transform: uppercase; font-size: 0.7rem;">Expected Impact</strong>
+                        {{ recommendation.estimated_impact }}
+                    </div>
+                    <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
+                        <strong style="display: block; margin-bottom: 0.35rem; color: var(--text-primary); text-transform: uppercase; font-size: 0.7rem;">Evidence</strong>
+                        {{ recommendation.evidence_summary }}{% if recommendation.evidence_score %} | Score {{ recommendation.evidence_score }}{% endif %}
+                    </div>
                 </div>
                 {% if recommendation.grouped_issue_titles and recommendation.grouped_issue_titles|length > 1 %}
-                <div style="margin-top: 1rem; font-size: 0.78rem; color: #64748b; line-height: 1.5;">
-                    <strong style="display: block; margin-bottom: 0.25rem; color: var(--ink);">Grouped Signals</strong>
+                <div style="margin-top: 1.25rem; font-size: 0.8rem; color: var(--text-muted); padding-top: 1rem; border-top: 1px solid var(--border-glass);">
+                    <strong style="color: var(--text-secondary); font-size: 0.7rem; text-transform: uppercase; margin-right: 0.5rem;">Signals:</strong>
                     {{ recommendation.grouped_issue_titles|join:", " }}
                 </div>
                 {% endif %}
-                {% if recommendation.affected_pages_count and recommendation.affected_pages_count > 1 %}
-                <div style="margin-top: 1rem; font-size: 0.78rem; color: #64748b; line-height: 1.5;">
-                    <strong style="display: block; margin-bottom: 0.25rem; color: var(--ink);">Affected Pages</strong>
-                    {{ recommendation.affected_pages_count }} pages show this issue.
-                </div>
-                {% endif %}
-                {% if recommendation.page_examples %}
-                <div style="margin-top: 1rem; font-size: 0.72rem; color: #64748b; line-height: 1.5;">
-                    <strong style="display: block; margin-bottom: 0.25rem; color: var(--ink);">Examples</strong>
-                    {% for url in recommendation.page_examples %}
-                    <div style="font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
-                    {% endfor %}
-                </div>
-                {% elif recommendation.page_url %}
-                <div style="margin-top: 1rem; font-size: 0.7rem; color: #64748b; font-family: monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">
-                    Reference: {{ recommendation.page_url }}
-                </div>
-                {% endif %}
-                <div style="margin-top: 1.5rem;">
-                    <a href="{% url 'core:home' %}#packages" style="font-size: 0.85rem; color: var(--signal); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px; margin-right: 1rem;">
-                        View {{ recommendation.suggested_plan }} plan <span>&rarr;</span>
+                <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+                    <a href="{% url 'core:home' %}#packages" class="button button-primary" style="font-size: 0.85rem;">
+                        View Plan <span>&rarr;</span>
                     </a>
-                    <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" style="font-size: 0.85rem; color: var(--ink); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+                    <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-secondary" style="font-size: 0.85rem;">
                         Create workspace <span>&rarr;</span>
                     </a>
                 </div>
             </article>
             {% empty %}
-            <article class="advice-card severity-LOW" style="padding: 1.5rem;">
-                <h4 style="margin-bottom: 0.75rem; font-size: 1rem; color: var(--ink);">No urgent recommendation set</h4>
-                <p style="font-size: 0.85rem; color: #64748b; margin: 0;">The current crawl did not produce a priority remediation list.</p>
+            <article class="system-card" style="padding: 2rem;">
+                <h4 style="margin-bottom: 0.75rem; font-size: 1.25rem; color: var(--text-primary);">No urgent recommendations</h4>
+                <p style="font-size: 0.95rem; color: var(--text-secondary); margin: 0;">The current crawl did not produce a priority remediation list.</p>
             </article>
             {% endfor %}
         </div>
     </div>
 </section>
 
-<section class="packages-section" style="background: #ffffff; border: 1px solid #e2e8f0; border-top: 1px solid rgba(255, 255, 255,0.05);">
+<section class="packages-section" style="border-top: 1px solid var(--border-glass);">
     <div class="container">
         <div class="section-heading">
             <p class="eyebrow">Score Breakdown</p>
-            <h2>How the audit scored each growth layer</h2>
-            <p class="section-text">Each score includes the target gap, issue count, and the next corrective step.</p>
+            <h2 style="color: var(--text-primary);">How the audit scored each growth layer</h2>
+            <p class="section-text" style="color: var(--text-secondary);">Each score includes the target gap, issue count, and the next corrective step.</p>
         </div>
 
         <div class="system-grid">
             {% for key, item in score_breakdown.items %}
             <article class="system-card" style="border-top: 4px solid {% if item.status == 'strong' %}#16a34a{% elif item.status == 'stable' %}#0ea5e9{% elif item.status == 'weak' %}#ea580c{% else %}#dc2626{% endif %};">
-                <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 0.75rem;">
-                    <h3 style="margin: 0;">{{ item.label }}</h3>
-                    <span style="font-size: 1.4rem; font-weight: 900; color: var(--ink);">{{ item.score }}</span>
+                <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 1rem;">
+                    <h3 style="margin: 0; color: var(--text-primary);">{{ item.label }}</h3>
+                    <span style="font-size: 1.75rem; font-weight: 900; color: var(--text-primary);">{{ item.score }}</span>
                 </div>
-                <p style="font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: #64748b; margin-bottom: 0.75rem;">
+                <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 800; margin-bottom: 0.75rem;">
                     {{ item.status }} | {{ item.issues }} issue{{ item.issues|pluralize }}
                 </p>
-                <p style="margin-bottom: 0.75rem; color: #64748b; line-height: 1.5;">{{ item.explanation }}</p>
-                <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; font-size: 0.85rem; line-height: 1.5;">
-                    <strong style="display: block; color: var(--ink); margin-bottom: 0.25rem;">Next Step</strong>
-                    {{ item.next_step }}
+                <p style="margin-bottom: 1.25rem; color: var(--text-secondary); line-height: 1.6;">{{ item.explanation }}</p>
+                <div style="background: rgba(255, 255, 255, 0.03); padding: 1.25rem; border-radius: 12px; font-size: 0.85rem; line-height: 1.6; border: 1px solid var(--border-glass);">
+                    <strong style="display: block; color: var(--text-primary); margin-bottom: 0.35rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Next Step</strong>
+                    <span style="color: var(--text-secondary);">{{ item.next_step }}</span>
                 </div>
             </article>
             {% endfor %}
@@ -371,56 +349,49 @@ setTimeout(function () {
 </section>
 {% endif %}
 
-<section class="faq-section" style="background: var(--panel);">
+<section class="faq-section" style="border-top: 1px solid var(--border-glass);">
     <div class="container">
         <div class="section-heading">
             <p class="eyebrow">Detailed Findings</p>
-            <h2>Secondary action queue</h2>
+            <h2 style="color: var(--text-primary);">Secondary action queue</h2>
         </div>
         <div class="advice-grid">
             {% for recommendation in secondary_recommendations|slice:":6" %}
-            <article class="advice-card severity-{{ recommendation.severity|upper }}">
-                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.5rem;">
-                    <p class="eyebrow" style="font-size: 0.65rem; margin: 0; color: var(--signal);">{{ recommendation.category }}</p>
+            <article class="system-card severity-{{ recommendation.severity|upper }}" style="padding: 1.5rem;">
+                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
+                    <p class="eyebrow" style="font-size: 0.65rem; margin: 0; color: var(--brand-primary); font-weight: 800;">{{ recommendation.category }}</p>
                     {% if recommendation.root_cause_label %}
                     <span class="score-pill score-high" style="font-size: 0.65rem;">{{ recommendation.root_cause_label }}</span>
                     {% endif %}
                     <span class="score-pill {% if recommendation.evidence_status == 'strong' %}score-high{% elif recommendation.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.65rem;">{{ recommendation.confidence_label }}</span>
                 </div>
-                <h3 style="margin-bottom: 1rem; font-size: 1.15rem;">{{ recommendation.title }}</h3>
-                <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; font-size: 0.9rem; line-height: 1.6;">
-                    <strong style="display: block; opacity: 0.6; margin-bottom: 4px;">Resolution Recommendation:</strong>
-                    {{ recommendation.recommended_fix }}
+                <h3 style="margin-bottom: 1rem; font-size: 1.25rem; color: var(--text-primary);">{{ recommendation.title }}</h3>
+                <div style="background: rgba(255, 255, 255, 0.03); padding: 1.25rem; border-radius: 12px; font-size: 0.9rem; line-height: 1.7; border: 1px solid var(--border-glass); margin-bottom: 1.25rem;">
+                    <strong style="display: block; color: var(--text-secondary); opacity: 0.8; margin-bottom: 6px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Resolution Recommendation:</strong>
+                    <span style="color: var(--text-primary);">{{ recommendation.recommended_fix }}</span>
                 </div>
-                <div style="margin-top: 1rem; font-size: 0.82rem; color: #64748b; line-height: 1.5;">
-                    <strong style="display: block; color: var(--ink); margin-bottom: 0.25rem;">Evidence</strong>
-                    {{ recommendation.evidence_summary }}{% if recommendation.evidence_score %} | Score {{ recommendation.evidence_score }}{% endif %}
+                <div style="display: grid; gap: 1rem; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6;">
+                    <div>
+                        <strong style="display: block; color: var(--text-primary); margin-bottom: 0.25rem; font-size: 0.7rem; text-transform: uppercase;">Evidence</strong>
+                        {{ recommendation.evidence_summary }}{% if recommendation.evidence_score %} | Score {{ recommendation.evidence_score }}{% endif %}
+                    </div>
+                    <div>
+                        <strong style="display: block; color: var(--text-primary); margin-bottom: 0.25rem; font-size: 0.7rem; text-transform: uppercase;">Category Count</strong>
+                        {{ recommendation.category_issue_count }} {{ recommendation.category|lower }} issue{{ recommendation.category_issue_count|pluralize }} detected in this audit.
+                    </div>
                 </div>
-                <div style="margin-top: 1rem; font-size: 0.78rem; color: #64748b; line-height: 1.5;">
-                    <strong style="display: block; margin-bottom: 0.25rem; color: var(--ink);">Category Count</strong>
-                    {{ recommendation.category_issue_count }} {{ recommendation.category|lower }} issue{{ recommendation.category_issue_count|pluralize }} detected in this audit.
-                </div>
-                {% if recommendation.technical_steps %}
-                <div style="margin-top: 1rem; font-size: 0.82rem; color: #64748b; line-height: 1.5;">
-                    <strong style="display: block; color: var(--ink); margin-bottom: 0.35rem;">Implementation Steps</strong>
-                    {% for step in recommendation.technical_steps %}
-                    <div>{{ forloop.counter }}. {{ step }}</div>
-                    {% endfor %}
-                </div>
-                {% endif %}
             </article>
             {% empty %}
-            <article class="advice-card severity-LOW">
-                <p class="eyebrow" style="font-size: 0.65rem; margin-bottom: 0.5rem; color: var(--signal);">Audit</p>
-                <h3 style="margin-bottom: 1rem; font-size: 1.15rem;">No secondary issue set available</h3>
-                <div style="background: #f8fafc; padding: 1rem; border-radius: 12px; font-size: 0.9rem; line-height: 1.6;">
-                    The primary recommendation list above already captures the current detected priorities.
-                </div>
+            <article class="system-card" style="padding: 1.5rem;">
+                <p class="eyebrow" style="font-size: 0.65rem; margin-bottom: 0.5rem; color: var(--brand-primary); font-weight: 800;">Audit</p>
+                <h3 style="margin-bottom: 1rem; font-size: 1.15rem; color: var(--text-primary);">No secondary issue set available</h3>
+                <p style="color: var(--text-secondary); font-size: 0.9rem;">The primary recommendation list above already captures the current detected priorities.</p>
             </article>
             {% endfor %}
         </div>
         {% if locked_recommendation_count %}
-        <div style="margin-top: 1.5rem; padding: 1rem 1.25rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #f8fafc; font-size: 0.95rem;">
+        <div style="margin-top: 2rem; padding: 1.25rem 1.5rem; border-radius: 20px; background: rgba(56, 189, 248, 0.08); border: 1px solid var(--border-active); color: var(--text-primary); font-size: 1rem; font-weight: 600; text-align: center;">
+            <i class="fas fa-lock" style="margin-right: 10px; color: var(--brand-primary);"></i>
             {{ locked_recommendation_count }} more detailed recommendation{{ locked_recommendation_count|pluralize }} unlock inside a higher workspace plan.
         </div>
         {% endif %}
@@ -459,27 +430,30 @@ setTimeout(function () {
     </div>
 </section>
 
-<section class="packages-section" style="background: #ffffff; border: 1px solid #e2e8f0; border-top: 1px solid rgba(255, 255, 255,0.05);">
+<section class="packages-section" style="border-top: 1px solid var(--border-glass);">
     <div class="container">
         <div class="section-heading">
             <p class="eyebrow">Plans</p>
-            <h2>Choose the tier that matches this audit</h2>
-            <p class="section-text">Plan cards are live for testing now. Enforcement is deferred so we can finish the product flow before billing gates are turned on.</p>
+            <h2 style="color: var(--text-primary);">Choose the tier that matches this audit</h2>
+            <p class="section-text" style="color: var(--text-secondary);">Plan cards are live for testing now. Enforcement is deferred so we can finish the product flow before billing gates are turned on.</p>
         </div>
         <div class="system-grid">
             {% for package in packages %}
-            <article class="system-card" style="border-top: 4px solid {% if package.name == 'Authority' %}#f8fafc{% else %}var(--signal){% endif %};">
-                <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 0.75rem;">
-                    <h3 style="margin: 0;">{{ package.name }}</h3>
-                    <span style="font-size: 1rem; font-weight: 900; color: var(--ink);">{{ package.price }}</span>
+            <article class="system-card" style="border-top: 4px solid {% if package.name == 'Authority' %}#f8fafc{% else %}var(--brand-primary){% endif %};">
+                <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 1rem;">
+                    <h3 style="margin: 0; color: var(--text-primary);">{{ package.name }}</h3>
+                    <span style="font-size: 1.25rem; font-weight: 900; color: var(--text-primary);">{{ package.price }}</span>
                 </div>
-                <p style="font-weight: 600; color: #64748b; margin-bottom: 1rem;">{{ package.label }}</p>
-                <div style="display: grid; gap: 0.5rem; font-size: 0.88rem; color: #64748b; margin-bottom: 1.25rem;">
+                <p style="font-weight: 600; color: var(--text-secondary); margin-bottom: 1.25rem; font-size: 0.95rem;">{{ package.label }}</p>
+                <div style="display: grid; gap: 0.75rem; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 2rem;">
                     {% for feature in package.features %}
-                    <div>{{ feature }}</div>
+                    <div style="display: flex; gap: 8px; align-items: center;">
+                        <i class="fas fa-check" style="color: var(--success); font-size: 0.75rem;"></i>
+                        {{ feature }}
+                    </div>
                     {% endfor %}
                 </div>
-                <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" style="font-size: 0.85rem; color: var(--signal); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+                <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-primary" style="width: 100%; font-size: 0.9rem;">
                     Start with {{ package.name }} <span>&rarr;</span>
                 </a>
             </article>
@@ -489,24 +463,24 @@ setTimeout(function () {
 </section>
 
 {% if custom_work_items %}
-<section class="packages-section" style="background: #ffffff; border: 1px solid #e2e8f0; border-top: 1px solid rgba(255, 255, 255,0.05);">
+<section class="packages-section" style="border-top: 1px solid var(--border-glass);">
     <div class="container">
         <div class="section-heading">
             <p class="eyebrow">Custom Work Exceptions</p>
-            <h2>When to talk to us directly</h2>
-            <p class="section-text">Most audit outcomes should stay inside the product. These exceptions are for rebuilds, app work, or bespoke implementations.</p>
+            <h2 style="color: var(--text-primary);">When to talk to us directly</h2>
+            <p class="section-text" style="color: var(--text-secondary);">Most audit outcomes should stay inside the product. These exceptions are for rebuilds, app work, or bespoke implementations.</p>
         </div>
         <div class="system-grid">
             {% for item in custom_work_items %}
-            <article class="system-card" style="border-top: 4px solid #f8fafc;">
-                <h3>{{ item.title }}</h3>
-                <p style="font-weight: 600; color: var(--ink); margin-bottom: 0.75rem; line-height: 1.4;">{{ item.reason }}</p>
-                <div style="background: #ffffff; padding: 1rem; border-radius: 12px; font-size: 0.85rem; line-height: 1.5;">
-                    <strong style="display: block; color: var(--ink); margin-bottom: 0.25rem;">Use Case</strong>
-                    {{ item.impact }}
+            <article class="system-card" style="border-top: 4px solid var(--brand-secondary);">
+                <h3 style="color: var(--text-primary); margin-bottom: 0.75rem;">{{ item.title }}</h3>
+                <p style="font-weight: 600; color: var(--text-primary); margin-bottom: 1rem; line-height: 1.5;">{{ item.reason }}</p>
+                <div style="background: rgba(255, 255, 255, 0.03); padding: 1.25rem; border-radius: 12px; font-size: 0.88rem; line-height: 1.6; border: 1px solid var(--border-glass);">
+                    <strong style="display: block; color: var(--text-primary); margin-bottom: 0.35rem; font-size: 0.75rem; text-transform: uppercase;">Use Case</strong>
+                    <span style="color: var(--text-secondary);">{{ item.impact }}</span>
                 </div>
-                <div style="margin-top: 1.5rem;">
-                    <a href="{% url 'core:home' %}#contact" style="font-size: 0.85rem; color: var(--ink); font-weight: 700; text-decoration: none; display: inline-flex; align-items: center; gap: 5px;">
+                <div style="margin-top: 2rem;">
+                    <a href="{% url 'core:home' %}#contact" class="button button-secondary" style="font-size: 0.85rem;">
                         {{ item.cta_label }} <span>&rarr;</span>
                     </a>
                 </div>
@@ -517,34 +491,34 @@ setTimeout(function () {
 </section>
 {% endif %}
 
-<section class="contact-section">
+<section class="contact-section" style="border-top: 1px solid var(--border-glass);">
     <div class="container">
         <div class="section-heading">
             <p class="eyebrow">Technical Footprint</p>
-            <h2>What we actually inspected</h2>
+            <h2 style="color: var(--text-primary);">What we actually inspected</h2>
         </div>
-        <div class="responsive-table-shell">
-            <table class="responsive-table">
+        <div class="responsive-table-shell" style="background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border-glass); overflow: hidden;">
+            <table class="responsive-table" style="width: 100%; border-collapse: collapse;">
                 <thead>
-                    <tr style="border-bottom: 2px solid #f1f5f9; text-align: left;">
-                        <th style="padding: 1rem;" class="eyebrow">URL Inspected</th>
-                        <th style="padding: 1rem;" class="eyebrow">Load Time</th>
-                        <th style="padding: 1rem;" class="eyebrow">Words</th>
-                        <th style="padding: 1rem;" class="eyebrow">Links</th>
-                        <th style="padding: 1rem;" class="eyebrow">Status</th>
+                    <tr style="border-bottom: 1px solid var(--border-glass); text-align: left; background: rgba(255,255,255,0.02);">
+                        <th style="padding: 1.25rem; color: var(--text-primary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;">URL Inspected</th>
+                        <th style="padding: 1.25rem; color: var(--text-primary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;">Load Time</th>
+                        <th style="padding: 1.25rem; color: var(--text-primary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;">Words</th>
+                        <th style="padding: 1.25rem; color: var(--text-primary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;">Links</th>
+                        <th style="padding: 1.25rem; color: var(--text-primary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;">Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for page in pages %}
-                    <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
-                        <td style="padding: 1rem;">
-                            <div class="url-wrap-mono" style="font-weight: 600; font-size: 0.95rem;">{{ page.url }}</div>
-                            <div style="font-size: 0.75rem; color: #64748b;">Title: {{ page.title|truncatechars:70|default:"Missing" }}</div>
+                    <tr style="border-bottom: 1px solid var(--border-glass); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
+                        <td style="padding: 1.25rem;">
+                            <div class="url-wrap-mono" style="font-weight: 600; font-size: 0.95rem; color: var(--brand-primary); word-break: break-all;">{{ page.url }}</div>
+                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Title: {{ page.title|truncatechars:70|default:"Missing" }}</div>
                         </td>
-                        <td style="padding: 1rem; font-size: 0.9rem;">{{ page.response_time_ms }}ms</td>
-                        <td style="padding: 1rem; font-size: 0.9rem;">{{ page.word_count|default:0 }}</td>
-                        <td style="padding: 1rem; font-size: 0.9rem;">{{ page.internal_link_count|default:0 }}</td>
-                        <td style="padding: 1rem;">
+                        <td style="padding: 1.25rem; font-size: 0.9rem; color: var(--text-secondary);">{{ page.response_time_ms }}ms</td>
+                        <td style="padding: 1.25rem; font-size: 0.9rem; color: var(--text-secondary);">{{ page.word_count|default:0 }}</td>
+                        <td style="padding: 1.25rem; font-size: 0.9rem; color: var(--text-secondary);">{{ page.internal_link_count|default:0 }}</td>
+                        <td style="padding: 1.25rem;">
                             <span class="score-pill {% if page.status_code == 200 %}score-high{% else %}score-low{% endif %}" style="font-size: 0.75rem;">
                                 {{ page.status_code }}
                             </span>

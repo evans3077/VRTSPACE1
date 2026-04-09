@@ -37,7 +37,7 @@
             </div>
             {% endif %}
 
-            <div class="workspace-flow-note" style="margin-top: 1rem; border-color: var(--border-glass); background: rgba(255, 255, 255, 0.05);">
+            <div class="workspace-flow-note" style="margin-top: 1rem; border-color: var(--border-glass); background: rgba(56, 189, 248, 0.05); color: var(--text-secondary); font-size: 0.9rem; padding: 1rem; border-radius: 12px; border: 1px solid var(--border-glass);">
                 Reuse the current audit for SEO, AEO, and content. Run another audit only when you need a fresh crawl or want to validate changes.
             </div>
 
@@ -65,11 +65,11 @@
 <section class="packages-section" style="padding-top: 0;">
     <div class="container-fluid page-stack">
         {% if project.pk and latest_audit %}
-        <article class="system-card" style="margin-bottom: 2rem; border-color: rgba(139, 92, 246, 0.3); background: rgba(139, 92, 246, 0.05);">
+        <article class="system-card" style="margin-bottom: 2rem; border-color: rgba(139, 92, 246, 0.3); background: rgba(139, 92, 246, 0.05); backdrop-filter: var(--glass-blur);">
             <div class="section-heading" style="text-align: left; margin-bottom: 1.5rem;">
                 <p class="eyebrow" style="color: var(--signal);">Command Center</p>
-                <h2 style="font-size: 2rem;">Priority Execution</h2>
-                <p class="section-text" style="max-width: 720px; margin-left: 0;">Continue the work from the current audit base. The workspace should always make the next operational move obvious.</p>
+                <h2 style="font-size: 2rem; color: var(--text-primary);">Priority Execution</h2>
+                <p class="section-text" style="max-width: 720px; margin-left: 0; color: var(--text-secondary);">Continue the work from the current audit base. The workspace should always make the next operational move obvious.</p>
             </div>
             
             <div class="command-module-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
@@ -145,7 +145,7 @@
                         </div>
                     </summary>
                     <div class="workspace-expandable-body">
-                        <div style="display: grid; gap: 0.35rem; color: #64748b; font-size: 0.84rem;">
+                        <div style="display: grid; gap: 0.35rem; color: var(--text-muted); font-size: 0.84rem;">
                             <div>{{ item.normalized_domain }}</div>
                             {% if item.business_type or item.location %}
                             <div>{{ item.business_type_label|default:"Unclassified" }}{% if item.location %} | {{ item.location }}{% endif %}</div>
@@ -156,7 +156,7 @@
                         </div>
                         <div class="seo-inline-tags" style="margin-top: 0.85rem;">
                             {% for tag in item.focus_tags %}
-                            <span class="seo-inline-tag">{{ tag }}</span>
+                            <span class="seo-inline-tag" style="background: rgba(255,255,255,0.05); border: 1px solid var(--border-glass); color: var(--text-secondary);">{{ tag }}</span>
                             {% endfor %}
                         </div>
                         <div class="workspace-expandable-metrics">
@@ -236,7 +236,7 @@
                         {% endif %}
                     </div>
                 </div>
-                <div style="margin-top: 1rem; color: #64748b; line-height: 1.6;">
+                <div style="margin-top: 1rem; color: var(--text-muted); line-height: 1.6;">
                     Keep the workspace focused on project work. Billing, top-ups, and personal settings live in your account area.
                 </div>
                 <div style="margin-top: 1rem;">
@@ -255,7 +255,7 @@
                     <span class="button button-primary">Start</span>
                 </summary>
                 <div class="workspace-create-body">
-                    <div style="color: #64748b; line-height: 1.6; margin-bottom: 1rem;">
+                    <div style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">
                         Use this when a user starts from SEO or AEO. The audit becomes the base and the workspace is attached automatically.
                     </div>
                     <form method="post" action="{% url 'tools:workspace-audit-start' %}" style="display: grid; gap: 0.85rem;">
@@ -410,7 +410,7 @@
                     <span class="button button-primary">Create</span>
                 </summary>
                 <div class="workspace-create-body">
-                    <div style="color: #64748b; line-height: 1.6; margin-bottom: 1rem;">
+                    <div style="color: var(--text-muted); line-height: 1.6; margin-bottom: 1rem;">
                         Create a separate workspace for another website, client, or brand. Each one keeps its own audit, SEO, AEO, and content history.
                     </div>
                     <form method="post" action="{% url 'tools:workspace-project-create' %}" style="display: grid; gap: 0.85rem;">
@@ -554,12 +554,12 @@
         {% if project.pk %}
 
         <!-- Cross-Module Command Card: Phase 11 Track A -->
-        <div class="command-card" id="command-center">
-            <p class="eyebrow">Command Center</p>
-            <h2 style="color: white; margin: 0.4rem 0 0.2rem; font-size: clamp(1.5rem, 2.5vw, 2rem);">
+        <div class="command-card" id="command-center" style="background: var(--bg-surface); border: 2px solid var(--signal); backdrop-filter: var(--glass-blur);">
+            <p class="eyebrow" style="color: var(--signal);">Command Center</p>
+            <h2 style="color: var(--text-primary); margin: 0.4rem 0 0.2rem; font-size: clamp(1.5rem, 2.5vw, 2rem);">
                 {{ project.name }} &mdash; What to do next
             </h2>
-            <p style="color: rgba(255,255,255,0.65); font-size: 0.9rem; margin: 0 0 0.5rem; line-height: 1.5;">
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin: 0 0 0.5rem; line-height: 1.5;">
                 One view across Audit, SEO, AEO, and Content. Act on the highest-priority item first.
             </p>
             <div class="command-module-grid">
@@ -635,28 +635,28 @@
                     </form>
                 </div>
             </article>
-            <article class="system-card" style="border-top: 4px solid #f8fafc;">
+            <article class="system-card" style="border-top: 4px solid var(--text-primary);">
                 <p class="eyebrow">SEO</p>
-                <h3 style="font-size: 1.4rem;">{% if latest_seo_snapshot %}{{ seo_active_campaign_count|default:0 }} campaign{{ seo_active_campaign_count|default:0|pluralize }}{% else %}Not started{% endif %}</h3>
-                <p>{% if latest_seo_snapshot %}Competitor benchmarks ready. {{ seo_execution_item_count|default:0 }} execution items mapped.{% elif latest_audit %}Audit base ready &mdash; run SEO intelligence to benchmark competitors.{% else %}Run the audit first to unlock SEO.{% endif %}</p>
+                <h3 style="font-size: 1.4rem; color: var(--text-primary);">{% if latest_seo_snapshot %}{{ seo_active_campaign_count|default:0 }} campaign{{ seo_active_campaign_count|default:0|pluralize }}{% else %}Not started{% endif %}</h3>
+                <p style="color: var(--text-secondary);">{% if latest_seo_snapshot %}Competitor benchmarks ready. {{ seo_execution_item_count|default:0 }} execution items mapped.{% elif latest_audit %}Audit base ready &mdash; run SEO intelligence to benchmark competitors.{% else %}Run the audit first to unlock SEO.{% endif %}</p>
                 <div style="margin-top: 1rem;">
                     {% if latest_audit %}<a class="button button-secondary" href="{% url 'seo:workspace-seo' %}">Open SEO</a>
                     {% else %}<a class="button button-secondary" href="#start-audit">Start with audit</a>{% endif %}
                 </div>
             </article>
-            <article class="system-card" style="border-top: 4px solid #ea580c;">
+            <article class="system-card" style="border-top: 4px solid var(--brand-secondary);">
                 <p class="eyebrow">AEO</p>
-                <h3 style="font-size: 1.4rem;">{% if latest_aeo_audit %}Active{% else %}Not started{% endif %}</h3>
-                <p>Entity clarity, answer coverage, and AI visibility against the current audit.</p>
+                <h3 style="font-size: 1.4rem; color: var(--text-primary);">{% if latest_aeo_audit %}Active{% else %}Not started{% endif %}</h3>
+                <p style="color: var(--text-secondary);">Entity clarity, answer coverage, and AI visibility against the current audit.</p>
                 <div style="margin-top: 1rem;">
                     {% if latest_audit %}<a class="button button-secondary" href="{% url 'aeo:workspace-aeo' %}">Open AEO</a>
                     {% else %}<a class="button button-secondary" href="#start-audit">Start with audit</a>{% endif %}
                 </div>
             </article>
-            <article class="system-card" style="border-top: 4px solid #16a34a;">
+            <article class="system-card" style="border-top: 4px solid var(--success);">
                 <p class="eyebrow">Content</p>
-                <h3 style="font-size: 1.4rem;">{% if latest_generated_content %}{{ content_draft_count|default:1 }} draft{{ content_draft_count|default:1|pluralize }}{% else %}Not started{% endif %}</h3>
-                <p>Generate targeted content from SEO and AEO findings. Each draft is tracked and linked to its source signal.</p>
+                <h3 style="font-size: 1.4rem; color: var(--text-primary);">{% if latest_generated_content %}{{ content_draft_count|default:1 }} draft{{ content_draft_count|default:1|pluralize }}{% else %}Not started{% endif %}</h3>
+                <p style="color: var(--text-secondary);">Generate targeted content from SEO and AEO findings. Each draft is tracked and linked to its source signal.</p>
                 <div style="margin-top: 1rem;">
                     {% if latest_audit %}<a class="button button-secondary" href="{% url 'content:workspace-content' %}">Open Content</a>
                     {% else %}<a class="button button-secondary" href="#start-audit">Start with audit</a>{% endif %}

@@ -4,7 +4,7 @@
 <style>
     .agency-dashboard {
         padding: 4rem 0;
-        background: rgba(255, 255, 255, 0.02);
+        background: var(--bg-main);
         min-height: 100vh;
     }
     .dashboard-grid {
@@ -18,10 +18,12 @@
         max-width: none !important;
         font-size: clamp(2.5rem, 4vw, 3.8rem) !important;
         letter-spacing: -0.02em;
+        color: var(--text-primary);
     }
     .section-text {
         max-width: none !important;
         opacity: 0.8;
+        color: var(--text-secondary);
     }
     .sidebar-panel {
         position: sticky;
@@ -30,17 +32,18 @@
         gap: 1.5rem;
     }
     .card {
-        background: #ffffff; border: 1px solid #e2e8f0;
-        border: 1px solid rgba(255, 255, 255, 0.08);
+        background: var(--bg-surface);
+        border: 1px solid var(--border-glass);
         border-radius: 20px;
         padding: 1.5rem;
-        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        box-shadow: var(--shadow-xl);
+        backdrop-filter: var(--glass-blur);
     }
     .card h2 {
         font-size: 1.25rem;
         margin-bottom: 1rem;
-        color: #1e293b;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        color: var(--text-primary);
+        border-bottom: 1px solid var(--border-glass);
         padding-bottom: 0.5rem;
     }
     .score-pill {
@@ -62,28 +65,31 @@
     .page-table th {
         text-align: left;
         padding: 12px;
-        background: #f1f5f9;
+        background: rgba(255, 255, 255, 0.05);
         font-size: 0.85rem;
         text-transform: uppercase;
-        color: #64748b;
+        color: var(--text-primary);
+        letter-spacing: 0.05em;
     }
     .page-table td {
         padding: 12px;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+        border-bottom: 1px solid var(--border-glass);
         font-size: 0.95rem;
+        color: var(--text-secondary);
     }
     .issue-tag {
         font-size: 0.75rem;
         padding: 2px 6px;
         border-radius: 4px;
-        background: #f1f5f9;
+        background: rgba(255, 255, 255, 0.08);
+        color: var(--text-secondary);
         margin-right: 4px;
     }
     .issue-item {
-        padding: 10px;
-        background: #fefefe;
-        border: 1px solid #f1f5f9;
-        border-radius: 8px;
+        padding: 1rem;
+        background: rgba(255, 255, 255, 0.02);
+        border: 1px solid var(--border-glass);
+        border-radius: 12px;
     }
     .severity-border-high { border-left: 4px solid #ef4444; }
     .severity-border-med { border-left: 4px solid #eab308; }
@@ -91,7 +97,7 @@
         width: 100px;
         height: 100px;
         border-radius: 50%;
-        background: conic-gradient(var(--gauge-color) calc(var(--gauge-score) * 1%), #f1f5f9 0);
+        background: conic-gradient(var(--gauge-color) calc(var(--gauge-score) * 1%), rgba(255,255,255,0.05) 0);
         display: flex;
         align-items: center;
         justify-content: center;
@@ -102,14 +108,15 @@
         position: absolute;
         width: 82px;
         height: 82px;
-        background: #ffffff; border: 1px solid #e2e8f0;
+        background: var(--bg-surface);
+        border: 1px solid var(--border-glass);
         border-radius: 50%;
     }
     .gauge-value {
         position: relative;
         font-size: 1.5rem;
         font-weight: 800;
-        color: var(--gauge-color);
+        color: var(--text-primary);
     }
     .score-green { --gauge-color: #16a34a; }
     .score-orange { --gauge-color: #ea580c; }
@@ -162,12 +169,12 @@
                             </span>
                         </li>
                     </ul>
-                    <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid #f1f5f9;">
+                    <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-glass);">
                         <form method="POST" action="{% url 'tools:free-seo-audit' %}" style="margin: 0;">
                             {% csrf_token %}
                             <input type="hidden" name="website" value="{{ audit_run.start_url }}">
                             <input type="hidden" name="company_name" value="{{ audit_run.audit_request.company_name }}">
-                            <button type="submit" class="btn" style="width: 100%; border-radius: 12px; font-weight: 700; background: #2563eb; color: white;">
+                            <button type="submit" class="button button-primary" style="width: 100%;">
                                 Run Expert Refresh
                             </button>
                         </form>
@@ -246,12 +253,12 @@
                         <li style="display: flex; gap: 10px; align-items: start;">
                             <span style="display: flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; background: {{ service.color }}; color: white; border-radius: 50%; font-size: 0.75rem; font-weight: 800;">{{ forloop.counter }}</span>
                             <div style="font-size: 0.8rem;">
-                                <strong>{{ service.service }}</strong>
-                                <div style="color: #64748b; margin-top: 0.2rem;">{{ service.reason|default:service.impact }}</div>
+                                <strong style="color: var(--text-primary);">{{ service.service }}</strong>
+                                <div style="color: var(--text-secondary); margin-top: 0.2rem;">{{ service.reason|default:service.impact }}</div>
                             </div>
                         </li>
                         {% empty %}
-                        <li style="font-size: 0.8rem; color: #64748b;">No immediate upsell path detected from the current audit state.</li>
+                        <li style="font-size: 0.8rem; color: var(--text-muted);">No immediate upsell path detected from the current audit state.</li>
                         {% endfor %}
                     </ul>
                 </article>
@@ -267,15 +274,15 @@
                     <h2>Score Breakdown</h2>
                     <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem;">
                         {% for key, item in score_breakdown.items %}
-                        <div style="padding: 1rem; border: 1px solid rgba(255, 255, 255, 0.08); border-left: 5px solid {% if item.status == 'strong' %}#16a34a{% elif item.status == 'stable' %}#0ea5e9{% elif item.status == 'weak' %}#ea580c{% else %}#dc2626{% endif %}; border-radius: 14px;">
+                        <div style="padding: 1rem; border: 1px solid var(--border-glass); border-left: 5px solid {% if item.status == 'strong' %}#16a34a{% elif item.status == 'stable' %}#0ea5e9{% elif item.status == 'weak' %}#ea580c{% else %}#dc2626{% endif %}; border-radius: 14px; background: rgba(255,255,255,0.01);">
                             <div style="display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 0.5rem;">
-                                <strong style="color: #1e293b;">{{ item.label }}</strong>
-                                <span style="font-weight: 800; color: #1e293b;">{{ item.score }}</span>
+                                <strong style="color: var(--text-primary);">{{ item.label }}</strong>
+                                <span style="font-weight: 800; color: var(--text-primary);">{{ item.score }}</span>
                             </div>
-                            <div style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
+                            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; font-weight: 700;">
                                 {{ item.status }} | {{ item.issues }} issue{{ item.issues|pluralize }}
                             </div>
-                            <div style="font-size: 0.85rem; color: #64748b; line-height: 1.5;">{{ item.next_step }}</div>
+                            <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">{{ item.next_step }}</div>
                         </div>
                         {% endfor %}
                     </div>
@@ -285,24 +292,24 @@
                     <h2>Priority Recommendations</h2>
                     <div style="display: grid; gap: 1rem;">
                         {% for recommendation in recommendations|slice:":6" %}
-                        <div style="padding: 1rem; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px;">
+                        <div style="padding: 1rem; border: 1px solid var(--border-glass); border-radius: 14px; background: rgba(255,255,255,0.01);">
                             <div style="display: flex; justify-content: space-between; gap: 1rem; margin-bottom: 0.5rem;">
-                                <strong style="color: #1e293b;">{{ recommendation.title }}</strong>
+                                <strong style="color: var(--text-primary);">{{ recommendation.title }}</strong>
                                 <span class="score-pill {% if recommendation.priority_score >= 80 %}score-low{% elif recommendation.priority_score >= 60 %}score-med{% else %}score-high{% endif %}">
                                     {{ recommendation.priority_score }}
                                 </span>
                             </div>
-                            <div style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem;">
+                            <div style="font-size: 0.75rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.5rem; font-weight: 700;">
                                 {{ recommendation.category }} | {{ recommendation.impact_level }}
                             </div>
-                            <div style="font-size: 0.88rem; color: #64748b; line-height: 1.6; margin-bottom: 0.75rem;">{{ recommendation.description }}</div>
-                            <div style="font-size: 0.88rem; color: #1e293b; line-height: 1.6;"><strong>Fix:</strong> {{ recommendation.recommended_fix }}</div>
+                            <div style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6; margin-bottom: 0.75rem;">{{ recommendation.description }}</div>
+                            <div style="font-size: 0.88rem; color: var(--text-primary); line-height: 1.6; background: rgba(255,255,255,0.03); padding: 0.75rem; border-radius: 8px;"><strong>Fix:</strong> {{ recommendation.recommended_fix }}</div>
                             {% if recommendation.page_url %}
-                            <div style="font-size: 0.75rem; color: #2563eb; margin-top: 0.5rem;">Page: {{ recommendation.page_url }}</div>
+                            <div style="font-size: 0.75rem; color: var(--brand-primary); margin-top: 0.5rem; font-family: monospace;">Page: {{ recommendation.page_url }}</div>
                             {% endif %}
                         </div>
                         {% empty %}
-                        <div style="font-size: 0.9rem; color: #64748b;">No recommendation set available for this audit.</div>
+                        <div style="font-size: 0.9rem; color: var(--text-muted);">No recommendation set available for this audit.</div>
                         {% endfor %}
                     </div>
                 </article>
@@ -310,14 +317,14 @@
                 {% if audit_run.summary.pagespeed.failed_audits %}
                 <article class="card" style="border-left: 6px solid #dc2626;">
                     <h2>Critical Technical Fixes (Lighthouse)</h2>
-                    <p style="font-size: 0.9rem; color: #64748b; margin-bottom: 1.25rem;">Specific audit failures requiring immediate attention:</p>
+                    <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1.25rem;">Specific audit failures requiring immediate attention:</p>
                     <div style="display: grid; gap: 1rem;">
                         {% for fail in audit_run.summary.pagespeed.failed_audits %}
-                        <div style="padding: 12px; background: #fff1f2; border: 1px solid #fecdd3; border-radius: 12px;">
-                            <div style="font-weight: 800; font-size: 0.95rem; color: #9f1239;">{{ fail.title }}</div>
-                            <div style="font-size: 0.85rem; color: #be123c; margin-top: 4px;">{{ fail.description|striptags }}</div>
+                        <div style="padding: 1rem; background: rgba(220, 38, 38, 0.1); border: 1px solid rgba(220, 38, 38, 0.2); border-radius: 12px; border-left: 4px solid #ef4444;">
+                            <div style="font-weight: 800; font-size: 1rem; color: #f87171;">{{ fail.title }}</div>
+                            <div style="font-size: 0.85rem; color: #fca5a5; margin-top: 6px; line-height: 1.5;">{{ fail.description|striptags }}</div>
                             {% if fail.displayValue %}
-                            <div style="font-size: 0.75rem; font-family: monospace; color: #e11d48; margin-top: 6px; padding: 2px 6px; background: #ffffff; border: 1px solid #e2e8f0; display: inline-block; border-radius: 4px;">
+                            <div style="font-size: 0.75rem; font-family: monospace; color: #f87171; margin-top: 8px; padding: 4px 8px; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.05); display: inline-block; border-radius: 4px;">
                                 Impact: {{ fail.displayValue }}
                             </div>
                             {% endif %}
@@ -329,7 +336,7 @@
 
                 <article class="card">
                     <h2>Technical Inventory</h2>
-                    <p style="font-size: 0.85rem; color: #64748b; margin-bottom: 1rem;">Direct signals extracted by the VRT SPACE diagnostic engine.</p>
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1.5rem;">Direct signals extracted by the VRT SPACE diagnostic engine.</p>
                     <div style="overflow-x: auto;">
                         <table class="page-table">
                             <thead>
@@ -343,12 +350,12 @@
                             </thead>
                             <tbody>
                                 {% for page in pages %}
-                                <tr>
+                                <tr style="transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
                                     <td style="max-width: 220px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                                        <a href="{{ page.url }}" target="_blank" style="color: #2563eb; font-size: 0.8rem;">{{ page.url|truncatechars:36 }}</a>
+                                        <a href="{{ page.url }}" target="_blank" style="color: var(--brand-primary); font-size: 0.8rem; font-weight: 700;">{{ page.url|truncatechars:36 }}</a>
                                     </td>
                                     <td>
-                                        <div style="font-size: 0.75rem;">
+                                        <div style="font-size: 0.75rem; color: var(--text-muted);">
                                             <span title="{{ page.title }}">Title: {{ page.title|length }} chars</span>
                                             <br>
                                             <span title="{{ page.meta_description }}">Meta: {{ page.meta_description|length }} chars</span>
@@ -356,20 +363,20 @@
                                     </td>
                                     <td>
                                         {% if page.h1 %}
-                                        <span style="font-size: 0.75rem; color: #16a34a;">Present</span>
+                                        <span style="font-size: 0.75rem; color: #16a34a; font-weight: 800;">Present</span>
                                         {% else %}
-                                        <span style="font-size: 0.75rem; color: #dc2626;">Missing</span>
+                                        <span style="font-size: 0.75rem; color: #dc2626; font-weight: 800;">Missing</span>
                                         {% endif %}
                                     </td>
                                     <td>
-                                        <div style="font-size: 0.75rem;">
+                                        <div style="font-size: 0.75rem; color: var(--text-muted);">
                                             Words: {{ page.word_count }}
                                             <br>
                                             Alt Gaps: {{ page.images_missing_alt }}
                                         </div>
                                     </td>
                                     <td>
-                                        <div style="font-size: 0.75rem;">
+                                        <div style="font-size: 0.75rem; color: var(--text-muted);">
                                             Schema: {{ page.schema_count }}
                                             <br>
                                             Canonical: {% if page.canonical_url %}Yes{% else %}No{% endif %}
@@ -385,21 +392,21 @@
                 <article class="card">
                     <h2>Issues Grouped by Category</h2>
                     {% for category, cat_issues in issues_by_category.items %}
-                    <div style="margin-bottom: 1.5rem;">
-                        <h3 style="text-transform: uppercase; font-size: 0.75rem; color: #64748b; letter-spacing: 0.05em; margin-bottom: 0.5rem; border-bottom: 2px solid #f1f5f9; padding-bottom: 0.25rem;">
+                    <div style="margin-bottom: 2rem;">
+                        <h3 style="text-transform: uppercase; font-size: 0.75rem; color: var(--text-primary); letter-spacing: 0.1em; margin-bottom: 1rem; border-bottom: 1px solid var(--border-glass); padding-bottom: 0.5rem; font-weight: 800;">
                             {{ category|title }} ({{ cat_issues|length }} Issues)
                         </h3>
                         <div style="display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1rem;">
                             {% for issue in cat_issues %}
                             <div class="issue-item {% if issue.severity == 'critical' or issue.severity == 'high' %}severity-border-high{% else %}severity-border-med{% endif %}">
-                                <div style="font-weight: 700; font-size: 0.95rem;">{{ issue.message }}</div>
-                                <div style="font-size: 0.85rem; color: #64748b; margin-top: 4px;">{{ issue.recommendation }}</div>
+                                <div style="font-weight: 700; font-size: 0.95rem; color: var(--text-primary); margin-bottom: 0.5rem;">{{ issue.message }}</div>
+                                <div style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.5;">{{ issue.recommendation }}</div>
                                 {% if issue.page %}
-                                <div style="font-size: 0.75rem; color: #2563eb; margin-top: 4px; font-weight: 600;">
-                                    Page: <a href="{{ issue.page.url }}" target="_blank" style="color: inherit; text-decoration: underline;">{{ issue.page.url }}</a>
+                                <div style="font-size: 0.75rem; color: var(--brand-primary); margin-top: 0.75rem; font-weight: 700; font-family: monospace;">
+                                    Reference: <a href="{{ issue.page.url }}" target="_blank" style="color: inherit; text-decoration: underline;">{{ issue.page.url|truncatechars:40 }}</a>
                                 </div>
                                 {% else %}
-                                <div style="font-size: 0.75rem; color: #64748b; margin-top: 4px; font-style: italic;">Site-wide issue</div>
+                                <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.75rem; font-style: italic;">Application-wide diagnostic signal</div>
                                 {% endif %}
                             </div>
                             {% endfor %}
