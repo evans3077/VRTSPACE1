@@ -1,0 +1,165 @@
+:root {
+    /* Primary Color Palette */
+    --bg-main: #020617; /* Deepest Navy (Slate 950) */
+    --bg-surface: #0f172a; /* Slate 900 */
+    --bg-glass: rgba(15, 23, 42, 0.7);
+    --bg-glass-heavy: rgba(15, 23, 42, 0.85);
+
+    /* Text Palette */
+    --text-primary: #f8fafc; /* Slate 50 */
+    --text-secondary: #94a3b8; /* Slate 400 */
+    --text-muted: #64748b; /* Slate 500 */
+    --text-accent: #38bdf8; /* Sky 400 */
+
+    /* Brand & Accent */
+    --brand-primary: #38bdf8; /* Sky 400 */
+    --brand-secondary: #818cf8; /* Indigo 400 */
+    --brand-accent: #22d3ee; /* Cyan 400 */
+    --brand-gradient: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+    --brand-glow: 0 0 20px rgba(56, 189, 248, 0.3);
+
+    /* Border & Glass */
+    --border-glass: rgba(255, 255, 255, 0.1);
+    --border-active: rgba(56, 189, 248, 0.5);
+    --glass-blur: blur(12px);
+
+    /* Functional Colors */
+    --success: #10b981;
+    --warning: #f59e0b;
+    --error: #ef4444;
+    --info: #3b82f6;
+
+    /* Spacing & Radii */
+    --radius-sm: 8px;
+    --radius-md: 14px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
+}
+
+/* Global Transitions */
+* {
+    transition: background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+}
+
+/* Base Overrides */
+body {
+    background-color: var(--bg-main) !important;
+    color: var(--text-primary) !important;
+    background-image: 
+        radial-gradient(circle at 0% 0%, rgba(56, 189, 248, 0.08) 0%, transparent 40%),
+        radial-gradient(circle at 100% 100%, rgba(129, 140, 248, 0.08) 0%, transparent 40%) !important;
+}
+
+/* Premium Panel System (Glassmorphism) */
+.glass-panel,
+.system-card,
+.audit-panel,
+.signal-panel,
+.hero-proof-card,
+.service-card,
+.stat-card,
+.package-card,
+.experience-card,
+.journey-card,
+.faq-card,
+.case-study-card,
+.contact-form,
+.workspace-nav-panel,
+.workspace-menu-panel {
+    background: var(--bg-glass) !important;
+    backdrop-filter: var(--glass-blur) !important;
+    -webkit-backdrop-filter: var(--glass-blur) !important;
+    border: 1px solid var(--border-glass) !important;
+    border-radius: var(--radius-lg) !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3) !important;
+}
+
+.glass-panel:hover,
+.system-card:hover,
+.audit-panel:hover,
+.hero-proof-card:hover,
+.service-card:hover,
+.stat-card:hover,
+.package-card:hover,
+.experience-card:hover,
+.journey-card:hover,
+.faq-card:hover {
+    border-color: var(--border-active) !important;
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), var(--brand-glow) !important;
+}
+
+/* Typography Enhancements */
+h1, h2, h3, h4, h5 {
+    color: var(--text-primary);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+}
+
+.gradient-text {
+    background: var(--brand-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+/* Button Overrides */
+.button-primary {
+    background: var(--brand-gradient) !important;
+    border: none !important;
+    color: white !important;
+    box-shadow: var(--brand-glow);
+}
+
+.button-primary:hover {
+    filter: brightness(1.1);
+    transform: translateY(-2px);
+    box-shadow: 0 0 30px rgba(56, 189, 248, 0.5);
+}
+
+.button-secondary {
+    background: transparent !important;
+    border: 1px solid var(--border-glass) !important;
+    color: var(--text-primary) !important;
+}
+
+.button-secondary:hover {
+    background: var(--border-glass) !important;
+    border-color: var(--text-secondary) !important;
+}
+
+/* Navigation Overrides */
+.site-header {
+    background: var(--bg-glass-heavy) !important;
+    border-bottom: 1px solid var(--border-glass) !important;
+}
+
+.brand {
+    color: var(--text-primary) !important;
+}
+
+.nav-links a {
+    color: var(--text-secondary) !important;
+}
+
+.nav-links a:hover {
+    color: var(--brand-primary) !important;
+}
+
+/* Form Overrides */
+input, select, textarea {
+    background: rgba(255, 255, 255, 0.05) !important;
+    border: 1px solid var(--border-glass) !important;
+    color: var(--text-primary) !important;
+    border-radius: var(--radius-md) !important;
+}
+
+input:focus, select:focus, textarea:focus {
+    border-color: var(--brand-primary) !important;
+    outline: none !important;
+    box-shadow: 0 0 0 2px rgba(56, 189, 248, 0.2) !important;
+}
+
+/* Utility Classes */
+.text-muted { color: var(--text-muted) !important; }
+.text-accent { color: var(--text-accent) !important; }
+.bg-surface { background-color: var(--bg-surface) !important; }
