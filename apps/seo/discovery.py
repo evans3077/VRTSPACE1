@@ -98,23 +98,58 @@ NON_COMPETITOR_DOMAIN_HINTS = {
     "priceline.com",
 }
 
-FOREIGN_GEO_HINTS = {
-    "austin",
-    "texas",
-    "tx",
-    "fort worth",
-    "dallas",
-    "houston",
-    "united states",
-    "usa",
-    "uk",
-    "united kingdom",
-    "london",
-    "canada",
-    "toronto",
-    "australia",
-    "india",
-    "dubai",
+# FOREIGN_GEO_HINTS is intentionally removed.
+# Geo-conflict detection is now dynamic via _parse_canonical_location() and
+# _is_foreign_location() so it works correctly for ANY target location globally.
+
+# Maps ISO country codes to their SerpApi gl parameter value
+# and a representative language code for hl.
+_COUNTRY_CODE_TO_GL = {
+    # Africa
+    "ke": ("ke", "en"),  # Kenya
+    "ng": ("ng", "en"),  # Nigeria
+    "gh": ("gh", "en"),  # Ghana
+    "za": ("za", "en"),  # South Africa
+    "tz": ("tz", "en"),  # Tanzania
+    "ug": ("ug", "en"),  # Uganda
+    "et": ("et", "en"),  # Ethiopia
+    "eg": ("eg", "ar"),  # Egypt
+    # Asia
+    "in": ("in", "en"),  # India
+    "pk": ("pk", "en"),  # Pakistan
+    "bd": ("bd", "en"),  # Bangladesh
+    "lk": ("lk", "en"),  # Sri Lanka
+    "ph": ("ph", "en"),  # Philippines
+    "sg": ("sg", "en"),  # Singapore
+    "my": ("my", "en"),  # Malaysia
+    "id": ("id", "id"),  # Indonesia
+    "th": ("th", "th"),  # Thailand
+    "vn": ("vn", "vi"),  # Vietnam
+    "cn": ("cn", "zh-CN"),  # China
+    "jp": ("jp", "ja"),  # Japan
+    "kr": ("kr", "ko"),  # South Korea
+    "ae": ("ae", "ar"),  # UAE
+    "sa": ("sa", "ar"),  # Saudi Arabia
+    # Europe
+    "gb": ("gb", "en"),  # United Kingdom
+    "ie": ("ie", "en"),  # Ireland
+    "de": ("de", "de"),  # Germany
+    "fr": ("fr", "fr"),  # France
+    "es": ("es", "es"),  # Spain
+    "it": ("it", "it"),  # Italy
+    "nl": ("nl", "nl"),  # Netherlands
+    "pt": ("pt", "pt"),  # Portugal
+    "pl": ("pl", "pl"),  # Poland
+    # Americas
+    "us": ("us", "en"),  # United States
+    "ca": ("ca", "en"),  # Canada
+    "mx": ("mx", "es"),  # Mexico
+    "br": ("br", "pt"),  # Brazil
+    "ar": ("ar", "es"),  # Argentina
+    "co": ("co", "es"),  # Colombia
+    # Oceania
+    "au": ("au", "en"),  # Australia
+    "nz": ("nz", "en"),  # New Zealand
 }
 
 INDUSTRY_DISCOVERY_TERMS = {
@@ -380,10 +415,9 @@ def _is_hospitality_event_focus(profile):
 
 
 def _has_foreign_geo_conflict(haystack, location):
-    location_tokens = _tokenize_terms(location)
-    if any(token in haystack for token in location_tokens):
-        return False
-    return any(token in haystack for token in FOREIGN_GEO_HINTS)
+    """Detect geo-conflict using dynamic location parsing instead of a hardcoded list."""
+    location_parts = _parse_canonical_location(location)
+    return _is_foreign_location(haystack, location_parts)
 
 
 def _build_benchmark_queries(profile, project=None):
@@ -393,6 +427,11 @@ def _build_benchmark_queries(profile, project=None):
     goal = (profile.target_goal or "").strip().lower()
     industry_terms = INDUSTRY_DISCOVERY_TERMS.get(profile.business_type, [])
     templates = DISCOVERY_QUERY_TEMPLATES.get(profile.business_type, DISCOVERY_QUERY_TEMPLATES["default"])
+    
+    # Extract city-only from canonical for tighter local queries
+    loc_parts = _parse_canonical_location(location)
+    city_only = loc_parts["city"] if loc_parts["city"] else location
+    
     if _is_hospitality_event_focus(profile):
         templates = [
             "{service} {location}",
@@ -410,6 +449,10 @@ def _build_benchmark_queries(profile, project=None):
         ).strip()
         for template in templates
     ]
+    # Add city-only variants for tighter local discovery
+    if city_only and city_only.lower() != location.lower():
+        queries.append(f"{service} in {city_only}".strip())
+        queries.append(f"best {service} in {city_only}".strip())
     if audience:
         queries.append(f"{service} for {audience} {location}".strip())
     if "lead" in goal or "inquiry" in goal or "book" in goal or "sales" in goal:
@@ -512,22 +555,129 @@ def build_discovery_queries(profile, project=None):
     return []
 
 
-def _serpapi_params(query, location):
+def _parse_canonical_location(location_str):
+    """Parse a Photon/canonical location string into usable parts.
+    
+    Input: "Nairobi, Nairobi County, Kenya" or "Austin, Texas, United States"
+    Output: {city, region, country, country_code_lower}
+    """
+    if not location_str or location_str.strip().lower() == "worldwide":
+        return {"city": "", "region": "", "country": "", "country_code": "", "tokens": []}
+    
+    parts = [p.strip() for p in location_str.split(",") if p.strip()]
+    city = parts[0] if len(parts) > 0 else ""
+    region = parts[1] if len(parts) > 1 else ""
+    country = parts[-1] if len(parts) > 1 else ""
+    
+    # Build a token set for fast haystack matching (lowercase, 3+ chars)
+    all_tokens = set()
+    for part in parts:
+        for word in part.replace("-", " ").split():
+            token = word.strip(" ,.").lower()
+            if len(token) >= 3:
+                all_tokens.add(token)
+    
+    return {
+        "city": city,
+        "region": region,
+        "country": country,
+        "country_code": "",  # resolved separately via profile if available
+        "tokens": list(all_tokens),
+    }
+
+
+def _infer_gl_hl(location_str, country_code=""):
+    """Infer SerpApi gl (geo-location) and hl (language) from location string."""
+    code = (country_code or "").strip().lower()
+    if not code:
+        # Derive from country name in canonical string
+        loc = _parse_canonical_location(location_str)
+        country_name = loc["country"].lower().strip()
+        # Simple country-name to code mapping for most common cases
+        _NAME_TO_CODE = {
+            "kenya": "ke", "nigeria": "ng", "ghana": "gh", "south africa": "za",
+            "tanzania": "tz", "uganda": "ug", "ethiopia": "et", "egypt": "eg",
+            "india": "in", "pakistan": "pk", "bangladesh": "bd", "sri lanka": "lk",
+            "philippines": "ph", "singapore": "sg", "malaysia": "my", "indonesia": "id",
+            "thailand": "th", "vietnam": "vn", "china": "cn", "japan": "jp",
+            "south korea": "kr", "united arab emirates": "ae", "uae": "ae",
+            "saudi arabia": "sa", "united kingdom": "gb", "uk": "gb",
+            "ireland": "ie", "germany": "de", "france": "fr", "spain": "es",
+            "italy": "it", "netherlands": "nl", "portugal": "pt", "poland": "pl",
+            "united states": "us", "usa": "us", "canada": "ca", "mexico": "mx",
+            "brazil": "br", "argentina": "ar", "colombia": "co",
+            "australia": "au", "new zealand": "nz",
+        }
+        code = _NAME_TO_CODE.get(country_name, "")
+    gl, hl = _COUNTRY_CODE_TO_GL.get(code, ("", "en"))
+    return gl, hl
+
+
+def _is_foreign_location(haystack, location_parts):
+    """Dynamic replacement for the old hardcoded FOREIGN_GEO_HINTS check.
+    
+    Returns True if the result haystack contains strong geo signals from a 
+    DIFFERENT location than the target, indicating it's not locally relevant.
+    """
+    if not location_parts or not location_parts.get("tokens"):
+        return False
+    
+    target_tokens = set(location_parts["tokens"])
+    
+    # If any of our own location tokens appear in the result, it's local — not foreign
+    if any(token in haystack for token in target_tokens):
+        return False
+    
+    # Check for clearly foreign geographic signals that wouldn't appear
+    # in a locally relevant result. Only flag if we have enough context.
+    # Common country/city tokens that signal a different geography.
+    # We derive these dynamically from well-known global geo terms.
+    STRONG_FOREIGN_SIGNALS = [
+        # US-specific (would be foreign for non-US targets)
+        "united states", "usa", " texas ", " california ", " florida ", " new york ",
+        " chicago ", " houston ", " dallas ", " austin ", " miami ",
+        # UK-specific
+        "united kingdom", " london ", " manchester ", " birmingham ", " glasgow ",
+        # Other major markets
+        " toronto ", " sydney ", " melbourne ", " beijing ", " shanghai ",
+        " tokyo ", " dubai ", " riyadh ", " singapore ", " mumbai ", " delhi ",
+    ]
+    
+    # Only flag as foreign if the target is NOT in those regions
+    target_country = (location_parts.get("country") or "").lower()
+    for signal in STRONG_FOREIGN_SIGNALS:
+        clean_signal = signal.strip()
+        # Skip if signal overlaps with our target country
+        if clean_signal in target_country or target_country in clean_signal:
+            continue
+        if clean_signal in haystack:
+            return True
+    
+    return False
+
+
+def _serpapi_params(query, location, country_code=""):
+    """Build SerpApi params with geo-restriction via gl/hl."""
     params = {
         "engine": "google",
         "q": query,
         "api_key": settings.SERPAPI_API_KEY,
         "num": settings.SERP_DISCOVERY_RESULTS_PER_QUERY,
     }
-    if location:
+    if location and location.strip().lower() != "worldwide":
         params["location"] = location
+        gl, hl = _infer_gl_hl(location, country_code=country_code)
+        if gl:
+            params["gl"] = gl
+        if hl:
+            params["hl"] = hl
     return params
 
 
-def fetch_serpapi_results(query, location=""):
+def fetch_serpapi_results(query, location="", country_code=""):
     response = requests.get(
         "https://serpapi.com/search.json",
-        params=_serpapi_params(query, location),
+        params=_serpapi_params(query, location, country_code=country_code),
         timeout=_provider_timeout("serpapi"),
     )
     response.raise_for_status()
@@ -839,7 +989,7 @@ def _should_disable_provider(exc):
     return isinstance(exc, (requests.Timeout, requests.ConnectionError))
 
 
-def fetch_search_results(query, location="", runtime_state=None):
+def fetch_search_results(query, location="", runtime_state=None, country_code=""):
     providers = _provider_order()
     errors = []
     attempted_provider = False
@@ -857,7 +1007,7 @@ def fetch_search_results(query, location="", runtime_state=None):
                 continue
             try:
                 attempted_provider = True
-                payload = fetch_serpapi_results(query, location=location)
+                payload = fetch_serpapi_results(query, location=location, country_code=country_code)
                 return {"provider": provider, "payload": payload, "errors": errors}
             except requests.RequestException as exc:
                 errors.append({"provider": provider, "message": str(exc)})
@@ -893,19 +1043,44 @@ def _relevance_signals(result, profile, *, query="", result_kind="organic"):
     signals = []
     score = 0
     local_pack = result_kind == "local"
+    
+    # Parse the canonical location for granular scoring
+    loc_parts = _parse_canonical_location(getattr(profile, "location", "") or "")
+    
     for term in _profile_service_terms(profile)[:8]:
         if term in haystack:
             score += 4 if " " in term else 2
             signals.append(f"service:{term}")
+    
+    # Granular location scoring: city match is highest signal
+    city_token = loc_parts["city"].lower().strip() if loc_parts["city"] else ""
+    country_token = loc_parts["country"].lower().strip() if loc_parts["country"] else ""
+    region_token = loc_parts["region"].lower().strip() if loc_parts["region"] else ""
+    
+    if city_token and city_token in haystack:
+        score += 6  # City-level match is the strongest local signal
+        signals.append(f"location:city:{city_token}")
+    elif region_token and region_token in haystack:
+        score += 3  # Region/county match is a good secondary signal
+        signals.append(f"location:region:{region_token}")
+    
+    if country_token and country_token in haystack:
+        score += 2
+        signals.append(f"location:country:{country_token}")
+    
+    # Also score individual tokenized terms from the full location string
     for token in _tokenize_terms(profile.location):
+        if token in (city_token, region_token, country_token):
+            continue  # Already scored above
         if token in haystack:
-            score += 3
+            score += 1
             signals.append(f"location:{token}")
-    for token in _tokenize_terms(profile.target_audience)[:2]:
+    
+    for token in _tokenize_terms(getattr(profile, "target_audience", "") or "")[:2]:
         if token in haystack:
             score += 1
             signals.append(f"audience:{token}")
-    for token in INDUSTRY_MUST_HAVE_TERMS.get(profile.business_type, [])[:4]:
+    for token in INDUSTRY_MUST_HAVE_TERMS.get(getattr(profile, "business_type", ""), [])[:4]:
         if token.lower() in haystack:
             score += 2
             signals.append(f"industry:{token.lower()}")
@@ -930,10 +1105,11 @@ def _relevance_signals(result, profile, *, query="", result_kind="organic"):
     if any(hint in haystack for hint in NON_COMPETITOR_DOMAIN_HINTS):
         score -= 8
         signals.append("non_competitor_host")
-    if _has_foreign_geo_conflict(haystack, profile.location):
-        score -= 8
+    # Dynamic foreign geo-conflict using parsed location parts
+    if _is_foreign_location(haystack, loc_parts):
+        score -= 10  # Stronger penalty than before (-8)
         signals.append("foreign_location_conflict")
-    if profile.business_type in INDUSTRY_MUST_HAVE_TERMS and not any(
+    if getattr(profile, "business_type", "") in INDUSTRY_MUST_HAVE_TERMS and not any(
         hint in haystack for hint in INDUSTRY_MUST_HAVE_TERMS[profile.business_type]
     ):
         score -= 2 if local_pack else 5
@@ -968,13 +1144,23 @@ def discover_serp_competitors(project, profile):
     runtime_state = {"disabled_providers": set(), "providers_exhausted": False}
     seen_error_keys = set()
 
+    # Infer country code from canonical location for geo-restricted SerpApi queries
+    location_str = getattr(profile, "location", "") or ""
+    _gl, _hl = _infer_gl_hl(location_str)
+    inferred_country_code = _gl  # e.g. "ke" for Kenya, "ng" for Nigeria
+
     for route in routes:
         if runtime_state.get("providers_exhausted"):
             break
         for query in route["queries"]:
             if query not in queries:
                 queries.append(query)
-            search_response = fetch_search_results(query, location=profile.location, runtime_state=runtime_state)
+            search_response = fetch_search_results(
+                query,
+                location=profile.location,
+                runtime_state=runtime_state,
+                country_code=inferred_country_code,
+            )
             payload = search_response.get("payload") or {}
             if search_response.get("errors"):
                 for item in search_response["errors"]:

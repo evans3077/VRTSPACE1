@@ -9,7 +9,11 @@ from django.utils import timezone
 from django.utils.text import slugify
 
 from apps.tools.evidence import decorate_recommendation, infer_root_cause_key, should_surface_recommendation
-from .discovery import discover_serp_competitors
+from .discovery import (
+    discover_serp_competitors,
+    _parse_canonical_location,
+    _is_foreign_location,
+)
 from apps.tools.services import (
     ParsedPage,
     analyze_assets,
@@ -120,24 +124,9 @@ NON_COMPETITOR_HOST_HINTS = {
     "google.co.ke",
 }
 
-FOREIGN_GEO_HINTS = {
-    "austin",
-    "texas",
-    "tx",
-    "fort worth",
-    "dallas",
-    "houston",
-    "united states",
-    "usa",
-    "uk",
-    "united kingdom",
-    "london",
-    "canada",
-    "toronto",
-    "australia",
-    "india",
-    "dubai",
-}
+# FOREIGN_GEO_HINTS removed — geo conflict detection is now dynamic.
+# Use _parse_canonical_location() + _is_foreign_location() from discovery.py.
+
 
 COMPETITOR_REVIEW_DECISIONS = {
     "auto": "Automatic",
@@ -307,10 +296,10 @@ def _profile_topic_terms(profile):
 
 
 def _has_foreign_geo_conflict(haystack, location):
-    location_tokens = _tokenize_phrase(location)
-    if any(token in haystack for token in location_tokens):
-        return False
-    return any(token in haystack for token in FOREIGN_GEO_HINTS)
+    """Dynamic geo-conflict check delegating to discovery module."""
+    from .discovery import _parse_canonical_location, _is_foreign_location
+    location_parts = _parse_canonical_location(location)
+    return _is_foreign_location(haystack, location_parts)
 
 
 def _candidate_text(parsed_page):
