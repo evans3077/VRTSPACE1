@@ -599,6 +599,17 @@
                         <span class="seo-inline-tag">Due: {{ campaign.due_date|default:"Not set" }}</span>
                     </div>
 
+                    {% if campaign.related_page_urls %}
+                    <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.85rem;">
+                        <strong style="display: block; color: var(--text-primary); margin-bottom: 0.4rem;">Related URLs</strong>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+                            {% for url in campaign.related_page_urls %}
+                            <span style="font-family: monospace; font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 6px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass); color: var(--text-muted); word-break: break-all;">{{ url }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+
                     <div class="compact-grid" style="margin-top: 1.25rem; gap: 1rem;">
                         <div style="padding: 1rem; border-radius: 14px; background: rgba(255,255,255,0.01); border: 1px solid var(--border-glass);">
                             <strong style="display: block; margin-bottom: 0.4rem; color: var(--text-primary); font-size: 0.85rem;">Editorial Brief</strong>
@@ -671,6 +682,16 @@
                             <strong style="display: block; color: var(--text-primary); margin-bottom: 0.4rem;">Context</strong>
                             {{ item.why_it_matters }}
                         </div>
+                        {% if item.where_to_apply %}
+                        <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.85rem;">
+                            <strong style="display: block; color: var(--text-primary); margin-bottom: 0.4rem;">Target Locations</strong>
+                            <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+                                {% for url in item.where_to_apply %}
+                                <span style="font-family: monospace; font-size: 0.75rem; padding: 0.2rem 0.5rem; border-radius: 6px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass); color: var(--text-muted); word-break: break-all;">{{ url }}</span>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>
@@ -790,6 +811,16 @@
                         <strong style="display: block; color: var(--text-primary); margin-bottom: 0.4rem;">Deliverable Objective</strong>
                         {{ item.deliverable }}
                     </div>
+                    {% if item.target_urls %}
+                    <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.82rem;">
+                        <strong style="display: block; color: var(--text-primary); margin-bottom: 0.4rem;">Exact Locations</strong>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+                            {% for url in item.target_urls %}
+                            <span style="font-family: monospace; font-size: 0.72rem; padding: 0.2rem 0.5rem; border-radius: 6px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass); color: var(--text-muted); word-break: break-all;">{{ url|default:"/" }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
                     {% if item.action_steps %}
                     <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.82rem; line-height: 1.6;">
                         <strong style="display: block; color: var(--text-primary); margin-bottom: 0.4rem;">Next Action Steps</strong>
