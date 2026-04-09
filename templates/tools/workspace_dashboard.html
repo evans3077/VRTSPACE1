@@ -1,0 +1,705 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="padding-bottom: 2rem;">
+    <div class="container-fluid">
+        <div class="section-heading">
+            <p class="eyebrow">Workspace</p>
+            <h1 style="max-width: none;">{% if project.pk %}{{ project.name }}{% else %}Workspace Overview{% endif %}</h1>
+            <p class="section-text" style="max-width: 760px;">
+                One working flow: create or open a workspace, run the audit, then move into SEO, AEO, or content from that same base.
+            </p>
+            <div id="project-actions" style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                {% if not project.pk %}
+                <a class="button button-primary" href="#new-project">Create workspace</a>
+                <a class="button button-secondary" href="#start-audit">Start with audit</a>
+                {% elif not latest_audit %}
+                <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button button-primary">Run first audit</button>
+                </form>
+                <a class="button button-secondary" href="#new-project">Create another workspace</a>
+                {% else %}
+                <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button button-primary">Run audit</button>
+                </form>
+                <a class="button button-secondary" href="{% url 'tools:audit-result' latest_audit.pk %}">Open latest audit</a>
+                <a class="button button-secondary" href="{% url 'seo:workspace-seo' %}">Open SEO</a>
+                <a class="button button-secondary" href="{% url 'aeo:workspace-aeo' %}">Open AEO</a>
+                <a class="button button-secondary" href="{% url 'content:workspace-content' %}">Open Content</a>
+                {% endif %}
+            </div>
+
+            {% if not audit_tier_enforcement %}
+            <div style="margin-top: 1rem; display: inline-flex; gap: 0.5rem; align-items: center; padding: 0.75rem 1rem; border-radius: 999px; background: rgba(14, 165, 233, 0.08); color: #f8fafc; font-size: 0.85rem; font-weight: 700;">
+                Free-pass mode is active. Usage is still logged even when billing gates are off.
+            </div>
+            {% endif %}
+
+            <div class="workspace-flow-note" style="margin-top: 1rem;">
+                Reuse the current audit for SEO, AEO, and content. Run another audit only when you need a fresh crawl or want to validate changes.
+            </div>
+
+            {% if not project.pk %}
+            <div style="margin-top: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: #f8fafc; color: #64748b; line-height: 1.6;">
+                No active workspace yet. Create one or start directly with an audit below.
+            </div>
+            {% elif not latest_audit %}
+            <div style="margin-top: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #f8fafc; line-height: 1.6;">
+                This workspace is ready. Run the first audit to unlock SEO, AEO, content, and validation history.
+            </div>
+            {% endif %}
+
+            {% if credit_overview.is_testing_mode and credit_overview.overage %}
+            <div style="margin-top: 1rem; padding: 0.95rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #f8fafc; line-height: 1.6;">
+                Testing mode logged {{ credit_overview.overage }} estimated credit{{ credit_overview.overage|pluralize }} above the current balance without blocking the workflow.
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{% include "includes/workspace_nav.html" %}
+
+<section class="packages-section" style="padding-top: 0;">
+    <div class="container-fluid page-stack">
+        {% if project.pk and latest_audit %}
+        <article class="system-card" style="margin-bottom: 2rem; border-color: rgba(139, 92, 246, 0.3); background: rgba(139, 92, 246, 0.05);">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1.5rem;">
+                <p class="eyebrow" style="color: var(--signal);">Command Center</p>
+                <h2 style="font-size: 2rem;">Priority Execution</h2>
+                <p class="section-text" style="max-width: 720px; margin-left: 0;">Continue the work from the current audit base. The workspace should always make the next operational move obvious.</p>
+            </div>
+            
+            <div class="command-module-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 2rem;">
+                <div class="system-card" style="padding: 1.25rem;">
+                    <p class="eyebrow">SEO Module</p>
+                    <h3 style="font-size: 1.5rem; margin-top: 0.25rem;">{{ seo_active_campaign_count|default:0 }} Active</h3>
+                    <p style="font-size: 0.85rem; margin-top: 0.25rem;">Live competitor campaigns</p>
+                </div>
+                <div class="system-card" style="padding: 1.25rem;">
+                   <p class="eyebrow">Content Module</p>
+                   <h3 style="font-size: 1.5rem; margin-top: 0.25rem;">{{ content_draft_count|default:0 }} Drafts</h3>
+                   <p style="font-size: 0.85rem; margin-top: 0.25rem;">Saved inside asset library</p>
+                </div>
+                <div class="system-card" style="padding: 1.25rem;">
+                   <p class="eyebrow">Technical Baseline</p>
+                   <h3 style="font-size: 1.5rem; margin-top: 0.25rem;">{{ seo_execution_item_count|default:0 }} Issues</h3>
+                   <p style="font-size: 0.85rem; margin-top: 0.25rem;">Found in latest sync</p>
+                </div>
+            </div>
+
+            <div class="command-priority-list">
+                {% if seo_execution_item_count > 0 %}
+                <div class="command-priority-item">
+                    <div class="command-priority-num">1</div>
+                    <div class="command-priority-text">
+                        <strong>Fix technical baseline:</strong> Review the {{ seo_execution_item_count }} critical gaps identified in the current audit before initiating external content campaigns. <a href="{% url 'tools:audit-result' latest_audit.pk %}" style="color: var(--signal);">Open Base Audit &rarr;</a>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if seo_active_campaign_count == 0 %}
+                <div class="command-priority-item">
+                    <div class="command-priority-num">{% if seo_execution_item_count > 0 %}2{% else %}1{% endif %}</div>
+                    <div class="command-priority-text">
+                        <strong>Launch Competitor Pipeline:</strong> No active SEO campaigns found. Map your target clusters and dispatch the engine to trace competitor entities. <a href="{% url 'seo:workspace-seo' %}#seo-opportunities" style="color: var(--signal);">Go to SEO Hub &rarr;</a>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if content_draft_count > 0 %}
+                <div class="command-priority-item">
+                    <div class="command-priority-num">{% if seo_active_campaign_count == 0 and seo_execution_item_count > 0 %}3{% elif seo_active_campaign_count == 0 or seo_execution_item_count > 0 %}2{% else %}1{% endif %}</div>
+                    <div class="command-priority-text">
+                        <strong>Publish Pending Drafts:</strong> You have {{ content_draft_count }} generated asset(s) ready in the queue. Review and deploy them to clear pipeline friction. <a href="{% url 'content:workspace-content' %}#drafts" style="color: var(--signal);">Open Asset Library &rarr;</a>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+        </article>
+        {% endif %}
+        {% if workspace_project_summaries %}
+        <article id="project-portfolio" class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Workspaces</p>
+                <h2 style="font-size: 2rem;">Projects</h2>
+                <p class="section-text" style="max-width: 680px; margin-left: 0;">
+                    Keep each website, brand, or client independent. Open the one you need and continue from there.
+                </p>
+            </div>
+            <div class="system-grid">
+                {% for item in workspace_project_summaries %}
+                <details class="workspace-expandable-card"{% if project.pk == item.pk %} open{% endif %}>
+                    <summary class="workspace-expandable-summary">
+                        <div>
+                            <strong>{{ item.name }}</strong>
+                            <div class="workspace-expandable-subtitle">{{ item.project_type_label }}</div>
+                        </div>
+                        <div class="workspace-expandable-meta">
+                            {% if project.pk == item.pk %}
+                            <span class="score-pill score-high">Active</span>
+                            {% endif %}
+                            <span class="score-pill score-medium">Score {{ item.latest_score }}</span>
+                        </div>
+                    </summary>
+                    <div class="workspace-expandable-body">
+                        <div style="display: grid; gap: 0.35rem; color: #64748b; font-size: 0.84rem;">
+                            <div>{{ item.normalized_domain }}</div>
+                            {% if item.business_type or item.location %}
+                            <div>{{ item.business_type_label|default:"Unclassified" }}{% if item.location %} | {{ item.location }}{% endif %}</div>
+                            {% endif %}
+                            {% if item.primary_service %}
+                            <div>{{ item.primary_service }}</div>
+                            {% endif %}
+                        </div>
+                        <div class="seo-inline-tags" style="margin-top: 0.85rem;">
+                            {% for tag in item.focus_tags %}
+                            <span class="seo-inline-tag">{{ tag }}</span>
+                            {% endfor %}
+                        </div>
+                        <div class="workspace-expandable-metrics">
+                            <div>SEO snapshots: <strong style="color: #f8fafc;">{{ item.seo_snapshot_count }}</strong></div>
+                            <div>AEO analyses: <strong style="color: #f8fafc;">{{ item.aeo_audit_count }}</strong></div>
+                            <div>Content drafts: <strong style="color: #f8fafc;">{{ item.generated_content_count }}</strong></div>
+                        </div>
+                        <div style="margin-top: 1rem;">
+                            {% if project.pk == item.pk %}
+                            <span class="score-pill score-medium">Current workspace</span>
+                            {% else %}
+                            <form method="post" action="{% url 'tools:workspace-project-select' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="project_id" value="{{ item.pk }}">
+                                <input type="hidden" name="next" value="{% url 'tools:workspace-dashboard' %}">
+                                <button type="submit" class="button button-secondary" style="width: 100%;">Open workspace</button>
+                            </form>
+                            {% endif %}
+                        </div>
+                    </div>
+                </details>
+                {% endfor %}
+            </div>
+        </article>
+        {% endif %}
+
+        <div style="display: grid; grid-template-columns: 1.25fr 0.95fr; gap: 2rem; align-items: start;">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Current workspace</p>
+                    <h2 style="font-size: 2rem;">What is active right now</h2>
+                </div>
+                <div class="system-grid">
+                    <article class="system-card">
+                        <p class="eyebrow">Domain</p>
+                        <h3>{% if latest_audit %}{{ latest_audit.normalized_domain }}{% elif project.normalized_domain %}{{ project.normalized_domain }}{% else %}-{% endif %}</h3>
+                        <p>Tracked property</p>
+                    </article>
+                    <article class="system-card">
+                        <p class="eyebrow">Overall score</p>
+                        <h3>{% if latest_audit %}{{ latest_audit.overall_score }}{% else %}-{% endif %}</h3>
+                        <p>Latest audit result</p>
+                    </article>
+                    <article class="system-card">
+                        <p class="eyebrow">Pages crawled</p>
+                        <h3>{% if latest_audit %}{{ latest_audit.pages_crawled }}{% else %}-{% endif %}</h3>
+                        <p>Current crawl depth</p>
+                    </article>
+                    <article class="system-card">
+                        <p class="eyebrow">Last audit</p>
+                        <h3>{% if latest_audit %}{{ latest_audit.created_at|date:"M j" }}{% else %}-{% endif %}</h3>
+                        <p>{% if latest_audit %}{{ latest_audit.status|title }}{% else %}Waiting for first audit{% endif %}</p>
+                    </article>
+                </div>
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Credits</p>
+                    <h2 style="font-size: 2rem;">Balance</h2>
+                </div>
+                <div class="workspace-credit-balance-card">
+                    <div>
+                        <p class="eyebrow" style="margin-bottom: 0.35rem;">Remaining</p>
+                        <h3 style="margin: 0; font-size: clamp(2rem, 4vw, 2.6rem);">
+                            {% if credit_overview.unlimited %}
+                            Unlimited
+                            {% else %}
+                            {{ credit_overview.remaining|default:0 }}
+                            {% endif %}
+                        </h3>
+                    </div>
+                    <div class="workspace-credit-balance-meta">
+                        <div>Used this cycle: <strong style="color: #f8fafc;">{{ credit_overview.used|default:0 }}</strong></div>
+                        {% if credit_overview.granted %}
+                        <div>Granted this cycle: <strong style="color: #f8fafc;">{{ credit_overview.granted }}</strong></div>
+                        {% endif %}
+                    </div>
+                </div>
+                <div style="margin-top: 1rem; color: #64748b; line-height: 1.6;">
+                    Keep the workspace focused on project work. Billing, top-ups, and personal settings live in your account area.
+                </div>
+                <div style="margin-top: 1rem;">
+                    <a class="button button-secondary" href="{% url 'tools:account-dashboard' %}#billing">Open account</a>
+                </div>
+            </article>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+            <details id="start-audit" class="system-card workspace-create-panel"{% if audit_start_form.errors or not project.pk %} open{% endif %}>
+                <summary class="workspace-create-summary">
+                    <div>
+                        <p class="eyebrow">Start with audit</p>
+                        <h2 style="font-size: 2rem; margin: 0;">Audit and attach a workspace</h2>
+                    </div>
+                    <span class="button button-primary">Start</span>
+                </summary>
+                <div class="workspace-create-body">
+                    <div style="color: #64748b; line-height: 1.6; margin-bottom: 1rem;">
+                        Use this when a user starts from SEO or AEO. The audit becomes the base and the workspace is attached automatically.
+                    </div>
+                    <form method="post" action="{% url 'tools:workspace-audit-start' %}" style="display: grid; gap: 0.85rem;">
+                        {% csrf_token %}
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Company</span>
+                            {{ audit_start_form.company_name }}
+                            {% if audit_start_form.company_name.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.company_name.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        {{ audit_start_form.email }}
+                        {{ audit_start_form.location }}
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Website</span>
+                            {{ audit_start_form.website }}
+                            {% if audit_start_form.website.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.website.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Business type</span>
+                            {{ audit_start_form.business_type }}
+                            {% if audit_start_form.business_type.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.business_type.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Specific niche</span>
+                            {{ audit_start_form.business_subtype }}
+                            {% if audit_start_form.business_subtype.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.business_subtype.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Target audience</span>
+                            {{ audit_start_form.target_audience }}
+                            {% if audit_start_form.target_audience.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.target_audience.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Market type</span>
+                            {{ audit_start_form.location_mode }}
+                            {% if audit_start_form.location_mode.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.location_mode.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <div id="workspace-audit-location-fields" style="display: grid; gap: 0.85rem; padding: 0.85rem; border: 1px solid rgba(148, 163, 184, 0.18); border-radius: 1rem; background: rgba(15, 23, 42, 0.18);">
+                            <label style="display: grid; gap: 0.3rem;">
+                                <span style="font-weight: 700;">Country</span>
+                                {{ audit_start_form.location_country }}
+                                {% if audit_start_form.location_country.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.location_country.errors|join:", " }}</span>{% endif %}
+                            </label>
+                            <label style="display: grid; gap: 0.3rem;">
+                                <span style="font-weight: 700;">Market level</span>
+                                {{ audit_start_form.location_scope }}
+                                {% if audit_start_form.location_scope.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.location_scope.errors|join:", " }}</span>{% endif %}
+                            </label>
+                            <label style="display: grid; gap: 0.3rem;">
+                                <span id="workspace-audit-location-area-label" style="font-weight: 700;">Location name</span>
+                                {{ audit_start_form.location_area }}
+                                {% if audit_start_form.location_area.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.location_area.errors|join:", " }}</span>{% endif %}
+                            </label>
+                        </div>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Target goal</span>
+                            {{ audit_start_form.target_goal }}
+                            {% if audit_start_form.target_goal.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.target_goal.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Primary offer</span>
+                            {{ audit_start_form.primary_service }}
+                            {% if audit_start_form.primary_service.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.primary_service.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Audit focus</span>
+                            {{ audit_start_form.notes }}
+                            {% if audit_start_form.notes.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.notes.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <button type="submit" class="button button-primary">Start audit</button>
+                    </form>
+                </div>
+            </details>
+
+            <details id="new-project" class="system-card workspace-create-panel"{% if project_form.errors %} open{% endif %}>
+                <summary class="workspace-create-summary">
+                    <div>
+                        <p class="eyebrow">Create workspace</p>
+                        <h2 style="font-size: 2rem; margin: 0;">Add another independent project</h2>
+                    </div>
+                    <span class="button button-primary">Create</span>
+                </summary>
+                <div class="workspace-create-body">
+                    <div style="color: #64748b; line-height: 1.6; margin-bottom: 1rem;">
+                        Create a separate workspace for another website, client, or brand. Each one keeps its own audit, SEO, AEO, and content history.
+                    </div>
+                    <form method="post" action="{% url 'tools:workspace-project-create' %}" style="display: grid; gap: 0.85rem;">
+                        {% csrf_token %}
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Project name</span>
+                            {{ project_form.name }}
+                            {% if project_form.name.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.name.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        {{ project_form.location }}
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Website</span>
+                            {{ project_form.website }}
+                            {% if project_form.website.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.website.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Business type</span>
+                            {{ project_form.business_type }}
+                            {% if project_form.business_type.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.business_type.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Specific niche</span>
+                            {{ project_form.business_subtype }}
+                            {% if project_form.business_subtype.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.business_subtype.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Target audience</span>
+                            {{ project_form.target_audience }}
+                            {% if project_form.target_audience.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.target_audience.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Market type</span>
+                            {{ project_form.location_mode }}
+                            {% if project_form.location_mode.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.location_mode.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <div id="workspace-project-location-fields" style="display: grid; gap: 0.85rem; padding: 0.85rem; border: 1px solid rgba(148, 163, 184, 0.18); border-radius: 1rem; background: rgba(15, 23, 42, 0.18);">
+                            <label style="display: grid; gap: 0.3rem;">
+                                <span style="font-weight: 700;">Country</span>
+                                {{ project_form.location_country }}
+                                {% if project_form.location_country.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.location_country.errors|join:", " }}</span>{% endif %}
+                            </label>
+                            <label style="display: grid; gap: 0.3rem;">
+                                <span style="font-weight: 700;">Market level</span>
+                                {{ project_form.location_scope }}
+                                {% if project_form.location_scope.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.location_scope.errors|join:", " }}</span>{% endif %}
+                            </label>
+                            <label style="display: grid; gap: 0.3rem;">
+                                <span id="workspace-project-location-area-label" style="font-weight: 700;">Location name</span>
+                                {{ project_form.location_area }}
+                                {% if project_form.location_area.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.location_area.errors|join:", " }}</span>{% endif %}
+                            </label>
+                        </div>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Target goal</span>
+                            {{ project_form.target_goal }}
+                            {% if project_form.target_goal.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.target_goal.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <label style="display: grid; gap: 0.3rem;">
+                            <span style="font-weight: 700;">Primary offer</span>
+                            {{ project_form.primary_service }}
+                            {% if project_form.primary_service.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.primary_service.errors|join:", " }}</span>{% endif %}
+                        </label>
+                        <button type="submit" class="button button-primary">Create workspace</button>
+                    </form>
+                </div>
+            </details>
+        </div>
+
+        {% if project.pk %}
+
+        <!-- Cross-Module Command Card: Phase 11 Track A -->
+        <div class="command-card" id="command-center">
+            <p class="eyebrow">Command Center</p>
+            <h2 style="color: white; margin: 0.4rem 0 0.2rem; font-size: clamp(1.5rem, 2.5vw, 2rem);">
+                {{ project.name }} &mdash; What to do next
+            </h2>
+            <p style="color: rgba(255,255,255,0.65); font-size: 0.9rem; margin: 0 0 0.5rem; line-height: 1.5;">
+                One view across Audit, SEO, AEO, and Content. Act on the highest-priority item first.
+            </p>
+            <div class="command-module-grid">
+                <a class="command-module-tile" href="{% if latest_audit %}{% url 'tools:audit-result' latest_audit.pk %}{% else %}#start-audit{% endif %}">
+                    <div class="command-module-label">Audit</div>
+                    <div class="command-module-value">{% if latest_audit %}{{ latest_audit.overall_score }}{% else %}&mdash;{% endif %}</div>
+                    <div class="command-module-status">{% if latest_audit %}{{ latest_audit.status|title }} &middot; {{ latest_audit.created_at|date:"M j" }}{% else %}Run first audit to begin{% endif %}</div>
+                </a>
+                <a class="command-module-tile" href="{% url 'seo:workspace-seo' %}">
+                    <div class="command-module-label">SEO</div>
+                    <div class="command-module-value">{% if latest_seo_snapshot %}{{ seo_active_campaign_count|default:0 }}{% else %}&mdash;{% endif %}</div>
+                    <div class="command-module-status">{% if latest_seo_snapshot %}{{ seo_active_campaign_count|default:0 }} active campaigns{% elif latest_audit %}Ready to run{% else %}Needs audit first{% endif %}</div>
+                </a>
+                <a class="command-module-tile" href="{% url 'aeo:workspace-aeo' %}">
+                    <div class="command-module-label">AEO</div>
+                    <div class="command-module-value">{% if latest_aeo_audit %}{% if latest_aeo_audit.overall_score %}{{ latest_aeo_audit.overall_score }}{% else %}&check;{% endif %}{% else %}&mdash;{% endif %}</div>
+                    <div class="command-module-status">{% if latest_aeo_audit %}Last run {{ latest_aeo_audit.created_at|date:"M j" }}{% elif latest_audit %}Ready to run{% else %}Needs audit first{% endif %}</div>
+                </a>
+                <a class="command-module-tile" href="{% url 'content:workspace-content' %}">
+                    <div class="command-module-label">Content</div>
+                    <div class="command-module-value">{% if latest_generated_content %}{{ content_draft_count|default:1 }}{% else %}&mdash;{% endif %}</div>
+                    <div class="command-module-status">{% if latest_generated_content %}{{ content_draft_count|default:0 }} draft{{ content_draft_count|default:0|pluralize }} in library{% elif latest_audit %}Ready &mdash; briefing available{% else %}Needs audit first{% endif %}</div>
+                </a>
+            </div>
+            <div class="command-priority-list">
+                {% if not latest_audit %}
+                <div class="command-priority-item">
+                    <div class="command-priority-num">1</div>
+                    <div class="command-priority-text"><strong>Run your first audit</strong> &mdash; this unlocks SEO, AEO, and content modules. Use the form below.</div>
+                </div>
+                {% else %}
+                    {% if not latest_seo_snapshot %}
+                    <div class="command-priority-item">
+                        <div class="command-priority-num">1</div>
+                        <div class="command-priority-text"><strong>Run SEO intelligence</strong> &mdash; audit is ready. <a href="{% url 'seo:workspace-seo' %}" style="color: #fb923c;">Open SEO workspace</a>, add competitor URLs, and refresh.</div>
+                    </div>
+{% endif %}
+{{ audit_start_form.country_ui_metadata|json_script:"workspace-audit-country-ui" }}
+{{ project_form.country_ui_metadata|json_script:"workspace-project-country-ui" }}
+<script>
+(() => {
+    const initStructuredLocation = ({ modeId, countryId, scopeId, areaId, panelId, labelId, metadataId }) => {
+        const modeField = document.getElementById(modeId);
+        const countryField = document.getElementById(countryId);
+        const scopeField = document.getElementById(scopeId);
+        const areaField = document.getElementById(areaId);
+        const panel = document.getElementById(panelId);
+        const label = document.getElementById(labelId);
+        const metadataNode = document.getElementById(metadataId);
+        if (!modeField || !countryField || !scopeField || !areaField || !panel || !label || !metadataNode) {
+            return;
+        }
+        const countryMeta = JSON.parse(metadataNode.textContent || "{}");
+        const defaultScopeLabel = (countryCode) => {
+            const item = countryMeta[countryCode] || {};
+            return item.admin_label || "Region / province";
+        };
+        const scopeText = () => {
+            const selected = scopeField.options[scopeField.selectedIndex];
+            return selected && selected.value ? selected.text : defaultScopeLabel(countryField.value);
+        };
+        const sync = () => {
+            const worldwide = modeField.value === "worldwide";
+            panel.style.display = worldwide ? "none" : "grid";
+            countryField.disabled = worldwide;
+            scopeField.disabled = worldwide;
+            areaField.disabled = worldwide;
+            label.textContent = worldwide ? "Location name" : `${scopeText()} name`;
+            areaField.placeholder = worldwide ? "" : `Enter the ${scopeText().toLowerCase()} inside the selected country`;
+        };
+        modeField.addEventListener("change", sync);
+        countryField.addEventListener("change", sync);
+        scopeField.addEventListener("change", sync);
+        sync();
+    };
+    initStructuredLocation({
+        modeId: "id_audit-location_mode",
+        countryId: "id_audit-location_country",
+        scopeId: "id_audit-location_scope",
+        areaId: "id_audit-location_area",
+        panelId: "workspace-audit-location-fields",
+        labelId: "workspace-audit-location-area-label",
+        metadataId: "workspace-audit-country-ui",
+    });
+    initStructuredLocation({
+        modeId: "id_project-location_mode",
+        countryId: "id_project-location_country",
+        scopeId: "id_project-location_scope",
+        areaId: "id_project-location_area",
+        panelId: "workspace-project-location-fields",
+        labelId: "workspace-project-location-area-label",
+        metadataId: "workspace-project-country-ui",
+    });
+})();
+</script>
+                    {% if not latest_aeo_audit %}
+                    <div class="command-priority-item">
+                        <div class="command-priority-num">{% if not latest_seo_snapshot %}2{% else %}1{% endif %}</div>
+                        <div class="command-priority-text"><strong>Run AEO analysis</strong> &mdash; check AI visibility and entity clarity using the same audit base. <a href="{% url 'aeo:workspace-aeo' %}" style="color: #fb923c;">Open AEO &rarr;</a></div>
+                    </div>
+                    {% endif %}
+                    {% if fix_queue_recommendations %}
+                    <div class="command-priority-item">
+                        <div class="command-priority-num">{% if not latest_seo_snapshot and not latest_aeo_audit %}3{% elif not latest_seo_snapshot or not latest_aeo_audit %}2{% else %}1{% endif %}</div>
+                        <div class="command-priority-text"><strong>{{ fix_queue_recommendations.0.title }}</strong> &mdash; {{ fix_queue_recommendations.0.recommended_fix|truncatechars:120 }}</div>
+                    </div>
+                    {% endif %}
+                    {% if latest_seo_snapshot and latest_aeo_audit and latest_generated_content %}
+                    <div class="command-priority-item">
+                        <div class="command-priority-num">&check;</div>
+                        <div class="command-priority-text">All core modules are active. Run a fresh audit to validate improvements, or check the SEO campaign pipeline for open items.</div>
+                    </div>
+                    {% endif %}
+                {% endif %}
+            </div>
+        </div>
+
+        <!-- Module tiles with live data and progress bars -->
+        <div class="system-grid">
+            <article class="system-card" style="border-top: 4px solid var(--signal);">
+                <p class="eyebrow">Audit</p>
+                <h3 style="font-size: 1.4rem;">{% if latest_audit %}{{ latest_audit.overall_score }}/100{% else %}Required{% endif %}</h3>
+                <p>{% if latest_audit %}Score from {{ latest_audit.created_at|date:"M j, Y" }}. Run again to validate fixes.{% else %}Start here before using the other modules.{% endif %}</p>
+                {% if latest_audit %}
+                <div class="progress-bar-shell"><div class="progress-bar-fill" style="width: {{ latest_audit.overall_score|default:0 }}%;"></div></div>
+                {% endif %}
+                <div style="margin-top: 1rem;">
+                    <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="button button-secondary">{% if latest_audit %}Run audit{% else %}Run first audit{% endif %}</button>
+                    </form>
+                </div>
+            </article>
+            <article class="system-card" style="border-top: 4px solid #f8fafc;">
+                <p class="eyebrow">SEO</p>
+                <h3 style="font-size: 1.4rem;">{% if latest_seo_snapshot %}{{ seo_active_campaign_count|default:0 }} campaign{{ seo_active_campaign_count|default:0|pluralize }}{% else %}Not started{% endif %}</h3>
+                <p>{% if latest_seo_snapshot %}Competitor benchmarks ready. {{ seo_execution_item_count|default:0 }} execution items mapped.{% elif latest_audit %}Audit base ready &mdash; run SEO intelligence to benchmark competitors.{% else %}Run the audit first to unlock SEO.{% endif %}</p>
+                <div style="margin-top: 1rem;">
+                    {% if latest_audit %}<a class="button button-secondary" href="{% url 'seo:workspace-seo' %}">Open SEO</a>
+                    {% else %}<a class="button button-secondary" href="#start-audit">Start with audit</a>{% endif %}
+                </div>
+            </article>
+            <article class="system-card" style="border-top: 4px solid #ea580c;">
+                <p class="eyebrow">AEO</p>
+                <h3 style="font-size: 1.4rem;">{% if latest_aeo_audit %}Active{% else %}Not started{% endif %}</h3>
+                <p>Entity clarity, answer coverage, and AI visibility against the current audit.</p>
+                <div style="margin-top: 1rem;">
+                    {% if latest_audit %}<a class="button button-secondary" href="{% url 'aeo:workspace-aeo' %}">Open AEO</a>
+                    {% else %}<a class="button button-secondary" href="#start-audit">Start with audit</a>{% endif %}
+                </div>
+            </article>
+            <article class="system-card" style="border-top: 4px solid #16a34a;">
+                <p class="eyebrow">Content</p>
+                <h3 style="font-size: 1.4rem;">{% if latest_generated_content %}{{ content_draft_count|default:1 }} draft{{ content_draft_count|default:1|pluralize }}{% else %}Not started{% endif %}</h3>
+                <p>Generate targeted content from SEO and AEO findings. Each draft is tracked and linked to its source signal.</p>
+                <div style="margin-top: 1rem;">
+                    {% if latest_audit %}<a class="button button-secondary" href="{% url 'content:workspace-content' %}">Open Content</a>
+                    {% else %}<a class="button button-secondary" href="#start-audit">Start with audit</a>{% endif %}
+                </div>
+            </article>
+        </div>
+
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Fix queue</p>
+                <h2 style="font-size: 2rem;">What needs attention first</h2>
+            </div>
+            <div style="display: grid; gap: 0.75rem;">
+                {% for recommendation in fix_queue_recommendations %}
+                <div style="padding: 0.9rem 1rem; border-radius: 16px; background: #f8fafc;">
+                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 0.45rem;">
+                        {% if recommendation.root_cause_label %}
+                        <span class="score-pill score-high" style="font-size: 0.68rem;">{{ recommendation.root_cause_label }}</span>
+                        {% endif %}
+                        {% if recommendation.confidence_label %}
+                        <span class="score-pill {% if recommendation.evidence_status == 'strong' %}score-high{% elif recommendation.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.68rem;">{{ recommendation.confidence_label }}</span>
+                        {% endif %}
+                    </div>
+                    <strong style="display: block; margin-bottom: 0.35rem;">{{ recommendation.title }}</strong>
+                    {% if recommendation.description %}
+                    <div style="color: #64748b; font-size: 0.88rem; line-height: 1.5; margin-bottom: 0.65rem;">{{ recommendation.description }}</div>
+                    {% endif %}
+                    <div style="color: #64748b; font-size: 0.9rem; line-height: 1.5;">
+                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">What to fix</strong>
+                        {{ recommendation.recommended_fix }}
+                    </div>
+                    {% if recommendation.page_examples %}
+                    <div style="margin-top: 0.75rem; font-size: 0.82rem; color: #64748b; line-height: 1.5;">
+                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Where this appears</strong>
+                        {{ recommendation.affected_pages_count|default:recommendation.page_examples|length }} pages including:
+                        {% for url in recommendation.page_examples %}
+                        <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
+                        {% endfor %}
+                    </div>
+                    {% elif recommendation.page_url %}
+                    <div style="margin-top: 0.75rem; font-size: 0.82rem; color: #64748b; line-height: 1.5;">
+                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Where this appears</strong>
+                        <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ recommendation.page_url }}</div>
+                    </div>
+                    {% endif %}
+                    {% if recommendation.evidence_summary %}
+                    <div style="margin-top: 0.65rem; font-size: 0.8rem; color: #64748b; line-height: 1.5;">
+                        <strong style="color: #f8fafc;">Evidence:</strong> {{ recommendation.evidence_summary }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <div style="padding: 0.9rem 1rem; border-radius: 16px; background: #f8fafc; color: #64748b;">No saved recommendations yet.</div>
+                {% endfor %}
+                {% if locked_recommendation_count %}
+                <div style="padding: 0.9rem 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #f8fafc; font-size: 0.9rem;">
+                    {{ locked_recommendation_count }} more recommendation{{ locked_recommendation_count|pluralize }} unlock on a higher plan.
+                </div>
+                {% endif %}
+            </div>
+        </article>
+
+        <article id="audit-history" class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Audit history</p>
+                <h2 style="font-size: 2rem;">Saved runs and validation</h2>
+            </div>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; min-width: 720px;">
+                    <thead>
+                        <tr style="text-align: left; border-bottom: 1px solid rgba(255, 255, 255, 0.08);">
+                            <th style="padding: 0.8rem 0.4rem;">Created</th>
+                            <th style="padding: 0.8rem 0.4rem;">Overall</th>
+                            <th style="padding: 0.8rem 0.4rem;">Delta</th>
+                            <th style="padding: 0.8rem 0.4rem;">Pages</th>
+                            <th style="padding: 0.8rem 0.4rem;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in audit_history_with_delta %}
+                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                            <td style="padding: 0.8rem 0.4rem;">{{ item.audit.created_at }}</td>
+                            <td style="padding: 0.8rem 0.4rem; font-weight: 700;">{{ item.audit.overall_score }}</td>
+                            <td style="padding: 0.8rem 0.4rem;">
+                                {% if item.delta is None %}
+                                -
+                                {% elif item.delta > 0 %}
+                                <span style="color: #16a34a; font-weight: 700;">+{{ item.delta }}</span>
+                                {% elif item.delta < 0 %}
+                                <span style="color: #dc2626; font-weight: 700;">{{ item.delta }}</span>
+                                {% else %}
+                                <span style="color: #64748b; font-weight: 700;">0</span>
+                                {% endif %}
+                            </td>
+                            <td style="padding: 0.8rem 0.4rem;">{{ item.audit.pages_crawled }}</td>
+                            <td style="padding: 0.8rem 0.4rem;">
+                                {{ item.audit.status|title }}
+                                {% if item.audit.status == "completed" %}
+                                <div style="margin-top: 0.4rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                                    <a href="{% url 'tools:audit-result' item.audit.pk %}" style="font-size: 0.8rem; color: var(--signal);">Open report</a>
+                                    <a href="{% url 'tools:audit-report-pdf' item.audit.pk %}" style="font-size: 0.8rem; color: var(--signal);">PDF</a>
+                                </div>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% if item.change_report %}
+                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05); background: rgba(255, 255, 255, 0.02);">
+                            <td colspan="5" style="padding: 0.75rem 0.4rem; color: #64748b; font-size: 0.9rem;">
+                                {{ item.change_report.summary.headline }}
+                                New: {{ item.change_report.new_issue_count }} |
+                                Resolved: {{ item.change_report.resolved_issue_count }}
+                            </td>
+                        </tr>
+                        {% endif %}
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="padding: 0.8rem 0.4rem; color: #64748b;">No saved reruns yet.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% if locked_history_count %}
+            <div style="margin-top: 1rem; padding: 1rem; border-radius: 16px; background: rgba(14, 165, 233, 0.08); color: #f8fafc;">
+                {{ locked_history_count }} older audit run{{ locked_history_count|pluralize }} are hidden by the current plan.
+            </div>
+            {% endif %}
+        </article>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

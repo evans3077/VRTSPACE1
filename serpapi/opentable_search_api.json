@@ -1,0 +1,769 @@
+{
+"search_metadata":
+{
+"id":
+"695927c48c24bd247f1be7ed",
+"status":
+"Success",
+"json_endpoint":
+"https://serpapi.com/searches/56049817ec27ae18/695927c48c24bd247f1be7ed.json",
+"created_at":
+"2026-01-03 14:29:24 UTC",
+"processed_at":
+"2026-01-03 14:29:24 UTC",
+"open_table_reviews_url":
+"https://www.opentable.com/r/central-park-boathouse-new-york-2?",
+"raw_html_file":
+"https://serpapi.com/searches/56049817ec27ae18/695927c48c24bd247f1be7ed.html",
+"total_time_taken":
+0.91
+},
+"search_parameters":
+{
+"engine":
+"open_table_reviews",
+"rid":
+"r/central-park-boathouse-new-york-2",
+"open_table_domain":
+"opentable.com"
+},
+"search_information":
+{
+"page":
+1,
+"total_pages":
+178
+},
+"reviews_summary":
+{
+"reviews_count":
+1777,
+"ratings_count":
+824,
+"ratings_summary":
+{
+"overall":
+4.6,
+"food":
+4.5,
+"service":
+4.6,
+"ambience":
+4.7,
+"value":
+4.2,
+"noise":
+"Moderate"
+},
+"ratings":
+[
+{
+"stars":
+1,
+"count":
+13
+},
+{
+"stars":
+2,
+"count":
+19
+},
+{
+"stars":
+3,
+"count":
+60
+},
+{
+"stars":
+4,
+"count":
+106
+},
+{
+"stars":
+5,
+"count":
+626
+}
+],
+"ai_summary":
+"Central Park Boathouse offers a delightful dining experience with "beautiful views," "excellent food," and "wonderful ambiance." Guests praise the "friendly and attentive service," making it a memorable spot for special occasions. While some mention service inconsistencies, the stunning setting and overall experience make it a "gem in Central Park.""
+},
+"reviews":
+[
+{
+"id":
+"OT-1294132-162341-130127898293",
+"content":
+"Beautiful view of the lake in Central Park. The place was warm and cozy. The food was great!",
+"dined_at":
+"2026-01-02T19:45:00Z",
+"submitted_at":
+"2026-01-02T22:41:38Z",
+"user":
+{
+"name":
+"StephanIe",
+"number_of_reviews":
+4,
+"location":
+"Tampa"
+},
+"rating":
+{
+"overall":
+5,
+"food":
+5,
+"service":
+5,
+"ambience":
+5,
+"value":
+5,
+"noise":
+"Moderate"
+}
+},
+{
+"id":
+"OT-1294132-160273-110159253541",
+"content":
+"Absolutely fantastic experience for the moment we arrived.
+The food was delicious, the view stunning and our waiter was awesome!",
+"dined_at":
+"2026-01-01T19:30:00Z",
+"submitted_at":
+"2026-01-02T22:47:52Z",
+"user":
+{
+"name":
+"Ellenor",
+"number_of_reviews":
+3,
+"location":
+"New York City"
+},
+"rating":
+{
+"overall":
+5,
+"food":
+5,
+"service":
+5,
+"ambience":
+5,
+"value":
+5,
+"noise":
+"Quiet"
+}
+},
+{
+"id":
+"OT-1294132-162088-190036305969",
+"content":
+"Quintessential New York in Central Park. Very nice ambiance, good cocktails and delicious food. I’d definitely recommend it!",
+"dined_at":
+"2026-01-01T19:15:00Z",
+"submitted_at":
+"2026-01-02T17:33:37Z",
+"user":
+{
+"name":
+"Steven",
+"number_of_reviews":
+9,
+"location":
+"New York City"
+},
+"rating":
+{
+"overall":
+5,
+"food":
+5,
+"service":
+5,
+"ambience":
+5,
+"value":
+5,
+"noise":
+"Quiet"
+}
+},
+{
+"id":
+"OT-1294132-160270-150015685985",
+"content":
+"Lovely experience with friends, views of the frozen lake blanketed with snow were an added visual treat - a winter wonderland in Central Park! Thank you. Happy New Year!",
+"dined_at":
+"2026-01-01T17:30:00Z",
+"submitted_at":
+"2026-01-02T18:06:56Z",
+"user":
+{
+"name":
+"Heather",
+"number_of_reviews":
+8,
+"location":
+"New York City"
+},
+"rating":
+{
+"overall":
+4,
+"food":
+4,
+"service":
+4,
+"ambience":
+5,
+"value":
+4,
+"noise":
+"Do Not Recall"
+}
+},
+{
+"id":
+"OT-1294132-160134-140022893214",
+"content":
+"Excellent food and service. The views are beautiful.",
+"dined_at":
+"2025-12-31T21:30:00Z",
+"submitted_at":
+"2026-01-01T16:27:14Z",
+"user":
+{
+"name":
+"Abbey",
+"number_of_reviews":
+8,
+"location":
+"New York City"
+},
+"rating":
+{
+"overall":
+5,
+"food":
+5,
+"service":
+5,
+"ambience":
+5,
+"value":
+5,
+"noise":
+"Quiet"
+}
+},
+{
+"id":
+"OT-1294132-161896-300077524130",
+"content":
+"Fab restaurant. Great food, great service, nice atmosphere, would 100% go again",
+"dined_at":
+"2025-12-31T19:30:00Z",
+"submitted_at":
+"2026-01-02T03:58:35Z",
+"user":
+{
+"name":
+"Samantha",
+"number_of_reviews":
+1,
+"location":
+"London"
+},
+"rating":
+{
+"overall":
+5,
+"food":
+5,
+"service":
+5,
+"ambience":
+5,
+"value":
+5,
+"noise":
+"Quiet"
+}
+},
+{
+"id":
+"OT-1294132-161984-190057258059",
+"content":
+"I wish I remember our waiters name. He was fantastic.",
+"dined_at":
+"2025-12-30T21:00:00Z",
+"submitted_at":
+"2026-01-01T20:59:07Z",
+"user":
+{
+"name":
+"Caralyn",
+"number_of_reviews":
+16,
+"location":
+"Orlando"
+},
+"rating":
+{
+"overall":
+5,
+"food":
+5,
+"service":
+5,
+"ambience":
+5,
+"value":
+5,
+"noise":
+"Quiet"
+}
+},
+{
+"id":
+"OT-1294132-160620-160040868886",
+"content":
+"Beautiful setting and excellent service . Food was just ok- stuffed mushrooms were lukewarm and apple tarte was good but would have been delicious if it had been heated before being served. It was served super cold.
+The butternut squash soup, however, was stellar.",
+"dined_at":
+"2025-12-30T17:45:00Z",
+"submitted_at":
+"2025-12-31T21:55:50Z",
+"user":
+{
+"name":
+"Linda",
+"number_of_reviews":
+21,
+"location":
+"New York City"
+},
+"rating":
+{
+"overall":
+3,
+"food":
+3,
+"service":
+5,
+"ambience":
+5,
+"value":
+3,
+"noise":
+"Moderate"
+}
+},
+{
+"id":
+"OT-1294132-161323-100169768450",
+"content":
+"This is a perfect restaurant for the holidays, especially if there is a bit of snow cover. Dine on delicious food with a gorgeous view of snowy Central Park! I strongly recommend ordering the Parker Rolls with lunch or dinner, and the cocktails are excellent.",
+"dined_at":
+"2025-12-29T19:00:00Z",
+"submitted_at":
+"2025-12-30T18:12:07Z",
+"user":
+{
+"name":
+"Grisel",
+"number_of_reviews":
+7,
+"location":
+"Hawaii"
+},
+"rating":
+{
+"overall":
+5,
+"food":
+4,
+"service":
+5,
+"ambience":
+5,
+"value":
+4,
+"noise":
+"Moderate"
+}
+},
+{
+"id":
+"OT-1294132-159815-190024800659",
+"content":
+"Great Christmas lunch with family. Loved being back at the boathouse! Our server was fantastic!",
+"dined_at":
+"2025-12-28T18:00:00Z",
+"submitted_at":
+"2025-12-30T03:34:37Z",
+"user":
+{
+"name":
+"MonicaO",
+"number_of_reviews":
+2,
+"location":
+"New York City"
+},
+"rating":
+{
+"overall":
+5,
+"food":
+5,
+"service":
+5,
+"ambience":
+5,
+"value":
+4,
+"noise":
+"Quiet"
+}
+}
+],
+"serpapi_pagination":
+{
+"next":
+"https://serpapi.com/search.json?engine=open_table_reviews&open_table_domain=opentable.com&page=2&rid=r/central-park-boathouse-new-york-2"
+}
+}
+
+GET
+
+
+https://serpapi.com/search.json?engine=open_table_reviews&rid=r/central-park-boathouse-new-york-2
+
+Code to integrate
+
+cURLRubyPythonJavaScriptGoPHPJavaRust.NETGoogle Sheets
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "open_table_reviews",
+  rid: "r/central-park-boathouse-new-york-2",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+reviews[0] = results[:reviews[0]]
+API Parameters
+Search Query
+rid
+
+Required
+
+Parameter defines the OpenTable Restaurant ID. This identifier can be found in the URL of the restaurant's page, it's the path of the URL (the part after the first singular /).
+
+For example, in the URL https://www.opentable.com/r/central-park-boathouse-new-york-2, the Restaurant ID is r/central-park-boathouse-new-york-2.
+
+Localization
+open_table_domain
+
+Optional
+
+Parameter defines the OpenTable domain to use. It defaults to www.opentable.com. Head to the OpenTable domains page for a full list of supported OpenTable domains.
+
+Pagination
+page
+
+Optional
+
+Parameter defines the page number. 1 (default) is the first page of 10 results, 2 is the 2nd page, etc.
+
+Serpapi Parameters
+engine
+
+Required
+
+Set parameter to open_table_reviews to use the OpenTable Reviews API engine.
+
+no_cache
+
+Optional
+
+Parameter will force SerpApi to fetch the OpenTable Reviews results even if a cached version is already present. A cache is served only if the query and all parameters are exactly the same. Cache expires after 1h. Cached searches are free, and are not counted towards your searches per month. It can be set to false (default) to allow results from the cache, or true to disallow results from the cache. no_cache and async parameters should not be used together.
+
+async
+
+Optional
+
+Parameter defines the way you want to submit your search to SerpApi. It can be set to false (default) to open an HTTP connection and keep it open until you got your search results, or true to just submit your search to SerpApi and retrieve them later. In this case, you'll need to use our Searches Archive API to retrieve your results. async and no_cache parameters should not be used together. async should not be used on accounts with Ludicrous Speed enabled.
+
+zero_trace
+
+Optional
+
+Enterprise only. Parameter enables ZeroTrace mode. It can be set to false (default) or true. Enable this mode to skip storing search parameters, search files, and search metadata on our servers. This may make debugging more difficult.
+
+api_key
+
+Required
+
+Parameter defines the SerpApi private key to use.
+
+output
+
+Optional
+
+Parameter defines the final output you want. It can be set to json (default) to get a structured JSON of the results, or html to get the raw html retrieved.
+
+API Results
+JSON Results
+JSON output includes structured data for Review results.
+
+A search status is accessible through search_metadata.status. It flows this way: Processing -> Success || Error. If a search has failed, error will contain an error message. search_metadata.id is the search ID inside SerpApi.
+
+HTML Results
+HTML output is useful to debug JSON results or support features not supported yet by SerpApi. HTML output gives you the raw HTML results from OpenTable Reviews.
+
+API Examples
+Example with 
+rid
+:
+r/central-park-boathouse-new-york-2
+for "Central Park Boathouse" in New York
+GET
+
+
+https://serpapi.com/search.json?engine=open_table_reviews&rid=r/central-park-boathouse-new-york-2
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "open_table_reviews",
+  rid: "r/central-park-boathouse-new-york-2",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+reviews = results[:reviews]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "691d9554c9472f070bdeba2e",
+    "status": "Success",
+    "json_endpoint": "http://serpapi.com/searches/0f2e162a9cc910ef/691d9554c9472f070bdeba2e.json",
+    "created_at": "2025-11-19 10:00:52 UTC",
+    "processed_at": "2025-11-19 10:00:52 UTC",
+    "open_table_reviews_url": "https://www.opentable.com/r/central-park-boathouse-new-york-2?page=36",
+    "raw_html_file": "https://serpapi.com/searches/0f2e162a9cc910ef/691d9554c9472f070bdeba2e.html",
+    "total_time_taken": 0.70
+  },
+  "search_parameters": {
+    "engine": "open_table_reviews",
+    "rid": "r/central-park-boathouse-new-york-2",
+    "open_table_domain": "opentable.com",
+    "page": "34"
+  },
+  "search_information": {
+    "page": 34,
+    "total_pages": 168
+  },
+  "reviews_summary": {
+    "reviews_count": 1662,
+    "ratings_count": 950,
+    "ratings_summary": {
+      "overall": 4.6,
+      "food": 4.4,
+      "service": 4.5,
+      "ambience": 4.7,
+      "value": 4.1,
+      "noise": "Moderate"
+    },
+    "ratings": [
+      {
+        "stars": 1,
+        "count": 14
+      },
+      {
+        "stars": 2,
+        "count": 20
+      },
+      {
+        "stars": 3,
+        "count": 79
+      },
+      {
+        "stars": 4,
+        "count": 149
+      },
+      {
+        "stars": 5,
+        "count": 688
+      }
+    ],
+    "ai_summary": "Central Park Boathouse offers a \"magical experience\" with \"wonderful food, service, views, and ambiance\" that enhances its iconic location. Guests praise the \"excellent service\" and \"delicious food\", while relishing the \"stunning\" lakeside views. \"Highly recommended\" for special occasions or a quintessential New York dining experience."
+  },
+  "reviews": [
+    {
+      "id": "OT-1294132-115898-100028063230",
+      "content": "The view of the lake is stunning. A beautiful vibe. The BBQ brisket special was delicious. Our cocktails were refreshing & a perfect way to spend a sunny afternoon in Central Park.",
+      "dined_at": "2025-07-04T15:30:00Z",
+      "submitted_at": "2025-07-05T17:49:51Z",
+      "user": {
+        "name": "Julie",
+        "number_of_reviews": 13,
+        "location": "Nashville",
+        "avatar": "https://resizer.otstatic.com/v2/photos/xsmall/1/58195520.jpg"
+      },
+      "rating": {
+        "overall": 5,
+        "food": 5,
+        "service": 5,
+        "ambience": 5,
+        "value": 4,
+        "noise": "Moderate"
+      },
+      "images": [
+        {
+          "id": "79221177",
+          "timestamp": "2025-07-05T17:49:58Z",
+          "variants": [
+            {
+              "size": "small",
+              "url": "https://resizer.otstatic.com/v2/photos/small/1/79221177.jpg"
+            },
+            {
+              "size": "medium",
+              "url": "https://resizer.otstatic.com/v2/photos/medium/1/79221177.jpg"
+            },
+            {
+              "size": "xlarge",
+              "url": "https://resizer.otstatic.com/v2/photos/xlarge/1/79221177.jpg"
+            },
+            {
+              "size": "wideMedium",
+              "url": "https://resizer.otstatic.com/v2/photos/wide-medium/1/79221177.jpg"
+            },
+            {
+              "size": "wideLarge",
+              "url": "https://resizer.otstatic.com/v2/photos/wide-large/1/79221177.jpg"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": "OT-1294132-114437-130038305383",
+      "content": "The food and service were excellent To quote my friend “that was the best salmon i ever had”.  I has roast chicken also good- tender and tasty. The mushroom dish was full of a wide variety. The cold soup appetizer zingy and fresh. The service was attentive and the view of course is delightful.",
+      "dined_at": "2025-07-03T17:30:00Z",
+      "submitted_at": "2025-07-04T17:35:36Z",
+      "user": {
+        "name": "Lucy",
+        "number_of_reviews": 37,
+        "location": "New York City",
+        "vip": true
+      },
+      "rating": {
+        "overall": 5,
+        "food": 5,
+        "service": 5,
+        "ambience": 5,
+        "value": 5,
+        "noise": "Quiet"
+      },
+      "response": {
+        "content": "Thank you for the feedback, Lucy! It's wonderful to know that you had an excellent dining experience at The Boathouse. We take pride in our dishes and your feedback let's us know that we are doing a great job. We're also glad to know that our attentive service added to your positive experience. We look forward to serving you again soon.\n\nBest,\nCentral Park Boathouse Team",
+        "date": "2025-07-07T17:42:46Z"
+      }
+    },
+    ...
+  ],
+  "serpapi_pagination": {
+    "previous": "https://serpapi.com/search.json?engine=open_table_reviews&open_table_domain=opentable.com&page=35&rid=r/central-park-boathouse-new-york-2",
+    "next": "https://serpapi.com/search.json?engine=open_table_reviews&open_table_domain=opentable.com&page=37&rid=r/central-park-boathouse-new-york-2"
+  }
+}
+JSON structure overview
+{
+  ...
+  "reviews_summary": {
+    "reviews_count": "Integer - Total number of reviews",
+    "ratings_count": "Integer - Total number of ratings",
+    "ratings_summary": {
+      "overall": "Float - Overall average rating (1.0-5.0)",
+      "food": "Float - Average food rating (1.0-5.0)",
+      "service": "Float - Average service rating (1.0-5.0)",
+      "ambience": "Float - Average ambience rating (1.0-5.0)",
+      "value": "Float - Average value rating (1.0-5.0)",
+      "noise": "String - Noise level rating"
+    },
+    "ratings": [
+      {
+        "stars": "Integer - Star rating (1-5)",
+        "count": "Integer - Count of ratings with this star value"
+      }
+    ],
+    "ai_summary": "String - AI-generated summary of reviews"
+  },
+  "awards": [
+    {
+      "location": "String - Location of the award",
+      "name": "String - Name of the award",
+    }
+  ],
+  "reviews": [
+    {
+      "id": "String - A unique identifier for the review",
+      "content": "String - The content of the review; may contain HTML tags",
+      "submitted_at": "String - The date and time the review was submitted",
+      "dined_at": "String - The date and time the user dined at the restaurant",
+      "ratings": {
+        "food": "Integer - Rating for food quality (1-5)",
+        "service": "Integer - Rating for service quality (1-5)",
+        "ambience": "Integer - Rating for ambience (1-5)",
+        "value": "Integer - Rating for value (1-5)",
+        "noise": "String - Description of noise level (e.g., 'Quiet', 'Moderate', 'Energetic')",
+        "overall": "Integer - Overall rating (1-5)"
+      },
+      "user": {
+        "name": "String - Reviewer's name",
+        "number_of_reviews": "Integer - Total number of reviews by the user",
+        "location": "String - Reviewer's location",
+      },
+      "helpfulness": {
+        "up": "Integer - Number of helpful votes",
+        "score": "Integer - Net helpful score"
+      },
+      "images": [
+        "id": "String - ID of the image",
+        "timestamp": "String - Timestamp when the image was uploaded",
+        "variants": [
+          {
+            "size": "String - Size of the image variant (e.g., 'small', 'medium', 'xlarge', ...)",
+            "url": "String - URL of the image variant"
+          }
+        ]
+      ],
+      "response": {
+        "content": "String - The restaurant's response to the review",
+        "date": "String - The date the response was posted"
+      }
+    },
+    ...
+  ],
+  ...
+}

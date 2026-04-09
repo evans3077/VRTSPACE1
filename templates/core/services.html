@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+    <div class="container section-heading">
+        <p class="eyebrow">Solution library</p>
+        <h1>Browse the VRT SPACE growth system.</h1>
+        <p class="section-text">
+            These pages explain how each module fits the audit, workspace, reporting, and custom-build paths
+            without forcing every user into a direct inquiry.
+        </p>
+    </div>
+</section>
+
+{% for group in service_groups %}
+<section class="services-section tone-{{ group.tone }}">
+    <div class="container service-band-head">
+        <div>
+            <p class="eyebrow">{{ group.title }}</p>
+            <h2>{{ group.lead }}</h2>
+        </div>
+    </div>
+    <div class="container service-grid expanded-grid">
+        {% for service in group.services %}
+        <article class="service-card">
+            <h3>{{ service.name }}</h3>
+            <p>{{ service.summary }}</p>
+            <ul class="bullet-list">
+                {% for bullet in service.bullets %}
+                <li>{{ bullet }}</li>
+                {% endfor %}
+            </ul>
+            <a class="package-link" href="{% url 'core:service-detail' slug=service.name|slugify %}">Open detail page</a>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endfor %}
+{% endblock %}

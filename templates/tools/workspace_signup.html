@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="padding-bottom: 2rem;">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Create Workspace</p>
+            <h1 style="max-width: none;">Save this audit and continue as a user</h1>
+            <p class="section-text" style="max-width: 760px;">
+                Create a workspace account to keep this audit, unlock plan-based modules, and return to your score history without using staff routes.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="packages-section" style="padding-top: 0;">
+    <div class="container" style="max-width: 760px;">
+        <article class="system-card" style="border-top: 4px solid var(--signal);">
+            {% if selected_package %}
+            <div style="margin-bottom: 1.5rem; padding: 1rem; border-radius: 16px; background: rgba(22, 163, 74, 0.08);">
+                <div class="eyebrow">Selected Plan</div>
+                <strong style="display: block; color: var(--ink); margin-bottom: 0.35rem;">{{ selected_package.name }}</strong>
+                <span style="font-size: 0.92rem; color: #64748b;">{{ selected_package.label }} - {{ selected_package.price }}</span>
+            </div>
+            {% endif %}
+
+            {% if audit_run %}
+            <div style="margin-bottom: 1.5rem; padding: 1rem; border-radius: 16px; background: #f8fafc;">
+                <div class="eyebrow">Linked Audit</div>
+                <strong style="display: block; color: var(--ink); margin-bottom: 0.35rem;">{{ audit_run.normalized_domain }}</strong>
+                <span style="font-size: 0.92rem; color: #64748b;">Overall score: {{ audit_run.overall_score }}</span>
+            </div>
+            {% endif %}
+
+            <div style="display: grid; gap: 0.75rem; margin-bottom: 1.5rem;">
+                {% if google_oauth_enabled %}
+                <a href="{{ google_oauth_url }}" class="button button-secondary" style="text-align: center;">Continue with Google</a>
+                {% endif %}
+                <p style="margin: 0; color: #64748b;">
+                    Already have an account?
+                    <a href="{{ login_url }}" style="font-weight: 700; color: var(--signal); text-decoration: none;">Sign in</a>
+                </p>
+            </div>
+
+            <form method="post" style="display: grid; gap: 1rem;">
+                {% csrf_token %}
+                {% if audit_run %}
+                <input type="hidden" name="audit" value="{{ audit_run.pk }}">
+                {% endif %}
+                {% if selected_package %}
+                <input type="hidden" name="package" value="{{ selected_package.name|lower }}">
+                {% endif %}
+                <div>
+                    <label for="{{ form.email.id_for_label }}" style="display: block; margin-bottom: 0.4rem; font-weight: 700;">Email</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                    <div style="color: #dc2626; font-size: 0.85rem; margin-top: 0.35rem;">{{ form.email.errors|join:", " }}</div>
+                    {% endif %}
+                </div>
+                <div>
+                    <label for="{{ form.password.id_for_label }}" style="display: block; margin-bottom: 0.4rem; font-weight: 700;">Password</label>
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                    <div style="color: #dc2626; font-size: 0.85rem; margin-top: 0.35rem;">{{ form.password.errors|join:", " }}</div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="button button-primary">Create Free Workspace</button>
+            </form>
+        </article>
+    </div>
+</section>
+{% endblock %}

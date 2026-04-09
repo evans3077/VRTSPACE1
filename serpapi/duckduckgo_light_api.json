@@ -1,0 +1,404 @@
+{
+"search_metadata":
+{
+"id":
+"695926a38c24bd247f1be7b4",
+"status":
+"Success",
+"json_endpoint":
+"https://serpapi.com/searches/9f1cacc6a23c0e72/695926a38c24bd247f1be7b4.json",
+"created_at":
+"2026-01-03 14:24:35 UTC",
+"processed_at":
+"2026-01-03 14:24:35 UTC",
+"duckduckgo_light_url":
+"https://html.duckduckgo.com/html/",
+"raw_html_file":
+"https://serpapi.com/searches/9f1cacc6a23c0e72/695926a38c24bd247f1be7b4.html",
+"total_time_taken":
+0.85
+},
+"search_parameters":
+{
+"engine":
+"duckduckgo_light",
+"q":
+"Coffee"
+},
+"search_information":
+{
+"organic_results_state":
+"Results for exact spelling"
+},
+"organic_results":
+[
+{
+"position":
+1,
+"title":
+"THE BEST 10 COFFEE & TEA in LUBBOCK, TX - Updated 2025 - Yelp",
+"link":
+"https://www.yelp.com/search?cflt=coffee&find_loc=Lubbock%2C+TX",
+"displayed_link":
+"www.yelp.com/search?cflt=coffee&find_loc=Lubbock,+TX",
+"snippet":
+"What are people saying about coffee & tea in Lubbock, TX? This is a review for coffee & tea in Lubbock, TX: "i have found my favorite lubbock cafe. this place truly understands good coffee and prioritizes it, all while maintaining a great ambiance and price point. i got the cafe sua da, and i was blown away by the presentation. this is how it's meant to be served!! it was such a delicious cup ...",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.yelp.com.ico"
+},
+{
+"position":
+2,
+"title":
+"9 Must-Try Coffee Shops in Lubbock",
+"link":
+"https://visitlubbock.org/blog/9-must-try-coffee-shops-in-lubbock/",
+"displayed_link":
+"visitlubbock.org/blog/9-must-try-coffee-shops-in-lubbock/",
+"date_raw":
+"2024-01-25T00:00:00.0000000",
+"date":
+"Jan 25, 2024",
+"snippet":
+"Monomyth Coffee Located within walking distance of Texas Tech University's campus, Monomyth is the perfect workspace and small gathering location. Guests are delighted to see the shop is partnered with Brûlée Bakery, a family-owned business, to offer delicious, locally made pastries. Our favorite snacks are the Churro Morning Bun and the classic Blueberry Muffin. 02",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/visitlubbock.org.ico"
+},
+{
+"position":
+3,
+"title":
+"The Best Coffee Shops in Lubbock, TX - 2025 Restaurantji",
+"link":
+"https://www.restaurantji.com/tx/lubbock/coffee-shops/",
+"displayed_link":
+"www.restaurantji.com/tx/lubbock/coffee-shops/",
+"snippet":
+"We've gathered up the best places to grab a coffee in Lubbock. Our current favorites are: 1: Monomyth Coffee, 2: Gold Stripe Coffee Roasters, 3: J&B Coffee, 4: Gold Stripe Coffee Roasters, 5: Brewed Awakening Coffee Lounge",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.restaurantji.com.ico"
+},
+{
+"position":
+4,
+"title":
+"8 Best Coffee Shops in Lubbock 2025: Great Cafés to Try!",
+"link":
+"https://cornercoffeestore.com/best-coffee-shops-in-lubbock/",
+"displayed_link":
+"cornercoffeestore.com/best-coffee-shops-in-lubbock/",
+"date_raw":
+"2025-03-29T00:00:00.0000000",
+"date":
+"Mar 29, 2025",
+"snippet":
+"There's no shortage of great coffee shops in Lubbock. If you're a local to the area or visiting the lone star state...",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/cornercoffeestore.com.ico"
+},
+{
+"position":
+5,
+"title":
+"Coffee Shops in Lubbock, TX - The Real Yellow Pages®",
+"link":
+"https://www.yellowpages.com/lubbock-tx/coffee-shops",
+"displayed_link":
+"www.yellowpages.com/lubbock-tx/coffee-shops",
+"snippet":
+"Coffee Shops in Lubbock on YP.com. See reviews, photos, directions, phone numbers and more for the best Coffee Shops in Lubbock, TX.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.yellowpages.com.ico"
+},
+{
+"position":
+6,
+"title":
+"Drive-Thru Coffee in Lubbock, TX | Visit 7 Brew at 1415 University Ave",
+"link":
+"https://locations.7brew.com/tx/lubbock/1415-university-ave",
+"displayed_link":
+"locations.7brew.com/tx/lubbock/1415-university-ave",
+"date_raw":
+"2025-12-11T00:00:00.0000000",
+"date":
+"Dec 11, 2025",
+"snippet":
+"Welcome to 7 Brew Coffee in Lubbock, TX, where fast meets friendly! Explore our menu of coffee, energy drinks, smoothies, and more, served with speed and a smile. Visit our drive-thru today at 1415 University Ave",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/locations.7brew.com.ico"
+},
+{
+"position":
+7,
+"title":
+"THE 10 BEST Cafés in Lubbock (Updated 2026) - Tripadvisor",
+"link":
+"https://www.tripadvisor.com/Restaurants-g56208-c8-Lubbock_Texas.html",
+"displayed_link":
+"www.tripadvisor.com/Restaurants-g56208-c8-Lubbock_Texas.html",
+"snippet":
+"Best Cafés in Lubbock, Texas: Find Tripadvisor traveller reviews of Lubbock Cafés and search by price, location, and more.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.tripadvisor.com.ico"
+},
+{
+"position":
+8,
+"title":
+"Best Coffee Shops in Lubbock, TX - CoffeePlume",
+"link":
+"https://coffeeplume.com/coffee-shops-in-lubbock-tx/",
+"displayed_link":
+"coffeeplume.com/coffee-shops-in-lubbock-tx/",
+"date_raw":
+"2025-10-25T00:00:00.0000000",
+"date":
+"Oct 25, 2025",
+"snippet":
+"Finding a great cup of coffee in Lubbock, TX isn't hard—but finding the right spot that fits your vibe, your schedule, and your taste buds?",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/coffeeplume.com.ico"
+},
+{
+"position":
+9,
+"title":
+"Home | Gold Stripe Coffee",
+"link":
+"https://www.goldstripecoffee.com/",
+"displayed_link":
+"www.goldstripecoffee.com",
+"snippet":
+"Craft coffee roasted, served, and catered in the Lubbock area, espresso equipment, repairs, and wholesale.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/www.goldstripecoffee.com.ico"
+},
+{
+"position":
+10,
+"title":
+"Best Specialty Coffee in Lubbock Texas (2025) - CoffeeSpots",
+"link":
+"https://coffeespots.com/location/united-states/texas/lubbock/",
+"displayed_link":
+"coffeespots.com/location/united-states/texas/lubbock/",
+"snippet":
+"Find specialty coffee in Lubbock, Texas, United States. 3000+ third-wave cafés serving specialty beans, manual brews, and pro-grade barista-grade gear.",
+"favicon":
+"https://external-content.duckduckgo.com/ip3/coffeespots.com.ico"
+}
+],
+"serpapi_pagination":
+{
+"next":
+"https://serpapi.com/search.json?engine=duckduckgo_light&next_page_token=eyJxIjoiQ29mZmVlIiwicyI6IjEwIiwibmV4dFBhcmFtcyI6IiIsInYiOiJsIiwibyI6Impzb24iLCJkYyI6IjExIiwiYXBpIjoiZC5qcyIsInZxZCI6IjQtMzIwNTc3MTgyMDg4Njc2NjYxNDk3NzIyNDM5NDA0MTYwODc3NTY3Iiwia2wiOiJ3dC13dCJ9&q=Coffee",
+"next_page_token":
+"eyJxIjoiQ29mZmVlIiwicyI6IjEwIiwibmV4dFBhcmFtcyI6IiIsInYiOiJsIiwibyI6Impzb24iLCJkYyI6IjExIiwiYXBpIjoiZC5qcyIsInZxZCI6IjQtMzIwNTc3MTgyMDg4Njc2NjYxNDk3NzIyNDM5NDA0MTYwODc3NTY3Iiwia2wiOiJ3dC13dCJ9"
+}
+}
+
+GET
+
+
+https://serpapi.com/search.json?engine=duckduckgo_light&q=Coffee
+
+Code to integrate
+
+cURLRubyPythonJavaScriptGoPHPJavaRust.NETGoogle Sheets
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "duckduckgo_light",
+  q: "Coffee",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+organic_results = results[:organic_results]
+API Parameters
+Search Query
+q
+
+Required
+
+Parameter defines the query you want to search. You can use anything that you would use in a regular DuckDuckGo search. (e.g., inurl:, site:, intitle:, etc.)
+
+Parameter length can not exceed 500 characters.
+
+Localization
+kl
+
+Optional
+
+Parameter defines the region to use for the DuckDuckGo search. Region code examples: us-en for the United States, uk-en for United Kingdom, or fr-fr for France. Head to the DuckDuckGo regions for a full list of supported regions.
+
+Advanced Duckduckgo Filters
+df
+
+Optional
+
+Parameter defines results filtered by date.
+
+It can be set to:
+d: Past day,
+w: Past week,
+m: Past month,
+y: Past year,
+
+or you can pass a custom date following the next format: from_date + .. + to_date (e.g. 2021-06-15..2024-06-16).
+
+Pagination
+next_page_token
+
+Optional
+
+Parameter defines the next page token. It is used for retrieving the next page results. 15 results are returned per page.
+
+Serpapi Parameters
+engine
+
+Required
+
+Set parameter to duckduckgo_light to use the DuckDuckGo Light API engine.
+
+no_cache
+
+Optional
+
+Parameter will force SerpApi to fetch the DuckDuckGo Light results even if a cached version is already present. A cache is served only if the query and all parameters are exactly the same. Cache expires after 1h. Cached searches are free, and are not counted towards your searches per month. It can be set to false (default) to allow results from the cache, or true to disallow results from the cache. no_cache and async parameters should not be used together.
+
+async
+
+Optional
+
+Parameter defines the way you want to submit your search to SerpApi. It can be set to false (default) to open an HTTP connection and keep it open until you got your search results, or true to just submit your search to SerpApi and retrieve them later. In this case, you'll need to use our Searches Archive API to retrieve your results. async and no_cache parameters should not be used together. async should not be used on accounts with Ludicrous Speed enabled.
+
+zero_trace
+
+Optional
+
+Enterprise only. Parameter enables ZeroTrace mode. It can be set to false (default) or true. Enable this mode to skip storing search parameters, search files, and search metadata on our servers. This may make debugging more difficult.
+
+api_key
+
+Required
+
+Parameter defines the SerpApi private key to use.
+
+output
+
+Optional
+
+Parameter defines the final output you want. It can be set to json (default) to get a structured JSON of the results, or html to get the raw html retrieved.
+
+API Results
+JSON Results
+JSON output includes structured data for Organic Results, Ads Results, Knowledge Graph.
+
+A search status is accessible through search_metadata.status. It flows this way: Processing -> Success || Error. If a search has failed, error will contain an error message. search_metadata.id is the search ID inside SerpApi.
+
+HTML Results
+HTML output is useful to debug JSON results or support features not supported yet by SerpApi. HTML output gives you the raw HTML results from DuckDuckGo Light.
+
+API Examples
+Results for:
+Coffee
+GET
+
+
+https://serpapi.com/search.json?engine=duckduckgo_light&q=Coffee
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "duckduckgo_light",
+  q: "Coffee",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "68399481ac29780996699bdf",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/84b1f8bfab22956c/68399481ac29780996699bdf.json",
+    "created_at": "2025-05-30 11:20:33 UTC",
+    "processed_at": "2025-05-30 11:20:33 UTC",
+    "duckduckgo_light_url": "https://html.duckduckgo.com/html/",
+    "raw_html_file": "https://serpapi.com/searches/84b1f8bfab22956c/68399481ac29780996699bdf.html",
+    "total_time_taken": 1.32
+  },
+  "search_parameters": {
+    "engine": "duckduckgo_light",
+    "q": "Coffee",
+    "kl": "us-en"
+  },
+  "search_information": {
+    "organic_results_state": "Results for exact spelling"
+  },
+  "ads": [
+    {
+      "position": 1,
+      "title": "Clean Coffee Made Easy - Popular Coffee Mix-ins Ad Viewing ads is privacy protected by DuckDuckGo. Ad clicks are managed by Microsoft's ad network (more info).",
+      "link": "https://duckduckgo.com/y.js?ad_domain=bulletproof.com&ad_provider=bingv7aa&ad_type=txad&click_metadata=svrWSeSeWzk36Qjv1O6yk9SPUa5VH%2DVoPbTwZyO2gPodoYqjowG4b4JnI2mM5x2oXz4eAYmnYhD7Lq0luVlvIi6VeBPHZo%2DYWVZU9bpjJUHuwOW8Bt0od0r9el3F4y4B.43XeLfes5YB0m3nT8KN0MA&rut=e5844588bdc236c305c6d47700eac163e6a8b4db7e5c111224fb12bb73125132&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De8NxTumrQgmaJF%2DXroGt%2DFhDVUCUwZx_%2DKJecun_%2DJx9hxfb2Bh8WC%2DdrfwP4tvj5auArrfgsBZZbz7WzOyhG6uLQMHvW_CErw8NpSc4s_1mW0v4UrqUtDnshIvw9oWSWaHkfbBq7jDXuJe_bvsX6HfgjNwel7xdDvX5u8gdqkAzZt6FjWOioA_TTsjhUnwWnrCEiHaQ%26u%3DaHR0cHMlM2ElMmYlMmZzaG9wLmJ1bGxldHByb29mLmNvbSUyZmNvbGxlY3Rpb25zJTJmc3RhcnRlci1raXRzJTNmbXNjbGtpZCUzZGNlNDFkYzY3ZWJmNjE4NGE2N2U3YjQ1ZTdmNzQ0NmIzJTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX2NhbXBhaWduJTNkUE1heCUyNTIwJTI1N0MlMjUyMENvcmUlMjUyMCUyNTdDJTI1MjBNaXgtSW5zJTI1MjAlMjU3QyUyNTIwVVMlMjUyMCUyNTdDJTI1MjBST0FTJTI2dXRtX3Rlcm0lM2RzaG9wLmJ1bGxldHByb29mLmNvbSUyNnV0bV9jb250ZW50JTNkQ29yZSUyNTIwJTI1N0MlMjUyMEtpdHMlMjUyMCUyNTI2JTI1MjBHaGVl%26rlid%3Dce41dc67ebf6184a67e7b45e7f7446b3&vqd=4-207571538713811304394050936699421108537&iurl=%7B1%7DIG%3D60175C25A9AD4801BFD51E38F7FD5A39%26CID%3D30E80267745366B7315E179B75946741%26ID%3DDevEx%2C5047.1",
+      "displayed_link": "bulletproof.com",
+      "direct_link": "https://shop.bulletproof.com/collections/starter-kits?msclkid=ce41dc67ebf6184a67e7b45e7f7446b3&utm_source=bing&utm_medium=cpc&utm_campaign=PMax%20%7C%20Core%20%7C%20Mix-Ins%20%7C%20US%20%7C%20ROAS&utm_term=shop.bulletproof.com&utm_content=Core%20%7C%20Kits%20%26%20Ghee",
+      "snippet": "Bulletproof products help provide the fuel for your healthy lifestyle. Subscribe and Save 30% plus receive free shipping. Free shipping on all orders over $49"
+    },
+    {
+      "position": 2,
+      "title": "Healthiest Coffee Made For You - Discover Lifeboost Coffee Ad Viewing ads is privacy protected by DuckDuckGo. Ad clicks are managed by Microsoft's ad network (more info).",
+      "link": "https://duckduckgo.com/y.js?ad_domain=lifeboostcoffee.com&ad_provider=bingv7aa&ad_type=txad&click_metadata=ZcNmecC0ifZ4xn%2Dd2laHcly5KjCmLgDdTUO5ln_xUj7R5XcZ1_b%2DwGbwhVs3gzD9TD64%2DoiHy9h%2DidwX9L5uEKjvpU6Uv6N0xQcrcdkmVE%2DGKFtQhD7A3PhSV58VzM%2Dj.wzMiSB70q2A5fFbnY3O6IQ&rut=7d1a176db5353038de382ac3e7cab4b8450a2de1049f85168f3d66fbfdfcf32d&u3=https%3A%2F%2Fwww.bing.com%2Faclick%3Fld%3De8V5N5LnRmo_86eGan8yPsIDVUCUxq2e_v5viG%2DalRyU3iddkfbAm26tJDYurPTF3uiPmYnapNyw_VjCuTXHbQc%2DlGj3KKYqRhR_M4r%2DkGA%2DGHaZR6W%2Du5NDCq7R4HU3ejxEik5iXHZZCcxmbJLoi7Y_w1dO7W0xwQDrCj5cQTzzG5E9QXmIV2hW8ldbRTRw3Hm6EFMA%26u%3DaHR0cHMlM2ElMmYlMmZsaWZlYm9vc3Rjb2ZmZWUuY29tJTJmY29sbGVjdGlvbnMlMmZzcHJpbmctZmxhdm9ycyUzZm5iX3NpJTNkJTdic291cmNlaWQlN2QlMjZ1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZ1dG1fY2FtcGFpZ24lM2Q1MzA4Mzk4NzYlMjZ1dG1fY29udGVudCUzZDEzNjIyOTc0MTI3NDE1NDklMjZuYnQlM2RuYiUyNTNBbWljcm9zb2Z0JTI1M0FzJTI1M0E1MzA4Mzk4NzYlMjUzQTEzNjIyOTc0MTI3NDE1NDklMjUzQTg1MTQzOTkzNTY0NjMwJTI2bmJfbXQlM2RiJTI2bmJfYm10JTNkYmIlMjZuYl9vaWklM2Q4NTE0NDcyMDgxNjUxNiUyNm5iX3FzJTNkQ29mZmVlJTI2bmJfZmlpJTNkJTI2bmJfbGlfbXMlM2QlMjZuYl9scF9tcyUzZDk3NjMyJTI2bmJfcGklM2QlMjZuYl9wYyUzZCUyNm5iX2NpJTNkJTI2bXNjbGtpZCUzZGYyZWJiYTBjNmRhODFlMGQ3YzU0ZDIzNWY5MmE1MTNiJTI2dXRtX3Rlcm0lM2RzdG9tYWNoLWZyaWVuZGx5JTI1MjBjb2ZmZWU%26rlid%3Df2ebba0c6da81e0d7c54d235f92a513b&vqd=4-30717342991489078040237121589486299579&iurl=%7B1%7DIG%3D60175C25A9AD4801BFD51E38F7FD5A39%26CID%3D30E80267745366B7315E179B75946741%26ID%3DDevEx%2C5052.1",
+      "displayed_link": "lifeboostcoffee.com",
+      "direct_link": "https://lifeboostcoffee.com/collections/spring-flavors?nb_si={sourceid}&utm_source=bing&utm_medium=cpc&utm_campaign=530839876&utm_content=1362297412741549&nbt=nb%3Amicrosoft%3As%3A530839876%3A1362297412741549%3A85143993564630&nb_mt=b&nb_bmt=bb&nb_oii=85144720816516&nb_qs=Coffee&nb_fii=&nb_li_ms=&nb_lp_ms=97632&nb_pi=&nb_pc=&nb_ci=&msclkid=f2ebba0c6da81e0d7c54d235f92a513b&utm_term=stomach-friendly%20coffee",
+      "snippet": "Enjoy a Cup of Healthy, Invigorating, Stomach-Friendly Coffee. Certified & Single Sourced. Pack Your Pantry with Light to Dark Roast, Decaf, Flavored, Probiotic, and More!"
+    }
+  ],
+  "organic_results": [
+    {
+      "position": 1,
+      "title": "The Best Coffee Shops in New York City - Eater NY",
+      "link": "https://ny.eater.com/maps/best-cafe-coffee-shop-new-york-city-brooklyn-queens",
+      "displayed_link": "ny.eater.com/maps/best-cafe-coffee-shop-new-york-city-brooklyn-queens",
+      "date_raw": "2025-03-10T16:07:00.0000000",
+      "date": "Mar 10, 2025",
+      "snippet": "Find expertly brewed cups of coffee and award-winning pastries at these cafes in New York City, from the Bronx to Brooklyn. Explore the diversity of neighborhoods, cuisines, and prices with Eater's curated map and reviews.",
+      "favicon": "https://external-content.duckduckgo.com/ip3/ny.eater.com.ico"
+    },
+    {
+      "position": 2,
+      "title": "21 Best Coffee Shops in NYC For Lattes, Iced Coffees and Espresso",
+      "link": "https://www.timeout.com/newyork/restaurants/best-coffee-shops-in-new-york",
+      "displayed_link": "www.timeout.com/newyork/restaurants/best-coffee-shops-in-new-york",
+      "date_raw": "2024-07-08T00:00:00.0000000",
+      "date": "Jul 8, 2024",
+      "snippet": "Find your new favorite spot for a morning iced coffee or an afternoon matcha at these coffee shops, cafés and bakeries. They serve up the best lattes, cold brews and matcha in the city, as well as inventive drinks, sandwiches and pastries.",
+      "favicon": "https://external-content.duckduckgo.com/ip3/www.timeout.com.ico"
+    },
+    {
+      "position": 3,
+      "title": "15 TOP-NOTCH Coffee Shops in New York City (Worth a Detour)",
+      "link": "https://newyorkspork.com/best-coffee-nyc/",
+      "displayed_link": "newyorkspork.com/best-coffee-nyc/",
+      "date_raw": "2025-02-05T00:00:00.0000000",
+      "date": "Feb 5, 2025",
+      "snippet": "Incapable of playing second fiddle, New York City offers the best of everything and coffee is no exception. Chock-full of charming corner cafes and shoe-box sized coffee shops, you'll find everything from the latest artisanal brews to time-honored institutions that have been serving New Yorkers for 100+ years. On that note, here's a quick roundup of the best coffee in New York City.",
+      "favicon": "https://external-content.duckduckgo.com/ip3/newyorkspork.com.ico"
+    },
+    ...
+  ],
+  "serpapi_pagination": {
+    "next": "https://serpapi.com/search.json?engine=duckduckgo_light&kl=us-en&next_page_token=eyJxIjoiQ29mZmVlIiwicyI6IjEwIiwibmV4dFBhcmFtcyI6IiIsInYiOiJsIiwibyI6Impzb24iLCJkYyI6IjEzIiwiYXBpIjoiZC5qcyIsInZxZCI6IjQtMzE5NDEwNzE2NjI3NDM1NDk2NTkyMjEzNjA3Mzg3MTQ0NDk4MzUxIiwia2wiOiJ1cy1lbiJ9&q=Coffee",
+    "next_page_token": "eyJxIjoiQ29mZmVlIiwicyI6IjEwIiwibmV4dFBhcmFtcyI6IiIsInYiOiJsIiwibyI6Impzb24iLCJkYyI6IjEzIiwiYXBpIjoiZC5qcyIsInZxZCI6IjQtMzE5NDEwNzE2NjI3NDM1NDk2NTkyMjEzNjA3Mzg3MTQ0NDk4MzUxIiwia2wiOiJ1cy1lbiJ9"
+  }
+}

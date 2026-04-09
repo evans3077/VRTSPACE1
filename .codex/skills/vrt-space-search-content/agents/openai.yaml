@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRT Search and Content"
+  short_description: "SEO, AEO, and content execution"
+  default_prompt: "Use $vrt-space-search-content to create search-ready content and page strategy for VRT SPACE AGENCY."

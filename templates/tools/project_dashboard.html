@@ -1,0 +1,178 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="padding-bottom: 2rem;">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Project Dashboard</p>
+            <h1 style="max-width: none;">{{ project.name }}</h1>
+            <p class="section-text" style="max-width: 860px;">
+                Staff view of the current project state, latest audit score, and the active remediation queue for {{ project.normalized_domain|default:project.website }}.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="packages-section" style="padding-top: 0;">
+    <div class="container">
+        <div style="display: grid; grid-template-columns: 340px 1fr; gap: 2rem; align-items: start;">
+            <aside style="display: grid; gap: 1rem;">
+                <article class="system-card" style="border-top: 4px solid var(--signal);">
+                    <p class="eyebrow">Project State</p>
+                    <h3>{{ project.stage|title }}</h3>
+                    <div style="display: grid; gap: 0.75rem; margin-top: 1rem; font-size: 0.92rem; color: #64748b;">
+                        <div><strong style="color: var(--ink);">Website:</strong> {{ project.website }}</div>
+                        <div><strong style="color: var(--ink);">Contact:</strong> {{ project.contact_email|default:"Not set" }}</div>
+                        <div><strong style="color: var(--ink);">Latest Score:</strong> {{ project.latest_score }}</div>
+                    </div>
+                </article>
+
+                {% if latest_audit %}
+                <article class="system-card">
+                    <p class="eyebrow">Latest Audit</p>
+                    <h3>{{ latest_audit.normalized_domain }}</h3>
+                    <div style="display: grid; gap: 0.75rem; margin-top: 1rem; font-size: 0.92rem; color: #64748b;">
+                        <div><strong style="color: var(--ink);">Status:</strong> {{ latest_audit.status|title }}</div>
+                        <div><strong style="color: var(--ink);">Pages Crawled:</strong> {{ latest_audit.pages_crawled }}</div>
+                        <div><strong style="color: var(--ink);">Completed:</strong> {{ latest_audit.completed_at|default:"Pending" }}</div>
+                    </div>
+                    <div style="margin-top: 1.25rem;">
+                        <a href="{% url 'tools:agency-audit' latest_audit.pk %}" class="button button-secondary" style="width: 100%;">
+                            Open Agency Audit
+                        </a>
+                    </div>
+                </article>
+                {% endif %}
+
+                {% if product_modules %}
+                <article class="system-card">
+                    <p class="eyebrow">Recommended Modules</p>
+                    <div style="display: grid; gap: 0.75rem;">
+                        {% for fit in product_modules %}
+                        <div style="padding: 0.9rem; border-radius: 14px; background: #f8fafc;">
+                            <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 0.3rem;">
+                                <strong style="display: block; color: var(--ink);">{{ fit.title }}</strong>
+                                <span class="score-pill score-high" style="font-size: 0.65rem;">{{ fit.plan|default:"Plan" }}</span>
+                            </div>
+                            <span style="font-size: 0.84rem; color: #64748b;">{{ fit.reason }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </article>
+                {% endif %}
+
+                {% if custom_work_items %}
+                <article class="system-card">
+                    <p class="eyebrow">Custom Work</p>
+                    <div style="display: grid; gap: 0.75rem;">
+                        {% for item in custom_work_items %}
+                        <div style="padding: 0.9rem; border-radius: 14px; background: #f8fafc;">
+                            <strong style="display: block; color: var(--ink); margin-bottom: 0.3rem;">{{ item.title }}</strong>
+                            <span style="font-size: 0.84rem; color: #64748b;">{{ item.reason }}</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </article>
+                {% endif %}
+            </aside>
+
+            <div style="display: grid; gap: 2rem;">
+                <article class="system-card">
+                    <div class="section-heading" style="margin-bottom: 1.5rem; text-align: left;">
+                        <p class="eyebrow">Score Breakdown</p>
+                        <h2 style="font-size: 2rem;">Current growth-layer scores</h2>
+                    </div>
+                    <div class="system-grid">
+                        {% for key, item in score_breakdown.items %}
+                        <div class="system-card" style="border-top: 4px solid {% if item.status == 'strong' %}#16a34a{% elif item.status == 'stable' %}#0ea5e9{% elif item.status == 'weak' %}#ea580c{% else %}#dc2626{% endif %};">
+                            <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 0.6rem;">
+                                <strong>{{ item.label }}</strong>
+                                <span style="font-size: 1.3rem; font-weight: 900; color: var(--ink);">{{ item.score }}</span>
+                            </div>
+                            <p style="font-size: 0.75rem; color: #64748b; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 0.75rem;">
+                                {{ item.status }} | {{ item.issues }} issue{{ item.issues|pluralize }}
+                            </p>
+                            <p style="font-size: 0.88rem; color: #64748b; margin: 0;">{{ item.next_step }}</p>
+                        </div>
+                        {% empty %}
+                        <div class="system-card">
+                            <h3>No score data yet</h3>
+                            <p>No completed audit summary is attached to this project.</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </article>
+
+                <article class="system-card">
+                    <div class="section-heading" style="margin-bottom: 1.5rem; text-align: left;">
+                        <p class="eyebrow">Recommendation Queue</p>
+                        <h2 style="font-size: 2rem;">Latest remediation priorities</h2>
+                    </div>
+                    <div style="display: grid; gap: 1rem;">
+                        {% for recommendation in recommendations|slice:":8" %}
+                        <div style="padding: 1rem 1.1rem; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 18px;">
+                            <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: start; margin-bottom: 0.5rem;">
+                                <div>
+                                    <div class="eyebrow" style="margin-bottom: 0.35rem;">{{ recommendation.category }}</div>
+                                    <strong style="color: var(--ink);">{{ recommendation.title }}</strong>
+                                </div>
+                                <span class="score-pill {% if recommendation.priority_score >= 80 %}score-low{% elif recommendation.priority_score >= 60 %}score-med{% else %}score-high{% endif %}">
+                                    {{ recommendation.priority_score }}
+                                </span>
+                            </div>
+                            <p style="margin: 0 0 0.75rem; color: #64748b;">{{ recommendation.description }}</p>
+                            <div style="font-size: 0.88rem; color: var(--ink);"><strong>Fix:</strong> {{ recommendation.recommended_fix }}</div>
+                        </div>
+                        {% empty %}
+                        <div style="padding: 1rem 1.1rem; border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 18px; color: #64748b;">
+                            No recommendation set is available for this project yet.
+                        </div>
+                        {% endfor %}
+                    </div>
+                </article>
+
+                <article class="system-card">
+                    <div class="section-heading" style="margin-bottom: 1.5rem; text-align: left;">
+                        <p class="eyebrow">Audit History</p>
+                        <h2 style="font-size: 2rem;">Recent score movement</h2>
+                    </div>
+                    <div style="overflow-x: auto;">
+                        <table style="width: 100%; border-collapse: collapse; min-width: 700px;">
+                            <thead>
+                                <tr style="text-align: left; border-bottom: 2px solid #e2e8f0;">
+                                    <th style="padding: 0.85rem;">Created</th>
+                                    <th style="padding: 0.85rem;">Status</th>
+                                    <th style="padding: 0.85rem;">Overall</th>
+                                    <th style="padding: 0.85rem;">Technical</th>
+                                    <th style="padding: 0.85rem;">AEO</th>
+                                    <th style="padding: 0.85rem;">Performance</th>
+                                    <th style="padding: 0.85rem;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for audit in audit_history %}
+                                <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                    <td style="padding: 0.85rem;">{{ audit.created_at }}</td>
+                                    <td style="padding: 0.85rem;">{{ audit.status|title }}</td>
+                                    <td style="padding: 0.85rem;">{{ audit.overall_score }}</td>
+                                    <td style="padding: 0.85rem;">{{ audit.technical_score }}</td>
+                                    <td style="padding: 0.85rem;">{{ audit.aeo_score }}</td>
+                                    <td style="padding: 0.85rem;">{{ audit.performance_score }}</td>
+                                    <td style="padding: 0.85rem;">
+                                        <a href="{% url 'tools:agency-audit' audit.pk %}" style="color: var(--signal); font-weight: 700; text-decoration: none;">Open</a>
+                                    </td>
+                                </tr>
+                                {% empty %}
+                                <tr>
+                                    <td colspan="7" style="padding: 1rem; color: #64748b;">No audit history has been attached to this project.</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </article>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

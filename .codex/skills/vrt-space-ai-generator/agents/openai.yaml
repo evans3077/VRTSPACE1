@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRT Space AI Generator"
+  short_description: "Build context-aware content generation systems for VRT Space"
+  default_prompt: "Use $vrt-space-ai-generator to design or implement VRT SPACE content generation workflows."

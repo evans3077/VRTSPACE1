@@ -1,0 +1,1533 @@
+{
+"search_metadata":
+{
+"id":
+"695927148c24bd247f1be7ce",
+"status":
+"Success",
+"json_endpoint":
+"https://serpapi.com/searches/a8bb65167798dba9/695927148c24bd247f1be7ce.json",
+"created_at":
+"2026-01-03 14:26:28 UTC",
+"processed_at":
+"2026-01-03 14:26:28 UTC",
+"google_local_services_url":
+"https://www.google.com/_/AdsHomeservicesConsumerUi/data/batchexecute?hl=en",
+"raw_html_file":
+"https://serpapi.com/searches/a8bb65167798dba9/695927148c24bd247f1be7ce.html",
+"prettify_html_file":
+"https://serpapi.com/searches/a8bb65167798dba9/695927148c24bd247f1be7ce.prettify",
+"total_time_taken":
+0.95
+},
+"search_parameters":
+{
+"engine":
+"google_local_services",
+"hl":
+"en",
+"q":
+"appliance_repair",
+"data_cid":
+"6745062158417646970"
+},
+"search_information":
+{
+"google_local_services_url":
+"https://www.google.com/localservices/prolist?scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4"
+},
+"local_ads":
+[
+{
+"title":
+"Max Appliance Repair",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=Max+Appliance+Repair&spp=EkcKEgizibTuAhDKspfMCRj_x6-gJRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"rating":
+4.8,
+"reviews":
+3320,
+"phone":
+"+18324792801",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"years_in_business":
+11,
+"thumbnail":
+"https://lh3.googleusercontent.com/WORRFKxR7_6CAp9dO2vkD4kkprADBhd3Jn2_tIgG85jXbmTXLT6ZmyhctVfZzA=w150-h150-p-rj-sc0x00ffffff",
+"hours":
+{
+"currently":
+"Open · Closes 6 PM",
+"week":
+[
+{
+"monday":
+"7:30 AM–7 PM"
+},
+{
+"tuesday":
+"7:30 AM–7 PM"
+},
+{
+"wednesday":
+"7:30 AM–7 PM"
+},
+{
+"thursday":
+"7:30 AM–7 PM"
+},
+{
+"friday":
+"8 AM–7 PM"
+},
+{
+"saturday":
+"8 AM–6 PM"
+},
+{
+"sunday":
+"Closed"
+}
+]
+},
+"cid":
+"768410803",
+"bid":
+"2575685962",
+"pid":
+"9999999999",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=2575685962&cid=768410803&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=9999999999&q=appliance_repair"
+},
+{
+"title":
+"Mr Appliance of Austin",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=Mr+Appliance+of+Austin&spp=EkcKEgiwwaarARDg35iyCRiVgKG0CRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"rating":
+4.7,
+"reviews":
+1285,
+"phone":
+"+15123771155",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"years_in_business":
+27,
+"thumbnail":
+"https://lh3.googleusercontent.com/ziyapY6oXgUdWaz_2rjO7Y-QC25v0dYbwPPgn4QVf36zJXiFYedZoH2WZWIp9ow=w150-h150-p-rj-sc0x00ffffff",
+"hours":
+{
+"currently":
+"Open 24 hours",
+"week":
+[
+{
+"monday":
+"Open 24 hours"
+},
+{
+"tuesday":
+"Open 24 hours"
+},
+{
+"wednesday":
+"Open 24 hours"
+},
+{
+"thursday":
+"Open 24 hours"
+},
+{
+"friday":
+"Open 24 hours"
+},
+{
+"saturday":
+"Open 24 hours"
+},
+{
+"sunday":
+"Open 24 hours"
+}
+]
+},
+"cid":
+"359243952",
+"bid":
+"2521182176",
+"pid":
+"2525511701",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=2521182176&cid=359243952&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=2525511701&q=appliance_repair"
+},
+{
+"title":
+"Flexible Appliance Repair",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=Flexible+Appliance+Repair&spp=EkcKEgjkrNmjGRDKqbKWIhj_x6-gJRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"rating":
+5,
+"reviews":
+191,
+"phone":
+"+17379001266",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"years_in_business":
+7,
+"thumbnail":
+"https://lh3.googleusercontent.com/FTP3RBHBvdZ1JY5J-Xg6wxNB04h_WoMuB4cUoMInOp0S-wM77j5995wascer=w150-h150-p-rj-sc0x00ffffff",
+"hours":
+{
+"currently":
+"Open · Closes 9 PM",
+"week":
+[
+{
+"monday":
+"7 AM–9 PM"
+},
+{
+"tuesday":
+"7 AM–9 PM"
+},
+{
+"wednesday":
+"7 AM–9 PM"
+},
+{
+"thursday":
+"7 AM–9 PM"
+},
+{
+"friday":
+"7 AM–9 PM"
+},
+{
+"saturday":
+"7 AM–9 PM"
+},
+{
+"sunday":
+"Closed"
+}
+]
+},
+"cid":
+"6785750628",
+"bid":
+"9173767370",
+"pid":
+"9999999999",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=9173767370&cid=6785750628&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=9999999999&q=appliance_repair"
+},
+{
+"title":
+"HomeHelp appliance Experts",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=HomeHelp+appliance+Experts&spp=EkcKEgj4pviNBhCinK2xJBj_x6-gJRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"rating":
+4.9,
+"reviews":
+69,
+"phone":
+"+12542511430",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"years_in_business":
+5,
+"hours":
+{
+"currently":
+"Open · Closes 4 PM",
+"week":
+[
+{
+"monday":
+"8 AM–6 PM"
+},
+{
+"tuesday":
+"8 AM–6 PM"
+},
+{
+"wednesday":
+"8 AM–6 PM"
+},
+{
+"thursday":
+"8 AM–6 PM"
+},
+{
+"friday":
+"8 AM–6 PM"
+},
+{
+"saturday":
+"8 AM–4 PM"
+},
+{
+"sunday":
+"10 AM–4 PM"
+}
+]
+},
+"cid":
+"1639846776",
+"bid":
+"9767177762",
+"pid":
+"9999999999",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=9767177762&cid=1639846776&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=9999999999&q=appliance_repair"
+},
+{
+"title":
+"C&W Appliance Repair Service",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=C%26W+Appliance+Repair+Service&spp=EkcKEgj6mdylAxDmu6_cCRj_x6-gJRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"rating":
+4.9,
+"reviews":
+68,
+"phone":
+"+19725327579",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"years_in_business":
+15,
+"hours":
+{
+"currently":
+"Open · Closes 12 PM",
+"week":
+[
+{
+"monday":
+"7 AM–7 PM"
+},
+{
+"tuesday":
+"7 AM–7 PM"
+},
+{
+"wednesday":
+"7 AM–7 PM"
+},
+{
+"thursday":
+"7 AM–7 PM"
+},
+{
+"friday":
+"7 AM–7 PM"
+},
+{
+"saturday":
+"8 AM–12 PM"
+},
+{
+"sunday":
+"Closed"
+}
+]
+},
+"cid":
+"884411642",
+"bid":
+"2609634790",
+"pid":
+"9999999999",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=2609634790&cid=884411642&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=9999999999&q=appliance_repair"
+},
+{
+"title":
+"Patriot Appliance Repair LLC",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=Patriot+Appliance+Repair+LLC&spp=EkcKEgiHmsiFARDt39itCRjD7d-uCRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"rating":
+4.8,
+"reviews":
+577,
+"phone":
+"+15129030641",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"hours":
+{
+"currently":
+"Open · Closes 10 PM",
+"week":
+[
+{
+"monday":
+"6 AM–10 PM"
+},
+{
+"tuesday":
+"6 AM–10 PM"
+},
+{
+"wednesday":
+"6 AM–10 PM"
+},
+{
+"thursday":
+"6 AM–10 PM"
+},
+{
+"friday":
+"6 AM–10 PM"
+},
+{
+"saturday":
+"6 AM–10 PM"
+},
+{
+"sunday":
+"Closed"
+}
+]
+},
+"cid":
+"280104199",
+"bid":
+"2511745005",
+"pid":
+"2513958595",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=2511745005&cid=280104199&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=2513958595&q=appliance_repair"
+},
+{
+"title":
+"Patriot Appliance & Air Conditioning Repair Service",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=Patriot+Appliance+%26+Air+Conditioning+Repair+Service&spp=EkYKEQjj7fQoEMvvjuYNGP_Hr6AlEjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVT&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"rating":
+4.8,
+"reviews":
+577,
+"phone":
+"+15129030641",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"years_in_business":
+13,
+"hours":
+{
+"currently":
+"Open 24 hours",
+"week":
+[
+{
+"monday":
+"Open 24 hours"
+},
+{
+"tuesday":
+"Open 24 hours"
+},
+{
+"wednesday":
+"Open 24 hours"
+},
+{
+"thursday":
+"Open 24 hours"
+},
+{
+"friday":
+"Open 24 hours"
+},
+{
+"saturday":
+"Open 24 hours"
+},
+{
+"sunday":
+"Open 24 hours"
+}
+]
+},
+"cid":
+"85800675",
+"bid":
+"3703814091",
+"pid":
+"9999999999",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=3703814091&cid=85800675&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=9999999999&q=appliance_repair"
+},
+{
+"title":
+"Central Appliance Repair",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=Central+Appliance+Repair&spp=EkcKEgjT1uDRBRCqvoyXFhj_x6-gJRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"rating":
+4.8,
+"reviews":
+199,
+"phone":
+"+15123662252",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"years_in_business":
+9,
+"hours":
+{
+"currently":
+"Open · Closes 8 PM",
+"week":
+[
+{
+"monday":
+"7 AM–9 PM"
+},
+{
+"tuesday":
+"7 AM–9 PM"
+},
+{
+"wednesday":
+"7 AM–9 PM"
+},
+{
+"thursday":
+"7 AM–9 PM"
+},
+{
+"friday":
+"7 AM–9 PM"
+},
+{
+"saturday":
+"7 AM–8 PM"
+},
+{
+"sunday":
+"Closed"
+}
+]
+},
+"cid":
+"1513630547",
+"bid":
+"5954019114",
+"pid":
+"9999999999",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=5954019114&cid=1513630547&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=9999999999&q=appliance_repair"
+},
+{
+"title":
+"NR Appliance Repair",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=NR+Appliance+Repair&spp=EkcKEgiYwd6FARC9lNitCRjn7d-uCRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"rating":
+5,
+"reviews":
+2,
+"phone":
+"+15127735819",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"hours":
+{
+"currently":
+"Open · Closes 3 PM",
+"week":
+[
+{
+"monday":
+"8 AM–5 PM"
+},
+{
+"tuesday":
+"8 AM–5 PM"
+},
+{
+"wednesday":
+"8 AM–5 PM"
+},
+{
+"thursday":
+"8 AM–5 PM"
+},
+{
+"friday":
+"8 AM–5 PM"
+},
+{
+"saturday":
+"8 AM–3 PM"
+},
+{
+"sunday":
+"Closed"
+}
+]
+},
+"cid":
+"280469656",
+"bid":
+"2511735357",
+"pid":
+"2513958631",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=2511735357&cid=280469656&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=2513958631&q=appliance_repair"
+},
+{
+"title":
+"H&H Appliance Repair Service Kitchen Appliance Installation Home Appliance Maintenance Austin TX",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=H%26H+Appliance+Repair+Service+Kitchen+Appliance+Installation+Home+Appliance+Maintenance+Austin+TX&spp=EkcKEgiz296FARCI4NitCRifot-uCRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"phone":
+"+15126472367",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"hours":
+{
+"currently":
+"Open · Closes 12 PM",
+"week":
+[
+{
+"monday":
+"7 AM–6 PM"
+},
+{
+"tuesday":
+"7 AM–6 PM"
+},
+{
+"wednesday":
+"7 AM–6 PM"
+},
+{
+"thursday":
+"7 AM–6 PM"
+},
+{
+"friday":
+"7 AM–6 PM"
+},
+{
+"saturday":
+"8 AM–12 PM"
+},
+{
+"sunday":
+"Closed"
+}
+]
+},
+"cid":
+"280473011",
+"bid":
+"2511745032",
+"pid":
+"2513948959",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=2511745032&cid=280473011&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=2513948959&q=appliance_repair"
+},
+{
+"title":
+"All-Star Appliance Repair",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=All-Star+Appliance+Repair&spp=EkcKEgip3d6FARDfutqtCRje0-GuCRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"phone":
+"+18304313989",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"hours":
+{
+"currently":
+"Open · Closes 6 PM",
+"week":
+[
+{
+"monday":
+"8 AM–6 PM"
+},
+{
+"tuesday":
+"8 AM–6 PM"
+},
+{
+"wednesday":
+"8 AM–6 PM"
+},
+{
+"thursday":
+"8 AM–6 PM"
+},
+{
+"friday":
+"8 AM–6 PM"
+},
+{
+"saturday":
+"8 AM–6 PM"
+},
+{
+"sunday":
+"Closed"
+}
+]
+},
+"cid":
+"280473257",
+"bid":
+"2511773023",
+"pid":
+"2513988062",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=2511773023&cid=280473257&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=2513988062&q=appliance_repair"
+},
+{
+"title":
+"Leander Appliance Repair Men",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=Leander+Appliance+Repair+Men&spp=EkcKEgjbv96FARDt4titCRi0mtyuCRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"phone":
+"+15127460893",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"hours":
+{
+"currently":
+"Open · Closes 11 PM",
+"week":
+[
+{
+"monday":
+"6 AM–11 PM"
+},
+{
+"tuesday":
+"6 AM–11 PM"
+},
+{
+"wednesday":
+"6 AM–11 PM"
+},
+{
+"thursday":
+"6 AM–11 PM"
+},
+{
+"friday":
+"6 AM–11 PM"
+},
+{
+"saturday":
+"6 AM–11 PM"
+},
+{
+"sunday":
+"6 AM–11 PM"
+}
+]
+},
+"cid":
+"280469467",
+"bid":
+"2511745389",
+"pid":
+"2513898804",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=2511745389&cid=280469467&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=2513898804&q=appliance_repair"
+},
+{
+"title":
+"Round Rock Appliance Repair Men",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=Round+Rock+Appliance+Repair+Men&spp=EkcKEgjnmd6FARDq4titCRjM7d-uCRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"phone":
+"+15127460891",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"hours":
+{
+"currently":
+"Open · Closes 11 PM",
+"week":
+[
+{
+"monday":
+"6 AM–11 PM"
+},
+{
+"tuesday":
+"6 AM–11 PM"
+},
+{
+"wednesday":
+"6 AM–11 PM"
+},
+{
+"thursday":
+"6 AM–11 PM"
+},
+{
+"friday":
+"6 AM–11 PM"
+},
+{
+"saturday":
+"6 AM–11 PM"
+},
+{
+"sunday":
+"6 AM–11 PM"
+}
+]
+},
+"cid":
+"280464615",
+"bid":
+"2511745386",
+"pid":
+"2513958604",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=2511745386&cid=280464615&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=2513958604&q=appliance_repair"
+},
+{
+"title":
+"Texas Appliance Repair Service",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=Texas+Appliance+Repair+Service&spp=EkcKEgiEiciFARDw39itCRjb0-GuCRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"phone":
+"+15127903217",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"hours":
+{
+"currently":
+"Open 24 hours",
+"week":
+[
+{
+"monday":
+"Open 24 hours"
+},
+{
+"tuesday":
+"Open 24 hours"
+},
+{
+"wednesday":
+"Open 24 hours"
+},
+{
+"thursday":
+"Open 24 hours"
+},
+{
+"friday":
+"Open 24 hours"
+},
+{
+"saturday":
+"Open 24 hours"
+},
+{
+"sunday":
+"Open 24 hours"
+}
+]
+},
+"cid":
+"280102020",
+"bid":
+"2511745008",
+"pid":
+"2513988059",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=2511745008&cid=280102020&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=2513988059&q=appliance_repair"
+},
+{
+"title":
+"Heart Of Texas Appliance Repair LLC",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=Heart+Of+Texas+Appliance+Repair+LLC&spp=EkcKEgiImt6FARCZy9qtCRi3mtyuCRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"phone":
+"+15122644101",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"hours":
+{
+"currently":
+"Open · Closes 10 PM",
+"week":
+[
+{
+"monday":
+"6 AM–10 PM"
+},
+{
+"tuesday":
+"6 AM–10 PM"
+},
+{
+"wednesday":
+"6 AM–10 PM"
+},
+{
+"thursday":
+"6 AM–10 PM"
+},
+{
+"friday":
+"6 AM–10 PM"
+},
+{
+"saturday":
+"6 AM–10 PM"
+},
+{
+"sunday":
+"Closed"
+}
+]
+},
+"cid":
+"280464648",
+"bid":
+"2511775129",
+"pid":
+"2513898807",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=2511775129&cid=280464648&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=2513898807&q=appliance_repair"
+},
+{
+"title":
+"The Appliance Repair Men Universal City",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=The+Appliance+Repair+Men+Universal+City&spp=EkcKEgir3-WFARCnl-GtCRiAutyuCRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"phone":
+"+12105042474",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"hours":
+{
+"currently":
+"Open · Closes 11 PM",
+"week":
+[
+{
+"monday":
+"6 AM–11 PM"
+},
+{
+"tuesday":
+"6 AM–11 PM"
+},
+{
+"wednesday":
+"6 AM–11 PM"
+},
+{
+"thursday":
+"6 AM–11 PM"
+},
+{
+"friday":
+"6 AM–11 PM"
+},
+{
+"saturday":
+"6 AM–11 PM"
+},
+{
+"sunday":
+"6 AM–11 PM"
+}
+]
+},
+"cid":
+"280588203",
+"bid":
+"2511883175",
+"pid":
+"2513902848",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=2511883175&cid=280588203&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=2513902848&q=appliance_repair"
+},
+{
+"title":
+"Access Appliance Service",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=Access+Appliance+Service&spp=EkcKEgjYmd6FARD539itCRjG7d-uCRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"phone":
+"+15127953919",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"hours":
+{
+"currently":
+"Open 24 hours",
+"week":
+[
+{
+"monday":
+"Open 24 hours"
+},
+{
+"tuesday":
+"Open 24 hours"
+},
+{
+"wednesday":
+"Open 24 hours"
+},
+{
+"thursday":
+"Open 24 hours"
+},
+{
+"friday":
+"Open 24 hours"
+},
+{
+"saturday":
+"Open 24 hours"
+},
+{
+"sunday":
+"Open 24 hours"
+}
+]
+},
+"cid":
+"280464600",
+"bid":
+"2511745017",
+"pid":
+"2513958598",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=2511745017&cid=280464600&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=2513958598&q=appliance_repair"
+},
+{
+"title":
+"Alamo Heights Appliance Repair Men",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=Alamo+Heights+Appliance+Repair+Men&spp=EkcKEgik9uWFARCbl-GtCRiy7N-uCRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"phone":
+"+12105042471",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"hours":
+{
+"currently":
+"Open · Closes 11 PM",
+"week":
+[
+{
+"monday":
+"6 AM–11 PM"
+},
+{
+"tuesday":
+"6 AM–11 PM"
+},
+{
+"wednesday":
+"6 AM–11 PM"
+},
+{
+"thursday":
+"6 AM–11 PM"
+},
+{
+"friday":
+"6 AM–11 PM"
+},
+{
+"saturday":
+"6 AM–11 PM"
+},
+{
+"sunday":
+"6 AM–11 PM"
+}
+]
+},
+"cid":
+"280591140",
+"bid":
+"2511883163",
+"pid":
+"2513958450",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=2511883163&cid=280591140&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=2513958450&q=appliance_repair"
+},
+{
+"title":
+"Schertz Appliance Repair Men",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=Schertz+Appliance+Repair+Men&spp=EkcKEgjeiOaFARChl-GtCRiN9N-uCRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"phone":
+"+12105042473",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"hours":
+{
+"currently":
+"Open · Closes 11 PM",
+"week":
+[
+{
+"monday":
+"6 AM–11 PM"
+},
+{
+"tuesday":
+"6 AM–11 PM"
+},
+{
+"wednesday":
+"6 AM–11 PM"
+},
+{
+"thursday":
+"6 AM–11 PM"
+},
+{
+"friday":
+"6 AM–11 PM"
+},
+{
+"saturday":
+"6 AM–11 PM"
+},
+{
+"sunday":
+"6 AM–11 PM"
+}
+]
+},
+"cid":
+"280593502",
+"bid":
+"2511883169",
+"pid":
+"2513959437",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=2511883169&cid=280593502&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=2513959437&q=appliance_repair"
+},
+{
+"title":
+"Live Oak Appliance Repair men",
+"link":
+"https://www.google.com/localservices/profile?cs=0&q=Live+Oak+Appliance+Repair+men&spp=EkcKEgjd9uWFARDShOKtCRi17N-uCRIxeGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfYXBwbGlhbmNlX3JlcGFpcjplbi1VUw&scp=CjF4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19hcHBsaWFuY2VfcmVwYWlyOmVuLVVTEhgaEgkvA8ygmbVEhhF61WnUS0abXTiZ0T4",
+"phone":
+"+12105042467",
+"type":
+"Appliance Repair Service",
+"service_area":
+"Austin",
+"hours":
+{
+"currently":
+"Open · Closes 11 PM",
+"week":
+[
+{
+"monday":
+"6 AM–11 PM"
+},
+{
+"tuesday":
+"6 AM–11 PM"
+},
+{
+"wednesday":
+"6 AM–11 PM"
+},
+{
+"thursday":
+"6 AM–11 PM"
+},
+{
+"friday":
+"6 AM–11 PM"
+},
+{
+"saturday":
+"6 AM–11 PM"
+},
+{
+"sunday":
+"6 AM–11 PM"
+}
+]
+},
+"cid":
+"280591197",
+"bid":
+"2511897170",
+"pid":
+"2513958453",
+"serpapi_link":
+"https://serpapi.com/search.json?bid=2511897170&cid=280591197&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=2513958453&q=appliance_repair"
+}
+]
+}
+
+GET
+
+
+https://serpapi.com/search.json?engine=google_local_services&q=appliance_repair&hl=en&data_cid=6745062158417646970
+
+Code to integrate
+
+cURLRubyPythonJavaScriptGoPHPJavaRust.NETGoogle Sheets
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_local_services",
+  q: "appliance_repair",
+  hl: "en",
+  data_cid: "6745062158417646970",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+local_ads = results[:local_ads]
+API Parameters
+Search Query
+q
+
+Required
+
+Parameter defines the service you want to search for. Head to the Google local services queries page for a full list of supported Google local services queries.
+
+Geographic Location
+data_cid
+
+Required
+
+Parameter defines the Google CID (customer identifier) of a place. This parameter can be found in Google Maps API local results, as well as in Google Search API and Google Local API local results under the name of place_id. You can also acquire it using Google's CID converter. Example CID for "New York, NY, USA": 14414772292044717666
+
+Using data_cid for specific business locations or streets may produce inconsistent results due to limitations on Google's side; we recommend using the city or district level instead.
+
+Google Local Services API returns empty results for places outside of the USA.
+
+Parameter should not be confused with cid as they are different parameters.
+
+Localization
+hl
+
+Optional
+
+Parameter defines the language to use for the Google Local Services search. It's a two-letter language code. (e.g., en for English, es for Spanish, or fr for French). Head to the Google languages page for a full list of supported Google languages.
+
+Advanced Google Local Services Parameters
+job_type
+
+Optional
+
+Parameter defines the type of a job, or a subcategory of a service you have searched for. For example, if you search for "electrician", you can be more specific by adding a job_type (e.g. job_type=restore_power). Head to the Google local services job types page for a full list of supported Google local services job types.
+
+Google Local Services Place Parameters
+cid
+
+Optional
+
+Parameter defines a unique ID of a place. The ID is available in our Google Local Services API JSON response.
+
+Parameter is required when accessing a specific business and should be used with bid and pid parameters.
+
+Parameter should not be confused with data_cid which corresponds to Google CID (customer identifier) of a place.
+
+bid
+
+Optional
+
+Parameter defines a unique ID of a place. The ID is available in our Google Local Services API JSON response.
+
+Parameter is required when accessing a specific business and should be used with cid and pid parameters.
+
+pid
+
+Optional
+
+Parameter defines a unique ID of a place. The ID is available in our Google Local Services API JSON response.
+
+Parameter is required when accessing a specific business and should be used with cid and bid parameters.
+
+Serpapi Parameters
+engine
+
+Required
+
+Set parameter to google_local_services to use the Google Local Services API engine.
+
+no_cache
+
+Optional
+
+Parameter will force SerpApi to fetch the Google Local Services results even if a cached version is already present. A cache is served only if the query and all parameters are exactly the same. Cache expires after 1h. Cached searches are free, and are not counted towards your searches per month. It can be set to false (default) to allow results from the cache, or true to disallow results from the cache. no_cache and async parameters should not be used together.
+
+async
+
+Optional
+
+Parameter defines the way you want to submit your search to SerpApi. It can be set to false (default) to open an HTTP connection and keep it open until you got your search results, or true to just submit your search to SerpApi and retrieve them later. In this case, you'll need to use our Searches Archive API to retrieve your results. async and no_cache parameters should not be used together. async should not be used on accounts with Ludicrous Speed enabled.
+
+zero_trace
+
+Optional
+
+Enterprise only. Parameter enables ZeroTrace mode. It can be set to false (default) or true. Enable this mode to skip storing search parameters, search files, and search metadata on our servers. This may make debugging more difficult.
+
+api_key
+
+Required
+
+Parameter defines the SerpApi private key to use.
+
+output
+
+Optional
+
+Parameter defines the final output you want. It can be set to json (default) to get a structured JSON of the results, or html to get the raw html retrieved.
+
+API Results
+JSON Results
+JSON output includes structured data for Local Ads and Local Place results.
+
+A search status is accessible through search_metadata.status. It flows this way: Processing -> Success || Error. If a search has failed, error will contain an error message. search_metadata.id is the search ID inside SerpApi.
+
+HTML Results
+This API does not have the HTML response, just a text. search_metadata.prettify_html_file contains prettified version of the result. It is displayed in the playground.
+
+API Examples
+Example with 
+q
+:
+electrician
+, and Austin, TX, US (
+data_cid
+:
+6745062158417646970
+) as a location
+GET
+
+
+https://serpapi.com/search.json?engine=google_local_services&q=electrician&data_cid=6745062158417646970
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_local_services",
+  q: "electrician",
+  data_cid: "6745062158417646970",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+local_ads = results[:local_ads]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "6706491796b8f861e9b084dc",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/37cb6121315438a4/6706491796b8f861e9b084dc.json",
+    "created_at": "2024-10-09 09:12:55 UTC",
+    "processed_at": "2024-10-09 09:12:55 UTC",
+    "google_local_services_url": "https://www.google.com/_/AdsHomeservicesConsumerUi/data/batchexecute?hl=en",
+    "raw_html_file": "https://serpapi.com/searches/37cb6121315438a4/6706491796b8f861e9b084dc.html",
+    "prettify_html_file": "https://serpapi.com/searches/37cb6121315438a4/6706491796b8f861e9b084dc.prettify",
+    "total_time_taken": 1.80
+  },
+  "search_parameters": {
+    "engine": "google_local_services",
+    "hl": "en",
+    "q": "electrician",
+    "data_cid": "6745062158417646970"
+  },
+  "search_information": {
+    "google_local_services_url": "https://www.google.com/localservices/prolist?scp=Cix4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19lbGVjdHJpY2lhbjplbi1VUxIYGhIJLwPMoJm1RIYRetVp1EtGm104mdE-"
+  },
+  "local_ads": [
+    {
+      "title": "Tejas Electric",
+      "link": "https://www.google.com/localservices/profile?cs=0&q=Tejas+Electric&spp=EkIKEgithoKcARC49cWwCRic1q2yCRIseGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfZWxlY3RyaWNpYW46ZW4tVVM&scp=Cix4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19lbGVjdHJpY2lhbjplbi1VUxIYGhIJLwPMoJm1RIYRetVp1EtGm104mdE-",
+      "rating": 5.0,
+      "reviews": 153,
+      "phone": "+15128713043",
+      "badge": "GOOGLE GUARANTEED",
+      "type": "Electrician",
+      "service_area": "Austin",
+      "years_in_business": 6,
+      "bookings_nearby": 10,
+      "thumbnail": "https://lh3.googleusercontent.com/UeXDfd2UzUat22NrelNUdBqzYTd7Z6P3PpNfo3skdQN654eKvqUl_0EeY1RUvg=w150-h150-p-rj-sc0x00ffffff",
+      "hours": {
+        "currently": "Open 24 hours",
+        "week": [
+          {
+            "monday": "Open 24 hours"
+          },
+          {
+            "tuesday": "Open 24 hours"
+          },
+          {
+            "wednesday": "Open 24 hours"
+          },
+          ...
+        ]
+      },
+      "cid": "327189293",
+      "bid": "2517727928",
+      "pid": "2521525020",
+      "serpapi_link": "https://serpapi.com/search.json?bid=2517727928&cid=327189293&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=2521525020&q=electrician"
+    },
+    {
+      "title": "Terrapin Electric",
+      "link": "https://www.google.com/localservices/profile?cs=0&q=Terrapin+Electric&spp=EkIKEgj6jYLJBBCb8rz7DBj_x6-gJRIseGNhdDpzZXJ2aWNlX2FyZWFfYnVzaW5lc3NfZWxlY3RyaWNpYW46ZW4tVVM&scp=Cix4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19lbGVjdHJpY2lhbjplbi1VUxIYGhIJLwPMoJm1RIYRetVp1EtGm104mdE-",
+      "rating": 4.9,
+      "reviews": 188,
+      "phone": "+15053874447",
+      "badge": "GOOGLE GUARANTEED",
+      "type": "Electrician",
+      "service_area": "Austin",
+      "years_in_business": 2,
+      "thumbnail": "https://lh3.googleusercontent.com/XHXRJptom5xpRDRTt23ZpRm7-ZxeJ2yG4cE-lYXZxI6ihyiCz4Rr_DNwNh9S=w150-h150-p-rj-sc0x00ffffff",
+      "hours": {
+        "currently": "Open 24 hours",
+        "week": [
+          {
+            "monday": "Open 24 hours"
+          },
+          {
+            "tuesday": "Open 24 hours"
+          },
+          {
+            "wednesday": "Open 24 hours"
+          },
+          ...
+        ]
+      },
+      "cid": "1226868474",
+      "bid": "3480172827",
+      "pid": "9999999999",
+      "serpapi_link": "https://serpapi.com/search.json?bid=3480172827&cid=1226868474&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=9999999999&q=electrician"
+    },
+    {
+      "title": "TruTec Electric",
+      "link": "https://www.google.com/localservices/profile?cs=0&q=TruTec+Electric&spp=EkEKEQjkrdJfEKntrKwJGLrjiK0JEix4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19lbGVjdHJpY2lhbjplbi1VUw&scp=Cix4Y2F0OnNlcnZpY2VfYXJlYV9idXNpbmVzc19lbGVjdHJpY2lhbjplbi1VUxIYGhIJLwPMoJm1RIYRetVp1EtGm104mdE-",
+      "rating": 4.9,
+      "reviews": 429,
+      "phone": "+15127906031",
+      "badge": "GOOGLE GUARANTEED",
+      "type": "Electrician",
+      "service_area": "Austin",
+      "years_in_business": 7,
+      "thumbnail": "https://lh3.googleusercontent.com/c3k4FQhEhZ9I67nd4BfOGk4Z55UNW4wAnaFW8AnE7ZpP9JQnNao77HFEm3hiXQ=w150-h150-p-rj-sc0x00ffffff",
+      "hours": {
+        "currently": "Open 24 hours",
+        "week": [
+          {
+            "monday": "Open 24 hours"
+          },
+          {
+            "tuesday": "Open 24 hours"
+          },
+          {
+            "wednesday": "Open 24 hours"
+          },
+          ...
+        ]
+      },
+      "cid": "200578788",
+      "bid": "2508928681",
+      "pid": "2510434746",
+      "serpapi_link": "https://serpapi.com/search.json?bid=2508928681&cid=200578788&data_cid=6745062158417646970&engine=google_local_services&hl=en&pid=2510434746&q=electrician"
+    },
+    ...
+  ]
+}
+JSON structure overview
+{
+  "local_ads": [
+    {
+      "title": "String - Title of the business",
+      "link": "String - URL to the Google Local Services search",
+      "rating": "Float - Rating of the business",
+      "reviews": "Integer - Number of reviews of the business",
+      "phone": "String - Phone number of the business",
+      "badge": "String - Google awarded badge of the business",
+      "type": "String - Type of the business",
+      "service_area": "String - Main coverage area of the business",
+      "years_in_business": "Integer - Number of years that business is in operation",
+      "bookings_nearby": "Integer - Number of bookings nearby",
+      "thumbnail": "String - Thumbnail of the business",
+      "hours": {
+        "currently": "String - Current open status of the business",
+        "week": [
+          {
+            "monday": "String - Working hours of the business"
+          },
+          ...
+        ]
+      },
+      "cid": "String - Unique ID of the business",
+      "bid": "String - Unique ID of the business",
+      "pid": "String - Unique ID of the business",
+      "serpapi_link": "String - URL to the SerpApi search"
+    },
+    ...
+  ]
+}

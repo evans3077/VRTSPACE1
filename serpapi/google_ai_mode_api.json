@@ -1,0 +1,265 @@
+https://serpapi.com/search.json?engine=google_ai_mode&q=Steakhouse&location=Austin,+Texas,+United+States
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_ai_mode",
+  q: "Steakhouse",
+  location: "Austin, Texas, United States",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+local_results = results[:local_results]
+
+JSON Example
+
+{
+  ...
+  "local_results": [
+    {
+      "title": "Dean's Italian Steakhouse",
+      "link": "https://www.google.com/viewer/place?mid=%2Fg%2F11pyc12_7j",
+      "thumbnail": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nq9PWzVebqMzKiX7XS8hAoII99fsxpT7CoGpqQLdNiaCEk__xxe63Mem4A8yMZaalSWDxnESP5ATx_fDLZxNLJNdQ4uSwXdQz-NcmekpR93GJLj9Iebp-vl1460jhwiS3uJFhehjg=w300-h400-n-k-no",
+      "rating": 4.9,
+      "reviews": 2500,
+      "hours": "Closed",
+      "type": "Steak",
+      "address": "110 E 2nd St",
+      "index": 0
+    },
+    {
+      "title": "J-Prime Steakhouse",
+      "link": "https://www.google.com/viewer/place?mid=%2Fg%2F11rv6jvz8n",
+      "thumbnail": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4noBVrXsboKmW_55uRu7vKwMNgLTDO1T3X33arXOPVzu2DjiUE0cnFstv9ii-R_OjQ-4rCpdMe-4pu75nURDicWQo1MNyiq_jukZW3X6vXMQ1nD4LUZDus7-dn5rhSSNRvSo1X6HKA=w300-h400-n-k-no",
+      "rating": 4.8,
+      "reviews": 948,
+      "price": "$100+",
+      "hours": "Closed",
+      "type": "Restaurant",
+      "address": "Corner of, 301 Brazos St ste 150, San Jacinto Blvd and 3rd",
+      "index": 1
+    },
+    {
+      "title": "Jeffrey's",
+      "link": "https://www.google.com/viewer/place?mid=%2Fm%2F020y__p",
+      "thumbnail": "https://lh3.googleusercontent.com/gps-cs-s/AC9h4nozMCmu6BPGouHcvvwbZ1N0lsiqnsR4yFUwydh_PgXKS0SSx6yVyURMc3i6cisoDWpbN9EoSod7iawLHHUQP5QIWe7W2kpvY1KsbOZo7Fx2UK8PFk6TPq-jQWZq6yzbIOcmwgh6yg=w300-h225-n-k-no",
+      "rating": 4.7,
+      "reviews": 1100,
+      "price": "$100+",
+      "hours": "Closed",
+      "type": "Steak",
+      "address": "1204 W Lynn St",
+      "index": 2
+    },
+    ...
+  ],
+  "text_blocks": [
+    {
+      "type": "paragraph",
+      "snippet": "In Austin, Texas, steakhouses range from classic fine-dining experiences to more modern interpretations with unique flavors. Several locations, like Steiner Ranch and Dean's Italian Steakhouse, are consistently praised for their quality steaks, excellent service, and atmosphere.",
+      "snippet_links": [
+        {
+          "text": "Dean's Italian Steakhouse",
+          "link": "https://www.google.com/viewer/place?mid=/g/11pyc12_7j&sa=X&ved=2ahUKEwiYlP2KgrqPAxWZmYkEHUsVPBUQqdYPegQIAxAB",
+          "local_results_reference_index": 0
+        }
+      ],
+      "reference_indexes": [
+        1,
+        0,
+        2
+      ]
+    },
+    {
+      "type": "heading",
+      "snippet": "Top-rated luxury steakhouses"
+    },
+    {
+      "type": "list",
+      "list": [
+        {
+          "snippet": "J-Prime Steakhouse: An upscale and contemporary downtown restaurant known for its phenomenal filet mignon, melt-in-your-mouth steaks, and attentive, 5-star service.",
+          "snippet_links": [
+            {
+              "text": "J-Prime Steakhouse",
+              "link": "https://www.google.com/viewer/place?mid=/g/11rv6jvz8n&sa=X&ved=2ahUKEwiYlP2KgrqPAxWZmYkEHUsVPBUQqdYPegQIBRAB",
+              "local_results_reference_index": 1
+            }
+          ]
+        },
+        {
+          "snippet": "Dean's Italian Steakhouse: This urbane downtown spot offers a sophisticated vibe with Wagyu beef and homemade pasta. Reviewers praise the impeccable service and perfectly cooked steaks. It also features a cocktail terrace.",
+          "snippet_links": [
+            {
+              "text": "Dean's Italian Steakhouse",
+              "link": "https://www.google.com/viewer/place?mid=/g/11pyc12_7j&sa=X&ved=2ahUKEwiYlP2KgrqPAxWZmYkEHUsVPBUQqdYPegQIBRAD",
+              "local_results_reference_index": 0
+            }
+          ]
+        },
+        {
+          "snippet": "Jeffrey's: A posh, fine-dining institution in Clarksville, Jeffrey's is known for its upscale New American cuisine, superior steaks, and romantic atmosphere.",
+          "snippet_links": [
+            {
+              "text": "Jeffrey's",
+              "link": "https://www.google.com/viewer/place?mid=/m/020y__p&sa=X&ved=2ahUKEwiYlP2KgrqPAxWZmYkEHUsVPBUQqdYPegQIBRAF",
+              "local_results_reference_index": 2
+            }
+          ]
+        },
+        ...
+      ],
+      "reference_indexes": [
+        0
+      ]
+    },
+    ...
+  ],
+  "references": [
+    {
+      "title": "TOP 10 BEST Old School Steak near Austin, TX 78701 - Yelp",
+      "link": "https://m.yelp.com/search?find_desc=Old+School+Steak&find_loc=Austin%2C+TX+78701",
+      "snippet": "* 1. Seven Grand. 4.5 (135 reviews) 0.3 mi. 405 E 7th St, Austin, TX 78701. (512) 520-4582. $$ Unfortunately, we were in the middle of a winter freeze when we w...",
+      "source": "Yelp",
+      "index": 0
+    },
+    {
+      "title": "J-Prime Steakhouse",
+      "link": "https://www.google.com/viewer/place?mid=/g/11rv6jvz8n",
+      "snippet": "Upscale restaurant with a contemporary vibe serving filet mignon, lobster bisque, and other fine dishes.",
+      "source": "Google",
+      "index": 1
+    },
+    {
+      "title": "Steiner Ranch Steakhouse",
+      "link": "https://www.google.com/viewer/place?mid=/g/1tx8tmmd",
+      "snippet": "Sophisticated steakhouse serving prime steaks & wines, with views over Lake Travis.",
+      "source": "Google",
+      "index": 2
+    },
+    ...
+  ],
+  ...
+}
+Example with
+table
+GET
+
+
+https://serpapi.com/search.json?engine=google_ai_mode&q=Lebron+James
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_ai_mode",
+  q: "Lebron James",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+text_blocks = results[:text_blocks]
+
+JSON Example
+
+{
+  ...
+  "inline_images": [
+    "http://t2.gstatic.com/images?q=tbn:ANd9GcSOKtbwN4lBTmTrz-Z65I9dnhrv4yHfyL-AaIhWMRPnNnr9Sbynx9Wl8MP7PuXpKsujQuPR0zw4",
+    "http://t0.gstatic.com/images?q=tbn:ANd9GcSSWpCF0doyW0ZJBCFGqH9u42NZ0wRJBc0mK_5-mR-CK-gFIV8grergyzSgt21xQMb0bHs-l427",
+    "http://t2.gstatic.com/images?q=tbn:ANd9GcTrJaKU6vHQfnndjVcGtg-Trfo8UBA_Dfz40VYJhuVOJ8bzWuedQ0wEvhEFS4dI1OpsuTfcH-ZF",
+    ...
+  ],
+  "text_blocks": [
+    {
+      "type": "heading",
+      "snippet": "LeBron James overview"
+    },
+    {
+      "type": "paragraph",
+      "snippet": "LeBron James, born December 30, 1984, is an American professional basketball player currently playing for the Los Angeles Lakers. He is 40 years old. He was drafted first overall in the 2003 NBA draft by the Cleveland Cavaliers. He has also played for the Miami Heat.",
+      "reference_indexes": [
+        1,
+        3,
+        7,
+        5
+      ]
+    },
+    {
+      "type": "table",
+      "table": [
+        [
+          "Team",
+          "Seasons Played"
+        ],
+        [
+          "Cleveland Cavaliers",
+          "2003–2010, 2014–2018"
+        ],
+        [
+          "Miami Heat",
+          "2010–2014"
+        ],
+        [
+          "Los Angeles Lakers",
+          "2018–present"
+        ]
+      ],
+      "formatted": [
+        {
+          "team": "Cleveland Cavaliers",
+          "seasons_played": "2003–2010, 2014–2018"
+        },
+        {
+          "team": "Miami Heat",
+          "seasons_played": "2010–2014"
+        },
+        {
+          "team": "Los Angeles Lakers",
+          "seasons_played": "2018–present"
+        }
+      ],
+      "reference_indexes": [
+        5,
+        1,
+        3
+      ]
+    },
+    ...
+  ],
+  "references": [
+    {
+      "title": "LeBron James - Wikipedia",
+      "link": "https://en.wikipedia.org/wiki/LeBron_James#:~:text=LeBron%20Raymone%20James%20Sr.%20(/,basketball%20players%20of%20all%20time.",
+      "snippet": "Table_title: LeBron James Table_content: row: | James with the Los Angeles Lakers in 2023 | | row: | No. 23 – Los Angeles Lakers | | row: | Position | Small for...",
+      "source": "Wikipedia",
+      "index": 0
+    },
+    {
+      "title": "LeBron James - Wikipedia",
+      "link": "https://en.wikipedia.org/wiki/LeBron_James",
+      "snippet": "Akron, Ohio, U.S.. Listed height, 6 ft 9 in (2.06 m). Listed weight, 250 lb (113 kg). Career information.",
+      "source": "Wikipedia",
+      "index": 1
+    },
+    {
+      "title": "Los Angeles Lakers | LeBron James - NBA",
+      "link": "https://www.nba.com/lakers/team/player-pages/lebron-james-2544#:~:text=The%20accolades%20for%20one%20of,1.5%20steals%20in%201%2C514%20games.",
+      "snippet": "LeBron James. The accolades for one of the game's greatest players of all time are too numerous to list, but they start with four NBA championships and four NBA...",
+      "source": "NBA",
+      "index": 2
+    },
+    ...
+  ],
+  ...
+}

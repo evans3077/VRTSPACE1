@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRT Growth and Ops"
+  short_description: "Leads, quality, security, and deploys"
+  default_prompt: "Use $vrt-space-growth-ops to implement growth, quality, and operations work for VRT SPACE AGENCY."

@@ -1,0 +1,4 @@
+interface:
+  display_name: "vert_seo"
+  short_description: "Ship VRT SEO and AEO changes correctly"
+  default_prompt: "Use $vert-seo to update this repo's SEO and AEO implementation without breaking crawlability, metadata, schema, or indexation."

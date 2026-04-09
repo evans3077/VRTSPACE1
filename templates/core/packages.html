@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="padding-bottom: 2rem;">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Pricing</p>
+            <h1 style="max-width: none;">Plans & Packages</h1>
+            <p class="section-text" style="max-width: 760px;">
+                Find the right fit for your business stage.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="packages-section" style="padding-top: 0;">
+    <div class="container page-stack">
+        <article class="system-card">
+            <div class="system-grid">
+                {% for plan in plans %}
+                <div style="padding: 1.5rem; border-radius: 16px; background: #f8fafc; border: 1px solid {% if plan.is_current %}var(--signal){% else %}rgba(255,255,255,0.1){% endif %}; position: relative;">
+                    {% if plan.is_current %}
+                    <div style="position: absolute; top: -0.75rem; right: 1.5rem; background: var(--signal); color: #0f172a; font-size: 0.75rem; font-weight: 700; padding: 0.25rem 0.75rem; border-radius: 999px;">Current Plan</div>
+                    {% endif %}
+                    <h3 style="margin: 0 0 0.25rem;">{{ plan.name }}</h3>
+                    <div style="font-size: 1.5rem; font-weight: 700; margin-bottom: 1rem;">
+                        {{ plan.price }}
+                    </div>
+                    <p style="color: #64748b; font-size: 0.9rem; line-height: 1.5; margin-bottom: 1.5rem;">{{ plan.description }}</p>
+                    
+                    <div style="margin-bottom: 1.5rem;">
+                        <strong style="display: block; margin-bottom: 0.5rem; font-size: 0.9rem;">Included features:</strong>
+                        <ul style="list-style: none; padding: 0; margin: 0; display: grid; gap: 0.5rem; font-size: 0.85rem; color: #64748b;">
+                            {% for limit in plan.limits_summary %}
+                            <li style="display: flex; gap: 0.5rem;"><i class="fas fa-check" style="color: #16a34a; margin-top: 0.2rem;"></i> <span><strong>{{ limit.label }}:</strong> {{ limit.display }}</span></li>
+                            {% endfor %}
+                            {% for feature in plan.features %}
+                            <li style="display: flex; gap: 0.5rem;"><i class="fas fa-check" style="color: #16a34a; margin-top: 0.2rem;"></i> <span>{{ feature }}</span></li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    
+                    {% if plan.is_current %}
+                    <button class="button button-secondary" disabled style="width: 100%; opacity: 0.7;">Active Plan</button>
+                    {% elif plan.is_custom %}
+                    <a href="{% url 'core:home' %}#contact" class="button button-secondary" style="width: 100%; text-align: center; display: block;">Contact Sales</a>
+                    {% elif plan.is_free %}
+                    <div style="text-align: center; color: #64748b; font-size: 0.85rem;">Included by default</div>
+                    {% else %}
+                    <form method="post" action="{% url 'tools:workspace-billing-checkout' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="plan" value="{{ plan.slug }}">
+                        <input type="hidden" name="return_to" value="{% url 'tools:workspace-dashboard' %}">
+                        <button type="submit" class="button {% if plan.action_direction == 'upgrade' %}button-primary{% else %}button-secondary{% endif %}" style="width: 100%;">
+                            {{ plan.action_label }}
+                        </button>
+                    </form>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+    </div>
+</section>
+{% endblock %}

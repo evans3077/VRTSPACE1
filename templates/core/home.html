@@ -1,0 +1,392 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="position: relative; overflow: visible;">
+    <div class="ambient-glow-violet" style="top: -15%; left: -10%;"></div>
+    <div class="ambient-glow-cyan" style="bottom: -20%; right: -10%;"></div>
+    <div class="container hero-grid" style="position: relative; z-index: 1;">
+        <div class="hero-copy">
+            <p class="eyebrow" style="color: var(--accent-cyan); letter-spacing: 0.15em;">SEO audits, AI visibility, and growth workspaces</p>
+            <h1 style="background: linear-gradient(135deg, #0f172a 0%, #3b82f6 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Turn your website into a measurable growth system.</h1>
+            <p class="hero-text">
+                Run the audit, open a workspace, track what is broken, and decide when to unlock deeper
+                monitoring, automation, and content systems. Custom builds stay available when the product
+                path is not enough.
+            </p>
+            <div class="hero-actions">
+                <a class="button button-primary" href="#audit">Run Free Audit</a>
+                <a class="button button-secondary" href="{% url 'tools:workspace-signup' %}">Create Free Workspace</a>
+            </div>
+            <div class="trust-bar">
+                {% for signal in trust_signals %}
+                <span>{{ signal }}</span>
+                {% endfor %}
+            </div>
+            <div class="audience-row">
+                {% for audience in audiences %}
+                <span>{{ audience }}</span>
+                {% endfor %}
+            </div>
+            <div class="hero-proof-grid">
+                {% for item in results %}
+                <article class="hero-proof-card">
+                    <strong>{{ item.value }}</strong>
+                    <span>{{ item.label }}</span>
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="hero-side">
+            <div class="audit-panel" id="audit">
+                <h2>Start with a live website audit</h2>
+                <p>Scan the site, see the score, group the highest-impact fixes, and route the result into a user workspace instead of a sales handoff.</p>
+                <form method="post" action="{% url 'tools:free-seo-audit' %}">
+                    {% csrf_token %}
+                    {{ audit_form.non_field_errors }}
+
+                    <!-- Core fields — always visible -->
+                    <label>
+                        Company
+                        {{ audit_form.company_name }}
+                        {{ audit_form.company_name.errors }}
+                    </label>
+                    <label>
+                        Email
+                        {{ audit_form.email }}
+                        {{ audit_form.email.errors }}
+                    </label>
+                    <label>
+                        Website
+                        {{ audit_form.website }}
+                        {{ audit_form.website.errors }}
+                    </label>
+
+                    <!-- Progressive disclosure: optional context -->
+                    <button type="button" class="audit-form-expand-btn" id="audit-form-expand" aria-expanded="false" aria-controls="audit-form-advanced">
+                        <i class="fas fa-plus-circle" aria-hidden="true"></i>
+                        <span id="audit-expand-label">Add context for a richer report</span>
+                    </button>
+
+                    <div class="audit-form-advanced" id="audit-form-advanced" aria-hidden="true">
+                        <label>
+                            Business type
+                            {{ audit_form.business_type }}
+                            {{ audit_form.business_type.errors }}
+                        </label>
+                        <label>
+                            Specific niche
+                            {{ audit_form.business_subtype }}
+                            {{ audit_form.business_subtype.errors }}
+                        </label>
+                        <label>
+                            Target audience
+                            {{ audit_form.target_audience }}
+                            {{ audit_form.target_audience.errors }}
+                        </label>
+                        <label>
+                            Market type
+                            {{ audit_form.location_mode }}
+                            {{ audit_form.location_mode.errors }}
+                        </label>
+                        {{ audit_form.location }}
+                        <div id="audit-location-fields" style="display: grid; gap: 0.85rem; padding: 0.85rem; border: 1px solid rgba(148, 163, 184, 0.22); border-radius: 1rem; background: rgba(15, 23, 42, 0.28);">
+                            <label>
+                                Country
+                                {{ audit_form.location_country }}
+                                {{ audit_form.location_country.errors }}
+                            </label>
+                            <label>
+                                Market level
+                                {{ audit_form.location_scope }}
+                                {{ audit_form.location_scope.errors }}
+                            </label>
+                            <label>
+                                <span id="audit-location-area-label">Location name</span>
+                                {{ audit_form.location_area }}
+                                {{ audit_form.location_area.errors }}
+                            </label>
+                            <p class="form-note" style="margin: 0;">
+                                Choose the country first, then enter the state, county, province, region, or city inside that country. For SaaS or global-service businesses, switch this to Worldwide.
+                            </p>
+                        </div>
+                        <label>
+                            Target goal
+                            {{ audit_form.target_goal }}
+                            {{ audit_form.target_goal.errors }}
+                        </label>
+                        <label>
+                            Primary offer
+                            {{ audit_form.primary_service }}
+                            {{ audit_form.primary_service.errors }}
+                        </label>
+                        <label>
+                            Monthly lead goal
+                            {{ audit_form.monthly_leads_goal }}
+                            {{ audit_form.monthly_leads_goal.errors }}
+                        </label>
+                        <label>
+                            Market context
+                            {{ audit_form.market_context }}
+                            {{ audit_form.market_context.errors }}
+                        </label>
+                        <label>
+                            Competitor URLs
+                            {{ audit_form.competitor_urls }}
+                            {{ audit_form.competitor_urls.errors }}
+                        </label>
+                        <label>
+                            Notes
+                            {{ audit_form.notes }}
+                            {{ audit_form.notes.errors }}
+                        </label>
+                    </div>
+
+                    <button class="button button-primary" type="submit" style="width: 100%; margin-top: 0.25rem;">Run audit now</button>
+                </form>
+                <p class="form-note">Use this for SEO, AI visibility, performance, and conversion diagnostics before choosing a plan or a custom build.</p>
+            </div>
+            <div class="signal-panel">
+                <p class="signal-kicker">Product rule</p>
+                <h3>Every public action should end in a score, a workspace, or a clear package decision.</h3>
+                <p>Direct inquiry is reserved for website builds, app builds, and custom implementations that do not fit the standard product flow.</p>
+            </div>
+        </div>
+    </div>
+</section>
+{{ audit_form.country_ui_metadata|json_script:"audit-country-ui" }}
+<script>
+(() => {
+    const modeField = document.getElementById("id_location_mode");
+    const countryField = document.getElementById("id_location_country");
+    const scopeField = document.getElementById("id_location_scope");
+    const areaField = document.getElementById("id_location_area");
+    const targetedPanel = document.getElementById("audit-location-fields");
+    const areaLabel = document.getElementById("audit-location-area-label");
+    const metadataNode = document.getElementById("audit-country-ui");
+    if (!modeField || !countryField || !scopeField || !areaField || !targetedPanel || !areaLabel || !metadataNode) {
+        return;
+    }
+    const countryMeta = JSON.parse(metadataNode.textContent || "{}");
+    const defaultScopeLabel = (countryCode) => {
+        const item = countryMeta[countryCode] || {};
+        return item.admin_label || "Region / province";
+    };
+    const scopeText = () => {
+        const selected = scopeField.options[scopeField.selectedIndex];
+        return selected && selected.value ? selected.text : defaultScopeLabel(countryField.value);
+    };
+    const sync = () => {
+        const worldwide = modeField.value === "worldwide";
+        targetedPanel.style.display = worldwide ? "none" : "grid";
+        countryField.disabled = worldwide;
+        scopeField.disabled = worldwide;
+        areaField.disabled = worldwide;
+        areaLabel.textContent = worldwide ? "Location name" : `${scopeText()} name`;
+        areaField.placeholder = worldwide ? "" : `Enter the ${scopeText().toLowerCase()} inside the selected country`;
+    };
+    modeField.addEventListener("change", sync);
+    countryField.addEventListener("change", sync);
+    scopeField.addEventListener("change", sync);
+    sync();
+})();
+</script>
+
+<section class="insight-section">
+    <div class="container section-heading">
+        <p class="eyebrow">Critical insight</p>
+        <h2>The site is not a brochure. It is the sales machine.</h2>
+        <p class="section-text">{{ critical_insight }}</p>
+    </div>
+</section>
+
+<section class="experience-section">
+    <div class="container section-heading">
+        <p class="eyebrow">Product experience</p>
+        <h2>Show users what to fix, why it matters, and what to unlock next.</h2>
+    </div>
+    <div class="container experience-grid">
+        {% for pillar in value_pillars %}
+        <article class="experience-card">
+            <h3>{{ pillar.title }}</h3>
+            <p>{{ pillar.body }}</p>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+{% for group in service_groups %}
+<section class="services-section tone-{{ group.tone }}" id="{{ group.anchor }}">
+    <div class="container service-band-head">
+        <div>
+            <p class="eyebrow">{{ group.title }}</p>
+            <h2>{{ group.lead }}</h2>
+        </div>
+    </div>
+    <div class="container service-grid expanded-grid">
+        {% for service in group.services %}
+        <article class="service-card">
+            <p class="service-tag">{{ forloop.counter|stringformat:"02d" }}</p>
+            <h3>{{ service.name }}</h3>
+            <p>{{ service.summary }}</p>
+            <ul class="bullet-list">
+                {% for bullet in service.bullets %}
+                <li>{{ bullet }}</li>
+                {% endfor %}
+            </ul>
+            <div class="system-feature">
+                <span>System feature</span>
+                <strong>{{ service.system_feature }}</strong>
+            </div>
+            <a class="package-link" href="{% url 'core:service-detail' slug=service.name|slugify %}">Explore service</a>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endfor %}
+
+
+
+<section class="journey-section">
+    <div class="container section-heading">
+        <p class="eyebrow">User journey</p>
+        <h2>Show how the product moves from scan to ongoing improvement.</h2>
+    </div>
+    <div class="container journey-grid">
+        {% for step in engagement_steps %}
+        <article class="journey-card">
+            <p class="journey-phase">{{ step.phase }}</p>
+            <h3>{{ step.title }}</h3>
+            <p>{{ step.body }}</p>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="systems-section" id="systems">
+    <div class="container section-heading">
+        <p class="eyebrow">Platform architecture</p>
+        <h2>What the product manages after the first scan.</h2>
+    </div>
+    <div class="container system-grid">
+        {% for block in system_blocks %}
+        <article class="system-card">
+            <h3>{{ block.title }}</h3>
+            <p>{{ block.body }}</p>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="method-section" id="method">
+    <div class="container method-grid">
+        <div>
+            <p class="eyebrow">Proprietary method</p>
+            <h2>VRT Authority Engine</h2>
+            <p>
+                The operating model behind the audit, workspace, recommendation, and reporting stack. Each layer
+                should help the product diagnose issues, teach the market, and expose the next valuable unlock.
+            </p>
+        </div>
+        <ol class="method-list">
+            {% for step in method_steps %}
+            <li>{{ step }}</li>
+            {% endfor %}
+        </ol>
+    </div>
+</section>
+
+<section class="case-study-section">
+    <div class="container case-study-card">
+        <div>
+            <p class="eyebrow">Proof section</p>
+            <h2>{{ case_study.title }}</h2>
+            <p class="case-meta">{{ case_study.client_name }} - {{ case_study.industry }}</p>
+        </div>
+        <div class="case-study-body">
+            <div>
+                <h3>Challenge</h3>
+                <p>{{ case_study.challenge }}</p>
+            </div>
+            <div>
+                <h3>Solution</h3>
+                <p>{{ case_study.solution }}</p>
+            </div>
+            <div>
+                <h3>Results</h3>
+                <p>{{ case_study.results }}</p>
+            </div>
+            <div class="metric-chip">{{ case_study.key_metric }}</div>
+        </div>
+    </div>
+</section>
+
+<section class="faq-section">
+    <div class="container section-heading">
+        <p class="eyebrow">Buyer questions</p>
+        <h2>Answer the objections that stop self-serve upgrades.</h2>
+    </div>
+    <div class="container faq-grid">
+        {% for faq in faqs %}
+        <article class="faq-card">
+            <h3>{{ faq.question }}</h3>
+            <p>{{ faq.answer }}</p>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="contact-section" id="contact">
+    <div class="container contact-grid">
+        <div>
+            <p class="eyebrow">Custom work request</p>
+            <h2>Use direct inquiry only for website builds, app builds, and custom implementations.</h2>
+            <p>
+                The default route is audit to workspace to plan selection. This form is for work that needs direct scoping,
+                custom architecture, or delivery outside the standard SaaS modules.
+            </p>
+            <p class="form-note">Best for rebuilds, app development, enterprise customizations, or implementation requests that need direct review.</p>
+        </div>
+        <form method="post" action="{% url 'leads:contact' %}" class="contact-form">
+            {% csrf_token %}
+            <input type="hidden" name="source_page" value="{{ request.path }}">
+            {{ lead_form.non_field_errors }}
+            <label>
+                Name
+                {{ lead_form.name }}
+                {{ lead_form.name.errors }}
+            </label>
+            <label>
+                Email
+                {{ lead_form.email }}
+                {{ lead_form.email.errors }}
+            </label>
+            <label>
+                Company
+                {{ lead_form.company }}
+                {{ lead_form.company.errors }}
+            </label>
+            <label>
+                Website
+                {{ lead_form.website }}
+                {{ lead_form.website.errors }}
+            </label>
+            <label>
+                Interest
+                {{ lead_form.interest_area }}
+                {{ lead_form.interest_area.errors }}
+            </label>
+            <label>
+                What needs to change?
+                {{ lead_form.message }}
+                {{ lead_form.message.errors }}
+            </label>
+            <label class="checkbox-row">
+                {{ lead_form.consent_to_contact }}
+                <span>I agree to be contacted about this request.</span>
+                {{ lead_form.consent_to_contact.errors }}
+            </label>
+            <button class="button button-primary" type="submit">Request custom build</button>
+        </form>
+    </div>
+</section>
+{% endblock %}

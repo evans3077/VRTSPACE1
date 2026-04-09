@@ -1,0 +1,201 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% firstof page_title "VRT SPACE AGENCY" as resolved_page_title %}
+    {% firstof meta_description "VRT SPACE AGENCY delivers SEO audits, AI visibility insights, and growth workspaces." as resolved_meta_description %}
+    {% firstof og_title resolved_page_title as resolved_og_title %}
+    {% firstof og_description resolved_meta_description as resolved_og_description %}
+    {% firstof og_type "website" as resolved_og_type %}
+    {% firstof twitter_card "summary" as resolved_twitter_card %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ resolved_page_title }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta name="description" content="{{ resolved_meta_description }}">
+    {% if canonical_url %}
+    <link rel="canonical" href="{{ canonical_url }}">
+    {% endif %}
+    {% if meta_robots %}
+    <meta name="robots" content="{{ meta_robots }}">
+    {% endif %}
+    <meta property="og:title" content="{{ resolved_og_title }}">
+    <meta property="og:description" content="{{ resolved_og_description }}">
+    <meta property="og:type" content="{{ resolved_og_type }}">
+    {% if canonical_url %}
+    <meta property="og:url" content="{{ canonical_url }}">
+    {% endif %}
+    <meta name="twitter:card" content="{{ resolved_twitter_card }}">
+    <meta name="twitter:title" content="{{ resolved_og_title }}">
+    <meta name="twitter:description" content="{{ resolved_og_description }}">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+    {% if schema_json %}
+    <script type="application/ld+json">{{ schema_json|safe }}</script>
+    {% endif %}
+</head>
+<body>
+    <header class="site-header">
+        <div class="container nav-shell">
+            <a class="brand" href="/">VRT SPACE AGENCY</a>
+            <div class="nav-actions">
+                <nav class="nav-links" aria-label="Primary">
+                    <a href="{% url 'core:home' %}#method">Platform</a>
+                    <a href="{% url 'core:services' %}">Solutions</a>
+                    <a href="{% url 'core:packages' %}">Pricing</a>
+                    <a href="{% url 'core:home' %}#audit">Free Audit</a>
+                    {% if user.is_staff %}
+                    <a href="{% url 'analytics:operations-dashboard' %}">Ops</a>
+                    {% endif %}
+                </nav>
+                {% if user.is_authenticated and not user.is_staff %}
+                <details class="workspace-menu">
+                    <summary class="workspace-menu-trigger">
+                        Workspace{% if active_workspace_project %}: {{ active_workspace_project.name }}{% endif %}
+                    </summary>
+                    <div class="workspace-menu-panel">
+                        <a href="{% url 'tools:workspace-dashboard' %}">Overview</a>
+                        <a href="{% url 'seo:workspace-seo' %}">SEO</a>
+                        <a href="{% url 'aeo:workspace-aeo' %}">AEO</a>
+                        <a href="{% url 'content:workspace-content' %}">Content</a>
+                    </div>
+                </details>
+                {% endif %}
+                {% if user.is_authenticated and workspace_projects|length > 1 %}
+                <form method="post" action="{% url 'tools:workspace-project-select' %}" class="workspace-project-switch">
+                    {% csrf_token %}
+                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
+                    <select name="project_id" onchange="this.form.submit()" style="min-width: 220px;">
+                        {% for item in workspace_project_summaries %}
+                        <option value="{{ item.pk }}"{% if active_workspace_project and active_workspace_project.pk == item.pk %} selected{% endif %}>{{ item.name }} | {{ item.project_type_label }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+                {% endif %}
+                {% if user.is_authenticated %}
+                <a class="button button-secondary nav-auth-link nav-account-link" href="{% url 'tools:account-dashboard' %}">
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                    <span>Account</span>
+                </a>
+                <a class="button button-secondary nav-auth-link" href="{% url 'tools:workspace-logout' %}">Sign out</a>
+                <a class="button button-primary nav-cta" href="{% url 'tools:workspace-dashboard' %}">Open Workspace</a>
+                {% else %}
+                <a class="button button-secondary nav-auth-link" href="{% url 'tools:workspace-login' %}">Sign in</a>
+                <a class="button button-primary nav-cta" href="{% url 'tools:workspace-signup' %}">Create Workspace</a>
+                {% endif %}
+            </div>
+            <!-- Hamburger for mobile -->
+            <button class="nav-hamburger" id="nav-hamburger" aria-label="Open navigation" aria-expanded="false" aria-controls="nav-mobile-drawer">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+    {% if messages %}
+    <div class="container flash-stack">
+        {% for message in messages %}
+        <div class="flash flash-{{ message.tags|default:'info' }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer">
+        <div class="container footer-shell">
+            <div>
+                <strong>VRT SPACE AGENCY</strong>
+                <p>SEO, AEO, audits, workspaces, analytics, and custom build paths designed as one product system.</p>
+            </div>
+            <div class="footer-links">
+                <a href="{% url 'core:services' %}">Solutions</a>
+                <a href="{% url 'core:home' %}#tools">Tools</a>
+                <a href="{% url 'core:packages' %}">Packages</a>
+                <a href="{% url 'core:home' %}#contact">Custom Work</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Mobile Navigation Drawer -->
+    <div class="nav-mobile-drawer" id="nav-mobile-drawer" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+        <button class="nav-mobile-close" id="nav-mobile-close" aria-label="Close navigation">&times;</button>
+        <div class="nav-mobile-brand">VRT SPACE AGENCY</div>
+        <nav class="nav-mobile-links" aria-label="Mobile primary">
+            <a href="{% url 'core:services' %}">Services</a>
+            <a href="{% url 'core:packages' %}">Packages</a>
+            <a href="{% url 'core:home' %}#audit">Audit</a>
+            <a href="{% url 'core:home' %}#method">Method</a>
+            {% if user.is_staff %}
+            <a href="{% url 'analytics:operations-dashboard' %}">Ops Dashboard</a>
+            {% endif %}
+            {% if user.is_authenticated and not user.is_staff %}
+            <a href="{% url 'tools:workspace-dashboard' %}">Workspace Overview</a>
+            <a href="{% url 'seo:workspace-seo' %}">SEO</a>
+            <a href="{% url 'aeo:workspace-aeo' %}">AEO</a>
+            <a href="{% url 'content:workspace-content' %}">Content</a>
+            {% endif %}
+        </nav>
+        <div class="nav-mobile-actions">
+            {% if user.is_authenticated %}
+            <a class="button button-secondary" href="{% url 'tools:account-dashboard' %}">Account</a>
+            <a class="button button-secondary" href="{% url 'tools:workspace-logout' %}">Sign out</a>
+            <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}">Open Workspace</a>
+            {% else %}
+            <a class="button button-secondary" href="{% url 'tools:workspace-login' %}">Sign in</a>
+            <a class="button button-primary" href="{% url 'tools:workspace-signup' %}">Create Workspace</a>
+            {% endif %}
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        var hamburger = document.getElementById('nav-hamburger');
+        var drawer = document.getElementById('nav-mobile-drawer');
+        var closeBtn = document.getElementById('nav-mobile-close');
+        if (!hamburger || !drawer) return;
+
+        function openDrawer() {
+            drawer.classList.add('is-open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeDrawer() {
+            drawer.classList.remove('is-open');
+            document.body.style.overflow = '';
+        }
+
+        hamburger.addEventListener('click', openDrawer);
+        if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+        drawer.addEventListener('click', function(e) {
+            if (e.target === drawer) closeDrawer();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeDrawer();
+        });
+
+        // Audit Form Progressive Disclosure
+        var auditExpandBtn = document.getElementById('audit-form-expand');
+        var auditAdvancedSection = document.getElementById('audit-form-advanced');
+        if (auditExpandBtn && auditAdvancedSection) {
+            auditExpandBtn.addEventListener('click', function() {
+                var isExpanded = auditExpandBtn.getAttribute('aria-expanded') === 'true';
+                if (!isExpanded) {
+                    auditExpandBtn.setAttribute('aria-expanded', 'true');
+                    auditAdvancedSection.classList.add('is-open');
+                    auditAdvancedSection.setAttribute('aria-hidden', 'false');
+                    var label = document.getElementById('audit-expand-label');
+                    if (label) label.textContent = 'Hide advanced context';
+                } else {
+                    auditExpandBtn.setAttribute('aria-expanded', 'false');
+                    auditAdvancedSection.classList.remove('is-open');
+                    auditAdvancedSection.setAttribute('aria-hidden', 'true');
+                    var label = document.getElementById('audit-expand-label');
+                    if (label) label.textContent = 'Add context for a richer report';
+                }
+            });
+        }
+    })();
+    </script>
+</body>
+</html>
+

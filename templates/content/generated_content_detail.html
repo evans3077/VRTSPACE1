@@ -1,0 +1,252 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="padding-bottom: 2rem;">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Generated Draft</p>
+            <h1 style="max-width: none;">{{ generated_content.title }}</h1>
+            <p class="section-text" style="max-width: 760px;">
+                {{ generated_content.get_output_type_display }} for {{ generated_content.business_type }}{% if generated_content.location %} in {{ generated_content.location }}{% endif %}.
+            </p>
+            <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <a class="button button-secondary" href="{{ back_url }}">Back to drafts</a>
+                <a class="button button-secondary" href="{% url 'content:workspace-content-json' generated_content.pk %}">Open JSON</a>
+                <form method="post" action="{% url 'content:workspace-content-apply' generated_content.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button button-primary">Apply to Content Library</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% include "includes/workspace_nav.html" %}
+
+<section class="packages-section" style="padding-top: 0;">
+    <div class="container" style="display: grid; gap: 2rem;">
+        <div class="system-grid">
+            <article class="system-card">
+                <p class="eyebrow">Meta Title</p>
+                <h3>{{ generated_content.meta_title }}</h3>
+            </article>
+            <article class="system-card">
+                <p class="eyebrow">Meta Description</p>
+                <p>{{ generated_content.meta_description }}</p>
+            </article>
+            <article class="system-card">
+                <p class="eyebrow">CTA</p>
+                <p>{{ generated_content.cta }}</p>
+            </article>
+            <article class="system-card">
+                <p class="eyebrow">SEO Brief</p>
+                <p>{% if generated_content.brief_json.summary %}{{ generated_content.brief_json.summary }}{% else %}Manual content request{% endif %}</p>
+            </article>
+            <article class="system-card">
+                <p class="eyebrow">Editorial Queue</p>
+                <p>
+                    {% if generated_content.source_editorial_task %}
+                    {{ generated_content.source_editorial_task.get_status_display }}
+                    {% else %}
+                    Not linked to an editorial task
+                    {% endif %}
+                </p>
+            </article>
+            <article class="system-card">
+                <p class="eyebrow">SEO Campaign</p>
+                <p>
+                    {% if generated_content.source_seo_campaign %}
+                    {{ generated_content.source_seo_campaign.title }} | {{ generated_content.source_seo_campaign.get_status_display }}
+                    {% else %}
+                    Not linked to an SEO campaign
+                    {% endif %}
+                </p>
+            </article>
+            <article class="system-card">
+                <p class="eyebrow">Refinement</p>
+                <p>
+                    {% if generated_content.output_json.refinement.applied %}
+                    {{ generated_content.output_json.refinement.provider|title }}{% if generated_content.output_json.refinement.model %} / {{ generated_content.output_json.refinement.model }}{% endif %}
+                    {% else %}
+                    Deterministic fallback
+                    {% endif %}
+                </p>
+            </article>
+        </div>
+
+        {% if generated_content.source_seo_campaign %}
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Execution Chain</p>
+                <h2 style="font-size: 2rem;">Campaign lineage</h2>
+            </div>
+            <div class="system-grid">
+                <div>
+                    <strong style="display: block; margin-bottom: 0.25rem;">Campaign</strong>
+                    <div style="color: #64748b;">{{ generated_content.source_seo_campaign.title }}</div>
+                    <div style="color: #64748b; font-size: 0.85rem;">
+                        {{ generated_content.source_seo_campaign.get_status_display }} | {{ generated_content.source_seo_campaign.get_validation_status_display }}
+                    </div>
+                </div>
+                <div>
+                    <strong style="display: block; margin-bottom: 0.25rem;">Target keyword</strong>
+                    <div style="color: #64748b;">{{ generated_content.source_seo_campaign.target_keyword|default:"Not specified" }}</div>
+                </div>
+                <div>
+                    <strong style="display: block; margin-bottom: 0.25rem;">Related pages</strong>
+                    {% for url in generated_content.source_seo_campaign.related_page_urls %}
+                    <div class="url-wrap-mono" style="font-size: 0.8rem; color: #64748b;">{{ url }}</div>
+                    {% empty %}
+                    <div style="color: #64748b;">No related pages recorded.</div>
+                    {% endfor %}
+                </div>
+                <div>
+                    <strong style="display: block; margin-bottom: 0.25rem;">Validation</strong>
+                    {% if generated_content.source_seo_campaign.latest_validation_audit_run %}
+                    <div style="color: #64748b;">
+                        Audit score {{ generated_content.source_seo_campaign.latest_validation_audit_run.overall_score }}
+                    </div>
+                    {% else %}
+                    <div style="color: #64748b;">Awaiting rerun validation.</div>
+                    {% endif %}
+                </div>
+            </div>
+        </article>
+        {% endif %}
+
+        {% if generated_content.brief_json %}
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Brief</p>
+                    <h2 style="font-size: 2rem;">Title options and outline</h2>
+                </div>
+                {% if generated_content.brief_json.title_options %}
+                <div style="display: grid; gap: 0.65rem;">
+                    {% for item in generated_content.brief_json.title_options %}
+                    <div style="padding: 0.8rem 1rem; border-radius: 14px; background: #f8fafc;">{{ item }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% if generated_content.brief_json.outline_sections %}
+                <div style="margin-top: 1rem; display: grid; gap: 0.75rem;">
+                    {% for item in generated_content.brief_json.outline_sections %}
+                    <div style="padding: 0.8rem 1rem; border-radius: 14px; background: #f8fafc;">
+                        <strong style="display: block; margin-bottom: 0.25rem;">{{ item.heading }}</strong>
+                        <div style="color: #64748b;">{{ item.instruction }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">SEO Targets</p>
+                    <h2 style="font-size: 2rem;">FAQs and internal links</h2>
+                </div>
+                {% if generated_content.brief_json.faq_targets %}
+                <div style="display: grid; gap: 0.65rem;">
+                    {% for item in generated_content.brief_json.faq_targets %}
+                    <div style="padding: 0.8rem 1rem; border-radius: 14px; background: #f8fafc;">{{ item }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% if generated_content.brief_json.internal_link_targets %}
+                <div style="margin-top: 1rem; display: grid; gap: 0.65rem;">
+                    {% for item in generated_content.brief_json.internal_link_targets %}
+                    <div style="padding: 0.8rem 1rem; border-radius: 14px; background: #f8fafc;">
+                        <strong>{{ item.label }}</strong>
+                        <div style="color: #64748b; font-size: 0.9rem;">{{ item.url }}</div>
+                        {% if item.reason %}
+                        <div style="color: #64748b; font-size: 0.82rem; margin-top: 0.2rem;">{{ item.reason }}</div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </article>
+        </div>
+        {% endif %}
+
+        <div style="display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 2rem; align-items: start;">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Draft Body</p>
+                    <h2 style="font-size: 2rem;">Structured output</h2>
+                </div>
+                <pre style="white-space: pre-wrap; font-family: inherit; line-height: 1.6; margin: 0;">{{ generated_content.body }}</pre>
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Validation</p>
+                    <h2 style="font-size: 2rem;">Quality checks</h2>
+                </div>
+                <div style="display: grid; gap: 0.65rem;">
+                    <div>Passes checks: <strong>{{ generated_content.validation_json.passes|yesno:"Yes,No" }}</strong></div>
+                    <div>Keyword coverage: <strong>{{ generated_content.validation_json.keyword_coverage }}/{{ generated_content.validation_json.keyword_target }}</strong></div>
+                    <div>FAQ section: <strong>{{ generated_content.validation_json.has_faq_items|yesno:"Yes,No" }}</strong></div>
+                    <div>CTA present: <strong>{{ generated_content.validation_json.has_cta|yesno:"Yes,No" }}</strong></div>
+                    <div>Generic risk: <strong>{{ generated_content.validation_json.generic_risk|title }}</strong></div>
+                    <div>Refinement applied: <strong>{{ generated_content.output_json.refinement.applied|yesno:"Yes,No" }}</strong></div>
+                </div>
+
+                <div class="section-heading" style="text-align: left; margin: 1.5rem 0 1rem;">
+                    <p class="eyebrow">Internal Links</p>
+                    <h2 style="font-size: 1.4rem;">Suggested link targets</h2>
+                </div>
+                <div style="display: grid; gap: 0.65rem;">
+                    {% for item in generated_content.suggested_internal_links %}
+                    <div style="padding: 0.8rem 1rem; border-radius: 14px; background: #f8fafc;">
+                        <strong>{{ item.label }}</strong>
+                        <div style="color: #64748b; font-size: 0.9rem;">{{ item.url }}</div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </article>
+        </div>
+
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Editorial Review</p>
+                <h2 style="font-size: 2rem;">Edit before publication</h2>
+            </div>
+            <form method="post" action="{% url 'content:workspace-content-update' generated_content.pk %}" style="display: grid; gap: 1rem;">
+                {% csrf_token %}
+                {% for field in edit_form %}
+                <label style="display: grid; gap: 0.35rem;">
+                    <span style="font-weight: 700;">{{ field.label }}</span>
+                    {{ field }}
+                    {% for error in field.errors %}
+                    <span style="font-size: 0.85rem; color: #b91c1c;">{{ error }}</span>
+                    {% endfor %}
+                </label>
+                {% endfor %}
+                <button type="submit" class="button button-secondary">Save draft changes</button>
+            </form>
+            {% if generated_content.applied_service %}
+            <div style="margin-top: 1rem; color: #64748b;">Applied to Service: <strong>{{ generated_content.applied_service.title }}</strong></div>
+            {% endif %}
+            {% if generated_content.applied_article %}
+            <div style="margin-top: 1rem; color: #64748b;">Applied to Article: <strong>{{ generated_content.applied_article.title }}</strong></div>
+            {% endif %}
+        </article>
+
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">FAQ Set</p>
+                <h2 style="font-size: 2rem;">Schema-ready answers</h2>
+            </div>
+            <div style="display: grid; gap: 0.75rem;">
+                {% for item in generated_content.faq_items %}
+                <div style="padding: 1rem; border-radius: 16px; background: #f8fafc;">
+                    <strong style="display: block; margin-bottom: 0.35rem;">{{ item.question }}</strong>
+                    <div style="color: #64748b;">{{ item.answer }}</div>
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+    </div>
+</section>
+{% endblock %}
