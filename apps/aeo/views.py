@@ -10,7 +10,8 @@ from apps.leads.services import get_workspace_projects
 from apps.leads.models import UsageRecord
 
 from .forms import AEOAuditRequestForm
-from .services import create_aeo_audit, get_latest_aeo_audit
+from .services import build_aeo_payload, create_aeo_audit, get_latest_aeo_audit
+from apps.seo.models import SEOProjectProfile
 
 
 class WorkspaceAEOView(LoginRequiredMixin, View):
@@ -29,6 +30,18 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
         if project and hasattr(project, "seo_profile") and project.seo_profile:
             metadata = getattr(project.seo_profile, "metadata", {}) or {}
             aeo_intelligence = metadata.get("intelligence", {})
+
+        # Always rebuild payload live so new fields (citation_readiness, engine_gaps) are current
+        if latest_aeo_audit and latest_aeo_audit.source_audit_run:
+            profile = SEOProjectProfile.objects.filter(project=project).first()
+            live_payload = build_aeo_payload(
+                audit_run=latest_aeo_audit.source_audit_run,
+                profile=profile,
+                target_keyword=latest_aeo_audit.target_keyword or "",
+            )
+        else:
+            live_payload = latest_aeo_audit.output_json if latest_aeo_audit else {}
+
         return render(
             request,
             self.template_name,
@@ -37,7 +50,7 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 "workspace_projects": get_workspace_projects(request.user),
                 "form": AEOAuditRequestForm(initial={"target_keyword": getattr(latest_aeo_audit, "target_keyword", "")}),
                 "latest_aeo_audit": latest_aeo_audit,
-                "aeo_payload": latest_aeo_audit.output_json if latest_aeo_audit else {},
+                "aeo_payload": live_payload,
                 "aeo_history": aeo_history,
                 "aeo_intelligence": aeo_intelligence,
                 "workspace_credit_actions": build_credit_action_guide(project, request.user) if project else [],
@@ -106,6 +119,17 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
             if project and getattr(project, "pk", None)
             else []
         )
+        # Rebuild payload live for consistency
+        if latest_aeo_audit_obj := aeo_audit:
+            profile_post = SEOProjectProfile.objects.filter(project=project).first()
+            live_payload_post = build_aeo_payload(
+                audit_run=aeo_audit.source_audit_run,
+                profile=profile_post,
+                target_keyword=aeo_audit.target_keyword or "",
+            )
+        else:
+            live_payload_post = aeo_audit.output_json
+
         return render(
             request,
             self.template_name,
@@ -114,7 +138,7 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 "workspace_projects": get_workspace_projects(request.user),
                 "form": AEOAuditRequestForm(initial={"target_keyword": aeo_audit.target_keyword}),
                 "latest_aeo_audit": aeo_audit,
-                "aeo_payload": aeo_audit.output_json,
+                "aeo_payload": live_payload_post,
                 "aeo_history": aeo_history,
                 "aeo_intelligence": aeo_intelligence,
                 "workspace_credit_actions": build_credit_action_guide(project, request.user),

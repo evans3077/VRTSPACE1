@@ -315,12 +315,70 @@ def build_aeo_payload(*, audit_run, profile=None, target_keyword=""):
         profile=profile,
         target_keyword=target_keyword,
     )
+
+    # ── Citation Readiness Score (weighted headline composite) ──────────────
+    citation_readiness = round(
+        visibility_score * 0.35
+        + entity_score * 0.25
+        + structure_score * 0.25
+        + completeness_score * 0.15
+    )
+
+    # ── Per-engine internal score approximations (mirror create_aeo_audit) ──
+    CITE_THRESHOLD = 68
+    aeo_s = int(audit_run.aeo_score or 0)
+    content_s = int(audit_run.content_score or 0)
+    on_page_s = int(audit_run.on_page_score or 0)
+
+    chatgpt_raw = entity_score * 0.4 + completeness_score * 0.3 + aeo_s * 0.3
+    gemini_raw = on_page_s * 0.35 + structure_score * 0.35 + entity_score * 0.3
+    perplexity_raw = content_s * 0.4 + completeness_score * 0.3 + aeo_s * 0.3
+
+    engine_gaps = [
+        {
+            "engine": "ChatGPT",
+            "score": round(chatgpt_raw),
+            "threshold": CITE_THRESHOLD,
+            "gap": max(0, CITE_THRESHOLD - round(chatgpt_raw)),
+            "cited": chatgpt_raw >= CITE_THRESHOLD,
+            "color": "#10a37f",
+            "icon": "🤖",
+            "lever": "Add FAQ schema and answer-first headings" if chatgpt_raw < CITE_THRESHOLD else "Maintain current answer structure",
+        },
+        {
+            "engine": "Gemini",
+            "score": round(gemini_raw),
+            "threshold": CITE_THRESHOLD,
+            "gap": max(0, CITE_THRESHOLD - round(gemini_raw)),
+            "cited": gemini_raw >= CITE_THRESHOLD,
+            "color": "#4285f4",
+            "icon": "✦",
+            "lever": "Add JSON-LD schema and align keyword with location" if gemini_raw < CITE_THRESHOLD else "Keep E-E-A-T and schema markup consistent",
+        },
+        {
+            "engine": "Perplexity",
+            "score": round(perplexity_raw),
+            "threshold": CITE_THRESHOLD,
+            "gap": max(0, CITE_THRESHOLD - round(perplexity_raw)),
+            "cited": perplexity_raw >= CITE_THRESHOLD,
+            "color": "#a855f7",
+            "icon": "⊕",
+            "lever": "Expand pages to 600+ words with structured facts" if perplexity_raw < CITE_THRESHOLD else "Maintain content depth and sourcing quality",
+        },
+    ]
+
+    # Sort: closest to threshold first (biggest opportunity)
+    engine_gaps.sort(key=lambda e: (e["cited"], -e["score"]))
+
+    top_priority_fix = recommendations[0] if recommendations else None
+
     return {
         "scores": {
             "visibility_score": visibility_score,
             "entity_score": entity_score,
             "structure_score": structure_score,
             "completeness_score": completeness_score,
+            "citation_readiness": citation_readiness,
         },
         "context": {
             "business_type": getattr(profile, "business_type", ""),
@@ -329,6 +387,8 @@ def build_aeo_payload(*, audit_run, profile=None, target_keyword=""):
             "primary_service": getattr(profile, "primary_service", ""),
             "target_keyword": target_keyword,
         },
+        "engine_gaps": engine_gaps,
+        "top_priority_fix": top_priority_fix,
         "recommendations": recommendations,
     }
 
