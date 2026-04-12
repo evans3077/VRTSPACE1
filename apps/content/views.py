@@ -20,6 +20,7 @@ from .services import (
     get_workspace_content_project,
     refresh_generated_content_validation,
     sync_project_editorial_tasks,
+    build_content_optimization_data,
 )
 
 
@@ -74,6 +75,10 @@ class WorkspaceGeneratedContentListView(LoginRequiredMixin, ListView):
         context["form"] = GeneratedContentRequestForm()
         context["editorial_tasks"] = get_editorial_tasks(project)
         context["workspace_credit_actions"] = build_credit_action_guide(project, self.request.user) if project else []
+        
+        # Phase D: Inject Gap Analysis & Keyword Clusters
+        context["optimization_engine"] = build_content_optimization_data(project)
+        
         return context
 
 

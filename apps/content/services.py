@@ -763,3 +763,61 @@ def apply_generated_content(draft):
         task.status = ContentEditorialTask.Status.APPLIED
         task.save(update_fields=["latest_generated_content", "status", "updated_at"])
     return draft
+
+
+def build_content_optimization_data(project):
+    if not project:
+        return {"gap_analysis": {}, "keyword_clusters": {}}
+        
+    seo_snapshot, opp_snapshot = get_latest_seo_context(project)
+    
+    # 1. Extract Keyword Clusters from Opportunities & AEO
+    clusters = {}
+    if seo_snapshot and getattr(seo_snapshot, "output_json", None):
+        clusters = seo_snapshot.output_json.get("keyword_clusters", {})
+        
+    # Inject Related Questions from AEO intelligence payload into clusters
+    related_queries = []
+    if project and hasattr(project, "seo_profile") and project.seo_profile:
+        intel = (project.seo_profile.metadata or {}).get("intelligence", {})
+        for q in intel.get("related_questions", []):
+            if q.get("question"):
+                related_queries.append(q["question"])
+    
+    if related_queries:
+        clusters["People Also Ask (AEO)"] = related_queries[:6]
+
+    # 2. Extract Gap Analysis from Site Structure vs Competitors
+    gap_analysis = {
+        "missing_layers": [],
+        "thin_content": [],
+    }
+    
+    # Retrieve structural recommendations generated during the Audit
+    if opp_snapshot and getattr(opp_snapshot, "output_json", None):
+        recs = opp_snapshot.output_json.get("page_map", [])
+        for rec in recs:
+            if rec.get("status") == "backlog":
+                continue
+            reason = (rec.get("reason") or "").lower()
+            if "missing" in reason or "add" in reason:
+                gap_analysis["missing_layers"].append({
+                    "title": rec.get("page_type_label", "Page"),
+                    "reason": rec.get("reason", "Missing core page type."),
+                    "priority": rec.get("priority_score", 0),
+                })
+            elif "thin" in reason or "deepen" in reason or "expand" in reason:
+                gap_analysis["thin_content"].append({
+                    "title": rec.get("page_type_label", "Page"),
+                    "reason": rec.get("reason", "Content is structurally thin compared to competitors."),
+                    "priority": rec.get("priority_score", 0),
+                })
+                
+    # Fallback default sorting for presentation
+    gap_analysis["missing_layers"] = sorted(gap_analysis["missing_layers"], key=lambda x: -x["priority"])[:4]
+    gap_analysis["thin_content"] = sorted(gap_analysis["thin_content"], key=lambda x: -x["priority"])[:4]
+    
+    return {
+        "gap_analysis": gap_analysis,
+        "keyword_clusters": clusters,
+    }

@@ -40,6 +40,74 @@
             </div>
         </div>
 
+        {% if optimization_engine and project and project.latest_audit_run %}
+        <!-- Phase D: Content Optimization Engine -->
+        <article id="content-optimization-engine" class="system-card" style="margin-bottom: 2rem;">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1.5rem;">
+                <p class="eyebrow" style="color: var(--signal);">Content Optimization Engine</p>
+                <h2 style="font-size: 2rem;">Gap Analysis &amp; Keyword Intelligence</h2>
+                <p style="color: var(--text-secondary); line-height: 1.6; max-width: 740px;">
+                    Competitive content gaps identified from accepted market competitors, enriched with live SERP intent signals and AEO-sourced queries.
+                </p>
+            </div>
+
+            <div class="system-grid" style="gap: 1.5rem; margin-bottom: 2rem;">
+                <!-- Missing Content Layers -->
+                {% if optimization_engine.gap_analysis.missing_layers %}
+                <div style="padding: 1.5rem; border-radius: 18px; background: rgba(220, 38, 38, 0.03); border: 1px solid rgba(220, 38, 38, 0.15);">
+                    <strong style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary); font-size: 1.05rem; margin-bottom: 1rem;">
+                        <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i> Missing Page Layers
+                    </strong>
+                    <div style="display: grid; gap: 0.75rem;">
+                        {% for gap in optimization_engine.gap_analysis.missing_layers %}
+                        <div style="padding: 0.9rem 1rem; border-radius: 12px; background: var(--bg-surface); border-left: 3px solid #ef4444;">
+                            <strong style="display: block; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.3rem;">{{ gap.title }}</strong>
+                            <p style="margin: 0; font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">{{ gap.reason }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Thin Content Gaps -->
+                {% if optimization_engine.gap_analysis.thin_content %}
+                <div style="padding: 1.5rem; border-radius: 18px; background: rgba(234, 88, 12, 0.03); border: 1px solid rgba(234, 88, 12, 0.15);">
+                    <strong style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary); font-size: 1.05rem; margin-bottom: 1rem;">
+                        <i class="fas fa-file-alt" style="color: #ea580c;"></i> Thin Content Detected
+                    </strong>
+                    <div style="display: grid; gap: 0.75rem;">
+                        {% for item in optimization_engine.gap_analysis.thin_content %}
+                        <div style="padding: 0.9rem 1rem; border-radius: 12px; background: var(--bg-surface); border-left: 3px solid #ea580c;">
+                            <strong style="display: block; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.3rem;">{{ item.title }}</strong>
+                            <p style="margin: 0; font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">{{ item.reason }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Keyword Intent Clusters -->
+            {% if optimization_engine.keyword_clusters %}
+            <div>
+                <strong style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--brand-primary); margin-bottom: 1.25rem;">Keyword Intent Clusters</strong>
+                <div style="display: grid; gap: 1.25rem;">
+                    {% for cluster_name, keywords in optimization_engine.keyword_clusters.items %}
+                    <div style="padding: 1.25rem; border-radius: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
+                        <p style="margin: 0 0 0.75rem; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary);">{{ cluster_name }}</p>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            {% for kw in keywords %}
+                            <span style="display: inline-flex; align-items: center; padding: 0.35rem 0.75rem; border-radius: 999px; background: rgba(14, 165, 233, 0.08); color: var(--brand-primary); font-size: 0.8rem; border: 1px solid rgba(14, 165, 233, 0.2); white-space: nowrap;">{{ kw }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </article>
+        {% endif %}
+
         <div class="layout-split-wide" style="margin-top: 1.5rem;">
             
             <article class="system-card" id="generate">
