@@ -7,23 +7,39 @@ from apps.tools.models import AuditRun
 from .models import AEOAudit, AIRecommendation, VisibilitySnapshot
 
 
-def _build_entity_score(profile, audit_run):
-    score = 35
+def _build_entity_score(profile, audit_run, target_keyword=""):
+    """Score how well the site's identity matches the target keyword."""
+    score = 30
     if profile:
         if profile.primary_service:
-            score += 20
-        if profile.location:
-            score += 20
-        if profile.business_type:
             score += 15
-        if profile.target_goal:
+        if profile.location:
+            score += 15
+        if profile.business_type:
             score += 10
+        if profile.target_goal:
+            score += 5
     if audit_run.normalized_domain:
         score += 5
+    
+    # Keyword-aware: check if pages match the target keyword
+    if target_keyword:
+        kw_lower = target_keyword.lower()
+        pages = list(audit_run.pages.all()[:15])
+        kw_in_title = sum(1 for p in pages if kw_lower in (p.title or "").lower())
+        kw_in_h1 = sum(1 for p in pages if kw_lower in (p.h1 or "").lower())
+        kw_location_match = 0
+        if profile and profile.location:
+            loc_tokens = [t.strip().lower() for t in profile.location.split(",") if t.strip()]
+            if any(t in kw_lower for t in loc_tokens):
+                kw_location_match = 1
+        score += kw_in_title * 5 + kw_in_h1 * 5 + kw_location_match * 10
+    
     return min(score, 100)
 
 
-def _build_structure_score(audit_run):
+def _build_structure_score(audit_run, target_keyword=""):
+    """Score structural AEO signals — schema, H1, FAQ presence."""
     pages = list(audit_run.pages.all()[:15])
     summary = audit_run.summary or {}
     score = 40
@@ -35,10 +51,22 @@ def _build_structure_score(audit_run):
         score += 10
     if not any(rec.get("category_key") == "aeo" for rec in summary.get("recommendations", [])):
         score += 10
-    return min(score, 100)
+    
+    # Penalty: if keyword has a geographic modifier, check that at least one page has H1/title with it
+    if target_keyword:
+        kw_lower = target_keyword.lower()
+        has_kw_structure = any(
+            kw_lower in (p.title or "").lower() or kw_lower in (p.h1 or "").lower()
+            for p in pages
+        )
+        if not has_kw_structure:
+            score -= 10  # structural gap: keyword not in any H1 or title
+    
+    return min(max(score, 0), 100)
 
 
-def _build_completeness_score(audit_run):
+def _build_completeness_score(audit_run, target_keyword=""):
+    """Score content completeness and depth relative to the target keyword."""
     summary = audit_run.summary or {}
     pages = list(audit_run.pages.all()[:15])
     score = 45
@@ -50,11 +78,28 @@ def _build_completeness_score(audit_run):
         score += 15
     if summary.get("context_analysis", {}).get("competitors"):
         score += 10
-    return min(score, 100)
+    
+    # Keyword-aware: does any page have a meta_description or high word_count page matching the keyword?
+    if target_keyword:
+        kw_lower = target_keyword.lower()
+        kw_meta = sum(1 for p in pages if kw_lower in (p.meta_description or "").lower())
+        kw_dense = sum(1 for p in pages if (p.word_count or 0) >= 500 and kw_lower in (p.title or p.h1 or "").lower())
+        score += kw_meta * 3 + kw_dense * 5
+        # If keyword targets a city that isn't referenced anywhere, apply a gap penalty
+        kw_words = set(kw_lower.split())
+        any_page_matches = any(
+            bool(kw_words.intersection(set((p.title or "").lower().split())))
+            for p in pages
+        )
+        if not any_page_matches:
+            score -= 8
+    
+    return min(max(score, 0), 100)
 
 
-def _build_visibility_score(audit_run):
-    return max(
+def _build_visibility_score(audit_run, target_keyword=""):
+    """Visibility: average of AEO, content, on-page, adjusted for keyword match strength."""
+    base = max(
         0,
         min(
             100,
@@ -67,6 +112,21 @@ def _build_visibility_score(audit_run):
             ),
         ),
     )
+    
+    # Keyword modifier: if pages strongly match the keyword, boost; else penalise
+    if target_keyword:
+        kw_lower = target_keyword.lower()
+        pages = list(audit_run.pages.all()[:15])
+        kw_match_count = sum(
+            1 for p in pages
+            if kw_lower in (p.title or "").lower() or kw_lower in (p.h1 or "").lower()
+        )
+        if kw_match_count >= 2:
+            base = min(base + 5, 100)
+        elif kw_match_count == 0:
+            base = max(base - 8, 0)
+    
+    return base
 
 
 def _priority_page_targets(audit_run, limit=3):
@@ -246,10 +306,10 @@ def build_aeo_recommendations(*, audit_run, profile=None, target_keyword=""):
 
 
 def build_aeo_payload(*, audit_run, profile=None, target_keyword=""):
-    visibility_score = _build_visibility_score(audit_run)
-    entity_score = _build_entity_score(profile, audit_run)
-    structure_score = _build_structure_score(audit_run)
-    completeness_score = _build_completeness_score(audit_run)
+    visibility_score = _build_visibility_score(audit_run, target_keyword)
+    entity_score = _build_entity_score(profile, audit_run, target_keyword)
+    structure_score = _build_structure_score(audit_run, target_keyword)
+    completeness_score = _build_completeness_score(audit_run, target_keyword)
     recommendations = build_aeo_recommendations(
         audit_run=audit_run,
         profile=profile,

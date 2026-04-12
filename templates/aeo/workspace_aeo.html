@@ -111,57 +111,76 @@
             <!-- Live Scores Panel -->
             {% if latest_aeo_audit %}
             <article id="aeo-scores" class="system-card">
-                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                    <p class="eyebrow">AI Visibility Scores</p>
-                    <h2 style="font-size: 2rem;">Four dimensions of answer readiness</h2>
+                <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div>
+                        <p class="eyebrow" style="color: var(--brand-primary);">AI Visibility Scores</p>
+                        <h2 style="font-size: 1.8rem; margin: 0;">Four dimensions of answer readiness</h2>
+                    </div>
+                    {% if aeo_payload.context.target_keyword %}
+                    <span style="display: inline-flex; align-items: center; padding: 0.5rem 1rem; border-radius: 999px; background: rgba(14,165,233,0.1); border: 1px solid rgba(14,165,233,0.2); color: var(--brand-primary); font-size: 0.85rem; font-weight: 600; white-space: nowrap;">
+                        <i class="fas fa-crosshairs" style="margin-right: 0.4rem;"></i> {{ aeo_payload.context.target_keyword }}
+                    </span>
+                    {% endif %}
                 </div>
 
-                <!-- Metric Hero Strip -->
-                <div class="metric-hero-strip">
-                    <div class="metric-hero-item">
-                        <div class="metric-hero-value">{{ latest_aeo_audit.visibility_score }}</div>
-                        <div class="metric-hero-label">Visibility</div>
-                    </div>
-                    <div class="metric-hero-item">
-                        <div class="metric-hero-value">{{ latest_aeo_audit.entity_score }}</div>
-                        <div class="metric-hero-label">Entity Clarity</div>
-                    </div>
-                    <div class="metric-hero-item">
-                        <div class="metric-hero-value">{{ latest_aeo_audit.structure_score }}</div>
-                        <div class="metric-hero-label">Structure</div>
-                    </div>
-                    <div class="metric-hero-item">
-                        <div class="metric-hero-value">{{ latest_aeo_audit.completeness_score }}</div>
-                        <div class="metric-hero-label">Completeness</div>
-                    </div>
-                </div>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
 
-                <!-- Score Detail Cards -->
-                <div class="system-grid" style="margin-top: 1rem;">
-                    <article class="system-card" style="border-top: 4px solid {% if latest_aeo_audit.visibility_score >= 70 %}#16a34a{% elif latest_aeo_audit.visibility_score >= 50 %}#ca8a04{% else %}#dc2626{% endif %};">
-                        <p class="eyebrow">Visibility</p>
-                        <h3>{{ latest_aeo_audit.visibility_score }}/100</h3>
-                        <div class="progress-bar-shell"><div class="progress-bar-fill{% if latest_aeo_audit.visibility_score >= 70 %}-green{% endif %}" style="width: {{ latest_aeo_audit.visibility_score }}%;"></div></div>
-                        <p style="font-size: 0.82rem; color: #64748b; margin-top: 0.5rem;">AI answer readiness. Derived from AEO, content, and on-page scores averaged together.</p>
-                    </article>
-                    <article class="system-card" style="border-top: 4px solid {% if latest_aeo_audit.entity_score >= 70 %}#16a34a{% elif latest_aeo_audit.entity_score >= 50 %}#ca8a04{% else %}#dc2626{% endif %};">
-                        <p class="eyebrow">Entity Clarity</p>
-                        <h3>{{ latest_aeo_audit.entity_score }}/100</h3>
-                        <div class="progress-bar-shell"><div class="progress-bar-fill{% if latest_aeo_audit.entity_score >= 70 %}-green{% endif %}" style="width: {{ latest_aeo_audit.entity_score }}%;"></div></div>
-                        <p style="font-size: 0.82rem; color: #64748b; margin-top: 0.5rem;">Business identity, service, and location signals present in the site profile.</p>
-                    </article>
-                    <article class="system-card" style="border-top: 4px solid {% if latest_aeo_audit.structure_score >= 70 %}#16a34a{% elif latest_aeo_audit.structure_score >= 50 %}#ca8a04{% else %}#dc2626{% endif %};">
-                        <p class="eyebrow">Structure</p>
-                        <h3>{{ latest_aeo_audit.structure_score }}/100</h3>
-                        <div class="progress-bar-shell"><div class="progress-bar-fill{% if latest_aeo_audit.structure_score >= 70 %}-green{% endif %}" style="width: {{ latest_aeo_audit.structure_score }}%;"></div></div>
-                        <p style="font-size: 0.82rem; color: #64748b; margin-top: 0.5rem;">Schema markup, FAQ coverage, H1 presence, and answer formatting signals from the crawl.</p>
-                    </article>
-                    <article class="system-card" style="border-top: 4px solid {% if latest_aeo_audit.completeness_score >= 70 %}#16a34a{% elif latest_aeo_audit.completeness_score >= 50 %}#ca8a04{% else %}#dc2626{% endif %};">
-                        <p class="eyebrow">Completeness</p>
-                        <h3>{{ latest_aeo_audit.completeness_score }}/100</h3>
-                        <div class="progress-bar-shell"><div class="progress-bar-fill{% if latest_aeo_audit.completeness_score >= 70 %}-green{% endif %}" style="width: {{ latest_aeo_audit.completeness_score }}%;"></div></div>
-                        <p style="font-size: 0.82rem; color: #64748b; margin-top: 0.5rem;">Content depth, page coverage, meta-descriptions, and competitor context presence.</p>
-                    </article>
+                    {% with s=latest_aeo_audit.visibility_score %}
+                    <div style="padding: 1.5rem; border-radius: 20px; background: {% if s >= 70 %}rgba(22,163,74,0.06){% elif s >= 50 %}rgba(202,138,4,0.06){% else %}rgba(220,38,38,0.06){% endif %}; border: 1px solid {% if s >= 70 %}rgba(22,163,74,0.25){% elif s >= 50 %}rgba(202,138,4,0.25){% else %}rgba(220,38,38,0.25){% endif %};">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 700;">Visibility</span>
+                            <span class="score-pill {% if s >= 70 %}score-high{% elif s >= 50 %}score-medium{% else %}score-low{% endif %}" style="font-size: 0.75rem;">{% if s >= 70 %}Good{% elif s >= 50 %}Fair{% else %}Weak{% endif %}</span>
+                        </div>
+                        <div style="font-size: 3rem; font-weight: 900; line-height: 1; color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %}; margin-bottom: 0.5rem;">{{ s }}<span style="font-size: 1rem; color: var(--text-muted); font-weight: 400;">/100</span></div>
+                        <div style="height: 6px; border-radius: 999px; background: rgba(255,255,255,0.08); margin-bottom: 0.75rem; overflow: hidden;">
+                            <div style="height: 100%; width: {{ s }}%; border-radius: 999px; background: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %}; transition: width 0.6s ease;"></div>
+                        </div>
+                        <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; margin: 0;">AI answer readiness score — averaged from AEO, content depth, and on-page signals, adjusted for keyword alignment.</p>
+                    </div>
+                    {% endwith %}
+
+                    {% with s=latest_aeo_audit.entity_score %}
+                    <div style="padding: 1.5rem; border-radius: 20px; background: {% if s >= 70 %}rgba(22,163,74,0.06){% elif s >= 50 %}rgba(202,138,4,0.06){% else %}rgba(220,38,38,0.06){% endif %}; border: 1px solid {% if s >= 70 %}rgba(22,163,74,0.25){% elif s >= 50 %}rgba(202,138,4,0.25){% else %}rgba(220,38,38,0.25){% endif %};">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 700;">Entity Clarity</span>
+                            <span class="score-pill {% if s >= 70 %}score-high{% elif s >= 50 %}score-medium{% else %}score-low{% endif %}" style="font-size: 0.75rem;">{% if s >= 70 %}Clear{% elif s >= 50 %}Partial{% else %}Unclear{% endif %}</span>
+                        </div>
+                        <div style="font-size: 3rem; font-weight: 900; line-height: 1; color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %}; margin-bottom: 0.5rem;">{{ s }}<span style="font-size: 1rem; color: var(--text-muted); font-weight: 400;">/100</span></div>
+                        <div style="height: 6px; border-radius: 999px; background: rgba(255,255,255,0.08); margin-bottom: 0.75rem; overflow: hidden;">
+                            <div style="height: 100%; width: {{ s }}%; border-radius: 999px; background: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %}; transition: width 0.6s ease;"></div>
+                        </div>
+                        <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; margin: 0;">Business identity, service, and location signals — boosted when the keyword matches page titles, H1s, and location context.</p>
+                    </div>
+                    {% endwith %}
+
+                    {% with s=latest_aeo_audit.structure_score %}
+                    <div style="padding: 1.5rem; border-radius: 20px; background: {% if s >= 70 %}rgba(22,163,74,0.06){% elif s >= 50 %}rgba(202,138,4,0.06){% else %}rgba(220,38,38,0.06){% endif %}; border: 1px solid {% if s >= 70 %}rgba(22,163,74,0.25){% elif s >= 50 %}rgba(202,138,4,0.25){% else %}rgba(220,38,38,0.25){% endif %};">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 700;">Structure</span>
+                            <span class="score-pill {% if s >= 70 %}score-high{% elif s >= 50 %}score-medium{% else %}score-low{% endif %}" style="font-size: 0.75rem;">{% if s >= 70 %}Solid{% elif s >= 50 %}Basic{% else %}Fragile{% endif %}</span>
+                        </div>
+                        <div style="font-size: 3rem; font-weight: 900; line-height: 1; color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %}; margin-bottom: 0.5rem;">{{ s }}<span style="font-size: 1rem; color: var(--text-muted); font-weight: 400;">/100</span></div>
+                        <div style="height: 6px; border-radius: 999px; background: rgba(255,255,255,0.08); margin-bottom: 0.75rem; overflow: hidden;">
+                            <div style="height: 100%; width: {{ s }}%; border-radius: 999px; background: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %}; transition: width 0.6s ease;"></div>
+                        </div>
+                        <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; margin: 0;">Schema markup, FAQ coverage, H1 presence, and keyword structural gaps from the crawl.</p>
+                    </div>
+                    {% endwith %}
+
+                    {% with s=latest_aeo_audit.completeness_score %}
+                    <div style="padding: 1.5rem; border-radius: 20px; background: {% if s >= 70 %}rgba(22,163,74,0.06){% elif s >= 50 %}rgba(202,138,4,0.06){% else %}rgba(220,38,38,0.06){% endif %}; border: 1px solid {% if s >= 70 %}rgba(22,163,74,0.25){% elif s >= 50 %}rgba(202,138,4,0.25){% else %}rgba(220,38,38,0.25){% endif %};">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                            <span style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 700;">Completeness</span>
+                            <span class="score-pill {% if s >= 70 %}score-high{% elif s >= 50 %}score-medium{% else %}score-low{% endif %}" style="font-size: 0.75rem;">{% if s >= 70 %}Complete{% elif s >= 50 %}Partial{% else %}Thin{% endif %}</span>
+                        </div>
+                        <div style="font-size: 3rem; font-weight: 900; line-height: 1; color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %}; margin-bottom: 0.5rem;">{{ s }}<span style="font-size: 1rem; color: var(--text-muted); font-weight: 400;">/100</span></div>
+                        <div style="height: 6px; border-radius: 999px; background: rgba(255,255,255,0.08); margin-bottom: 0.75rem; overflow: hidden;">
+                            <div style="height: 100%; width: {{ s }}%; border-radius: 999px; background: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %}; transition: width 0.6s ease;"></div>
+                        </div>
+                        <p style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; margin: 0;">Content depth, page coverage, meta-descriptions, and keyword content density relative to the target query.</p>
+                    </div>
+                    {% endwith %}
+
                 </div>
             </article>
             {% else %}
