@@ -2146,3 +2146,165 @@ table tr:last-child td {
 table tr:hover td {
     background: #f8fafc;
 }
+
+/* ============================================================
+   PHASE F: GLOBAL MOBILE RESPONSIVENESS OVERHAUL
+   ============================================================ */
+
+/* TABLET DOWN (< 1024px) */
+@media (max-width: 1024px) {
+    /* Collapse core page grids */
+    .hero-grid,
+    .contact-grid,
+    .method-grid,
+    .layout-split-sidebar {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    /* Adjust padding for intermediate screens */
+    .hero,
+    .services-section,
+    .packages-section,
+    .systems-section,
+    .insight-section,
+    .experience-section,
+    .journey-section,
+    .method-section,
+    .case-study-section,
+    .faq-section,
+    .contact-section {
+        padding: 3rem 0;
+    }
+    
+    .workspace-nav-panel {
+        grid-template-columns: 1fr !important;
+        padding: 1.5rem;
+    }
+    
+    .billing-plan-columns {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* MOBILE DOWN (< 768px) */
+@media (max-width: 768px) {
+    /* Typography scaling */
+    .hero-copy h1,
+    .section-heading h2,
+    .method-section h2,
+    .contact-section h2,
+    .service-band-head h2,
+    .case-study-card h2 {
+        font-size: clamp(2rem, 8vw, 2.5rem);
+        margin-bottom: 1rem;
+    }
+    
+    .workspace-nav-title {
+        font-size: 1.8rem;
+    }
+
+    /* Make flex rows stack */
+    .workspace-nav-head {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+
+    /* Collapse repeated grids */
+    .hero-proof-grid,
+    .stat-grid,
+    .service-grid,
+    .package-grid,
+    .system-grid,
+    .experience-grid,
+    .journey-grid,
+    .faq-grid,
+    .command-module-grid,
+    .metric-hero-strip,
+    .audience-row,
+    .trust-bar {
+        grid-template-columns: 1fr;
+        gap: 1rem;
+    }
+
+    /* Tweak internal card paddings */
+    .audit-panel,
+    .signal-panel,
+    .contact-form,
+    .case-study-card,
+    .system-card,
+    .package-card,
+    .billing-plan-summary {
+        padding: 1.25rem;
+    }
+
+    /* Billing Header stacking */
+    .billing-plan-summary {
+        grid-template-columns: 1fr;
+        padding-right: 1.25rem;
+    }
+    .billing-plan-summary::after {
+        top: 1.25rem;
+        right: 1.25rem;
+    }
+    .billing-plan-header-row {
+        padding-right: 0;
+    }
+    .billing-plan-summary-side {
+        justify-items: start;
+        text-align: left;
+        padding-right: 0;
+        margin-top: 0.5rem;
+    }
+
+    /* Reduce global padding heavily for small screens */
+    .hero,
+    .services-section,
+    .packages-section,
+    .systems-section,
+    .insight-section,
+    .experience-section,
+    .journey-section,
+    .method-section,
+    .case-study-section,
+    .faq-section,
+    .contact-section {
+        padding: 2.5rem 0;
+    }
+
+    /* Ensure tables remain scrollable but fit */
+    .table-shell {
+        border-radius: 12px !important;
+    }
+    
+    .workspace-flow-note,
+    .workspace-credit-balance-card {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .workspace-credit-balance-meta {
+        text-align: left;
+    }
+    
+    .workspace-subnav {
+        width: 100%;
+    }
+    .workspace-subnav-link {
+        flex: 1 1 auto;
+        text-align: center;
+    }
+    
+    /* Audit Form inputs */
+    .checkbox-row {
+        align-items: flex-start;
+    }
+}
+
+/* Ensure images and videos scale */
+img, video {
+    max-width: 100%;
+    height: auto;
+}
+

@@ -210,7 +210,38 @@ input:focus, select:focus, textarea:focus {
 }
 
 @media (max-width: 1024px) {
-    .layout-split-sidebar { grid-template-columns: 1fr; }
+    .layout-split-sidebar { 
+        grid-template-columns: 1fr; 
+        gap: 1.5rem;
+    }
+    .hero-premium {
+        padding: 4rem 0 2rem 0;
+    }
+    h1 { font-size: 2.2rem !important; }
+    h2 { font-size: 1.8rem !important; }
+    h3 { font-size: 1.5rem !important; }
+}
+
+@media (max-width: 768px) {
+    .button-row {
+        flex-direction: column;
+        width: 100%;
+    }
+    .button, .btn-primary, .button-primary, .button-secondary {
+        width: 100%;
+        text-align: center;
+        justify-content: center;
+    }
+    .pill-group {
+        gap: 0.5rem;
+    }
+    .premium-pill {
+        font-size: 0.75rem;
+        padding: 0.5rem 1rem;
+    }
+    .metric-grid-premium {
+        grid-template-columns: 1fr;
+    }
 }
 
 /* Card Components */
