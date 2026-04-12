@@ -10,6 +10,13 @@ class VisibilitySnapshot(TimestampedModel):
         PERPLEXITY = "perplexity", "Perplexity"
 
     engine = models.CharField(max_length=24, choices=Engine.choices)
+    aeo_audit = models.ForeignKey(
+        "aeo.AEOAudit",
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="visibility_snapshots",
+    )
     prompt = models.TextField()
     cited_url = models.URLField(blank=True)
     answer_present = models.BooleanField(default=False)

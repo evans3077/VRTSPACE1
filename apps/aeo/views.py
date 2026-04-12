@@ -24,6 +24,11 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
             if project and getattr(project, "pk", None)
             else []
         )
+        
+        aeo_intelligence = {}
+        if project and hasattr(project, "seo_profile") and project.seo_profile:
+            metadata = getattr(project.seo_profile, "metadata", {}) or {}
+            aeo_intelligence = metadata.get("intelligence", {})
         return render(
             request,
             self.template_name,
@@ -34,6 +39,7 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 "latest_aeo_audit": latest_aeo_audit,
                 "aeo_payload": latest_aeo_audit.output_json if latest_aeo_audit else {},
                 "aeo_history": aeo_history,
+                "aeo_intelligence": aeo_intelligence,
                 "workspace_credit_actions": build_credit_action_guide(project, request.user) if project else [],
             },
         )
@@ -49,6 +55,12 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
             return redirect("tools:workspace-dashboard")
 
         form = AEOAuditRequestForm(request.POST)
+        
+        aeo_intelligence = {}
+        if project and hasattr(project, "seo_profile") and project.seo_profile:
+            metadata = getattr(project.seo_profile, "metadata", {}) or {}
+            aeo_intelligence = metadata.get("intelligence", {})
+            
         if not form.is_valid():
             latest_aeo_audit = get_latest_aeo_audit(project)
             return render(
@@ -60,6 +72,7 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                     "form": form,
                     "latest_aeo_audit": latest_aeo_audit,
                     "aeo_payload": latest_aeo_audit.output_json if latest_aeo_audit else {},
+                    "aeo_intelligence": aeo_intelligence,
                 },
                 status=400,
             )
@@ -103,6 +116,7 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 "latest_aeo_audit": aeo_audit,
                 "aeo_payload": aeo_audit.output_json,
                 "aeo_history": aeo_history,
+                "aeo_intelligence": aeo_intelligence,
                 "workspace_credit_actions": build_credit_action_guide(project, request.user),
             },
         )

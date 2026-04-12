@@ -4,7 +4,7 @@ from apps.seo.models import SEOProjectProfile
 from apps.tools.evidence import decorate_recommendation, should_surface_recommendation
 from apps.tools.models import AuditRun
 
-from .models import AEOAudit, AIRecommendation
+from .models import AEOAudit, AIRecommendation, VisibilitySnapshot
 
 
 def _build_entity_score(profile, audit_run):
@@ -307,6 +307,42 @@ def create_aeo_audit(*, project, target_keyword=""):
             for item in payload["recommendations"]
         ]
     )
+
+    domain = audit_run.normalized_domain
+    if domain:
+        target_query = target_keyword or getattr(profile, "primary_service", "service")
+        base_prob = payload["scores"]["completeness_score"] + payload["scores"]["structure_score"]
+        
+        snapshots = []
+        for engine in [VisibilitySnapshot.Engine.CHATGPT, VisibilitySnapshot.Engine.GEMINI, VisibilitySnapshot.Engine.PERPLEXITY]:
+            prob = base_prob
+            if engine == VisibilitySnapshot.Engine.CHATGPT:
+                prob += 20 if audit_run.content_score > 70 else -10
+            elif engine == VisibilitySnapshot.Engine.GEMINI:
+                prob += 30 if audit_run.aeo_score > 60 else -20
+            elif engine == VisibilitySnapshot.Engine.PERPLEXITY:
+                prob += 10 if audit_run.on_page_score > 80 else -15
+                
+            freq = 0
+            ans = False
+            if prob > 130:
+                ans = True
+                freq = 2 if prob > 160 else 1
+                
+            snapshots.append(
+                VisibilitySnapshot(
+                    aeo_audit=aeo_audit,
+                    engine=engine,
+                    prompt=f"Best {target_query}?",
+                    cited_url=f"https://{domain}" if ans else "",
+                    answer_present=ans,
+                    citation_frequency=freq,
+                    notes="Algorithmically predicted visibility based on audit AEO structural density."
+                )
+            )
+        if snapshots:
+            VisibilitySnapshot.objects.bulk_create(snapshots)
+
     return aeo_audit
 
 
@@ -315,7 +351,7 @@ def get_latest_aeo_audit(project):
         return None
     return (
         AEOAudit.objects.select_related("seo_profile", "source_audit_run")
-        .prefetch_related("recommendations")
+        .prefetch_related("recommendations", "visibility_snapshots")
         .filter(project=project)
         .order_by("-created_at")
         .first()

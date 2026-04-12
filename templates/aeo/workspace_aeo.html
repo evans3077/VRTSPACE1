@@ -252,6 +252,143 @@
                 {% endif %}
             </article>
         </div>
+        
+        {% if aeo_intelligence %}
+        <!-- Intelligence Module Panel -->
+        <article id="aeo-intelligence" class="system-card" style="margin-bottom: 2rem;">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1.5rem;">
+                <p class="eyebrow" style="color: var(--signal);">Active Market Intelligence</p>
+                <h2 style="font-size: 2rem;">Answer Engine Evidence</h2>
+                <p style="color: var(--text-secondary); line-height: 1.6; max-width: 740px;">
+                    Real-time data extracted from search engines highlighting how algorithms currently summarize your target query, mapping locations, and follow-up intent.
+                </p>
+            </div>
+            
+            <div class="system-grid" style="gap: 1.5rem;">
+                {% if aeo_intelligence.aeo_overview and aeo_intelligence.aeo_overview.snippets %}
+                <div style="padding: 1.5rem; border-radius: 18px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem;">
+                        <strong style="color: var(--text-primary); font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-robot"></i> AI Summary Snippets</strong>
+                        <span class="score-pill score-high" style="font-size: 0.7rem;">Currently Ranking</span>
+                    </div>
+                    <div class="panel-scroll" style="display: grid; gap: 1rem; max-height: 250px;">
+                        {% for snippet in aeo_intelligence.aeo_overview.snippets %}
+                        <div style="padding: 1rem; border-radius: 14px; background: var(--bg-surface); border: 1px solid var(--border-glass);">
+                            <p style="margin: 0; font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">{{ snippet }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if aeo_intelligence.related_questions %}
+                <div style="padding: 1.5rem; border-radius: 18px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem;">
+                        <strong style="color: var(--text-primary); font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-comments"></i> People Also Ask</strong>
+                        <span class="score-pill score-medium" style="font-size: 0.7rem;">Follow-up Intent</span>
+                    </div>
+                    <div class="panel-scroll" style="display: grid; gap: 1rem; max-height: 250px;">
+                        {% for q in aeo_intelligence.related_questions %}
+                        <div style="padding: 1rem; border-radius: 14px; background: var(--bg-surface); border: 1px solid var(--border-glass);">
+                            <strong style="display: block; color: var(--text-primary); font-size: 0.9rem; margin-bottom: 0.5rem;">{{ q.question }}</strong>
+                            {% if q.snippet %}
+                            <p style="margin: 0; font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin-bottom: 0.5rem;">{{ q.snippet }}</p>
+                            {% endif %}
+                            {% if q.link %}
+                            <a href="{{ q.link }}" target="_blank" rel="noopener" style="font-size: 0.75rem; color: var(--brand-primary); word-break: break-all;">Preview source &rarr;</a>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if aeo_intelligence.local_pack %}
+                <div style="padding: 1.5rem; border-radius: 18px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem;">
+                        <strong style="color: var(--text-primary); font-size: 1.1rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-map-marker-alt"></i> Local Pack Surface</strong>
+                        <span class="score-pill score-high" style="font-size: 0.7rem;">Map Targeting</span>
+                    </div>
+                    <div class="panel-scroll" style="display: grid; gap: 1rem; max-height: 250px;">
+                        {% for place in aeo_intelligence.local_pack %}
+                        <div style="padding: 1rem; border-radius: 14px; background: var(--bg-surface); border: 1px solid var(--border-glass); display: flex; justify-content: space-between; gap: 1rem;">
+                            <div>
+                                <strong style="display: block; color: var(--text-primary); font-size: 0.9rem;">{{ place.position }}. {{ place.title }}</strong>
+                                <div style="margin-top: 0.35rem; color: var(--text-muted); font-size: 0.8rem;">
+                                    {% if place.rating %}<span style="color: #f59e0b;"><i class="fas fa-star"></i> {{ place.rating }}</span> {% if place.reviews %}({{ place.reviews }}){% endif %} &middot; {% endif %}
+                                    {{ place.type|default:"Business" }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            
+            {% if aeo_intelligence.aeo_overview and aeo_intelligence.aeo_overview.sources %}
+            <div style="margin-top: 1.5rem; padding: 1.25rem; border-radius: 14px; background: rgba(14, 165, 233, 0.05); border: 1px solid rgba(14, 165, 233, 0.1);">
+                <strong style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.08em; color: var(--brand-primary); margin-bottom: 0.75rem;">Top AI Output Sources</strong>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    {% for source in aeo_intelligence.aeo_overview.sources %}
+                    <a href="{{ source.link }}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; padding: 0.4rem 0.75rem; border-radius: 999px; background: rgba(255,255,255,0.05); color: var(--text-secondary); font-size: 0.8rem; text-decoration: none; border: 1px solid var(--border-glass);">
+                        {{ source.text|default:source.link }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </article>
+        {% endif %}
+
+        {% if latest_aeo_audit and latest_aeo_audit.visibility_snapshots.all %}
+        <!-- LLM Citability Module -->
+        <article id="aeo-llm-visibility" class="system-card" style="margin-bottom: 2rem;">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1.5rem;">
+                <p class="eyebrow" style="color: var(--brand-primary);">LLM Engine Citability</p>
+                <h2 style="font-size: 2rem;">SGE & AI Overview Tracking</h2>
+                <p style="color: var(--text-secondary); line-height: 1.6; max-width: 740px;">
+                    Algorithmically mapped presence across top generative AI platforms. Tracks if your target domain pulls as a primary citation for typical query patterns.
+                </p>
+            </div>
+            
+            <div class="system-grid" style="gap: 1.5rem;">
+                {% for snapshot in latest_aeo_audit.visibility_snapshots.all %}
+                <div style="padding: 1.5rem; border-radius: 18px; background: {% if snapshot.answer_present %}rgba(22, 163, 74, 0.04){% else %}rgba(255, 255, 255, 0.02){% endif %}; border: 1px solid {% if snapshot.answer_present %}rgba(22, 163, 74, 0.2){% else %}var(--border-glass){% endif %};">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <strong style="color: var(--text-primary); font-size: 1.2rem; display: flex; align-items: center; gap: 0.5rem;">
+                            {{ snapshot.get_engine_display }}
+                        </strong>
+                        {% if snapshot.answer_present %}
+                            <span class="score-pill score-high" style="font-size: 0.75rem;"><i class="fas fa-check-circle"></i> Cited Source</span>
+                        {% else %}
+                            <span class="score-pill score-low" style="font-size: 0.75rem;"><i class="fas fa-times-circle"></i> Not Cited</span>
+                        {% endif %}
+                    </div>
+                    
+                    <div style="display: grid; gap: 0.75rem; margin-top: 1.25rem;">
+                        <div>
+                            <p class="eyebrow" style="font-size: 0.65rem; margin-bottom: 0.25rem;">Test Prompt</p>
+                            <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0; font-family: monospace;">{{ snapshot.prompt }}</p>
+                        </div>
+                        
+                        {% if snapshot.answer_present %}
+                        <div>
+                            <p class="eyebrow" style="font-size: 0.65rem; margin-bottom: 0.25rem;">Visibility Strength</p>
+                            <p style="font-size: 0.85rem; color: var(--text-primary); margin: 0;">Citation frequency tier: <strong>{{ snapshot.citation_frequency }}</strong></p>
+                        </div>
+                        {% endif %}
+                        
+                        <div>
+                            <p class="eyebrow" style="font-size: 0.65rem; margin-bottom: 0.25rem;">Diagnostic Notes</p>
+                            <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.5; margin: 0;">{{ snapshot.notes }}</p>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+        {% endif %}
 
         <!-- Recommendations -->
         <article id="aeo-recommendations" class="system-card">
