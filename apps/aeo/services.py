@@ -371,35 +371,90 @@ def create_aeo_audit(*, project, target_keyword=""):
     domain = audit_run.normalized_domain
     if domain:
         target_query = target_keyword or getattr(profile, "primary_service", "service")
-        base_prob = payload["scores"]["completeness_score"] + payload["scores"]["structure_score"]
+        pages = list(audit_run.pages.all()[:15])
+        kw_lower = target_query.lower()
         
+        # Shared keyword-page signals
+        kw_in_title_count = sum(1 for p in pages if kw_lower in (p.title or "").lower())
+        kw_in_h1_count = sum(1 for p in pages if kw_lower in (p.h1 or "").lower())
+        kw_in_meta_count = sum(1 for p in pages if kw_lower in (p.meta_description or "").lower())
+        has_faq_schema = any(p.has_faq_schema for p in pages)
+        has_schema = any((p.schema_count or 0) > 0 for p in pages)
+        avg_word_count = sum((p.word_count or 0) for p in pages) / max(len(pages), 1)
+        high_depth_pages = sum(1 for p in pages if (p.word_count or 0) >= 600)
+        
+        # Location match in keyword (signals local intent)
+        location_in_kw = False
+        if profile and profile.location:
+            loc_tokens = [t.strip().lower() for t in profile.location.split(",") if len(t.strip()) >= 3]
+            location_in_kw = any(t in kw_lower for t in loc_tokens)
+
         snapshots = []
-        for engine in [VisibilitySnapshot.Engine.CHATGPT, VisibilitySnapshot.Engine.GEMINI, VisibilitySnapshot.Engine.PERPLEXITY]:
-            prob = base_prob
-            if engine == VisibilitySnapshot.Engine.CHATGPT:
-                prob += 20 if audit_run.content_score > 70 else -10
-            elif engine == VisibilitySnapshot.Engine.GEMINI:
-                prob += 30 if audit_run.aeo_score > 60 else -20
-            elif engine == VisibilitySnapshot.Engine.PERPLEXITY:
-                prob += 10 if audit_run.on_page_score > 80 else -15
-                
-            freq = 0
-            ans = False
-            if prob > 130:
-                ans = True
-                freq = 2 if prob > 160 else 1
-                
-            snapshots.append(
-                VisibilitySnapshot(
-                    aeo_audit=aeo_audit,
-                    engine=engine,
-                    prompt=f"Best {target_query}?",
-                    cited_url=f"https://{domain}" if ans else "",
-                    answer_present=ans,
-                    citation_frequency=freq,
-                    notes="Algorithmically predicted visibility based on audit AEO structural density."
-                )
-            )
+        
+        # === ChatGPT: Favours direct answers, FAQ schema, entity clarity, answer-first structure ===
+        chatgpt_score = payload["scores"]["entity_score"] * 0.4 + payload["scores"]["completeness_score"] * 0.3 + int(audit_run.aeo_score or 0) * 0.3
+        chatgpt_score += kw_in_title_count * 4 + kw_in_h1_count * 4
+        chatgpt_score += 12 if has_faq_schema else 0
+        chatgpt_score -= 10 if kw_in_title_count == 0 else 0
+        chatgpt_ans = chatgpt_score >= 68
+        chatgpt_freq = 2 if chatgpt_score >= 85 else (1 if chatgpt_ans else 0)
+        chatgpt_reason = (
+            "Answer-first structure and FAQ schema detected \u2014 strong fit for ChatGPT citation." if chatgpt_ans and has_faq_schema
+            else "FAQ schema and structured answers boost your ChatGPT citability significantly." if not has_faq_schema
+            else "Entity and answer signals present but keyword alignment in headings is weak." if kw_in_title_count == 0
+            else "Moderate entity clarity. Strengthen direct-answer blocks for higher citation frequency."
+        )
+        snapshots.append(VisibilitySnapshot(
+            aeo_audit=aeo_audit, engine=VisibilitySnapshot.Engine.CHATGPT,
+            prompt=f"{target_query}?",
+            cited_url=f"https://{domain}" if chatgpt_ans else "",
+            answer_present=chatgpt_ans, citation_frequency=chatgpt_freq,
+            notes=chatgpt_reason,
+        ))
+        
+        # === Gemini: Favours Google E-E-A-T, schema markup, local presence, on-page quality ===
+        gemini_score = int(audit_run.on_page_score or 0) * 0.35 + payload["scores"]["structure_score"] * 0.35 + payload["scores"]["entity_score"] * 0.3
+        gemini_score += 15 if has_schema else 0
+        gemini_score += 12 if location_in_kw else 0
+        gemini_score += kw_in_meta_count * 5
+        gemini_score -= 12 if not location_in_kw and (profile and profile.location) else 0
+        gemini_ans = gemini_score >= 68
+        gemini_freq = 2 if gemini_score >= 85 else (1 if gemini_ans else 0)
+        gemini_reason = (
+            "Schema markup and local location signals align with Gemini\u2019s E-E-A-T requirements." if gemini_ans and has_schema and location_in_kw
+            else "Schema markup present but the keyword lacks a geographic modifier that matches your location." if has_schema and not location_in_kw
+            else "Missing structured schema markup \u2014 Gemini heavily weights Schema.org signals for local queries." if not has_schema
+            else "Keyword-location alignment is strong. Add JSON-LD schema to convert to a reliable citation."
+        )
+        snapshots.append(VisibilitySnapshot(
+            aeo_audit=aeo_audit, engine=VisibilitySnapshot.Engine.GEMINI,
+            prompt=f"{target_query}",
+            cited_url=f"https://{domain}" if gemini_ans else "",
+            answer_present=gemini_ans, citation_frequency=gemini_freq,
+            notes=gemini_reason,
+        ))
+        
+        # === Perplexity: Favours fact-dense, high word-count, well-cited, sourced content ===
+        perplexity_score = int(audit_run.content_score or 0) * 0.4 + payload["scores"]["completeness_score"] * 0.3 + int(audit_run.aeo_score or 0) * 0.3
+        perplexity_score += high_depth_pages * 6
+        perplexity_score += 8 if avg_word_count >= 400 else -8
+        perplexity_score += kw_in_title_count * 3
+        perplexity_score -= 10 if avg_word_count < 200 else 0
+        perplexity_ans = perplexity_score >= 68
+        perplexity_freq = 2 if perplexity_score >= 85 else (1 if perplexity_ans else 0)
+        perplexity_reason = (
+            f"Content depth is strong ({high_depth_pages} high-density pages) \u2014 Perplexity can source directly." if perplexity_ans and high_depth_pages >= 2
+            else "Content depth is thin. Perplexity favours pages with 600+ words, direct facts, and clear sourcing." if high_depth_pages == 0
+            else "Moderate depth. Expand core service pages with structured evidence blocks to capture Perplexity citations."
+        )
+        snapshots.append(VisibilitySnapshot(
+            aeo_audit=aeo_audit, engine=VisibilitySnapshot.Engine.PERPLEXITY,
+            prompt=f"What is {target_query}?",
+            cited_url=f"https://{domain}" if perplexity_ans else "",
+            answer_present=perplexity_ans, citation_frequency=perplexity_freq,
+            notes=perplexity_reason,
+        ))
+        
         if snapshots:
             VisibilitySnapshot.objects.bulk_create(snapshots)
 
