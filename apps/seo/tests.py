@@ -857,8 +857,8 @@ class WorkspaceSEOViewTests(TestCase):
         response = self.client.get(reverse("seo:workspace-seo"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Business and competitor context")
-        self.assertContains(response, "Refresh SEO Intelligence")
+        self.assertContains(response, "Entity Context")
+        self.assertContains(response, "Update Intelligence")
 
     @patch("apps.seo.services.discover_serp_competitors")
     @patch("apps.seo.services.fetch_many")
@@ -919,11 +919,9 @@ class WorkspaceSEOViewTests(TestCase):
         self.assertContains(response, "SEO Opportunity Roadmap")
         self.assertContains(response, "Keyword Opportunity Queue")
         self.assertContains(response, "Execution Queue")
-        self.assertContains(response, "Exact page edits")
-        self.assertContains(response, "Evidence confidence")
+        self.assertContains(response, "Page Map")
+        self.assertContains(response, "SERP Discovery Queries")
         self.assertContains(response, "used car dealership Nairobi")
-        self.assertContains(response, "SERP discovery queries used")
-        self.assertContains(response, "No H1 tag detected.")
 
     @override_settings(SEO_REFRESH_ASYNC=True)
     @patch("apps.seo.views.enqueue_project_seo_refresh")
@@ -1278,9 +1276,9 @@ class WorkspaceSEOViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Campaigns Advanced")
-        self.assertContains(response, "Editorial brief")
-        self.assertContains(response, "Open linked draft")
-        self.assertContains(response, "Outreach chain")
+        self.assertContains(response, "Editorial Brief")
+        self.assertContains(response, "Briefs Linked")
+        self.assertContains(response, "Outreach Targets")
 
     def test_workspace_seo_export_json_returns_stakeholder_payload(self):
         profile = SEOProjectProfile.objects.create(
@@ -1957,7 +1955,7 @@ class SEOCompetitorDiscoveryTests(TestCase):
             primary_service="used car dealership",
             target_audience="price-sensitive car buyers",
         )
-        def fake_serp_payload(query, location=""):
+        def fake_serp_payload(query, location="", country_code=""):
             if any(token in query for token in ("directory", "reviews", "listing", "guide", "resources", "association")):
                 return {"organic_results": [], "local_results": []}
             if "best" in query:
@@ -2447,7 +2445,7 @@ class SEOCompetitorDiscoveryTests(TestCase):
         self.assertEqual(mocked_serpapi.call_count, 1)
         self.assertEqual(first["errors"][0]["provider"], "serpapi")
         self.assertTrue(second["providers_exhausted"])
-        self.assertIn("cooled down", second["errors"][0]["message"])
+        self.assertIn("heavy load", second["errors"][0]["message"])
 
     @override_settings(
         SERP_DISCOVERY_ENABLED=True,

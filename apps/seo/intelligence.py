@@ -1,7 +1,10 @@
 import requests
 from dataclasses import dataclass, field
 from typing import List, Dict, Any, Optional
+import hashlib
+import json
 from django.conf import settings
+from django.core.cache import cache
 
 @dataclass
 class RelevantLink:
@@ -39,6 +42,14 @@ def fetch_serpapi_engine(engine: str, query: str, location: str = "") -> dict:
     if location:
         params["location"] = location
         
+    safe_params = {k: v for k, v in params.items() if k != "api_key"}
+    param_hash = hashlib.md5(json.dumps(safe_params, sort_keys=True).encode("utf-8")).hexdigest()
+    cache_key = f"seo:serpapi:intelligence:{param_hash}"
+    
+    cached_data = cache.get(cache_key)
+    if cached_data is not None:
+        return cached_data
+        
     try:
         response = requests.get(
             "https://serpapi.com/search.json",
@@ -46,7 +57,9 @@ def fetch_serpapi_engine(engine: str, query: str, location: str = "") -> dict:
             timeout=15,
         )
         response.raise_for_status()
-        return response.json()
+        data = response.json()
+        cache.set(cache_key, data, 604800)  # Cache for 7 days
+        return data
     except Exception as e:
         return {"error": str(e)}
 

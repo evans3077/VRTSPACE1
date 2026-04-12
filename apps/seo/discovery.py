@@ -1,5 +1,7 @@
 from collections import defaultdict
 from urllib.parse import urlparse
+import hashlib
+import json
 
 import requests
 from bs4 import BeautifulSoup
@@ -675,13 +677,28 @@ def _serpapi_params(query, location, country_code=""):
 
 
 def fetch_serpapi_results(query, location="", country_code=""):
+    params = _serpapi_params(query, location, country_code=country_code)
+    
+    # Generate a deterministic cache key (excluding the API tree/key safely)
+    safe_params = {k: v for k, v in params.items() if k != "api_key"}
+    param_hash = hashlib.md5(json.dumps(safe_params, sort_keys=True).encode("utf-8")).hexdigest()
+    cache_key = f"seo:serpapi:discovery:{param_hash}"
+    
+    # Search cache before calling
+    cached_data = cache.get(cache_key)
+    if cached_data is not None:
+        return cached_data
+        
     response = requests.get(
         "https://serpapi.com/search.json",
-        params=_serpapi_params(query, location, country_code=country_code),
+        params=params,
         timeout=_provider_timeout("serpapi"),
     )
     response.raise_for_status()
-    return response.json()
+    
+    data = response.json()
+    cache.set(cache_key, data, 604800)  # Cache duration: 7 days
+    return data
 
 
 def fetch_duckduckgo_results(query, location=""):
