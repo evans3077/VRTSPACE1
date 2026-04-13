@@ -86,13 +86,9 @@
 <section class="proof-section" style="padding: 4rem 0; background: rgba(15, 23, 42, 0.3);">
     <div class="container hero-proof-grid">
         {% for item in results %}
-        <article class="hero-proof-card glass-panel"
-            style="padding: 1.5rem; text-align: center; border: none; background: transparent !important;">
-            <strong class="gradient-text" style="font-size: 3rem; display: block; margin-bottom: 0.25rem;">{{ item.value
-                }}</strong>
-            <span class="text-secondary"
-                style="font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em;">{{
-                item.label }}</span>
+        <article class="hero-proof-card glass-panel" style="padding: 1.5rem; text-align: center; border: none; background: transparent !important;">
+            <strong class="gradient-text" style="font-size: 3rem; display: block; margin-bottom: 0.25rem;">{{ item.value }}</strong>
+            <span class="text-secondary" style="font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em;">{{ item.label }}</span>
         </article>
         {% endfor %}
     </div>
