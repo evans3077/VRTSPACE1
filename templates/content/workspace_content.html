@@ -73,9 +73,20 @@
                     </div>
                     <div style="display: grid; gap: 0.75rem;">
                         {% for gap in optimization_engine.gap_analysis.missing_layers %}
-                        <div class="alert-block alert-block-danger">
-                            <span class="alert-block-title">{{ gap.title }}</span>
-                            <p class="alert-block-text">{{ gap.reason }}</p>
+                        <div class="precision-gap-card precision-gap-card-danger">
+                            <div class="precision-gap-header">
+                                <h4 class="precision-gap-title">{{ gap.title }}</h4>
+                                {% if gap.target_keyword %}
+                                <span class="precision-gap-keyword">{{ gap.target_keyword }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="precision-gap-stats">
+                                <div class="precision-stat">
+                                    <span class="precision-stat-label">Competitor Presence</span>
+                                    <span class="precision-stat-value">{{ gap.competitor_presence }} out of {{ gap.competitor_count }}</span>
+                                </div>
+                            </div>
+                            <p class="precision-gap-action"><strong>Next Step:</strong> {{ gap.action }}</p>
                         </div>
                         {% endfor %}
                     </div>
@@ -90,9 +101,24 @@
                     </div>
                     <div style="display: grid; gap: 0.75rem;">
                         {% for item in optimization_engine.gap_analysis.thin_content %}
-                        <div class="alert-block alert-block-warning">
-                            <span class="alert-block-title">{{ item.title }}</span>
-                            <p class="alert-block-text">{{ item.reason }}</p>
+                        <div class="precision-gap-card precision-gap-card-warning">
+                            <div class="precision-gap-header">
+                                <h4 class="precision-gap-title">{{ item.title }}</h4>
+                                {% if item.target_keyword %}
+                                <span class="precision-gap-keyword">{{ item.target_keyword }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="precision-gap-stats">
+                                <div class="precision-stat">
+                                    <span class="precision-stat-label">Your Depth</span>
+                                    <span class="precision-stat-value">{{ item.site_avg_word_count }} words</span>
+                                </div>
+                                <div class="precision-stat">
+                                    <span class="precision-stat-label">Competitor Baseline</span>
+                                    <span class="precision-stat-value">{{ item.competitor_avg_word_count }} words</span>
+                                </div>
+                            </div>
+                            <p class="precision-gap-action"><strong>Next Step:</strong> {{ item.action }}</p>
                         </div>
                         {% endfor %}
                     </div>

@@ -797,19 +797,26 @@ def build_content_optimization_data(project):
     if opp_snapshot and getattr(opp_snapshot, "output_json", None):
         recs = opp_snapshot.output_json.get("page_map", [])
         for rec in recs:
-            if rec.get("status") == "backlog":
+            if rec.get("status") in {"backlog", "optimize"}:
                 continue
-            reason = (rec.get("reason") or "").lower()
-            if "missing" in reason or "add" in reason:
+            status = rec.get("status")
+            if status == "missing":
                 gap_analysis["missing_layers"].append({
                     "title": rec.get("page_type_label", "Page"),
-                    "reason": rec.get("reason", "Missing core page type."),
+                    "target_keyword": rec.get("target_keyword", ""),
+                    "competitor_presence": int(rec.get("competitor_presence", 0)),
+                    "competitor_count": int(rec.get("competitor_count", 0)),
+                    "action": rec.get("action", "Create this missing page."),
                     "priority": rec.get("priority_score", 0),
                 })
-            elif "thin" in reason or "deepen" in reason or "expand" in reason:
+            elif status == "expand":
                 gap_analysis["thin_content"].append({
                     "title": rec.get("page_type_label", "Page"),
-                    "reason": rec.get("reason", "Content is structurally thin compared to competitors."),
+                    "target_keyword": rec.get("target_keyword", ""),
+                    "site_avg_word_count": int(rec.get("site_avg_word_count", 0)),
+                    "competitor_avg_word_count": int(rec.get("competitor_avg_word_count", 0)),
+                    "target_urls": rec.get("target_urls", []),
+                    "action": rec.get("action", "Expand content depth."),
                     "priority": rec.get("priority_score", 0),
                 })
                 
