@@ -900,8 +900,158 @@
         </article>
     </div>
 
+{% block extra_head %}
+<!-- FAQ Schema (JSON-LD) for AEO Intelligence -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How is my AEO Readiness Score calculated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The AEO Readiness Score is a composite metric derived from visibility, structural integrity, entity density, and citation completeness. It measures the probability of your brand being cited as the definitive answer by Large Language Models like ChatGPT and Gemini."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do LLMs (Large Language Models) actually 'discover' my site?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "LLMs discover sites through pre-training datasets and real-time retrieval-augmented generation (RAG). If your content is structured with high entity-density and technical schema, it is identified as a high-relevance source for synthesis."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are 'Entity Clusters' and how do they impact AEO?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Entity Clusters are groups of related topics that define semantic completeness. AI models see a 'Knowledge Graph'; VRTSPACE identifies missing entities your domain needs to complete the cluster and win the citation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the impact of Schema.org on AI retrieval architecture?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Schema acts as the primary handshake between your server and an AI retriever. JSON-LD provides machine-readable summaries that LLMs ingest with 100% accuracy, increasing citation probability."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does 'Citation Coverage' represent in the benchmarks?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Citation Coverage measures how often your brand is referenced across AI search engines. It indicates whether your domain is serving as the 'ground-truth' data source for generative responses."
+      }
+    }
+  ]
+}
+</script>
+{% endblock %}
+
     {% endif %}{# /if latest_aeo_audit #}
     {% endif %}{# /if project #}
+
+    <section class="faq-section" style="margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--border-glass);">
+        <div class="container section-heading" style="text-align: center; margin-bottom: 2rem;">
+            <p class="eyebrow" style="color: var(--brand-primary);">AEO Intelligence FAQ</p>
+            <h2>Decoding AI Visibility</h2>
+        </div>
+        <div class="container faq-accordion">
+            <details class="faq-item">
+                <summary class="faq-question">
+                    <h3>How is my AEO Readiness Score calculated?</h3>
+                    <span class="faq-icon"></span>
+                </summary>
+                <div class="faq-answer">
+                    <span class="direct-answer">The AEO Readiness Score is a composite metric focusing on semantic visibility, entity density, technical structure, and informational completeness.</span>
+                    <p>
+                        We analyze your content's "answer-ready" density—the ability for AI models to rapidly ingest and cite your information. 
+                        By benchmarking your technical schema and topical authority against the entities currently winning the "citation box," 
+                        we provide a high-precision probability of your brand being the primary answer for a specific user query.
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary class="faq-question">
+                    <h3>How do LLMs (Large Language Models) actually 'discover' my site?</h3>
+                    <span class="faq-icon"></span>
+                </summary>
+                <div class="faq-answer">
+                    <span class="direct-answer">LLMs discover your site through a combination of traditional crawling, massive pre-training datasets, and real-time retrieval blocks.</span>
+                    <p>
+                        When an AI agent like Perplexity or SearchGPT answers a query, it often performs a real-time web search (RAG). 
+                        If your site is correctly structured with high entity-density and technical schema, the LLM's retriever identifies 
+                        your content as a high-relevance source and uses it to synthesize the final answer.
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary class="faq-question">
+                    <h3>What are 'Entity Clusters' and how do they impact AEO?</h3>
+                    <span class="faq-icon"></span>
+                </summary>
+                <div class="faq-answer">
+                    <span class="direct-answer">Entity Clusters are groups of related people, places, and things that define a topic's semantic neighborhood.</span>
+                    <p>
+                        AI models don't just see words; they see a "Knowledge Graph." If your content lacks the expected neighboring 
+                        entities for your topic, the model views your expertise as incomplete. VRTSPACE helps you identify these 
+                        missing entities so you can complete the cluster and win the citation over less comprehensive competitors.
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary class="faq-question">
+                    <h3>What is the impact of Schema.org on AI retrieval architecture?</h3>
+                    <span class="faq-icon"></span>
+                </summary>
+                <div class="faq-answer">
+                    <span class="direct-answer">Schema.org metadata acts as the primary "Handshake" between your server and an AI retriever agent.</span>
+                    <p>
+                        By providing precise JSON-LD (Schema) for your products, FAQs, and articles, you provide a clear, 
+                        machine-readable summary that the model can ingest with 100% accuracy. This removes the "hallucination risk" 
+                        for the AI and significantly increases your chances of being quoted as the factual source.
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary class="faq-question">
+                    <h3>What does 'Citation Coverage' represent in the benchmarks?</h3>
+                    <span class="faq-icon"></span>
+                </summary>
+                <div class="faq-answer">
+                    <span class="direct-answer">Citation Coverage measures the frequency of your brand appearing as a primary source across major LLM search engines.</span>
+                    <p>
+                        Unlike traditional search impressions, AEO visibility hinges on being a cited source. Our engine simulates queries 
+                        across models like Perplexity, SearchGPT, and Gemini to determine if your domain is providing the ground-truth data. 
+                        High coverage means your content is effectively structured for retrieval and is seen as highly authoritative by AI agents.
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary class="faq-question">
+                    <h3>How does 'Zero-Click' search impact my conversion attribution?</h3>
+                    <span class="faq-icon"></span>
+                </summary>
+                <div class="faq-answer">
+                    <span class="direct-answer">In the AEO era, conversion shifts from "Link Clicks" to "Brand Citations" and "User Attribution" in AI answers.</span>
+                    <p>
+                        If a user gets their answer directly from an AI without visiting your site, traditional tracking fails. 
+                        We help you track "Indirect Conversion" by monitoring the frequency of your brand being mentioned as the 
+                        authoritative source, ensuring you get credit for the systemic influence your brand is creating in the discovery layer.
+                    </p>
+                </div>
+            </details>
+        </div>
+    </section>
 
 </div>
 </section>

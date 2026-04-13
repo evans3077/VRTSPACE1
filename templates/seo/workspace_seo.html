@@ -988,7 +988,157 @@
             </div>
         </article>
         {% endif %}
-        {% endif %}
+    {% endif %}
+{% block extra_head %}
+<!-- FAQ Schema (JSON-LD) for SEO Intelligence -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What specific technical signals does the SEO audit scan for?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The SEO audit deep-dives into semantic crawlability, entity density, and core web vitals. We identify 'Authority Killers'—technical gaps that hinder parsing by both search crawlers and AI answer engines."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is a 'Phantom Keyword' and how do we find them?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Phantom Keywords are queries where your site has AI citation authority but lacks Page 1 SEO rankings. We cross-reference ranking data with AEO citations to identify these high-ROI growth opportunities."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does VRTSPACE calculate 'Crawl Budget' efficiency?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We monitor the ratio of 'Value-Density Pages' to technical waste URLs. By pruning low-value paths, we ensure search engines focus their energy on your high-converting money pages."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How often should I run 'Intelligence Updates' for the audit?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We recommend updating after any major site change or new content cluster deployment. This ensures your 'Authority Gap' stays grounded in current competitor and SERP performance signals."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the difference between 'Domain Authority' and 'Semantic Depth'?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Domain Authority measures backlink equity, while Semantic Depth measures how thoroughly your content covers industry entities. VRTSPACE focuses on the synergy between these two signals."
+      }
+    }
+  ]
+}
+</script>
+{% endblock %}
+
+    </div>
+</section>
+
+<section class="faq-section" style="margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--border-glass);">
+    <div class="container section-heading" style="text-align: center; margin-bottom: 2rem;">
+        <p class="eyebrow" style="color: var(--brand-primary);">SEO Intelligence FAQ</p>
+        <h2>Technical & Performance Gaps</h2>
+    </div>
+    <div class="container faq-accordion">
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>What specific technical signals does the SEO audit scan for?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">The audit specifically targets 'Authority Killers'—the structural and semantic gaps that hinder indexing and AI discovery.</span>
+                <p>
+                    While generic tools focus on surface-level metadata, the VRTSPACE Technical Audit deep-dives into your site’s DOM hierarchy and indexation logic. 
+                    We scan for semantic heading discipline, schema.org validation, and mobile performance bottlenecks. By ensuring your site is architecturally sound, 
+                    we lay the foundation for both traditional organic ranking and high-precision AEO visibility.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>What is a 'Phantom Keyword' and how do we find them?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">Phantom Keywords are queries where your site is already cited by AI models despite not ranking on Page 1 of Google.</span>
+                <p>
+                    These are your highest-ROI growth opportunities. Our engine cross-references your current SEO rankings with live AEO citation data 
+                    to find topics where you already have "Semantic Authority." By making small technical SEO adjustments to these specific pages, 
+                    you can rapidly bridge the gap to Page 1 dominance for queries where you are already the expert.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>How precisely does VRTSPACE calculate 'Crawl Budget' efficiency?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">We monitor the ratio of "Value-Density Pages" to "Technical Waste" like 404s and redirect chains.</span>
+                <p>
+                    Every domain has a finite capacity for how many pages a search engine will crawl daily. By identifying and pruning 
+                    low-relevance URLs and fixing redirect loops, we ensure that Googlebot focuses its energy on your high-conversion 
+                    "Money Pages," significantly speeding up the indexation of new clusters and technical site updates.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>How often should I run "Intelligence Updates" for the audit?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">Regular updates are critical for maintaining a live map of the 'Authority Gap' between you and your competitors.</span>
+                <p>
+                    The search landscape is highly dynamic. Competitor pushes and algorithm updates can shift the required authority threshold overnight. 
+                    Running an update after any major architectural deployment or seasonal content push ensures that your SEO strategy remains 
+                    proactive. This allows you to identify and close gaps before they impact your primary traffic channels.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>What is the difference between 'Domain Authority' and 'Semantic Depth'?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">Domain Authority measures backlink equity, while Semantic Depth measures topical completeness.</span>
+                <p>
+                    In the current search landscape, linkage alone is no longer enough. You can have high DA but low Semantic Depth, which leads 
+                    to ranking volatility during algorithm updates. VRTSPACE focuses on the synergy between the two—ensuring your backend 
+                    technical authority (links) is matched by deep, entity-dense content that algorithms and AI models trust implicitly.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>How do we map technical fixes to specific revenue outcomes?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">We correlate Core Web Vitals and technical health improvements with historical conversion data.</span>
+                <p>
+                    Technical SEO is often seen as a cost center. VRTSPACE changes this by showing the relationship between page-speed deltas, 
+                    indexation coverage, and top-of-funnel traffic growth. This allows you to prioritize engineer resources based 
+                    on the projected ROI of the specific technical lift, rather than just solving errors for the sake of cleanliness.
+                </p>
+            </div>
+        </details>
     </div>
 </section>
 {% if seo_refresh_state.refresh_status == "queued" or seo_refresh_state.refresh_status == "running" %}

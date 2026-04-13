@@ -13,6 +13,58 @@
     </div>
 </section>
 
+{% block extra_head %}
+<!-- FAQ Schema (JSON-LD) for Pricing/Commercial Authority -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is an 'Intelligence Credit' and how is it consumed?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Intelligence Credits are the internal currency for running high-precision audits, AEO benchmarks, and AI content generation. Higher-compute operations consume more credits, allowing you to pay exactly for the intelligence throughput you use."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Do Intelligence Credits roll over to the next month?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Credits from our Authority and Growth tiers roll over for up to 90 days, ensuring your strategic investment is preserved during months of heavy execution vs. deep auditing."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the estimated ROI of the Momentum vs. Growth plans?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Momentum is built for maintaining existing authority, while the Growth plan provides the aggressive infrastructure for AEO dominance. Clients on the Growth plan often see a significant increase in citation velocity due to deep competitor profiling limits."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do the 'Self-Serve' tiers differ from 'Enterprise Partner' paths?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Self-Serve tiers provide the intelligence tools for your internal team to execute. The Enterprise Partner path is a custom route for large-scale architectural rebuilds and app developments handled directly by our engineering core."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Are there bulk discounts for multi-domain enterprise accounts?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Organizations managing 5+ domains are eligible for custom pool-based credit pricing and consolidated billing through our 'Universal Credit Pool' program."
+      }
+    }
+  ]
+}
+</script>
+{% endblock %}
+
 <section class="dashboard-stack">
     <div class="container">
         <div class="metric-grid-premium" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
@@ -66,6 +118,89 @@
             </article>
             {% endfor %}
         </div>
+    </div>
+</section>
+
+<section class="faq-section">
+    <div class="container section-heading">
+        <p class="eyebrow">Investment Intelligence</p>
+        <h2>Scaling & ROI Clarity</h2>
+    </div>
+    <div class="container faq-accordion">
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>What is an "Intelligence Credit" and how is it consumed?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">Intelligence Credits are the internal currency for high-precision audits, AEO benchmarks, and AI content generation.</span>
+                <p>
+                    Every high-compute operation—such as crawling a competitor's AI citation data or generating rank-ready 
+                    content—consumes a specific amount of credits. This ensures that you only pay for the high-intensity 
+                    processing your project requires, while basic dashboard monitoring remain accessible.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>Do Intelligence Credits roll over to the next month?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">Unused credits from high-tier plans roll over for up to 90 days.</span>
+                <p>
+                    We recognize that data needs fluctuate. If you perform a massive audit one month and focus on 
+                    human-led execution the next, your rollover credits allow you to maintain access to high-precision 
+                    snapshots and forge production without friction or loss of investment.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>What is the estimated ROI of the Momentum vs. Growth plans?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">Momentum is for maintaining authority, while Growth is built to aggressively capture new AI citation boxes.</span>
+                <p>
+                    Most clients on the Growth plan see a 40% faster "Time-to-Citation" because of the higher execution 
+                    priority and deep competitor profiling limits. Momentum is ideal for established brands protecting 
+                    territory, while Growth is the standard for contenders aiming for industry dominance.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>How do the "Self-Serve" tiers differ from "Enterprise Partner" paths?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">Self-Serve tiers empower your internal team, while Enterprise paths are custom-built for large-scale delivery.</span>
+                <p>
+                    Our modular plans (Growth, Scale, Momentum) are perfect for teams using our AI and SEO intelligence 
+                    to run their own audits. The Enterprise Partner route is specifically for businesses requiring 
+                    custom architecture or direct scoping from the VRTSPACE core team for success.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>Are there bulk discounts for multi-domain enterprise accounts?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">Yes, we offer a "Universal Credit Pool" for accounts managing multiple high-authority domains.</span>
+                <p>
+                    Organizations managing 5+ domains are eligible for custom pool-based credit pricing and consolidated 
+                    billing. This allows you to allocate resources across projects dynamically, reducing the per-domain 
+                    cost of intelligence and simplifying resource management for global agencies.
+                </p>
+            </div>
+        </details>
     </div>
 </section>
 {% endblock %}

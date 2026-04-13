@@ -38,6 +38,7 @@
     {% if schema_json %}
     <script type="application/ld+json">{{ schema_json|safe }}</script>
     {% endif %}
+    {% block extra_head %}{% endblock %}
 </head>
 <body>
     <header class="site-header">
@@ -58,11 +59,13 @@
                     <summary class="workspace-menu-trigger">
                         Workspace{% if active_workspace_project %}: {{ active_workspace_project.name }}{% endif %}
                     </summary>
-                    <div class="workspace-menu-panel">
-                        <a href="{% url 'tools:workspace-dashboard' %}">Overview</a>
-                        <a href="{% url 'seo:workspace-seo' %}">SEO</a>
-                        <a href="{% url 'aeo:workspace-aeo' %}">AEO</a>
-                        <a href="{% url 'content:workspace-content' %}">Content</a>
+                    <div class="workspace-menu-panel glass-panel">
+                        <a href="{% url 'tools:workspace-dashboard' %}"><i class="fas fa-th-large"></i> Dashboard View</a>
+                        <a href="{% url 'seo:workspace-seo' %}"><i class="fas fa-search"></i> SEO Intelligence</a>
+                        <a href="{% url 'aeo:workspace-aeo' %}"><i class="fas fa-robot"></i> Answer Engine Opt.</a>
+                        <a href="{% url 'content:workspace-content' %}"><i class="fas fa-pen-nib"></i> Content Forge</a>
+                        <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 0.5rem 0;"></div>
+                        <a href="{% url 'tools:workspace-logout' %}"><i class="fas fa-sign-out-alt"></i> Systems Exit</a>
                     </div>
                 </details>
                 {% endif %}
@@ -120,39 +123,54 @@
         </div>
     </footer>
 
-    <!-- Mobile Navigation Drawer -->
+    <!-- Premium Mobile Navigation Overlay -->
     <div class="nav-mobile-drawer" id="nav-mobile-drawer" role="dialog" aria-modal="true" aria-label="Mobile navigation">
-        <button class="nav-mobile-close" id="nav-mobile-close" aria-label="Close navigation">&times;</button>
-        <div class="nav-mobile-brand">VRT SPACE AGENCY</div>
-        <nav class="nav-mobile-links" aria-label="Mobile primary">
-            <a href="{% url 'core:services' %}">Services</a>
-            <a href="{% url 'core:packages' %}">Packages</a>
-            <a href="{% url 'core:home' %}#audit">Audit</a>
-            <a href="{% url 'core:home' %}#method">Method</a>
-            {% if user.is_staff %}
-            <a href="{% url 'analytics:operations-dashboard' %}">Ops Dashboard</a>
-            {% endif %}
-            {% if user.is_authenticated and not user.is_staff %}
-            <a href="{% url 'tools:workspace-dashboard' %}">Workspace Overview</a>
-            <a href="{% url 'seo:workspace-seo' %}">SEO</a>
-            <a href="{% url 'aeo:workspace-aeo' %}">AEO</a>
-            <a href="{% url 'content:workspace-content' %}">Content</a>
-            {% endif %}
-        </nav>
-        <div class="nav-mobile-actions">
-            {% if user.is_authenticated %}
-            <a class="button button-secondary" href="{% url 'tools:account-dashboard' %}">Account</a>
-            <a class="button button-secondary" href="{% url 'tools:workspace-logout' %}">Sign out</a>
-            <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}">Open Workspace</a>
-            {% else %}
-            <a class="button button-secondary" href="{% url 'tools:workspace-login' %}">Sign in</a>
-            <a class="button button-primary" href="{% url 'tools:workspace-signup' %}">Create Workspace</a>
-            {% endif %}
+        <div class="mobile-drawer-content glass-panel">
+            <button class="nav-mobile-close" id="nav-mobile-close" aria-label="Close navigation">&times;</button>
+            <div class="nav-mobile-brand gradient-text">VRT SPACE AGENCY</div>
+            <nav class="nav-mobile-links" aria-label="Mobile primary">
+                <a href="{% url 'core:home' %}" style="--i:1">Platform Home</a>
+                <a href="{% url 'core:services' %}" style="--i:2">Intelligence Solutions</a>
+                <a href="{% url 'core:packages' %}" style="--i:3">Pricing & Packages</a>
+                <a href="{% url 'core:home' %}#audit" style="--i:4">Free Website Audit</a>
+                {% if user.is_staff %}
+                <a href="{% url 'analytics:operations-dashboard' %}" style="--i:5">Operations Center</a>
+                {% endif %}
+                <div class="mobile-divider" style="--i:6"></div>
+                {% if user.is_authenticated and not user.is_staff %}
+                <a href="{% url 'tools:workspace-dashboard' %}" style="--i:7">Workspace Dashboard</a>
+                <a href="{% url 'seo:workspace-seo' %}" style="--i:8">SEO Analysis</a>
+                <a href="{% url 'aeo:workspace-aeo' %}" style="--i:9">AEO Performance</a>
+                <a href="{% url 'content:workspace-content' %}" style="--i:10">Content Systems</a>
+                {% endif %}
+            </nav>
+            <div class="nav-mobile-actions" style="--i:11">
+                {% if user.is_authenticated %}
+                <a class="button button-secondary" href="{% url 'tools:account-dashboard' %}"><i class="fas fa-user"></i> Account</a>
+                <a class="button button-secondary" href="{% url 'tools:workspace-logout' %}">Sign out</a>
+                <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}">Open Workspace</a>
+                {% else %}
+                <a class="button button-secondary" href="{% url 'tools:workspace-login' %}">Sign in</a>
+                <a class="button button-primary" href="{% url 'tools:workspace-signup' %}">Create Workspace</a>
+                {% endif %}
+            </div>
         </div>
     </div>
 
     <script>
     (function() {
+        // Premium Header Scroll Logic
+        var header = document.querySelector('.site-header');
+        function handleScroll() {
+            if (window.scrollY > 20) {
+                header.classList.add('is-scrolled');
+            } else {
+                header.classList.remove('is-scrolled');
+            }
+        }
+        window.addEventListener('scroll', handleScroll);
+        handleScroll(); // Initial check
+
         var hamburger = document.getElementById('nav-hamburger');
         var drawer = document.getElementById('nav-mobile-drawer');
         var closeBtn = document.getElementById('nav-mobile-close');

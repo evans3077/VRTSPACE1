@@ -12,6 +12,58 @@
     </div>
 </section>
 
+{% block extra_head %}
+<!-- FAQ Schema (JSON-LD) for Services Authority -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is the difference between SEO and AEO in the VRTSPACE ecosystem?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "SEO focuses on winning organic traffic through traditional rankings, while AEO (Answer Engine Optimization) focuses on securing authoritative citations in LLM responses like Perplexity. VRTSPACE unifies these so you stay visible across both clicked links and generated answers."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is 'Semantic Authority' and why is it our platform goal?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Semantic Authority measures how completely a domain covers the entities and factual relationships of a topic. By establishing this authority, you ensure your site is viewed as the definitive 'source of truth' by both Google's Knowledge Vault and major AI models."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does the Authority Engine track 'Citation Velocity'?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Citation Velocity tracks how rapidly your brand is appearing as a primary source in AI search logs. A rising velocity indicates your AEO optimizations are successfully influencing the latest model retrieval windows."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can I use the workspace modules independently?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. Our platform is modular. You can utilize the SEO Intelligence module, the AEO module, or the Content Forge independently to focus on specific growth metrics as your authority scales."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do custom build paths work for high-performance apps?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Custom builds integrate our Authority Engine from the first line of code. We ensure your app architecture is fast, crawlable, and natively supports the high-precision schema required for modern AI discovery."
+      }
+    }
+  ]
+}
+</script>
+{% endblock %}
+
 {% for group in service_groups %}
 <section class="services-section tone-{{ group.tone }}">
     <div class="container service-band-head">
@@ -36,4 +88,88 @@
     </div>
 </section>
 {% endfor %}
+
+<section class="faq-section">
+    <div class="container section-heading">
+        <p class="eyebrow">Service Intelligence</p>
+        <h2>Technical & Strategic Gaps</h2>
+    </div>
+    <div class="container faq-accordion">
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>What is the difference between SEO and AEO in the VRTSPACE ecosystem?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">SEO focuses on organic traffic through traditional rankings, while AEO focuses on securing authoritative citations in AI responses.</span>
+                <p>
+                    Traditional SEO optimizes for the way search engines index and rank pages for users to click. 
+                    AEO optimizes for the way AI models (LLMs) ingest, summarize, and cite information.
+                    VRTSPACE unifies these disciplines so that your website remains dominant in traditional search results while 
+                    becoming a primary source for generated AI answers.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>What is 'Semantic Authority' and why is it the goal of the Platform?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">Semantic Authority is the measure of how completely your domain covers the entities and factual relationships of a topic.</span>
+                <p>
+                    Search engines and AI models no longer just look for matching strings; they look for matching *things*. 
+                    By establishing Semantic Authority, you tell search engines that your site is the definitive 
+                    "source of truth" for a topic, making you the primary candidate for citation across all search surfaces.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>How does the Authority Engine track 'Citation Velocity'?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">Citation Velocity measures how rapidly your brand is gaining new mentions in AI search responses.</span>
+                <p>
+                    Visibility is a moving target. We track how often LLMs choose your domain as the "ground truth" over time. 
+                    A rising Citation Velocity indicates that your AEO optimizations are working and that your site 
+                    is being prioritized in the latest model training and retrieval windows.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>Can I use the workspace modules independently?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">Yes, our platform is modular by architectural design to allow for targeted growth injections.</span>
+                <p>
+                    Every business is at a different stage of authority. You can lock in the SEO, AEO, or Content Forge 
+                    modules as needed, allowing you to focus on the specific metrics that will drive your next stage 
+                    of growth without being forced into a single monolithic path.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>How do custom build paths work for high-performance apps?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">We treat every custom app build as a high-performance search surface.</span>
+                <p>
+                    Traditional app architecture often ignores SEO and AEO until after deployment. Our build path 
+                    integrates our Authority Engine from day one, ensuring that your app's foundation is fast, 
+                    crawlable, and natively supports the technical schema required for AI discovery.
+                </p>
+            </div>
+        </details>
+    </div>
+</section>
 {% endblock %}

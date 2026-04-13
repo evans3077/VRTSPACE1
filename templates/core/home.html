@@ -5,6 +5,65 @@
     <div class="ambient-glow-violet" style="top: -15%; left: -10%;"></div>
     <div class="ambient-glow-cyan" style="bottom: -20%; right: -10%;"></div>
     <div class="container hero-grid" style="position: relative; z-index: 1;">
+{% block extra_head %}
+<!-- FAQ Schema (JSON-LD) for AEO/SEO Authority -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "What is AI Search Visibility (AEO) and why does it matter?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "AEO (Answer Engine Optimization) is the process of optimizing your digital footprint so that Large Language Models (LLMs) and Answer Engines like Perplexity, ChatGPT, and Google AI Overviews cite your brand as the authoritative answer. As search shifts from blue links to direct AI answers, AEO ensures you remain visible in the new era of discovery."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How precisely does VRTSPACE calculate the 'Authority Gap'?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Authority Gap is the quantifiable delta between your current entity-density and the baseline set by top market leaders. We map the top 50 industry citations to build a 'Ground Truth' map and audit your domain against it to identify missing facts, schema, and structural elements."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Does VRTSPACE integrate with my existing tech stack (CMS/CRM)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. VRTSPACE outputs are optimized for WordPress, Webflow, Shopify, and Headless CMS architectures. We provide clean JSON, HTML, and Markdown exports of every 'Answer Unit' to ensure technical schema is preserved during deployment."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is VRTSPACE an agency or a SaaS platform?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "VRTSPACE is a hybrid Intelligence Hub. We provide SaaS-led workspace modules (SEO, AEO, Content) for self-serve growth, while maintaining an expert delivery path for custom builds, app architecture, and enterprise implementations."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Is my domain data used to train public AI models?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "No. VRTSPACE maintains strict data isolation and enterprise-grade privacy. Your audit data, competitive intelligence, and generated drafts are stored in your encrypted project silo and are never fed back into public training sets."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How does the platform handle global vs. local search intelligence?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We use localized proxy systems to simulate search environments in any target market. This allows you to audit your competitive authority in specific cities or countries, reflecting the geographic nuances of AI discovery."
+      }
+    }
+  ]
+}
+</script>
+{% endblock %}
         <div class="hero-copy">
             <p class="eyebrow text-accent" style="letter-spacing: 0.15em;">SEO audits, AI visibility, and growth workspaces</p>
             <h1 class="gradient-text">Turn your website into a measurable growth system.</h1>
@@ -376,17 +435,95 @@
         <h2>Answer the objections that stop self-serve upgrades.</h2>
     </div>
     <div class="container faq-accordion">
-        {% for faq in faqs %}
         <details class="faq-item">
             <summary class="faq-question">
-                <h3>{{ faq.question }}</h3>
+                <h3>What is AI Search Visibility (AEO) and why does it matter?</h3>
                 <span class="faq-icon"></span>
             </summary>
             <div class="faq-answer">
-                <p>{{ faq.answer }}</p>
+                <span class="direct-answer">AEO ensures your brand is the definitive answer cited by AI agents like Perplexity, ChatGPT, and Google Gemini.</span>
+                <p>
+                    As the search landscape shifts from "ten blue links" to generated direct answers, traditional SEO is no longer enough. 
+                    Answer Engine Optimization (AEO) focuses on structuring your data and authority so that LLMs can ingest, synthesize, 
+                    and cite your content. Without AEO, your brand risks becoming invisible in the "zero-click" search environments of tomorrow.
+                </p>
             </div>
         </details>
-        {% endfor %}
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>How precisely does VRTSPACE calculate the 'Authority Gap'?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">The Authority Gap is a proprietary metric measuring the semantic completeness of your content vs. top market leaders.</span>
+                <p>
+                    Our engine crawls the top 50 citations in your industry and builds a "Ground Truth" entity map. We then audit your domain 
+                    against this map to see exactly which facts, schema, or structural elements you are missing to win the citation box. 
+                    This identifies the exact informational voids that are currently preventing your brand from being the primary answer.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>Does VRTSPACE integrate with my existing tech stack (CMS/CRM)?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">Yes. Our workspace outputs are optimized for WordPress, Webflow, Shopify, and Headless CMS architectures.</span>
+                <p>
+                    We provide bridge-ready JSON, HTML units, and structured Markdown for every piece of content generated. 
+                    This ensures that the high-precision schema.org tags and entity-rich formatting produced in our forge 
+                    survive the transfer to your production environment without loss of technical integrity.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>Is VRTSPACE an agency or a SaaS platform?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">We are a hybrid Intelligence Hub designed to bridge the gap between automated tools and custom execution.</span>
+                <p>
+                    VRTSPACE provides high-precision intelligence workspaces (SEO, AEO, Content) for internal growth, 
+                    while maintaining a dedicated <strong>Agency Build Path</strong> for projects requiring custom architecture, 
+                    deep technical rebuilds, or high-complexity enterprise implementation that goes beyond our standard modules.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>Is my domain data used to train public AI models?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">No. VRTSPACE maintains strict data isolation and enterprise-grade privacy protocols.</span>
+                <p>
+                    All audit data, competitive intelligence, and generated drafts are stored in your encrypted project silo. 
+                    We do not feed your proprietary content or strategic "Authority Maps" back into public training sets. 
+                    Your competitive advantage remains exclusively yours.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>How does the platform handle global vs. local search intelligence?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">We use localized proxy systems to simulate search environments in any target market or language.</span>
+                <p>
+                    Global authority is different from local relevance. Our audits allow you to specify exact geolocation parameters, 
+                    enabling you to see how your brand is perceived in London vs. New York vs. Tokyo, ensuring your AEO 
+                    strategy remains accurate across diverse geographic retrieval zones.
+                </p>
+            </div>
+        </details>
     </div>
 </section>
 

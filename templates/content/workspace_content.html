@@ -314,5 +314,170 @@
             </div>
         </article>
     </div>
+{% block extra_head %}
+<!-- FAQ Schema (JSON-LD) for Content Intelligence -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does the Content Forge ensure content is 'Rank Ready' for AI search?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Content Forge architects every draft as an 'Answer Unit'—a structurally optimized piece of content with high semantic density. It integrates data from AEO and SEO audits to ensure the entities and schema required by LLMs are correctly formatted."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I avoid 'AI Detection' while maintaining high production speed?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We focus on meeting the Semantic Quality Score (SQS). By injecting real-time competitor facts and high entity-density, our Forge creates content that is functionally indistinguishable from expert-written material because of its factual precision."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can the Forge write in my brand's specific tone-of-voice?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The Forge allows you to upload 'Style Entities' and past successful articles to calibrate tone. Our extraction process ensures automated production aligns perfectly with your existing high-end content library."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is 'Recursive Content Optimization'?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is a continuous feedback loop where the Forge analyzes the performance of published content and suggests 'Patch Updates' based on new competitor pushes, ensuring your Answer Units stay fresh."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the 'Semantic Quality Score' (SQS)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "SQS is an internal metric measuring how well your content covers the required semantic entities for a topic compared to top-ranking peers. A high SQS indicates your content is authoritative enough to be cited by major AI models."
+      }
+    }
+  ]
+}
+</script>
+{% endblock %}
+
+<section class="faq-section" style="margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--border-glass);">
+    <div class="container section-heading" style="text-align: center; margin-bottom: 2rem;">
+        <p class="eyebrow" style="color: var(--brand-primary);">Content Intelligence FAQ</p>
+        <h2>Production & Authority Systems</h2>
+    </div>
+    <div class="container faq-accordion">
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>How does the Content Forge ensure content is "Rank Ready" for AI search?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">The Forge builds 'Answer Units'—text architectured for semantic retrieval and high-precision AI discovery.</span>
+                <p>
+                    We go beyond simple word generation. The Content Forge integrates your current AEO and SEO benchmarks to identify 
+                    the exact "Authority Gap" in your existing layers. It then generates drafts that satisfy specific informational 
+                    requirements (entities, schema, formatting) that Large Language Models (LLMs) use to identify primary citation sources. 
+                    This ensures that every piece of content is mission-critical for gaining AI visibility.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>How do I avoid 'AI Detection' while maintaining high production speed?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">We focus on meeting the Semantic Quality Score (SQS)—the same signals used by search engines to index authoritative content.</span>
+                <p>
+                    "AI Detection" is often a proxy for thin, low-information content. By injecting real-time competitor facts and high 
+                    entity-density through our Authority Engine, the Forge creates content that is functionally indistinguishable 
+                    from expert-written material. Factual precision and semantic depth are the ultimate "human" signals that 
+                    algorithms trust most.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>Can the Forge write in my brand's specific tone-of-voice?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">Yes. The Forge uses 'Style Entities' to calibrate the atmospheric and structural tone of every draft.</span>
+                <p>
+                    Tone isn't just about vocabulary; it's about structural pacing and information hierarchy. Our calibration process 
+                    extracts your unique brand signals from your best past articles and applies them to the Forge's output. This ensures 
+                    that your automated production pipeline aligns perfectly with your existing high-end content library and brand guidelines.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>What is 'Recursive Content Optimization'?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">It is a continuous feedback loop that suggests "Patch Updates" as your industry's knowledge graph evolves.</span>
+                <p>
+                    Content isn't static. Recursive optimization ensures that your "Answer Units" stay fresh. If a competitor publishes 
+                    a new fact or angle that changes the industry baseline, the Forge flags the authority gap and allows you to 
+                    generate and inject the necessary updates into your existing published pages with a single click.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>What is the "Semantic Quality Score" (SQS)?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">SQS measures your content's informational completeness relative to the current knowledge-graph leaders in your industry.</span>
+                <p>
+                    A high Semantic Quality Score (SQS) means your content contains the deep informational connections and entity-density 
+                    required to be seen as a "Primary Source" by AI agents. We compare your drafts against the top competitors currently 
+                    winning the SERP to ensure you aren't just matching their word count, but matching their architectural authority.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>How does the Forge handle internal linking architecture automatically?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">The Forge maps every draft against your existing Knowledge Graph to suggest high-value internal link placements.</span>
+                <p>
+                    Internal linking is the "circulatory system" of your site's authority. Our system identifies your "Link-Wealthy" 
+                    pillar pages and suggests contextually relevant anchors within your new drafts, ensuring that equity flows 
+                    efficiently to your target conversion pages from the moment your content is published.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>What formats are supported beyond standard blog posts?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">The Forge produces Product Comparisons, Whitepapers, Landing Page Copy, and Answer-First FAQ Clusters.</span>
+                <p>
+                    Informing a purchase decision requires diverse content types. Whether you need a 3,000-word industry deep-dive 
+                    or a compact, high-precision product snippet for a conversion page, our templates use the same Authority Engine 
+                    signals to ensure every asset has a high probability of both search ranking and AI discovery.
+                </p>
+            </div>
+        </details>
+    </div>
 </section>
 {% endblock %}
