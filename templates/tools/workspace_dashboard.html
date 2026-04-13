@@ -49,7 +49,7 @@
     </div>
 </div>
 
-<section class="packages-section" style="padding-top: 0;">
+<section class="dashboard-stack" style="padding-top: 1.5rem;">
     <div class="container-fluid page-stack">
         {% if project.pk and latest_audit %}
         <article class="system-card" style="margin-bottom: 2rem; border-color: rgba(139, 92, 246, 0.3); background: rgba(139, 92, 246, 0.05); backdrop-filter: var(--glass-blur);">
@@ -170,32 +170,34 @@
         </article>
         {% endif %}
 
+        {# ── Active workspace: show live stats + credit balance side by side ── #}
+        {% if project.pk %}
         <div class="layout-split">
             <article class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1.25rem;">
                     <p class="eyebrow">Current workspace</p>
-                    <h2 style="font-size: 1.8rem;">What is active right now</h2>
+                    <h2 style="font-size: 1.8rem;">{{ project.name }}</h2>
                 </div>
                 <div class="ws-stat-row" style="grid-template-columns: repeat(2, 1fr);">
                     <div class="stat-tile">
                         <p class="eyebrow">Domain</p>
-                        <h3>{% if latest_audit %}{{ latest_audit.normalized_domain }}{% elif project.normalized_domain %}{{ project.normalized_domain }}{% else %}-{% endif %}</h3>
+                        <h3 style="font-size: 1.1rem; word-break: break-all;">{% if latest_audit %}{{ latest_audit.normalized_domain }}{% elif project.normalized_domain %}{{ project.normalized_domain }}{% else %}—{% endif %}</h3>
                         <p>Tracked property</p>
                     </div>
                     <div class="stat-tile">
                         <p class="eyebrow">Overall score</p>
-                        <h3>{% if latest_audit %}{{ latest_audit.overall_score }}{% else %}-{% endif %}</h3>
-                        <p>Latest audit result</p>
+                        <h3>{% if latest_audit %}{{ latest_audit.overall_score }}{% else %}—{% endif %}</h3>
+                        <p>{% if latest_audit %}Latest audit{% else %}No audit yet{% endif %}</p>
                     </div>
                     <div class="stat-tile">
                         <p class="eyebrow">Pages crawled</p>
-                        <h3>{% if latest_audit %}{{ latest_audit.pages_crawled }}{% else %}-{% endif %}</h3>
-                        <p>Current crawl depth</p>
+                        <h3>{% if latest_audit %}{{ latest_audit.pages_crawled }}{% else %}—{% endif %}</h3>
+                        <p>Current depth</p>
                     </div>
                     <div class="stat-tile">
                         <p class="eyebrow">Last audit</p>
-                        <h3>{% if latest_audit %}{{ latest_audit.created_at|date:"M j" }}{% else %}-{% endif %}</h3>
-                        <p>{% if latest_audit %}{{ latest_audit.status|title }}{% else %}Waiting for first audit{% endif %}</p>
+                        <h3 style="font-size: 1.3rem;">{% if latest_audit %}{{ latest_audit.created_at|date:"M j" }}{% else %}—{% endif %}</h3>
+                        <p>{% if latest_audit %}{{ latest_audit.status|title }}{% else %}Pending{% endif %}</p>
                     </div>
                 </div>
             </article>
@@ -209,11 +211,7 @@
                     <div>
                         <p class="eyebrow" style="margin-bottom: 0.35rem;">Remaining</p>
                         <h3 style="margin: 0; font-size: clamp(2rem, 4vw, 2.6rem);">
-                            {% if credit_overview.unlimited %}
-                            Unlimited
-                            {% else %}
-                            {{ credit_overview.remaining|default:0 }}
-                            {% endif %}
+                            {% if credit_overview.unlimited %}Unlimited{% else %}{{ credit_overview.remaining|default:0 }}{% endif %}
                         </h3>
                     </div>
                     <div class="workspace-credit-balance-meta">
@@ -223,14 +221,45 @@
                         {% endif %}
                     </div>
                 </div>
-                <div style="margin-top: 1rem; color: var(--text-muted); line-height: 1.6; font-size: 0.88rem;">
-                    Billing, top-ups, and personal settings live in your account area.
-                </div>
-                <div style="margin-top: 1rem;">
-                    <a class="button button-secondary" href="{% url 'tools:account-dashboard' %}#billing">Open account</a>
-                </div>
+                <div style="margin-top: 1rem; color: var(--text-muted); line-height: 1.6; font-size: 0.88rem;">Billing, top-ups, and personal settings live in your account area.</div>
+                <div style="margin-top: 1rem;"><a class="button button-secondary" href="{% url 'tools:account-dashboard' %}#billing">Open account</a></div>
             </article>
         </div>
+        {% else %}
+        {# ── No project yet: full-width onboarding CTA ─────────────────── #}
+        <article class="system-card" style="border-color: rgba(14,165,233,0.3); background: rgba(14,165,233,0.04);">
+            <div class="layout-split" style="align-items: center;">
+                <div>
+                    <p class="eyebrow" style="color: var(--brand-primary); margin-bottom: 0.75rem;"><i class="fas fa-rocket"></i> Getting started</p>
+                    <h2 style="font-size: 2rem; margin-bottom: 0.75rem;">Launch your first workspace</h2>
+                    <p style="color: var(--text-secondary); line-height: 1.7; max-width: 520px; margin-bottom: 1.5rem;">
+                        Run the entry audit to baseline your site. VRTSPACE will build your workspace automatically — then you can move straight into SEO, AEO, and content from that same audit base.
+                    </p>
+                    <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                        <a class="button button-primary" href="#start-audit"><i class="fas fa-play"></i> Run baseline audit</a>
+                        <a class="button button-secondary" href="{% url 'tools:account-dashboard' %}#billing">View plan &amp; credits</a>
+                    </div>
+                </div>
+                <div style="display: grid; gap: 1rem;">
+                    <div class="stat-tile" style="border-color: rgba(14,165,233,0.2);">
+                        <p class="eyebrow"><i class="fas fa-search"></i> Step 1</p>
+                        <h3 style="font-size: 1rem; letter-spacing: 0;">Run baseline audit</h3>
+                        <p>Crawl your domain and produce a full technical + content score</p>
+                    </div>
+                    <div class="stat-tile" style="border-color: rgba(139,92,246,0.2);">
+                        <p class="eyebrow"><i class="fas fa-chart-line"></i> Step 2</p>
+                        <h3 style="font-size: 1rem; letter-spacing: 0;">Map SEO competitors</h3>
+                        <p>Identify gap opportunities across your target keyword clusters</p>
+                    </div>
+                    <div class="stat-tile" style="border-color: rgba(34,197,94,0.2);">
+                        <p class="eyebrow"><i class="fas fa-pen-nib"></i> Step 3</p>
+                        <h3 style="font-size: 1rem; letter-spacing: 0;">Generate content</h3>
+                        <p>Produce SEO-structured drafts directly from the audit context</p>
+                    </div>
+                </div>
+            </div>
+        </article>
+        {% endif %}
 
 
         <div class="layout-split">
