@@ -337,6 +337,30 @@ input, select, textarea, .form-control {
     padding: 0.85rem 1rem !important;
     font-family: inherit;
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
+    flex-shrink: 0; /* Prevents input fields from collapsing in tight flex columns */
+}
+
+textarea {
+    min-height: 120px;
+    resize: vertical;
+    line-height: 1.5;
+}
+
+select {
+    appearance: none;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    background-image: url('data:image/svg+xml;charset=UTF-8,%3Csvg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="%2394a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"%3E%3Cpolyline points="6 9 12 15 18 9"%3E%3C/polyline%3E%3C/svg%3E') !important;
+    background-repeat: no-repeat !important;
+    background-position: right 1rem center !important;
+    background-size: 1em !important;
+    padding-right: 2.5rem !important;
+}
+
+select option {
+    background-color: var(--bg-surface) !important;
+    color: var(--text-primary) !important;
+    min-height: 1.5rem;
 }
 
 input:focus, select:focus, textarea:focus {
