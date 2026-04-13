@@ -333,27 +333,39 @@
     </div>
 </section>
 
-<section class="case-study-section">
-    <div class="container case-study-card">
-        <div>
-            <p class="eyebrow">Proof section</p>
+<section class="case-study-showcase">
+    <div class="container case-study-wrapper glass-panel">
+        <div class="case-study-visual">
+            <p class="eyebrow">Growth Evidence</p>
             <h2>{{ case_study.title }}</h2>
-            <p class="case-meta">{{ case_study.client_name }} - {{ case_study.industry }}</p>
+            <div class="case-metric-highlight">
+                <span class="metric-label">Success Metric</span>
+                <strong class="gradient-text">{{ case_study.key_metric }}</strong>
+            </div>
+            <p class="case-meta-premium">{{ case_study.client_name }} // {{ case_study.industry }}</p>
         </div>
-        <div class="case-study-body">
-            <div>
-                <h3>Challenge</h3>
-                <p>{{ case_study.challenge }}</p>
+        <div class="case-study-content">
+            <div class="case-step">
+                <span class="step-num">01</span>
+                <div>
+                    <h3>Challenge</h3>
+                    <p>{{ case_study.challenge }}</p>
+                </div>
             </div>
-            <div>
-                <h3>Solution</h3>
-                <p>{{ case_study.solution }}</p>
+            <div class="case-step">
+                <span class="step-num">02</span>
+                <div>
+                    <h3>Solution</h3>
+                    <p>{{ case_study.solution }}</p>
+                </div>
             </div>
-            <div>
-                <h3>Results</h3>
-                <p>{{ case_study.results }}</p>
+            <div class="case-step">
+                <span class="step-num">03</span>
+                <div>
+                    <h3>Results</h3>
+                    <p>{{ case_study.results }}</p>
+                </div>
             </div>
-            <div class="metric-chip">{{ case_study.key_metric }}</div>
         </div>
     </div>
 </section>
@@ -363,12 +375,17 @@
         <p class="eyebrow">Buyer questions</p>
         <h2>Answer the objections that stop self-serve upgrades.</h2>
     </div>
-    <div class="container faq-grid">
+    <div class="container faq-accordion">
         {% for faq in faqs %}
-        <article class="faq-card">
-            <h3>{{ faq.question }}</h3>
-            <p>{{ faq.answer }}</p>
-        </article>
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>{{ faq.question }}</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <p>{{ faq.answer }}</p>
+            </div>
+        </details>
         {% endfor %}
     </div>
 </section>

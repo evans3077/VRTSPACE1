@@ -518,6 +518,365 @@ input::placeholder, textarea::placeholder {
     opacity: 0.8;
 }
 
+/* Premium Bento Grid for Systems */
+.system-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    grid-auto-rows: minmax(160px, auto) !important;
+    gap: 1.5rem !important;
+    margin-top: 3rem !important;
+}
+
+.system-card {
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    min-height: 220px;
+    z-index: 1;
+}
+
+.system-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: radial-gradient(800px circle at var(--x, 0) var(--y, 0), rgba(56, 189, 248, 0.06), transparent 40%);
+    z-index: -1;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.system-card:hover::before {
+    opacity: 1;
+}
+
+.system-card h3 {
+    font-size: 1.5rem;
+    margin-bottom: 0.75rem;
+    background: var(--brand-gradient);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+/* Bento Spans */
+.system-card:nth-child(1) {
+    grid-column: span 2;
+    grid-row: span 2;
+    min-height: 480px;
+}
+
+.system-card:nth-child(1) h3 {
+    font-size: 2.2rem;
+}
+
+.system-card:nth-child(4) {
+    grid-column: span 2;
+}
+
+.system-card:nth-child(5) {
+    grid-column: span 1;
+}
+
+.system-card:nth-child(6) {
+    grid-column: span 1;
+}
+
+@media (max-width: 1100px) {
+    .system-grid {
+        grid-template-columns: repeat(2, 1fr) !important;
+    }
+    .system-card:nth-child(1) {
+        grid-column: span 2;
+        grid-row: span 1;
+        min-height: 300px;
+    }
+}
+
+@media (max-width: 768px) {
+    .system-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .system-card:nth-child(1),
+    .system-card:nth-child(4) {
+        grid-column: span 1 !important;
+    }
+}
+
+/* Premium Case Study Showcase */
+.case-study-showcase {
+    padding: 6rem 0 !important;
+}
+
+.case-study-wrapper {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 4rem !important;
+    align-items: center !important;
+    padding: 4rem !important;
+}
+
+.case-study-visual h2 {
+    font-size: 3rem;
+    line-height: 1;
+    margin-bottom: 2rem;
+}
+
+.case-metric-highlight {
+    margin: 2.5rem 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.metric-label {
+    text-transform: uppercase;
+    letter-spacing: 0.2em;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.case-metric-highlight strong {
+    font-size: 5rem;
+    font-weight: 900;
+    line-height: 1;
+}
+
+.case-meta-premium {
+    font-size: 0.9rem;
+    color: var(--brand-secondary);
+    font-weight: 700;
+    letter-spacing: 0.05em;
+}
+
+.case-study-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2.5rem;
+}
+
+.case-step {
+    display: flex;
+    gap: 1.5rem;
+}
+
+.step-num {
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--brand-primary);
+    opacity: 0.5;
+    font-family: 'Space Grotesk', sans-serif;
+}
+
+.case-step h3 {
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-primary);
+}
+
+.case-step p {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin: 0;
+}
+
+@media (max-width: 980px) {
+    .case-study-wrapper {
+        grid-template-columns: 1fr !important;
+        padding: 2.5rem !important;
+    }
+    .case-metric-highlight strong {
+        font-size: 3.5rem;
+    }
+}
+
+/* Premium FAQ Accordion */
+.faq-accordion {
+    max-width: 800px !important;
+    margin: 3rem auto !important;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.faq-item {
+    background: var(--bg-surface);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.faq-item[open] {
+    border-color: var(--brand-primary);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+}
+
+.faq-question {
+    padding: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    list-style: none;
+    user-select: none;
+}
+
+.faq-question::-webkit-details-marker {
+    display: none;
+}
+
+.faq-question h3 {
+    font-size: 1.15rem;
+    margin: 0;
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+.faq-icon {
+    width: 24px;
+    height: 24px;
+    position: relative;
+    transition: transform 0.3s ease;
+}
+
+.faq-icon::before,
+.faq-icon::after {
+    content: '';
+    position: absolute;
+    background: var(--brand-primary);
+    border-radius: 2px;
+}
+
+/* Horizontal line */
+.faq-icon::before {
+    top: 11px;
+    left: 4px;
+    width: 16px;
+    height: 2px;
+}
+
+/* Vertical line */
+.faq-icon::after {
+    top: 4px;
+    left: 11px;
+    width: 2px;
+    height: 16px;
+    transition: transform 0.3s ease;
+}
+
+.faq-item[open] .faq-icon::after {
+    transform: rotate(90deg);
+}
+
+.faq-answer {
+    padding: 0 1.5rem 1.5rem 1.5rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    animation: fade-in 0.4s ease;
+}
+
+@keyframes fade-in {
+    from { opacity: 0; transform: translateY(-10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Glowing Journey Timeline */
+.journey-grid {
+    display: grid !important;
+    grid-template-columns: repeat(4, 1fr) !important;
+    gap: 3rem !important;
+    position: relative;
+    padding-top: 2rem !important;
+    margin-top: 2rem !important;
+}
+
+/* The Timeline Track */
+.journey-grid::before {
+    content: '';
+    position: absolute;
+    top: 4rem;
+    left: 10%;
+    right: 10%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--brand-primary), var(--brand-secondary), transparent);
+    opacity: 0.3;
+    z-index: 0;
+}
+
+.journey-card {
+    position: relative;
+    background: transparent !important;
+    border: none !important;
+    box-shadow: none !important;
+    padding: 0 !important;
+    z-index: 1;
+    text-align: center;
+}
+
+/* The Node Dot */
+.journey-card::before {
+    content: '';
+    width: 20px;
+    height: 20px;
+    background: var(--bg-surface);
+    border: 3px solid var(--brand-primary);
+    border-radius: 50%;
+    display: block;
+    margin: 0 auto 2rem auto;
+    box-shadow: 0 0 15px var(--brand-primary);
+    transition: all 0.3s ease;
+}
+
+.journey-card:hover::before {
+    transform: scale(1.3);
+    background: var(--brand-primary);
+    box-shadow: 0 0 25px var(--brand-primary);
+}
+
+.journey-phase {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--brand-primary) !important;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+}
+
+.journey-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.journey-card p {
+    font-size: 0.9rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+}
+
+@media (max-width: 980px) {
+    .journey-grid {
+        grid-template-columns: 1fr !important;
+        gap: 4rem !important;
+    }
+    .journey-grid::before {
+        left: 1.5rem;
+        width: 2px;
+        height: 80%;
+        top: 2rem;
+        background: linear-gradient(180deg, transparent, var(--brand-primary), var(--brand-secondary), transparent);
+    }
+    .journey-card {
+        text-align: left;
+        padding-left: 4rem !important;
+    }
+    .journey-card::before {
+        margin: 0;
+        position: absolute;
+        left: 0.9rem;
+        top: 0;
+    }
+}
+
 @keyframes rotate-slow {
     0% { transform: rotate(0deg); }
     100% { transform: rotate(360deg); }
