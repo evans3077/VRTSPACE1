@@ -147,35 +147,36 @@
 }
 </style>
 
-{# ─── Page Hero ─────────────────────────────────────────────────────────────── #}
-<section class="hero" style="padding-bottom: 1.5rem;">
-    <div class="container-fluid">
-        <div style="display: flex; align-items: flex-start; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem;">
-            <div>
-                <p class="eyebrow" style="color: var(--brand-primary);">AEO Hub</p>
-                <h1 style="font-size: clamp(2rem, 5vw, 3rem); margin: 0 0 0.65rem;">
-                    {% if project %}{{ project.name }}{% else %}Answer Engine Optimization{% endif %}
-                </h1>
-                <p style="color: #94a3b8; font-size: 0.95rem; line-height: 1.65; max-width: 620px; margin: 0;">
-                    AI visibility and answer-readiness analysis. Scores your site on how ChatGPT, Gemini, and Perplexity extract, cite, and surface your content — then tells you exactly what to fix.
-                </p>
-            </div>
+{% include "includes/workspace_nav.html" %}
+
+{# ─── Hub Header ─────────────────────────────────────────────────────────── #}
+<div class="container-fluid">
+    <div class="ws-hub-header">
+        <div class="ws-hub-header-left">
+            <div class="ws-hub-eyebrow"><i class="fas fa-robot"></i> AEO Strategy Hub</div>
+            <h1 class="ws-hub-title">{% if project %}{{ project.name }}{% else %}Answer Engine Optimization{% endif %}</h1>
+            <p class="ws-hub-description">
+                AI visibility and answer-readiness analysis. Scores your site on how ChatGPT, Gemini, and Perplexity extract, cite, and surface your content — then tells you exactly what to fix.
+            </p>
+        </div>
+        <div class="ws-hub-header-right">
             {% if latest_aeo_audit %}
-            <div style="flex-shrink: 0;">
-                <div style="padding: 0.6rem 1.25rem; border-radius: 999px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); font-size: 0.78rem; color: #94a3b8; display: flex; align-items: center; gap: 0.5rem;">
-                    <span style="width: 6px; height: 6px; border-radius: 50%; background: #4ade80; display: inline-block; box-shadow: 0 0 8px #4ade80;"></span>
-                    Last run: <strong style="color: #f1f5f9;">{{ latest_aeo_audit.created_at|date:"M j, Y" }}</strong>
-                    {% if aeo_payload.context.target_keyword %}
-                    &nbsp;&middot;&nbsp; Keyword: <strong style="color: #38bdf8;">{{ aeo_payload.context.target_keyword }}</strong>
-                    {% endif %}
-                </div>
+            <div class="ws-status-tag">
+                <span class="ws-status-dot dot-green"></span>
+                Last run: {{ latest_aeo_audit.created_at|date:"M j, Y" }}
+                {% if aeo_payload.context.target_keyword %}
+                &middot; <span style="color: var(--brand-primary); font-weight: 700;">{{ aeo_payload.context.target_keyword }}</span>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="ws-status-tag">
+                <span class="ws-status-dot dot-muted"></span>
+                No AEO snapshot yet
             </div>
             {% endif %}
         </div>
     </div>
-</section>
-
-{% include "includes/workspace_nav.html" %}
+</div>
 
 {% if latest_aeo_audit %}
 <nav class="page-jump-nav" aria-label="AEO sections">

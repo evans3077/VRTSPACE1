@@ -1,66 +1,53 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="hero-premium">
-    <div class="container-fluid">
-        <div class="section-heading">
-            <p class="eyebrow text-accent">Workspace</p>
-            <h1 class="gradient-text">{% if project.pk %}{{ project.name }}{% else %}Workspace Overview{% endif %}</h1>
-            <p class="section-text text-muted" style="max-width: 760px;">
-                One working flow: create or open a workspace, run the audit, then move into SEO, AEO, or content from that same base.
-            </p>
-            <div id="project-actions" style="margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center;">
-                {% if not project.pk %}
-                <a class="button button-primary" href="#new-project">Create workspace</a>
-                <a class="button button-secondary" href="#start-audit">Start with audit</a>
-                {% elif not latest_audit %}
-                <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="button button-primary">Run first audit</button>
-                </form>
-                <a class="button button-secondary" href="#new-project">Create another workspace</a>
-                {% else %}
-                <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="button button-primary">Run audit</button>
-                </form>
-                <a class="button button-secondary" href="{% url 'tools:audit-result' latest_audit.pk %}">Open latest audit</a>
-                <a class="button button-secondary" href="{% url 'seo:workspace-seo' %}">Open SEO</a>
-                <a class="button button-secondary" href="{% url 'aeo:workspace-aeo' %}">Open AEO</a>
-                <a class="button button-secondary" href="{% url 'content:workspace-content' %}">Open Content</a>
-                {% endif %}
+
+{% include "includes/workspace_nav.html" %}
+
+{# ── Hub Header ─────────────────────────────────────────────────────────── #}
+<div class="container-fluid">
+    <div class="ws-hub-header">
+        <div class="ws-hub-header-left">
+            <div class="ws-hub-eyebrow"><i class="fas fa-th-large"></i> Workspace</div>
+            <h1 class="ws-hub-title">{% if project.pk %}{{ project.name }}{% else %}Workspace Overview{% endif %}</h1>
+            <p class="ws-hub-description">One working flow: create or open a workspace, run the audit, then move into SEO, AEO, or content from that same base.</p>
+        </div>
+        <div class="ws-hub-header-right">
+            {% if project.pk and latest_audit %}
+            <div class="ws-status-tag">
+                <span class="ws-status-dot dot-green"></span>
+                Score {{ latest_audit.overall_score }} &middot; {{ latest_audit.created_at|date:"M j, Y" }}
             </div>
+            <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
+                <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin:0;">
+                    {% csrf_token %}
+                    <button type="submit" class="button button-primary" style="font-size:0.82rem; padding: 0.55rem 1.25rem;"><i class="fas fa-redo"></i> Run Audit</button>
+                </form>
+                <a class="button button-secondary" href="{% url 'tools:audit-result' latest_audit.pk %}" style="font-size:0.82rem; padding: 0.55rem 1.25rem;">Open Report</a>
+            </div>
+            {% elif project.pk %}
+            <div class="ws-status-tag">
+                <span class="ws-status-dot dot-amber"></span>
+                Audit required
+            </div>
+            <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin:0;">
+                {% csrf_token %}
+                <button type="submit" class="button button-primary" style="font-size:0.82rem; padding: 0.55rem 1.25rem;"><i class="fas fa-play"></i> Run First Audit</button>
+            </form>
+            {% else %}
+            <div class="ws-status-tag">
+                <span class="ws-status-dot dot-muted"></span>
+                No workspace yet
+            </div>
+            <a class="button button-primary" href="#new-project" style="font-size:0.82rem; padding: 0.55rem 1.25rem;">Create Workspace</a>
+            {% endif %}
 
             {% if not audit_tier_enforcement %}
-            <div class="pill-accent" style="margin-top: 1.5rem; display: inline-block;">
-                Free-pass mode is active. Usage is still logged even when billing gates are off.
-            </div>
-            {% endif %}
-
-            <div class="workspace-flow-note" style="margin-top: 1rem; border-color: var(--border-glass); background: rgba(56, 189, 248, 0.05); color: var(--text-secondary); font-size: 0.9rem; padding: 1rem; border-radius: 12px; border: 1px solid var(--border-glass);">
-                Reuse the current audit for SEO, AEO, and content. Run another audit only when you need a fresh crawl or want to validate changes.
-            </div>
-
-            {% if not project.pk %}
-            <div class="empty-state-panel" style="margin-top: 1.5rem;">
-                <p>No active workspace yet. Create one or start directly with an audit below.</p>
-            </div>
-            {% elif not latest_audit %}
-            <div class="credit-notice" style="margin-top: 1.5rem;">
-                <p style="margin:0;">This workspace is ready. Run the first audit to unlock SEO, AEO, content, and validation history.</p>
-            </div>
-            {% endif %}
-
-            {% if credit_overview.is_testing_mode and credit_overview.overage %}
-            <div class="credit-notice" style="margin-top: 1rem;">
-                <p style="margin:0;">Testing mode logged {{ credit_overview.overage }} estimated credit{{ credit_overview.overage|pluralize }} above the current balance without blocking the workflow.</p>
-            </div>
+            <div class="pill-accent" style="font-size: 0.72rem; display: inline-block;">Free-pass mode active</div>
             {% endif %}
         </div>
     </div>
-</section>
-
-{% include "includes/workspace_nav.html" %}
+</div>
 
 <section class="packages-section" style="padding-top: 0;">
     <div class="container-fluid page-stack">

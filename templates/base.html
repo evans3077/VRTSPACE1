@@ -41,55 +41,116 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <header class="site-header">
+    <header class="site-header" x-data="{ openMenu: null }">
         <div class="container nav-shell">
             <a class="brand" href="/">VRT SPACE AGENCY</a>
             <div class="nav-actions">
                 <nav class="nav-links" aria-label="Primary">
-                    <a href="{% url 'core:home' %}#method">Platform</a>
-                    <a href="{% url 'core:services' %}">Solutions</a>
+                    <!-- Platform Mega-Menu -->
+                    <div class="nav-item-wrapper" @mouseenter="openMenu = 'platform'" @mouseleave="openMenu = null">
+                        <button class="mega-menu-trigger">
+                            Platform <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
+                        </button>
+                        <div class="mega-menu-panel" :class="{ 'is-open': openMenu === 'platform' }">
+                            <div class="nav-column">
+                                <span class="nav-category-head">Intelligence Hubs</span>
+                                <div class="nav-card-group">
+                                    <a href="{% url 'seo:workspace-seo' %}" class="nav-card">
+                                        <div class="nav-card-icon"><i class="fas fa-search"></i></div>
+                                        <div class="nav-card-info">
+                                            <span class="nav-card-title">SEO Intelligence</span>
+                                            <p class="nav-card-desc">Crawl budget optimization, phantom keywords, and technical gap analysis.</p>
+                                        </div>
+                                    </a>
+                                    <a href="{% url 'aeo:workspace-aeo' %}" class="nav-card">
+                                        <div class="nav-card-icon"><i class="fas fa-robot"></i></div>
+                                        <div class="nav-card-info">
+                                            <span class="nav-card-title">AEO Strategy</span>
+                                            <p class="nav-card-desc">AI discovery engine optimization and LLM citation acceleration.</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="nav-column">
+                                <span class="nav-category-head">Production Systems</span>
+                                <div class="nav-card-group">
+                                    <a href="{% url 'content:workspace-content' %}" class="nav-card">
+                                        <div class="nav-card-icon"><i class="fas fa-pen-nib"></i></div>
+                                        <div class="nav-card-info">
+                                            <span class="nav-card-title">Content Forge</span>
+                                            <p class="nav-card-desc">Recursive content optimization and high-precision Answer Unit generation.</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="nav-column">
+                                <span class="nav-category-head">Management</span>
+                                <div class="nav-card-group">
+                                    <a href="{% url 'tools:workspace-dashboard' %}" class="nav-card">
+                                        <div class="nav-card-icon"><i class="fas fa-th-large"></i></div>
+                                        <div class="nav-card-info">
+                                            <span class="nav-card-title">Project Control</span>
+                                            <p class="nav-card-desc">Omni-channel visibility tracking and credit pool management.</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Solutions Mega-Menu -->
+                    <div class="nav-item-wrapper" @mouseenter="openMenu = 'solutions'" @mouseleave="openMenu = null">
+                        <button class="mega-menu-trigger">
+                            Solutions <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
+                        </button>
+                        <div class="mega-menu-panel" :class="{ 'is-open': openMenu === 'solutions' }">
+                            <div class="nav-column">
+                                <span class="nav-category-head">By Use Case</span>
+                                <div class="nav-card-group">
+                                    <a href="{% url 'core:services' %}" class="nav-card">
+                                        <div class="nav-card-icon"><i class="fas fa-building"></i></div>
+                                        <div class="nav-card-info">
+                                            <span class="nav-card-title">Enterprise Dominance</span>
+                                            <p class="nav-card-desc">Large-scale semantic authority for complex internal architectures.</p>
+                                        </div>
+                                    </a>
+                                    <a href="{% url 'core:services' %}" class="nav-card">
+                                        <div class="nav-card-icon"><i class="fas fa-rocket"></i></div>
+                                        <div class="nav-card-info">
+                                            <span class="nav-card-title">Startup Acceleration</span>
+                                            <p class="nav-card-desc">Rapid visibility gains for new products and market entries.</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <a href="{% url 'core:packages' %}">Pricing</a>
                     <a href="{% url 'core:home' %}#audit">Free Audit</a>
-                    {% if user.is_staff %}
-                    <a href="{% url 'analytics:operations-dashboard' %}">Ops</a>
-                    {% endif %}
                 </nav>
-                {% if user.is_authenticated and not user.is_staff %}
-                <details class="workspace-menu">
-                    <summary class="workspace-menu-trigger">
-                        Workspace{% if active_workspace_project %}: {{ active_workspace_project.name }}{% endif %}
-                    </summary>
-                    <div class="workspace-menu-panel glass-panel">
-                        <a href="{% url 'tools:workspace-dashboard' %}"><i class="fas fa-th-large"></i> Dashboard View</a>
-                        <a href="{% url 'seo:workspace-seo' %}"><i class="fas fa-search"></i> SEO Intelligence</a>
-                        <a href="{% url 'aeo:workspace-aeo' %}"><i class="fas fa-robot"></i> Answer Engine Opt.</a>
-                        <a href="{% url 'content:workspace-content' %}"><i class="fas fa-pen-nib"></i> Content Forge</a>
-                        <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 0.5rem 0;"></div>
-                        <a href="{% url 'tools:workspace-logout' %}"><i class="fas fa-sign-out-alt"></i> Systems Exit</a>
-                    </div>
-                </details>
-                {% endif %}
-                {% if user.is_authenticated and workspace_projects|length > 1 %}
-                <form method="post" action="{% url 'tools:workspace-project-select' %}" class="workspace-project-switch">
-                    {% csrf_token %}
-                    <input type="hidden" name="next" value="{{ request.get_full_path }}">
-                    <select name="project_id" onchange="this.form.submit()" style="min-width: 220px;">
-                        {% for item in workspace_project_summaries %}
-                        <option value="{{ item.pk }}"{% if active_workspace_project and active_workspace_project.pk == item.pk %} selected{% endif %}>{{ item.name }} | {{ item.project_type_label }}</option>
-                        {% endfor %}
-                    </select>
-                </form>
-                {% endif %}
+
                 {% if user.is_authenticated %}
-                <a class="button button-secondary nav-auth-link nav-account-link" href="{% url 'tools:account-dashboard' %}">
-                    <i class="fas fa-user" aria-hidden="true"></i>
-                    <span>Account</span>
-                </a>
-                <a class="button button-secondary nav-auth-link" href="{% url 'tools:workspace-logout' %}">Sign out</a>
+                <div class="nav-user-shell" x-data="{ openProfile: false }" @mouseleave="openProfile = false">
+                    <button class="button button-secondary nav-account-link" @mouseenter="openProfile = true">
+                        <i class="fas fa-user-circle" style="font-size: 1.1rem;"></i>
+                        <span>Account</span>
+                    </button>
+                    <div class="workspace-menu-panel glass-panel" x-show="openProfile" x-transition @mouseenter="openProfile = true">
+                        <div class="profile-header" style="padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-glass); margin-bottom: 0.75rem;">
+                            <span style="display: block; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800;">Identity Verified</span>
+                            <span style="font-weight: 700; color: var(--text-primary);">{{ user.email }}</span>
+                        </div>
+                        <a href="{% url 'tools:workspace-dashboard' %}"><i class="fas fa-columns"></i> Dashboard Console</a>
+                        <a href="{% url 'tools:account-dashboard' %}"><i class="fas fa-cog"></i> Settings</a>
+                        <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 0.5rem 0;"></div>
+                        <a href="{% url 'tools:workspace-logout' %}" style="color: var(--error) !important;"><i class="fas fa-power-off"></i> Systems Exit</a>
+                    </div>
+                </div>
                 <a class="button button-primary nav-cta" href="{% url 'tools:workspace-dashboard' %}">Open Workspace</a>
                 {% else %}
                 <a class="button button-secondary nav-auth-link" href="{% url 'tools:workspace-login' %}">Sign in</a>
-                <a class="button button-primary nav-cta" href="{% url 'tools:workspace-signup' %}">Create Workspace</a>
+                <a class="button button-primary nav-cta" href="{% url 'tools:workspace-signup' %}">Apply for Access</a>
                 {% endif %}
             </div>
             <!-- Hamburger for mobile -->
@@ -128,23 +189,34 @@
         <div class="mobile-drawer-content glass-panel">
             <button class="nav-mobile-close" id="nav-mobile-close" aria-label="Close navigation">&times;</button>
             <div class="nav-mobile-brand gradient-text">VRT SPACE AGENCY</div>
-            <nav class="nav-mobile-links" aria-label="Mobile primary">
-                <a href="{% url 'core:home' %}" style="--i:1">Platform Home</a>
-                <a href="{% url 'core:services' %}" style="--i:2">Intelligence Solutions</a>
-                <a href="{% url 'core:packages' %}" style="--i:3">Pricing & Packages</a>
-                <a href="{% url 'core:home' %}#audit" style="--i:4">Free Website Audit</a>
+            <nav class="nav-mobile-links" aria-label="Mobile primary" x-data="{ openSub: null }">
+                <!-- Platform Cluster -->
+                <div class="mobile-nav-group">
+                    <span class="nav-category-head" style="margin-bottom: 1rem;">The Platform</span>
+                    <a href="{% url 'seo:workspace-seo' %}" style="--i:1">SEO Intelligence</a>
+                    <a href="{% url 'aeo:workspace-aeo' %}" style="--i:2">AEO Strategy</a>
+                    <a href="{% url 'content:workspace-content' %}" style="--i:3">Content Forge</a>
+                </div>
+
+                <!-- Solutions Cluster -->
+                <div class="mobile-nav-group" style="margin-top: 2rem;">
+                    <span class="nav-category-head" style="margin-bottom: 1rem;">Solutions</span>
+                    <a href="{% url 'core:services' %}" style="--i:4">Enterprise Growth</a>
+                    <a href="{% url 'core:services' %}" style="--i:5">Startup Acceleration</a>
+                </div>
+
+                <!-- Commercial Cluster -->
+                <div class="mobile-nav-group" style="margin-top: 2rem;">
+                    <span class="nav-category-head" style="margin-bottom: 1rem;">Success</span>
+                    <a href="{% url 'core:packages' %}" style="--i:6">Pricing & Packages</a>
+                    <a href="{% url 'core:home' %}#audit" style="--i:7">Free Live Audit</a>
+                </div>
+
                 {% if user.is_staff %}
-                <a href="{% url 'analytics:operations-dashboard' %}" style="--i:5">Operations Center</a>
-                {% endif %}
-                <div class="mobile-divider" style="--i:6"></div>
-                {% if user.is_authenticated and not user.is_staff %}
-                <a href="{% url 'tools:workspace-dashboard' %}" style="--i:7">Workspace Dashboard</a>
-                <a href="{% url 'seo:workspace-seo' %}" style="--i:8">SEO Analysis</a>
-                <a href="{% url 'aeo:workspace-aeo' %}" style="--i:9">AEO Performance</a>
-                <a href="{% url 'content:workspace-content' %}" style="--i:10">Content Systems</a>
+                <a href="{% url 'analytics:operations-dashboard' %}" style="--i:8">Operations Center</a>
                 {% endif %}
             </nav>
-            <div class="nav-mobile-actions" style="--i:11">
+            <div class="nav-mobile-actions" style="--i:9">
                 {% if user.is_authenticated %}
                 <a class="button button-secondary" href="{% url 'tools:account-dashboard' %}"><i class="fas fa-user"></i> Account</a>
                 <a class="button button-secondary" href="{% url 'tools:workspace-logout' %}">Sign out</a>

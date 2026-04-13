@@ -1,22 +1,49 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="hero-premium">
-    <div class="container-fluid">
-        <div class="section-heading">
-            <p class="eyebrow text-accent">SEO Intelligence Hub</p>
-            <h1 class="gradient-text">{% if project %}{{ project.name }}{% else %}Workspace SEO{% endif %}</h1>
-            <p class="section-text text-muted">
-                Competitor-backed SEO intelligence. This module reuses the latest audit, fetches real competitor websites, profiles what they publish, and turns those gaps into a concrete SEO roadmap.
-            </p>
-        </div>
-    </div>
-</section>
 
 {% include "includes/workspace_nav.html" %}
 
+{# ── Hub Header ─────────────────────────────────────────────────────────── #}
+<div class="container-fluid">
+    <div class="ws-hub-header">
+        <div class="ws-hub-header-left">
+            <div class="ws-hub-eyebrow"><i class="fas fa-search"></i> SEO Intelligence Hub</div>
+            <h1 class="ws-hub-title">{% if project %}{{ project.name }}{% else %}Workspace SEO{% endif %}</h1>
+            <p class="ws-hub-description">
+                Competitor-backed SEO intelligence. Fetches real competitor websites, profiles what they publish, and turns those gaps into a concrete SEO roadmap.
+            </p>
+        </div>
+        <div class="ws-hub-header-right">
+            {% if snapshot %}
+            <div class="ws-status-tag">
+                <span class="ws-status-dot dot-green"></span>
+                Snapshot active &middot; {{ seo_context.industry_label|default:"—" }}
+            </div>
+            {% elif seo_refresh_state.refresh_status == "running" or seo_refresh_state.refresh_status == "queued" %}
+            <div class="ws-status-tag">
+                <span class="ws-status-dot dot-amber"></span>
+                Refresh in progress
+            </div>
+            {% else %}
+            <div class="ws-status-tag">
+                <span class="ws-status-dot dot-muted"></span>
+                No snapshot yet
+            </div>
+            {% endif %}
+            {% if project and can_generate_snapshot %}
+            <form method="post" action="{% url 'seo:workspace-seo' %}" style="margin:0;">
+                {% csrf_token %}
+                <button type="submit" class="button button-primary" style="font-size:0.82rem; padding: 0.55rem 1.25rem;"><i class="fas fa-sync-alt"></i> Run Refresh</button>
+            </form>
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+
 {% if project and snapshot %}
-<nav class="page-jump-nav glass-panel" aria-label="Page sections" style="margin: 1rem 0;">
+<nav class="page-jump-nav glass-panel" aria-label="Page sections" style="margin: 0 0 1.5rem;">
     <div class="container-fluid">
         <div class="page-jump-links">
             <a class="page-jump-link" href="#seo-overview"><i class="fas fa-chart-bar"></i> Overview</a>
@@ -227,26 +254,26 @@
                 </div>
             </div>
             {% endif %}
-            <div class="system-grid" style="gap: 1.5rem;">
-                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Competitors</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_value_summary.competitors_benchmarked|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Real competitor sites fetched and benchmarked</p></article>
-                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Auto-Discovered</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_value_summary.auto_discovered_competitors|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Competitors found directly from global SERPs</p></article>
-                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Market Surfaces</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_value_summary.market_surfaces|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Observed search or marketplace surfaces kept out of peer benchmarking</p></article>
-                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Citation Sources</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_value_summary.citation_sources|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Directory and local listing sources tracked separately from competitors</p></article>
-                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Backlink Prospects</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_value_summary.backlink_sources|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Editorial and resource surfaces saved for later authority work</p></article>
-                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Competitor Pages</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_value_summary.competitor_pages_profiled|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Pages profiled across those competitor sites</p></article>
-                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Images Profiled</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_value_summary.competitor_images_profiled|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Competitor visual assets captured for analysis</p></article>
-                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Scripts Profiled</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_value_summary.competitor_scripts_profiled|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Third-party and app stack signals captured</p></article>
-                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Keyword Targets</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_value_summary.keyword_targets|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Search targets generated from structure and competitor evidence</p></article>
-                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Execution Items</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_value_summary.execution_items|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Actionable tasks mapped from the benchmark output</p></article>
+            <div class="data-card-grid" style="margin-bottom: 1.5rem;">
+                <div class="data-card"><span class="data-card-label">Competitors</span><span class="data-card-value">{{ seo_value_summary.competitors_benchmarked|default:0 }}</span><p class="data-card-desc">Real competitor sites fetched and benchmarked</p></div>
+                <div class="data-card"><span class="data-card-label">Auto-Discovered</span><span class="data-card-value">{{ seo_value_summary.auto_discovered_competitors|default:0 }}</span><p class="data-card-desc">Found directly from global SERPs</p></div>
+                <div class="data-card"><span class="data-card-label">Market Surfaces</span><span class="data-card-value">{{ seo_value_summary.market_surfaces|default:0 }}</span><p class="data-card-desc">Marketplace surfaces excluded from benchmarking</p></div>
+                <div class="data-card"><span class="data-card-label">Citation Sources</span><span class="data-card-value">{{ seo_value_summary.citation_sources|default:0 }}</span><p class="data-card-desc">Directory &amp; local listing sources tracked</p></div>
+                <div class="data-card"><span class="data-card-label">Backlink Prospects</span><span class="data-card-value">{{ seo_value_summary.backlink_sources|default:0 }}</span><p class="data-card-desc">Editorial surfaces saved for authority work</p></div>
+                <div class="data-card"><span class="data-card-label">Competitor Pages</span><span class="data-card-value">{{ seo_value_summary.competitor_pages_profiled|default:0 }}</span><p class="data-card-desc">Pages profiled across competitor sites</p></div>
+                <div class="data-card"><span class="data-card-label">Images Profiled</span><span class="data-card-value">{{ seo_value_summary.competitor_images_profiled|default:0 }}</span><p class="data-card-desc">Visual assets captured for analysis</p></div>
+                <div class="data-card"><span class="data-card-label">Scripts Profiled</span><span class="data-card-value">{{ seo_value_summary.competitor_scripts_profiled|default:0 }}</span><p class="data-card-desc">Third-party app stack signals captured</p></div>
+                <div class="data-card"><span class="data-card-label">Keyword Targets</span><span class="data-card-value">{{ seo_value_summary.keyword_targets|default:0 }}</span><p class="data-card-desc">Targets from structure and competitor evidence</p></div>
+                <div class="data-card"><span class="data-card-label">Execution Items</span><span class="data-card-value">{{ seo_value_summary.execution_items|default:0 }}</span><p class="data-card-desc">Actionable tasks from benchmark output</p></div>
             </div>
-            <div class="system-grid" style="margin-top: 1.5rem; gap: 1.5rem;">
-                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow">Campaigns Advanced</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_chain_value_summary.campaign_count|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Execution items carried into tracked campaigns</p></article>
-                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow">Briefs Linked</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_chain_value_summary.brief_count|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Campaigns with a live editorial brief</p></article>
-                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow">Drafts Created</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_chain_value_summary.draft_count|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Campaigns that already produced a content draft</p></article>
-                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow">Content Applied</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_chain_value_summary.content_applied_count|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">SEO-driven drafts already pushed into the content library</p></article>
-                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow">Outreach Targets</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_chain_value_summary.outreach_target_count|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Backlink prospects linked to active campaigns</p></article>
-                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow">Validated Campaigns</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_chain_value_summary.validated_campaigns|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Completed campaigns confirmed by a later audit rerun</p></article>
-                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow">Acquired Links</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ seo_chain_value_summary.acquired_link_count|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Linked campaigns that already converted into acquired backlinks</p></article>
+            <div class="data-card-grid" style="margin-top: 1rem;">
+                <div class="data-card"><span class="data-card-label">Campaigns Advanced</span><span class="data-card-value">{{ seo_chain_value_summary.campaign_count|default:0 }}</span><p class="data-card-desc">Items carried into tracked campaigns</p></div>
+                <div class="data-card"><span class="data-card-label">Briefs Linked</span><span class="data-card-value">{{ seo_chain_value_summary.brief_count|default:0 }}</span><p class="data-card-desc">Campaigns with a live editorial brief</p></div>
+                <div class="data-card"><span class="data-card-label">Drafts Created</span><span class="data-card-value">{{ seo_chain_value_summary.draft_count|default:0 }}</span><p class="data-card-desc">Campaigns that produced a content draft</p></div>
+                <div class="data-card"><span class="data-card-label">Content Applied</span><span class="data-card-value">{{ seo_chain_value_summary.content_applied_count|default:0 }}</span><p class="data-card-desc">SEO-driven drafts in the content library</p></div>
+                <div class="data-card"><span class="data-card-label">Outreach Targets</span><span class="data-card-value">{{ seo_chain_value_summary.outreach_target_count|default:0 }}</span><p class="data-card-desc">Backlink prospects linked to campaigns</p></div>
+                <div class="data-card"><span class="data-card-label">Validated Campaigns</span><span class="data-card-value">{{ seo_chain_value_summary.validated_campaigns|default:0 }}</span><p class="data-card-desc">Completed &amp; confirmed by audit rerun</p></div>
+                <div class="data-card"><span class="data-card-label">Acquired Links</span><span class="data-card-value">{{ seo_chain_value_summary.acquired_link_count|default:0 }}</span><p class="data-card-desc">Campaigns converted into acquired backlinks</p></div>
             </div>
             {% if seo_discovery.queries %}
             <div style="margin-top: 2rem; padding: 1.5rem; border-radius: var(--radius-lg); background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); color: var(--text-secondary); line-height: 1.6;">
@@ -650,8 +677,10 @@
                 {% endfor %}
             </div>
             {% else %}
-            <div style="padding: 1rem; border-radius: 16px; background: #f8fafc; color: #64748b;">
-                Campaign objects will appear here once the execution queue is available for this project.
+            <div class="ws-empty-state">
+                <div class="ws-empty-icon"><i class="fas fa-tasks"></i></div>
+                <p class="ws-empty-title">No campaigns yet</p>
+                <p class="ws-empty-desc">Campaign objects appear once the execution queue is built for this project. Run an SEO refresh to generate the first set.</p>
             </div>
             {% endif %}
         </article>

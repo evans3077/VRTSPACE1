@@ -1,21 +1,34 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="hero" style="position: relative; overflow: visible; padding-bottom: 2rem;">
-    <div class="ambient-glow-violet" style="top: -15%; left: -5%; opacity: 0.5;"></div>
-    <div class="ambient-glow-cyan" style="bottom: 0; right: -5%; opacity: 0.4;"></div>
-    <div class="container" style="position: relative; z-index: 1;">
-        <div class="section-heading">
-            <p class="eyebrow" style="color: var(--accent-cyan); letter-spacing: 0.15em;">AI Content Engine</p>
-            <h1 style="max-width: none; background: linear-gradient(135deg, #0f172a 0%, #3b82f6 100%); background-clip: text; -webkit-background-clip: text; -webkit-text-fill-color: transparent;">Generate draft content from your workspace context</h1>
-            <p class="section-text" style="max-width: 760px;">
+
+{% include "includes/workspace_nav.html" %}
+
+{# ── Hub Header ─────────────────────────────────────────────────────────── #}
+<div class="container-fluid">
+    <div class="ws-hub-header">
+        <div class="ws-hub-header-left">
+            <div class="ws-hub-eyebrow"><i class="fas fa-pen-nib"></i> AI Content Engine</div>
+            <h1 class="ws-hub-title">Generate draft content from workspace context</h1>
+            <p class="ws-hub-description">
                 Create structured drafts for service pages, landing pages, articles, and answer blocks using the current audit plus the latest SEO and tracking context.
             </p>
         </div>
+        <div class="ws-hub-header-right">
+            {% if project and project.latest_audit_run %}
+            <div class="ws-status-tag">
+                <span class="ws-status-dot dot-green"></span>
+                {{ generated_content_list|length }} draft{{ generated_content_list|length|pluralize }} &middot; {{ editorial_tasks|length }} queued
+            </div>
+            {% else %}
+            <div class="ws-status-tag">
+                <span class="ws-status-dot dot-muted"></span>
+                Audit required to generate
+            </div>
+            {% endif %}
+        </div>
     </div>
-</section>
-
-{% include "includes/workspace_nav.html" %}
+</div>
 
 <section class="packages-section" style="padding-top: 0; position: relative; z-index: 2;">
     <div class="container-fluid page-stack">
@@ -203,76 +216,60 @@
                 <div style="display: grid; gap: 1rem;">
                     {% for task in editorial_tasks %}
                     {% with brief=task.brief_json %}
-                    <div style="padding: 1.5rem; border-radius: 18px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05);">
-                        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 1rem; padding-bottom: 1rem; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                            <h3 style="margin: 0; font-size: 1.2rem; color: var(--ink);">{{ brief.primary_keyword }}</h3>
-                            
-                            {% if task.status == "queued" %}
-                                <span class="score-pill score-medium">Queued</span>
-                            {% elif task.status == "drafting" %}
-                                <span class="score-pill score-high" style="background: rgba(6, 182, 212, 0.15); color: #22d3ee; border-color: rgba(6, 182, 212, 0.4); box-shadow: 0 0 10px rgba(6, 182, 212, 0.1);">Drafting</span>
-                            {% elif task.status == "completed" %}
-                                <span class="score-pill score-high">Completed</span>
-                            {% else %}
-                                <span class="score-pill score-low">Stale / Need Review</span>
-                            {% endif %}
-                        </div>
-                        
-                        <div style="display: grid; gap: 0.75rem; color: var(--text-muted); font-size: 0.9rem;">
-                            
-                            <!-- Context Grid -->
-                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 0.5rem;">
-                                <div><strong style="color: var(--ink); display:block; margin-bottom:0.15rem; font-size: 0.75rem; text-transform: uppercase;">Format</strong> {{ brief.output_type_label|title }}</div>
-                                <div><strong style="color: var(--ink); display:block; margin-bottom:0.15rem; font-size: 0.75rem; text-transform: uppercase;">Priority</strong> {{ task.priority_score }} / 100</div>
-                                
-                                {% if task.seo_campaign %}
-                                <div>
-                                    <strong style="color: var(--ink); display:block; margin-bottom:0.15rem; font-size: 0.75rem; text-transform: uppercase;">Campaign Connection</strong> 
-                                    {{ task.seo_campaign.title|truncatechars:25 }}
-                                </div>
-                                {% endif %}
+                    <div class="trace-card">
+                        <div class="trace-card-header">
+                            <div>
+                                <p class="trace-card-title">{{ brief.primary_keyword }}</p>
+                                <p class="trace-card-subtitle">{{ brief.output_type_label|title }} &middot; Priority {{ task.priority_score }}/100{% if task.seo_campaign %} &middot; {{ task.seo_campaign.title|truncatechars:30 }}{% endif %}</p>
                             </div>
-
-                            <div style="line-height: 1.55; padding: 0.75rem; background: rgba(0,0,0,0.2); border-radius: 8px;">
-                                <strong style="color: var(--ink);">System Rationale:</strong> {{ brief.reason }}
-                            </div>
-
-                            <div style="line-height: 1.55;">
-                                <strong style="color: var(--ink);">Target Action:</strong> {{ brief.action }}
-                            </div>
-
-                            <!-- Draft Generator Block -->
-                            <div style="margin-top: 1rem; border-top: 1px dashed rgba(255,255,255,0.08); padding-top: 1rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
-                                
-                                {% if task.latest_generated_content %}
-                                <div>
-                                    <span style="font-size: 0.8rem; color: var(--text-muted); display: block;">Latest Iteration</span>
-                                    <a href="{% url 'content:workspace-content-detail' task.latest_generated_content.pk %}" style="color: var(--signal); font-weight: 700; text-decoration: none;">
-                                        &rarr; Review: {{ task.latest_generated_content.title }}
-                                    </a>
-                                </div>
+                            <div class="trace-card-badges">
+                                {% if task.status == "queued" %}
+                                <span class="status-badge status-badge-queued">Queued</span>
+                                {% elif task.status == "drafting" %}
+                                <span class="status-badge status-badge-running">Drafting</span>
+                                {% elif task.status == "completed" %}
+                                <span class="status-badge status-badge-done">Completed</span>
                                 {% else %}
-                                <div style="font-size: 0.85rem;">Draft waiting to be generated seamlessly.</div>
+                                <span class="status-badge status-badge-warning">Stale</span>
                                 {% endif %}
-
-                                <form method="post" action="{% url 'content:workspace-content-generate-from-seo' %}">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="brief_key" value="{{ task.brief_key }}">
-                                    <button type="submit" class="button button-primary">
-                                        {% if task.status == "queued" or task.status == "stale" %}
-                                        Auto-Generate Draft
-                                        {% else %}
-                                        Regenerate Iteration
-                                        {% endif %}
-                                    </button>
-                                </form>
                             </div>
+                        </div>
+                        <div class="trace-card-body">
+                            <div class="trace-card-sub-grid">
+                                <div class="trace-sub">
+                                    <span class="trace-sub-label">System Rationale</span>
+                                    <p class="trace-sub-text">{{ brief.reason }}</p>
+                                </div>
+                                <div class="trace-sub">
+                                    <span class="trace-sub-label">Target Action</span>
+                                    <p class="trace-sub-text">{{ brief.action }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="trace-card-footer">
+                            {% if task.latest_generated_content %}
+                            <a href="{% url 'content:workspace-content-detail' task.latest_generated_content.pk %}" style="color: var(--brand-primary); font-weight: 700; font-size: 0.85rem; text-decoration: none;">
+                                &rarr; Review: {{ task.latest_generated_content.title }}
+                            </a>
+                            {% else %}
+                            <span style="font-size: 0.82rem; color: var(--text-muted);">Draft not yet generated</span>
+                            {% endif %}
+                            <form method="post" action="{% url 'content:workspace-content-generate-from-seo' %}" style="margin: 0;">
+                                {% csrf_token %}
+                                <input type="hidden" name="brief_key" value="{{ task.brief_key }}">
+                                <button type="submit" class="button button-primary" style="font-size: 0.82rem; padding: 0.5rem 1.1rem;">
+                                    {% if task.status == "queued" or task.status == "stale" %}Auto-Generate{% else %}Regenerate{% endif %}
+                                </button>
+                            </form>
                         </div>
                     </div>
                     {% endwith %}
-                    
                     {% empty %}
-                    <div class="evidence-card"><div class="evidence-card-text">Refresh the SEO hub first to build the content brief queue from the current page map and keyword opportunities.</div></div>
+                    <div class="ws-empty-state">
+                        <div class="ws-empty-icon"><i class="fas fa-file-alt"></i></div>
+                        <p class="ws-empty-title">Pipeline empty</p>
+                        <p class="ws-empty-desc">Refresh the SEO hub first to build the content brief queue from the current page map and keyword opportunities.</p>
+                    </div>
                     {% endfor %}
                 </div>
                 {% endif %}
