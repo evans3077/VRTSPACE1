@@ -30,26 +30,26 @@
     </div>
 </div>
 
-<section class="packages-section" style="padding-top: 0; position: relative; z-index: 2;">
-    <div class="container-fluid page-stack">
+<section class="dashboard-stack">
+    <div class="container-fluid">
         
-        <!-- Metric Hero Strip -->
-        <div class="metric-hero-strip">
-            <div class="metric-cell">
-                <span class="metric-label">Workspace</span>
-                <span class="metric-value" style="font-size: 1.1rem; padding-top: 0.2rem;">{{ project.name|default:"No linked project" }}</span>
+        <!-- Metric Grid -->
+        <div class="metric-grid-premium" style="margin-bottom: 2rem;">
+            <div class="metric-card-premium">
+                <p class="eyebrow">Workspace</p>
+                <h3>{{ project.name|default:"No linked project" }}</h3>
             </div>
-            <div class="metric-cell">
-                <span class="metric-label">Base Audit Score</span>
-                <span class="metric-value">{% if project and project.latest_audit_run %}{{ project.latest_audit_run.overall_score }}{% else %}-{% endif %}</span>
+            <div class="metric-card-premium">
+                <p class="eyebrow">Base Audit Score</p>
+                <h3>{% if project and project.latest_audit_run %}{{ project.latest_audit_run.overall_score }}{% else %}-{% endif %}</h3>
             </div>
-            <div class="metric-cell">
-                <span class="metric-label">Drafts</span>
-                <span class="metric-value">{{ generated_content_list|length }}</span>
+            <div class="metric-card-premium">
+                <p class="eyebrow">Drafts</p>
+                <h3>{{ generated_content_list|length }}</h3>
             </div>
-            <div class="metric-cell">
-                <span class="metric-label">Editorial Queue</span>
-                <span class="metric-value">{{ editorial_tasks|length }}</span>
+            <div class="metric-card-premium">
+                <p class="eyebrow">Editorial Queue</p>
+                <h3>{{ editorial_tasks|length }}</h3>
             </div>
         </div>
 
@@ -67,15 +67,15 @@
             <div class="system-grid" style="gap: 1.5rem; margin-bottom: 2rem;">
                 <!-- Missing Content Layers -->
                 {% if optimization_engine.gap_analysis.missing_layers %}
-                <div style="padding: 1.5rem; border-radius: 18px; background: rgba(220, 38, 38, 0.03); border: 1px solid rgba(220, 38, 38, 0.15);">
-                    <strong style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary); font-size: 1.05rem; margin-bottom: 1rem;">
+                <div class="alert-panel alert-panel-danger">
+                    <div class="alert-panel-header">
                         <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i> Missing Page Layers
-                    </strong>
+                    </div>
                     <div style="display: grid; gap: 0.75rem;">
                         {% for gap in optimization_engine.gap_analysis.missing_layers %}
-                        <div style="padding: 0.9rem 1rem; border-radius: 12px; background: var(--bg-surface); border-left: 3px solid #ef4444;">
-                            <strong style="display: block; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.3rem;">{{ gap.title }}</strong>
-                            <p style="margin: 0; font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">{{ gap.reason }}</p>
+                        <div class="alert-block alert-block-danger">
+                            <span class="alert-block-title">{{ gap.title }}</span>
+                            <p class="alert-block-text">{{ gap.reason }}</p>
                         </div>
                         {% endfor %}
                     </div>
@@ -84,15 +84,15 @@
 
                 <!-- Thin Content Gaps -->
                 {% if optimization_engine.gap_analysis.thin_content %}
-                <div style="padding: 1.5rem; border-radius: 18px; background: rgba(234, 88, 12, 0.03); border: 1px solid rgba(234, 88, 12, 0.15);">
-                    <strong style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-primary); font-size: 1.05rem; margin-bottom: 1rem;">
+                <div class="alert-panel alert-panel-warning">
+                    <div class="alert-panel-header">
                         <i class="fas fa-file-alt" style="color: #ea580c;"></i> Thin Content Detected
-                    </strong>
+                    </div>
                     <div style="display: grid; gap: 0.75rem;">
                         {% for item in optimization_engine.gap_analysis.thin_content %}
-                        <div style="padding: 0.9rem 1rem; border-radius: 12px; background: var(--bg-surface); border-left: 3px solid #ea580c;">
-                            <strong style="display: block; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.3rem;">{{ item.title }}</strong>
-                            <p style="margin: 0; font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;">{{ item.reason }}</p>
+                        <div class="alert-block alert-block-warning">
+                            <span class="alert-block-title">{{ item.title }}</span>
+                            <p class="alert-block-text">{{ item.reason }}</p>
                         </div>
                         {% endfor %}
                     </div>
@@ -104,13 +104,13 @@
             {% if optimization_engine.keyword_clusters %}
             <div>
                 <strong style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--brand-primary); margin-bottom: 1.25rem;">Keyword Intent Clusters</strong>
-                <div style="display: grid; gap: 1.25rem;">
+                <div class="data-card-grid">
                     {% for cluster_name, keywords in optimization_engine.keyword_clusters.items %}
-                    <div style="padding: 1.25rem; border-radius: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
-                        <p style="margin: 0 0 0.75rem; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--text-secondary);">{{ cluster_name }}</p>
+                    <div class="keyword-cluster-card">
+                        <p class="keyword-cluster-title">{{ cluster_name }}</p>
                         <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
                             {% for kw in keywords %}
-                            <span style="display: inline-flex; align-items: center; padding: 0.35rem 0.75rem; border-radius: 999px; background: rgba(14, 165, 233, 0.08); color: var(--brand-primary); font-size: 0.8rem; border: 1px solid rgba(14, 165, 233, 0.2); white-space: nowrap;">{{ kw }}</span>
+                            <span class="keyword-pill">{{ kw }}</span>
                             {% endfor %}
                         </div>
                     </div>
@@ -159,21 +159,21 @@
                     {% endfor %}
                 {% endif %}
                 
-                <form method="post" action="{% url 'content:workspace-content-generate' %}" style="display: grid; gap: 1.25rem;">
+                <form method="post" action="{% url 'content:workspace-content-generate' %}" class="premium-form">
                     {% csrf_token %}
                     {% for field in form %}
-                    <label style="display: grid; gap: 0.5rem;">
-                        <span style="font-weight: 700; color: var(--ink);">{{ field.label }}</span>
+                    <div class="form-group">
+                        <label>{{ field.label }}</label>
                         {{ field }}
                         {% if field.help_text %}
-                        <span style="font-size: 0.82rem; color: var(--text-muted);">{{ field.help_text }}</span>
+                        <small class="text-muted">{{ field.help_text }}</small>
                         {% endif %}
                         {% for error in field.errors %}
-                        <span style="font-size: 0.82rem; color: #fca5a5;">{{ error }}</span>
+                        <div class="text-error">{{ error }}</div>
                         {% endfor %}
-                    </label>
+                    </div>
                     {% endfor %}
-                    <button type="submit" class="button button-primary" style="margin-top: 0.5rem; justify-self: start;">Generate Engine Draft</button>
+                    <button type="submit" class="button button-primary" style="margin-top: 1rem; width: 100%;">Generate Engine Draft</button>
                 </form>
                 {% endif %}
             </article>
@@ -283,26 +283,26 @@
             </div>
             <div class="panel-scroll">
                 {% for item in generated_content_list %}
-                <a href="{% url 'content:workspace-content-detail' item.pk %}" style="display: block; padding: 1.25rem; border-radius: 16px; background: rgba(255, 255, 255, 0.02); text-decoration: none; color: inherit; border: 1px solid rgba(255,255,255,0.05); margin-bottom: 0.75rem; transition: border-color 0.2s, background 0.2s;">
-                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
-                        <strong style="color: var(--ink); font-size: 1.1rem;">{{ item.title }}</strong>
+                <a href="{% url 'content:workspace-content-detail' item.pk %}" class="list-card">
+                    <div class="list-card-header">
+                        <span class="list-card-title">{{ item.title }}</span>
                         <span class="score-pill score-high">{{ item.get_output_type_display }}</span>
                     </div>
-                    <div style="margin-top: 0.5rem; color: var(--text-muted); font-size: 0.88rem;">
+                    <div class="list-card-meta">
                         {{ item.business_type }}{% if item.location %} targeting {{ item.location }}{% endif %}
                     </div>
                     
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 0.75rem;">
+                    <div class="list-card-footer">
                         {% if item.source_seo_campaign %}
                         <div style="color: var(--text-muted); font-size: 0.82rem;">
-                            <strong style="color: var(--ink);">System Source:</strong>
+                            <strong style="color: var(--text-primary);">System Source:</strong>
                             {{ item.source_seo_campaign.title }} ({{ item.source_seo_campaign.get_status_display }})
                         </div>
                         {% else %}
                         <div></div>
                         {% endif %}
                         
-                        <div style="font-size: 0.82rem; color: var(--signal); font-weight: 700;">View Draft &rarr;</div>
+                        <div style="font-size: 0.82rem; color: var(--brand-primary); font-weight: 700;">View Draft &rarr;</div>
                     </div>
                 </a>
                 {% empty %}

@@ -1743,6 +1743,128 @@ input::placeholder, textarea::placeholder {
     border: 1px solid rgba(255, 255, 255, 0.07);
 }
 
+/* ── Alert Panels (Gap Analysis) ───────────────────────────────────────── */
+.alert-panel {
+    padding: 1.5rem;
+    border-radius: 18px;
+    margin-bottom: 1.5rem;
+}
+.alert-panel-danger {
+    background: rgba(220, 38, 38, 0.03);
+    border: 1px solid rgba(220, 38, 38, 0.15);
+}
+.alert-panel-warning {
+    background: rgba(234, 88, 12, 0.03);
+    border: 1px solid rgba(234, 88, 12, 0.15);
+}
+.alert-panel-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--text-primary);
+    font-size: 1.05rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+.alert-block {
+    padding: 0.9rem 1rem;
+    border-radius: 12px;
+    background: var(--bg-surface);
+    margin-bottom: 0.75rem;
+}
+.alert-block:last-child {
+    margin-bottom: 0;
+}
+.alert-block-danger {
+    border-left: 3px solid #ef4444;
+}
+.alert-block-warning {
+    border-left: 3px solid #ea580c;
+}
+.alert-block-title {
+    display: block;
+    font-size: 0.9rem;
+    color: var(--text-primary);
+    font-weight: 700;
+    margin-bottom: 0.3rem;
+}
+.alert-block-text {
+    margin: 0;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+
+/* ── Asset Library Cards ────────────────────────────────────────────────── */
+.list-card {
+    display: block;
+    padding: 1.25rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.02);
+    text-decoration: none;
+    color: inherit;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    margin-bottom: 0.75rem;
+    transition: all 0.2s ease;
+}
+.list-card:hover {
+    background: rgba(255, 255, 255, 0.04);
+    border-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+.list-card-header {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: center;
+}
+.list-card-title {
+    color: var(--ink);
+    font-size: 1.1rem;
+    font-weight: 700;
+}
+.list-card-meta {
+    margin-top: 0.5rem;
+    color: var(--text-muted);
+    font-size: 0.88rem;
+}
+.list-card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+    padding-top: 0.75rem;
+}
+
+/* ── Keyword Clusters ──────────────────────────────────────────────────── */
+.keyword-cluster-card {
+    padding: 1.25rem;
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid var(--border-glass);
+}
+.keyword-cluster-title {
+    margin: 0 0 0.75rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+}
+.keyword-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.35rem 0.75rem;
+    border-radius: 999px;
+    background: rgba(14, 165, 233, 0.08);
+    color: var(--brand-primary);
+    font-size: 0.8rem;
+    border: 1px solid rgba(14, 165, 233, 0.2);
+    white-space: nowrap;
+}
+
 /* ── Responsive Fixes ──────────────────────────────────────────────────── */
 @media (max-width: 768px) {
     .workspace-command-bar { top: 60px; }
