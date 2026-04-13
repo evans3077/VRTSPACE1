@@ -384,6 +384,7 @@ input::placeholder, textarea::placeholder {
     display: flex;
     flex-direction: column;
     gap: 0.65rem;
+    flex: 1 0 auto;
 }
 
 .form-group label {

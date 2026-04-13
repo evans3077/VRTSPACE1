@@ -40,7 +40,7 @@
             <div class="audit-panel" id="audit">
                 <h2>Start with a live website audit</h2>
                 <p>Scan the site, see the score, group the highest-impact fixes, and route the result into a user workspace instead of a sales handoff.</p>
-                <form method="post" action="{% url 'tools:free-seo-audit' %}" class="premium-form">
+                <form id="audit-workflow" class="premium-form" method="post" action="{% url 'tools:free-seo-audit' %}" style="display: flex !important; flex-direction: column !important; gap: 1.5rem;">
                     {% csrf_token %}
                     {{ audit_form.non_field_errors }}
 
