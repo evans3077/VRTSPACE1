@@ -1050,9 +1050,9 @@ input::placeholder, textarea::placeholder {
 
 .mega-menu-panel {
     position: absolute;
-    top: calc(100% + 0.75rem);
+    top: 100%;
     left: 50%;
-    transform: translateX(-50%) translateY(12px);
+    transform: translateX(-50%) translateY(6px);
     width: 90vw;
     max-width: 1100px;
     background: var(--bg-glass-heavy) !important;
@@ -1067,7 +1067,7 @@ input::placeholder, textarea::placeholder {
     z-index: 1000;
     opacity: 0;
     pointer-events: none;
-    transition: opacity 0.25s ease, transform 0.25s ease;
+    transition: opacity 0.2s ease, transform 0.2s ease;
 }
 
 .mega-menu-panel.is-open {

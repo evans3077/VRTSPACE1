@@ -41,13 +41,13 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body>
-    <header class="site-header" x-data="{ openMenu: null }">
+    <header class="site-header" x-data="{ openMenu: null, _closeTimer: null, scheduleClose() { this._closeTimer = setTimeout(() => { this.openMenu = null; }, 150); }, cancelClose() { clearTimeout(this._closeTimer); } }">
         <div class="container nav-shell">
             <a class="brand" href="/">VRT SPACE AGENCY</a>
             <div class="nav-actions">
                 <nav class="nav-links" aria-label="Primary">
                     <!-- Platform Mega-Menu -->
-                    <div class="nav-item-wrapper" @mouseenter="openMenu = 'platform'" @mouseleave="openMenu = null">
+                    <div class="nav-item-wrapper" @mouseenter="cancelClose(); openMenu = 'platform'" @mouseleave="scheduleClose()">
                         <button class="mega-menu-trigger">
                             Platform <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
                         </button>
@@ -99,7 +99,7 @@
                     </div>
 
                     <!-- Solutions Mega-Menu -->
-                    <div class="nav-item-wrapper" @mouseenter="openMenu = 'solutions'" @mouseleave="openMenu = null">
+                    <div class="nav-item-wrapper" @mouseenter="cancelClose(); openMenu = 'solutions'" @mouseleave="scheduleClose()">
                         <button class="mega-menu-trigger">
                             Solutions <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
                         </button>
