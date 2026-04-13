@@ -42,7 +42,7 @@
                 </p>
             </div>
 
-            <form method="post" style="display: grid; gap: 1rem;">
+            <form method="post" class="premium-form">
                 {% csrf_token %}
                 {% if audit_run %}
                 <input type="hidden" name="audit" value="{{ audit_run.pk }}">
@@ -50,18 +50,18 @@
                 {% if selected_package %}
                 <input type="hidden" name="package" value="{{ selected_package.name|lower }}">
                 {% endif %}
-                <div>
-                    <label for="{{ form.email.id_for_label }}" style="display: block; margin-bottom: 0.4rem; font-weight: 700;">Email</label>
+                <div class="form-group">
+                    <label for="{{ form.email.id_for_label }}">Email</label>
                     {{ form.email }}
                     {% if form.email.errors %}
-                    <div style="color: #dc2626; font-size: 0.85rem; margin-top: 0.35rem;">{{ form.email.errors|join:", " }}</div>
+                    <div class="text-error">{{ form.email.errors|join:", " }}</div>
                     {% endif %}
                 </div>
-                <div>
-                    <label for="{{ form.password.id_for_label }}" style="display: block; margin-bottom: 0.4rem; font-weight: 700;">Password</label>
+                <div class="form-group">
+                    <label for="{{ form.password.id_for_label }}">Password</label>
                     {{ form.password }}
                     {% if form.password.errors %}
-                    <div style="color: #dc2626; font-size: 0.85rem; margin-top: 0.35rem;">{{ form.password.errors|join:", " }}</div>
+                    <div class="text-error">{{ form.password.errors|join:", " }}</div>
                     {% endif %}
                 </div>
                 <button type="submit" class="button button-primary">Create Free Workspace</button>

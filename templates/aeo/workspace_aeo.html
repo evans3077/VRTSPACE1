@@ -240,14 +240,17 @@
                 {% if item.remaining is not None %}<span style="font-size: 0.78rem; color: #94a3b8;"> &middot; {{ item.remaining }} remaining</span>{% endif %}
             </div>
             {% endif %}{% endfor %}{% endif %}
-            <form method="post">
+            <form method="post" class="premium-form">
                 {% csrf_token %}
-                <div style="margin-bottom: 1.25rem;">
-                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.5rem;">Target Keyword or Question</label>
-                    <input type="text" name="target_keyword" value="{{ form.target_keyword.value|default:'' }}" placeholder="e.g. best events gardens in Nairobi" style="width: 100%; box-sizing: border-box;">
-                    {% if form.target_keyword.errors %}<p style="color: #f87171; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.target_keyword.errors.as_text }}</p>{% endif %}
+                {% for field in form %}
+                <div class="form-group">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}<small class="text-muted">{{ field.help_text }}</small>{% endif %}
+                    {% if field.errors %}<div class="text-error">{{ field.errors|join:", " }}</div>{% endif %}
                 </div>
-                <button type="submit" class="button-mega" style="width: 100%;">
+                {% endfor %}
+                <button type="submit" class="button-mega" style="width: 100%; margin-top: 1rem;">
                     <i class="fas fa-bolt"></i> &nbsp;Run Intelligence Scan
                 </button>
             </form>
