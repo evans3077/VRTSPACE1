@@ -10,7 +10,7 @@ from apps.leads.services import get_workspace_projects
 from apps.leads.models import UsageRecord
 
 from .forms import AEOAuditRequestForm
-from .services import build_aeo_payload, create_aeo_audit, get_latest_aeo_audit
+from .services import build_aeo_payload, build_aeo_competitor_benchmarks, create_aeo_audit, get_latest_aeo_audit
 from apps.seo.models import SEOProjectProfile
 
 
@@ -42,6 +42,16 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
         else:
             live_payload = latest_aeo_audit.output_json if latest_aeo_audit else {}
 
+        # Build competitor benchmark
+        profile = SEOProjectProfile.objects.filter(project=project).first() if project else None
+        _bench_audit = latest_aeo_audit.source_audit_run if latest_aeo_audit else None
+        competitor_benchmark = build_aeo_competitor_benchmarks(
+            project=project,
+            profile=profile,
+            target_keyword=getattr(latest_aeo_audit, "target_keyword", "") or "",
+            aeo_intelligence=aeo_intelligence,
+        ) if project and _bench_audit else {"client": None, "competitors": [], "has_data": False}
+
         return render(
             request,
             self.template_name,
@@ -53,6 +63,7 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 "aeo_payload": live_payload,
                 "aeo_history": aeo_history,
                 "aeo_intelligence": aeo_intelligence,
+                "competitor_benchmark": competitor_benchmark,
                 "workspace_credit_actions": build_credit_action_guide(project, request.user) if project else [],
             },
         )
@@ -130,6 +141,15 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
         else:
             live_payload_post = aeo_audit.output_json
 
+        # Build competitor benchmark post-run
+        profile_bench = SEOProjectProfile.objects.filter(project=project).first()
+        competitor_benchmark_post = build_aeo_competitor_benchmarks(
+            project=project,
+            profile=profile_bench,
+            target_keyword=aeo_audit.target_keyword or "",
+            aeo_intelligence=aeo_intelligence,
+        )
+
         return render(
             request,
             self.template_name,
@@ -141,6 +161,7 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 "aeo_payload": live_payload_post,
                 "aeo_history": aeo_history,
                 "aeo_intelligence": aeo_intelligence,
+                "competitor_benchmark": competitor_benchmark_post,
                 "workspace_credit_actions": build_credit_action_guide(project, request.user),
             },
         )

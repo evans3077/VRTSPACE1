@@ -23,6 +23,7 @@
             <a class="page-jump-link" href="#aeo-recommendations"><i class="fas fa-lightbulb" aria-hidden="true"></i> Recommendations</a>
             <a class="page-jump-link" href="#aeo-entity"><i class="fas fa-building" aria-hidden="true"></i> Entity</a>
             <a class="page-jump-link" href="#aeo-history"><i class="fas fa-history" aria-hidden="true"></i> History</a>
+            <a class="page-jump-link" href="#aeo-benchmark"><i class="fas fa-chart-bar" aria-hidden="true"></i> Benchmark</a>
             <a class="page-jump-link" href="#aeo-run"><i class="fas fa-redo" aria-hidden="true"></i> Run Again</a>
         </div>
     </div>
@@ -491,6 +492,127 @@
             </div>
         </article>
         {% endif %}
+
+        <!-- Competitor Benchmark Panel (Priority 4) -->
+        <article id="aeo-benchmark" class="system-card" style="margin-bottom: 2rem;">
+            <div style="margin-bottom: 1.5rem;">
+                <p class="eyebrow" style="color: var(--brand-primary);">Competitive Intelligence</p>
+                <h2 style="font-size: 2rem; margin: 0 0 0.5rem;">AEO Benchmark</h2>
+                <p style="color: #94a3b8; line-height: 1.6; max-width: 740px; margin: 0;">
+                    How your site scores on each AEO dimension compared to competitors found in your market. Scores are computed from the same signals we use for your site.
+                </p>
+            </div>
+
+            {% if competitor_benchmark.client %}
+
+            {% if not competitor_benchmark.has_data %}
+            <!-- Empty state: no competitors yet -->
+            <div style="padding: 2rem; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px dashed rgba(255,255,255,0.1); text-align: center;">
+                <div style="font-size: 2rem; margin-bottom: 0.75rem;">&#x1F50D;</div>
+                <p style="font-size: 1rem; font-weight: 700; color: #f1f5f9; margin: 0 0 0.5rem;">No competitors discovered yet</p>
+                <p style="font-size: 0.88rem; color: #94a3b8; line-height: 1.6; margin: 0 0 1.25rem; max-width: 480px; margin-left: auto; margin-right: auto;">
+                    Run an SEO discovery audit to extract competitors from the SERP. Once discovered, they will appear here for side-by-side AEO comparison. You can also add competitors manually in the SEO workspace.
+                </p>
+                <a class="button button-secondary" href="{% url 'seo:workspace-seo' %}">Add competitors in SEO workspace &rarr;</a>
+            </div>
+            {% else %}
+
+            <!-- Dimension legend -->
+            <div style="display: flex; gap: 1.5rem; flex-wrap: wrap; margin-bottom: 1.5rem;">
+                {% for label, color, icon in dimension_meta %}
+                <div style="display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: #94a3b8;">
+                    <span style="display: inline-block; width: 10px; height: 10px; border-radius: 50%; background: {{ color }};"></span>
+                    {{ label }}
+                </div>
+                {% endfor %}
+            </div>
+
+            <!-- Benchmark table -->
+            <div style="overflow-x: auto; border-radius: 16px; border: 1px solid rgba(255,255,255,0.07);">
+                <table style="width: 100%; border-collapse: collapse; min-width: 680px;">
+                    <thead>
+                        <tr style="background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.08);">
+                            <th style="padding: 0.9rem 1rem; text-align: left; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; font-weight: 700;">Site</th>
+                            <th style="padding: 0.9rem 1rem; text-align: center; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; font-weight: 700;">Readiness</th>
+                            <th style="padding: 0.9rem 1rem; text-align: center; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; font-weight: 700;">Visibility</th>
+                            <th style="padding: 0.9rem 1rem; text-align: center; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; font-weight: 700;">Entity</th>
+                            <th style="padding: 0.9rem 1rem; text-align: center; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; font-weight: 700;">Structure</th>
+                            <th style="padding: 0.9rem 1rem; text-align: center; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; font-weight: 700;">Completeness</th>
+                            <th style="padding: 0.9rem 1rem; text-align: center; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; font-weight: 700;">FAQ Schema</th>
+                            <th style="padding: 0.9rem 1rem; text-align: center; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; font-weight: 700;">Avg Words</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <!-- Client row -->
+                        {% with site=competitor_benchmark.client %}
+                        <tr style="background: rgba(14,165,233,0.04); border-bottom: 1px solid rgba(255,255,255,0.06);">
+                            <td style="padding: 0.9rem 1rem;">
+                                <div style="display: flex; flex-direction: column; gap: 0.15rem;">
+                                    <span style="font-size: 0.82rem; font-weight: 800; color: #0ea5e9;">Your Site</span>
+                                    <span style="font-size: 0.7rem; color: #94a3b8;">{{ site.domain }}</span>
+                                </div>
+                            </td>
+                            <td style="padding: 0.9rem 1rem; text-align: center;">
+                                <span style="font-size: 1.2rem; font-weight: 900; color: {% if site.readiness >= 70 %}#4ade80{% elif site.readiness >= 50 %}#fbbf24{% else %}#f87171{% endif %};">{{ site.readiness }}</span>
+                            </td>
+                            <td style="padding: 0.9rem 1rem; text-align: center; font-weight: 700; color: {% if site.visibility >= 70 %}#4ade80{% elif site.visibility >= 50 %}#fbbf24{% else %}#f87171{% endif %};">{{ site.visibility }}</td>
+                            <td style="padding: 0.9rem 1rem; text-align: center; font-weight: 700; color: {% if site.entity >= 70 %}#4ade80{% elif site.entity >= 50 %}#fbbf24{% else %}#f87171{% endif %};">{{ site.entity }}</td>
+                            <td style="padding: 0.9rem 1rem; text-align: center; font-weight: 700; color: {% if site.structure >= 70 %}#4ade80{% elif site.structure >= 50 %}#fbbf24{% else %}#f87171{% endif %};">{{ site.structure }}</td>
+                            <td style="padding: 0.9rem 1rem; text-align: center; font-weight: 700; color: {% if site.completeness >= 70 %}#4ade80{% elif site.completeness >= 50 %}#fbbf24{% else %}#f87171{% endif %};">{{ site.completeness }}</td>
+                            <td style="padding: 0.9rem 1rem; text-align: center;">
+                                {% if site.has_faq_schema %}<span style="color: #4ade80; font-size: 0.85rem; font-weight: 700;">Yes</span>{% else %}<span style="color: #f87171; font-size: 0.85rem;">No</span>{% endif %}
+                            </td>
+                            <td style="padding: 0.9rem 1rem; text-align: center; font-size: 0.88rem; color: {% if site.avg_words >= 500 %}#4ade80{% elif site.avg_words >= 200 %}#fbbf24{% else %}#f87171{% endif %};">{{ site.avg_words }}</td>
+                        </tr>
+                        {% endwith %}
+
+                        <!-- Competitor rows -->
+                        {% for comp in competitor_benchmark.competitors %}
+                        <tr style="border-bottom: 1px solid rgba(255,255,255,0.04);">
+                            <td style="padding: 0.9rem 1rem;">
+                                <div style="display: flex; flex-direction: column; gap: 0.15rem;">
+                                    <span style="font-size: 0.82rem; font-weight: 700; color: #f1f5f9;">{{ comp.label }}</span>
+                                    {% if comp.source == "local_pack" %}<span style="font-size: 0.65rem; padding: 0.15rem 0.4rem; border-radius: 4px; background: rgba(251,191,36,0.1); color: #fbbf24; width: fit-content;">Local Pack</span>{% elif comp.source == "serp_source" %}<span style="font-size: 0.65rem; padding: 0.15rem 0.4rem; border-radius: 4px; background: rgba(168,85,247,0.1); color: #a855f7; width: fit-content;">AI Source</span>{% else %}<span style="font-size: 0.7rem; color: #94a3b8;">{{ comp.domain }}</span>{% endif %}
+                                </div>
+                            </td>
+                            {% if comp.unknown %}
+                            <td colspan="7" style="padding: 0.9rem 1rem; text-align: left;">
+                                <span style="font-size: 0.8rem; color: #94a3b8; font-style: italic;">Competitor spotted in AI results &mdash; run SEO analysis on this domain to score it</span>
+                            </td>
+                            {% else %}
+                            <td style="padding: 0.9rem 1rem; text-align: center;">
+                                <span style="font-size: 1.1rem; font-weight: 900; color: {% if comp.readiness >= 70 %}#4ade80{% elif comp.readiness >= 50 %}#fbbf24{% else %}#f87171{% endif %};">{{ comp.readiness }}</span>
+                            </td>
+                            <td style="padding: 0.9rem 1rem; text-align: center; font-weight: 700; color: {% if comp.visibility >= 70 %}#4ade80{% elif comp.visibility >= 50 %}#fbbf24{% else %}#f87171{% endif %};">{{ comp.visibility }}</td>
+                            <td style="padding: 0.9rem 1rem; text-align: center; font-weight: 700; color: {% if comp.entity >= 70 %}#4ade80{% elif comp.entity >= 50 %}#fbbf24{% else %}#f87171{% endif %};">{{ comp.entity }}</td>
+                            <td style="padding: 0.9rem 1rem; text-align: center; font-weight: 700; color: {% if comp.structure >= 70 %}#4ade80{% elif comp.structure >= 50 %}#fbbf24{% else %}#f87171{% endif %};">{{ comp.structure }}</td>
+                            <td style="padding: 0.9rem 1rem; text-align: center; font-weight: 700; color: {% if comp.completeness >= 70 %}#4ade80{% elif comp.completeness >= 50 %}#fbbf24{% else %}#f87171{% endif %};">{{ comp.completeness }}</td>
+                            <td style="padding: 0.9rem 1rem; text-align: center;">
+                                {% if comp.has_faq_schema %}<span style="color: #4ade80; font-size: 0.85rem; font-weight: 700;">Yes</span>{% else %}<span style="color: #f87171; font-size: 0.85rem;">No</span>{% endif %}
+                            </td>
+                            <td style="padding: 0.9rem 1rem; text-align: center; font-size: 0.88rem; color: {% if comp.avg_words >= 500 %}#4ade80{% elif comp.avg_words >= 200 %}#fbbf24{% else %}#f87171{% endif %};">{{ comp.avg_words }}</td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Gap callout: where you're losing -->
+            {% if competitor_benchmark.competitors %}
+            <div style="margin-top: 1.25rem; padding: 1rem 1.25rem; border-radius: 14px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 0.75rem;">
+                <i class="fas fa-info-circle" style="color: #94a3b8; flex-shrink: 0;"></i>
+                <p style="font-size: 0.82rem; color: #94a3b8; margin: 0; line-height: 1.5;">
+                    Scores above 68 are in the citation zone for most LLM engines. Add competitors via SEO workspace to get full scored benchmarks. Run a fresh AEO analysis after adding new keywords to update all scores.
+                </p>
+            </div>
+            {% endif %}
+
+            {% endif %}<!-- /has_data -->
+            {% else %}
+            <p style="color: #94a3b8; font-size: 0.88rem;">Run an AEO analysis first to unlock competitor benchmarking.</p>
+            {% endif %}<!-- /client -->
+        </article>
 
         <!-- Recommendations -->
         <article id="aeo-recommendations" class="system-card">

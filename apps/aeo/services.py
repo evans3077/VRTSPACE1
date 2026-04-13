@@ -531,3 +531,134 @@ def get_latest_aeo_audit(project):
         .order_by("-created_at")
         .first()
     )
+
+
+def build_aeo_competitor_benchmarks(project, profile=None, target_keyword="", aeo_intelligence=None):
+    """Build a side-by-side AEO benchmark comparing the client site against discovered competitors.
+
+    Sources in priority order:
+    1. Active SEOCompetitor records with snapshots
+    2. Local Pack entries from intelligence metadata
+    3. AEO Overview source domains from intelligence metadata
+    Falls back to an empty list when no competitor data is available.
+    """
+    from apps.seo.models import SEOCompetitor
+
+    benchmarks = []
+    seen_domains = set()
+
+    # ── Client site baseline ───────────────────────────────────────────────
+    audit_run = getattr(project, "latest_audit_run", None)
+    if not audit_run:
+        return {"client": None, "competitors": [], "dimensions": []}
+
+    client_vis = _build_visibility_score(audit_run, target_keyword)
+    client_ent = _build_entity_score(profile, audit_run, target_keyword)
+    client_str = _build_structure_score(audit_run, target_keyword)
+    client_cmp = _build_completeness_score(audit_run, target_keyword)
+    client_readiness = round(client_vis * 0.35 + client_ent * 0.25 + client_str * 0.25 + client_cmp * 0.15)
+
+    client = {
+        "label": audit_run.normalized_domain or "Your Site",
+        "domain": audit_run.normalized_domain or "",
+        "is_client": True,
+        "visibility": client_vis,
+        "entity": client_ent,
+        "structure": client_str,
+        "completeness": client_cmp,
+        "readiness": client_readiness,
+        "has_faq_schema": any(p.has_faq_schema for p in audit_run.pages.all()[:15]),
+        "has_schema": any((p.schema_count or 0) > 0 for p in audit_run.pages.all()[:15]),
+        "avg_words": round(sum((p.word_count or 0) for p in audit_run.pages.all()[:15]) / max(audit_run.pages.all()[:15].count(), 1)),
+        "source": "audit",
+    }
+    if audit_run.normalized_domain:
+        seen_domains.add(audit_run.normalized_domain)
+
+    # ── Source 1: SEOCompetitor records with snapshots ─────────────────────
+    active_comps = SEOCompetitor.objects.filter(
+        project=project, is_active=True, normalized_domain__isnull=False
+    ).prefetch_related("snapshots")[:4]
+
+    for comp in active_comps:
+        domain = comp.normalized_domain
+        if not domain or domain in seen_domains:
+            continue
+        seen_domains.add(domain)
+        snap = comp.snapshots.order_by("-created_at").first()
+        if snap and snap.output_json:
+            pages_data = snap.output_json.get("pages", [])
+            has_faq = any(p.get("has_faq_schema") for p in pages_data)
+            has_schema = any((p.get("schema_count") or 0) > 0 for p in pages_data)
+            avg_w = round(sum(p.get("word_count", 0) for p in pages_data) / max(len(pages_data), 1))
+            # Approximate AEO dimensions from snapshot data
+            vis = min(round((snap.output_json.get("aeo_score", 0) + snap.output_json.get("content_score", 0) + snap.output_json.get("on_page_score", 0)) / 3), 100)
+            ent = 45 + (15 if has_schema else 0) + (10 if has_faq else 0)
+            struct = 40 + (20 if has_faq else 0) + (15 if has_schema else 0)
+            comp_ = 45 + (10 if avg_w >= 200 else 0) + (15 if avg_w >= 500 else 0)
+        else:
+            # Heuristic-only if no snapshot — score is opaque/unknown
+            has_faq = has_schema = False
+            avg_w = 0
+            vis = ent = struct = comp_ = 0  # unknown
+
+        readiness = round(vis * 0.35 + ent * 0.25 + struct * 0.25 + comp_ * 0.15)
+        benchmarks.append({
+            "label": comp.label or domain,
+            "domain": domain,
+            "is_client": False,
+            "visibility": vis,
+            "entity": ent,
+            "structure": struct,
+            "completeness": comp_,
+            "readiness": readiness,
+            "has_faq_schema": has_faq,
+            "has_schema": has_schema,
+            "avg_words": avg_w,
+            "source": "competitor_record",
+            "unknown": vis == 0,
+        })
+
+    # ── Source 2 & 3: SERP intelligence (Local Pack + AEO sources) ─────────
+    intel = aeo_intelligence or {}
+    serp_sources = []
+
+    # Local pack competitors
+    for place in intel.get("local_pack", [])[:3]:
+        domain = place.get("link", "").replace("https://", "").replace("http://", "").split("/")[0]
+        if domain and domain not in seen_domains:
+            serp_sources.append({"label": place.get("title", domain), "domain": domain, "source": "local_pack"})
+            seen_domains.add(domain)
+
+    # AEO overview source domains
+    for source in intel.get("aeo_overview", {}).get("sources", [])[:3]:
+        raw = source.get("link", "")
+        domain = raw.replace("https://", "").replace("http://", "").split("/")[0]
+        if domain and domain not in seen_domains:
+            serp_sources.append({"label": source.get("text", domain), "domain": domain, "source": "serp_source"})
+            seen_domains.add(domain)
+
+    for entry in serp_sources[:3]:
+        # No page data for SERP sources — show as "competitor spotted in AI results"
+        benchmarks.append({
+            "label": entry["label"],
+            "domain": entry["domain"],
+            "is_client": False,
+            "visibility": None,
+            "entity": None,
+            "structure": None,
+            "completeness": None,
+            "readiness": None,
+            "has_faq_schema": None,
+            "has_schema": None,
+            "avg_words": None,
+            "source": entry["source"],
+            "unknown": True,
+        })
+
+    return {
+        "client": client,
+        "competitors": benchmarks[:4],
+        "dimensions": ["visibility", "entity", "structure", "completeness"],
+        "has_data": bool(benchmarks),
+    }
