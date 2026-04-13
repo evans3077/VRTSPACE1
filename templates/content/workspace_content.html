@@ -64,10 +64,11 @@
                 </p>
             </div>
 
+            {% if optimization_engine.gap_analysis.missing_layers or optimization_engine.gap_analysis.thin_content %}
             <div class="system-grid" style="gap: 1.5rem; margin-bottom: 2rem;">
                 <!-- Missing Content Layers -->
                 {% if optimization_engine.gap_analysis.missing_layers %}
-                <div class="alert-panel alert-panel-danger">
+                <div class="alert-panel alert-panel-danger" style="margin: 0;">
                     <div class="alert-panel-header">
                         <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i> Missing Page Layers
                     </div>
@@ -95,7 +96,7 @@
 
                 <!-- Thin Content Gaps -->
                 {% if optimization_engine.gap_analysis.thin_content %}
-                <div class="alert-panel alert-panel-warning">
+                <div class="alert-panel alert-panel-warning" style="margin: 0;">
                     <div class="alert-panel-header">
                         <i class="fas fa-file-alt" style="color: #ea580c;"></i> Thin Content Detected
                     </div>
@@ -125,6 +126,13 @@
                 </div>
                 {% endif %}
             </div>
+            {% else %}
+            <div class="ws-empty-state" style="margin-bottom: 2rem;">
+                <div class="ws-empty-icon"><i class="fas fa-microscope"></i></div>
+                <p class="ws-empty-title">Waiting on Competitive Data</p>
+                <p class="ws-empty-desc" style="max-width: 500px; margin: 0 auto;">There are no execution gaps detected against tracking targets at the moment. When competitor vulnerabilities hit the threshold, precision metrics tracking Missing Layers and Content Depth ratios will appear here.</p>
+            </div>
+            {% endif %}
 
             <!-- Keyword Intent Clusters -->
             {% if optimization_engine.keyword_clusters %}
@@ -154,6 +162,8 @@
                     <p class="eyebrow">Generator</p>
                     <h2 style="font-size: 1.7rem;">Build structured output</h2>
                 </div>
+                
+                <div style="max-width: 550px;">
                 
                 {% if not project %}
                 <div class="evidence-card" style="margin: 0;">
@@ -202,10 +212,11 @@
                     <button type="submit" class="button button-primary" style="margin-top: 1rem; width: 100%;">Generate Engine Draft</button>
                 </form>
                 {% endif %}
+                </div>
             </article>
 
-            <div class="system-card" style="background: transparent; box-shadow: none; border: none; padding: 0;">
-                <article class="system-card" style="margin-bottom: 2rem;">
+            <div style="padding: 1rem 0;">
+                <article class="system-card" style="margin-bottom: 2rem; background: var(--bg-surface); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: none;">
                     <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                         <p class="eyebrow">Generator Architecture</p>
                         <h2 style="font-size: 1.5rem;">What the engine produces</h2>
@@ -294,7 +305,13 @@
                     <div class="ws-empty-state">
                         <div class="ws-empty-icon"><i class="fas fa-file-alt"></i></div>
                         <p class="ws-empty-title">Pipeline empty</p>
-                        <p class="ws-empty-desc">Refresh the SEO hub first to build the content brief queue from the current page map and keyword opportunities.</p>
+                        <p class="ws-empty-desc" style="max-width: 450px; margin: 0 auto 1.5rem;">The editorial queue is empty. Sync from the SEO Intelligence Hub to automatically build content briefs from active keyword clusters and missing page layers.</p>
+                        {% if project and project.latest_audit_run %}
+                        <form method="post" action="{% url 'content:workspace-content-editorial-sync' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="button button-primary">Sync Pipeline Now</button>
+                        </form>
+                        {% endif %}
                     </div>
                     {% endfor %}
                 </div>
