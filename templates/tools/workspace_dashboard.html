@@ -170,13 +170,13 @@
         </article>
         {% endif %}
 
-        <div class="layout-split-wide" style="margin-bottom: 0;">
+        <div class="layout-split">
             <article class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1.25rem;">
                     <p class="eyebrow">Current workspace</p>
                     <h2 style="font-size: 1.8rem;">What is active right now</h2>
                 </div>
-                <div class="ws-stat-row">
+                <div class="ws-stat-row" style="grid-template-columns: repeat(2, 1fr);">
                     <div class="stat-tile">
                         <p class="eyebrow">Domain</p>
                         <h3>{% if latest_audit %}{{ latest_audit.normalized_domain }}{% elif project.normalized_domain %}{{ project.normalized_domain }}{% else %}-{% endif %}</h3>

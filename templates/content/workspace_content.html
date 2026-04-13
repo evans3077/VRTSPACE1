@@ -155,7 +155,7 @@
         </article>
         {% endif %}
 
-        <div class="layout-split-wide" style="margin-top: 1.5rem;">
+        <div class="layout-split" style="margin-top: 1.5rem;">
             
             <article class="system-card" id="generate">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1.5rem;">
@@ -163,22 +163,24 @@
                     <h2 style="font-size: 1.7rem;">Build structured output</h2>
                 </div>
                 
-                <div style="max-width: 550px;">
-                
                 {% if not project %}
-                <div class="evidence-card" style="margin: 0;">
-                    <div class="evidence-card-text">Create a project first. Content generation should live inside a specific project so drafts, audits, SEO briefs, and credit usage stay consistent.</div>
-                    <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                        <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}#start-audit">Start with audit</a>
+                <div class="ws-empty-state">
+                    <div class="ws-empty-icon"><i class="fas fa-folder-plus"></i></div>
+                    <p class="ws-empty-title">No workspace linked</p>
+                    <p class="ws-empty-desc">Create a project first. Content generation lives inside a project so drafts, audits, SEO briefs and credit usage stay consistent.</p>
+                    <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center;">
+                        <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}#start-audit"><i class="fas fa-play"></i> Start with audit</a>
                         <a class="button button-secondary" href="{% url 'tools:workspace-dashboard' %}#new-project">Create workspace</a>
                     </div>
                 </div>
                 {% elif not project.latest_audit_run %}
-                <div class="evidence-card" style="margin: 0;">
-                    <div class="evidence-card-text">This project needs its first audit before content generation. The content engine uses the audit as the base context for page decisions, internal links, and score gaps.</div>
-                    <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin-top: 1rem;">
+                <div class="ws-empty-state">
+                    <div class="ws-empty-icon"><i class="fas fa-search"></i></div>
+                    <p class="ws-empty-title">Audit required</p>
+                    <p class="ws-empty-desc">Run the first audit before generating content. The engine uses the audit as the base context for page decisions, internal links, and score gaps.</p>
+                    <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin-top: 1.5rem;">
                         {% csrf_token %}
-                        <button type="submit" class="button button-primary">Run first audit</button>
+                        <button type="submit" class="button button-primary"><i class="fas fa-play"></i> Run first audit</button>
                     </form>
                 </div>
                 {% else %}
@@ -186,9 +188,9 @@
                 {% if workspace_credit_actions %}
                     {% for item in workspace_credit_actions %}
                         {% if item.slug == "content" %}
-                        <div class="evidence-card" style="background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.3); margin-top: 0; margin-bottom: 1.5rem;">
+                        <div class="evidence-card" style="background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.3); margin-bottom: 1.5rem;">
                             <div class="evidence-card-text">
-                                Generation is currently estimated at <strong>{{ item.credits }} credits</strong>. {{ item.next_step }}
+                                Generation estimated at <strong>{{ item.credits }} credits</strong>. {{ item.next_step }}
                             </div>
                         </div>
                         {% endif %}
@@ -209,26 +211,44 @@
                         {% endfor %}
                     </div>
                     {% endfor %}
-                    <button type="submit" class="button button-primary" style="margin-top: 1rem; width: 100%;">Generate Engine Draft</button>
+                    <button type="submit" class="button button-primary" style="margin-top: 1rem; width: 100%;"><i class="fas fa-bolt"></i> Generate Engine Draft</button>
                 </form>
                 {% endif %}
-                </div>
             </article>
 
-            <div style="padding: 1rem 0;">
-                <article class="system-card" style="margin-bottom: 2rem; background: var(--bg-surface); border: 1px solid rgba(255, 255, 255, 0.05); box-shadow: none;">
-                    <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                        <p class="eyebrow">Generator Architecture</p>
-                        <h2 style="font-size: 1.5rem;">What the engine produces</h2>
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1.25rem;">
+                    <p class="eyebrow" style="color: var(--brand-primary);">Generator Architecture</p>
+                    <h2 style="font-size: 1.5rem;">What the engine produces</h2>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.35rem;line-height: 1.6;">Each draft is structured across three layers — SEO metadata, execution formatting, and briefing intelligence.</p>
+                </div>
+                <div style="display: grid; gap: 1rem;">
+                    <div class="evidence-card" style="margin:0; border-left: 3px solid var(--brand-primary);">
+                        <span class="evidence-card-label">SEO Package</span>
+                        <div class="evidence-card-text">Title tag, meta title, meta description, schema JSON — structured for indexing.</div>
                     </div>
-                    <div style="display: grid; gap: 0.85rem;">
-                        <div class="evidence-card" style="margin:0;"><span class="evidence-card-label">SEO Package</span><div class="evidence-card-text">Title, meta title, meta description, schema JSON</div></div>
-                        <div class="evidence-card" style="margin:0;"><span class="evidence-card-label">Execution Structuring</span><div class="evidence-card-text">Answer-first intro, section layout, strict FAQ block formatting, CTA integrations</div></div>
-                        <div class="evidence-card" style="margin:0;"><span class="evidence-card-label">Briefing Layer</span><div class="evidence-card-text">Keyword targets, competitor evidence bridging, internal link routing</div></div>
+                    <div class="evidence-card" style="margin:0; border-left: 3px solid var(--brand-secondary);">
+                        <span class="evidence-card-label">Execution Structuring</span>
+                        <div class="evidence-card-text">Answer-first intro, section layout, strict FAQ block formatting, CTA integrations.</div>
                     </div>
-                </article>
-            </div>
+                    <div class="evidence-card" style="margin:0; border-left: 3px solid #22c55e;">
+                        <span class="evidence-card-label">Briefing Layer</span>
+                        <div class="evidence-card-text">Keyword targets, competitor evidence bridging, internal link routing — ready to publish.</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.06);">
+                    <p class="eyebrow" style="margin-bottom: 0.75rem;">How to begin</p>
+                    <ol style="padding-left: 1.25rem; display: grid; gap: 0.6rem; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6;">
+                        <li>Create a workspace and run the baseline audit</li>
+                        <li>Run SEO intelligence to map competitor clusters</li>
+                        <li>Select a page type and target keyword, then generate</li>
+                        <li>Review, export, and publish the structured draft</li>
+                    </ol>
+                </div>
+            </article>
         </div>
+
 
         <article class="system-card" id="editorial-queue">
             <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
