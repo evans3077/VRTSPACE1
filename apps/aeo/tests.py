@@ -167,7 +167,7 @@ class WorkspaceAEOViewTests(TestCase):
             1,
         )
         self.assertContains(response, "What AI systems need from this site")
-        self.assertContains(response, "Evidence confidence")
+        self.assertContains(response, "Why AI systems ignore this")
 
     def test_workspace_aeo_uses_selected_project(self):
         second_request = AuditRequest.objects.create(
