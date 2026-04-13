@@ -4,16 +4,48 @@ from .models import GeneratedContent
 
 
 class GeneratedContentRequestForm(forms.Form):
-    output_type = forms.ChoiceField(choices=GeneratedContent.OutputType.choices)
-    business_type = forms.CharField(max_length=160)
-    location = forms.CharField(max_length=160, required=False)
-    target_audience = forms.CharField(max_length=255)
-    page_goal = forms.CharField(max_length=255)
-    offer_summary = forms.CharField(max_length=255)
-    target_keywords = forms.CharField(
-        help_text="Comma-separated keywords or phrases to use in the draft.",
+    output_type = forms.ChoiceField(
+        choices=GeneratedContent.OutputType.choices,
+        label="Content Format",
+        help_text="Choose the structure for your output (e.g. Service Page, FAQ Block)."
     )
-    search_intent = forms.CharField(max_length=120, required=False, initial="commercial")
+    business_type = forms.CharField(
+        max_length=160,
+        label="Brand or Business Type",
+        help_text="e.g. Boutique Hotel, Real Estate Agency."
+    )
+    location = forms.CharField(
+        max_length=160,
+        required=False,
+        label="Target Location",
+        help_text="Optional: City or region to localize the content."
+    )
+    target_audience = forms.CharField(
+        max_length=255,
+        label="Target Audience",
+        help_text="Who are you writing for? (e.g. First-time homebuyers)."
+    )
+    page_goal = forms.CharField(
+        max_length=255,
+        label="Goal of this Page",
+        help_text="What should the user do? (e.g. Book a viewing, sign up for newsletter)."
+    )
+    offer_summary = forms.CharField(
+        max_length=255,
+        label="Primary Offer",
+        help_text="Summarize the value proposition or product."
+    )
+    target_keywords = forms.CharField(
+        label="Target Keywords",
+        help_text="Comma-separated keywords to include in the draft.",
+    )
+    search_intent = forms.CharField(
+        max_length=120,
+        required=False,
+        initial="commercial",
+        label="Search Intent",
+        help_text="The buyer journey stage (e.g. informational, commercial)."
+    )
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)

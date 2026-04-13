@@ -242,13 +242,13 @@
             {% endif %}{% endfor %}{% endif %}
             <form method="post">
                 {% csrf_token %}
-                <div style="margin-bottom: 1rem;">
-                    <label style="display: block; font-size: 0.78rem; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 0.4rem;">Target keyword</label>
-                    <input type="text" name="target_keyword" value="{{ form.target_keyword.value|default:'' }}" placeholder="e.g. event venue in nairobi" style="width: 100%; box-sizing: border-box;">
+                <div style="margin-bottom: 1.25rem;">
+                    <label style="display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-secondary); margin-bottom: 0.5rem;">Target Keyword or Question</label>
+                    <input type="text" name="target_keyword" value="{{ form.target_keyword.value|default:'' }}" placeholder="e.g. best events gardens in Nairobi" style="width: 100%; box-sizing: border-box;">
                     {% if form.target_keyword.errors %}<p style="color: #f87171; font-size: 0.8rem; margin-top: 0.25rem;">{{ form.target_keyword.errors.as_text }}</p>{% endif %}
                 </div>
-                <button type="submit" class="button button-primary" style="width: 100%;">
-                    <i class="fas fa-brain"></i> &nbsp;Run AEO Analysis
+                <button type="submit" class="button-mega" style="width: 100%;">
+                    <i class="fas fa-bolt"></i> &nbsp;Run Intelligence Scan
                 </button>
             </form>
             <p style="font-size: 0.78rem; color: #94a3b8; margin-top: 0.85rem; line-height: 1.5;">Reuses the existing site crawl — no extra crawl needed. Each run generates fresh AI citability predictions.</p>

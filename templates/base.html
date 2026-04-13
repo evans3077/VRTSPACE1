@@ -199,8 +199,58 @@
                 }
             });
         }
+        
+        // Premium Global Loader Logic
+        var intLoader = document.getElementById('intelligence-loader');
+        var loaderTitle = document.getElementById('loader-dynamic-title');
+        var loaderSubtitle = document.getElementById('loader-dynamic-subtitle');
+        
+        if (intLoader) {
+            var loaderPhases = [
+                { title: "Initializing Intelligence Matrix", subtitle: "Connecting to global network..." },
+                { title: "Analyzing Competitor Overlap", subtitle: "Extracting semantic relevance..." },
+                { title: "Mapping Target SERP", subtitle: "Simulating intent signals..." },
+                { title: "Scoring Content Gaps", subtitle: "Calculating readiness..." },
+                { title: "Structuring Final Output", subtitle: "Finalizing recommendation vectors..." }
+            ];
+            
+            document.querySelectorAll('form').forEach(function(form) {
+                var action = (form.getAttribute('action') || '').toLowerCase();
+                // Trigger loader on major analysis points
+                if (action.includes('audit') || action.includes('aeo') || action.includes('seo') || action.includes('content')) {
+                    // Do not trigger on simple GET or local switches
+                    if (form.getAttribute('method') && form.getAttribute('method').toLowerCase() === 'post') {
+                        form.addEventListener('submit', function(e) {
+                            // Let the form submit natively, but show the overlay immediately
+                            intLoader.classList.add('active');
+                            document.body.style.overflow = 'hidden';
+                            
+                            var phaseIdx = 0;
+                            setInterval(function() {
+                                phaseIdx = (phaseIdx + 1) % loaderPhases.length;
+                                if (loaderTitle) loaderTitle.textContent = loaderPhases[phaseIdx].title;
+                                if (loaderSubtitle) loaderSubtitle.textContent = loaderPhases[phaseIdx].subtitle;
+                            }, 3000); // Shift text every 3 seconds
+                        });
+                    }
+                }
+            });
+        }
     })();
     </script>
+
+    <!-- Global Intelligence Loader Overlay -->
+    <div id="intelligence-loader" class="global-loader-overlay">
+        <div class="loader-circuit-container">
+            <div class="loader-ring-outer"></div>
+            <div class="loader-ring-inner"></div>
+            <div class="loader-core-pulse"></div>
+        </div>
+        <div class="loader-text-container">
+            <div id="loader-dynamic-title" class="loader-title">Connecting to API Engine</div>
+            <div id="loader-dynamic-subtitle" class="loader-subtitle">Preparing initial parameters...</div>
+        </div>
+    </div>
 </body>
 </html>
 

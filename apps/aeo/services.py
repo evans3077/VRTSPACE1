@@ -1103,6 +1103,43 @@ def create_aeo_audit(*, project, target_keyword=""):
         ]
         VisibilitySnapshot.objects.bulk_create(snapshots)
 
+        # ── Pre-fetch AEO Competitors ──────────────────────────────────────────
+        # Find domains mentioned in the local pack and AI sources
+        serp = payload.get("serp") or {}
+        intel = payload.get("aeo_intelligence") or {}
+        
+        comps_to_fetch = set()
+        for place in intel.get("local_pack", [])[:3]:
+            d = _extract_domain(place.get("link", ""))
+            if d and d != domain:
+                comps_to_fetch.add(d)
+                
+        for source in intel.get("aeo_overview", {}).get("sources", [])[:3]:
+            d = _extract_domain(source.get("link", ""))
+            if d and d != domain:
+                comps_to_fetch.add(d)
+
+        if comps_to_fetch:
+            from apps.seo.models import SEOCompetitor
+            from apps.seo.services import get_or_build_competitor_snapshot
+            
+            comps_fetched = 0
+            # Limit the fetch to 2-3 to prevent the response from dropping, but enough to trigger the beautiful loader
+            for comp_domain in list(comps_to_fetch)[:3]:
+                comp_obj = SEOCompetitor.objects.filter(project=project, normalized_domain=comp_domain).first()
+                if not comp_obj:
+                    comp_obj = SEOCompetitor.objects.create(
+                        project=project,
+                        normalized_domain=comp_domain,
+                        homepage_url=f"https://{comp_domain}",
+                        label=comp_domain,
+                        source=SEOCompetitor.Source.SERP,
+                        is_active=True
+                    )
+                # Force synchronous snapshot generation so benchmarks populate immediately
+                get_or_build_competitor_snapshot(competitor=comp_obj, audit_run=audit_run, profile=profile)
+                comps_fetched += 1
+
     return aeo_audit
 
 
@@ -1164,15 +1201,17 @@ def build_aeo_competitor_benchmarks(project, profile=None, target_keyword="", ae
             continue
         seen_domains.add(domain)
         snap = comp.snapshots.order_by("-created_at").first()
-        if snap and snap.output_json:
+        if snap and snap.output_json and snap.output_json.get("pages"):
             pages_data = snap.output_json.get("pages", [])
             has_faq = any(p.get("has_faq_schema") for p in pages_data)
             has_schema = any((p.get("schema_count") or 0) > 0 for p in pages_data)
             avg_w = round(sum(p.get("word_count", 0) for p in pages_data) / max(len(pages_data), 1))
-            vis = min(round((snap.output_json.get("aeo_score", 0) + snap.output_json.get("content_score", 0) + snap.output_json.get("on_page_score", 0)) / 3), 100)
-            ent = 45 + (15 if has_schema else 0) + (10 if has_faq else 0)
+            
+            # Synthesize proxy structural readiness scores natively from page signals
+            vis = 40 + (20 if has_faq else 0) + (15 if has_schema else 0) + (15 if avg_w >= 400 else 0)
+            ent = 45 + (15 if has_schema else 0) + (10 if has_faq else 0) + (10 if avg_w > 300 else 0)
             struct = 40 + (20 if has_faq else 0) + (15 if has_schema else 0)
-            comp_ = 45 + (10 if avg_w >= 200 else 0) + (15 if avg_w >= 500 else 0)
+            comp_ = 45 + (10 if avg_w >= 200 else 0) + (20 if avg_w >= 500 else 0)
         else:
             has_faq = has_schema = False
             avg_w = 0

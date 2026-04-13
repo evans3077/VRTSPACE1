@@ -46,19 +46,15 @@
 
                     <!-- Core fields — always visible -->
                     <div class="form-group">
-                        <label>Company</label>
-                        {{ audit_form.company_name }}
-                        {{ audit_form.company_name.errors }}
-                    </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        {{ audit_form.email }}
-                        {{ audit_form.email.errors }}
-                    </div>
-                    <div class="form-group">
                         <label>Website</label>
                         {{ audit_form.website }}
                         {{ audit_form.website.errors }}
+                    </div>
+
+                    <div class="form-group">
+                        <label>Business Email</label>
+                        {{ audit_form.email }}
+                        {{ audit_form.email.errors }}
                     </div>
 
                     <!-- Progressive disclosure: optional context -->
@@ -67,7 +63,12 @@
                         <span id="audit-expand-label">Add context for a richer report</span>
                     </button>
 
-                    <div class="audit-form-advanced" id="audit-form-advanced" aria-hidden="true" style="display:none; gap:1.5rem; margin-top:1.5rem;">
+                    <div class="audit-form-advanced" id="audit-form-advanced" aria-hidden="true" style="display:none; gap:1.25rem; margin-top:1.25rem;">
+                        <div class="form-group">
+                            <label>Company/Brand Name</label>
+                            {{ audit_form.company_name }}
+                            {{ audit_form.company_name.errors }}
+                        </div>
                         <div class="form-group">
                             <label>Business type</label>
                             {{ audit_form.business_type }}
@@ -214,7 +215,7 @@
                         </div>
                     </div>
 
-                    <button class="button button-primary" type="submit" style="width: 100%; margin-top: 1rem;">Run audit now</button>
+                    <button class="button-mega" type="submit" style="width: 100%; margin-top: 1.5rem;">Run Audit Now</button>
                 </form>
                 <p class="form-note text-muted" style="margin-top: 1rem;">Use this for SEO, AI visibility, performance, and conversion diagnostics before choosing a plan.</p>
             </div>
@@ -397,16 +398,7 @@
                 {{ lead_form.email }}
                 {{ lead_form.email.errors }}
             </label>
-            <label>
-                Company
-                {{ lead_form.company }}
-                {{ lead_form.company.errors }}
-            </label>
-            <label>
-                Website
-                {{ lead_form.website }}
-                {{ lead_form.website.errors }}
-            </label>
+
             <label>
                 Interest
                 {{ lead_form.interest_area }}

@@ -51,19 +51,15 @@ class LeadCaptureForm(forms.ModelForm):
         fields = [
             "name",
             "email",
-            "company",
-            "website",
             "interest_area",
             "message",
             "consent_to_contact",
         ]
         widgets = {
-            "name": forms.TextInput(attrs={"placeholder": "Jane Mwangi"}),
-            "email": forms.EmailInput(attrs={"placeholder": "jane@company.com"}),
-            "company": forms.TextInput(attrs={"placeholder": "Company or brand"}),
-            "website": forms.TextInput(attrs={"placeholder": "example.com"}),
+            "name": forms.TextInput(attrs={"placeholder": "Full name"}),
+            "email": forms.EmailInput(attrs={"placeholder": "Business email"}),
             "interest_area": forms.Select(),
-            "message": forms.Textarea(attrs={"rows": 4, "placeholder": "Tell us what needs to change and what success should look like."}),
+            "message": forms.Textarea(attrs={"rows": 4, "placeholder": "Briefly describe what you're looking for..."}),
         }
 
     def clean_website(self):
