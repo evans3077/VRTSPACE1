@@ -67,7 +67,7 @@
 
 <section class="dashboard-stack">
     <div class="container">
-        <div class="metric-grid-premium" style="grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));">
+        <div class="packages-grid-premium">
             {% for plan in plans %}
             <article class="system-card glass-panel" style="display: flex; flex-direction: column; height: 100%; {% if plan.is_current %}border-color: var(--brand-primary) !important; box-shadow: 0 0 20px rgba(56, 189, 248, 0.2) !important;{% endif %}">
                 {% if plan.is_current %}
