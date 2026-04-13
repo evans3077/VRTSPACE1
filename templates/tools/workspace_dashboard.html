@@ -170,40 +170,40 @@
         </article>
         {% endif %}
 
-        <div style="display: grid; grid-template-columns: 1.25fr 0.95fr; gap: 2rem; align-items: start;">
+        <div class="layout-split-wide" style="margin-bottom: 0;">
             <article class="system-card">
-                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1.25rem;">
                     <p class="eyebrow">Current workspace</p>
-                    <h2 style="font-size: 2rem;">What is active right now</h2>
+                    <h2 style="font-size: 1.8rem;">What is active right now</h2>
                 </div>
-                <div class="system-grid">
-                    <article class="system-card">
+                <div class="ws-stat-row">
+                    <div class="stat-tile">
                         <p class="eyebrow">Domain</p>
                         <h3>{% if latest_audit %}{{ latest_audit.normalized_domain }}{% elif project.normalized_domain %}{{ project.normalized_domain }}{% else %}-{% endif %}</h3>
                         <p>Tracked property</p>
-                    </article>
-                    <article class="system-card">
+                    </div>
+                    <div class="stat-tile">
                         <p class="eyebrow">Overall score</p>
                         <h3>{% if latest_audit %}{{ latest_audit.overall_score }}{% else %}-{% endif %}</h3>
                         <p>Latest audit result</p>
-                    </article>
-                    <article class="system-card">
+                    </div>
+                    <div class="stat-tile">
                         <p class="eyebrow">Pages crawled</p>
                         <h3>{% if latest_audit %}{{ latest_audit.pages_crawled }}{% else %}-{% endif %}</h3>
                         <p>Current crawl depth</p>
-                    </article>
-                    <article class="system-card">
+                    </div>
+                    <div class="stat-tile">
                         <p class="eyebrow">Last audit</p>
                         <h3>{% if latest_audit %}{{ latest_audit.created_at|date:"M j" }}{% else %}-{% endif %}</h3>
                         <p>{% if latest_audit %}{{ latest_audit.status|title }}{% else %}Waiting for first audit{% endif %}</p>
-                    </article>
+                    </div>
                 </div>
             </article>
 
             <article class="system-card">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                     <p class="eyebrow">Credits</p>
-                    <h2 style="font-size: 2rem;">Balance</h2>
+                    <h2 style="font-size: 1.8rem;">Balance</h2>
                 </div>
                 <div class="workspace-credit-balance-card">
                     <div>
@@ -223,8 +223,8 @@
                         {% endif %}
                     </div>
                 </div>
-                <div style="margin-top: 1rem; color: var(--text-muted); line-height: 1.6;">
-                    Keep the workspace focused on project work. Billing, top-ups, and personal settings live in your account area.
+                <div style="margin-top: 1rem; color: var(--text-muted); line-height: 1.6; font-size: 0.88rem;">
+                    Billing, top-ups, and personal settings live in your account area.
                 </div>
                 <div style="margin-top: 1rem;">
                     <a class="button button-secondary" href="{% url 'tools:account-dashboard' %}#billing">Open account</a>
@@ -232,7 +232,8 @@
             </article>
         </div>
 
-        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+
+        <div class="layout-split">
             <details id="start-audit" class="system-card workspace-create-panel"{% if audit_start_form.errors or not project.pk %} open{% endif %}>
                 <summary class="workspace-create-summary">
                     <div>
