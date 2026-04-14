@@ -6,6 +6,7 @@ from apps.core.models import TimestampedModel
 
 class Lead(TimestampedModel):
     class InterestArea(models.TextChoices):
+        AUDIT = "audit", "Audit"
         AEO = "aeo", "Answer Engine Optimization"
         SEO = "seo", "SEO"
         CONTENT = "content", "Content Marketing"

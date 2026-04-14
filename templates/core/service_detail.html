@@ -1,66 +1,72 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="hero">
-    <div class="container hero-grid">
-        <div class="hero-copy">
+<section class="marketing-page-hero">
+    <div class="container marketing-page-hero-grid">
+        <div>
             <p class="eyebrow">{{ service.group_title }}</p>
             <h1>{{ service.name }}</h1>
-            <p class="hero-text">{{ service.summary }}</p>
-            <div class="hero-actions">
-                <a class="button button-primary" href="{% url 'core:home' %}#audit">Run Free Audit</a>
-                <a class="button button-secondary" href="{% url 'tools:workspace-signup' %}">Create Workspace</a>
+            <p class="section-text">{{ service.summary }}</p>
+            <div class="marketing-hero-actions">
+                <a class="button button-primary marketing-primary-cta" href="{% url 'core:home' %}#audit">Run Free Audit</a>
+                <a class="button button-secondary" href="{% url 'core:services' %}">Back to Services</a>
             </div>
-            <p class="section-text">{{ service.value_statement }}</p>
         </div>
-        <div class="signal-panel">
-            <p class="signal-kicker">System feature</p>
-            <h3>{{ service.system_feature }}</h3>
-            <p>This module is designed to fit the audit-to-workspace flow first, then expand into plan-based monitoring, automation, or custom delivery when needed.</p>
+        <div class="marketing-side-panel">
+            <p class="eyebrow">Best fit</p>
+            <h2>{{ service.system_feature }}</h2>
+            <p>{{ service.best_for }}</p>
+            <div class="marketing-side-divider"></div>
+            <p class="marketing-side-note">{{ service.why_it_matters }}</p>
         </div>
     </div>
 </section>
 
-<section class="experience-section">
-    <div class="container section-heading">
-        <p class="eyebrow">What this improves</p>
-        <h2>Resolve the blocking issue, then connect it to the wider product system.</h2>
+<section class="marketing-section marketing-section-muted">
+    <div class="container section-heading marketing-heading-left">
+        <p class="eyebrow">What this should help you do</p>
+        <h2>Move from uncertainty to a clearer next step.</h2>
     </div>
-    <div class="container experience-grid">
+    <div class="container marketing-three-up">
         {% for point in service.experience_points %}
-        <article class="experience-card">
+        <article class="marketing-note-card">
             <p>{{ point }}</p>
         </article>
         {% endfor %}
     </div>
 </section>
 
-<section class="services-section tone-{{ service.tone }}">
-    <div class="container section-heading">
-        <p class="eyebrow">Core scope</p>
-        <h2>{{ service.name }} delivery areas</h2>
-    </div>
-    <div class="container faq-grid">
-        {% for bullet in service.bullets %}
-        <article class="faq-card">
-            <h3>{{ bullet }}</h3>
-            <p>Implemented inside a system that should improve discoverability, clarity, trust, or conversion.</p>
-        </article>
-        {% endfor %}
+<section class="marketing-section">
+    <div class="container marketing-detail-grid">
+        <div class="marketing-detail-main">
+            <p class="eyebrow">Included focus</p>
+            <h2>{{ service.name }} focus areas</h2>
+            <div class="marketing-detail-list">
+                {% for bullet in service.bullets %}
+                <article class="marketing-detail-item">
+                    <strong>{{ bullet }}</strong>
+                    <p>Delivered as part of a guided, audit-led visibility strategy rather than isolated technical work.</p>
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+        <aside class="marketing-detail-rail">
+            <p class="eyebrow">Expected outcome</p>
+            <h3>{{ service.outcome }}</h3>
+            <p>{{ service.value_statement }}</p>
+            <a class="button button-primary marketing-primary-cta" href="{% url 'core:home' %}#audit">Start with the Audit</a>
+        </aside>
     </div>
 </section>
 
-<section class="contact-section">
-    <div class="container section-heading">
-        <p class="eyebrow">Next action</p>
-        {% if service.custom_inquiry %}
-        <h2>This path can require a direct custom scope.</h2>
-        <p class="section-text">Start with the audit if you want baseline diagnostics, or use the custom work form when the request is a website build, app build, or bespoke implementation.</p>
-        <p><a class="button button-primary" href="{% url 'core:home' %}#contact">Request custom scope</a></p>
-        {% else %}
-        <h2>Start in the product before asking for help.</h2>
-        <p class="section-text">Run the audit, save the workspace, and use the visible plan ladder to decide whether you need a deeper package.</p>
-        {% endif %}
+<section class="marketing-section">
+    <div class="container marketing-cta-band">
+        <div>
+            <p class="eyebrow">Next action</p>
+            <h2>Use the audit to confirm whether {{ service.name }} should be the next move.</h2>
+            <p>The audit helps keep the recommendation grounded in what the site actually needs now.</p>
+        </div>
+        <a class="button button-primary marketing-primary-cta" href="{% url 'core:home' %}#audit">Run Free Audit</a>
     </div>
 </section>
 {% endblock %}

@@ -55,7 +55,7 @@ PLAN_DEFINITIONS = [
         "name": "Starter",
         "price_label": "~$200",
         "label": "Self-serve entry",
-        "description": "Core paid workspace for site operators who need repeatable audits and exact next steps without a heavy team process.",
+        "description": "For businesses that want repeatable audits and a clearer SEO and AEO action path without a heavy process.",
         "sort_order": 10,
         "is_public": True,
         "is_paid": True,
@@ -64,8 +64,8 @@ PLAN_DEFINITIONS = [
         "features": [
             "Core audit workspace",
             "Saved audit history",
-            "Priority recommendations and action packs",
-            "Limited competitor-backed SEO benchmarking",
+            "Priority recommendations",
+            "Foundational SEO and AEO visibility review",
         ],
         "credits": {
             "workspace": 50,
@@ -99,14 +99,14 @@ PLAN_DEFINITIONS = [
             "campaign_tracking_enabled": False,
             "cross_module_summary_enabled": False,
         },
-        "upgrade_message": "Upgrade when you need recurring workflows, richer exports, content operations, and more benchmark depth.",
+        "upgrade_message": "Upgrade when you need recurring audits, deeper benchmarking, and stronger reporting.",
     },
     {
         "slug": "growth",
         "name": "Growth",
         "price_label": "~$500",
         "label": "Team plan",
-        "description": "The operating plan for teams that want recurring audits, SEO execution flow, reporting, and structured content work.",
+        "description": "For teams that want recurring audits, stronger SEO and AEO depth, and reporting they can actually use.",
         "sort_order": 20,
         "is_public": True,
         "is_paid": True,
@@ -115,7 +115,7 @@ PLAN_DEFINITIONS = [
         "features": [
             "Recurring audits and exports",
             "Deeper competitor benchmarking",
-            "Content briefs and editorial queue",
+            "Stronger SEO and AEO analysis capacity",
             "Stakeholder-ready reporting and sharing",
         ],
         "credits": {
@@ -150,14 +150,14 @@ PLAN_DEFINITIONS = [
             "campaign_tracking_enabled": True,
             "cross_module_summary_enabled": False,
         },
-        "upgrade_message": "Upgrade when you need backlink workflows, larger monthly capacity, and end-to-end execution continuity.",
+        "upgrade_message": "Upgrade when you need more capacity, deeper visibility analysis, and stronger team reporting.",
     },
     {
         "slug": "authority",
         "name": "Authority",
         "price_label": "$1000+",
         "label": "Advanced visibility plan",
-        "description": "Full execution plan for operators running SEO, AEO, content, reporting, and authority-building as one system.",
+        "description": "For operators who want full audit, SEO, and AEO coverage with the deepest reporting and strategic support.",
         "sort_order": 30,
         "is_public": True,
         "is_paid": True,
@@ -165,9 +165,9 @@ PLAN_DEFINITIONS = [
         "audience": "Agencies, multi-location brands, and execution-heavy teams",
         "features": [
             "Full audit, SEO, and AEO workflow",
-            "Content generation and editorial continuity",
-            "Backlink prospecting and campaign chain tracking",
-            "Advanced stakeholder reporting",
+            "Higher monthly analysis capacity",
+            "Advanced reporting and stakeholder visibility",
+            "Deeper strategic support",
         ],
         "credits": {
             "workspace": 400,
@@ -208,7 +208,7 @@ PLAN_DEFINITIONS = [
         "name": "Enterprise",
         "price_label": "Custom",
         "label": "Custom environments",
-        "description": "Reserved for multi-market delivery, custom integrations, high-touch reporting, and bespoke implementation.",
+        "description": "Reserved for complex teams that need custom delivery, high-touch reporting, or multi-market support.",
         "sort_order": 40,
         "is_public": True,
         "is_paid": True,
@@ -266,12 +266,9 @@ _LIMIT_SUMMARY_LABELS = {
     "seo_refreshes": "SEO refreshes",
     "aeo_analyses": "AEO analyses",
     "exports": "Exports",
-    "content_drafts": "Content drafts",
     "share_links": "Share links",
     "tracked_competitors": "Tracked competitors",
     "competitor_pages_per_refresh": "Competitor pages per refresh",
-    "backlink_prospects": "Backlink prospects",
-    "automation_projects": "Automated projects",
 }
 
 

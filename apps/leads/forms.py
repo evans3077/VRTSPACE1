@@ -16,13 +16,32 @@ class StructuredLocationMixin:
 
     def clean(self):
         cleaned_data = super().clean()
-        
-        # If user cleared the field or Worldwide is selected
-        val = cleaned_data.get("location_display", "").strip()
-        if not val or val.lower() == "worldwide":
+
+        location_mode = str(cleaned_data.get("location_mode") or "").strip() or "targeted"
+        location_country = str(cleaned_data.get("location_country") or "").strip().upper()
+        location_scope = str(cleaned_data.get("location_scope") or "").strip()
+        location_area = str(cleaned_data.get("location_area") or "").strip()
+        location_display = str(cleaned_data.get("location_display") or "").strip()
+        location_value = str(cleaned_data.get("location") or "").strip()
+
+        if location_mode == "worldwide" or location_display.lower() == "worldwide" or location_value.lower() == "worldwide":
             cleaned_data["location"] = "Worldwide"
-        
-        # Keep legacy fields empty for backwards database compatibility
+            cleaned_data["location_mode"] = "worldwide"
+            cleaned_data["location_country"] = ""
+            cleaned_data["location_scope"] = ""
+            cleaned_data["location_area"] = ""
+            return cleaned_data
+
+        if location_country or location_scope or location_area:
+            validated = validate_location_selection(location_country, location_scope, location_area)
+            cleaned_data["location"] = validated["display"]
+            cleaned_data["location_mode"] = "targeted"
+            cleaned_data["location_country"] = validated["country_code"]
+            cleaned_data["location_scope"] = validated["scope"]
+            cleaned_data["location_area"] = validated["area"]
+            return cleaned_data
+
+        cleaned_data["location"] = location_value or location_display or "Worldwide"
         cleaned_data["location_mode"] = "targeted"
         cleaned_data["location_country"] = ""
         cleaned_data["location_scope"] = ""
@@ -46,11 +65,26 @@ class LeadCaptureForm(forms.ModelForm):
     website = forms.CharField(required=False)
     consent_to_contact = forms.BooleanField(required=False)
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        allowed = [
+            Lead.InterestArea.AUDIT,
+            Lead.InterestArea.SEO,
+            Lead.InterestArea.AEO,
+        ]
+        self.fields["interest_area"].choices = [
+            (value, label)
+            for value, label in self.fields["interest_area"].choices
+            if value in allowed
+        ]
+
     class Meta:
         model = Lead
         fields = [
             "name",
             "email",
+            "company",
+            "website",
             "interest_area",
             "message",
             "consent_to_contact",
@@ -58,6 +92,8 @@ class LeadCaptureForm(forms.ModelForm):
         widgets = {
             "name": forms.TextInput(attrs={"placeholder": "Full name"}),
             "email": forms.EmailInput(attrs={"placeholder": "Business email"}),
+            "company": forms.TextInput(attrs={"placeholder": "Company"}),
+            "website": forms.TextInput(attrs={"placeholder": "example.com"}),
             "interest_area": forms.Select(),
             "message": forms.Textarea(attrs={"rows": 4, "placeholder": "Briefly describe what you're looking for..."}),
         }

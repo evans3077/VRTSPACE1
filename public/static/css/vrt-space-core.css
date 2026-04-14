@@ -887,7 +887,14 @@ input::placeholder, textarea::placeholder {
 
 /* Premium Navigation & Global Menu */
 .site-header {
-    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+    /* Explicit properties only — never transition z-index or overflow */
+    transition: background 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+                backdrop-filter 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+                box-shadow 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+                border-color 0.4s cubic-bezier(0.165, 0.84, 0.44, 1),
+                padding 0.4s cubic-bezier(0.165, 0.84, 0.44, 1) !important;
+    overflow: visible !important;
+    z-index: 1000 !important;
 }
 
 .site-header.is-scrolled {

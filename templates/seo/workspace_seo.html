@@ -53,7 +53,7 @@
             <a class="page-jump-link" href="#seo-patterns"><i class="fas fa-puzzle-piece"></i> Patterns</a>
             <a class="page-jump-link" href="#seo-campaigns"><i class="fas fa-tasks"></i> Campaigns</a>
             <a class="page-jump-link" href="#seo-roadmap"><i class="fas fa-map"></i> Roadmap</a>
-            <a class="page-jump-link" href="#seo-backlinks"><i class="fas fa-link"></i> Backlinks</a>
+            <a class="page-jump-link" href="#seo-execution"><i class="fas fa-list-check"></i> Execution</a>
             <a class="page-jump-link" href="#seo-opportunities"><i class="fas fa-lightbulb"></i> Ideas</a>
         </div>
     </div>
@@ -259,7 +259,6 @@
                 <div class="data-card"><span class="data-card-label">Auto-Discovered</span><span class="data-card-value">{{ seo_value_summary.auto_discovered_competitors|default:0 }}</span><p class="data-card-desc">Found directly from global SERPs</p></div>
                 <div class="data-card"><span class="data-card-label">Market Surfaces</span><span class="data-card-value">{{ seo_value_summary.market_surfaces|default:0 }}</span><p class="data-card-desc">Marketplace surfaces excluded from benchmarking</p></div>
                 <div class="data-card"><span class="data-card-label">Citation Sources</span><span class="data-card-value">{{ seo_value_summary.citation_sources|default:0 }}</span><p class="data-card-desc">Directory &amp; local listing sources tracked</p></div>
-                <div class="data-card"><span class="data-card-label">Backlink Prospects</span><span class="data-card-value">{{ seo_value_summary.backlink_sources|default:0 }}</span><p class="data-card-desc">Editorial surfaces saved for authority work</p></div>
                 <div class="data-card"><span class="data-card-label">Competitor Pages</span><span class="data-card-value">{{ seo_value_summary.competitor_pages_profiled|default:0 }}</span><p class="data-card-desc">Pages profiled across competitor sites</p></div>
                 <div class="data-card"><span class="data-card-label">Images Profiled</span><span class="data-card-value">{{ seo_value_summary.competitor_images_profiled|default:0 }}</span><p class="data-card-desc">Visual assets captured for analysis</p></div>
                 <div class="data-card"><span class="data-card-label">Scripts Profiled</span><span class="data-card-value">{{ seo_value_summary.competitor_scripts_profiled|default:0 }}</span><p class="data-card-desc">Third-party app stack signals captured</p></div>
@@ -269,11 +268,7 @@
             <div class="data-card-grid" style="margin-top: 1rem;">
                 <div class="data-card"><span class="data-card-label">Campaigns Advanced</span><span class="data-card-value">{{ seo_chain_value_summary.campaign_count|default:0 }}</span><p class="data-card-desc">Items carried into tracked campaigns</p></div>
                 <div class="data-card"><span class="data-card-label">Briefs Linked</span><span class="data-card-value">{{ seo_chain_value_summary.brief_count|default:0 }}</span><p class="data-card-desc">Campaigns with a live editorial brief</p></div>
-                <div class="data-card"><span class="data-card-label">Drafts Created</span><span class="data-card-value">{{ seo_chain_value_summary.draft_count|default:0 }}</span><p class="data-card-desc">Campaigns that produced a content draft</p></div>
-                <div class="data-card"><span class="data-card-label">Content Applied</span><span class="data-card-value">{{ seo_chain_value_summary.content_applied_count|default:0 }}</span><p class="data-card-desc">SEO-driven drafts in the content library</p></div>
-                <div class="data-card"><span class="data-card-label">Outreach Targets</span><span class="data-card-value">{{ seo_chain_value_summary.outreach_target_count|default:0 }}</span><p class="data-card-desc">Backlink prospects linked to campaigns</p></div>
                 <div class="data-card"><span class="data-card-label">Validated Campaigns</span><span class="data-card-value">{{ seo_chain_value_summary.validated_campaigns|default:0 }}</span><p class="data-card-desc">Completed &amp; confirmed by audit rerun</p></div>
-                <div class="data-card"><span class="data-card-label">Acquired Links</span><span class="data-card-value">{{ seo_chain_value_summary.acquired_link_count|default:0 }}</span><p class="data-card-desc">Campaigns converted into acquired backlinks</p></div>
             </div>
             {% if seo_discovery.queries %}
             <div style="margin-top: 2rem; padding: 1.5rem; border-radius: var(--radius-lg); background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); color: var(--text-secondary); line-height: 1.6;">
@@ -819,7 +814,7 @@
             </article>
         </div>
 
-        <article id="seo-backlinks" class="system-card">
+        <article id="seo-execution" class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                 <p class="eyebrow">Execution Queue</p>
                 <h2 style="font-size: 2rem;">What to build or update first</h2>
@@ -912,111 +907,6 @@
             </div>
         </article>
 
-        {% if backlink_action.available %}
-        <div class="layout-split-wide">
-            <article class="system-card">
-                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                    <p class="eyebrow">Linkable Assets</p>
-                    <h2 style="font-size: 2rem;">Pages worth promoting for backlinks</h2>
-                </div>
-                {% if backlink_summary %}
-                <div class="system-grid" style="margin-bottom: 1.5rem; gap: 1.5rem;">
-                    <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Assets</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ backlink_summary.linkable_asset_count|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Pages or drafts worth promoting</p></article>
-                    <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Prospects</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ backlink_summary.prospect_count|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Targets scored from live discovery</p></article>
-                    <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Avg Score</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ backlink_summary.average_total_score|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Average fit across current prospects</p></article>
-                </div>
-                {% endif %}
-                <div class="panel-scroll" style="display: grid; gap: 1.25rem;">
-                    {% for asset in backlink_linkable_assets %}
-                    <div style="padding: 1.5rem; border-radius: 18px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
-                        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
-                            <strong style="color: var(--text-primary); font-size: 1.1rem;">{{ asset.asset_title }}</strong>
-                            <span class="score-pill score-high" style="font-size: 0.7rem;">Priority {{ asset.priority_score }}</span>
-                        </div>
-                        <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6;">
-                            <strong style="display: block; color: var(--text-primary); margin-bottom: 0.4rem;">Pitch Hook</strong>
-                            {{ asset.pitch_hook }}
-                        </div>
-                    </div>
-                    {% empty %}
-                    <div style="padding: 1.5rem; border-radius: 16px; background: rgba(255,255,255,0.01); border: 1px solid var(--border-glass); color: var(--text-muted);">
-                        Linkable asset recommendations will appear after the SEO refresh.
-                    </div>
-                    {% endfor %}
-                </div>
-            </article>
-
-            <article class="system-card">
-                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                    <p class="eyebrow">Backlink Prospects</p>
-                    <h2 style="font-size: 2rem;">Who should link to what</h2>
-                </div>
-                {% if backlink_errors %}
-                <div style="margin-bottom: 1rem; padding: 1rem; border-radius: 16px; background: rgba(220, 38, 38, 0.08); color: #991b1b; line-height: 1.6;">
-                    <strong style="display: block; margin-bottom: 0.35rem;">Backlink discovery warnings</strong>
-                    {% for item in backlink_errors %}
-                    <div>{{ item.query }}{% if item.provider %} ({{ item.provider }}){% endif %}: {{ item.message }}</div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-                <div class="panel-scroll panel-scroll-tall" style="display: grid; gap: 1.25rem;">
-                    {% for prospect in backlink_prospects %}
-                    <div style="padding: 1.5rem; border-radius: 18px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
-                        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
-                            <strong style="color: var(--text-primary); font-size: 1.1rem;">{{ prospect.domain }}</strong>
-                            <span class="score-pill score-high" style="font-size: 0.7rem;">Score {{ prospect.total_score }}</span>
-                        </div>
-                        <div style="margin-top: 0.75rem; color: var(--text-secondary); font-size: 0.82rem;">
-                            {{ prospect.get_prospect_type_display }} &mdash; Target: <strong style="color: var(--text-primary);">{{ prospect.target_asset_title }}</strong>
-                        </div>
-                        <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6;">
-                            <strong style="display: block; color: var(--text-primary); margin-bottom: 0.4rem;">Pitch angle</strong>
-                            {{ prospect.outreach_packet.pitch_angle|default:"No pitch angle generated yet." }}
-                        </div>
-                        <form method="post" action="{% url 'seo:workspace-backlink-prospect-update' prospect.pk %}" style="margin-top: 1.25rem; display: grid; gap: 1rem;">
-                            {% csrf_token %}
-                            <div style="display: grid; grid-template-columns: 0.8fr 1fr; gap: 1rem;">
-                                <label style="display: grid; gap: 0.4rem;">
-                                    <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-primary);">Status</span>
-                                    <select name="status" style="background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-glass);">
-                                        {% for value, label in backlink_status_choices %}
-                                        <option value="{{ value }}"{% if prospect.status == value %} selected{% endif %}>{{ label }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </label>
-                                <label style="display: grid; gap: 0.4rem;">
-                                    <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-primary);">Notes</span>
-                                    <input type="text" name="notes" value="{{ prospect.metadata.notes }}" placeholder="Add note..." style="background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-glass);">
-                                </label>
-                            </div>
-                            <button type="submit" class="button button-secondary">Update Prospect</button>
-                        </form>
-                    </div>
-                    {% empty %}
-                    <div style="padding: 1.5rem; border-radius: 16px; background: rgba(255,255,255,0.01); border: 1px solid var(--border-glass); color: var(--text-muted);">
-                        No prospects yet. Run SEO refresh to generate targets.
-                    </div>
-                    {% endfor %}
-                </div>
-            </article>
-        </div>
-        {% else %}
-        <article class="system-card">
-            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                <p class="eyebrow">Backlink Intelligence</p>
-                <h2 style="font-size: 2rem;">Authority work unlock</h2>
-            </div>
-            <div style="padding: 1.5rem; border-radius: 16px; background: rgba(255, 255, 255, 0.02); color: var(--text-secondary); line-height: 1.6; border: 1px solid var(--border-glass);">
-                <strong style="display: block; margin-bottom: 0.5rem; color: var(--text-primary);">Credits Required</strong>
-                {{ backlink_action.next_unlock_message|default:backlink_action.blocked_message }}
-                {% if backlink_action.direct_checkout_available %}
-                <div style="margin-top: 1.25rem;">
-                    <a href="{% url 'tools:account-dashboard' %}#plans" class="button button-primary">Upgrade Plan</a>
-                </div>
-                {% endif %}
-            </div>
-        </article>
-        {% endif %}
     {% endif %}
 {% block extra_head %}
 <!-- FAQ Schema (JSON-LD) for SEO Intelligence -->

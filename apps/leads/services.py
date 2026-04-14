@@ -146,12 +146,8 @@ def summarize_workspace_project(project):
         focus_tags.append("SEO")
     if getattr(project, "aeo_audit_count", 0):
         focus_tags.append("AEO")
-    if getattr(project, "generated_content_count", 0):
-        focus_tags.append("Content")
 
-    if "Content" in focus_tags:
-        project_type_label = "Content-active project"
-    elif "SEO" in focus_tags and "AEO" in focus_tags:
+    if "SEO" in focus_tags and "AEO" in focus_tags:
         project_type_label = "SEO and AEO project"
     elif "SEO" in focus_tags:
         project_type_label = "SEO project"

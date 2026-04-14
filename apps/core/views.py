@@ -39,17 +39,17 @@ def build_home_context(request, **extra):
         }
 
     context = {
-        "page_title": "VRT SPACE AGENCY | SEO Audits, AI Visibility, and Growth Workspace",
+        "body_class": "marketing-body",
+        "page_title": "VRT SPACE AGENCY | SEO, Website Audits, and AEO",
         "meta_description": (
-            "VRT SPACE AGENCY provides SEO audits, AI visibility diagnostics, growth workspaces, "
-            "and custom implementation paths for websites, apps, and advanced search systems."
+            "VRT SPACE AGENCY helps businesses improve SEO, run clear website audits, and strengthen AI visibility with a simpler, audit-led growth path."
         ),
         "schema_json": json.dumps(
             {
                 "@context": "https://schema.org",
                 "@type": "Organization",
                 "name": "VRT SPACE AGENCY",
-                "description": "SEO audit, AI visibility, workspace, analytics, and custom implementation platform.",
+                "description": "SEO, website audit, and AI visibility agency.",
                 "url": request.build_absolute_uri("/"),
                 "areaServed": ["Global"],
                 "sameAs": [],
@@ -65,22 +65,25 @@ def build_home_context(request, **extra):
         "engagement_steps": ENGAGEMENT_STEPS,
         "faqs": FAQS,
         "results": [
-            {"value": "21", "label": "Solution paths connected to one growth system"},
-            {"value": "4", "label": "Visible plans from Starter to Enterprise"},
-            {"value": "3", "label": "Core product surfaces for audits, workspaces, and ops"},
+            {"value": "Audit-led", "label": "Start with evidence"},
+            {"value": "Search + AI", "label": "Visibility focus"},
+            {"value": "Priority-first", "label": "Clear next steps"},
         ],
         "method_steps": [
-            "Map audits, workspace flows, and package destinations into a website that teaches, qualifies, and converts without a manual sales dependency.",
-            "Build SEO, AEO, development, content, and analytics into one product stack instead of disconnected offers.",
-            "Turn tools, audit summaries, dashboards, and follow-up sequences into an always-on growth engine.",
-            "Use reporting, performance, and AI visibility monitoring to keep users informed and expand them into higher-value modules when needed.",
+            "Start with a live audit so the next decision is based on evidence.",
+            "Use SEO to improve how the business gets found in search.",
+            "Use AEO to improve how the business shows up in AI answers.",
+            "Keep the next step simple: fix what matters first, then expand only when needed.",
         ],
-        "trust_signals": ["SEO foundation", "AI citation edge", "Global Search Dominance", "Enterprise-capable delivery"],
+        "trust_signals": [
+            "Audit-led recommendations",
+            "SEO and AI visibility focus",
+            "No bloated public offer",
+        ],
         "audiences": ["Founders", "Growth teams", "Enterprise brands", "Global Agencies"],
         "case_study": case_study,
         "critical_insight": (
-            "Most sites still stop at lead capture and manual follow-up. VRT SPACE is being built "
-            "as a product system that audits, groups fixes, routes users into workspaces, and only escalates to direct scoping when the request is custom."
+            "Most businesses do not need more noise. They need a clear audit, a realistic SEO plan, and stronger visibility in both search engines and AI answers."
         ),
     }
     context.update(extra)
@@ -99,10 +102,12 @@ class ServicesIndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         return {
-            "page_title": "VRT SPACE AGENCY Solutions",
-            "meta_description": "Browse the VRT SPACE growth system across SEO, AI visibility, reporting, workspaces, and custom implementation paths.",
+            "body_class": "marketing-body",
+            "page_title": "SEO, Audit, and AEO Services | VRT SPACE AGENCY",
+            "meta_description": "Explore the three core VRT SPACE services: SEO, website audits, and AEO.",
             "service_groups": SERVICE_GROUPS,
             "service_page_list": SERVICE_PAGE_LIST,
+            "faqs": FAQS,
         }
 
 
@@ -116,8 +121,9 @@ class ServiceDetailView(TemplateView):
             raise Http404("Service not found.")
 
         return {
+            "body_class": "marketing-body",
             "page_title": f"{service['name']} | VRT SPACE AGENCY",
-            "meta_description": service["summary"],
+            "meta_description": f"{service['summary']} Learn how VRT SPACE uses an audit-led process to improve visibility and next-step clarity.",
             "service": service,
             "service_page_list": SERVICE_PAGE_LIST,
         }
@@ -128,8 +134,9 @@ class PackagesView(TemplateView):
 
     def get_context_data(self, **kwargs):
         return {
+            "body_class": "marketing-body",
             "page_title": "Plans & Pricing | VRT SPACE AGENCY",
-            "meta_description": "Flexible plans designed to evolve with your business.",
+            "meta_description": "Choose a VRT SPACE plan for audit-led SEO and AEO improvement.",
             "plans": build_plan_cards(self.request.user),
         }
 

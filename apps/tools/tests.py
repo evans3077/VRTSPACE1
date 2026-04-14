@@ -947,7 +947,7 @@ class ProjectDashboardTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Free-pass mode for testing")
         self.assertContains(response, "4 on-page issues")
-        self.assertContains(response, "View Growth plan")
+        self.assertContains(response, "Start with Growth")
         self.assertContains(response, reverse("tools:workspace-signup"))
 
 

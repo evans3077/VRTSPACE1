@@ -807,7 +807,7 @@ class WorkspaceProjectCreateView(LoginRequiredMixin, View):
         )
         set_active_workspace_project(request, project)
         if created:
-            messages.success(request, f"{project.name} is ready. Run an audit when you want a fresh crawl, or move straight into SEO, AEO, or content setup.")
+            messages.success(request, f"{project.name} is ready. Run an audit when you want a fresh crawl, or move straight into SEO or AEO from the same workspace.")
         else:
             messages.info(request, f"{project.name} already existed, so the workspace reopened that project instead of creating a duplicate.")
         return redirect("tools:workspace-dashboard")

@@ -858,7 +858,7 @@ class WorkspaceSEOViewTests(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Entity Context")
-        self.assertContains(response, "Update Intelligence")
+        self.assertContains(response, "Update SEO Intelligence")
 
     @patch("apps.seo.services.discover_serp_competitors")
     @patch("apps.seo.services.fetch_many")
@@ -1278,7 +1278,8 @@ class WorkspaceSEOViewTests(TestCase):
         self.assertContains(response, "Campaigns Advanced")
         self.assertContains(response, "Editorial Brief")
         self.assertContains(response, "Briefs Linked")
-        self.assertContains(response, "Outreach Targets")
+        self.assertContains(response, "Validated Campaigns")
+        self.assertNotContains(response, "Outreach Targets")
 
     def test_workspace_seo_export_json_returns_stakeholder_payload(self):
         profile = SEOProjectProfile.objects.create(

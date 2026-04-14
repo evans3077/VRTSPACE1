@@ -1,20 +1,6 @@
 {% extends "base.html" %}
 
-{% block content %}
-<section class="hero-premium">
-    <div class="container">
-        <div class="section-heading">
-            <p class="eyebrow text-accent">Investment</p>
-            <h1 class="gradient-text">Plans & Packages</h1>
-            <p class="section-text text-muted">
-                High-performance search systems, architected for growth.
-            </p>
-        </div>
-    </div>
-</section>
-
 {% block extra_head %}
-<!-- FAQ Schema (JSON-LD) for Pricing/Commercial Authority -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -22,42 +8,26 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "What is an 'Intelligence Credit' and how is it consumed?",
+      "name": "What do the plans actually unlock?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Intelligence Credits are the internal currency for running high-precision audits, AEO benchmarks, and AI content generation. Higher-compute operations consume more credits, allowing you to pay exactly for the intelligence throughput you use."
+        "text": "The plans mainly expand how often you can run audits, how much SEO and AEO analysis you can use, and how much history, reporting, and sharing support you get."
       }
     },
     {
       "@type": "Question",
-      "name": "Do Intelligence Credits roll over to the next month?",
+      "name": "Which plan is best to start with?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. Credits from our Authority and Growth tiers roll over for up to 90 days, ensuring your strategic investment is preserved during months of heavy execution vs. deep auditing."
+        "text": "Most businesses should start with the audit, then move to the plan that matches how often they need to review, improve, and report on SEO and AEO progress."
       }
     },
     {
       "@type": "Question",
-      "name": "What is the estimated ROI of the Momentum vs. Growth plans?",
+      "name": "Do I need a custom plan right away?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Momentum is built for maintaining existing authority, while the Growth plan provides the aggressive infrastructure for AEO dominance. Clients on the Growth plan often see a significant increase in citation velocity due to deep competitor profiling limits."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do the 'Self-Serve' tiers differ from 'Enterprise Partner' paths?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Self-Serve tiers provide the intelligence tools for your internal team to execute. The Enterprise Partner path is a custom route for large-scale architectural rebuilds and app developments handled directly by our engineering core."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Are there bulk discounts for multi-domain enterprise accounts?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Organizations managing 5+ domains are eligible for custom pool-based credit pricing and consolidated billing through our 'Universal Credit Pool' program."
+        "text": "Usually no. Custom scope is best for businesses with more complexity, larger reporting needs, or multi-market requirements."
       }
     }
   ]
@@ -65,139 +35,158 @@
 </script>
 {% endblock %}
 
-<section class="dashboard-stack">
-    <div class="container">
-        <div class="packages-grid-premium">
-            {% for plan in plans %}
-            <article class="system-card glass-panel" style="display: flex; flex-direction: column; height: 100%; {% if plan.is_current %}border-color: var(--brand-primary) !important; box-shadow: 0 0 20px rgba(56, 189, 248, 0.2) !important;{% endif %}">
-                {% if plan.is_current %}
-                <div class="pill-accent" style="align-self: flex-end; margin-bottom: 1rem;">Active Model</div>
-                {% endif %}
-                
-                <div class="card-head">
-                    <p class="eyebrow text-accent">{{ plan.name }}</p>
-                    <h2 style="font-size: 2.4rem; margin: 0.5rem 0;">{{ plan.price }}</h2>
-                    <p class="text-muted" style="font-size: 0.95rem;">{{ plan.description }}</p>
-                </div>
-                
-                <div style="flex-grow: 1; margin-bottom: 2rem;">
-                    <ul style="list-style: none; padding: 0; margin: 0; display: grid; gap: 0.8rem;">
-                        {% for limit in plan.limits_summary %}
-                        <li style="display: flex; gap: 0.75rem; color: var(--text-primary); font-size: 0.9rem;">
-                            <i class="fas fa-check-circle" style="color: var(--brand-primary); margin-top: 0.2rem;"></i>
-                            <span><strong>{{ limit.label }}:</strong> {{ limit.display }}</span>
-                        </li>
-                        {% endfor %}
-                        {% for feature in plan.features %}
-                        <li style="display: flex; gap: 0.75rem; color: var(--text-secondary); font-size: 0.9rem;">
-                            <i class="fas fa-check" style="color: var(--text-muted); margin-top: 0.2rem;"></i>
-                            <span>{{ feature }}</span>
-                        </li>
-                        {% endfor %}
-                    </ul>
-                </div>
-                
-                <div class="button-row" style="padding-top: 1rem; border-top: 1px solid var(--border-glass);">
-                    {% if plan.is_current %}
-                    <button class="button-secondary" disabled style="width: 100%;">Current Plan</button>
-                    {% elif plan.is_custom %}
-                    <a href="{% url 'core:home' %}#contact" class="button-primary" style="width: 100%; text-align: center;">Partner with us</a>
-                    {% elif plan.is_free %}
-                    <div style="text-align: center; color: var(--text-muted); font-size: 0.85rem; padding: 0.8rem;">Base Intelligence Included</div>
-                    {% else %}
-                    <form method="post" action="{% url 'tools:workspace-billing-checkout' %}" style="width: 100%;">
-                        {% csrf_token %}
-                        <input type="hidden" name="plan" value="{{ plan.slug }}">
-                        <input type="hidden" name="return_to" value="{% url 'tools:workspace-dashboard' %}">
-                        <button type="submit" class="{% if plan.action_direction == 'upgrade' %}button-primary{% else %}button-secondary{% endif %}" style="width: 100%;">
-                            {{ plan.action_label }}
-                        </button>
-                    </form>
-                    {% endif %}
-                </div>
-            </article>
-            {% endfor %}
+{% block content %}
+<section class="marketing-page-hero">
+    <div class="container marketing-page-hero-grid">
+        <div>
+            <p class="eyebrow">Plans</p>
+            <h1>Choose the level of support that fits your next stage.</h1>
+            <p class="section-text">
+                Keep the first step simple: run the audit, understand the gap, then pick the level of follow-through that matches how often you need to improve, report, and revisit visibility work.
+            </p>
+            <div class="marketing-hero-actions">
+                <a class="button button-primary marketing-primary-cta" href="{% url 'core:home' %}#audit">Run Free Audit</a>
+                <a class="button button-secondary" href="{% url 'core:services' %}">Review Services</a>
+            </div>
+        </div>
+        <div class="marketing-side-panel">
+            <p class="eyebrow">How to think about plans</p>
+            <div class="marketing-flow-list">
+                <article class="marketing-flow-item">
+                    <span class="marketing-flow-number">01</span>
+                    <div>
+                        <strong>Audit first</strong>
+                        <p>Use the diagnosis to see whether deeper SEO or AEO work is actually justified.</p>
+                    </div>
+                </article>
+                <article class="marketing-flow-item">
+                    <span class="marketing-flow-number">02</span>
+                    <div>
+                        <strong>Choose the right cadence</strong>
+                        <p>Plans mainly change how much analysis, history, and reporting continuity you need.</p>
+                    </div>
+                </article>
+                <article class="marketing-flow-item">
+                    <span class="marketing-flow-number">03</span>
+                    <div>
+                        <strong>Upgrade when the workflow grows</strong>
+                        <p>You should not need a larger plan until the volume or reporting complexity genuinely calls for it.</p>
+                    </div>
+                </article>
+            </div>
         </div>
     </div>
 </section>
 
-<section class="faq-section">
+<section class="marketing-section marketing-section-muted">
+    <div class="container pricing-card-grid">
+        {% for plan in plans %}
+        <article class="pricing-card{% if plan.slug == 'growth' and not plan.is_current %} pricing-card-featured{% endif %}{% if plan.is_current %} pricing-card-current{% endif %}">
+            <div class="pricing-card-top">
+                {% if plan.is_current %}
+                <span class="pricing-badge">Current Plan</span>
+                {% elif plan.slug == 'growth' %}
+                <span class="pricing-badge pricing-badge-alt">Most common next step</span>
+                {% endif %}
+                <p class="eyebrow">{{ plan.name }}</p>
+                <h2>{{ plan.price }}</h2>
+                <p class="pricing-description">{{ plan.description }}</p>
+            </div>
+
+            <div class="pricing-list-shell">
+                <div class="pricing-list-block">
+                    <span class="marketing-label">Core limits</span>
+                    <ul class="marketing-list pricing-list">
+                        {% for limit in plan.limits_summary|slice:":4" %}
+                        <li><strong>{{ limit.label }}:</strong> {{ limit.display }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+                <div class="pricing-list-block">
+                    <span class="marketing-label">What this adds</span>
+                    <ul class="marketing-list pricing-list">
+                        {% for feature in plan.features|slice:":4" %}
+                        <li>{{ feature }}</li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+
+            <div class="pricing-card-actions">
+                {% if plan.is_current %}
+                <button class="button button-secondary" disabled>Current Plan</button>
+                {% elif plan.is_custom %}
+                <a href="{% url 'core:home' %}#contact" class="button button-primary marketing-primary-cta">Request custom scope</a>
+                {% elif plan.is_free %}
+                <div class="pricing-inline-note">Included</div>
+                {% else %}
+                <form method="post" action="{% url 'tools:workspace-billing-checkout' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="plan" value="{{ plan.slug }}">
+                    <input type="hidden" name="return_to" value="{% url 'tools:workspace-dashboard' %}">
+                    <button type="submit" class="{% if plan.action_direction == 'upgrade' %}button button-primary marketing-primary-cta{% else %}button button-secondary{% endif %}">
+                        {{ plan.action_label }}
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+<section class="marketing-section">
+    <div class="container marketing-cta-band">
+        <div>
+            <p class="eyebrow">Best first move</p>
+            <h2>If you are unsure which plan fits, start with the audit.</h2>
+            <p>The audit usually makes the plan decision much easier because it shows the real depth of work required.</p>
+        </div>
+        <a class="button button-primary marketing-primary-cta" href="{% url 'core:home' %}#audit">Run Free Audit</a>
+    </div>
+</section>
+
+<section class="marketing-section marketing-faq-section">
     <div class="container section-heading">
-        <p class="eyebrow">Investment Intelligence</p>
-        <h2>Scaling & ROI Clarity</h2>
+        <p class="eyebrow">Pricing clarity</p>
+        <h2>What to know before you choose a plan</h2>
     </div>
     <div class="container faq-accordion">
         <details class="faq-item">
             <summary class="faq-question">
-                <h3>What is an "Intelligence Credit" and how is it consumed?</h3>
+                <h3>What changes as I move up the plans?</h3>
                 <span class="faq-icon"></span>
             </summary>
             <div class="faq-answer">
-                <span class="direct-answer">Intelligence Credits are the internal currency for high-precision audits, AEO benchmarks, and AI content generation.</span>
+                <span class="direct-answer">You mainly unlock more audit capacity, stronger SEO and AEO depth, and better reporting continuity.</span>
                 <p>
-                    Every high-compute operation—such as crawling a competitor's AI citation data or generating rank-ready 
-                    content—consumes a specific amount of credits. This ensures that you only pay for the high-intensity 
-                    processing your project requires, while basic dashboard monitoring remain accessible.
+                    Higher plans are for teams that need more analysis volume, more saved history, and more dependable reporting support across ongoing work.
                 </p>
             </div>
         </details>
 
         <details class="faq-item">
             <summary class="faq-question">
-                <h3>Do Intelligence Credits roll over to the next month?</h3>
+                <h3>Should I start with a paid plan immediately?</h3>
                 <span class="faq-icon"></span>
             </summary>
             <div class="faq-answer">
-                <span class="direct-answer">Unused credits from high-tier plans roll over for up to 90 days.</span>
+                <span class="direct-answer">Usually the smartest first move is still the audit.</span>
                 <p>
-                    We recognize that data needs fluctuate. If you perform a massive audit one month and focus on 
-                    human-led execution the next, your rollover credits allow you to maintain access to high-precision 
-                    snapshots and forge production without friction or loss of investment.
+                    The audit gives you a stronger basis for deciding whether the next priority is technical cleanup, deeper SEO execution, or stronger AEO work.
                 </p>
             </div>
         </details>
 
         <details class="faq-item">
             <summary class="faq-question">
-                <h3>What is the estimated ROI of the Momentum vs. Growth plans?</h3>
+                <h3>When does custom scope make sense?</h3>
                 <span class="faq-icon"></span>
             </summary>
             <div class="faq-answer">
-                <span class="direct-answer">Momentum is for maintaining authority, while Growth is built to aggressively capture new AI citation boxes.</span>
+                <span class="direct-answer">Custom scope makes sense when the visibility problem is broader than a normal operating plan.</span>
                 <p>
-                    Most clients on the Growth plan see a 40% faster "Time-to-Citation" because of the higher execution 
-                    priority and deep competitor profiling limits. Momentum is ideal for established brands protecting 
-                    territory, while Growth is the standard for contenders aiming for industry dominance.
-                </p>
-            </div>
-        </details>
-
-        <details class="faq-item">
-            <summary class="faq-question">
-                <h3>How do the "Self-Serve" tiers differ from "Enterprise Partner" paths?</h3>
-                <span class="faq-icon"></span>
-            </summary>
-            <div class="faq-answer">
-                <span class="direct-answer">Self-Serve tiers empower your internal team, while Enterprise paths are custom-built for large-scale delivery.</span>
-                <p>
-                    Our modular plans (Growth, Scale, Momentum) are perfect for teams using our AI and SEO intelligence 
-                    to run their own audits. The Enterprise Partner route is specifically for businesses requiring 
-                    custom architecture or direct scoping from the VRTSPACE core team for success.
-                </p>
-            </div>
-        </details>
-
-        <details class="faq-item">
-            <summary class="faq-question">
-                <h3>Are there bulk discounts for multi-domain enterprise accounts?</h3>
-                <span class="faq-icon"></span>
-            </summary>
-            <div class="faq-answer">
-                <span class="direct-answer">Yes, we offer a "Universal Credit Pool" for accounts managing multiple high-authority domains.</span>
-                <p>
-                    Organizations managing 5+ domains are eligible for custom pool-based credit pricing and consolidated 
-                    billing. This allows you to allocate resources across projects dynamically, reducing the per-domain 
-                    cost of intelligence and simplifying resource management for global agencies.
+                    Use it for multi-market complexity, unusual reporting requirements, or implementation work that needs a more tailored engagement.
                 </p>
             </div>
         </details>

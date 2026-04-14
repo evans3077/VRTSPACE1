@@ -65,8 +65,7 @@
                 <div class="system-grid">
                     <article class="system-card"><p class="eyebrow">Campaigns</p><h3>{{ report_payload.campaign_value_summary.campaign_count|default:0 }}</h3><p>Tracked execution campaigns</p></article>
                     <article class="system-card"><p class="eyebrow">Briefs</p><h3>{{ report_payload.campaign_value_summary.brief_count|default:0 }}</h3><p>Editorial briefs linked</p></article>
-                    <article class="system-card"><p class="eyebrow">Drafts</p><h3>{{ report_payload.campaign_value_summary.draft_count|default:0 }}</h3><p>Content drafts created</p></article>
-                    <article class="system-card"><p class="eyebrow">Outreach</p><h3>{{ report_payload.campaign_value_summary.outreach_target_count|default:0 }}</h3><p>Backlink targets linked to campaigns</p></article>
+                    <article class="system-card"><p class="eyebrow">Validated</p><h3>{{ report_payload.campaign_value_summary.validated_campaigns|default:0 }}</h3><p>Campaigns confirmed after reruns</p></article>
                 </div>
             </article>
         </div>
@@ -160,11 +159,13 @@
                         <span class="score-pill score-medium" style="font-size: 0.7rem;">{{ item.status|title }}</span>
                     </div>
                     <div style="margin-top: 0.45rem; color: #64748b; font-size: 0.84rem;">
-                        Validation: {{ item.validation_status|title }} | Draft: {{ item.draft_title|default:"Not created" }}
+                        Validation: {{ item.validation_status|title }} | Target keyword: {{ item.target_keyword|default:"Not set" }}
                     </div>
+                    {% if item.related_page_urls %}
                     <div style="margin-top: 0.45rem; color: #64748b; font-size: 0.84rem;">
-                        Outreach targets: {{ item.backlink_prospect_count }} | Acquired links: {{ item.acquired_backlink_count }}
+                        Tracked URLs: {{ item.related_page_urls|length }}
                     </div>
+                    {% endif %}
                 </div>
                 {% empty %}
                 <div style="padding: 1rem; border-radius: 16px; background: #f8fafc; color: #64748b;">No campaign pipeline data was stored.</div>

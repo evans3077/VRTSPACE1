@@ -1,19 +1,6 @@
 {% extends "base.html" %}
 
-{% block content %}
-<section class="hero">
-    <div class="container section-heading">
-        <p class="eyebrow">Solution library</p>
-        <h1>Browse the VRT SPACE growth system.</h1>
-        <p class="section-text">
-            These pages explain how each module fits the audit, workspace, reporting, and custom-build paths
-            without forcing every user into a direct inquiry.
-        </p>
-    </div>
-</section>
-
 {% block extra_head %}
-<!-- FAQ Schema (JSON-LD) for Services Authority -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
@@ -21,42 +8,26 @@
   "mainEntity": [
     {
       "@type": "Question",
-      "name": "What is the difference between SEO and AEO in the VRTSPACE ecosystem?",
+      "name": "Why focus on SEO, Audit, and AEO only?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "SEO focuses on winning organic traffic through traditional rankings, while AEO (Answer Engine Optimization) focuses on securing authoritative citations in LLM responses like Perplexity. VRTSPACE unifies these so you stay visible across both clicked links and generated answers."
+        "text": "Because a simpler public message helps visitors understand the value faster. VRT SPACE uses the audit as the entry point, then helps clients improve SEO and AI visibility with clearer next steps."
       }
     },
     {
       "@type": "Question",
-      "name": "What is 'Semantic Authority' and why is it our platform goal?",
+      "name": "What should a business start with?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Semantic Authority measures how completely a domain covers the entities and factual relationships of a topic. By establishing this authority, you ensure your site is viewed as the definitive 'source of truth' by both Google's Knowledge Vault and major AI models."
+        "text": "Start with the audit. It gives the clearest picture of what is hurting visibility, trust, and conversion before a deeper SEO or AEO engagement."
       }
     },
     {
       "@type": "Question",
-      "name": "How does the Authority Engine track 'Citation Velocity'?",
+      "name": "How do SEO and AEO work together?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Citation Velocity tracks how rapidly your brand is appearing as a primary source in AI search logs. A rising velocity indicates your AEO optimizations are successfully influencing the latest model retrieval windows."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Can I use the workspace modules independently?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Yes. Our platform is modular. You can utilize the SEO Intelligence module, the AEO module, or the Content Forge independently to focus on specific growth metrics as your authority scales."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "How do custom build paths work for high-performance apps?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Custom builds integrate our Authority Engine from the first line of code. We ensure your app architecture is fast, crawlable, and natively supports the high-precision schema required for modern AI discovery."
+        "text": "SEO improves how a business is found in search results. AEO improves how a business is understood and cited in AI-generated answers. Together they make visibility stronger across both search behaviors."
       }
     }
   ]
@@ -64,112 +35,108 @@
 </script>
 {% endblock %}
 
-{% for group in service_groups %}
-<section class="services-section tone-{{ group.tone }}">
-    <div class="container service-band-head">
+{% block content %}
+<section class="marketing-page-hero">
+    <div class="container marketing-page-hero-grid">
         <div>
-            <p class="eyebrow">{{ group.title }}</p>
-            <h2>{{ group.lead }}</h2>
+            <p class="eyebrow">Core services</p>
+            <h1>Three focused ways we help businesses grow online.</h1>
+            <p class="section-text">
+                This is a deliberately tight offer. Start with the audit when you need clarity, move into SEO when search visibility is the bigger gap, and use AEO when the site needs to read better to AI systems.
+            </p>
+            <div class="marketing-hero-actions">
+                <a class="button button-primary marketing-primary-cta" href="{% url 'core:home' %}#audit">Run Free Audit</a>
+                <a class="button button-secondary" href="{% url 'core:packages' %}">See Plans</a>
+            </div>
+        </div>
+        <div class="marketing-side-panel">
+            <p class="eyebrow">How to choose</p>
+            <div class="marketing-flow-list">
+                <article class="marketing-flow-item">
+                    <span class="marketing-flow-number">01</span>
+                    <div>
+                        <strong>Not sure where the issue is?</strong>
+                        <p>Start with the audit and let the diagnosis decide the next move.</p>
+                    </div>
+                </article>
+                <article class="marketing-flow-item">
+                    <span class="marketing-flow-number">02</span>
+                    <div>
+                        <strong>Need stronger search performance?</strong>
+                        <p>Use SEO to improve rankings, priorities, and the pages that should pull qualified traffic.</p>
+                    </div>
+                </article>
+                <article class="marketing-flow-item">
+                    <span class="marketing-flow-number">03</span>
+                    <div>
+                        <strong>Need better AI visibility?</strong>
+                        <p>Use AEO to strengthen structure, answer readiness, and citation potential.</p>
+                    </div>
+                </article>
+            </div>
         </div>
     </div>
-    <div class="container service-grid expanded-grid">
+</section>
+
+{% for group in service_groups %}
+<section class="marketing-section marketing-section-muted">
+    <div class="container marketing-service-grid">
         {% for service in group.services %}
-        <article class="service-card">
+        <article class="marketing-service-card">
+            <p class="marketing-card-step">0{{ forloop.counter }}</p>
             <h3>{{ service.name }}</h3>
-            <p>{{ service.summary }}</p>
-            <ul class="bullet-list">
+            <p class="marketing-card-summary">{{ service.summary }}</p>
+            <div class="marketing-card-block">
+                <span class="marketing-label">Best for</span>
+                <p>{{ service.best_for }}</p>
+            </div>
+            <div class="marketing-card-block">
+                <span class="marketing-label">Outcome</span>
+                <p>{{ service.outcome }}</p>
+            </div>
+            <ul class="marketing-list">
                 {% for bullet in service.bullets %}
                 <li>{{ bullet }}</li>
                 {% endfor %}
             </ul>
-            <a class="package-link" href="{% url 'core:service-detail' slug=service.name|slugify %}">Open detail page</a>
+            <div class="marketing-card-footer">
+                <span>{{ service.system_feature }}</span>
+                <a href="{% url 'core:service-detail' slug=service.name|slugify %}">Learn more</a>
+            </div>
         </article>
         {% endfor %}
     </div>
 </section>
 {% endfor %}
 
-<section class="faq-section">
+<section class="marketing-section">
+    <div class="container marketing-cta-band">
+        <div>
+            <p class="eyebrow">Best next step</p>
+            <h2>Still deciding? Start with the audit.</h2>
+            <p>The audit keeps the next decision grounded in evidence instead of assumptions.</p>
+        </div>
+        <a class="button button-primary marketing-primary-cta" href="{% url 'core:home' %}#audit">Run Free Audit</a>
+    </div>
+</section>
+
+<section class="marketing-section marketing-faq-section">
     <div class="container section-heading">
-        <p class="eyebrow">Service Intelligence</p>
-        <h2>Technical & Strategic Gaps</h2>
+        <p class="eyebrow">Service clarity</p>
+        <h2>Questions before choosing a service</h2>
     </div>
     <div class="container faq-accordion">
+        {% for item in faqs %}
         <details class="faq-item">
             <summary class="faq-question">
-                <h3>What is the difference between SEO and AEO in the VRTSPACE ecosystem?</h3>
+                <h3>{{ item.question }}</h3>
                 <span class="faq-icon"></span>
             </summary>
             <div class="faq-answer">
-                <span class="direct-answer">SEO focuses on organic traffic through traditional rankings, while AEO focuses on securing authoritative citations in AI responses.</span>
-                <p>
-                    Traditional SEO optimizes for the way search engines index and rank pages for users to click. 
-                    AEO optimizes for the way AI models (LLMs) ingest, summarize, and cite information.
-                    VRTSPACE unifies these disciplines so that your website remains dominant in traditional search results while 
-                    becoming a primary source for generated AI answers.
-                </p>
+                <span class="direct-answer">{{ item.answer }}</span>
             </div>
         </details>
-
-        <details class="faq-item">
-            <summary class="faq-question">
-                <h3>What is 'Semantic Authority' and why is it the goal of the Platform?</h3>
-                <span class="faq-icon"></span>
-            </summary>
-            <div class="faq-answer">
-                <span class="direct-answer">Semantic Authority is the measure of how completely your domain covers the entities and factual relationships of a topic.</span>
-                <p>
-                    Search engines and AI models no longer just look for matching strings; they look for matching *things*. 
-                    By establishing Semantic Authority, you tell search engines that your site is the definitive 
-                    "source of truth" for a topic, making you the primary candidate for citation across all search surfaces.
-                </p>
-            </div>
-        </details>
-
-        <details class="faq-item">
-            <summary class="faq-question">
-                <h3>How does the Authority Engine track 'Citation Velocity'?</h3>
-                <span class="faq-icon"></span>
-            </summary>
-            <div class="faq-answer">
-                <span class="direct-answer">Citation Velocity measures how rapidly your brand is gaining new mentions in AI search responses.</span>
-                <p>
-                    Visibility is a moving target. We track how often LLMs choose your domain as the "ground truth" over time. 
-                    A rising Citation Velocity indicates that your AEO optimizations are working and that your site 
-                    is being prioritized in the latest model training and retrieval windows.
-                </p>
-            </div>
-        </details>
-
-        <details class="faq-item">
-            <summary class="faq-question">
-                <h3>Can I use the workspace modules independently?</h3>
-                <span class="faq-icon"></span>
-            </summary>
-            <div class="faq-answer">
-                <span class="direct-answer">Yes, our platform is modular by architectural design to allow for targeted growth injections.</span>
-                <p>
-                    Every business is at a different stage of authority. You can lock in the SEO, AEO, or Content Forge 
-                    modules as needed, allowing you to focus on the specific metrics that will drive your next stage 
-                    of growth without being forced into a single monolithic path.
-                </p>
-            </div>
-        </details>
-
-        <details class="faq-item">
-            <summary class="faq-question">
-                <h3>How do custom build paths work for high-performance apps?</h3>
-                <span class="faq-icon"></span>
-            </summary>
-            <div class="faq-answer">
-                <span class="direct-answer">We treat every custom app build as a high-performance search surface.</span>
-                <p>
-                    Traditional app architecture often ignores SEO and AEO until after deployment. Our build path 
-                    integrates our Authority Engine from day one, ensuring that your app's foundation is fast, 
-                    crawlable, and natively supports the technical schema required for AI discovery.
-                </p>
-            </div>
-        </details>
+        {% endfor %}
     </div>
 </section>
 {% endblock %}
