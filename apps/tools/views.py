@@ -66,6 +66,7 @@ from .automation import get_workspace_schedule
 from .jobs import enqueue_public_site_audit
 from .models import AuditRun, AuditShareLink
 from .pdf_reports import build_audit_report_pdf
+from .recommendations import build_audit_summary
 from .services import extract_domain, normalize_url
 
 
@@ -244,6 +245,15 @@ class AuditResultDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         audit_run = self.object
         summary = audit_run.summary or {}
+        needs_summary_refresh = audit_run.status == AuditRun.Status.COMPLETED and (
+            (summary.get("top_issues") and "summary" not in summary["top_issues"][0])
+            or (summary.get("quick_wins") and "summary" not in summary["quick_wins"][0])
+            or (summary.get("recommended_next_step") and "checklist" not in summary["recommended_next_step"])
+        )
+        if needs_summary_refresh:
+            summary = build_audit_summary(audit_run)
+            audit_run.summary = summary
+            audit_run.save(update_fields=["summary", "updated_at"])
         viewer_user = _get_audit_viewer_user(self.request, audit_run)
         audit_profile = get_audit_result_profile(viewer_user)
         scores = summary.get("scores", {})
@@ -277,7 +287,8 @@ class AuditResultDetailView(DetailView):
                 "label": label,
                 "score": score,
                 "offset": small_offset,
-                "color": "#16a34a" if score >= 90 else "#ea580c" if score >= 50 else "#dc2626"
+                "color": "#16a34a" if score >= 90 else "#ea580c" if score >= 50 else "#dc2626",
+                "tone": "strong" if score >= 90 else "warning" if score >= 50 else "critical",
             })
         score_breakdown_keys = audit_profile.get("score_breakdown_keys")
         if score_breakdown_keys:

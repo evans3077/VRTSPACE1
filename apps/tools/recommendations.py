@@ -1,5 +1,6 @@
 import re
 from collections import Counter
+from urllib.parse import urlparse
 
 from .evidence import decorate_recommendation
 from .models import AuditIssue
@@ -63,6 +64,108 @@ CATEGORY_PLAN_MAP = {
     AuditIssue.Category.AEO: "Authority",
     AuditIssue.Category.INTERNAL_LINKING: "Growth",
     AuditIssue.Category.PERFORMANCE: "Growth",
+}
+
+ROOT_CAUSE_PLAYBOOK = {
+    "on-page-structure": {
+        "problem": "Search snippets are not presenting the offer clearly enough, which makes clicks harder to win.",
+        "fix": "Tighten the title and heading so the main page promise is obvious in a single glance.",
+        "steps": [
+            "Start with {first_url} and trim the title to roughly 50 to 60 characters.",
+            "Lead with the main service or page topic before the brand name.",
+            "Match the title, H1, and opening copy so the promise is consistent.",
+        ],
+        "next_title": "Clean up the first search-facing page signals.",
+        "next_body": "Fix the highest-visibility title and heading issues first, then rerun the audit to confirm the page reads cleanly in search.",
+    },
+    "answer-readiness": {
+        "problem": "Important pages are not yet packaged in a way answer engines can quote and cite easily.",
+        "fix": "Add short question-and-answer blocks to the strongest service pages and support them with clean structured formatting.",
+        "steps": [
+            "Start with {first_url} and add 3 to 5 questions real visitors ask before converting.",
+            "Answer each question in direct, plain language before expanding with extra detail.",
+            "Add FAQ schema only where those questions genuinely exist on the page.",
+        ],
+        "next_title": "Turn the strongest pages into citation-ready answers.",
+        "next_body": "Use the audit pages with the clearest answer-readiness gaps as the first AEO improvements inside the workspace.",
+    },
+    "crawl-foundation": {
+        "problem": "Crawl and index signals are sending mixed messages, which weakens discovery and trust.",
+        "fix": "Clean up canonical, robots, sitemap, or status-code conflicts so search engines see one clear version of every important page.",
+        "steps": [
+            "Start with {first_url} and confirm the preferred canonical and indexable version.",
+            "Resolve any robots, status-code, or duplication conflict before rerunning the crawl.",
+            "Update the sitemap so important pages are easy for search engines to find again.",
+        ],
+        "next_title": "Stabilize crawl and index foundations first.",
+        "next_body": "Fix the technical discovery blockers first so later SEO and AEO work has a clean base to build on.",
+    },
+    "content-depth": {
+        "problem": "The page exists, but it does not yet answer the topic deeply enough to feel authoritative.",
+        "fix": "Expand the page with clearer proof, stronger examples, and fuller answers to the main user intent.",
+        "steps": [
+            "Start with {first_url} and list the top questions the page should answer before a user contacts you.",
+            "Add proof elements such as examples, process detail, outcomes, or trust signals.",
+            "Remove thin filler copy and make the page easier to scan for the core decision points.",
+        ],
+        "next_title": "Deepen the pages that should be carrying trust.",
+        "next_body": "Strengthen the thinnest high-value pages first so the site feels more complete and credible to both users and search engines.",
+    },
+    "performance": {
+        "problem": "Slow rendering is creating trust friction before users reach the core offer.",
+        "fix": "Reduce the heaviest assets and server delays first so the page feels responsive from the first visit.",
+        "steps": [
+            "Start with {first_url} and remove or defer the assets blocking the first screen.",
+            "Compress large images, fonts, and third-party scripts loading before the main content.",
+            "Rerun the audit after each speed change so you can confirm the metric actually moved.",
+        ],
+        "next_title": "Take the first speed blockers off the page.",
+        "next_body": "Fix the slowest rendering and server-response problems first because they affect both conversion trust and visibility.",
+    },
+    "internal-linking": {
+        "problem": "Important pages are not getting enough support from the rest of the site.",
+        "fix": "Add clearer contextual links from strong pages so priority URLs are easier to discover and rank.",
+        "steps": [
+            "Start with {first_url} and identify stronger pages that should link into it naturally.",
+            "Add links using descriptive anchor text that matches the page topic.",
+            "Reduce orphan-style paths so important pages are no more than a few clicks deep.",
+        ],
+        "next_title": "Strengthen the routes into your priority pages.",
+        "next_body": "Use the workspace to map and improve the internal paths that should be carrying authority into the most valuable URLs.",
+    },
+    "entity-clarity": {
+        "problem": "The site is not sending a strong enough signal about what the business is and what it is best known for.",
+        "fix": "Make the service, entity, and business context more explicit across the main pages.",
+        "steps": [
+            "Start with {first_url} and make the main service or business type obvious in the first screen.",
+            "Repeat the core entity terms consistently across headings, summaries, and supporting copy.",
+            "Add structured context only where the on-page content clearly supports it.",
+        ],
+        "next_title": "Clarify the business signal before expanding coverage.",
+        "next_body": "Make the core entity and offer clearer first so later SEO and AEO work has a stronger identity base.",
+    },
+    "local-intent": {
+        "problem": "Location intent is not being made clear enough for users and search engines.",
+        "fix": "Bring the service and location terms closer together on the pages that should win local searches.",
+        "steps": [
+            "Start with {first_url} and place the main service plus location in the title and heading.",
+            "Support the location intent with proof, FAQs, and nearby-service language where relevant.",
+            "Keep the location wording natural so the page still reads like it was written for people first.",
+        ],
+        "next_title": "Make the local service intent unmistakable.",
+        "next_body": "Use the first local-intent pages to sharpen location relevance before expanding the same pattern site-wide.",
+    },
+    "page-coverage": {
+        "problem": "The site is missing page coverage that users and search engines expect to find.",
+        "fix": "Create or strengthen the missing page types so important intents are not being left uncovered.",
+        "steps": [
+            "Start with {first_url} or the closest existing page and confirm which intent is still missing.",
+            "Create a dedicated page instead of forcing multiple intents into one weak URL.",
+            "Link the new page from related service or navigation paths so it can be discovered quickly.",
+        ],
+        "next_title": "Fill the first obvious content gaps.",
+        "next_body": "Use the audit to identify which missing pages would unlock the clearest visibility gains next.",
+    },
 }
 
 PERFORMANCE_METRIC_CONFIG = [
@@ -133,6 +236,96 @@ def _technical_steps(issue):
         if step not in steps:
             steps.append(step)
     return steps[:3]
+
+
+def _normalize_sentence(value):
+    text = " ".join(str(value or "").split())
+    if text and text[-1] not in ".!?":
+        text = f"{text}."
+    return text
+
+
+def _unique_urls(values):
+    seen = set()
+    urls = []
+    for value in values or []:
+        value = (value or "").strip()
+        if not value or value in seen:
+            continue
+        seen.add(value)
+        urls.append(value)
+    return urls
+
+
+def _short_url(url):
+    parsed = urlparse(url or "")
+    if not parsed.netloc:
+        return url or ""
+    path = parsed.path.rstrip("/") or "/"
+    return f"{parsed.netloc}{path}" if path != "/" else parsed.netloc
+
+
+def _page_targets_for(recommendation, limit=3):
+    targets = recommendation.get("page_examples") or []
+    if recommendation.get("page_url"):
+        targets = [recommendation["page_url"], *targets]
+    return _unique_urls(targets)[:limit]
+
+
+def _page_scope_label(recommendation, urls):
+    affected_count = recommendation.get("affected_pages_count") or recommendation.get("duplicate_issue_count") or len(urls)
+    if affected_count <= 0:
+        return "Site-wide signal"
+    if affected_count == 1:
+        return "1 priority URL affected"
+    return f"{affected_count} URLs need attention"
+
+
+def _playbook_for(recommendation):
+    return ROOT_CAUSE_PLAYBOOK.get(recommendation.get("root_cause_key"), {})
+
+
+def _action_steps_for(recommendation, urls):
+    playbook = _playbook_for(recommendation)
+    first_url = _short_url(urls[0]) if urls else "the first affected page"
+    steps = []
+
+    for step in playbook.get("steps", []):
+        formatted = _normalize_sentence(step.format(first_url=first_url))
+        if formatted and formatted not in steps:
+            steps.append(formatted)
+
+    for step in recommendation.get("technical_steps", []):
+        cleaned = _normalize_sentence(step)
+        if cleaned and cleaned not in steps:
+            steps.append(cleaned)
+
+    fix = _normalize_sentence(playbook.get("fix") or recommendation.get("recommended_fix"))
+    if fix and fix not in steps:
+        steps.append(fix)
+
+    return steps[:3]
+
+
+def _present_recommendation(recommendation):
+    urls = _page_targets_for(recommendation)
+    playbook = _playbook_for(recommendation)
+    return {
+        "category": recommendation["category"],
+        "severity": recommendation["severity"],
+        "message": recommendation["title"],
+        "summary": playbook.get("problem") or _normalize_sentence(recommendation.get("description")),
+        "recommendation": _normalize_sentence(playbook.get("fix") or recommendation.get("recommended_fix")),
+        "urls": urls,
+        "url_labels": [_short_url(url) for url in urls],
+        "scope_label": _page_scope_label(recommendation, urls),
+        "action_steps": _action_steps_for(recommendation, urls),
+        "impact": recommendation.get("estimated_impact", ""),
+        "root_cause_label": recommendation.get("root_cause_label", recommendation.get("category")),
+        "confidence_label": recommendation.get("confidence_label", ""),
+        "evidence_status": recommendation.get("evidence_status", ""),
+        "page_url": recommendation.get("page_url"),
+    }
 
 
 def build_ranked_recommendations(audit_run, *, issues=None, score_breakdown=None):
@@ -261,35 +454,49 @@ def build_featured_recommendations(recommendations, limit=6):
 
 
 def build_top_issues(recommendations):
-    return [
-        {
-            "category": recommendation["category"],
-            "severity": recommendation["severity"],
-            "message": recommendation["title"],
-            "recommendation": recommendation["recommended_fix"],
+    issue_candidates = [
+        recommendation
+        for recommendation in recommendations
+        if recommendation["severity"] in {
+            AuditIssue.Severity.CRITICAL,
+            AuditIssue.Severity.HIGH,
+            AuditIssue.Severity.MEDIUM,
         }
-        for recommendation in recommendations[:8]
     ]
+    if len(issue_candidates) < min(3, len(recommendations)):
+        for recommendation in recommendations:
+            if recommendation in issue_candidates:
+                continue
+            issue_candidates.append(recommendation)
+            if len(issue_candidates) >= min(3, len(recommendations)):
+                break
+    if not issue_candidates:
+        issue_candidates = list(recommendations)
+    return [_present_recommendation(recommendation) for recommendation in issue_candidates[:6]]
 
 
 def build_quick_wins(recommendations):
     quick_wins = []
-    seen_categories = set()
     for recommendation in recommendations:
-        if recommendation["severity"] not in {AuditIssue.Severity.HIGH, AuditIssue.Severity.MEDIUM}:
+        if recommendation["severity"] == AuditIssue.Severity.CRITICAL:
             continue
-        if recommendation["category_key"] in seen_categories:
+        presented = _present_recommendation(recommendation)
+        if presented["root_cause_label"] in {item["root_cause_label"] for item in quick_wins}:
             continue
         quick_wins.append(
             {
-                "category": recommendation["category"],
-                "problem": recommendation["title"],
-                "fix": recommendation["recommended_fix"],
-                "url": recommendation["page_url"],
+                "category": presented["category"],
+                "problem": presented["message"],
+                "summary": presented["summary"],
+                "fix": presented["recommendation"],
+                "urls": presented["urls"],
+                "url_labels": presented["url_labels"],
+                "scope_label": presented["scope_label"],
+                "action_steps": presented["action_steps"],
+                "root_cause_label": presented["root_cause_label"],
             }
         )
-        seen_categories.add(recommendation["category_key"])
-        if len(quick_wins) >= 6:
+        if len(quick_wins) >= 4:
             break
     return quick_wins
 
@@ -351,12 +558,15 @@ def build_performance_metrics(pagespeed):
 
         status = "strong"
         impact = config["description"]
+        status_label = "Healthy"
         if normalized > config["critical_threshold"]:
             status = "critical"
             impact = config["critical_impact"]
+            status_label = "Needs attention"
         elif normalized > config["warning_threshold"]:
             status = "warning"
             impact = config["warning_impact"]
+            status_label = "Watch closely"
 
         performance_metrics.append(
             {
@@ -366,6 +576,7 @@ def build_performance_metrics(pagespeed):
                 "value": str(raw_value),
                 "normalized_value": normalized,
                 "status": status,
+                "status_label": status_label,
                 "target_label": config["target_label"],
                 "description": config["description"],
                 "impact": impact,
@@ -527,11 +738,13 @@ def build_diagnosis(audit_run, score_breakdown, recommendations):
         "The goal is to remove the blockers that are most likely to affect discovery, trust, and conversion first."
     )
     next_recommendation = recommendations[0] if recommendations else {}
+    playbook = _playbook_for(next_recommendation)
     return {
         "headline": headline,
         "summary": summary,
-        "next_step_title": next_recommendation.get("title", "Review the priority fixes"),
-        "next_step_body": next_recommendation.get(
+        "next_step_title": playbook.get("next_title") or next_recommendation.get("title", "Review the priority fixes"),
+        "next_step_body": playbook.get("next_body")
+        or next_recommendation.get(
             "recommended_fix",
             "Start with the clearest high-impact recommendation, then rerun the audit to validate the change.",
         ),
@@ -541,11 +754,20 @@ def build_diagnosis(audit_run, score_breakdown, recommendations):
 def build_recommended_next_step(recommendations, product_modules):
     recommendation = recommendations[0] if recommendations else {}
     module = product_modules[0] if product_modules else {}
+    playbook = _playbook_for(recommendation)
+    page_targets = _page_targets_for(recommendation, limit=3)
+    checklist = _action_steps_for(recommendation, page_targets)
     return {
-        "title": module.get("title") or recommendation.get("title") or "Move into the next layer",
-        "body": module.get("impact") or recommendation.get("recommended_fix") or "Use the audit to decide the next product layer and fix sequence.",
+        "title": playbook.get("next_title") or module.get("title") or recommendation.get("title") or "Move into the next layer",
+        "body": playbook.get("next_body")
+        or module.get("impact")
+        or recommendation.get("recommended_fix")
+        or "Use the audit to decide the next product layer and fix sequence.",
         "cta_label": module.get("cta_label") or "Open the workspace",
         "plan": module.get("plan", ""),
+        "checklist": checklist,
+        "scope_label": _page_scope_label(recommendation, page_targets),
+        "focus_urls": page_targets,
     }
 
 
@@ -576,15 +798,16 @@ def build_audit_summary(audit_run, *, issues=None):
         issues=issue_list,
         score_breakdown=score_breakdown,
     )
+    featured_recommendations = build_featured_recommendations(recommendations)
     vitals_failures = build_vitals_failures(pagespeed)
     product_modules = build_product_modules(audit_run, score_breakdown)
     custom_work_items = build_custom_work_items(audit_run)
 
     summary = {
         "diagnosis": build_diagnosis(audit_run, score_breakdown, recommendations),
-        "top_issues": build_top_issues(recommendations),
-        "quick_wins": build_quick_wins(recommendations),
-        "featured_recommendations": build_featured_recommendations(recommendations),
+        "top_issues": build_top_issues(featured_recommendations),
+        "quick_wins": build_quick_wins(featured_recommendations),
+        "featured_recommendations": featured_recommendations,
         "recommendations": recommendations[:12],
         "issue_summary": build_issue_summary(issue_list),
         "score_breakdown": score_breakdown,
@@ -594,7 +817,7 @@ def build_audit_summary(audit_run, *, issues=None):
         "product_modules": product_modules,
         "custom_work_items": custom_work_items,
         "service_fit": product_modules,
-        "recommended_next_step": build_recommended_next_step(recommendations, product_modules),
+        "recommended_next_step": build_recommended_next_step(featured_recommendations or recommendations, product_modules),
         "captured_context": build_captured_context(audit_run),
         "pages_crawled": audit_run.pages_crawled,
         "scores": serialize_score_snapshot(audit_run),

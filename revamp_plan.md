@@ -51,6 +51,8 @@ This plan tracks the revamp work driven by the Markdown review, especially `prom
 - Updated public and workspace audit-start flows in `apps/tools/views.py` so they now check website capacity, audit limits, and credit access before creating new runs
 - Added diagnosis, next-step, and captured-context objects to the audit summary in `apps/tools/recommendations.py` so the result page and later workspace layers share the same audit framing
 - Rebuilt `templates/tools/audit_result.html` around a diagnosis-first, plan-aware audit experience with clearer borders, more deliberate upgrade pressure, and controlled reveal by plan
+- Refined the audit result experience again so grouped issues now surface affected URLs, clearer human fix language, three-step action lists, value-aware metric colors, and a lightweight in-progress animation for the live audit state
+- Updated `apps/tools/views.py` so older completed audits automatically refresh into the newer audit-summary contract when opened instead of rendering stale summary structures
 - Updated account and workspace dashboard surfaces so they now show audit runs remaining and tracked-website capacity alongside credits
 - Ran `python manage.py check` successfully after the changes
 
@@ -67,6 +69,7 @@ This plan tracks the revamp work driven by the Markdown review, especially `prom
 - The deeper SEO and AEO sections still contain older inline styling, so the first-screen experience is cleaner than the long-scroll detail sections for now.
 - The homepage already has a workable audit CTA and a strong form base, so the revamp should simplify and tighten rather than rebuild from scratch.
 - The audit now needs to act as a controlled SaaS diagnosis rather than a full technical dump: free results stay concise, Starter is meaningfully more detailed, and Growth / Authority expose the deeper layers.
+- The audit result page now communicates value more clearly in the first diagnosis blocks, but the same clarity standard still needs to spread into the rest of the audit-related workspace surfaces.
 - Plan policy now needs to stay consistent everywhere the user can feel it: homepage, public audit creation, workspace reruns, the result page, and the account dashboard.
 - The audit intake only needs enough business context to make the next SEO and AEO layers smarter; competitor and market-detail prompts do not belong in the first public form anymore.
 
@@ -96,6 +99,7 @@ This plan tracks the revamp work driven by the Markdown review, especially `prom
 - Keep the audit form progressive and low-friction as future public edits continue
 - Review whether anonymous public audits should later inherit a stronger account-linked limit beyond the current email/account matching behavior
 - Continue tightening workspace audit, SEO, and AEO long-scroll sections so the deeper product shell matches the new audit result quality bar
+- Carry the same issue grouping, recommendation clarity, and visible-progress language into the broader workspace audit surfaces after this public audit-result pass
 
 ### Phase 2: Public conversion polish
 

@@ -3,7 +3,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse, JsonResponse
 from django.shortcuts import redirect
 from django.urls import reverse
-from urllib.parse import urlencode
+from urllib.parse import quote
 from django.utils.decorators import method_decorator
 from django.views import View
 from django.views.decorators.csrf import csrf_exempt
@@ -16,6 +16,7 @@ from apps.leads.billing import (
     get_plan_by_slug,
     get_workspace_subscription,
     handle_stripe_webhook_event,
+    is_active_subscription,
     sync_subscription_from_checkout_session_id,
     verify_stripe_signature,
 )
@@ -50,15 +51,12 @@ class WorkspaceCheckoutCreateView(LoginRequiredMixin, View):
             return redirect("core:home")
 
         try:
-            success_path = reverse("tools:workspace-billing-success")
+            success_path = f"{reverse('tools:workspace-billing-success')}?session_id={{CHECKOUT_SESSION_ID}}"
             cancel_path = reverse("tools:workspace-billing-cancel")
-            success_query = "session_id={CHECKOUT_SESSION_ID}"
             if return_to.startswith("/"):
-                query = urlencode({"next": return_to})
-                success_path = f"{success_path}?{query}&{success_query}"
-                cancel_path = f"{cancel_path}?{query}"
-            else:
-                success_path = f"{success_path}?{success_query}"
+                quoted_return_to = quote(return_to, safe="/#?=&")
+                success_path = f"{success_path}&next={quoted_return_to}"
+                cancel_path = f"{cancel_path}?next={quoted_return_to}"
             session = create_checkout_session(
                 user=request.user,
                 plan=plan,
@@ -99,14 +97,27 @@ class WorkspaceBillingPortalView(LoginRequiredMixin, View):
 class WorkspaceBillingSuccessView(LoginRequiredMixin, View):
     def get(self, request, *args, **kwargs):
         session_id = request.GET.get("session_id", "").strip()
+        subscription = get_workspace_subscription(request.user)
+        session_placeholder_received = (
+            not session_id
+            or session_id == "{CHECKOUT_SESSION_ID}"
+            or "{CHECKOUT_SESSION_ID}" in session_id
+        )
+        if session_placeholder_received and subscription and subscription.stripe_checkout_session_id:
+            session_id = subscription.stripe_checkout_session_id
+
         if session_id:
             try:
                 sync_subscription_from_checkout_session_id(session_id)
             except BillingError as exc:
-                messages.warning(
-                    request,
-                    f"Billing completed, but the subscription refresh is still pending. {exc}",
-                )
+                refreshed_subscription = get_workspace_subscription(request.user)
+                if is_active_subscription(refreshed_subscription):
+                    messages.success(request, "Billing completed and the subscription is active.")
+                else:
+                    messages.warning(
+                        request,
+                        f"Billing completed, but the subscription refresh is still pending. {exc}",
+                    )
             else:
                 messages.success(request, "Billing completed and workspace credits are now available.")
         else:

@@ -3703,6 +3703,107 @@ body.shell-light .result-alert-panel {
     padding: 2rem !important;
 }
 
+body.shell-light .audit-processing-shell {
+    display: grid;
+    grid-template-columns: minmax(180px, 220px) minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: center;
+}
+
+body.shell-light .audit-processing-orbit {
+    position: relative;
+    width: 200px;
+    height: 200px;
+    margin: 0 auto;
+}
+
+body.shell-light .audit-processing-core {
+    position: absolute;
+    inset: 50%;
+    width: 36px;
+    height: 36px;
+    margin: -18px;
+    border-radius: 999px;
+    background: radial-gradient(circle, rgba(20, 184, 166, 0.95), rgba(15, 118, 110, 0.82));
+    box-shadow: 0 0 0 10px rgba(20, 184, 166, 0.08), 0 0 36px rgba(20, 184, 166, 0.22);
+}
+
+body.shell-light .audit-processing-ring {
+    position: absolute;
+    inset: 50%;
+    border: 1px solid rgba(15, 118, 110, 0.16);
+    border-radius: 999px;
+    transform: translate(-50%, -50%);
+}
+
+body.shell-light .audit-processing-ring-one {
+    width: 92px;
+    height: 92px;
+    animation: audit-orbit-spin 10s linear infinite;
+}
+
+body.shell-light .audit-processing-ring-two {
+    width: 136px;
+    height: 136px;
+    animation: audit-orbit-spin 14s linear infinite reverse;
+}
+
+body.shell-light .audit-processing-ring-three {
+    width: 184px;
+    height: 184px;
+    animation: audit-orbit-spin 18s linear infinite;
+}
+
+body.shell-light .audit-processing-planet {
+    position: absolute;
+    top: 50%;
+    left: 100%;
+    width: 14px;
+    height: 14px;
+    margin: -7px;
+    border-radius: 999px;
+}
+
+body.shell-light .audit-processing-planet-one {
+    background: #14b8a6;
+}
+
+body.shell-light .audit-processing-planet-two {
+    background: #38bdf8;
+}
+
+body.shell-light .audit-processing-planet-three {
+    background: #f59e0b;
+}
+
+body.shell-light .audit-processing-steps {
+    display: grid;
+    gap: 0.85rem;
+}
+
+body.shell-light .audit-processing-step {
+    padding: 0.95rem 1rem;
+    border-radius: 18px;
+    background: rgba(248, 250, 252, 0.9);
+    border: 1px solid rgba(15, 23, 42, 0.06);
+}
+
+body.shell-light .audit-processing-step.is-active {
+    border-color: rgba(15, 118, 110, 0.18);
+    background: linear-gradient(180deg, rgba(240, 253, 250, 0.96), rgba(255, 255, 255, 0.98));
+    box-shadow: 0 16px 36px rgba(15, 23, 42, 0.06);
+}
+
+body.shell-light .audit-processing-step strong,
+body.shell-light .audit-processing-step p {
+    margin: 0;
+}
+
+body.shell-light .audit-processing-step p {
+    margin-top: 0.35rem;
+    color: var(--text-secondary);
+}
+
 body.shell-light .result-state-panel-danger {
     border-color: rgba(239, 68, 68, 0.18) !important;
     box-shadow: 0 20px 60px rgba(239, 68, 68, 0.08) !important;
@@ -3726,7 +3827,7 @@ body.shell-light .audit-score-number {
 
 body.shell-light .audit-score-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 0.9rem;
 }
 
@@ -3737,6 +3838,8 @@ body.shell-light .audit-score-card {
     border: 1px solid rgba(15, 23, 42, 0.06);
     display: grid;
     gap: 0.35rem;
+    min-height: 92px;
+    align-content: start;
 }
 
 body.shell-light .audit-score-card strong {
@@ -3744,8 +3847,24 @@ body.shell-light .audit-score-card strong {
     color: var(--text-primary);
 }
 
+body.shell-light .audit-score-card-strong {
+    border-color: rgba(34, 197, 94, 0.18);
+    background: linear-gradient(180deg, rgba(240, 253, 244, 0.98), rgba(255, 255, 255, 0.98));
+}
+
+body.shell-light .audit-score-card-warning {
+    border-color: rgba(245, 158, 11, 0.18);
+    background: linear-gradient(180deg, rgba(255, 251, 235, 0.98), rgba(255, 255, 255, 0.98));
+}
+
+body.shell-light .audit-score-card-critical {
+    border-color: rgba(239, 68, 68, 0.18);
+    background: linear-gradient(180deg, rgba(254, 242, 242, 0.98), rgba(255, 255, 255, 0.98));
+}
+
 body.shell-light .performance-metric-card h3 {
     font-size: 2rem;
+    margin: 0;
 }
 
 body.shell-light .metric-status-critical {
@@ -3762,6 +3881,66 @@ body.shell-light .metric-status-good {
 
 body.shell-light .metric-status-success {
     border-color: rgba(34, 197, 94, 0.22) !important;
+}
+
+body.shell-light .metric-status-strong {
+    border-color: rgba(34, 197, 94, 0.22) !important;
+}
+
+body.shell-light .audit-metric-status,
+body.shell-light .audit-scope-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.3rem 0.65rem;
+    border-radius: 999px;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: #ffffff;
+    color: var(--text-primary);
+}
+
+body.shell-light .audit-metric-status-critical {
+    color: #b91c1c;
+    border-color: rgba(239, 68, 68, 0.18);
+    background: rgba(254, 242, 242, 0.98);
+}
+
+body.shell-light .audit-metric-status-warning {
+    color: #b45309;
+    border-color: rgba(245, 158, 11, 0.18);
+    background: rgba(255, 251, 235, 0.98);
+}
+
+body.shell-light .audit-metric-status-strong {
+    color: #15803d;
+    border-color: rgba(34, 197, 94, 0.18);
+    background: rgba(240, 253, 244, 0.98);
+}
+
+body.shell-light .audit-metric-value {
+    padding: 0.95rem 1rem;
+    border-radius: 20px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    margin-bottom: 0.35rem;
+}
+
+body.shell-light .audit-metric-value-critical {
+    background: linear-gradient(180deg, rgba(254, 242, 242, 0.98), rgba(255, 255, 255, 0.98));
+    border-color: rgba(239, 68, 68, 0.18);
+}
+
+body.shell-light .audit-metric-value-warning {
+    background: linear-gradient(180deg, rgba(255, 251, 235, 0.98), rgba(255, 255, 255, 0.98));
+    border-color: rgba(245, 158, 11, 0.18);
+}
+
+body.shell-light .audit-metric-value-strong {
+    background: linear-gradient(180deg, rgba(240, 253, 244, 0.98), rgba(255, 255, 255, 0.98));
+    border-color: rgba(34, 197, 94, 0.18);
 }
 
 body.shell-light .result-alert-panel {
@@ -4314,6 +4493,56 @@ body.shell-light .account-surface .billing-plan-card[open] {
     box-shadow: 0 22px 44px rgba(15, 23, 42, 0.08);
 }
 
+body.shell-light .account-surface h2,
+body.shell-light .account-surface h3,
+body.shell-light .account-surface h4,
+body.shell-light .account-surface strong,
+body.shell-light .account-surface label,
+body.shell-light .account-surface summary,
+body.shell-light .account-surface .workspace-subnav-link,
+body.shell-light .account-surface .workspace-subnav-link span,
+body.shell-light .account-surface .workspace-subnav-link i,
+body.shell-light .account-surface .billing-plan-price,
+body.shell-light .account-surface .billing-plan-badge,
+body.shell-light .account-surface .account-note-card-head,
+body.shell-light .account-surface .account-note-card-head strong,
+body.shell-light .account-surface .account-note-card-head span {
+    color: #0f172a !important;
+}
+
+body.shell-light .account-surface p,
+body.shell-light .account-surface li,
+body.shell-light .account-surface span,
+body.shell-light .account-surface .account-page-text,
+body.shell-light .account-surface .billing-plan-description,
+body.shell-light .account-surface .billing-plan-summary-label,
+body.shell-light .account-surface .billing-plan-summary-hint,
+body.shell-light .account-surface .billing-plan-footnote,
+body.shell-light .account-surface .billing-limit-list span,
+body.shell-light .account-surface .account-help-text,
+body.shell-light .account-surface .account-note-card-meta {
+    color: #334155 !important;
+}
+
+body.shell-light .account-surface .eyebrow,
+body.shell-light .account-surface .text-muted,
+body.shell-light .account-surface .billing-plan-summary-hint {
+    color: #475569 !important;
+}
+
+body.shell-light .account-surface .workspace-subnav-link {
+    border: 1px solid rgba(15, 23, 42, 0.1);
+}
+
+body.shell-light .account-surface .billing-plan-summary-side strong,
+body.shell-light .account-surface .billing-plan-section-title {
+    color: #0f172a !important;
+}
+
+body.shell-light .account-surface .billing-limit-list i {
+    color: #0f766e !important;
+}
+
 body.shell-light .account-surface input,
 body.shell-light .account-surface select,
 body.shell-light .account-surface textarea,
@@ -4347,6 +4576,506 @@ body.shell-light .workspace-aeo-shell .system-card {
     background: rgba(255, 255, 255, 0.98);
     border-color: rgba(15, 23, 42, 0.08);
     box-shadow: 0 18px 40px rgba(15, 23, 42, 0.06);
+}
+
+body.shell-light .account-shell-hero {
+    padding: 4.5rem 0 2rem;
+}
+
+body.shell-light .account-hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.9fr);
+    gap: 1.5rem;
+    align-items: stretch;
+}
+
+body.shell-light .account-hero-copy,
+body.shell-light .account-hero-panel,
+body.shell-light .account-nav-card,
+body.shell-light .account-stat-card,
+body.shell-light .account-card,
+body.shell-light .billing-plan-card,
+body.shell-light .billing-plan-summary,
+body.shell-light .billing-plan-body,
+body.shell-light .billing-plan-section,
+body.shell-light .account-note-card,
+body.shell-light .account-empty-state {
+    background: rgba(255, 255, 255, 0.98) !important;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    border-radius: 24px;
+    box-shadow: 0 18px 44px rgba(15, 23, 42, 0.06);
+}
+
+body.shell-light .account-hero-copy,
+body.shell-light .account-hero-panel {
+    padding: clamp(1.75rem, 2.6vw, 2.4rem);
+}
+
+body.shell-light .account-hero-copy {
+    background:
+        radial-gradient(circle at top left, rgba(20, 184, 166, 0.12), transparent 34%),
+        linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.98));
+}
+
+body.shell-light .account-hero-copy h1 {
+    margin: 0.2rem 0 0.85rem;
+    font-size: clamp(2.1rem, 4vw, 3.3rem);
+    line-height: 1.02;
+    letter-spacing: -0.05em;
+    color: #0f172a;
+}
+
+body.shell-light .account-page-text {
+    color: #475569 !important;
+    line-height: 1.68;
+    font-size: 0.98rem;
+}
+
+body.shell-light .account-hero-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 1.5rem;
+}
+
+body.shell-light .account-hero-actions .button,
+body.shell-light .account-hero-actions form {
+    width: auto;
+}
+
+body.shell-light .account-hero-panel {
+    display: grid;
+    gap: 1.1rem;
+    align-content: start;
+    background:
+        linear-gradient(180deg, rgba(240, 253, 250, 0.96), rgba(255, 255, 255, 0.98));
+}
+
+body.shell-light .account-hero-panel-head,
+body.shell-light .account-note-card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+}
+
+body.shell-light .account-plan-badge,
+body.shell-light .billing-plan-badge {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0.4rem 0.75rem;
+    border-radius: 999px;
+    border: 1px solid rgba(15, 118, 110, 0.14);
+    background: rgba(20, 184, 166, 0.1);
+    color: #0f766e !important;
+    font-size: 0.73rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+body.shell-light .account-hero-plan-row {
+    display: grid;
+    gap: 1rem;
+}
+
+body.shell-light .account-hero-plan-name {
+    display: block;
+    color: #0f172a;
+    font-size: 1.55rem;
+    font-weight: 800;
+    line-height: 1.1;
+}
+
+body.shell-light .account-hero-meta {
+    display: grid;
+    gap: 0.55rem;
+}
+
+body.shell-light .account-hero-meta span,
+body.shell-light .account-hero-panel-note {
+    color: #334155 !important;
+    font-size: 0.95rem;
+}
+
+body.shell-light .account-shell {
+    padding: 1rem 0 5rem;
+}
+
+body.shell-light .account-dashboard-stack {
+    display: grid;
+    gap: 1.5rem;
+}
+
+body.shell-light .account-nav-card,
+body.shell-light .account-card,
+body.shell-light .account-stat-card {
+    padding: 1.5rem;
+}
+
+body.shell-light .account-card-heading {
+    margin-bottom: 1.2rem;
+}
+
+body.shell-light .account-card-heading h2 {
+    margin: 0.2rem 0 0.45rem;
+    color: #0f172a;
+    font-size: clamp(1.35rem, 2vw, 1.95rem);
+    letter-spacing: -0.04em;
+}
+
+body.shell-light .account-nav-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.8rem;
+}
+
+body.shell-light .account-nav-pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.82rem 1rem;
+    border-radius: 999px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: #ffffff;
+    color: #0f172a !important;
+    text-decoration: none;
+    font-weight: 700;
+    box-shadow: 0 10px 24px rgba(15, 23, 42, 0.04);
+}
+
+body.shell-light .account-nav-pill:hover,
+body.shell-light .account-nav-pill:focus-visible {
+    border-color: rgba(15, 118, 110, 0.2);
+    background: #f8fffd;
+    box-shadow: 0 16px 28px rgba(15, 23, 42, 0.06);
+}
+
+body.shell-light .account-stats-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1rem;
+}
+
+body.shell-light .account-stat-card {
+    min-height: 168px;
+    display: grid;
+    align-content: start;
+    gap: 0.65rem;
+}
+
+body.shell-light .account-stat-card-wide {
+    grid-column: span 2;
+}
+
+body.shell-light .account-stat-card h3 {
+    margin: 0;
+    color: #0f172a;
+    font-size: clamp(1.4rem, 2vw, 1.95rem);
+    line-height: 1.08;
+    letter-spacing: -0.04em;
+}
+
+body.shell-light .account-main-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.8fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+body.shell-light .account-primary-column,
+body.shell-light .account-secondary-column {
+    display: grid;
+    gap: 1.5rem;
+}
+
+body.shell-light .account-card {
+    padding: 1.6rem;
+}
+
+body.shell-light .account-card-compact {
+    padding: 1.45rem;
+}
+
+body.shell-light .account-form-grid {
+    display: grid;
+    gap: 1rem;
+}
+
+body.shell-light #profile .account-form-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body.shell-light #profile .account-form-grid .form-group:last-of-type,
+body.shell-light #profile .account-form-actions {
+    grid-column: 1 / -1;
+}
+
+body.shell-light .account-form-label {
+    color: #0f172a !important;
+    font-size: 0.84rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    display: inline-block;
+    margin-bottom: 0.45rem;
+}
+
+body.shell-light .account-card input,
+body.shell-light .account-card select,
+body.shell-light .account-card textarea {
+    width: 100%;
+    min-height: 48px;
+    border-radius: 14px;
+    border: 1px solid #cbd5e1 !important;
+    background: #ffffff !important;
+    color: #0f172a !important;
+    padding: 0.85rem 0.95rem;
+    box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.02);
+}
+
+body.shell-light .account-card textarea {
+    min-height: 120px;
+}
+
+body.shell-light .account-card input::placeholder,
+body.shell-light .account-card textarea::placeholder {
+    color: #94a3b8 !important;
+}
+
+body.shell-light .account-card input:focus,
+body.shell-light .account-card select:focus,
+body.shell-light .account-card textarea:focus {
+    border-color: #14b8a6 !important;
+    box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.12) !important;
+    outline: none;
+}
+
+body.shell-light .account-help-text {
+    color: #475569 !important;
+    font-size: 0.85rem;
+    line-height: 1.6;
+    margin-top: 0.55rem;
+}
+
+body.shell-light .account-help-text ul {
+    margin: 0;
+    padding-left: 1.1rem;
+    display: grid;
+    gap: 0.2rem;
+}
+
+body.shell-light .account-help-text li {
+    color: #475569 !important;
+}
+
+body.shell-light .account-card .text-error {
+    color: #b91c1c !important;
+    font-size: 0.84rem;
+    line-height: 1.5;
+    margin-top: 0.45rem;
+}
+
+body.shell-light .account-form-actions {
+    padding-top: 0.35rem;
+}
+
+body.shell-light .account-form-actions .button {
+    width: auto;
+    min-width: 180px;
+}
+
+body.shell-light .account-stack {
+    display: grid;
+    gap: 0.9rem;
+}
+
+body.shell-light .account-note-card,
+body.shell-light .account-empty-state {
+    padding: 1rem 1.05rem;
+    border-radius: 18px;
+}
+
+body.shell-light .account-note-card-head strong,
+body.shell-light .account-note-card-head span {
+    color: #0f172a !important;
+    font-size: 0.95rem;
+}
+
+body.shell-light .account-note-card-meta,
+body.shell-light .account-empty-state p {
+    color: #64748b !important;
+    margin-top: 0.35rem;
+    font-size: 0.88rem;
+}
+
+body.shell-light .account-empty-state strong {
+    color: #0f172a !important;
+    display: block;
+}
+
+body.shell-light .billing-plan-accordion {
+    display: grid;
+    gap: 1rem;
+}
+
+body.shell-light .billing-plan-card {
+    overflow: hidden;
+}
+
+body.shell-light .billing-plan-card[open] {
+    border-color: rgba(15, 118, 110, 0.18);
+    box-shadow: 0 24px 50px rgba(15, 23, 42, 0.08);
+}
+
+body.shell-light .billing-plan-summary {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    padding: 1.3rem 1.4rem;
+    cursor: pointer;
+    list-style: none;
+}
+
+body.shell-light .billing-plan-summary::-webkit-details-marker {
+    display: none;
+}
+
+body.shell-light .billing-plan-header-row {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.65rem;
+}
+
+body.shell-light .billing-plan-header-row h3,
+body.shell-light .billing-plan-price,
+body.shell-light .billing-plan-section-title,
+body.shell-light .billing-plan-summary-side strong {
+    color: #0f172a !important;
+}
+
+body.shell-light .billing-plan-price {
+    font-size: 1.85rem;
+    font-weight: 800;
+    line-height: 1.05;
+    margin-top: 0.35rem;
+}
+
+body.shell-light .billing-plan-description,
+body.shell-light .billing-plan-summary-label,
+body.shell-light .billing-plan-summary-hint,
+body.shell-light .billing-plan-footnote,
+body.shell-light .billing-limit-list span {
+    color: #475569 !important;
+}
+
+body.shell-light .billing-plan-summary-side {
+    min-width: 112px;
+    text-align: right;
+    display: grid;
+    gap: 0.25rem;
+    align-content: start;
+}
+
+body.shell-light .billing-plan-summary-label,
+body.shell-light .billing-plan-summary-hint,
+body.shell-light .billing-limit-list strong {
+    font-size: 0.78rem;
+    letter-spacing: 0.05em;
+}
+
+body.shell-light .billing-plan-body {
+    padding: 0 1.4rem 1.4rem;
+    border-top: 1px solid rgba(15, 23, 42, 0.08);
+}
+
+body.shell-light .billing-plan-columns {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    padding-top: 1rem;
+}
+
+body.shell-light .billing-plan-section {
+    padding: 1rem;
+    border-radius: 18px;
+}
+
+body.shell-light .billing-limit-list {
+    margin: 0.8rem 0 0;
+    padding: 0;
+    list-style: none;
+    display: grid;
+    gap: 0.65rem;
+}
+
+body.shell-light .billing-limit-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+}
+
+body.shell-light .billing-plan-actions {
+    padding-top: 1rem;
+}
+
+body.shell-light .billing-plan-actions .button,
+body.shell-light .billing-plan-actions form {
+    width: 100%;
+}
+
+body.shell-light .button-block {
+    width: 100%;
+}
+
+@media (max-width: 1100px) {
+    body.shell-light .account-hero-grid,
+    body.shell-light .account-main-grid,
+    body.shell-light .billing-plan-columns {
+        grid-template-columns: 1fr;
+    }
+
+    body.shell-light .account-stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    body.shell-light .account-stat-card-wide {
+        grid-column: span 2;
+    }
+
+    body.shell-light #profile .account-form-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    body.shell-light .account-shell-hero {
+        padding: 3.25rem 0 1.4rem;
+    }
+
+    body.shell-light .account-stats-grid {
+        grid-template-columns: 1fr;
+    }
+
+    body.shell-light .account-stat-card-wide {
+        grid-column: span 1;
+    }
+
+    body.shell-light .account-hero-actions .button,
+    body.shell-light .account-hero-actions form,
+    body.shell-light .account-form-actions .button {
+        width: 100%;
+    }
+
+    body.shell-light .billing-plan-summary {
+        grid-template-columns: 1fr;
+    }
+
+    body.shell-light .billing-plan-summary-side {
+        text-align: left;
+    }
 }
 
 body.shell-light .workspace-seo-shell .seo-inline-tag,
@@ -4475,6 +5204,41 @@ body.shell-light .audit-diagnosis-card {
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.98));
 }
 
+body.shell-light .audit-action-card {
+    gap: 0.8rem;
+}
+
+body.shell-light .audit-action-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+body.shell-light .audit-action-list {
+    display: grid;
+    gap: 0.55rem;
+}
+
+body.shell-light .audit-action-step {
+    padding: 0.72rem 0.85rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.92);
+    border: 1px solid rgba(15, 23, 42, 0.07);
+    color: var(--text-primary);
+    line-height: 1.55;
+}
+
+body.shell-light .audit-next-panel {
+    background: linear-gradient(180deg, rgba(248, 250, 252, 0.96), rgba(255, 255, 255, 0.98));
+    border-radius: 18px;
+}
+
+body.shell-light .audit-next-step-list {
+    margin-top: 1rem;
+}
+
 body.shell-light .audit-next-step-card {
     margin-top: 1rem;
     padding: 1rem;
@@ -4511,5 +5275,25 @@ body.shell-light .audit-upsell-panel {
 @media (max-width: 960px) {
     body.shell-light .audit-diagnosis-grid {
         grid-template-columns: 1fr;
+    }
+
+    body.shell-light .audit-processing-shell {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    body.shell-light .audit-score-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@keyframes audit-orbit-spin {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
     }
 }

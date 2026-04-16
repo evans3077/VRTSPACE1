@@ -10,6 +10,34 @@
             The request is running in the background while we collect crawl and performance signals.
             This page refreshes automatically until the diagnosis is ready.
         </p>
+        <div class="audit-processing-shell">
+            <div class="audit-processing-orbit" aria-hidden="true">
+                <div class="audit-processing-core"></div>
+                <div class="audit-processing-ring audit-processing-ring-one">
+                    <span class="audit-processing-planet audit-processing-planet-one"></span>
+                </div>
+                <div class="audit-processing-ring audit-processing-ring-two">
+                    <span class="audit-processing-planet audit-processing-planet-two"></span>
+                </div>
+                <div class="audit-processing-ring audit-processing-ring-three">
+                    <span class="audit-processing-planet audit-processing-planet-three"></span>
+                </div>
+            </div>
+            <div class="audit-processing-steps">
+                <div class="audit-processing-step is-active">
+                    <strong>Scanning priority pages</strong>
+                    <p>We are checking the homepage and the most visible internal URLs first.</p>
+                </div>
+                <div class="audit-processing-step">
+                    <strong>Collecting speed and trust signals</strong>
+                    <p>Performance, rendering, and basic visibility indicators are being scored now.</p>
+                </div>
+                <div class="audit-processing-step">
+                    <strong>Writing the first diagnosis</strong>
+                    <p>The audit is grouping the clearest blockers and quick wins into a simpler action plan.</p>
+                </div>
+            </div>
+        </div>
         <div class="public-chip-row">
             <span class="premium-pill">Status: {{ audit_run.get_status_display }}</span>
             <a class="button button-secondary" href="{% url 'core:home' %}#audit">Run another audit</a>
@@ -70,7 +98,7 @@ setTimeout(function () {
             </div>
             <div class="audit-score-grid">
                 {% for gauge in gauge_list %}
-                <article class="audit-score-card">
+                <article class="audit-score-card audit-score-card-{{ gauge.tone }}">
                     <span class="journey-phase">{{ gauge.label }}</span>
                     <strong>{{ gauge.score }}</strong>
                 </article>
@@ -99,9 +127,30 @@ setTimeout(function () {
             </div>
             <div class="report-list-stack">
                 {% for item in top_issues %}
-                <div class="report-list-card">
-                    <strong>{{ item.message }}</strong>
-                    <p>{{ item.recommendation }}</p>
+                <div class="report-list-card audit-action-card">
+                    <div class="audit-action-head">
+                        <strong>{{ item.message }}</strong>
+                        <span class="audit-scope-pill">{{ item.scope_label }}</span>
+                    </div>
+                    <p>{{ item.summary }}</p>
+                    {% if item.url_labels %}
+                    <div class="report-url-list">
+                        {% for url in item.url_labels %}
+                        <span class="report-url-chip">{{ url }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="report-detail-block">
+                        <strong>Fix direction</strong>
+                        <p>{{ item.recommendation }}</p>
+                    </div>
+                    {% if item.action_steps %}
+                    <div class="audit-action-list">
+                        {% for step in item.action_steps %}
+                        <div class="audit-action-step">{{ step }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                 </div>
                 {% empty %}
                 <div class="report-list-card">
@@ -120,9 +169,30 @@ setTimeout(function () {
             </div>
             <div class="report-list-stack">
                 {% for item in quick_wins %}
-                <div class="report-list-card">
-                    <strong>{{ item.problem }}</strong>
-                    <p>{{ item.fix }}</p>
+                <div class="report-list-card audit-action-card audit-action-card-compact">
+                    <div class="audit-action-head">
+                        <strong>{{ item.problem }}</strong>
+                        <span class="audit-scope-pill">{{ item.scope_label }}</span>
+                    </div>
+                    <p>{{ item.summary }}</p>
+                    {% if item.url_labels %}
+                    <div class="report-url-list">
+                        {% for url in item.url_labels %}
+                        <span class="report-url-chip">{{ url }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    <div class="report-detail-block">
+                        <strong>Quick fix</strong>
+                        <p>{{ item.fix }}</p>
+                    </div>
+                    {% if item.action_steps %}
+                    <div class="audit-action-list">
+                        {% for step in item.action_steps %}
+                        <div class="audit-action-step">{{ step }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                 </div>
                 {% empty %}
                 <div class="report-list-card">
@@ -139,15 +209,22 @@ setTimeout(function () {
                 <strong>What happens next</strong>
                 <span class="pill-accent">{{ audit_profile.label }}</span>
             </div>
-            <div class="report-detail-block">
+            <div class="report-detail-block audit-next-panel">
                 <strong>{{ diagnosis.next_step_title|default:recommended_next_step.title|default:"Review the first fix" }}</strong>
                 <p>{{ diagnosis.next_step_body|default:recommended_next_step.body|default:"Use the workspace to keep the audit, SEO, and AEO work connected." }}</p>
             </div>
+            {% if recommended_next_step.checklist %}
+            <div class="audit-action-list audit-next-step-list">
+                {% for step in recommended_next_step.checklist %}
+                <div class="audit-action-step">{{ step }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
             {% if captured_context.target_goal or captured_context.primary_service or captured_context.location %}
             <div class="audit-context-list">
-                {% if captured_context.primary_service %}<span class="report-url-chip">{{ captured_context.primary_service }}</span>{% endif %}
-                {% if captured_context.target_goal %}<span class="report-url-chip">{{ captured_context.target_goal }}</span>{% endif %}
-                {% if captured_context.location %}<span class="report-url-chip">{{ captured_context.location }}</span>{% endif %}
+                {% if captured_context.primary_service %}<span class="report-url-chip">Service: {{ captured_context.primary_service }}</span>{% endif %}
+                {% if captured_context.target_goal %}<span class="report-url-chip">Goal: {{ captured_context.target_goal }}</span>{% endif %}
+                {% if captured_context.location %}<span class="report-url-chip">Location: {{ captured_context.location }}</span>{% endif %}
             </div>
             {% endif %}
             <div class="public-cta-actions">
@@ -173,9 +250,11 @@ setTimeout(function () {
         <article class="public-capability-card performance-metric-card metric-status-{{ metric.status }}">
             <div class="report-list-head">
                 <span class="journey-phase">{{ metric.short_label }}</span>
-                <span class="pill-accent">{{ metric.status|title }}</span>
+                <span class="audit-metric-status audit-metric-status-{{ metric.status }}">{{ metric.status_label }}</span>
             </div>
-            <h3>{{ metric.value }}</h3>
+            <div class="audit-metric-value audit-metric-value-{{ metric.status }}">
+                <h3>{{ metric.value }}</h3>
+            </div>
             <p><strong>{{ metric.label }}</strong></p>
             <div class="report-detail-block">
                 <strong>Target</strong>
@@ -235,7 +314,7 @@ setTimeout(function () {
                 <strong>{{ item.label }}</strong>
                 <span class="pill-accent">{{ item.score }}</span>
             </div>
-            <p>{{ item.status }} · {{ item.issues }} issue{{ item.issues|pluralize }}</p>
+            <p>{{ item.status }} &middot; {{ item.issues }} issue{{ item.issues|pluralize }}</p>
             <p>{{ item.explanation }}</p>
             <div class="report-detail-block">
                 <strong>Next step</strong>
@@ -272,6 +351,13 @@ setTimeout(function () {
                 <strong>Recommended fix</strong>
                 <p>{{ recommendation.recommended_fix }}</p>
             </div>
+            {% if recommendation.technical_steps %}
+            <div class="audit-action-list">
+                {% for step in recommendation.technical_steps|slice:":3" %}
+                <div class="audit-action-step">{{ step }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
             <div class="result-detail-grid">
                 <div class="report-detail-block">
                     <strong>Expected impact</strong>
@@ -311,6 +397,13 @@ setTimeout(function () {
                 <strong>Resolution recommendation</strong>
                 <p>{{ recommendation.recommended_fix }}</p>
             </div>
+            {% if recommendation.technical_steps %}
+            <div class="audit-action-list">
+                {% for step in recommendation.technical_steps|slice:":3" %}
+                <div class="audit-action-step">{{ step }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
             <div class="report-detail-block">
                 <strong>Evidence</strong>
                 <p>{{ recommendation.evidence_summary }}{% if recommendation.evidence_score %} | Score {{ recommendation.evidence_score }}{% endif %}</p>

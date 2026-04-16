@@ -424,6 +424,19 @@ def ensure_plan_credit_grants(user, now=None):
     amount = _get_workspace_credit_allowance(user)
     if amount in (0, None):
         return
+    granted_total = (
+        WorkspaceCreditLedger.objects.filter(
+            user=user,
+            category=WORKSPACE_CREDIT_CATEGORY,
+            kind=WorkspaceCreditLedger.Kind.GRANT,
+            period_start=period_start,
+            period_end=period_end,
+        ).aggregate(total=Sum("delta")).get("total")
+        or 0
+    )
+    grant_delta = amount - granted_total
+    if grant_delta <= 0:
+        return
     existing = WorkspaceCreditLedger.objects.filter(
         user=user,
         category=WORKSPACE_CREDIT_CATEGORY,
@@ -431,20 +444,26 @@ def ensure_plan_credit_grants(user, now=None):
         period_start=period_start,
         period_end=period_end,
     ).exists()
-    if existing:
-        return
     WorkspaceCreditLedger.objects.create(
         user=user,
         plan=plan,
         subscription=subscription,
         category=WORKSPACE_CREDIT_CATEGORY,
         kind=WorkspaceCreditLedger.Kind.GRANT,
-        delta=amount,
+        delta=grant_delta,
         period_start=period_start,
         period_end=period_end,
-        note="Monthly workspace credit allocation",
-        reference_key=f"plan-credit:{WORKSPACE_CREDIT_CATEGORY}:{period_start.isoformat()}",
-        metadata={"source": "monthly_plan_credit"},
+        note="Monthly workspace credit allocation" if not existing else "Workspace credit adjustment after plan change",
+        reference_key=(
+            f"plan-credit:{WORKSPACE_CREDIT_CATEGORY}:{period_start.isoformat()}"
+            if not existing
+            else f"plan-credit-adjustment:{WORKSPACE_CREDIT_CATEGORY}:{period_start.isoformat()}:{grant_delta}"
+        ),
+        metadata={
+            "source": "monthly_plan_credit" if not existing else "plan_credit_adjustment",
+            "target_allowance": amount,
+            "granted_before": granted_total,
+        },
     )
 
 
