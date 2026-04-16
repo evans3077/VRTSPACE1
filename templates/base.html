@@ -40,94 +40,15 @@
     {% endif %}
     {% block extra_head %}{% endblock %}
 </head>
-<body>
+<body class="{{ shell_theme|default:'' }}">
     <header class="site-header" x-data="{ openMenu: null, _closeTimer: null, scheduleClose() { this._closeTimer = setTimeout(() => { this.openMenu = null; }, 150); }, cancelClose() { clearTimeout(this._closeTimer); } }">
         <div class="container nav-shell">
             <a class="brand" href="/">VRT SPACE AGENCY</a>
             <div class="nav-actions">
                 <nav class="nav-links" aria-label="Primary">
-                    <!-- Platform Mega-Menu -->
-                    <div class="nav-item-wrapper" @mouseenter="cancelClose(); openMenu = 'platform'" @mouseleave="scheduleClose()">
-                        <button class="mega-menu-trigger">
-                            Platform <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
-                        </button>
-                        <div class="mega-menu-panel" :class="{ 'is-open': openMenu === 'platform' }">
-                            <div class="nav-column">
-                                <span class="nav-category-head">Intelligence Hubs</span>
-                                <div class="nav-card-group">
-                                    <a href="{% url 'seo:workspace-seo' %}" class="nav-card">
-                                        <div class="nav-card-icon"><i class="fas fa-search"></i></div>
-                                        <div class="nav-card-info">
-                                            <span class="nav-card-title">SEO Intelligence</span>
-                                            <p class="nav-card-desc">Crawl budget optimization, phantom keywords, and technical gap analysis.</p>
-                                        </div>
-                                    </a>
-                                    <a href="{% url 'aeo:workspace-aeo' %}" class="nav-card">
-                                        <div class="nav-card-icon"><i class="fas fa-robot"></i></div>
-                                        <div class="nav-card-info">
-                                            <span class="nav-card-title">AEO Strategy</span>
-                                            <p class="nav-card-desc">AI discovery engine optimization and LLM citation acceleration.</p>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="nav-column">
-                                <span class="nav-category-head">Production Systems</span>
-                                <div class="nav-card-group">
-                                    <a href="{% url 'content:workspace-content' %}" class="nav-card">
-                                        <div class="nav-card-icon"><i class="fas fa-pen-nib"></i></div>
-                                        <div class="nav-card-info">
-                                            <span class="nav-card-title">Content Forge</span>
-                                            <p class="nav-card-desc">Recursive content optimization and high-precision Answer Unit generation.</p>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                            <div class="nav-column">
-                                <span class="nav-category-head">Management</span>
-                                <div class="nav-card-group">
-                                    <a href="{% url 'tools:workspace-dashboard' %}" class="nav-card">
-                                        <div class="nav-card-icon"><i class="fas fa-th-large"></i></div>
-                                        <div class="nav-card-info">
-                                            <span class="nav-card-title">Project Control</span>
-                                            <p class="nav-card-desc">Omni-channel visibility tracking and credit pool management.</p>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Solutions Mega-Menu -->
-                    <div class="nav-item-wrapper" @mouseenter="cancelClose(); openMenu = 'solutions'" @mouseleave="scheduleClose()">
-                        <button class="mega-menu-trigger">
-                            Solutions <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
-                        </button>
-                        <div class="mega-menu-panel" :class="{ 'is-open': openMenu === 'solutions' }">
-                            <div class="nav-column">
-                                <span class="nav-category-head">By Use Case</span>
-                                <div class="nav-card-group">
-                                    <a href="{% url 'core:services' %}" class="nav-card">
-                                        <div class="nav-card-icon"><i class="fas fa-building"></i></div>
-                                        <div class="nav-card-info">
-                                            <span class="nav-card-title">Enterprise Dominance</span>
-                                            <p class="nav-card-desc">Large-scale semantic authority for complex internal architectures.</p>
-                                        </div>
-                                    </a>
-                                    <a href="{% url 'core:services' %}" class="nav-card">
-                                        <div class="nav-card-icon"><i class="fas fa-rocket"></i></div>
-                                        <div class="nav-card-info">
-                                            <span class="nav-card-title">Startup Acceleration</span>
-                                            <p class="nav-card-desc">Rapid visibility gains for new products and market entries.</p>
-                                        </div>
-                                    </a>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
+                    <a href="{% url 'core:services' %}">Services</a>
+                    <a href="{% url 'core:home' %}#journey">How It Works</a>
                     <a href="{% url 'core:packages' %}">Pricing</a>
-                    <a href="{% url 'core:home' %}#audit">Free Audit</a>
                 </nav>
 
                 {% if user.is_authenticated %}
@@ -150,7 +71,7 @@
                 <a class="button button-primary nav-cta" href="{% url 'tools:workspace-dashboard' %}">Open Workspace</a>
                 {% else %}
                 <a class="button button-secondary nav-auth-link" href="{% url 'tools:workspace-login' %}">Sign in</a>
-                <a class="button button-primary nav-cta" href="{% url 'tools:workspace-signup' %}">Apply for Access</a>
+                <a class="button button-primary nav-cta" href="{% url 'core:home' %}#audit">Start Free Audit</a>
                 {% endif %}
             </div>
             <!-- Hamburger for mobile -->
@@ -173,13 +94,13 @@
         <div class="container footer-shell">
             <div>
                 <strong>VRT SPACE AGENCY</strong>
-                <p>SEO, AEO, audits, workspaces, analytics, and custom build paths designed as one product system.</p>
+                <p>Website audits, SEO analysis, AI visibility, and workspace progress tracking in one focused system.</p>
             </div>
             <div class="footer-links">
-                <a href="{% url 'core:services' %}">Solutions</a>
-                <a href="{% url 'core:home' %}#tools">Tools</a>
-                <a href="{% url 'core:packages' %}">Packages</a>
-                <a href="{% url 'core:home' %}#contact">Custom Work</a>
+                <a href="{% url 'core:services' %}">Services</a>
+                <a href="{% url 'core:packages' %}">Pricing</a>
+                <a href="{% url 'core:home' %}#audit">Free Audit</a>
+                <a href="{% url 'core:home' %}#contact">Contact</a>
             </div>
         </div>
     </footer>
@@ -190,40 +111,26 @@
             <button class="nav-mobile-close" id="nav-mobile-close" aria-label="Close navigation">&times;</button>
             <div class="nav-mobile-brand gradient-text">VRT SPACE AGENCY</div>
             <nav class="nav-mobile-links" aria-label="Mobile primary" x-data="{ openSub: null }">
-                <!-- Platform Cluster -->
                 <div class="mobile-nav-group">
-                    <span class="nav-category-head" style="margin-bottom: 1rem;">The Platform</span>
-                    <a href="{% url 'seo:workspace-seo' %}" style="--i:1">SEO Intelligence</a>
-                    <a href="{% url 'aeo:workspace-aeo' %}" style="--i:2">AEO Strategy</a>
-                    <a href="{% url 'content:workspace-content' %}" style="--i:3">Content Forge</a>
-                </div>
-
-                <!-- Solutions Cluster -->
-                <div class="mobile-nav-group" style="margin-top: 2rem;">
-                    <span class="nav-category-head" style="margin-bottom: 1rem;">Solutions</span>
-                    <a href="{% url 'core:services' %}" style="--i:4">Enterprise Growth</a>
-                    <a href="{% url 'core:services' %}" style="--i:5">Startup Acceleration</a>
-                </div>
-
-                <!-- Commercial Cluster -->
-                <div class="mobile-nav-group" style="margin-top: 2rem;">
-                    <span class="nav-category-head" style="margin-bottom: 1rem;">Success</span>
-                    <a href="{% url 'core:packages' %}" style="--i:6">Pricing & Packages</a>
-                    <a href="{% url 'core:home' %}#audit" style="--i:7">Free Live Audit</a>
+                    <span class="nav-category-head" style="margin-bottom: 1rem;">Explore</span>
+                    <a href="{% url 'core:services' %}" style="--i:1">Services</a>
+                    <a href="{% url 'core:home' %}#journey" style="--i:2">How It Works</a>
+                    <a href="{% url 'core:packages' %}" style="--i:3">Pricing</a>
+                    <a href="{% url 'core:home' %}#audit" style="--i:4">Free Audit</a>
                 </div>
 
                 {% if user.is_staff %}
-                <a href="{% url 'analytics:operations-dashboard' %}" style="--i:8">Operations Center</a>
+                <a href="{% url 'analytics:operations-dashboard' %}" style="--i:5">Operations Center</a>
                 {% endif %}
             </nav>
-            <div class="nav-mobile-actions" style="--i:9">
+            <div class="nav-mobile-actions" style="--i:6">
                 {% if user.is_authenticated %}
                 <a class="button button-secondary" href="{% url 'tools:account-dashboard' %}"><i class="fas fa-user"></i> Account</a>
                 <a class="button button-secondary" href="{% url 'tools:workspace-logout' %}">Sign out</a>
                 <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}">Open Workspace</a>
                 {% else %}
                 <a class="button button-secondary" href="{% url 'tools:workspace-login' %}">Sign in</a>
-                <a class="button button-primary" href="{% url 'tools:workspace-signup' %}">Create Workspace</a>
+                <a class="button button-primary" href="{% url 'core:home' %}#audit">Start Free Audit</a>
                 {% endif %}
             </div>
         </div>
@@ -343,4 +250,3 @@
     </div>
 </body>
 </html>
-

@@ -527,6 +527,8 @@ It should not feel:
 * generic
 * overengineered
 
+git remote add origin <https://github.com/evans3077/VRTSPACE1.git>
+
 ---
 
 ## Golden Rule

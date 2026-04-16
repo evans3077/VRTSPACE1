@@ -72,6 +72,78 @@ ACTION_FEATURE_LABELS = {
     "campaign_tracking_enabled": "Campaign tracking",
     "cross_module_summary_enabled": "Cross-module summaries",
 }
+AUDIT_RESULT_PROFILES = {
+    "free": {
+        "label": "Starter diagnosis",
+        "summary": "Clear enough to confirm the main blockers, but intentionally shaped to push the next decision instead of dumping everything.",
+        "top_issue_limit": 3,
+        "quick_win_limit": 3,
+        "featured_recommendation_limit": 3,
+        "secondary_recommendation_limit": 0,
+        "performance_metric_limit": 3,
+        "score_breakdown_keys": ["technical", "seo", "performance", "aeo"],
+        "technical_page_limit": 0,
+        "show_context_analysis": False,
+        "show_custom_work_items": False,
+        "show_secondary_recommendations": False,
+    },
+    "starter": {
+        "label": "Starter detail",
+        "summary": "Detailed enough to act on the audit inside the workspace, without exposing the full operating depth reserved for larger plans.",
+        "top_issue_limit": 4,
+        "quick_win_limit": 4,
+        "featured_recommendation_limit": 5,
+        "secondary_recommendation_limit": 3,
+        "performance_metric_limit": 4,
+        "score_breakdown_keys": ["technical", "seo", "performance", "aeo", "content", "internal_linking"],
+        "technical_page_limit": 5,
+        "show_context_analysis": False,
+        "show_custom_work_items": True,
+        "show_secondary_recommendations": True,
+    },
+    "growth": {
+        "label": "Growth detail",
+        "summary": "Designed for teams who need deeper audit context, broader score visibility, and enough evidence to keep execution moving.",
+        "top_issue_limit": 6,
+        "quick_win_limit": 6,
+        "featured_recommendation_limit": 6,
+        "secondary_recommendation_limit": 6,
+        "performance_metric_limit": 6,
+        "score_breakdown_keys": None,
+        "technical_page_limit": 12,
+        "show_context_analysis": True,
+        "show_custom_work_items": True,
+        "show_secondary_recommendations": True,
+    },
+    "authority": {
+        "label": "Authority detail",
+        "summary": "The deepest audit layer with broader evidence, technical footprint, and the clearest handoff into execution workflows.",
+        "top_issue_limit": None,
+        "quick_win_limit": None,
+        "featured_recommendation_limit": None,
+        "secondary_recommendation_limit": None,
+        "performance_metric_limit": None,
+        "score_breakdown_keys": None,
+        "technical_page_limit": None,
+        "show_context_analysis": True,
+        "show_custom_work_items": True,
+        "show_secondary_recommendations": True,
+    },
+    "enterprise": {
+        "label": "Enterprise detail",
+        "summary": "Reserved for custom environments that need the full audit surface and broader operational context.",
+        "top_issue_limit": None,
+        "quick_win_limit": None,
+        "featured_recommendation_limit": None,
+        "secondary_recommendation_limit": None,
+        "performance_metric_limit": None,
+        "score_breakdown_keys": None,
+        "technical_page_limit": None,
+        "show_context_analysis": True,
+        "show_custom_work_items": True,
+        "show_secondary_recommendations": True,
+    },
+}
 
 
 def _definition_to_capabilities(definition):
@@ -182,42 +254,61 @@ def get_effective_capabilities(user):
         return dict(FREE_PLAN_CAPABILITIES)
 
     plan = subscription.plan
-    capabilities = _definition_to_capabilities(get_plan_definition(plan.slug))
+    definition = get_plan_definition(plan.slug)
+    if not definition:
+        capabilities = _definition_to_capabilities(None)
+        metadata = dict(plan.metadata or {})
+        capabilities["name"] = plan.name or capabilities.get("name", "Free")
+        capabilities["price_label"] = plan.price_label or capabilities.get("price_label", "")
+        capabilities["description"] = plan.description or capabilities.get("description", "")
+        capabilities["label"] = metadata.get("label", capabilities.get("label", ""))
+        capabilities["audience"] = metadata.get("audience", capabilities.get("audience", ""))
+        capabilities["upgrade_message"] = metadata.get("upgrade_message", capabilities.get("upgrade_message", ""))
+        capabilities["features"] = {
+            **metadata.get("features", {}),
+            **capabilities.get("features", {}),
+        }
+        capabilities["limits"] = {
+            **metadata.get("limits", {}),
+            **capabilities.get("limits", {}),
+        }
+        capabilities["credits"] = {
+            **metadata.get("credits", {}),
+            **capabilities.get("credits", {}),
+        }
+        return capabilities
+
+    capabilities = _definition_to_capabilities(definition)
     metadata = dict(plan.metadata or {})
-    capabilities["name"] = plan.name
-    capabilities["price_label"] = plan.price_label or capabilities.get("price_label", "")
-    capabilities["description"] = plan.description or capabilities.get("description", "")
-    capabilities["label"] = metadata.get("label", capabilities.get("label", ""))
-    capabilities["audience"] = metadata.get("audience", capabilities.get("audience", ""))
-    capabilities["upgrade_message"] = metadata.get("upgrade_message", capabilities.get("upgrade_message", ""))
+    capabilities["name"] = definition.get("name", capabilities.get("name", "Free"))
+    capabilities["price_label"] = definition.get("price_label", capabilities.get("price_label", ""))
+    capabilities["description"] = definition.get("description", capabilities.get("description", ""))
+    capabilities["label"] = definition.get("label", metadata.get("label", capabilities.get("label", "")))
+    capabilities["audience"] = definition.get("audience", metadata.get("audience", capabilities.get("audience", "")))
+    capabilities["upgrade_message"] = definition.get(
+        "upgrade_message",
+        metadata.get("upgrade_message", capabilities.get("upgrade_message", "")),
+    )
     capabilities["features"] = {
-        **capabilities.get("features", {}),
         **metadata.get("features", {}),
+        **capabilities.get("features", {}),
     }
     capabilities["limits"] = {
-        **capabilities.get("limits", {}),
         **metadata.get("limits", {}),
+        **capabilities.get("limits", {}),
     }
     capabilities["credits"] = {
-        **capabilities.get("credits", {}),
         **metadata.get("credits", {}),
+        **capabilities.get("credits", {}),
     }
-    capabilities["monthly_audits_limit"] = plan.monthly_audits_limit
-    capabilities["history_limit"] = plan.history_limit
-    capabilities["premium_recommendation_limit"] = plan.premium_recommendation_limit
-    capabilities["recurring_audits_enabled"] = plan.recurring_audits_enabled
-    capabilities["export_reports_enabled"] = plan.export_reports_enabled
-    capabilities["email_reports_enabled"] = plan.email_reports_enabled
-    capabilities["competitor_tracking_enabled"] = plan.competitor_tracking_enabled
-    capabilities["stakeholder_sharing_enabled"] = plan.stakeholder_sharing_enabled
-    capabilities["limits"]["audit_runs"] = plan.monthly_audits_limit
-    capabilities["limits"]["saved_history"] = plan.history_limit
-    capabilities["limits"]["premium_recommendations"] = plan.premium_recommendation_limit
-    capabilities["features"]["recurring_audits_enabled"] = plan.recurring_audits_enabled
-    capabilities["features"]["export_reports_enabled"] = plan.export_reports_enabled
-    capabilities["features"]["email_reports_enabled"] = plan.email_reports_enabled
-    capabilities["features"]["competitor_tracking_enabled"] = plan.competitor_tracking_enabled
-    capabilities["features"]["stakeholder_sharing_enabled"] = plan.stakeholder_sharing_enabled
+    capabilities["monthly_audits_limit"] = capabilities["limits"].get("audit_runs")
+    capabilities["history_limit"] = capabilities["limits"].get("saved_history")
+    capabilities["premium_recommendation_limit"] = capabilities["limits"].get("premium_recommendations")
+    capabilities["recurring_audits_enabled"] = capabilities["features"].get("recurring_audits_enabled", False)
+    capabilities["export_reports_enabled"] = capabilities["features"].get("export_reports_enabled", False)
+    capabilities["email_reports_enabled"] = capabilities["features"].get("email_reports_enabled", False)
+    capabilities["competitor_tracking_enabled"] = capabilities["features"].get("competitor_tracking_enabled", False)
+    capabilities["stakeholder_sharing_enabled"] = capabilities["features"].get("stakeholder_sharing_enabled", False)
     return capabilities
 
 
@@ -551,7 +642,11 @@ def get_usage_summary(user):
     aeo_limit = limits.get("aeo_analyses")
     content_limit = limits.get("content_drafts")
     export_limit = limits.get("exports")
+    site_limit = limits.get("tracked_sites")
+    site_count = ClientProject.objects.filter(owner=user).count()
     return {
+        "plan_slug": capabilities.get("slug", "free"),
+        "plan_name": capabilities.get("name", "Free"),
         "audit_runs_used": audit_usage.quantity,
         "audit_runs_limit": audit_limit,
         "audit_runs_remaining": None if audit_limit is None else max(audit_limit - audit_usage.quantity, 0),
@@ -563,6 +658,10 @@ def get_usage_summary(user):
         "content_drafts_limit": content_limit,
         "exports_used": export_usage.quantity,
         "exports_limit": export_limit,
+        "tracked_sites_used": site_count,
+        "tracked_sites_limit": site_limit,
+        "tracked_sites_remaining": None if site_limit is None else max(site_limit - site_count, 0),
+        "tracked_competitors_limit": limits.get("tracked_competitors"),
     }
 
 
@@ -840,10 +939,153 @@ def build_action_access_context(user, category, *, project=None, feature_name=No
     }
 
 
-def can_run_workspace_audit(user, *, project=None):
+def _get_next_plan_with_more_limit(user, limit_key, current_limit):
+    current_sort_order = _get_current_plan_sort_order(user)
+    for definition in get_plan_definitions(include_free=True):
+        if definition.get("sort_order", 0) <= current_sort_order:
+            continue
+        next_limit = definition.get("limits", {}).get(limit_key)
+        if current_limit is None:
+            continue
+        if next_limit is None or next_limit > current_limit:
+            return definition
+    return None
+
+
+def get_workspace_capacity_summary(user):
+    if not user or not getattr(user, "is_authenticated", False):
+        return {
+            "sites_used": 0,
+            "sites_limit": 0,
+            "sites_remaining": 0,
+            "tracked_competitors_limit": 0,
+        }
+
+    capabilities = get_effective_capabilities(user)
+    limits = capabilities.get("limits", {})
+    site_limit = limits.get("tracked_sites")
+    sites_used = ClientProject.objects.filter(owner=user).count()
+    return {
+        "sites_used": sites_used,
+        "sites_limit": site_limit,
+        "sites_remaining": None if site_limit is None else max(site_limit - sites_used, 0),
+        "tracked_competitors_limit": limits.get("tracked_competitors"),
+    }
+
+
+def can_create_workspace_project(user, *, normalized_domain=""):
+    if not user or not getattr(user, "is_authenticated", False):
+        return True, {
+            "sites_used": 0,
+            "sites_limit": None,
+            "sites_remaining": None,
+            "existing_project": False,
+            "blocked_message": "",
+            "next_unlock_message": "",
+        }
+
+    capabilities = get_effective_capabilities(user)
+    capacity = get_workspace_capacity_summary(user)
+    existing_project = False
+    if normalized_domain:
+        existing_project = ClientProject.objects.filter(
+            owner=user,
+            normalized_domain=normalized_domain,
+        ).exists()
+
+    allowed = existing_project or capacity["sites_limit"] is None or capacity["sites_used"] < capacity["sites_limit"]
+    blocked_message = ""
+    next_unlock_message = ""
+    next_plan = None
+    if settings.AUDIT_TIER_ENFORCEMENT and not allowed:
+        next_plan = _get_next_plan_with_more_limit(
+            user,
+            "tracked_sites",
+            capacity["sites_limit"],
+        )
+        blocked_message = (
+            f"The {capabilities.get('name', 'current')} plan tracks up to "
+            f"{capacity['sites_limit']} website{'' if capacity['sites_limit'] == 1 else 's'}."
+        )
+        if next_plan:
+            next_limit = next_plan.get("limits", {}).get("tracked_sites")
+            next_unlock_message = (
+                f"{next_plan['name']} raises that capacity to "
+                f"{'Unlimited' if next_limit is None else next_limit} tracked websites."
+            )
+
+    return allowed or not settings.AUDIT_TIER_ENFORCEMENT, {
+        **capacity,
+        "existing_project": existing_project,
+        "blocked_message": blocked_message,
+        "next_unlock_message": next_unlock_message,
+        "next_plan_slug": next_plan.get("slug", "") if next_plan else "",
+        "next_plan_name": next_plan.get("name", "") if next_plan else "",
+        "next_plan_price": next_plan.get("price_label", "") if next_plan else "",
+    }
+
+
+def get_audit_result_profile(user=None):
+    if user and getattr(user, "is_authenticated", False):
+        slug = get_effective_capabilities(user).get("slug", "free")
+    else:
+        slug = "free"
+    profile = AUDIT_RESULT_PROFILES.get(slug, AUDIT_RESULT_PROFILES["free"])
+    return {"slug": slug, **profile}
+
+
+def build_audit_run_access_context(user, *, project=None):
+    capabilities = get_effective_capabilities(user)
+    usage = get_usage_summary(user)
     estimate = estimate_credit_cost("audit", project=project)
-    allowed, balance = can_spend_credits(user, "audit", amount=estimate["amount"])
-    return allowed, balance, estimate
+    credit_allowed, balance = can_spend_credits(user, "audit", amount=estimate["amount"])
+    usage_remaining = usage.get("audit_runs_remaining")
+    usage_allowed = usage_remaining is None or usage_remaining > 0
+    next_plan = None
+    blocked_message = ""
+
+    if settings.AUDIT_TIER_ENFORCEMENT:
+        if not usage_allowed:
+            next_plan = _get_next_plan_with_more_limit(
+                user,
+                "audit_runs",
+                usage.get("audit_runs_limit"),
+            )
+            blocked_message = (
+                f"You have used all {usage.get('audit_runs_limit', 0)} audits included in "
+                f"the {capabilities.get('name', 'current')} plan for this cycle."
+            )
+        elif not credit_allowed:
+            next_plan = get_next_plan_for_action(user, required_credits=estimate["amount"])
+            remaining_label = "Unlimited" if balance["unlimited"] else balance["remaining"]
+            blocked_message = (
+                f"This audit usually needs {estimate['amount']} workspace credits and the current balance is "
+                f"{remaining_label}."
+            )
+
+    next_unlock_message = ""
+    if next_plan:
+        next_unlock_message = f"{next_plan['name']} starts at {next_plan.get('price_label', '')} and unlocks more audit capacity."
+
+    return {
+        "available": (usage_allowed and credit_allowed) or not settings.AUDIT_TIER_ENFORCEMENT,
+        "usage_allowed": usage_allowed,
+        "credit_allowed": credit_allowed,
+        "blocked_message": blocked_message,
+        "next_unlock_message": next_unlock_message,
+        "balance": balance,
+        "estimate": estimate,
+        "usage": usage,
+        "capabilities": capabilities,
+        "next_plan_slug": next_plan.get("slug", "") if next_plan else "",
+        "next_plan_name": next_plan.get("name", "") if next_plan else "",
+        "next_plan_price": next_plan.get("price_label", "") if next_plan else "",
+    }
+
+
+def can_run_workspace_audit(user, *, project=None):
+    access = build_audit_run_access_context(user, project=project)
+    return access["available"], access["balance"], access["estimate"]
 
 
 def can_access_audit_feature(user, feature_name):
@@ -1120,11 +1362,12 @@ def create_workspace_rerun_for_user(user, *, project=None):
     if not project:
         raise BillingError("No workspace project is attached to this account yet.")
 
-    allowed, balance, estimate = can_run_workspace_audit(user, project=project)
-    if settings.AUDIT_TIER_ENFORCEMENT and not allowed:
+    access = build_audit_run_access_context(user, project=project)
+    if settings.AUDIT_TIER_ENFORCEMENT and not access["available"]:
         raise BillingError(
-            f"Your current plan does not have enough credits remaining for this audit rerun. "
-            f"This rerun needs {estimate['amount']} credits based on the current site size."
+            access["blocked_message"]
+            or access["next_unlock_message"]
+            or "This audit rerun is blocked on the current plan."
         )
 
     audit_run = AuditRun.objects.create(
@@ -1138,7 +1381,10 @@ def create_workspace_rerun_for_user(user, *, project=None):
         project=project,
         note="Workspace audit rerun",
         reference_key=f"audit-run:{audit_run.pk}",
-        metadata={"remaining_before": balance.get("remaining")},
+        metadata={
+            "remaining_before": access["balance"].get("remaining"),
+            "audits_remaining_before": access["usage"].get("audit_runs_remaining"),
+        },
     )
     record_usage(user, UsageRecord.Metric.AUDIT_RUN, quantity=1)
     return audit_run

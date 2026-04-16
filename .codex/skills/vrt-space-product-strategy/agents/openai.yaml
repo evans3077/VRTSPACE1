@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRT Space Product Strategy"
+  short_description: "Keep the VRT SPACE revamp aligned with the core product story."
+  default_prompt: "Use this skill to keep VRT SPACE revamp work focused on the Audit, SEO, AEO, workspace, and rerun loop before making scope or messaging changes."

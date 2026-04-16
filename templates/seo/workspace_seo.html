@@ -60,18 +60,21 @@
 </nav>
 {% endif %}
 
-<section class="dashboard-stack">
+<section class="dashboard-stack workspace-seo-shell">
     <div class="container-fluid">
-        <div id="seo-overview" class="layout-split-sidebar">
-            <article class="system-card glass-panel">
-                <div class="card-head">
-                    <p class="eyebrow text-accent">Inputs</p>
-                    <h2>Entity Context</h2>
+        <div id="seo-overview" class="workspace-report-grid">
+            <article class="workspace-report-card">
+                <div class="workspace-report-intro">
+                    <p class="workspace-report-kicker">Inputs</p>
+                    <h2>Update the SEO intelligence brief</h2>
+                    <p>Tell the system which market, offer, and competitors to benchmark so every refresh produces cleaner opportunities and more useful evidence.</p>
                 </div>
                 {% if not project %}
-                <div class="empty-state-panel">
-                    <p>Create a workspace project to begin competitor profiling and SEO auditing.</p>
-                    <div class="button-row">
+                <div class="workspace-state-panel">
+                    <p class="workspace-report-kicker">Workspace Required</p>
+                    <h2>Create a workspace project first</h2>
+                    <p>SEO intelligence needs a connected project so the refresh can reuse your audit, project context, and competitor list.</p>
+                    <div class="workspace-card-actions">
                         <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}#start-audit">Start Audit</a>
                         <a class="button button-secondary" href="{% url 'tools:workspace-dashboard' %}#new-project">New Project</a>
                     </div>
@@ -80,8 +83,9 @@
                 {% if workspace_credit_actions %}
                 {% for item in workspace_credit_actions %}
                 {% if item.slug == "seo" %}
-                <div class="credit-notice">
-                    Estimated cost: <strong>{{ item.credits }} credits</strong>. {{ item.next_step }}
+                <div class="workspace-credit-callout">
+                    <p class="workspace-report-kicker">Run Cost</p>
+                    <p>Each SEO refresh uses <strong>{{ item.credits }} credits</strong>. {{ item.next_step }}</p>
                 </div>
                 {% endif %}
                 {% endfor %}
@@ -98,53 +102,64 @@
                     {% endfor %}
                     <button type="submit" class="button-mega" style="width: 100%; margin-top: 1rem;">Update SEO Intelligence</button>
                 </form>
+                <p class="text-muted">The refresh reuses your latest crawl so users can move from audit evidence to SEO action without another heavy setup step.</p>
                 {% endif %}
             </article>
 
-            <article class="system-card glass-panel">
-                <div class="card-head">
-                    <p class="eyebrow text-accent">Status</p>
-                    <h2>SEO Snapshot</h2>
+            <article class="workspace-report-card">
+                <div class="workspace-report-intro">
+                    <p class="workspace-report-kicker">Snapshot</p>
+                    <h2>Current benchmark state</h2>
+                    <p>This is the quick read for whether the workspace has enough audit context and competitor evidence to generate a useful SEO view.</p>
                 </div>
                 {% if not can_generate_snapshot %}
-                <div class="empty-state-panel">
-                    <p>A completed audit is required before benchmarking competitors.</p>
+                <div class="workspace-state-panel is-audit">
+                    <p class="workspace-report-kicker">Audit Required</p>
+                    <h2>Run the first audit to unlock SEO benchmarking</h2>
+                    <p>A completed audit is required before the platform can benchmark competitors, detect gaps, and recommend the next SEO actions.</p>
                     <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
                         {% csrf_token %}
                         <button type="submit" class="button button-primary">Run First Audit</button>
                     </form>
                 </div>
                 {% elif seo_refresh_state.refresh_status == "queued" or seo_refresh_state.refresh_status == "running" %}
-                <div class="loading-panel">
-                    <p class="text-secondary">Benchmark refresh in progress...</p>
+                <div class="workspace-status-card is-warning">
+                    <p class="workspace-report-kicker">Refresh Running</p>
+                    <h3>Benchmark update in progress</h3>
+                    <p>The workspace is fetching competitor evidence and reprocessing the SEO summary. The latest completed snapshot stays visible until the new run finishes.</p>
                 </div>
                 {% elif not snapshot %}
-                <div class="empty-state-panel">
-                    <p>Save your profile above to generate the first SEO snapshot.</p>
+                <div class="workspace-state-panel">
+                    <p class="workspace-report-kicker">Ready To Generate</p>
+                    <h2>No SEO snapshot yet</h2>
+                    <p>Save the profile on the left to generate the first benchmark and start turning competitor signals into a roadmap.</p>
                 </div>
                 {% else %}
-                <div class="metric-grid-premium">
-                    <div class="metric-card-premium">
-                        <p class="eyebrow">Industry</p>
+                <div class="workspace-metric-grid">
+                    <div class="workspace-metric-card">
+                        <p class="workspace-report-kicker">Industry</p>
                         <h3>{{ seo_context.industry_label }}</h3>
-                        <small class="text-muted">{{ seo_context.location }}</small>
+                        <small>{{ seo_context.location|default:"Location not set" }}</small>
                     </div>
-                    <div class="metric-card-premium">
-                        <p class="eyebrow">Goal</p>
+                    <div class="workspace-metric-card">
+                        <p class="workspace-report-kicker">Goal</p>
                         <h3>{{ seo_context.target_goal }}</h3>
+                        <small>Primary optimization target</small>
                     </div>
-                    <div class="metric-card-premium">
-                        <p class="eyebrow">Peers</p>
+                    <div class="workspace-metric-card">
+                        <p class="workspace-report-kicker">Peers</p>
                         <h3>{{ seo_benchmark_summary.available_competitors|default:0 }}</h3>
+                        <small>Competitors benchmarked so far</small>
                     </div>
                 </div>
-                <div class="focus-box">
-                    <strong>Goal Focus:</strong> {{ seo_context.goal_focus }}
+                <div class="workspace-highlight-box">
+                    <strong>Goal focus</strong>
+                    <p>{{ seo_context.goal_focus }}</p>
                 </div>
                 {% if seo_benchmark_summary.top_match_signals %}
-                <div class="tag-row">
+                <div class="workspace-chip-row">
                     {% for signal in seo_benchmark_summary.top_match_signals %}
-                    <span class="pill-accent">{{ signal }}</span>
+                    <span class="workspace-chip">{{ signal }}</span>
                     {% endfor %}
                 </div>
                 {% endif %}
@@ -153,104 +168,95 @@
         </div>
 
         {% if seo_refresh_state.refresh_status == "queued" or seo_refresh_state.refresh_status == "running" %}
-        <article class="system-card seo-refresh-shell" style="background: rgba(14, 165, 233, 0.08);" data-seo-refresh-state="{{ seo_refresh_state.refresh_status }}">
-            <div class="section-heading" style="text-align: left; margin-bottom: 0.5rem;">
-                <p class="eyebrow">SEO Refresh Status</p>
-                <h2 style="font-size: 1.6rem;">Benchmark refresh in progress</h2>
+        <article class="workspace-report-card" data-seo-refresh-state="{{ seo_refresh_state.refresh_status }}">
+            <div class="workspace-report-intro">
+                <p class="workspace-report-kicker">SEO Refresh Status</p>
+                <h2>Benchmark refresh in progress</h2>
+                <p>Competitor discovery and page profiling are running in the background. The workspace keeps the latest completed snapshot visible until the new result is ready.</p>
             </div>
-            <div class="seo-refresh-visual">
-                <div class="seo-orbit" aria-hidden="true">
-                    <div class="seo-orbit-ring"></div>
-                    <div class="seo-orbit-ring ring-two"></div>
-                    <div class="seo-orbit-core"></div>
-                    <div class="seo-orbit-dot"></div>
-                    <div class="seo-orbit-dot dot-two"></div>
+            <div class="workspace-block-grid">
+                <div class="workspace-block-card">
+                    <p class="workspace-report-kicker">Current Step</p>
+                    <h3>Collecting market evidence</h3>
+                    <p>Pulling live SERP patterns, competitor pages, and site-level signals tied to the current business profile.</p>
                 </div>
-                <div class="seo-status-stack">
-                    <div class="seo-status-live">
-                        <span class="seo-live-dot"></span>
-                        Live benchmark running
-                    </div>
-                    <p class="seo-status-message" data-seo-status-copy>
-                        Competitor discovery and page profiling are running in the background. This page will show the latest completed SEO snapshot until the new refresh finishes.
-                    </p>
-                    <div class="seo-loading-grid" aria-hidden="true">
-                        <div class="seo-loading-card">
-                            <div class="seo-line-lg seo-shimmer"></div>
-                            <div class="seo-line-md seo-shimmer"></div>
-                            <div class="seo-line-sm seo-shimmer"></div>
-                        </div>
-                        <div class="seo-loading-card">
-                            <div class="seo-line-lg seo-shimmer"></div>
-                            <div class="seo-line-md seo-shimmer"></div>
-                            <div class="seo-line-sm seo-shimmer"></div>
-                        </div>
-                        <div class="seo-loading-card">
-                            <div class="seo-line-lg seo-shimmer"></div>
-                            <div class="seo-line-md seo-shimmer"></div>
-                            <div class="seo-line-sm seo-shimmer"></div>
-                        </div>
-                    </div>
+                <div class="workspace-block-card">
+                    <p class="workspace-report-kicker">Next</p>
+                    <h3>Rebuilding recommendations</h3>
+                    <p>The system will refresh scorecards, opportunity groups, and content priorities as soon as the evidence pass completes.</p>
                 </div>
             </div>
         </article>
         {% elif seo_refresh_state.refresh_status == "failed" %}
-        <article class="system-card" style="background: rgba(220, 38, 38, 0.08);">
-            <div class="section-heading" style="text-align: left; margin-bottom: 0.5rem;">
-                <p class="eyebrow">SEO Refresh Status</p>
-                <h2 style="font-size: 1.6rem;">Latest refresh failed</h2>
+        <article class="workspace-report-card">
+            <div class="workspace-status-card is-danger">
+                <p class="workspace-report-kicker">SEO Refresh Status</p>
+                <h3>Latest refresh failed</h3>
+                <p>{{ seo_refresh_state.refresh_error|default:"The competitor refresh did not finish. Try again after checking the provider and network settings." }}</p>
             </div>
-            <p style="margin: 0; color: #7f1d1d; line-height: 1.6;">
-                {{ seo_refresh_state.refresh_error|default:"The competitor refresh did not finish. Try again after checking the provider and network settings." }}
-            </p>
         </article>
         {% endif %}
 
         {% if snapshot %}
-        <article id="seo-benchmark" class="system-card">
-            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                <p class="eyebrow">Value From This Refresh</p>
-                <h2 style="font-size: 2rem;">What the system actually processed</h2>
+        <article id="seo-benchmark" class="workspace-report-card">
+            <div class="workspace-report-intro">
+                <p class="workspace-report-kicker">Value From This Refresh</p>
+                <h2>What the system actually processed</h2>
+                <p>Use this block to export the benchmark, share it with stakeholders, and confirm how much competitor, SERP, and campaign evidence the workspace captured.</p>
             </div>
-            <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 1rem;">
-                {% if seo_export_action.available %}
-                <a class="button button-secondary" href="{% url 'seo:workspace-seo-report-pdf' %}" target="_blank" rel="noopener">View SEO PDF</a>
-                <a class="button button-secondary" href="{% url 'seo:workspace-seo-report-pdf' %}?download=1">Download PDF</a>
-                <a class="button button-secondary" href="{% url 'seo:workspace-seo-export-json' %}">Export JSON</a>
-                {% else %}
-                <div style="padding: 0.85rem 1rem; border-radius: 16px; background: #f8fafc; color: #64748b; line-height: 1.5;">
-                    SEO exports use {{ seo_export_action.credits }} credits.
-                    {{ seo_export_action.next_unlock_message|default:seo_export_action.blocked_message }}
-                    {% if seo_export_action.direct_checkout_available %}
-                    <div style="margin-top: 0.85rem;">
-                        <a href="{% url 'tools:account-dashboard' %}#plans" class="button button-primary">Open plans in Account</a>
+            <div class="workspace-action-grid">
+                <div class="workspace-action-card">
+                    <p class="workspace-report-kicker">Exports</p>
+                    <h3>Take this SEO snapshot out of the workspace</h3>
+                    <p>Use the PDF for client review, download the file for handoff, or export raw JSON for downstream systems.</p>
+                    {% if seo_export_action.available %}
+                    <div class="workspace-card-actions">
+                        <a class="button button-secondary" href="{% url 'seo:workspace-seo-report-pdf' %}" target="_blank" rel="noopener">View SEO PDF</a>
+                        <a class="button button-secondary" href="{% url 'seo:workspace-seo-report-pdf' %}?download=1">Download PDF</a>
+                        <a class="button button-secondary" href="{% url 'seo:workspace-seo-export-json' %}">Export JSON</a>
+                    </div>
+                    {% else %}
+                    <div class="workspace-credit-callout">
+                        <p>SEO exports use <strong>{{ seo_export_action.credits }} credits</strong>. {{ seo_export_action.next_unlock_message|default:seo_export_action.blocked_message }}</p>
+                        {% if seo_export_action.direct_checkout_available %}
+                        <div class="workspace-card-actions">
+                            <a href="{% url 'tools:account-dashboard' %}#plans" class="button button-primary">Open plans in Account</a>
+                        </div>
+                        {% endif %}
                     </div>
                     {% endif %}
                 </div>
-                {% endif %}
-                {% if seo_share_action.available %}
-                <form method="post" action="{% url 'seo:workspace-seo-share-create' %}">
-                    {% csrf_token %}
-                    <button type="submit" class="button button-primary">Create Share Link</button>
-                </form>
-                {% else %}
-                <div style="padding: 0.85rem 1rem; border-radius: 16px; background: #f8fafc; color: #64748b; line-height: 1.5;">
-                    Stakeholder sharing uses {{ seo_share_action.credits }} credits.
-                    {{ seo_share_action.next_unlock_message|default:seo_share_action.blocked_message }}
-                    {% if seo_share_action.direct_checkout_available %}
-                    <div style="margin-top: 0.85rem;">
-                        <a href="{% url 'tools:account-dashboard' %}#plans" class="button button-primary">Open plans in Account</a>
+                <div class="workspace-action-card">
+                    <p class="workspace-report-kicker">Stakeholder Link</p>
+                    <h3>Share the benchmark without sharing the workspace</h3>
+                    <p>Create a clean stakeholder report URL for clients, partners, or internal reviewers who only need the result surface.</p>
+                    {% if seo_share_action.available %}
+                    <form method="post" action="{% url 'seo:workspace-seo-share-create' %}">
+                        {% csrf_token %}
+                        <button type="submit" class="button button-primary">Create Share Link</button>
+                    </form>
+                    {% else %}
+                    <div class="workspace-credit-callout">
+                        <p>Stakeholder sharing uses <strong>{{ seo_share_action.credits }} credits</strong>. {{ seo_share_action.next_unlock_message|default:seo_share_action.blocked_message }}</p>
+                        {% if seo_share_action.direct_checkout_available %}
+                        <div class="workspace-card-actions">
+                            <a href="{% url 'tools:account-dashboard' %}#plans" class="button button-primary">Open plans in Account</a>
+                        </div>
+                        {% endif %}
                     </div>
                     {% endif %}
                 </div>
-                {% endif %}
             </div>
             {% if latest_seo_share_url %}
-            <div style="margin-bottom: 2rem; padding: 1.5rem; border-radius: var(--radius-lg); background: rgba(14, 165, 233, 0.08); border: 1px solid rgba(14, 165, 233, 0.2); color: var(--text-primary); line-height: 1.6;">
-                <strong style="display: block; margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem; color: var(--brand-primary);">Active Stakeholder Report</strong>
-                <div class="url-wrap-mono" style="font-size: 0.82rem; color: var(--text-secondary); background: rgba(0,0,0,0.3); padding: 0.75rem; border-radius: var(--radius-sm); border: 1px solid var(--border-glass); margin-bottom: 1rem;">{{ latest_seo_share_url }}</div>
-                <div style="display: flex; gap: 1rem;">
-                    <a href="{{ latest_seo_share_url }}" target="_blank" rel="noopener" class="button button-primary" style="font-size: 0.85rem;">Open Shared Report</a>
+            <div class="workspace-share-banner">
+                <div class="workspace-report-intro">
+                    <p class="workspace-report-kicker">Active Stakeholder Report</p>
+                    <h3>Latest live share link</h3>
+                    <p>This link opens the latest SEO report in a cleaner stakeholder-facing surface.</p>
+                </div>
+                <div class="workspace-url-shell">{{ latest_seo_share_url }}</div>
+                <div class="workspace-card-actions">
+                    <a href="{{ latest_seo_share_url }}" target="_blank" rel="noopener" class="button button-primary">Open Shared Report</a>
                 </div>
             </div>
             {% endif %}
@@ -275,51 +281,50 @@
                 <div class="data-card"><span class="data-card-label">Validated Campaigns</span><span class="data-card-value">{{ seo_chain_value_summary.validated_campaigns|default:0 }}</span><p class="data-card-desc">Completed &amp; confirmed by audit rerun</p></div>
                 <div class="data-card"><span class="data-card-label">Acquired Links</span><span class="data-card-value">{{ seo_chain_value_summary.acquired_link_count|default:0 }}</span><p class="data-card-desc">Campaigns converted into acquired backlinks</p></div>
             </div>
-            {% if seo_discovery.queries %}
-            <div style="margin-top: 2rem; padding: 1.5rem; border-radius: var(--radius-lg); background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); color: var(--text-secondary); line-height: 1.6;">
-                <strong style="display: block; color: var(--text-primary); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem;">SERP Discovery Queries</strong>
-                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
-                    {% for q in seo_discovery.queries %}
-                    <span class="pill-accent" style="font-size: 0.75rem; background: rgba(56, 189, 248, 0.05);">{{ q }}</span>
-                    {% endfor %}
-                </div>
-
-                {% if seo_discovery.errors %}
-                <div style="margin-top: 1.5rem; padding: 1.25rem; border-radius: var(--radius-md); background: rgba(239, 68, 68, 0.05); border: 1px solid rgba(239, 68, 68, 0.15); color: var(--text-secondary);">
-                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem;">
-                        <i class="fas fa-exclamation-triangle" style="color: var(--error);"></i>
-                        <strong style="color: var(--text-primary); font-size: 0.85rem;">Intelligence Feed Warnings</strong>
-                    </div>
-                    <ul style="margin: 0; padding-left: 1.25rem; font-size: 0.85rem; display: grid; gap: 0.5rem;">
-                        {% for item in seo_discovery.errors %}
-                        <li>
-                            <span style="color: var(--text-primary); font-weight: 600;">{{ item.query }}</span>: 
-                            <span style="opacity: 0.8;">{{ item.message }}</span>
-                        </li>
+            {% if seo_discovery.queries or seo_discovery.routing_policy or snapshot %}
+            <div class="workspace-block-grid" style="margin-top: 1.5rem;">
+                {% if seo_discovery.queries %}
+                <div class="workspace-block-card">
+                    <p class="workspace-report-kicker">SERP Discovery Queries</p>
+                    <h3>Search patterns used to source market evidence</h3>
+                    <p>These queries shaped which competitor pages, directories, and support surfaces were pulled into the SEO benchmark.</p>
+                    <div class="workspace-chip-row">
+                        {% for q in seo_discovery.queries %}
+                        <span class="workspace-chip">{{ q }}</span>
                         {% endfor %}
-                    </ul>
+                    </div>
+                    {% if seo_discovery.errors %}
+                    <div class="workspace-status-card is-danger">
+                        <p class="workspace-report-kicker">Warnings</p>
+                        <h3>Some discovery sources returned issues</h3>
+                        <ul>
+                            {% for item in seo_discovery.errors %}
+                            <li><strong>{{ item.query }}</strong>: {{ item.message }}</li>
+                            {% endfor %}
+                        </ul>
+                    </div>
+                    {% endif %}
+                </div>
+                {% elif snapshot %}
+                <div class="workspace-block-card">
+                    <p class="workspace-report-kicker">Discovery Mode</p>
+                    <h3>Manual competitor benchmarking is active</h3>
+                    <p>Automatic SERP discovery is not configured, so the workspace is benchmarking the competitors you entered directly.</p>
                 </div>
                 {% endif %}
-            </div>
-            {% elif snapshot %}
-            <div style="margin-top: 2rem; padding: 1.5rem; border-radius: var(--radius-lg); background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); color: var(--text-muted); line-height: 1.6; text-align: center;">
-                <i class="fas fa-search" style="display: block; margin-bottom: 0.5rem; opacity: 0.5; font-size: 1.2rem;"></i>
-                Automatic SERP discovery is not configured. Benchmarking manual competitors directly.
-            </div>
-            {% endif %}
 
-            {% if seo_discovery.routing_policy %}
-            <div style="margin-top: 2rem; padding: 1.5rem; border-radius: var(--radius-lg); background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass); color: var(--text-secondary); line-height: 1.6;">
-                <strong style="display: block; color: var(--text-primary); margin-bottom: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; font-size: 0.75rem;">Intelligence Routing Policy</strong>
-                <div style="font-size: 0.95rem;">
-                    Targeting <strong style="color: var(--text-primary);">{{ seo_context.industry_label|default:"General" }}</strong> 
-                    peers for <strong style="color: var(--text-primary);">{{ seo_discovery.routing_policy.primary_service|default:"the declared offer" }}</strong>.
-                </div>
-                {% if seo_discovery.routing_policy.routes %}
-                <div style="margin-top: 1.25rem; display: flex; flex-wrap: wrap; gap: 0.65rem;">
-                    {% for route in seo_discovery.routing_policy.routes %}
-                    <span class="premium-pill" style="font-size: 0.75rem; background: rgba(255,255,255,0.03); color: var(--text-primary);">{{ route.family_label }}</span>
-                    {% endfor %}
+                {% if seo_discovery.routing_policy %}
+                <div class="workspace-block-card">
+                    <p class="workspace-report-kicker">Routing Policy</p>
+                    <h3>How the workspace chose benchmark paths</h3>
+                    <p>Targeting <strong>{{ seo_context.industry_label|default:"General" }}</strong> peers for <strong>{{ seo_discovery.routing_policy.primary_service|default:"the declared offer" }}</strong>.</p>
+                    {% if seo_discovery.routing_policy.routes %}
+                    <div class="workspace-chip-row">
+                        {% for route in seo_discovery.routing_policy.routes %}
+                        <span class="workspace-chip">{{ route.family_label }}</span>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
                 </div>
                 {% endif %}
             </div>

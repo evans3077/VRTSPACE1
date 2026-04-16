@@ -380,6 +380,7 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             "og_description": "Private SEO workspace for benchmarked competitor intelligence and execution planning.",
             "og_type": "website",
             "twitter_card": "summary",
+            "shell_theme": "shell-light",
             "schema_json": json.dumps(
                 {
                     "@context": "https://schema.org",
@@ -654,6 +655,7 @@ class SharedSEOReportView(DetailView):
             {
                 "report_payload": payload,
                 "project": share_link.project,
+                "shell_theme": "shell-light",
                 "canonical_url": canonical_url,
                 "page_title": f"{share_link.project.name} SEO Strategy Report | VRT SPACE AGENCY",
                 "meta_description": f"Stakeholder SEO strategy report for {share_link.project.normalized_domain} with benchmark evidence, execution priorities, and campaign progress.",

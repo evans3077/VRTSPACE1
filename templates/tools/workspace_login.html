@@ -1,49 +1,52 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="hero" style="padding-top: 3rem; padding-bottom: 1.5rem;">
-    <div class="container">
-        <div class="section-heading">
-            <p class="eyebrow">Workspace Login</p>
-            <h1 style="max-width: none;">Sign in to your workspace</h1>
-            <p class="section-text" style="max-width: 760px;">
-                Return to your saved audits, score history, and upgrade path. Use Google sign-in if it is configured,
-                or sign in with the email and password you created earlier.
+<section class="public-shell-section">
+    <div class="container auth-shell">
+        <div class="auth-intro-card glass-panel">
+            <p class="feature-tag">Workspace Login</p>
+            <h1>Sign in and continue from where the last audit left off.</h1>
+            <p class="lead">
+                Return to saved audits, score history, plan access, and the next actions waiting inside your workspace.
             </p>
-        </div>
-    </div>
-</section>
-
-<section class="packages-section" style="padding-top: 0;">
-    <div class="container" style="max-width: 760px;">
-        <article class="system-card" style="border-top: 4px solid var(--signal);">
-            {% if selected_package %}
-            <div style="margin-bottom: 1.5rem; padding: 1rem; border-radius: 16px; background: rgba(22, 163, 74, 0.08);">
-                <div class="eyebrow">Selected Plan</div>
-                <strong style="display: block; color: var(--ink); margin-bottom: 0.35rem;">{{ selected_package.name }}</strong>
-                <span style="font-size: 0.92rem; color: #64748b;">{{ selected_package.label }} - {{ selected_package.price }}</span>
+            <div class="public-chip-row">
+                <span class="premium-pill">Saved audit history</span>
+                <span class="premium-pill">Plan-aware workspace</span>
+                <span class="premium-pill">Rerun after fixes</span>
             </div>
-            {% endif %}
 
-            {% if audit_run %}
-            <div style="margin-bottom: 1.5rem; padding: 1rem; border-radius: 16px; background: #f8fafc;">
-                <div class="eyebrow">Linked Audit</div>
-                <strong style="display: block; color: var(--ink); margin-bottom: 0.35rem;">{{ audit_run.normalized_domain }}</strong>
-                <span style="font-size: 0.92rem; color: #64748b;">Overall score: {{ audit_run.overall_score }}</span>
-            </div>
-            {% endif %}
-
-            <div style="display: grid; gap: 0.75rem; margin-bottom: 1.5rem;">
-                {% if google_oauth_enabled %}
-                <a href="{{ google_oauth_url }}" class="button button-secondary" style="text-align: center;">Continue with Google</a>
+            <div class="auth-context-grid">
+                {% if selected_package %}
+                <article class="auth-context-card">
+                    <p class="eyebrow">Selected plan</p>
+                    <h3>{{ selected_package.name }}</h3>
+                    <p>{{ selected_package.label }} · {{ selected_package.price }}</p>
+                </article>
                 {% endif %}
-                <p style="margin: 0; color: #64748b;">
-                    Need an account?
-                    <a href="{{ signup_url }}" style="font-weight: 700; color: var(--signal); text-decoration: none;">Create one</a>
-                </p>
+
+                {% if audit_run %}
+                <article class="auth-context-card">
+                    <p class="eyebrow">Linked audit</p>
+                    <h3>{{ audit_run.normalized_domain }}</h3>
+                    <p>Overall score: {{ audit_run.overall_score }}</p>
+                </article>
+                {% endif %}
+            </div>
+        </div>
+
+        <article class="auth-form-card glass-panel">
+            <div class="auth-form-head">
+                <p class="eyebrow">Sign in</p>
+                <h2>Open your workspace</h2>
+                <p class="section-text">Use the account you created after your audit, or continue with Google if it is enabled.</p>
             </div>
 
-            <form method="post" class="premium-form">
+            {% if google_oauth_enabled %}
+            <a href="{{ google_oauth_url }}" class="button button-secondary button-block">Continue with Google</a>
+            <div class="auth-divider"><span>or sign in with email</span></div>
+            {% endif %}
+
+            <form method="post" class="premium-form auth-form">
                 {% csrf_token %}
                 {% if audit_run %}
                 <input type="hidden" name="audit" value="{{ audit_run.pk }}">
@@ -51,13 +54,15 @@
                 {% if selected_package %}
                 <input type="hidden" name="package" value="{{ selected_package.name|lower }}">
                 {% endif %}
+
                 <div class="form-group">
-                    <label for="{{ form.username.id_for_label }}">Email</label>
+                    <label for="{{ form.username.id_for_label }}">Email address</label>
                     {{ form.username }}
                     {% if form.username.errors %}
                     <div class="text-error">{{ form.username.errors|join:", " }}</div>
                     {% endif %}
                 </div>
+
                 <div class="form-group">
                     <label for="{{ form.password.id_for_label }}">Password</label>
                     {{ form.password }}
@@ -65,11 +70,18 @@
                     <div class="text-error">{{ form.password.errors|join:", " }}</div>
                     {% endif %}
                 </div>
+
                 {% if form.non_field_errors %}
                 <div class="text-error">{{ form.non_field_errors|join:", " }}</div>
                 {% endif %}
-                <button type="submit" class="button button-primary">Sign in</button>
+
+                <button type="submit" class="button button-primary button-block">Sign in</button>
             </form>
+
+            <p class="auth-assist-text">
+                Need an account?
+                <a href="{{ signup_url }}">Create one</a>
+            </p>
         </article>
     </div>
 </section>

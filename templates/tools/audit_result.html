@@ -2,30 +2,17 @@
 
 {% block content %}
 {% if is_processing %}
-<section class="hero" style="padding-bottom: 3rem;">
-    <div class="container">
-        <div class="section-heading">
-            <p class="eyebrow">Audit In Progress</p>
-            <h1 style="max-width: none;">We are analyzing {{ audit_run.normalized_domain|default:audit_run.start_url }}</h1>
-            <p class="section-text" style="max-width: 760px;">
-                The request was accepted and moved off the web request thread so Render does not time out.
-                This page refreshes automatically while the crawl and PageSpeed calls finish.
-            </p>
-            <div style="margin-top: 1.5rem; display: inline-flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
-                <span class="score-pill score-med" style="font-size: 0.75rem;">Status: {{ audit_run.get_status_display }}</span>
-                <a class="button button-secondary" href="{% url 'core:home' %}#audit">Run another audit</a>
-            </div>
-        </div>
-
-        <div class="system-grid" style="margin-top: 3rem;">
-            <article class="system-card" style="border-top: 4px solid var(--signal);">
-                <h3>Current step</h3>
-                <p>Fetching public pages, collecting crawl signals, and requesting PageSpeed data for the scanned URLs.</p>
-            </article>
-            <article class="system-card" style="border-top: 4px solid #f8fafc;">
-                <h3>What happens next</h3>
-                <p>As soon as the job completes, this page will switch to the full audit report with scores, grouped fixes, and workspace actions.</p>
-            </article>
+<section class="public-shell-section">
+    <div class="container result-state-panel glass-panel">
+        <p class="feature-tag">Audit In Progress</p>
+        <h1>We are analyzing {{ audit_run.normalized_domain|default:audit_run.start_url }}</h1>
+        <p class="lead">
+            The request is running in the background while we collect crawl and performance signals.
+            This page refreshes automatically until the diagnosis is ready.
+        </p>
+        <div class="public-chip-row">
+            <span class="premium-pill">Status: {{ audit_run.get_status_display }}</span>
+            <a class="button button-secondary" href="{% url 'core:home' %}#audit">Run another audit</a>
         </div>
     </div>
 </section>
@@ -35,113 +22,265 @@ setTimeout(function () {
 }, 5000);
 </script>
 {% elif audit_run.status == "failed" %}
-<section class="hero" style="padding-bottom: 3rem;">
-    <div class="container">
-        <div class="section-heading">
-            <p class="eyebrow">Audit Failed</p>
-            <h1 style="max-width: none;">We could not finish the audit for {{ audit_run.normalized_domain|default:audit_run.start_url }}</h1>
-            <p class="section-text" style="max-width: 760px;">
-                {{ audit_run.error_message|default:"The audit could not complete with the current public URL." }}
-            </p>
-            <div style="margin-top: 1.5rem;">
-                <a class="button button-primary" href="{% url 'core:home' %}#audit">Try another audit</a>
-            </div>
+<section class="public-shell-section">
+    <div class="container result-state-panel glass-panel result-state-panel-danger">
+        <p class="feature-tag">Audit Failed</p>
+        <h1>We could not finish the audit for {{ audit_run.normalized_domain|default:audit_run.start_url }}</h1>
+        <p class="lead">{{ audit_run.error_message|default:"The audit could not complete with the current public URL." }}</p>
+        <div class="public-cta-actions">
+            <a class="button button-primary" href="{% url 'core:home' %}#audit">Try another audit</a>
         </div>
     </div>
 </section>
 {% else %}
-<section class="hero" style="padding-bottom: 3rem;">
-    <div class="container">
-        <div class="section-heading">
-            <p class="eyebrow">Site Intelligence Snapshot</p>
-            <h1 style="max-width: none;">Audit Analysis: {{ audit_run.normalized_domain }}</h1>
-            <div style="margin-bottom: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                <a href="{% url 'tools:audit-report-pdf' audit_run.pk %}" class="button button-secondary" target="_blank" rel="noopener">
-                    View PDF Report
-                </a>
-                <a href="{% url 'tools:audit-report-pdf' audit_run.pk %}?download=1" class="button button-secondary">
-                    Download PDF
-                </a>
-            {% if user.is_staff %}
-                <a href="{% url 'tools:agency-audit' audit_run.pk %}" class="button button-secondary" style="padding: 0.5rem 1rem; font-size: 0.85rem;">
-                    View Agency Intelligence
-                </a>
-            {% endif %}
-            </div>
-            <p class="section-text" style="opacity: 0.7;">
-                Combined signals from public infrastructure and crawler heuristics. For deeper workflows, compare the
-                <a href="#upsell" style="color: var(--signal); font-weight: 600;">workspace upgrades</a> matched to this audit.
+<section class="public-shell-section">
+    <div class="container hero-split public-hero-split">
+        <div class="public-hero-copy">
+            <p class="feature-tag">{{ audit_profile.label }}</p>
+            <h1>{{ diagnosis.headline|default:"Website audit diagnosis" }}</h1>
+            <p class="lead">
+                {{ diagnosis.summary|default:"This report is organized to show the biggest blockers first, then guide the next move without overwhelming the page." }}
             </p>
-            {% if not audit_tier_enforcement %}
-            <div style="margin-top: 1rem; display: inline-flex; gap: 0.5rem; align-items: center; padding: 0.75rem 1rem; border-radius: 999px; background: rgba(14, 165, 233, 0.08); color: #f8fafc; font-size: 0.85rem; font-weight: 700;">
-                Free-pass mode for testing: plans are visible now, enforcement comes later.
+            <div class="public-chip-row">
+                <span class="premium-pill">Overall score: {{ audit_run.overall_score|default:"-" }}</span>
+                <span class="premium-pill">Pages scanned: {{ audit_run.pages_crawled|default:0 }}</span>
+                <span class="premium-pill">Detail layer: {{ audit_profile.label }}</span>
+                {% if not audit_tier_enforcement %}
+                <span class="premium-pill">Free-pass mode active for testing</span>
+                {% endif %}
             </div>
-            {% endif %}
+            <div class="hero-actions public-hero-actions">
+                <a href="{% url 'tools:audit-report-pdf' audit_run.pk %}" class="button button-secondary" target="_blank" rel="noopener">View PDF</a>
+                <a href="{% url 'tools:audit-report-pdf' audit_run.pk %}?download=1" class="button button-secondary">Download PDF</a>
+                {% if viewer_has_workspace %}
+                <a href="{% url 'tools:workspace-dashboard' %}" class="button button-primary">Open Workspace</a>
+                {% else %}
+                <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-primary">Create Free Workspace</a>
+                {% endif %}
+                {% if user.is_staff %}
+                <a href="{% url 'tools:agency-audit' audit_run.pk %}" class="button button-secondary">Agency View</a>
+                {% endif %}
+            </div>
         </div>
-
-        <div class="layout-split-sidebar" style="margin-top: 3rem; align-items: center;">
-            <div class="system-card" style="padding: 3rem; border: 2px solid var(--signal);">
-                <div class="gauge-circle" style="width: 180px; height: 180px;">
-                    <svg class="gauge-svg" width="180" height="180">
-                        <circle class="gauge-bg" cx="90" cy="90" r="82" style="stroke-width: 12; stroke: rgba(255,255,255,0.05);"></circle>
-                        <circle class="gauge-fill" cx="90" cy="90" r="82"
-                                style="stroke-width: 12; stroke: var(--signal);
-                                       stroke-dasharray: 515.22;
-                                       stroke-dashoffset: {{ audit_run.summary.gauge_offsets.overall|default:515 }};">
-                        </circle>
-                    </svg>
-                    <div class="gauge-value" style="font-size: 3rem; color: var(--text-primary);">{{ audit_run.overall_score|default:"-" }}</div>
-                </div>
-                <div class="gauge-label" style="font-size: 1.1rem; color: var(--text-secondary); margin-top: 1rem;">Overall Intelligence</div>
+        <div class="public-hero-panel glass-panel audit-score-panel audit-hero-score-panel">
+            <div class="audit-score-summary">
+                <p class="eyebrow">Audit summary</p>
+                <div class="audit-score-number">{{ audit_run.overall_score|default:"-" }}</div>
+                <p class="section-text">{{ audit_profile.summary }}</p>
             </div>
-
-            <div class="metric-strip" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 1rem;">
+            <div class="audit-score-grid">
                 {% for gauge in gauge_list %}
-                <div class="system-card" style="padding: 1rem; flex-direction: column; gap: 0.5rem; justify-content: center; align-items: center; text-align: center;">
-                    <div class="gauge-circle" style="width: 50px; height: 50px; margin-bottom: 0;">
-                        <svg class="gauge-svg" width="50" height="50">
-                            <circle class="gauge-bg" cx="25" cy="25" r="22" style="stroke-width: 4; stroke: rgba(255,255,255,0.05);"></circle>
-                            <circle class="gauge-fill" cx="25" cy="25" r="22"
-                                    style="stroke-width: 4; stroke: {{ gauge.color }};
-                                           stroke-dasharray: 138.23;
-                                           stroke-dashoffset: {{ gauge.offset }};">
-                            </circle>
-                        </svg>
-                        <div class="gauge-value" style="font-size: 0.9rem; color: var(--text-primary);">{{ gauge.score }}</div>
-                    </div>
-                    <div class="gauge-label" style="font-size: 0.7rem; color: var(--text-muted); font-weight: 700; text-transform: uppercase;">{{ gauge.label }}</div>
-                </div>
+                <article class="audit-score-card">
+                    <span class="journey-phase">{{ gauge.label }}</span>
+                    <strong>{{ gauge.score }}</strong>
+                </article>
                 {% endfor %}
             </div>
+            {% if recommended_next_step.title %}
+            <div class="audit-next-step-card">
+                <p class="journey-phase">Recommended next step</p>
+                <strong>{{ recommended_next_step.title }}</strong>
+                <p>{{ recommended_next_step.body }}</p>
+                {% if recommended_next_step.plan %}
+                <span class="pill-accent">{{ recommended_next_step.plan }}</span>
+                {% endif %}
+            </div>
+            {% endif %}
         </div>
     </div>
 </section>
 
-{% if audit_run.summary.performance_metrics %}
-<section class="container" style="margin-bottom: 2rem;">
-    <div class="section-heading" style="margin-bottom: 1.5rem;">
-        <p class="eyebrow">Performance Signals</p>
-        <h2 style="max-width: none;">Trust and rendering diagnostics</h2>
-        <p class="section-text" style="max-width: 760px;">
-            These are the first performance indicators users feel. LCP shows when the main content appears. TTFB shows when the server starts responding.
-        </p>
-    </div>
-    <div class="system-grid" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));">
-        {% for metric in audit_run.summary.performance_metrics %}
-        <article class="system-card" style="border-top: 4px solid {% if metric.status == 'critical' %}#dc2626{% elif metric.status == 'warning' %}#ea580c{% else %}#16a34a{% endif %};">
-            <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 0.5rem;">
-                <p class="eyebrow" style="margin: 0; color: var(--brand-primary);">{{ metric.short_label }}</p>
-                <span class="score-pill {% if metric.status == 'critical' %}score-low{% elif metric.status == 'warning' %}score-med{% else %}score-high{% endif %}" style="font-size: 0.65rem;">
-                    {{ metric.status|title }}
-                </span>
+<section class="public-shell-section">
+    <div class="container audit-diagnosis-grid">
+        <article class="public-capability-card audit-diagnosis-card">
+            <div class="report-list-head">
+                <strong>Critical issues</strong>
+                <span class="pill-accent">{{ top_issues|length }}</span>
             </div>
-            <h3 style="margin-bottom: 0.35rem; color: var(--text-primary);">{{ metric.value }}</h3>
-            <div style="font-weight: 700; color: var(--text-secondary); margin-bottom: 0.5rem;">{{ metric.label }}</div>
-            <div style="font-size: 0.82rem; color: var(--text-muted); margin-bottom: 0.75rem;">Target: {{ metric.target_label }}</div>
-            <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 0.5rem; line-height: 1.5;">{{ metric.description }}</p>
-            <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
-                <strong style="display: block; color: var(--text-primary); margin-bottom: 0.2rem;">Why it matters</strong>
-                {{ metric.impact }}
+            <div class="report-list-stack">
+                {% for item in top_issues %}
+                <div class="report-list-card">
+                    <strong>{{ item.message }}</strong>
+                    <p>{{ item.recommendation }}</p>
+                </div>
+                {% empty %}
+                <div class="report-list-card">
+                    <p>No critical issues were surfaced in the current starter layer.</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% if top_issues_locked_count %}
+            <div class="audit-inline-lock">{{ top_issues_locked_count }} more issue{{ top_issues_locked_count|pluralize }} appear on a higher detail layer.</div>
+            {% endif %}
+        </article>
+        <article class="public-capability-card audit-diagnosis-card">
+            <div class="report-list-head">
+                <strong>Quick wins</strong>
+                <span class="pill-accent">{{ quick_wins|length }}</span>
+            </div>
+            <div class="report-list-stack">
+                {% for item in quick_wins %}
+                <div class="report-list-card">
+                    <strong>{{ item.problem }}</strong>
+                    <p>{{ item.fix }}</p>
+                </div>
+                {% empty %}
+                <div class="report-list-card">
+                    <p>No quick-win items were isolated in the current result layer.</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% if quick_wins_locked_count %}
+            <div class="audit-inline-lock">{{ quick_wins_locked_count }} more quick win{{ quick_wins_locked_count|pluralize }} unlock with a deeper plan.</div>
+            {% endif %}
+        </article>
+        <article class="public-capability-card audit-diagnosis-card">
+            <div class="report-list-head">
+                <strong>What happens next</strong>
+                <span class="pill-accent">{{ audit_profile.label }}</span>
+            </div>
+            <div class="report-detail-block">
+                <strong>{{ diagnosis.next_step_title|default:recommended_next_step.title|default:"Review the first fix" }}</strong>
+                <p>{{ diagnosis.next_step_body|default:recommended_next_step.body|default:"Use the workspace to keep the audit, SEO, and AEO work connected." }}</p>
+            </div>
+            {% if captured_context.target_goal or captured_context.primary_service or captured_context.location %}
+            <div class="audit-context-list">
+                {% if captured_context.primary_service %}<span class="report-url-chip">{{ captured_context.primary_service }}</span>{% endif %}
+                {% if captured_context.target_goal %}<span class="report-url-chip">{{ captured_context.target_goal }}</span>{% endif %}
+                {% if captured_context.location %}<span class="report-url-chip">{{ captured_context.location }}</span>{% endif %}
+            </div>
+            {% endif %}
+            <div class="public-cta-actions">
+                {% if viewer_has_workspace %}
+                <a href="{% url 'tools:workspace-dashboard' %}" class="button button-primary button-block">Continue in workspace</a>
+                {% else %}
+                <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-primary button-block">Save this audit</a>
+                {% endif %}
+            </div>
+        </article>
+    </div>
+</section>
+
+{% if performance_metrics %}
+<section class="public-shell-section">
+    <div class="container section-heading">
+        <p class="eyebrow">Performance Signals</p>
+        <h2>The first trust and rendering indicators.</h2>
+        <p class="section-text">These are limited to the clearest signals for the current plan layer so the audit stays focused.</p>
+    </div>
+    <div class="container public-card-grid">
+        {% for metric in performance_metrics %}
+        <article class="public-capability-card performance-metric-card metric-status-{{ metric.status }}">
+            <div class="report-list-head">
+                <span class="journey-phase">{{ metric.short_label }}</span>
+                <span class="pill-accent">{{ metric.status|title }}</span>
+            </div>
+            <h3>{{ metric.value }}</h3>
+            <p><strong>{{ metric.label }}</strong></p>
+            <div class="report-detail-block">
+                <strong>Target</strong>
+                <p>{{ metric.target_label }}</p>
+            </div>
+            <div class="report-detail-block">
+                <strong>Why it matters</strong>
+                <p>{{ metric.impact }}</p>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+    {% if performance_metrics_locked_count %}
+    <div class="container">
+        <div class="result-lock-banner">
+            {{ performance_metrics_locked_count }} more performance signal{{ performance_metrics_locked_count|pluralize }} are available on deeper plans.
+        </div>
+    </div>
+    {% endif %}
+</section>
+{% endif %}
+
+{% if audit_run.summary.has_vitals_failure %}
+<section class="public-shell-section">
+    <div class="container result-alert-panel">
+        <div class="result-alert-copy">
+            <p class="feature-tag">Critical Alert</p>
+            <h2>Critical Web Vitals failure detected.</h2>
+            <p>Performance bottlenecks are actively damaging visibility and user conversion. These should be fixed early.</p>
+        </div>
+        <div class="public-card-grid">
+            {% for failure in audit_run.summary.vitals_failures %}
+            <article class="public-capability-card">
+                <div class="report-list-head">
+                    <strong>{{ failure.metric }}</strong>
+                    <span class="pill-accent">{{ failure.value }}</span>
+                </div>
+                <p>Threshold: {{ failure.threshold }}</p>
+                <p>{{ failure.impact }}</p>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section class="public-shell-section">
+    <div class="container section-heading">
+        <p class="eyebrow">Score Breakdown</p>
+        <h2>How the audit scored the key growth layers.</h2>
+        <p class="section-text">Each block summarizes the current score, the issue pressure, and the most useful next move.</p>
+    </div>
+    <div class="container public-card-grid">
+        {% for key, item in score_breakdown.items %}
+        <article class="public-capability-card score-breakdown-card score-status-{{ item.status }}">
+            <div class="report-list-head">
+                <strong>{{ item.label }}</strong>
+                <span class="pill-accent">{{ item.score }}</span>
+            </div>
+            <p>{{ item.status }} · {{ item.issues }} issue{{ item.issues|pluralize }}</p>
+            <p>{{ item.explanation }}</p>
+            <div class="report-detail-block">
+                <strong>Next step</strong>
+                <p>{{ item.next_step }}</p>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+
+{% if featured_recommendations %}
+<section class="public-shell-section">
+    <div class="container section-heading">
+        <p class="eyebrow">Priority Recommendations</p>
+        <h2>What to fix first.</h2>
+        <p class="section-text">These are the highest-leverage actions exposed by the current plan layer.</p>
+    </div>
+    <div class="container public-card-grid">
+        {% for recommendation in featured_recommendations %}
+        <article class="report-recommendation-card recommendation-card audit-premium-card">
+            <div class="report-list-head">
+                <strong>{{ recommendation.title }}</strong>
+                <span class="pill-accent">Priority {{ recommendation.priority_score }}</span>
+            </div>
+            <div class="report-url-list">
+                <span class="report-url-chip">{{ recommendation.category }}</span>
+                {% if recommendation.root_cause_label %}
+                <span class="report-url-chip">{{ recommendation.root_cause_label }}</span>
+                {% endif %}
+                <span class="report-url-chip">{{ recommendation.category_issue_count }} issue{{ recommendation.category_issue_count|pluralize }}</span>
+            </div>
+            <p>{{ recommendation.description }}</p>
+            <div class="report-detail-block">
+                <strong>Recommended fix</strong>
+                <p>{{ recommendation.recommended_fix }}</p>
+            </div>
+            <div class="result-detail-grid">
+                <div class="report-detail-block">
+                    <strong>Expected impact</strong>
+                    <p>{{ recommendation.estimated_impact }}</p>
+                </div>
+                <div class="report-detail-block">
+                    <strong>Evidence</strong>
+                    <p>{{ recommendation.evidence_summary }}{% if recommendation.evidence_score %} | Score {{ recommendation.evidence_score }}{% endif %}</p>
+                </div>
             </div>
         </article>
         {% endfor %}
@@ -149,386 +288,249 @@ setTimeout(function () {
 </section>
 {% endif %}
 
-{% if audit_run.summary.has_vitals_failure %}
-<section class="container" style="margin-bottom: 2rem;">
-    <div style="background: rgba(239, 68, 68, 0.1); border: 2px solid #ef4444; padding: 2rem; border-radius: var(--radius-lg); backdrop-filter: var(--glass-blur);">
-        <div style="display: flex; gap: 1.5rem; align-items: center;">
-            <div style="font-size: 0.75rem; font-weight: 800; letter-spacing: 0.08em; text-transform: uppercase; color: #ef4444;">Alert</div>
-            <div>
-                <h2 style="color: #f8fafc; margin-bottom: 0.5rem; font-size: 1.5rem;">Critical Web Vitals Failure Detected</h2>
-                <p style="color: var(--text-secondary); margin-bottom: 1rem; font-weight: 500;">Our engine identified performance bottlenecks that are actively damaging search visibility and user conversion.</p>
+{% if show_secondary_recommendations and secondary_recommendations %}
+<section class="public-shell-section">
+    <div class="container section-heading">
+        <p class="eyebrow">More Findings</p>
+        <h2>Secondary recommendations in this plan layer.</h2>
+    </div>
+    <div class="container public-card-grid">
+        {% for recommendation in secondary_recommendations %}
+        <article class="report-recommendation-card recommendation-card">
+            <div class="report-url-list">
+                <span class="report-url-chip">{{ recommendation.category }}</span>
+                {% if recommendation.root_cause_label %}
+                <span class="report-url-chip">{{ recommendation.root_cause_label }}</span>
+                {% endif %}
+                {% if recommendation.confidence_label %}
+                <span class="report-url-chip">{{ recommendation.confidence_label }}</span>
+                {% endif %}
             </div>
-        </div>
-
-        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1rem; margin-top: 1.5rem;">
-            {% for failure in audit_run.summary.vitals_failures %}
-            <div class="system-card" style="border-left: 4px solid #ef4444; padding: 1.25rem;">
-                <div style="font-weight: 800; color: var(--text-primary); font-size: 0.9rem; margin-bottom: 0.25rem;">{{ failure.metric }}</div>
-                <div style="display: flex; gap: 10px; align-items: baseline; margin-bottom: 0.5rem;">
-                    <span style="color: #ef4444; font-weight: 900; font-size: 1.25rem;">{{ failure.value }}</span>
-                    <span style="color: var(--text-muted); font-size: 0.75rem;">(Limit: {{ failure.threshold }})</span>
-                </div>
-                <p style="font-size: 0.8rem; color: var(--text-secondary); margin: 0; line-height: 1.4;">{{ failure.impact }}</p>
+            <strong>{{ recommendation.title }}</strong>
+            <div class="report-detail-block">
+                <strong>Resolution recommendation</strong>
+                <p>{{ recommendation.recommended_fix }}</p>
             </div>
-            {% endfor %}
-        </div>
-
-        <div style="margin-top: 2rem; text-align: center;">
-            <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-primary">
-                Unlock Performance Workflows <span>&rarr;</span>
-            </a>
-        </div>
+            <div class="report-detail-block">
+                <strong>Evidence</strong>
+                <p>{{ recommendation.evidence_summary }}{% if recommendation.evidence_score %} | Score {{ recommendation.evidence_score }}{% endif %}</p>
+            </div>
+        </article>
+        {% endfor %}
     </div>
 </section>
 {% endif %}
 
-<section class="packages-section" style="border-top: 1px solid var(--border-glass);">
-    <div class="container">
-        <div class="section-heading">
-            <p class="eyebrow">Recommended Modules</p>
-            <h2 style="color: var(--text-primary);">What to unlock inside the product</h2>
-            <p class="section-text" style="color: var(--text-secondary);">These upgrades map directly to the score gaps detected in your audit and keep the work inside the platform.</p>
-        </div>
-
-        <div class="system-grid">
-            {% for module in product_modules %}
-            <article class="system-card" style="border-top: 4px solid var(--signal);">
-                <div class="advice-icon" style="margin-bottom: 1rem; color: var(--brand-primary); font-weight: 800;">{{ module.icon|default:"VRT" }}</div>
-                <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 0.5rem;">
-                    <h3 style="margin: 0; color: var(--text-primary);">{{ module.title }}</h3>
-                    <span class="score-pill score-high" style="font-size: 0.65rem;">{{ module.plan|default:"Plan" }}</span>
-                </div>
-                <p style="font-weight: 600; color: var(--text-secondary); margin-bottom: 0.5rem; line-height: 1.4;">
-                    {{ module.reason }}
-                </p>
-                <div style="background: rgba(16, 185, 129, 0.08); padding: 1rem; border-radius: 12px; font-size: 0.85rem; border-left: 3px solid #10b981;">
-                    <strong style="display: block; color: #10b981; margin-bottom: 4px; font-size: 0.75rem; text-transform: uppercase;">In-Product Outcome:</strong>
-                    {{ module.impact }}
-                </div>
-                <div style="margin-top: 1.5rem;">
-                    <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-secondary" style="font-size: 0.85rem; padding: 0.5rem 1rem;">
-                        {{ module.cta_label|default:"Unlock in workspace" }} <span>&rarr;</span>
-                    </a>
-                </div>
-            </article>
-            {% empty %}
-            <article class="system-card">
-                <h3 style="color: var(--text-primary);">Baseline product fit is healthy</h3>
-                <p style="color: var(--text-secondary);">Your current infrastructure is in a healthy range. The next step is scale, history tracking, and automation rather than urgent repair.</p>
-            </article>
-            {% endfor %}
-        </div>
+{% if product_modules %}
+<section class="public-shell-section">
+    <div class="container section-heading">
+        <p class="eyebrow">Recommended Modules</p>
+        <h2>Where this audit naturally goes next.</h2>
+        <p class="section-text">The audit should lead into the next product layer, not into a disconnected pile of work.</p>
+    </div>
+    <div class="container public-card-grid">
+        {% for module in product_modules %}
+        <article class="public-capability-card module-card audit-premium-card">
+            <div class="report-list-head">
+                <strong>{{ module.title }}</strong>
+                <span class="pill-accent">{{ module.plan|default:"Plan" }}</span>
+            </div>
+            <p>{{ module.reason }}</p>
+            <div class="report-detail-block">
+                <strong>In-product outcome</strong>
+                <p>{{ module.impact }}</p>
+            </div>
+            {% if viewer_has_workspace %}
+            <a href="{% url 'tools:workspace-dashboard' %}" class="button button-secondary button-block">{{ module.cta_label|default:"Continue in workspace" }}</a>
+            {% else %}
+            <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-secondary button-block">{{ module.cta_label|default:"Unlock in workspace" }}</a>
+            {% endif %}
+        </article>
+        {% endfor %}
     </div>
 </section>
+{% endif %}
 
-<section class="experience-section" style="border-top: 1px solid var(--border-glass);">
-    <div class="container">
-        <div class="section-heading">
-            <p class="eyebrow">Priority Recommendations</p>
-            <h2 style="color: var(--text-primary);">What to fix first</h2>
-        </div>
-        <div class="advice-grid" style="margin-top: 2rem;">
-            {% for recommendation in featured_recommendations %}
-            <article class="system-card severity-{{ recommendation.severity|upper }}" style="padding: 2rem; border-left: 6px solid {% if recommendation.priority_score >= 80 %}#ef4444{% elif recommendation.priority_score >= 60 %}#ea580c{% else %}#10b981{% endif %};">
-                <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem;">
-                    <div style="display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                        <span class="score-pill {% if recommendation.priority_score >= 80 %}score-low{% elif recommendation.priority_score >= 60 %}score-med{% else %}score-high{% endif %}" style="font-size: 0.65rem;">
-                            {{ recommendation.category }}
-                        </span>
-                        {% if recommendation.root_cause_label %}
-                        <span class="score-pill score-high" style="font-size: 0.65rem;">
-                            {{ recommendation.root_cause_label }}
-                        </span>
-                        {% endif %}
-                        <span class="score-pill score-high" style="font-size: 0.65rem;">
-                            {{ recommendation.category_issue_count }} {{ recommendation.category|lower }} issue{{ recommendation.category_issue_count|pluralize }}
-                        </span>
-                    </div>
-                    <span style="font-size: 0.75rem; font-weight: 700; color: var(--brand-primary); letter-spacing: 0.05em; text-transform: uppercase;">Priority {{ recommendation.priority_score }}</span>
-                </div>
-                <h4 style="margin-bottom: 0.75rem; font-size: 1.25rem; color: var(--text-primary);">{{ recommendation.title }}</h4>
-                <p style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 1rem; line-height: 1.6;">{{ recommendation.description }}</p>
-                <div style="background: rgba(56, 189, 248, 0.08); padding: 1.25rem; border-radius: 16px; font-size: 0.9rem; border-left: 4px solid var(--brand-primary); margin-bottom: 1.5rem;">
-                    <strong style="display: block; color: var(--brand-primary); margin-bottom: 6px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Strategic Fix:</strong>
-                    <span style="color: var(--text-primary); line-height: 1.6;">{{ recommendation.recommended_fix }}</span>
-                </div>
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem;">
-                    <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
-                        <strong style="display: block; margin-bottom: 0.35rem; color: var(--text-primary); text-transform: uppercase; font-size: 0.7rem;">Expected Impact</strong>
-                        {{ recommendation.estimated_impact }}
-                    </div>
-                    <div style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">
-                        <strong style="display: block; margin-bottom: 0.35rem; color: var(--text-primary); text-transform: uppercase; font-size: 0.7rem;">Evidence</strong>
-                        {{ recommendation.evidence_summary }}{% if recommendation.evidence_score %} | Score {{ recommendation.evidence_score }}{% endif %}
-                    </div>
-                </div>
-                {% if recommendation.grouped_issue_titles and recommendation.grouped_issue_titles|length > 1 %}
-                <div style="margin-top: 1.25rem; font-size: 0.8rem; color: var(--text-muted); padding-top: 1rem; border-top: 1px solid var(--border-glass);">
-                    <strong style="color: var(--text-secondary); font-size: 0.7rem; text-transform: uppercase; margin-right: 0.5rem;">Signals:</strong>
-                    {{ recommendation.grouped_issue_titles|join:", " }}
-                </div>
-                {% endif %}
-                <div style="margin-top: 2rem; display: flex; gap: 1rem; flex-wrap: wrap;">
-                    <a href="{% url 'core:home' %}#packages" class="button button-primary" style="font-size: 0.85rem;">
-                        View Plan <span>&rarr;</span>
-                    </a>
-                    <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-secondary" style="font-size: 0.85rem;">
-                        Create workspace <span>&rarr;</span>
-                    </a>
-                </div>
-            </article>
-            {% empty %}
-            <article class="system-card" style="padding: 2rem;">
-                <h4 style="margin-bottom: 0.75rem; font-size: 1.25rem; color: var(--text-primary);">No urgent recommendations</h4>
-                <p style="font-size: 0.95rem; color: var(--text-secondary); margin: 0;">The current crawl did not produce a priority remediation list.</p>
-            </article>
-            {% endfor %}
-        </div>
+{% if show_context_analysis %}
+<section class="public-shell-section">
+    <div class="container section-heading">
+        <p class="eyebrow">Context Analysis</p>
+        <h2>Market and competitor framing.</h2>
+        <p class="section-text">This deeper layer is shown only on plans where broader context belongs in the audit workflow.</p>
     </div>
-</section>
-
-<section class="packages-section" style="border-top: 1px solid var(--border-glass);">
-    <div class="container">
-        <div class="section-heading">
-            <p class="eyebrow">Score Breakdown</p>
-            <h2 style="color: var(--text-primary);">How the audit scored each growth layer</h2>
-            <p class="section-text" style="color: var(--text-secondary);">Each score includes the target gap, issue count, and the next corrective step.</p>
-        </div>
-
-        <div class="system-grid">
-            {% for key, item in score_breakdown.items %}
-            <article class="system-card" style="border-top: 4px solid {% if item.status == 'strong' %}#16a34a{% elif item.status == 'stable' %}#0ea5e9{% elif item.status == 'weak' %}#ea580c{% else %}#dc2626{% endif %};">
-                <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 1rem;">
-                    <h3 style="margin: 0; color: var(--text-primary);">{{ item.label }}</h3>
-                    <span style="font-size: 1.75rem; font-weight: 900; color: var(--text-primary);">{{ item.score }}</span>
-                </div>
-                <p style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); font-weight: 800; margin-bottom: 0.75rem;">
-                    {{ item.status }} | {{ item.issues }} issue{{ item.issues|pluralize }}
-                </p>
-                <p style="margin-bottom: 1.25rem; color: var(--text-secondary); line-height: 1.6;">{{ item.explanation }}</p>
-                <div style="background: rgba(255, 255, 255, 0.03); padding: 1.25rem; border-radius: 12px; font-size: 0.85rem; line-height: 1.6; border: 1px solid var(--border-glass);">
-                    <strong style="display: block; color: var(--text-primary); margin-bottom: 0.35rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Next Step</strong>
-                    <span style="color: var(--text-secondary);">{{ item.next_step }}</span>
-                </div>
-            </article>
-            {% endfor %}
-        </div>
-    </div>
-</section>
-
-{% if audit_run.summary.context_analysis %}
-<section class="packages-section" style="background: #ffffff; border: 1px solid #e2e8f0; border-top: 1px solid rgba(255, 255, 255,0.05);">
-    <div class="container">
-        <div class="section-heading">
-            <p class="eyebrow">Context Analysis</p>
-            <h2>Market and competitor benchmarks</h2>
-            <p class="section-text">This layer uses the submitted market context and competitor URLs to give the audit commercial framing.</p>
-        </div>
-        <div class="layout-split">
-            <div style="display: grid; gap: 0.75rem;">
+    <div class="container public-card-grid">
+        <article class="public-note-card glass-panel">
+            <h3>Insights</h3>
+            <div class="report-list-stack">
                 {% for insight in audit_run.summary.context_analysis.insights %}
-                <div style="padding: 1rem; border-radius: 16px; background: #f8fafc; color: #64748b;">{{ insight }}</div>
+                <div class="report-list-card">
+                    <p>{{ insight }}</p>
+                </div>
+                {% empty %}
+                <div class="report-list-card">
+                    <p>No additional context insights were stored for this audit.</p>
+                </div>
                 {% endfor %}
             </div>
-            <div style="display: grid; gap: 0.75rem;">
+        </article>
+        <article class="public-note-card glass-panel">
+            <h3>Competitors</h3>
+            <div class="report-list-stack">
                 {% for competitor in audit_run.summary.context_analysis.competitors %}
-                <div style="padding: 1rem; border-radius: 16px; background: #f8fafc;">
+                <div class="report-list-card">
                     <strong>{{ competitor.url }}</strong>
-                    <div style="margin-top: 0.35rem; color: #64748b; font-size: 0.9rem;">
+                    <p>
                         {% if competitor.status == "unavailable" %}
                         This competitor could not be fetched during the benchmark pass.
                         {% else %}
-                        {{ competitor.word_count }} words | {{ competitor.schema_count }} schema blocks | {{ competitor.response_time_ms }}ms
+                        {{ competitor.word_count }} words · {{ competitor.schema_count }} schema blocks · {{ competitor.response_time_ms }}ms
                         {% endif %}
-                    </div>
+                    </p>
+                </div>
+                {% empty %}
+                <div class="report-list-card">
+                    <p>No competitors were attached to this audit context.</p>
                 </div>
                 {% endfor %}
             </div>
-        </div>
+        </article>
     </div>
 </section>
 {% endif %}
 
-<section class="faq-section" style="border-top: 1px solid var(--border-glass);">
-    <div class="container">
-        <div class="section-heading">
-            <p class="eyebrow">Detailed Findings</p>
-            <h2 style="color: var(--text-primary);">Secondary action queue</h2>
-        </div>
-        <div class="advice-grid">
-            {% for recommendation in secondary_recommendations|slice:":6" %}
-            <article class="system-card severity-{{ recommendation.severity|upper }}" style="padding: 1.5rem;">
-                <div style="display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem;">
-                    <p class="eyebrow" style="font-size: 0.65rem; margin: 0; color: var(--brand-primary); font-weight: 800;">{{ recommendation.category }}</p>
-                    {% if recommendation.root_cause_label %}
-                    <span class="score-pill score-high" style="font-size: 0.65rem;">{{ recommendation.root_cause_label }}</span>
-                    {% endif %}
-                    <span class="score-pill {% if recommendation.evidence_status == 'strong' %}score-high{% elif recommendation.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.65rem;">{{ recommendation.confidence_label }}</span>
-                </div>
-                <h3 style="margin-bottom: 1rem; font-size: 1.25rem; color: var(--text-primary);">{{ recommendation.title }}</h3>
-                <div style="background: rgba(255, 255, 255, 0.03); padding: 1.25rem; border-radius: 12px; font-size: 0.9rem; line-height: 1.7; border: 1px solid var(--border-glass); margin-bottom: 1.25rem;">
-                    <strong style="display: block; color: var(--text-secondary); opacity: 0.8; margin-bottom: 6px; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em;">Resolution Recommendation:</strong>
-                    <span style="color: var(--text-primary);">{{ recommendation.recommended_fix }}</span>
-                </div>
-                <div style="display: grid; gap: 1rem; font-size: 0.82rem; color: var(--text-secondary); line-height: 1.6;">
-                    <div>
-                        <strong style="display: block; color: var(--text-primary); margin-bottom: 0.25rem; font-size: 0.7rem; text-transform: uppercase;">Evidence</strong>
-                        {{ recommendation.evidence_summary }}{% if recommendation.evidence_score %} | Score {{ recommendation.evidence_score }}{% endif %}
-                    </div>
-                    <div>
-                        <strong style="display: block; color: var(--text-primary); margin-bottom: 0.25rem; font-size: 0.7rem; text-transform: uppercase;">Category Count</strong>
-                        {{ recommendation.category_issue_count }} {{ recommendation.category|lower }} issue{{ recommendation.category_issue_count|pluralize }} detected in this audit.
-                    </div>
-                </div>
-            </article>
-            {% empty %}
-            <article class="system-card" style="padding: 1.5rem;">
-                <p class="eyebrow" style="font-size: 0.65rem; margin-bottom: 0.5rem; color: var(--brand-primary); font-weight: 800;">Audit</p>
-                <h3 style="margin-bottom: 1rem; font-size: 1.15rem; color: var(--text-primary);">No secondary issue set available</h3>
-                <p style="color: var(--text-secondary); font-size: 0.9rem;">The primary recommendation list above already captures the current detected priorities.</p>
-            </article>
-            {% endfor %}
-        </div>
-        {% if locked_recommendation_count %}
-        <div style="margin-top: 2rem; padding: 1.25rem 1.5rem; border-radius: 20px; background: rgba(56, 189, 248, 0.08); border: 1px solid var(--border-active); color: var(--text-primary); font-size: 1rem; font-weight: 600; text-align: center;">
-            <i class="fas fa-lock" style="margin-right: 10px; color: var(--brand-primary);"></i>
-            {{ locked_recommendation_count }} more detailed recommendation{{ locked_recommendation_count|pluralize }} unlock inside a higher workspace plan.
-        </div>
-        {% endif %}
-    </div>
-</section>
-
-<section id="upsell" class="insight-section">
-    <div class="container">
-        <div class="upsell-panel">
-            <div class="upsell-grid">
-                <div>
-                    <p class="eyebrow" style="color: rgba(255,255,255,0.6);">Workspace Upgrades</p>
-                    <h2 style="color: white; margin-top: 0.5rem;">Unlock the paid product layers</h2>
-                    <p style="opacity: 0.8; margin-bottom: 2rem;">
-                        This free scan is the entry layer. Paid plans add continuous tracking, saved workspaces, richer reporting,
-                        and guided execution paths directly inside the product.
-                    </p>
-                    <div class="locked-feature-list">
-                        {% for teaser in audit_run.summary.full_audit_teasers %}
-                        <div class="locked-feature">
-                            <span style="color: var(--signal);">[+]</span>
-                            <span>{{ teaser }}</span>
-                        </div>
-                        {% endfor %}
-                    </div>
-                </div>
-                <div style="text-align: center; background: rgba(255,255,255,0.05); padding: 3rem; border-radius: 32px; backdrop-filter: blur(8px);">
-                    <h3 style="color: white; margin-bottom: 1.5rem;">Ready to unlock the workspace?</h3>
-                    <p style="font-size: 1.1rem; margin-bottom: 2.5rem; opacity: 0.9;">Compare plans, keep your audit history, and run deeper workflows inside the platform.</p>
-                    <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-primary" style="width: 100%; font-size: 1.1rem;">
-                        Create Free Workspace
-                    </a>
-                </div>
+<section id="upsell" class="public-shell-section">
+    <div class="container public-cta-panel glass-panel result-upsell-panel audit-upsell-panel">
+        <div>
+            <p class="eyebrow">Upgrade Path</p>
+            <h2>Go deeper when the diagnosis is already clear.</h2>
+            <p class="section-text">
+                Free reports stay controlled by design. Starter adds a more detailed audit, Growth opens broader execution depth, and Authority exposes the fullest operating layer.
+            </p>
+            {% if locked_recommendation_count %}
+            <div class="result-lock-banner" style="margin-top: 1rem;">
+                {{ locked_recommendation_count }} more recommendation{{ locked_recommendation_count|pluralize }} are locked behind a deeper plan or higher recommendation tier.
             </div>
+            {% endif %}
+            {% if audit_run.summary.full_audit_teasers %}
+            <div class="report-list-stack" style="margin-top: 1rem;">
+                {% for teaser in audit_run.summary.full_audit_teasers %}
+                <div class="report-list-card">
+                    <p>{{ teaser }}</p>
+                </div>
+                {% endfor %}
+            </div>
+            {% endif %}
+        </div>
+        <div class="result-upsell-actions">
+            <h3>Choose the layer you need next</h3>
+            <p>Plans now control both detail depth and monthly audit capacity across websites, competitors, exports, and workspace workflows.</p>
+            {% if viewer_has_workspace %}
+            <a href="{% url 'tools:account-dashboard' %}#plans" class="button button-primary button-block">Compare Plans</a>
+            {% else %}
+            <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-primary button-block">Create Free Workspace</a>
+            {% endif %}
         </div>
     </div>
 </section>
 
-<section class="packages-section" style="border-top: 1px solid var(--border-glass);">
-    <div class="container">
-        <div class="section-heading">
-            <p class="eyebrow">Plans</p>
-            <h2 style="color: var(--text-primary);">Choose the tier that matches this audit</h2>
-            <p class="section-text" style="color: var(--text-secondary);">Plan cards are live for testing now. Enforcement is deferred so we can finish the product flow before billing gates are turned on.</p>
-        </div>
-        <div class="system-grid">
-            {% for package in packages %}
-            <article class="system-card" style="border-top: 4px solid {% if package.name == 'Authority' %}#f8fafc{% else %}var(--brand-primary){% endif %};">
-                <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 1rem;">
-                    <h3 style="margin: 0; color: var(--text-primary);">{{ package.name }}</h3>
-                    <span style="font-size: 1.25rem; font-weight: 900; color: var(--text-primary);">{{ package.price }}</span>
+<section class="public-shell-section">
+    <div class="container pricing-grid">
+        {% for package in packages %}
+        <article class="pricing-card glass-panel audit-plan-card">
+            <div class="pricing-card-head">
+                <div class="pricing-label-row">
+                    <p class="eyebrow">{{ package.name }}</p>
+                    <span class="pill-accent">{{ package.label }}</span>
                 </div>
-                <p style="font-weight: 600; color: var(--text-secondary); margin-bottom: 1.25rem; font-size: 0.95rem;">{{ package.label }}</p>
-                <div style="display: grid; gap: 0.75rem; font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 2rem;">
-                    {% for feature in package.features %}
-                    <div style="display: flex; gap: 8px; align-items: center;">
-                        <i class="fas fa-check" style="color: var(--success); font-size: 0.75rem;"></i>
-                        {{ feature }}
-                    </div>
-                    {% endfor %}
-                </div>
-                <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-primary" style="width: 100%; font-size: 0.9rem;">
-                    Start with {{ package.name }} <span>&rarr;</span>
-                </a>
-            </article>
-            {% endfor %}
-        </div>
+                <h3 class="pricing-price">{{ package.price }}</h3>
+            </div>
+            <p class="section-text" style="margin-bottom: 1rem;">{{ package.description }}</p>
+            <ul class="pricing-list">
+                {% for feature in package.features %}
+                <li class="is-feature">
+                    <span>{{ feature }}</span>
+                </li>
+                {% endfor %}
+            </ul>
+            {% if viewer_has_workspace %}
+            <a href="{% url 'tools:account-dashboard' %}#plans" class="button button-primary button-block">Review {{ package.name }}</a>
+            {% else %}
+            <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}&package={{ package.name|lower }}" class="button button-primary button-block">Start with {{ package.name }}</a>
+            {% endif %}
+        </article>
+        {% endfor %}
     </div>
 </section>
 
-{% if custom_work_items %}
-<section class="packages-section" style="border-top: 1px solid var(--border-glass);">
-    <div class="container">
-        <div class="section-heading">
-            <p class="eyebrow">Custom Work Exceptions</p>
-            <h2 style="color: var(--text-primary);">When to talk to us directly</h2>
-            <p class="section-text" style="color: var(--text-secondary);">Most audit outcomes should stay inside the product. These exceptions are for rebuilds, app work, or bespoke implementations.</p>
-        </div>
-        <div class="system-grid">
-            {% for item in custom_work_items %}
-            <article class="system-card" style="border-top: 4px solid var(--brand-secondary);">
-                <h3 style="color: var(--text-primary); margin-bottom: 0.75rem;">{{ item.title }}</h3>
-                <p style="font-weight: 600; color: var(--text-primary); margin-bottom: 1rem; line-height: 1.5;">{{ item.reason }}</p>
-                <div style="background: rgba(255, 255, 255, 0.03); padding: 1.25rem; border-radius: 12px; font-size: 0.88rem; line-height: 1.6; border: 1px solid var(--border-glass);">
-                    <strong style="display: block; color: var(--text-primary); margin-bottom: 0.35rem; font-size: 0.75rem; text-transform: uppercase;">Use Case</strong>
-                    <span style="color: var(--text-secondary);">{{ item.impact }}</span>
-                </div>
-                <div style="margin-top: 2rem;">
-                    <a href="{% url 'core:home' %}#contact" class="button button-secondary" style="font-size: 0.85rem;">
-                        {{ item.cta_label }} <span>&rarr;</span>
-                    </a>
-                </div>
-            </article>
-            {% endfor %}
-        </div>
+{% if show_custom_work_items and custom_work_items %}
+<section class="public-shell-section">
+    <div class="container section-heading">
+        <p class="eyebrow">Custom Work Exceptions</p>
+        <h2>When a standard product workflow is not enough.</h2>
+    </div>
+    <div class="container public-card-grid">
+        {% for item in custom_work_items %}
+        <article class="public-capability-card">
+            <strong>{{ item.title }}</strong>
+            <p>{{ item.reason }}</p>
+            <div class="report-detail-block">
+                <strong>Use case</strong>
+                <p>{{ item.impact }}</p>
+            </div>
+            <a href="{% url 'core:home' %}#contact" class="button button-secondary button-block">{{ item.cta_label }}</a>
+        </article>
+        {% endfor %}
     </div>
 </section>
 {% endif %}
 
-<section class="contact-section" style="border-top: 1px solid var(--border-glass);">
-    <div class="container">
-        <div class="section-heading">
-            <p class="eyebrow">Technical Footprint</p>
-            <h2 style="color: var(--text-primary);">What we actually inspected</h2>
-        </div>
-        <div class="responsive-table-shell" style="background: var(--bg-surface); border-radius: var(--radius-lg); border: 1px solid var(--border-glass); overflow: hidden;">
-            <table class="responsive-table" style="width: 100%; border-collapse: collapse;">
+{% if show_technical_footprint %}
+<section class="public-shell-section">
+    <div class="container section-heading">
+        <p class="eyebrow">Technical Footprint</p>
+        <h2>What the audit actually inspected.</h2>
+    </div>
+    <div class="container technical-table-shell">
+        <div class="responsive-table-shell technical-table-scroll">
+            <table class="technical-table">
                 <thead>
-                    <tr style="border-bottom: 1px solid var(--border-glass); text-align: left; background: rgba(255,255,255,0.02);">
-                        <th style="padding: 1.25rem; color: var(--text-primary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;">URL Inspected</th>
-                        <th style="padding: 1.25rem; color: var(--text-primary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;">Load Time</th>
-                        <th style="padding: 1.25rem; color: var(--text-primary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;">Words</th>
-                        <th style="padding: 1.25rem; color: var(--text-primary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;">Links</th>
-                        <th style="padding: 1.25rem; color: var(--text-primary); font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em;">Status</th>
+                    <tr>
+                        <th>URL inspected</th>
+                        <th>Load time</th>
+                        <th>Words</th>
+                        <th>Links</th>
+                        <th>Status</th>
                     </tr>
                 </thead>
                 <tbody>
                     {% for page in pages %}
-                    <tr style="border-bottom: 1px solid var(--border-glass); transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.02)'" onmouseout="this.style.background='transparent'">
-                        <td style="padding: 1.25rem;">
-                            <div class="url-wrap-mono" style="font-weight: 600; font-size: 0.95rem; color: var(--brand-primary); word-break: break-all;">{{ page.url }}</div>
-                            <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 4px;">Title: {{ page.title|truncatechars:70|default:"Missing" }}</div>
+                    <tr>
+                        <td>
+                            <div class="url-wrap-mono">{{ page.url }}</div>
+                            <div class="technical-table-subtitle">Title: {{ page.title|truncatechars:70|default:"Missing" }}</div>
                         </td>
-                        <td style="padding: 1.25rem; font-size: 0.9rem; color: var(--text-secondary);">{{ page.response_time_ms }}ms</td>
-                        <td style="padding: 1.25rem; font-size: 0.9rem; color: var(--text-secondary);">{{ page.word_count|default:0 }}</td>
-                        <td style="padding: 1.25rem; font-size: 0.9rem; color: var(--text-secondary);">{{ page.internal_link_count|default:0 }}</td>
-                        <td style="padding: 1.25rem;">
-                            <span class="score-pill {% if page.status_code == 200 %}score-high{% else %}score-low{% endif %}" style="font-size: 0.75rem;">
-                                {{ page.status_code }}
-                            </span>
-                        </td>
+                        <td>{{ page.response_time_ms }}ms</td>
+                        <td>{{ page.word_count|default:0 }}</td>
+                        <td>{{ page.internal_link_count|default:0 }}</td>
+                        <td><span class="pill-accent">{{ page.status_code }}</span></td>
+                    </tr>
+                    {% empty %}
+                    <tr>
+                        <td colspan="5">No technical footprint rows are available for this audit.</td>
                     </tr>
                     {% endfor %}
                 </tbody>
             </table>
         </div>
     </div>
+    {% if hidden_pages_count %}
+    <div class="container">
+        <div class="result-lock-banner">
+            {{ hidden_pages_count }} more inspected page{{ hidden_pages_count|pluralize }} unlock on a deeper plan.
+        </div>
+    </div>
+    {% endif %}
 </section>
+{% endif %}
 {% endif %}
 {% endblock %}

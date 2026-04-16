@@ -75,6 +75,11 @@ class WorkspaceGeneratedContentListView(LoginRequiredMixin, ListView):
         context["form"] = GeneratedContentRequestForm()
         context["editorial_tasks"] = get_editorial_tasks(project)
         context["workspace_credit_actions"] = build_credit_action_guide(project, self.request.user) if project else []
+        context["page_title"] = f"{project.name if project else 'Workspace'} Content | VRT SPACE AGENCY"
+        context["meta_description"] = "Private content workspace for draft generation, editorial queue management, and SEO-driven content operations."
+        context["canonical_url"] = self.request.build_absolute_uri(self.request.path)
+        context["meta_robots"] = "noindex, nofollow"
+        context["shell_theme"] = "shell-light"
         
         # Phase D: Inject Gap Analysis & Keyword Clusters
         context["optimization_engine"] = build_content_optimization_data(project)
@@ -117,6 +122,13 @@ class WorkspaceGeneratedContentCreateView(LoginRequiredMixin, View):
                     "generated_content_list": queryset,
                     "form": form,
                     "editorial_tasks": get_editorial_tasks(project),
+                    "workspace_credit_actions": build_credit_action_guide(project, request.user) if project else [],
+                    "optimization_engine": build_content_optimization_data(project),
+                    "page_title": f"{project.name if project else 'Workspace'} Content | VRT SPACE AGENCY",
+                    "meta_description": "Private content workspace for draft generation, editorial queue management, and SEO-driven content operations.",
+                    "canonical_url": request.build_absolute_uri(request.path),
+                    "meta_robots": "noindex, nofollow",
+                    "shell_theme": "shell-light",
                 },
                 status=400,
             )
@@ -236,6 +248,11 @@ class WorkspaceGeneratedContentDetailView(WorkspaceGeneratedContentAccessMixin, 
         context["project"] = self.object.project
         context["back_url"] = reverse("content:workspace-content")
         context["edit_form"] = kwargs.get("edit_form") or GeneratedContentEditForm(instance=self.object)
+        context["page_title"] = f"{self.object.title} | Content Draft | VRT SPACE AGENCY"
+        context["meta_description"] = "Private generated content draft detail view for editorial review and application."
+        context["canonical_url"] = self.request.build_absolute_uri(self.request.path)
+        context["meta_robots"] = "noindex, nofollow"
+        context["shell_theme"] = "shell-light"
         return context
 
 

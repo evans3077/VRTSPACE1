@@ -4,16 +4,14 @@
 {% block content %}
 <section class="hero-split container">
     <div class="hero-content">
-        <p class="feature-tag">SEO &bull; AEO &bull; Content Intelligence</p>
-        <h1 class="gradient-text">Dominate the AI Search Era.</h1>
+        <p class="feature-tag">Website Visibility Analysis</p>
+        <h1 class="gradient-text">Understand Your Website, Fix What Matters, Improve Over Time.</h1>
         <p class="lead">
-            VRTSPACE is the all-in-one Intelligence Hub for SEO, AEO, and Content Authority.
-            Identify the Authority Gap, generate Rank-Ready Answer Units, and capture citations
-            from the world's leading AI discovery engines.
+            Run a live audit, uncover SEO gaps, improve AI visibility, and keep progress visible in one workspace.
         </p>
         <div class="hero-actions" style="justify-content: flex-start; margin-top: 2rem;">
-            <a class="button button-mega" href="{% url 'tools:workspace-signup' %}">Get Categorical Dominance</a>
-            <a class="button button-secondary" href="#audit">Run Free Diagnostic</a>
+            <a class="button button-mega" href="{% url 'tools:workspace-signup' %}">Start Free Audit</a>
+            <a class="button button-secondary" href="#journey">See How It Works</a>
         </div>
         <div class="trust-bar tag-row" style="margin-top: 3rem; opacity: 0.7;">
             {% for signal in trust_signals %}
@@ -29,33 +27,33 @@
                 <div class="dot green"></div>
                 <div
                     style="flex-grow: 1; text-align: center; font-size: 0.7rem; color: var(--text-muted); font-family: monospace;">
-                    VRTSPACE_BENCHMARK_v2.0</div>
+                    VRTSPACE_VISIBILITY_LOOP</div>
             </div>
             <div class="workbench-body">
                 <div style="display: grid; gap: 1rem;">
                     <div
                         style="padding: 1rem; background: rgba(255,255,255,0.03); border-radius: 8px; border-left: 3px solid var(--brand-primary);">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                            <span style="font-size: 0.75rem; color: var(--text-muted);">AEO CITATION SCORE</span>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">WEBSITE AUDIT</span>
                             <span
-                                style="font-size: 0.75rem; color: var(--brand-primary); font-weight: 800;">88.4%</span>
+                                style="font-size: 0.75rem; color: var(--brand-primary); font-weight: 800;">84/100</span>
                         </div>
                         <div style="height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px;">
                             <div
-                                style="width: 88.4%; height: 100%; background: var(--brand-primary); border-radius: 2px;">
+                                style="width: 84%; height: 100%; background: var(--brand-primary); border-radius: 2px;">
                             </div>
                         </div>
                     </div>
                     <div
                         style="padding: 1rem; background: rgba(255,255,255,0.03); border-radius: 8px; border-left: 3px solid var(--brand-secondary);">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                            <span style="font-size: 0.75rem; color: var(--text-muted);">SEMANTIC DEPTH</span>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">SEO &amp; AEO GAPS</span>
                             <span
-                                style="font-size: 0.75rem; color: var(--brand-secondary); font-weight: 800;">72.1%</span>
+                                style="font-size: 0.75rem; color: var(--brand-secondary); font-weight: 800;">6 priority fixes</span>
                         </div>
                         <div style="height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px;">
                             <div
-                                style="width: 72.1%; height: 100%; background: var(--brand-secondary); border-radius: 2px;">
+                                style="width: 72%; height: 100%; background: var(--brand-secondary); border-radius: 2px;">
                             </div>
                         </div>
                     </div>
@@ -63,18 +61,18 @@
                         <div class="system-card"
                             style="min-height: 80px; padding: 1rem !important; text-align: center;">
                             <span
-                                style="display: block; font-size: 1.5rem; font-weight: 900; color: var(--brand-accent);">12.4k</span>
+                                style="display: block; font-size: 1.35rem; font-weight: 900; color: var(--brand-accent);">1</span>
                             <span
-                                style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Entities
-                                Tracked</span>
+                                style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Workspace
+                                Ready</span>
                         </div>
                         <div class="system-card"
                             style="min-height: 80px; padding: 1rem !important; text-align: center;">
                             <span
-                                style="display: block; font-size: 1.5rem; font-weight: 900; color: var(--success);">+412%</span>
+                                style="display: block; font-size: 1.35rem; font-weight: 900; color: var(--success);">Next</span>
                             <span
-                                style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Citation
-                                ROI</span>
+                                style="font-size: 0.65rem; color: var(--text-muted); text-transform: uppercase;">Rerun
+                                After Fixes</span>
                         </div>
                     </div>
                 </div>
@@ -86,21 +84,24 @@
 <section class="proof-section" style="padding: 4rem 0; background: rgba(15, 23, 42, 0.3);">
     <div class="container hero-proof-grid">
         {% for item in results %}
-        <article class="hero-proof-card glass-panel" style="padding: 1.5rem; text-align: center; border: none; background: transparent !important;">
-            <strong class="gradient-text" style="font-size: 3rem; display: block; margin-bottom: 0.25rem;">{{ item.value }}</strong>
-            <span class="text-secondary" style="font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em;">{{ item.label }}</span>
+        <article class="hero-proof-card glass-panel"
+            style="padding: 1.5rem; text-align: center; border: none; background: transparent !important;">
+            <strong class="gradient-text"
+                style="font-size: 3rem; display: block; margin-bottom: 0.25rem;">{{ item.value }}</strong>
+            <span class="text-secondary"
+                style="font-weight: 700; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.1em;">{{ item.label }}</span>
         </article>
         {% endfor %}
     </div>
 </section>
 
-<section class="feature-showcase-section container" style="padding: 8rem 0;">
+<section class="feature-showcase-section container" id="services" style="padding: 8rem 0;">
     <div class="section-heading" style="text-align: center; max-width: 800px; margin: 0 auto 4rem auto;">
-        <p class="feature-tag">The Toolkit for Dominance</p>
-        <h2 style="font-size: 3.5rem;">Powerful tools. Premium Intelligence.</h2>
+        <p class="feature-tag">Three Connected Layers</p>
+        <h2 style="font-size: 3.5rem;">Audit first. Then SEO. Then AI visibility.</h2>
         <p class="text-secondary" style="font-size: 1.25rem; margin-top: 1.5rem;">
-            From identifying hidden technical leakages to generating content that AI models rank as "Primary Source,"
-            our workspaces are modular, data-dense, and built for speed.
+            Start with a diagnosis, understand what competitors are doing better, and improve how your site shows up
+            in both search engines and AI answers.
         </p>
     </div>
 
@@ -108,26 +109,25 @@
         <article class="feature-card-premium">
             <div class="icon-box"><i class="fas fa-search"></i></div>
             <div class="feature-content">
-                <p class="feature-tag">Intelligence</p>
-                <h3>Site Audit & Gap Mapping</h3>
-                <p>Quantify your 'Authority Gap' vs competitors with a technical audit built for the AI search
-                    landscape.</p>
+                <p class="feature-tag">Audit</p>
+                <h3>Website Audit</h3>
+                <p>See the technical issues, performance blockers, and quick wins that are holding your site back.</p>
+            </div>
+        </article>
+        <article class="feature-card-premium">
+            <div class="icon-box"><i class="fas fa-chart-line"></i></div>
+            <div class="feature-content">
+                <p class="feature-tag">SEO</p>
+                <h3>SEO Analysis</h3>
+                <p>Understand competitor gaps, missing content patterns, and the next improvements that matter most.</p>
             </div>
         </article>
         <article class="feature-card-premium">
             <div class="icon-box"><i class="fas fa-robot"></i></div>
             <div class="feature-content">
-                <p class="feature-tag">Authority</p>
-                <h3>AEO Citation Optimizer</h3>
-                <p>Ensure LLMs and Answer Engines cite your brand by optimizing your semantic entity density.</p>
-            </div>
-        </article>
-        <article class="feature-card-premium">
-            <div class="icon-box"><i class="fas fa-pen-nib"></i></div>
-            <div class="feature-content">
-                <p class="feature-tag">Production</p>
-                <h3>Content Forge</h3>
-                <p>Automate the creation of Rank-Ready content that satisfies both human users and AI retrievers.</p>
+                <p class="feature-tag">AEO</p>
+                <h3>AI Visibility</h3>
+                <p>Improve answer-readiness, entity clarity, and the signals that help AI systems trust your site.</p>
             </div>
         </article>
     </div>
@@ -137,30 +137,32 @@
     style="padding: 8rem 0; background: radial-gradient(circle at 100% 100%, rgba(56, 189, 248, 0.05), transparent 50%); border-top: 1px solid var(--border-glass);">
     <div class="container layout-split-sidebar">
         <div class="diagnostic-copy" style="padding-top: 2rem;">
-            <p class="feature-tag" style="color: var(--brand-secondary);">Diagnostic Hub</p>
-            <h2 style="font-size: 3rem; margin-bottom: 2rem;">Get your first live roadmap.</h2>
+            <p class="feature-tag" style="color: var(--brand-secondary);">Start Here</p>
+            <h2 style="font-size: 3rem; margin-bottom: 2rem;">Run a live audit in minutes.</h2>
             <p class="text-secondary" style="font-size: 1.2rem; line-height: 1.6; margin-bottom: 2rem;">
-                Scan your site, see the score, and group the highest-impact fixes.
-                Move directly into a Workspace instead of waiting for a sales handoff.
+                Enter your website, get a clear baseline, and move straight into a workspace once you are ready to keep
+                improving.
             </p>
             <ul style="list-style: none; padding: 0; display: grid; gap: 1rem;">
                 <li style="display: flex; gap: 1rem; color: var(--text-primary);"><i class="fas fa-check-circle"
-                        style="color: var(--success); margin-top: 0.25rem;"></i> No-cost technical gap analysis</li>
+                        style="color: var(--success); margin-top: 0.25rem;"></i> Live technical and visibility checks
+                </li>
                 <li style="display: flex; gap: 1rem; color: var(--text-primary);"><i class="fas fa-check-circle"
-                        style="color: var(--success); margin-top: 0.25rem;"></i> Ranked opportunity identification</li>
+                        style="color: var(--success); margin-top: 0.25rem;"></i> Clear priority fixes and next actions
+                </li>
                 <li style="display: flex; gap: 1rem; color: var(--text-primary);"><i class="fas fa-check-circle"
-                        style="color: var(--success); margin-top: 0.25rem;"></i> Immediate Workspace activation</li>
+                        style="color: var(--success); margin-top: 0.25rem;"></i> Two starter audits on the free layer before you need to upgrade
+                </li>
             </ul>
         </div>
         <div class="diagnostic-shell">
-            <div class="audit-panel" id="audit">
+            <div class="audit-panel" id="audit-panel">
                 <form id="audit-workflow" class="premium-form system-card" method="post"
                     action="{% url 'tools:free-seo-audit' %}"
                     style="display: flex !important; flex-direction: column !important; gap: 1.5rem; padding: 3rem !important; border: 1px solid var(--border-active);">
                     {% csrf_token %}
                     {{ audit_form.non_field_errors }}
 
-                    <!-- Core fields — always visible -->
                     <div class="form-group">
                         <label>Website</label>
                         {{ audit_form.website }}
@@ -173,7 +175,6 @@
                         {{ audit_form.email.errors }}
                     </div>
 
-                    <!-- Progressive disclosure: optional context -->
                     <button type="button" class="audit-form-expand-btn button-secondary"
                         style="width:100%; border:none;" id="audit-form-expand" aria-expanded="false"
                         aria-controls="audit-form-advanced">
@@ -183,6 +184,7 @@
 
                     <div class="audit-form-advanced" id="audit-form-advanced" aria-hidden="true"
                         style="display:none; gap:1.25rem; margin-top:1.25rem;">
+                        {{ audit_form.monthly_leads_goal }}
                         <div class="form-group">
                             <label>Company/Brand Name</label>
                             {{ audit_form.company_name }}
@@ -214,7 +216,7 @@
                                         this.searchQuery = hiddenInput.value;
                                         if (hiddenInput.value === 'Worldwide') this.searchQuery = 'Worldwide';
                                     }
-                                    
+
                                     this.$watch('searchQuery', value => {
                                         if (value.length < 2) {
                                             this.results = [];
@@ -230,14 +232,14 @@
                                 fetchLocations() {
                                     if (this.searchQuery.length < 2) return;
                                     if (this.searchQuery.toLowerCase().includes('world')) return;
-                                    
+
                                     fetch('https://photon.komoot.io/api/?q=' + encodeURIComponent(this.searchQuery) + '&limit=20')
                                         .then(res => res.json())
                                         .then(data => {
                                             if (data && data.features) {
                                                 const validTypes = new Set(['city', 'town', 'village', 'state', 'county', 'country', 'administrative', 'region', 'municipality', 'borough', 'hamlet', 'district', 'suburb']);
                                                 const geographicalFeatures = data.features.filter(f => validTypes.has(f.properties.osm_value) || validTypes.has(f.properties.type) || validTypes.has(f.properties.osm_key));
-                                                
+
                                                 this.results = geographicalFeatures.slice(0, 10).map(f => {
                                                     const p = f.properties;
                                                     const stateObj = p.state ? p.state + ', ' : '';
@@ -262,7 +264,7 @@
                                 selectLocation(res) {
                                     const hiddenInput = document.querySelector('input[name=\'location\']');
                                     if (hiddenInput) {
-                                        hiddenInput.value = res.canonical_name; 
+                                        hiddenInput.value = res.canonical_name;
                                     }
                                     this.searchQuery = res.canonical_name;
                                     this.isOpen = false;
@@ -309,22 +311,7 @@
                             {{ audit_form.primary_service.errors }}
                         </div>
                         <div class="form-group">
-                            <label>Monthly lead goal</label>
-                            {{ audit_form.monthly_leads_goal }}
-                            {{ audit_form.monthly_leads_goal.errors }}
-                        </div>
-                        <div class="form-group">
-                            <label>Market context</label>
-                            {{ audit_form.market_context }}
-                            {{ audit_form.market_context.errors }}
-                        </div>
-                        <div class="form-group">
-                            <label>Competitor URLs</label>
-                            {{ audit_form.competitor_urls }}
-                            {{ audit_form.competitor_urls.errors }}
-                        </div>
-                        <div class="form-group">
-                            <label>Notes</label>
+                            <label>Audit focus</label>
                             {{ audit_form.notes }}
                             {{ audit_form.notes.errors }}
                         </div>
@@ -333,26 +320,24 @@
                     <button class="button-mega" type="submit" style="width: 100%; margin-top: 1.5rem;">Run Audit
                         Now</button>
                 </form>
-                <p class="form-note text-muted" style="margin-top: 1rem;">Use this for SEO, AI visibility, performance,
-                    and conversion diagnostics before choosing a plan.</p>
+                <p class="form-note text-muted" style="margin-top: 1rem;">Use this to get the diagnosis first. Free accounts include two starter audits, then deeper work continues through credits and paid plans.</p>
             </div>
         </div>
     </div>
 </section>
 
-
 <section class="insight-section">
     <div class="container section-heading">
-        <p class="eyebrow">The authority gap</p>
-        <h2>Your website is your highest-leverage sales asset.</h2>
+        <p class="eyebrow">Why this matters</p>
+        <h2>Your website needs more than one kind of fix.</h2>
         <p class="section-text">{{ critical_insight }}</p>
     </div>
 </section>
 
 <section class="experience-section">
     <div class="container section-heading">
-        <p class="eyebrow">Product experience</p>
-        <h2>See what to fix, understand why it matters, and know what to unlock next.</h2>
+        <p class="eyebrow">What you get</p>
+        <h2>See the issues, understand the impact, and keep the next step clear.</h2>
     </div>
     <div class="container experience-grid">
         {% for pillar in value_pillars %}
@@ -364,42 +349,10 @@
     </div>
 </section>
 
-{% for group in service_groups %}
-<section class="services-section tone-{{ group.tone }}" id="{{ group.anchor }}">
-    <div class="container service-band-head">
-        <div>
-            <p class="eyebrow">{{ group.title }}</p>
-            <h2>{{ group.lead }}</h2>
-        </div>
-    </div>
-    <div class="container service-grid expanded-grid">
-        {% for service in group.services %}
-        <article class="service-card">
-            <p class="service-tag">{{ forloop.counter|stringformat:"02d" }}</p>
-            <h3>{{ service.name }}</h3>
-            <p>{{ service.summary }}</p>
-            <ul class="bullet-list">
-                {% for bullet in service.bullets %}
-                <li>{{ bullet }}</li>
-                {% endfor %}
-            </ul>
-            <div class="system-feature">
-                <span>System feature</span>
-                <strong>{{ service.system_feature }}</strong>
-            </div>
-            <a class="package-link" href="{% url 'core:service-detail' slug=service.name|slugify %}">Explore service</a>
-        </article>
-        {% endfor %}
-    </div>
-</section>
-{% endfor %}
-
-
-
-<section class="journey-section">
+<section class="journey-section" id="journey">
     <div class="container section-heading">
-        <p class="eyebrow">User journey</p>
-        <h2>From first scan to ongoing improvement — in three clear stages.</h2>
+        <p class="eyebrow">How it works</p>
+        <h2>From first scan to repeatable progress.</h2>
     </div>
     <div class="container journey-grid">
         {% for step in engagement_steps %}
@@ -412,10 +365,10 @@
     </div>
 </section>
 
-<section class="systems-section" id="systems">
+<section class="systems-section" id="workspace">
     <div class="container section-heading">
-        <p class="eyebrow">Platform architecture</p>
-        <h2>Everything the platform manages after your first scan.</h2>
+        <p class="eyebrow">Why the workspace matters</p>
+        <h2>Keep the work visible after the first audit.</h2>
     </div>
     <div class="container system-grid">
         {% for block in system_blocks %}
@@ -430,10 +383,11 @@
 <section class="method-section" id="method">
     <div class="container method-grid">
         <div>
-            <p class="eyebrow">Proprietary method</p>
-            <h2>VRT Authority Engine</h2>
+            <p class="eyebrow">The working method</p>
+            <h2>One simple loop for better visibility.</h2>
             <p>
-                The proprietary operating model powering the audit, workspace, recommendation, and reporting stack. Each layer diagnoses issues, maps the next opportunity, and surfaces the highest-value unlock for your business.
+                VRT SPACE is designed to help you diagnose the site, decide what matters most, keep the work in one
+                place, and measure progress after each round of fixes.
             </p>
         </div>
         <ol class="method-list">
@@ -447,7 +401,7 @@
 <section class="case-study-showcase">
     <div class="container case-study-wrapper glass-panel">
         <div class="case-study-visual">
-            <p class="eyebrow">Growth Evidence</p>
+            <p class="eyebrow">Proof of progress</p>
             <h2>{{ case_study.title }}</h2>
             <div class="case-metric-highlight">
                 <span class="metric-label">Success Metric</span>
@@ -484,127 +438,31 @@
 <section class="faq-section">
     <div class="container section-heading">
         <p class="eyebrow">Frequently asked</p>
-        <h2>Common questions about VRTSPACE.</h2>
+        <h2>Common questions about VRT SPACE.</h2>
     </div>
     <div class="container faq-accordion">
+        {% for item in faqs %}
         <details class="faq-item">
             <summary class="faq-question">
-                <h3>What is AI Search Visibility (AEO) and why does it matter?</h3>
+                <h3>{{ item.question }}</h3>
                 <span class="faq-icon"></span>
             </summary>
             <div class="faq-answer">
-                <span class="direct-answer">AEO ensures your brand is the definitive answer cited by AI agents like
-                    Perplexity, ChatGPT, and Google Gemini.</span>
-                <p>
-                    As the search landscape shifts from "ten blue links" to generated direct answers, traditional SEO is
-                    no longer enough.
-                    Answer Engine Optimization (AEO) focuses on structuring your data and authority so that LLMs can
-                    ingest, synthesize,
-                    and cite your content. Without AEO, your brand risks becoming invisible in the "zero-click" search
-                    environments of tomorrow.
-                </p>
+                <span class="direct-answer">{{ item.answer }}</span>
             </div>
         </details>
-
-        <details class="faq-item">
-            <summary class="faq-question">
-                <h3>How precisely does VRTSPACE calculate the 'Authority Gap'?</h3>
-                <span class="faq-icon"></span>
-            </summary>
-            <div class="faq-answer">
-                <span class="direct-answer">The Authority Gap is a proprietary metric measuring the semantic
-                    completeness of your content vs. top market leaders.</span>
-                <p>
-                    Our engine crawls the top 50 citations in your industry and builds a "Ground Truth" entity map. We
-                    then audit your domain
-                    against this map to see exactly which facts, schema, or structural elements you are missing to win
-                    the citation box.
-                    This identifies the exact informational voids that are currently preventing your brand from being
-                    the primary answer.
-                </p>
-            </div>
-        </details>
-
-        <details class="faq-item">
-            <summary class="faq-question">
-                <h3>Does VRTSPACE integrate with my existing tech stack (CMS/CRM)?</h3>
-                <span class="faq-icon"></span>
-            </summary>
-            <div class="faq-answer">
-                <span class="direct-answer">Yes. Our workspace outputs are optimized for WordPress, Webflow, Shopify,
-                    and Headless CMS architectures.</span>
-                <p>
-                    We provide bridge-ready JSON, HTML units, and structured Markdown for every piece of content
-                    generated.
-                    This ensures that the high-precision schema.org tags and entity-rich formatting produced in our
-                    forge
-                    survive the transfer to your production environment without loss of technical integrity.
-                </p>
-            </div>
-        </details>
-
-        <details class="faq-item">
-            <summary class="faq-question">
-                <h3>Is VRTSPACE an agency or a SaaS platform?</h3>
-                <span class="faq-icon"></span>
-            </summary>
-            <div class="faq-answer">
-                <span class="direct-answer">We are a hybrid Intelligence Hub designed to bridge the gap between
-                    automated tools and custom execution.</span>
-                <p>
-                    VRTSPACE provides high-precision intelligence workspaces (SEO, AEO, Content) for internal growth,
-                    while maintaining a dedicated <strong>Agency Build Path</strong> for projects requiring custom
-                    architecture,
-                    deep technical rebuilds, or high-complexity enterprise implementation that goes beyond our standard
-                    modules.
-                </p>
-            </div>
-        </details>
-
-        <details class="faq-item">
-            <summary class="faq-question">
-                <h3>Is my domain data used to train public AI models?</h3>
-                <span class="faq-icon"></span>
-            </summary>
-            <div class="faq-answer">
-                <span class="direct-answer">No. VRTSPACE maintains strict data isolation and enterprise-grade privacy
-                    protocols.</span>
-                <p>
-                    All audit data, competitive intelligence, and generated drafts are stored in your encrypted project
-                    silo.
-                    We do not feed your proprietary content or strategic "Authority Maps" back into public training
-                    sets.
-                    Your competitive advantage remains exclusively yours.
-                </p>
-            </div>
-        </details>
-
-        <details class="faq-item">
-            <summary class="faq-question">
-                <h3>How does the platform handle global vs. local search intelligence?</h3>
-                <span class="faq-icon"></span>
-            </summary>
-            <div class="faq-answer">
-                <span class="direct-answer">We use localized proxy systems to simulate search environments in any target
-                    market or language.</span>
-                <p>
-                    Global authority is different from local relevance. Our audits allow you to specify exact
-                    geolocation parameters,
-                    enabling you to see how your brand is perceived in London vs. New York vs. Tokyo, ensuring your AEO
-                    strategy remains accurate across diverse geographic retrieval zones.
-                </p>
-            </div>
-        </details>
+        {% endfor %}
     </div>
 </section>
 
 <section class="contact-section" id="contact">
     <div class="container contact-grid">
         <div>
-            <p class="eyebrow">Custom work request</p>
-            <h2>Need something built? Let&rsquo;s scope it.</h2>
+            <p class="eyebrow">Custom implementation</p>
+            <h2>Need help beyond the standard workflow?</h2>
             <p>
-                For website builds, app development, custom architecture, or enterprise implementations that go beyond the standard workspace modules. Tell us what you need &mdash; we&rsquo;ll map it out.
+                Start with the product first. If the work turns into a rebuild, app project, or a more custom
+                implementation, use this form and we will scope the next step with you.
             </p>
         </div>
         <form method="post" action="{% url 'leads:contact' %}" class="contact-form">
@@ -637,7 +495,7 @@
                 <span>I agree to be contacted about this request.</span>
                 {{ lead_form.consent_to_contact.errors }}
             </label>
-            <button class="button button-primary" type="submit">Request custom build</button>
+            <button class="button button-primary" type="submit">Request custom scope</button>
         </form>
     </div>
 </section>

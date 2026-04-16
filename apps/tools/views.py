@@ -16,9 +16,12 @@ from apps.core.site_content import PACKAGES
 from apps.leads.billing import (
     BillingError,
     build_action_access_context,
+    build_audit_run_access_context,
     build_credit_action_guide,
     can_access_audit_feature,
+    can_create_workspace_project,
     get_billing_state,
+    get_audit_result_profile,
     get_effective_capabilities,
     get_limited_audit_history,
     get_limited_recommendations,
@@ -82,6 +85,45 @@ def _decorate_product_modules(product_modules, billing_plans):
     return decorated
 
 
+def _render_home_with_audit_form(request, form, *, status=400):
+    from apps.core.views import HomePageView, build_home_context
+    from apps.leads.forms import LeadCaptureForm
+
+    context = build_home_context(
+        request,
+        lead_form=LeadCaptureForm(),
+        audit_form=form,
+    )
+    return render(request, HomePageView.template_name, context, status=status)
+
+
+def _get_audit_account_user(request, email=""):
+    if getattr(request.user, "is_authenticated", False):
+        return request.user
+    normalized_email = str(email or "").strip().lower()
+    if not normalized_email:
+        return None
+    return get_user_model().objects.filter(email__iexact=normalized_email).first()
+
+
+def _get_audit_viewer_user(request, audit_run):
+    if not getattr(request.user, "is_authenticated", False):
+        return None
+    if request.user.is_staff:
+        return request.user
+    project = getattr(getattr(audit_run, "audit_request", None), "client_project", None)
+    if project and project.owner_id == request.user.id:
+        return request.user
+    return None
+
+
+def _slice_for_limit(items, limit):
+    items = list(items or [])
+    if limit is None:
+        return items, 0
+    return items[:limit], max(len(items) - limit, 0)
+
+
 class PublicAuditCreateView(View):
     rate_limit = 3
     rate_window = 900
@@ -100,18 +142,11 @@ class PublicAuditCreateView(View):
 
         form = AuditRequestForm(request.POST)
         if not form.is_valid():
-            from apps.core.views import HomePageView, build_home_context
-            from apps.leads.forms import LeadCaptureForm
-
-            context = build_home_context(
-                request,
-                lead_form=LeadCaptureForm(),
-                audit_form=form,
-            )
-            return render(request, HomePageView.template_name, context, status=400)
+            return _render_home_with_audit_form(request, form, status=400)
 
         normalized_start_url = normalize_url(form.cleaned_data["website"])
         normalized_domain = extract_domain(normalized_start_url)
+        account_user = _get_audit_account_user(request, form.cleaned_data.get("email", ""))
         existing_run = (
             AuditRun.objects.filter(
                 normalized_domain=normalized_domain,
@@ -127,6 +162,31 @@ class PublicAuditCreateView(View):
             )
             return redirect("tools:audit-result", pk=existing_run.pk)
 
+        project = None
+        if account_user:
+            allowed_project, project_capacity = can_create_workspace_project(
+                account_user,
+                normalized_domain=normalized_domain,
+            )
+            if not allowed_project:
+                form.add_error(
+                    None,
+                    project_capacity["blocked_message"] or project_capacity["next_unlock_message"],
+                )
+                return _render_home_with_audit_form(request, form, status=400)
+            project = (
+                ClientProject.objects.select_related("latest_audit_run", "audit_request")
+                .filter(owner=account_user, normalized_domain=normalized_domain)
+                .first()
+            )
+            audit_access = build_audit_run_access_context(account_user, project=project)
+            if settings.AUDIT_TIER_ENFORCEMENT and not audit_access["available"]:
+                form.add_error(
+                    None,
+                    audit_access["blocked_message"] or audit_access["next_unlock_message"],
+                )
+                return _render_home_with_audit_form(request, form, status=400)
+
         audit_request = create_audit_request_from_form(form, request=request)
         audit_run = AuditRun.objects.create(
             audit_request=audit_request,
@@ -134,7 +194,26 @@ class PublicAuditCreateView(View):
             start_url=normalized_start_url,
         )
 
-        sync_client_project_from_audit_run(audit_run)
+        if account_user:
+            try:
+                spend_action_credits(
+                    account_user,
+                    "audit",
+                    project=project,
+                    note="Public audit run",
+                    reference_key=f"audit-run:{audit_run.pk}",
+                    metadata={"audit_run_id": audit_run.pk, "source": "public_audit"},
+                )
+                record_usage(account_user, UsageRecord.Metric.AUDIT_RUN, quantity=1)
+            except BillingError as exc:
+                audit_run.delete()
+                form.add_error(None, str(exc))
+                return _render_home_with_audit_form(request, form, status=400)
+
+        project = sync_client_project_from_audit_run(audit_run)
+        if account_user and (not project.owner_id or project.owner_id != account_user.id):
+            project.owner = account_user
+            project.save(update_fields=["owner", "updated_at"])
         enqueue_public_site_audit(audit_run.pk)
         messages.success(request, "Audit started. We are analyzing the site now.")
         return redirect("tools:audit-result", pk=audit_run.pk)
@@ -146,7 +225,7 @@ class AuditResultDetailView(DetailView):
     context_object_name = "audit_run"
 
     def get_queryset(self):
-        return AuditRun.objects.prefetch_related("pages", "issues")
+        return AuditRun.objects.select_related("audit_request", "audit_request__client_project").prefetch_related("pages", "issues")
 
     def get(self, request, *args, **kwargs):
         self.object = self.get_queryset().filter(pk=kwargs.get("pk")).first()
@@ -165,8 +244,10 @@ class AuditResultDetailView(DetailView):
         context = super().get_context_data(**kwargs)
         audit_run = self.object
         summary = audit_run.summary or {}
+        viewer_user = _get_audit_viewer_user(self.request, audit_run)
+        audit_profile = get_audit_result_profile(viewer_user)
         scores = summary.get("scores", {})
-        score_breakdown = summary.get("score_breakdown", {})
+        raw_score_breakdown = summary.get("score_breakdown", {})
         recommendations = summary.get("recommendations", [])
         featured_recommendations = summary.get("featured_recommendations", recommendations[:6])
         product_modules = summary.get("product_modules", [])
@@ -192,39 +273,93 @@ class AuditResultDetailView(DetailView):
             small_offset = round(138.23 * (1 - score / 100))
             
             gauge_list.append({
+                "key": key,
                 "label": label,
                 "score": score,
                 "offset": small_offset,
                 "color": "#16a34a" if score >= 90 else "#ea580c" if score >= 50 else "#dc2626"
             })
+        score_breakdown_keys = audit_profile.get("score_breakdown_keys")
+        if score_breakdown_keys:
+            score_breakdown = {
+                key: raw_score_breakdown[key]
+                for key in score_breakdown_keys
+                if key in raw_score_breakdown
+            }
+            gauge_list = [item for item in gauge_list if item["key"] in score_breakdown_keys]
+        else:
+            score_breakdown = raw_score_breakdown
+
         context["gauge_list"] = gauge_list
         context["score_breakdown"] = score_breakdown
         visible_recommendations, locked_recommendation_count = get_limited_recommendations(
             recommendations,
-            self.request.user,
+            viewer_user,
         )
-        recommendation_limit = get_effective_capabilities(self.request.user)["premium_recommendation_limit"]
+        recommendation_limit = get_effective_capabilities(viewer_user)["premium_recommendation_limit"]
         if settings.AUDIT_TIER_ENFORCEMENT and recommendation_limit is not None:
             product_modules = product_modules[:recommendation_limit]
-        context["recommendations"] = visible_recommendations
-        context["featured_recommendations"] = featured_recommendations
+        visible_featured_recommendations, featured_locked_count = _slice_for_limit(
+            featured_recommendations,
+            audit_profile.get("featured_recommendation_limit"),
+        )
         featured_root_causes = {
             item.get("root_cause_key")
-            for item in featured_recommendations
+            for item in visible_featured_recommendations
             if item.get("root_cause_key")
         }
-        context["secondary_recommendations"] = [
+        secondary_recommendations = [
             item
             for item in visible_recommendations
             if item.get("root_cause_key") not in featured_root_causes
         ]
-        context["product_modules"] = product_modules
-        context["custom_work_items"] = custom_work_items
+        visible_secondary_recommendations, secondary_locked_count = _slice_for_limit(
+            secondary_recommendations,
+            audit_profile.get("secondary_recommendation_limit"),
+        )
+        top_issues, top_issues_locked_count = _slice_for_limit(
+            summary.get("top_issues", []),
+            audit_profile.get("top_issue_limit"),
+        )
+        quick_wins, quick_wins_locked_count = _slice_for_limit(
+            summary.get("quick_wins", []),
+            audit_profile.get("quick_win_limit"),
+        )
+        performance_metrics, performance_metrics_locked_count = _slice_for_limit(
+            summary.get("performance_metrics", []),
+            audit_profile.get("performance_metric_limit"),
+        )
+        technical_pages, hidden_pages_count = _slice_for_limit(
+            audit_run.pages.all(),
+            audit_profile.get("technical_page_limit"),
+        )
+        context["recommendations"] = visible_recommendations
+        context["featured_recommendations"] = visible_featured_recommendations
+        context["secondary_recommendations"] = visible_secondary_recommendations
+        context["top_issues"] = top_issues
+        context["quick_wins"] = quick_wins
+        context["performance_metrics"] = performance_metrics
+        context["product_modules"] = product_modules[:4]
+        context["custom_work_items"] = custom_work_items if audit_profile.get("show_custom_work_items") else []
         context["packages"] = PACKAGES
         context["audit_tier_enforcement"] = settings.AUDIT_TIER_ENFORCEMENT
-        context["pages"] = audit_run.pages.all()
+        context["pages"] = technical_pages
         context["is_processing"] = audit_run.status in {AuditRun.Status.PENDING, AuditRun.Status.RUNNING}
-        context["locked_recommendation_count"] = locked_recommendation_count
+        context["locked_recommendation_count"] = locked_recommendation_count + featured_locked_count + secondary_locked_count
+        context["top_issues_locked_count"] = top_issues_locked_count
+        context["quick_wins_locked_count"] = quick_wins_locked_count
+        context["performance_metrics_locked_count"] = performance_metrics_locked_count
+        context["hidden_pages_count"] = hidden_pages_count
+        context["audit_profile"] = audit_profile
+        context["diagnosis"] = summary.get("diagnosis", {})
+        context["recommended_next_step"] = summary.get("recommended_next_step", {})
+        context["captured_context"] = summary.get("captured_context", {})
+        context["show_context_analysis"] = audit_profile.get("show_context_analysis") and bool(summary.get("context_analysis"))
+        context["show_secondary_recommendations"] = audit_profile.get("show_secondary_recommendations")
+        context["show_custom_work_items"] = audit_profile.get("show_custom_work_items") and bool(custom_work_items)
+        context["show_technical_footprint"] = audit_profile.get("technical_page_limit") is None or audit_profile.get("technical_page_limit", 0) > 0
+        context["viewer_has_workspace"] = bool(viewer_user)
+        context["shell_theme"] = "shell-light"
         return context
 from .admin_utils import get_service_recommendations
 
@@ -256,6 +391,11 @@ class AgencyAuditDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView)
         for issue in audit_run.issues.all():
             issues_by_cat[issue.category].append(issue)
         context["issues_by_category"] = dict(issues_by_cat)
+        context["page_title"] = f"Agency Audit | {audit_run.normalized_domain}"
+        context["meta_description"] = f"Internal agency audit workspace for {audit_run.normalized_domain}."
+        context["meta_robots"] = "noindex, nofollow"
+        context["canonical_url"] = self.request.build_absolute_uri(self.request.path)
+        context["shell_theme"] = "shell-light"
 
         return context
 
@@ -297,6 +437,11 @@ class ProjectDashboardDetailView(LoginRequiredMixin, UserPassesTestMixin, Detail
         context["custom_work_items"] = latest_summary.get("custom_work_items", [])
         context["packages"] = PACKAGES
         context["audit_tier_enforcement"] = settings.AUDIT_TIER_ENFORCEMENT
+        context["page_title"] = f"{project.name} Project Dashboard | VRT SPACE AGENCY"
+        context["meta_description"] = f"Internal project dashboard for {project.normalized_domain or project.website}."
+        context["meta_robots"] = "noindex, nofollow"
+        context["canonical_url"] = self.request.build_absolute_uri(self.request.path)
+        context["shell_theme"] = "shell-light"
         return context
 
 
@@ -318,6 +463,7 @@ class WorkspaceSignupView(View):
                 "google_oauth_enabled": is_google_oauth_enabled(),
                 "google_oauth_url": self._build_google_oauth_url(),
                 "login_url": self._build_auth_url("tools:workspace-login"),
+                "shell_theme": "shell-light",
             },
         )
 
@@ -337,6 +483,7 @@ class WorkspaceSignupView(View):
                     "google_oauth_enabled": is_google_oauth_enabled(),
                     "google_oauth_url": self._build_google_oauth_url(),
                     "login_url": self._build_auth_url("tools:workspace-login"),
+                    "shell_theme": "shell-light",
                 },
                 status=400,
             )
@@ -410,6 +557,7 @@ class WorkspaceLoginView(View):
             "google_oauth_enabled": is_google_oauth_enabled(),
             "google_oauth_url": self._build_auth_url("tools:google-oauth-start"),
             "signup_url": signup_url,
+            "shell_theme": "shell-light",
         }
 
     def _build_auth_url(self, route_name):
@@ -538,6 +686,7 @@ class AccountDashboardView(LoginRequiredMixin, View):
             "meta_description": "Personal account settings, billing, and security controls.",
             "meta_robots": "noindex, nofollow",
             "canonical_url": request.build_absolute_uri(request.path),
+            "shell_theme": "shell-light",
         }
 
 
@@ -723,6 +872,11 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["email_reports_allowed"] = email_allowed
         context["workspace_projects"] = get_workspace_projects(self.request.user)
         context["workspace_project_summaries"] = get_workspace_project_summaries(self.request.user)
+        context["page_title"] = f"{project.name if getattr(project, 'pk', None) else 'Workspace'} | VRT SPACE AGENCY"
+        context["meta_description"] = "Workspace overview for audits, SEO, AEO, content, credits, and rerun progress."
+        context["meta_robots"] = "noindex, nofollow"
+        context["canonical_url"] = self.request.build_absolute_uri(self.request.path)
+        context["shell_theme"] = "shell-light"
         context["project_form"] = WorkspaceProjectForm(
             prefix="project",
             initial={
@@ -790,6 +944,24 @@ class WorkspaceProjectCreateView(LoginRequiredMixin, View):
             context["project_form"] = form
             return dashboard_view.render_to_response(context, status=400)
 
+        normalized_start_url = normalize_url(form.cleaned_data["website"])
+        normalized_domain = extract_domain(normalized_start_url)
+        allowed_project, project_capacity = can_create_workspace_project(
+            request.user,
+            normalized_domain=normalized_domain,
+        )
+        if not allowed_project:
+            form.add_error(
+                None,
+                project_capacity["blocked_message"] or project_capacity["next_unlock_message"],
+            )
+            dashboard_view = WorkspaceDashboardView()
+            dashboard_view.request = request
+            dashboard_view.object = dashboard_view.get_object()
+            context = dashboard_view.get_context_data(object=dashboard_view.object)
+            context["project_form"] = form
+            return dashboard_view.render_to_response(context, status=400)
+
         project, created = create_workspace_project_for_user(
             request.user,
             name=form.cleaned_data["name"],
@@ -825,21 +997,95 @@ class WorkspaceAuditStartView(LoginRequiredMixin, View):
             context["audit_start_form"] = form
             return dashboard_view.render_to_response(context, status=400)
 
-        audit_request = create_audit_request_from_form(form, request=request)
         normalized_start_url = normalize_url(form.cleaned_data["website"])
         normalized_domain = extract_domain(normalized_start_url)
+        existing_run = (
+            AuditRun.objects.filter(
+                normalized_domain=normalized_domain,
+                status__in={AuditRun.Status.PENDING, AuditRun.Status.RUNNING},
+            )
+            .order_by("-created_at")
+            .first()
+        )
+        if existing_run:
+            messages.info(
+                request,
+                "An audit for this website is already in progress. Opening the current result instead of creating a duplicate run.",
+            )
+            return redirect("tools:audit-result", pk=existing_run.pk)
+
+        matching_project = (
+            ClientProject.objects.select_related("latest_audit_run", "audit_request")
+            .filter(owner=request.user, normalized_domain=normalized_domain)
+            .first()
+        )
+        allowed_project, project_capacity = can_create_workspace_project(
+            request.user,
+            normalized_domain=normalized_domain,
+        )
+        if not allowed_project:
+            form.add_error(
+                None,
+                project_capacity["blocked_message"] or project_capacity["next_unlock_message"],
+            )
+            dashboard_view = WorkspaceDashboardView()
+            dashboard_view.request = request
+            dashboard_view.object = dashboard_view.get_object()
+            context = dashboard_view.get_context_data(object=dashboard_view.object)
+            context["audit_start_form"] = form
+            return dashboard_view.render_to_response(context, status=400)
+
+        cost_project = matching_project
+        if cost_project is None and active_project and active_project.normalized_domain == normalized_domain:
+            cost_project = active_project
+        audit_access = build_audit_run_access_context(request.user, project=cost_project)
+        if settings.AUDIT_TIER_ENFORCEMENT and not audit_access["available"]:
+            form.add_error(
+                None,
+                audit_access["blocked_message"] or audit_access["next_unlock_message"],
+            )
+            dashboard_view = WorkspaceDashboardView()
+            dashboard_view.request = request
+            dashboard_view.object = dashboard_view.get_object()
+            context = dashboard_view.get_context_data(object=dashboard_view.object)
+            context["audit_start_form"] = form
+            return dashboard_view.render_to_response(context, status=400)
+
+        audit_request = create_audit_request_from_form(form, request=request)
         audit_run = AuditRun.objects.create(
             audit_request=audit_request,
             normalized_domain=normalized_domain or "pending",
             start_url=normalized_start_url,
         )
+        try:
+            spend_action_credits(
+                request.user,
+                "audit",
+                project=cost_project,
+                note="Workspace audit run",
+                reference_key=f"audit-run:{audit_run.pk}",
+                metadata={"audit_run_id": audit_run.pk, "source": "workspace_audit"},
+            )
+            record_usage(request.user, UsageRecord.Metric.AUDIT_RUN, quantity=1)
+        except BillingError as exc:
+            audit_run.delete()
+            form.add_error(None, str(exc))
+            dashboard_view = WorkspaceDashboardView()
+            dashboard_view.request = request
+            dashboard_view.object = dashboard_view.get_object()
+            context = dashboard_view.get_context_data(object=dashboard_view.object)
+            context["audit_start_form"] = form
+            return dashboard_view.render_to_response(context, status=400)
+
         project = sync_client_project_from_audit_run(audit_run)
-        if active_project and getattr(active_project, "pk", None) and active_project.owner_id == request.user.id:
-            if not project.owner_id:
-                project.owner = request.user
-            if not project.audit_request_id:
-                project.audit_request = audit_request
-            project.save(update_fields=["owner", "audit_request", "updated_at"])
+        update_fields = ["updated_at"]
+        if not project.owner_id or project.owner_id != request.user.id:
+            project.owner = request.user
+            update_fields.append("owner")
+        if active_project and getattr(active_project, "pk", None) and active_project.owner_id == request.user.id and not project.audit_request_id:
+            project.audit_request = audit_request
+            update_fields.append("audit_request")
+        project.save(update_fields=update_fields)
         set_active_workspace_project(request, project)
         enqueue_public_site_audit(audit_run.pk)
         messages.success(request, "Audit started. The workspace will attach to this audit automatically as the results are saved.")
@@ -1023,6 +1269,12 @@ class SharedAuditReportView(DetailView):
         audit_run = self.object.audit_run
         summary = audit_run.summary or {}
         context["audit_run"] = audit_run
+        context["shell_theme"] = "shell-light"
+        context["page_title"] = f"{audit_run.normalized_domain} Audit Report | VRT SPACE AGENCY"
+        context["meta_description"] = (
+            f"Shared audit report for {audit_run.normalized_domain} with score breakdown, recommendations, and next steps."
+        )
+        context["meta_robots"] = "noindex, nofollow"
         context["score_breakdown"] = summary.get("score_breakdown", {})
         context["recommendations"] = (summary.get("featured_recommendations") or summary.get("recommendations", []))[:6]
         context["context_analysis"] = summary.get("context_analysis", {})

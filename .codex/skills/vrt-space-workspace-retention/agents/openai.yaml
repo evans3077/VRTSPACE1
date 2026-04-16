@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRT Space Workspace Retention"
+  short_description: "Strengthen workspaces, reruns, credits, and progress loops."
+  default_prompt: "Use this skill when improving VRT SPACE workspace flows, reruns, history, credit messaging, and progress-driven retention behavior."

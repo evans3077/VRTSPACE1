@@ -49,7 +49,7 @@
     </div>
 </div>
 
-<section class="dashboard-stack" style="padding-top: 1.5rem;">
+<section class="dashboard-stack workspace-dashboard-shell" style="padding-top: 1.5rem;">
     <div class="container-fluid page-stack">
         {% if project.pk and latest_audit %}
         <article class="system-card" style="margin-bottom: 2rem; border-color: rgba(139, 92, 246, 0.3); background: rgba(139, 92, 246, 0.05); backdrop-filter: var(--glass-blur);">
@@ -147,9 +147,9 @@
                             {% endfor %}
                         </div>
                         <div class="workspace-expandable-metrics">
-                            <div>SEO snapshots: <strong style="color: #f8fafc;">{{ item.seo_snapshot_count }}</strong></div>
-                            <div>AEO analyses: <strong style="color: #f8fafc;">{{ item.aeo_audit_count }}</strong></div>
-                            <div>Content drafts: <strong style="color: #f8fafc;">{{ item.generated_content_count }}</strong></div>
+                            <div>SEO snapshots: <strong>{{ item.seo_snapshot_count }}</strong></div>
+                            <div>AEO analyses: <strong>{{ item.aeo_audit_count }}</strong></div>
+                            <div>Content drafts: <strong>{{ item.generated_content_count }}</strong></div>
                         </div>
                         <div style="margin-top: 1rem;">
                             {% if project.pk == item.pk %}
@@ -215,10 +215,12 @@
                         </h3>
                     </div>
                     <div class="workspace-credit-balance-meta">
-                        <div>Used this cycle: <strong style="color: #f8fafc;">{{ credit_overview.used|default:0 }}</strong></div>
+                        <div>Used this cycle: <strong>{{ credit_overview.used|default:0 }}</strong></div>
                         {% if credit_overview.granted %}
-                        <div>Granted this cycle: <strong style="color: #f8fafc;">{{ credit_overview.granted }}</strong></div>
+                        <div>Granted this cycle: <strong>{{ credit_overview.granted }}</strong></div>
                         {% endif %}
+                        <div>Audits left this cycle: <strong>{% if usage_summary.audit_runs_remaining is None %}Unlimited{% else %}{{ usage_summary.audit_runs_remaining|default:0 }}{% endif %}</strong></div>
+                        <div>Tracked websites: <strong>{{ usage_summary.tracked_sites_used|default:0 }}</strong>{% if usage_summary.tracked_sites_limit is not None %} / {{ usage_summary.tracked_sites_limit }}{% endif %}</div>
                     </div>
                 </div>
                 <div style="margin-top: 1rem; color: var(--text-muted); line-height: 1.6; font-size: 0.88rem;">Billing, top-ups, and personal settings live in your account area.</div>
@@ -277,13 +279,17 @@
                     </div>
                     <form method="post" action="{% url 'tools:workspace-audit-start' %}" style="display: grid; gap: 0.85rem;">
                         {% csrf_token %}
+                        {% if audit_start_form.non_field_errors %}
+                        <div class="credit-notice" style="margin-bottom: 0.25rem;">
+                            {{ audit_start_form.non_field_errors|join:" " }}
+                        </div>
+                        {% endif %}
                         <label style="display: grid; gap: 0.3rem;">
                             <span style="font-weight: 700;">Company</span>
                             {{ audit_start_form.company_name }}
                             {% if audit_start_form.company_name.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ audit_start_form.company_name.errors|join:", " }}</span>{% endif %}
                         </label>
                         {{ audit_start_form.email }}
-                        {{ audit_start_form.location }}
                         <label style="display: grid; gap: 0.3rem;">
                             <span style="font-weight: 700;">Website</span>
                             {{ audit_start_form.website }}
@@ -432,12 +438,16 @@
                     </div>
                     <form method="post" action="{% url 'tools:workspace-project-create' %}" style="display: grid; gap: 0.85rem;">
                         {% csrf_token %}
+                        {% if project_form.non_field_errors %}
+                        <div class="credit-notice" style="margin-bottom: 0.25rem;">
+                            {{ project_form.non_field_errors|join:" " }}
+                        </div>
+                        {% endif %}
                         <label style="display: grid; gap: 0.3rem;">
                             <span style="font-weight: 700;">Project name</span>
                             {{ project_form.name }}
                             {% if project_form.name.errors %}<span style="color: #991b1b; font-size: 0.82rem;">{{ project_form.name.errors|join:", " }}</span>{% endif %}
                         </label>
-                        {{ project_form.location }}
                         <label style="display: grid; gap: 0.3rem;">
                             <span style="font-weight: 700;">Website</span>
                             {{ project_form.website }}

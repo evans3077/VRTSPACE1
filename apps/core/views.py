@@ -39,21 +39,43 @@ def build_home_context(request, **extra):
         }
 
     context = {
-        "page_title": "VRT SPACE AGENCY | SEO Audits, AI Visibility, and Growth Workspace",
+        "page_title": "Website Audit, SEO Analysis, and AI Visibility | VRT SPACE AGENCY",
         "meta_description": (
-            "VRT SPACE AGENCY provides SEO audits, AI visibility diagnostics, growth workspaces, "
-            "and custom implementation paths for websites, apps, and advanced search systems."
+            "Run a website audit, uncover SEO gaps, improve AI visibility, and track progress in one VRT SPACE workspace."
         ),
+        "canonical_url": request.build_absolute_uri(request.path),
+        "og_title": "Website Audit, SEO Analysis, and AI Visibility | VRT SPACE AGENCY",
+        "og_description": (
+            "Understand what is holding your website back, what to fix next, and how to improve over time."
+        ),
+        "meta_robots": "index,follow",
         "schema_json": json.dumps(
-            {
-                "@context": "https://schema.org",
-                "@type": "Organization",
-                "name": "VRT SPACE AGENCY",
-                "description": "SEO audit, AI visibility, workspace, analytics, and custom implementation platform.",
-                "url": request.build_absolute_uri("/"),
-                "areaServed": ["Global"],
-                "sameAs": [],
-            }
+            [
+                {
+                    "@context": "https://schema.org",
+                    "@type": "Organization",
+                    "name": "VRT SPACE AGENCY",
+                    "description": "Website audit, SEO analysis, AI visibility, and workspace progress platform.",
+                    "url": request.build_absolute_uri("/"),
+                    "areaServed": ["Global"],
+                    "sameAs": [],
+                },
+                {
+                    "@context": "https://schema.org",
+                    "@type": "FAQPage",
+                    "mainEntity": [
+                        {
+                            "@type": "Question",
+                            "name": item["question"],
+                            "acceptedAnswer": {
+                                "@type": "Answer",
+                                "text": item["answer"],
+                            },
+                        }
+                        for item in FAQS
+                    ],
+                },
+            ]
         ),
         "lead_form": extra.get("lead_form", LeadCaptureForm()),
         "audit_form": extra.get("audit_form", AuditRequestForm()),
@@ -65,23 +87,23 @@ def build_home_context(request, **extra):
         "engagement_steps": ENGAGEMENT_STEPS,
         "faqs": FAQS,
         "results": [
-            {"value": "21", "label": "Solution paths connected to one growth system"},
-            {"value": "4", "label": "Visible plans from Starter to Enterprise"},
-            {"value": "3", "label": "Core product surfaces for audits, workspaces, and ops"},
+            {"value": "3", "label": "Connected layers across audit, SEO, and AI visibility"},
+            {"value": "1", "label": "Workspace that keeps every run and next step together"},
+            {"value": "Repeat", "label": "Rerun after fixes and measure what improved"},
         ],
         "method_steps": [
-            "Map audits, workspace flows, and package destinations into a website that teaches, qualifies, and converts without a manual sales dependency.",
-            "Build SEO, AEO, development, content, and analytics into one product stack instead of disconnected offers.",
-            "Turn tools, audit summaries, dashboards, and follow-up sequences into an always-on growth engine.",
-            "Use reporting, performance, and AI visibility monitoring to keep users informed and expand them into higher-value modules when needed.",
+            "Run a live audit to surface the biggest issues affecting speed, search visibility, and AI readiness.",
+            "Review the SEO and AEO signals to understand what competitors are doing better and what your site is missing.",
+            "Save the work in a workspace so your team can track recommendations, history, and next actions in one place.",
+            "Rerun after updates to validate improvements and keep building progress over time.",
         ],
-        "trust_signals": ["SEO foundation", "AI citation edge", "Global Search Dominance", "Enterprise-capable delivery"],
+        "trust_signals": ["Audit-first clarity", "SEO roadmap", "AI visibility insight", "Workspace progress tracking"],
         "audiences": ["Founders", "Growth teams", "Enterprise brands", "Global Agencies"],
         "case_study": case_study,
         "critical_insight": (
-            "Most sites still stop at lead capture and manual follow-up. VRT SPACE is being built "
-            "as a product system that audits, groups fixes, routes users into workspaces, and only escalates to direct scoping when the request is custom."
+            "Most websites do not have one visibility problem. They have a mix of technical, search, and AI-readiness gaps that need one clear order of attack."
         ),
+        "shell_theme": "shell-light",
     }
     context.update(extra)
     return context
@@ -99,8 +121,20 @@ class ServicesIndexView(TemplateView):
 
     def get_context_data(self, **kwargs):
         return {
-            "page_title": "VRT SPACE AGENCY Solutions",
-            "meta_description": "Browse the VRT SPACE growth system across SEO, AI visibility, reporting, workspaces, and custom implementation paths.",
+            "page_title": "Audit, SEO, and AEO Services | VRT SPACE AGENCY",
+            "meta_description": "Explore the three connected VRT SPACE services: website audit, SEO analysis, and AI visibility.",
+            "canonical_url": self.request.build_absolute_uri(self.request.path),
+            "meta_robots": "index,follow",
+            "shell_theme": "shell-light",
+            "schema_json": json.dumps(
+                {
+                    "@context": "https://schema.org",
+                    "@type": "CollectionPage",
+                    "name": "VRT SPACE Services",
+                    "description": "Website audit, SEO analysis, and AI visibility services.",
+                    "url": self.request.build_absolute_uri(self.request.path),
+                }
+            ),
             "service_groups": SERVICE_GROUPS,
             "service_page_list": SERVICE_PAGE_LIST,
         }
@@ -118,6 +152,22 @@ class ServiceDetailView(TemplateView):
         return {
             "page_title": f"{service['name']} | VRT SPACE AGENCY",
             "meta_description": service["summary"],
+            "canonical_url": self.request.build_absolute_uri(self.request.path),
+            "meta_robots": "index,follow",
+            "shell_theme": "shell-light",
+            "schema_json": json.dumps(
+                {
+                    "@context": "https://schema.org",
+                    "@type": "Service",
+                    "name": service["name"],
+                    "description": service["summary"],
+                    "provider": {
+                        "@type": "Organization",
+                        "name": "VRT SPACE AGENCY",
+                    },
+                    "url": self.request.build_absolute_uri(self.request.path),
+                }
+            ),
             "service": service,
             "service_page_list": SERVICE_PAGE_LIST,
         }
@@ -129,7 +179,19 @@ class PackagesView(TemplateView):
     def get_context_data(self, **kwargs):
         return {
             "page_title": "Plans & Pricing | VRT SPACE AGENCY",
-            "meta_description": "Flexible plans designed to evolve with your business.",
+            "meta_description": "Compare VRT SPACE plans for audits, SEO analysis, AI visibility, and workspace progress tracking.",
+            "canonical_url": self.request.build_absolute_uri(self.request.path),
+            "meta_robots": "index,follow",
+            "shell_theme": "shell-light",
+            "schema_json": json.dumps(
+                {
+                    "@context": "https://schema.org",
+                    "@type": "WebPage",
+                    "name": "VRT SPACE Pricing",
+                    "description": "Pricing for audits, SEO analysis, AI visibility, and workspace plans.",
+                    "url": self.request.build_absolute_uri(self.request.path),
+                }
+            ),
             "plans": build_plan_cards(self.request.user),
         }
 

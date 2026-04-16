@@ -65,6 +65,11 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 "aeo_intelligence": aeo_intelligence,
                 "competitor_benchmark": competitor_benchmark,
                 "workspace_credit_actions": build_credit_action_guide(project, request.user) if project else [],
+                "page_title": f"{project.name if project else 'Workspace'} AEO Workspace | VRT SPACE AGENCY",
+                "meta_description": "Private AEO workspace for answer-engine visibility, citation readiness, and competitor comparison.",
+                "canonical_url": request.build_absolute_uri(request.path),
+                "meta_robots": "noindex, nofollow",
+                "shell_theme": "shell-light",
             },
         )
 
@@ -97,6 +102,11 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                     "latest_aeo_audit": latest_aeo_audit,
                     "aeo_payload": latest_aeo_audit.output_json if latest_aeo_audit else {},
                     "aeo_intelligence": aeo_intelligence,
+                    "page_title": f"{project.name if project else 'Workspace'} AEO Workspace | VRT SPACE AGENCY",
+                    "meta_description": "Private AEO workspace for answer-engine visibility, citation readiness, and competitor comparison.",
+                    "canonical_url": request.build_absolute_uri(request.path),
+                    "meta_robots": "noindex, nofollow",
+                    "shell_theme": "shell-light",
                 },
                 status=400,
             )
@@ -163,5 +173,10 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 "aeo_intelligence": aeo_intelligence,
                 "competitor_benchmark": competitor_benchmark_post,
                 "workspace_credit_actions": build_credit_action_guide(project, request.user),
+                "page_title": f"{project.name if project else 'Workspace'} AEO Workspace | VRT SPACE AGENCY",
+                "meta_description": "Private AEO workspace for answer-engine visibility, citation readiness, and competitor comparison.",
+                "canonical_url": request.build_absolute_uri(request.path),
+                "meta_robots": "noindex, nofollow",
+                "shell_theme": "shell-light",
             },
         )

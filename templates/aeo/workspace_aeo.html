@@ -194,16 +194,16 @@
 </nav>
 {% endif %}
 
-<section class="packages-section" style="padding-top: 0;">
+<section class="packages-section workspace-aeo-shell" style="padding-top: 0;">
 <div class="container-fluid page-stack">
 
     {# ── State: No project ── #}
     {% if not project %}
-    <article class="system-card" style="border-top: 4px solid var(--brand-primary);">
-        <p class="eyebrow">Getting Started</p>
+    <article class="workspace-state-panel">
+        <p class="workspace-report-kicker">Getting Started</p>
         <h2>Create a workspace first</h2>
-        <p style="color: #94a3b8; line-height: 1.6; margin-bottom: 1.5rem;">AEO analysis needs a workspace project and at least one completed audit to generate meaningful scores.</p>
-        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <p>AEO analysis needs a workspace project and at least one completed audit so the score can be grounded in real crawl, structure, and content evidence.</p>
+        <div class="workspace-card-actions">
             <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}#start-audit">Start with audit</a>
             <a class="button button-secondary" href="{% url 'tools:workspace-dashboard' %}#new-project">Create workspace</a>
         </div>
@@ -211,10 +211,10 @@
 
     {# ── State: No audit yet ── #}
     {% elif not project.latest_audit_run %}
-    <article class="system-card" style="border-top: 4px solid #ea580c;">
-        <p class="eyebrow" style="color: #fb923c;">Audit Required</p>
+    <article class="workspace-state-panel is-audit">
+        <p class="workspace-report-kicker">Audit Required</p>
         <h2>Run the first audit to unlock AEO</h2>
-        <p style="color: #94a3b8; line-height: 1.6; margin-bottom: 1.5rem;">AEO scoring is built from your site's crawl data, page structure, and content signals. It needs at least one completed audit.</p>
+        <p>AEO scoring is built from your site's crawl data, page structure, and content signals. It needs at least one completed audit before the workspace can measure AI visibility well.</p>
         <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
             {% csrf_token %}
             <button type="submit" class="button button-primary">Run first audit</button>
@@ -226,19 +226,19 @@
     {# ══════════════════════════════════════════════════════════════════════════ #}
     {# ROW 1: Run Form  +  Score Summary                                        #}
     {# ══════════════════════════════════════════════════════════════════════════ #}
-    <div style="display: grid; grid-template-columns: 1fr 1.6fr; gap: 2rem; align-items: start; margin-bottom: 1.75rem;" class="aeo-hero-split">
+    <div class="workspace-report-grid aeo-hero-split">
 
         {# ── Run Form ── #}
-        <article id="aeo-run" class="system-card">
-            <div class="aeo-section-head">
-                <span class="eyebrow">{% if latest_aeo_audit %}Refresh Analysis{% else %}Run Analysis{% endif %}</span>
-                <h2 style="font-size: 1.5rem;">Generate AEO snapshot</h2>
+        <article id="aeo-run" class="workspace-report-card">
+            <div class="workspace-report-intro">
+                <p class="workspace-report-kicker">{% if latest_aeo_audit %}Refresh Analysis{% else %}Run Analysis{% endif %}</p>
+                <h2>Generate AEO snapshot</h2>
+                <p>Run a fresh answer-engine analysis from the latest audit so users can see what AI systems are likely to cite, ignore, or misunderstand.</p>
             </div>
             {% if workspace_credit_actions %}{% for item in workspace_credit_actions %}{% if item.slug == "aeo" %}
-            <div style="padding: 0.85rem 1rem; border-radius: 12px; background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.15); margin-bottom: 1.25rem;">
-                <p style="font-size: 0.78rem; color: #94a3b8; margin: 0 0 0.15rem;">Cost per run</p>
-                <strong style="color: #38bdf8; font-size: 1rem;">{{ item.cost }} credits</strong>
-                {% if item.remaining is not None %}<span style="font-size: 0.78rem; color: #94a3b8;"> &middot; {{ item.remaining }} remaining</span>{% endif %}
+            <div class="workspace-credit-callout">
+                <p class="workspace-report-kicker">Cost Per Run</p>
+                <p><strong>{{ item.cost }} credits</strong>{% if item.remaining is not None %} &middot; {{ item.remaining }} remaining{% endif %}</p>
             </div>
             {% endif %}{% endfor %}{% endif %}
             <form method="post" class="premium-form">
@@ -255,78 +255,80 @@
                     <i class="fas fa-bolt"></i> &nbsp;Run Intelligence Scan
                 </button>
             </form>
-            <p style="font-size: 0.78rem; color: #94a3b8; margin-top: 0.85rem; line-height: 1.5;">Reuses the existing site crawl — no extra crawl needed. Each run generates fresh AI citability predictions.</p>
+            <p class="text-muted">This run reuses the existing site crawl, so no extra crawl is needed. Each refresh generates new AI citability predictions from the same baseline audit.</p>
         </article>
 
         {# ── Latest Score Card ── #}
         {% if latest_aeo_audit %}
-        <article id="aeo-scores" class="system-card" style="background: linear-gradient(135deg, rgba(56,189,248,0.05) 0%, rgba(129,140,248,0.05) 100%); border-color: rgba(56,189,248,0.12);">
-            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
-                <div>
-                    <span class="eyebrow">Latest snapshot &mdash; {{ latest_aeo_audit.created_at|date:"M j, Y" }}</span>
-                    <h2 style="font-size: 1.5rem; margin: 0;">AEO Dimension Scores</h2>
+        <article id="aeo-scores" class="workspace-report-card">
+            <div class="workspace-score-head">
+                <div class="workspace-report-intro">
+                    <p class="workspace-report-kicker">Latest Snapshot</p>
+                    <h2>AEO dimension scores</h2>
+                    <p>These four layers show where the site is most likely to be under-explained, under-structured, or under-cited by answer engines.</p>
                 </div>
                 {% if aeo_payload.context.target_keyword %}
-                <span class="aeo-pill aeo-pill-blue"><i class="fas fa-crosshairs"></i> {{ aeo_payload.context.target_keyword }}</span>
+                <span class="workspace-chip"><i class="fas fa-crosshairs"></i> {{ aeo_payload.context.target_keyword }}</span>
                 {% endif %}
             </div>
+            <p class="text-muted">Snapshot date: {{ latest_aeo_audit.created_at|date:"M j, Y" }}</p>
 
-            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;" class="aeo-scores-grid">
+            <div class="workspace-score-grid aeo-scores-grid">
                 {# Visibility #}
                 {% with s=aeo_payload.scores.visibility_score %}
-                <div style="text-align: center; padding: 1.25rem 0.75rem; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);">
+                <div class="workspace-score-card">
                     <div class="aeo-score-ring" style="--ring-pct: {% widthratio s 100 360 %}deg; --ring-color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %}; margin: 0 auto 0.85rem;">
                         <div class="ring-inner">
                             <span class="ring-num" style="color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %};">{{ s }}</span>
                         </div>
                     </div>
-                    <p style="font-size: 0.8rem; font-weight: 800; color: #f1f5f9; margin: 0 0 0.25rem; text-transform: uppercase; letter-spacing: 0.05em;">Visibility</p>
-                    <p style="font-size: 0.7rem; color: #94a3b8; margin: 0; line-height: 1.4;">LLM recognition & AI snippet presence</p>
+                    <p class="score-label">Visibility</p>
+                    <p class="score-copy">LLM recognition and AI snippet presence</p>
                 </div>
                 {% endwith %}
                 {# Entity #}
                 {% with s=aeo_payload.scores.entity_score %}
-                <div style="text-align: center; padding: 1.25rem 0.75rem; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);">
+                <div class="workspace-score-card">
                     <div class="aeo-score-ring" style="--ring-pct: {% widthratio s 100 360 %}deg; --ring-color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %}; margin: 0 auto 0.85rem;">
                         <div class="ring-inner">
                             <span class="ring-num" style="color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %};">{{ s }}</span>
                         </div>
                     </div>
-                    <p style="font-size: 0.8rem; font-weight: 800; color: #f1f5f9; margin: 0 0 0.25rem; text-transform: uppercase; letter-spacing: 0.05em;">Entity</p>
-                    <p style="font-size: 0.7rem; color: #94a3b8; margin: 0; line-height: 1.4;">Business identity & schema clarity</p>
+                    <p class="score-label">Entity</p>
+                    <p class="score-copy">Business identity and schema clarity</p>
                 </div>
                 {% endwith %}
                 {# Structure #}
                 {% with s=aeo_payload.scores.structure_score %}
-                <div style="text-align: center; padding: 1.25rem 0.75rem; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);">
+                <div class="workspace-score-card">
                     <div class="aeo-score-ring" style="--ring-pct: {% widthratio s 100 360 %}deg; --ring-color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %}; margin: 0 auto 0.85rem;">
                         <div class="ring-inner">
                             <span class="ring-num" style="color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %};">{{ s }}</span>
                         </div>
                     </div>
-                    <p style="font-size: 0.8rem; font-weight: 800; color: #f1f5f9; margin: 0 0 0.25rem; text-transform: uppercase; letter-spacing: 0.05em;">Structure</p>
-                    <p style="font-size: 0.7rem; color: #94a3b8; margin: 0; line-height: 1.4;">Heading hierarchy & answer-first layout</p>
+                    <p class="score-label">Structure</p>
+                    <p class="score-copy">Heading hierarchy and answer-first layout</p>
                 </div>
                 {% endwith %}
                 {# Completeness #}
                 {% with s=aeo_payload.scores.completeness_score %}
-                <div style="text-align: center; padding: 1.25rem 0.75rem; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);">
+                <div class="workspace-score-card">
                     <div class="aeo-score-ring" style="--ring-pct: {% widthratio s 100 360 %}deg; --ring-color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %}; margin: 0 auto 0.85rem;">
                         <div class="ring-inner">
                             <span class="ring-num" style="color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %};">{{ s }}</span>
                         </div>
                     </div>
-                    <p style="font-size: 0.8rem; font-weight: 800; color: #f1f5f9; margin: 0 0 0.25rem; text-transform: uppercase; letter-spacing: 0.05em;">Completeness</p>
-                    <p style="font-size: 0.7rem; color: #94a3b8; margin: 0; line-height: 1.4;">Content depth & FAQ coverage</p>
+                    <p class="score-label">Completeness</p>
+                    <p class="score-copy">Content depth and FAQ coverage</p>
                 </div>
                 {% endwith %}
             </div>
         </article>
         {% else %}
-        <article class="system-card">
-            <p class="eyebrow">Latest Snapshot</p>
-            <h2 style="font-size: 1.5rem;">No AEO snapshot yet</h2>
-            <p style="color: #94a3b8; line-height: 1.6;">Run the form on the left to generate the first AEO analysis.</p>
+        <article class="workspace-report-card">
+            <p class="workspace-report-kicker">Latest Snapshot</p>
+            <h2>No AEO snapshot yet</h2>
+            <p>Run the form on the left to generate the first AEO analysis and start measuring AI visibility against your latest audit.</p>
         </article>
         {% endif %}
     </div>
@@ -338,28 +340,30 @@
     {# ══════════════════════════════════════════════════════════════════════════ #}
     {% if aeo_payload.scores.citation_readiness %}
     <div id="aeo-readiness" class="aeo-module">
-        <div class="aeo-hero-card">
-            <div style="display: grid; grid-template-columns: 160px 1fr; gap: 2.5rem; align-items: center;" class="aeo-hero-split">
-
-                {# Big Number #}
-                <div style="text-align: center;">
-                    <div style="font-size: clamp(4rem, 8vw, 5.5rem); font-weight: 900; line-height: 1; letter-spacing: -0.05em; color: {% if aeo_payload.scores.citation_readiness >= 70 %}#4ade80{% elif aeo_payload.scores.citation_readiness >= 50 %}#fbbf24{% else %}#f87171{% endif %}; text-shadow: 0 0 40px {% if aeo_payload.scores.citation_readiness >= 70 %}rgba(74,222,128,0.4){% elif aeo_payload.scores.citation_readiness >= 50 %}rgba(251,191,36,0.4){% else %}rgba(248,113,113,0.4){% endif %};">
-                        {{ aeo_payload.scores.citation_readiness }}
-                    </div>
-                    <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; color: #94a3b8; margin-top: 0.4rem; font-weight: 700;">Citation Readiness</div>
-                    <div style="font-size: 0.72rem; color: #64748b;">/100 composite</div>
+        <div class="workspace-report-card">
+            <div class="workspace-score-head">
+                <div class="workspace-report-intro">
+                    <p class="workspace-report-kicker">Citation Readiness</p>
+                    <h2>How close the site is to being cited by answer engines</h2>
+                    <p>Use the composite score, engine gaps, and the priority fix below to decide what to improve first for AI visibility.</p>
                 </div>
+                <div class="workspace-metric-card" style="min-width: 160px;">
+                    <p class="workspace-report-kicker">Composite</p>
+                    <h3 style="color: {% if aeo_payload.scores.citation_readiness >= 70 %}#16a34a{% elif aeo_payload.scores.citation_readiness >= 50 %}#d97706{% else %}#dc2626{% endif %};">{{ aeo_payload.scores.citation_readiness }}</h3>
+                    <small>/100 citation readiness</small>
+                </div>
+            </div>
 
-                {# Engine Gap Bars #}
-                <div>
-                    <p style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #94a3b8; margin: 0 0 1.25rem;">AI engine citation distance</p>
-                    <div style="display: grid; gap: 1.1rem;">
+            <div class="workspace-block-grid">
+                <div class="workspace-block-card">
+                    <p class="workspace-report-kicker">AI Engine Citation Distance</p>
+                    <div class="workspace-progress-list">
                         {% for eg in aeo_payload.engine_gaps %}
-                        <div>
-                            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.4rem;">
-                                <span style="font-size: 0.85rem; font-weight: 800; color: {{ eg.color }};">{{ eg.engine }}</span>
-                                <div style="display: flex; align-items: center; gap: 0.5rem;">
-                                    <span style="font-size: 0.75rem; color: #94a3b8;">{{ eg.score }}/100</span>
+                        <div class="workspace-progress-row">
+                            <div class="workspace-progress-head">
+                                <strong style="color: {{ eg.color }};">{{ eg.engine }}</strong>
+                                <div class="workspace-card-actions">
+                                    <span class="workspace-chip">{{ eg.score }}/100</span>
                                     {% if eg.cited %}
                                     <span class="aeo-pill aeo-pill-green">&#10003; Cited</span>
                                     {% else %}
@@ -367,34 +371,28 @@
                                     {% endif %}
                                 </div>
                             </div>
-                            <div class="aeo-bar">
-                                <div class="fill" style="width: {{ eg.score }}%; max-width: 100%; background: {% if eg.cited %}#4ade80{% elif eg.score >= 55 %}#fbbf24{% else %}#f87171{% endif %}; position: relative;"></div>
+                            <div class="workspace-progress-bar">
+                                <div class="workspace-progress-fill" style="width: {{ eg.score }}%; max-width: 100%; background: {% if eg.cited %}#4ade80{% elif eg.score >= 55 %}#fbbf24{% else %}#f87171{% endif %};"></div>
                             </div>
                             {% if not eg.cited %}
-                            <p style="font-size: 0.72rem; color: #94a3b8; margin: 0.25rem 0 0; line-height: 1.4;">{{ eg.lever }}</p>
+                            <p class="text-muted">{{ eg.lever }}</p>
                             {% endif %}
                         </div>
                         {% endfor %}
                     </div>
                 </div>
-            </div>
 
-            {# Top Priority Fix #}
-            {% if aeo_payload.top_priority_fix %}
-            <div style="margin-top: 1.75rem; padding: 1.25rem 1.5rem; border-radius: 16px; background: rgba(251,146,60,0.08); border: 1px solid rgba(251,146,60,0.25); display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: flex-start;">
-                <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(251,146,60,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
-                    <i class="fas fa-bolt" style="color: #fb923c; font-size: 0.9rem;"></i>
-                </div>
-                <div>
-                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; flex-wrap: wrap;">
-                        <span style="font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #fb923c;">Top Priority Fix</span>
+                {% if aeo_payload.top_priority_fix %}
+                <div class="workspace-priority-card">
+                    <p class="workspace-report-kicker">Top Priority Fix</p>
+                    <div class="workspace-card-actions">
                         <span class="aeo-pill aeo-pill-orange">Priority {{ aeo_payload.top_priority_fix.priority_score }}</span>
                     </div>
-                    <p style="margin: 0 0 0.35rem; font-size: 0.95rem; font-weight: 700; color: #f1f5f9; line-height: 1.4;">{{ aeo_payload.top_priority_fix.issue }}</p>
-                    <p style="margin: 0; font-size: 0.85rem; color: #cbd5e1; line-height: 1.55;">{{ aeo_payload.top_priority_fix.fix }}</p>
+                    <h3>{{ aeo_payload.top_priority_fix.issue }}</h3>
+                    <p>{{ aeo_payload.top_priority_fix.fix }}</p>
                 </div>
+                {% endif %}
             </div>
-            {% endif %}
         </div>
     </div>
     {% endif %}

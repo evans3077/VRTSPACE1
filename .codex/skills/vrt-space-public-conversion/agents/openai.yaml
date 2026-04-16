@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRT Space Public Conversion"
+  short_description: "Guide public pages toward a simpler, clearer conversion flow."
+  default_prompt: "Use this skill when simplifying VRT SPACE public pages around Audit, SEO, AEO, and one dominant call to action."

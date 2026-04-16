@@ -71,6 +71,7 @@ class LeadCaptureForm(forms.ModelForm):
 
 class AuditRequestForm(BusinessContextMixin, StructuredLocationMixin, forms.ModelForm):
     website = forms.CharField()
+    monthly_leads_goal = forms.IntegerField(required=False, initial=20, widget=forms.HiddenInput())
     competitor_urls = forms.CharField(
         required=False,
         widget=forms.Textarea(
@@ -107,11 +108,11 @@ class AuditRequestForm(BusinessContextMixin, StructuredLocationMixin, forms.Mode
             "email": forms.EmailInput(attrs={"placeholder": "team@company.com"}),
             "website": forms.TextInput(attrs={"placeholder": "example.com"}),
             "business_subtype": forms.TextInput(attrs={"placeholder": "Used car dealership, wedding venue, dermatology clinic"}),
-            "target_audience": forms.TextInput(attrs={"placeholder": "People looking for event gardens in Machakos"}),
+            "target_audience": forms.TextInput(attrs={"placeholder": "The people or buyers you most want this site to reach"}),
             "target_goal": forms.TextInput(attrs={"placeholder": "Increase qualified leads from search"}),
             "primary_service": forms.TextInput(attrs={"placeholder": "Used car sales"}),
             "market_context": forms.Textarea(attrs={"rows": 3, "placeholder": "Market, audience, location, or commercial context that should shape the audit."}),
-            "notes": forms.Textarea(attrs={"rows": 4, "placeholder": "Share the market, offer, or visibility problem you want the audit to surface."}),
+            "notes": forms.Textarea(attrs={"rows": 4, "placeholder": "What should this audit focus on first? Share the offer, audience, or visibility issue you care about most."}),
         }
 
     def clean_website(self):
@@ -125,6 +126,10 @@ class AuditRequestForm(BusinessContextMixin, StructuredLocationMixin, forms.Mode
 
     def clean_primary_service(self):
         return self.cleaned_data.get("primary_service", "").strip()
+
+    def clean_monthly_leads_goal(self):
+        value = self.cleaned_data.get("monthly_leads_goal")
+        return value or 20
 
     def clean_competitor_urls(self):
         raw_value = self.cleaned_data.get("competitor_urls", "")

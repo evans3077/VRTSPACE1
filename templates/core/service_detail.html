@@ -1,48 +1,55 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="hero">
-    <div class="container hero-grid">
-        <div class="hero-copy">
-            <p class="eyebrow">{{ service.group_title }}</p>
+<section class="public-shell-section">
+    <div class="container hero-split public-hero-split">
+        <div class="public-hero-copy">
+            <p class="feature-tag">{{ service.group_title }}</p>
             <h1>{{ service.name }}</h1>
-            <p class="hero-text">{{ service.summary }}</p>
-            <div class="hero-actions">
-                <a class="button button-primary" href="{% url 'core:home' %}#audit">Run Free Audit</a>
-                <a class="button button-secondary" href="{% url 'tools:workspace-signup' %}">Create Workspace</a>
+            <p class="lead">{{ service.summary }}</p>
+            <div class="hero-actions public-hero-actions">
+                <a class="button button-mega" href="{% url 'core:home' %}#audit">Run Free Audit</a>
+                <a class="button button-secondary" href="{% url 'core:packages' %}">See Pricing</a>
             </div>
             <p class="section-text">{{ service.value_statement }}</p>
         </div>
-        <div class="signal-panel">
-            <p class="signal-kicker">System feature</p>
+        <div class="public-hero-panel glass-panel">
+            <p class="eyebrow">System feature</p>
             <h3>{{ service.system_feature }}</h3>
             <p>This module is designed to fit the audit-to-workspace flow first, then expand into plan-based monitoring, automation, or custom delivery when needed.</p>
+            <div class="public-chip-row">
+                <span class="premium-pill">Clearer diagnosis</span>
+                <span class="premium-pill">Priority actions</span>
+                <span class="premium-pill">Better follow-through</span>
+            </div>
         </div>
     </div>
 </section>
 
-<section class="experience-section">
+<section class="public-shell-section">
     <div class="container section-heading">
         <p class="eyebrow">What this improves</p>
-        <h2>Resolve the blocking issue, then connect it to the wider product system.</h2>
+        <h2>Resolve the blocking issue, then connect it to the wider visibility system.</h2>
+        <p class="section-text">This page explains where the module helps most and how it fits the wider product loop.</p>
     </div>
-    <div class="container experience-grid">
+    <div class="container public-card-grid">
         {% for point in service.experience_points %}
-        <article class="experience-card">
+        <article class="experience-card public-note-card">
             <p>{{ point }}</p>
         </article>
         {% endfor %}
     </div>
 </section>
 
-<section class="services-section tone-{{ service.tone }}">
+<section class="public-shell-section">
     <div class="container section-heading">
         <p class="eyebrow">Core scope</p>
         <h2>{{ service.name }} delivery areas</h2>
+        <p class="section-text">The strongest results come from turning each insight into a clear next action.</p>
     </div>
-    <div class="container faq-grid">
+    <div class="container public-card-grid">
         {% for bullet in service.bullets %}
-        <article class="faq-card">
+        <article class="faq-card public-capability-card">
             <h3>{{ bullet }}</h3>
             <p>Implemented inside a system that should improve discoverability, clarity, trust, or conversion.</p>
         </article>
@@ -50,16 +57,26 @@
     </div>
 </section>
 
-<section class="contact-section">
-    <div class="container section-heading">
-        <p class="eyebrow">Next action</p>
+<section class="public-shell-section">
+    <div class="container public-cta-panel glass-panel">
+        <div>
+            <p class="eyebrow">Next action</p>
         {% if service.custom_inquiry %}
-        <h2>This path can require a direct custom scope.</h2>
-        <p class="section-text">Start with the audit if you want baseline diagnostics, or use the custom work form when the request is a website build, app build, or bespoke implementation.</p>
-        <p><a class="button button-primary" href="{% url 'core:home' %}#contact">Request custom scope</a></p>
+            <h2>This path can expand into a custom scope when needed.</h2>
+            <p class="section-text">Start with the audit if you want baseline diagnostics, or use the custom work form when the request goes beyond the standard product flow.</p>
+        </div>
+        <div class="public-cta-actions">
+            <a class="button button-primary" href="{% url 'core:home' %}#contact">Request custom scope</a>
+            <a class="button button-secondary" href="{% url 'core:home' %}#audit">Start with an audit</a>
+        </div>
         {% else %}
-        <h2>Start in the product before asking for help.</h2>
-        <p class="section-text">Run the audit, save the workspace, and use the visible plan ladder to decide whether you need a deeper package.</p>
+            <h2>Start in the product before asking for extra help.</h2>
+            <p class="section-text">Run the audit, save the workspace, and use the visible plan ladder to decide whether you need a deeper package.</p>
+        </div>
+        <div class="public-cta-actions">
+            <a class="button button-primary" href="{% url 'core:home' %}#audit">Run Free Audit</a>
+            <a class="button button-secondary" href="{% url 'tools:workspace-signup' %}">Create Workspace</a>
+        </div>
         {% endif %}
     </div>
 </section>

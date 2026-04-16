@@ -504,6 +504,66 @@ def build_service_fit(audit_run, score_breakdown):
     return build_product_modules(audit_run, score_breakdown)
 
 
+def build_diagnosis(audit_run, score_breakdown, recommendations):
+    ranked_dimensions = sorted(
+        score_breakdown.values(),
+        key=lambda item: item.get("score", 100),
+    )
+    weakest_dimensions = [item.get("label", "").lower() for item in ranked_dimensions[:2] if item.get("label")]
+    weakest_summary = " and ".join(weakest_dimensions) if weakest_dimensions else "technical visibility"
+
+    overall_score = audit_run.overall_score or 0
+    if overall_score >= 85:
+        headline = "Strong base with a few visible gaps."
+    elif overall_score >= 70:
+        headline = "Healthy baseline, but important gaps still need attention."
+    elif overall_score >= 50:
+        headline = "The site has real visibility blockers that should be fixed before scaling."
+    else:
+        headline = "Foundational issues are holding the site back."
+
+    summary = (
+        f"The clearest pressure points in this audit are around {weakest_summary}. "
+        "The goal is to remove the blockers that are most likely to affect discovery, trust, and conversion first."
+    )
+    next_recommendation = recommendations[0] if recommendations else {}
+    return {
+        "headline": headline,
+        "summary": summary,
+        "next_step_title": next_recommendation.get("title", "Review the priority fixes"),
+        "next_step_body": next_recommendation.get(
+            "recommended_fix",
+            "Start with the clearest high-impact recommendation, then rerun the audit to validate the change.",
+        ),
+    }
+
+
+def build_recommended_next_step(recommendations, product_modules):
+    recommendation = recommendations[0] if recommendations else {}
+    module = product_modules[0] if product_modules else {}
+    return {
+        "title": module.get("title") or recommendation.get("title") or "Move into the next layer",
+        "body": module.get("impact") or recommendation.get("recommended_fix") or "Use the audit to decide the next product layer and fix sequence.",
+        "cta_label": module.get("cta_label") or "Open the workspace",
+        "plan": module.get("plan", ""),
+    }
+
+
+def build_captured_context(audit_run):
+    audit_request = getattr(audit_run, "audit_request", None)
+    if not audit_request:
+        return {}
+    return {
+        "business_type": audit_request.business_type,
+        "business_subtype": audit_request.business_subtype,
+        "target_audience": audit_request.target_audience,
+        "location": audit_request.location,
+        "target_goal": audit_request.target_goal,
+        "primary_service": audit_request.primary_service,
+        "notes": audit_request.notes,
+    }
+
+
 def build_audit_summary(audit_run, *, issues=None):
     issue_list = list(issues) if issues is not None else list(audit_run.issues.select_related("page"))
     prior_summary = audit_run.summary if isinstance(audit_run.summary, dict) else {}
@@ -521,6 +581,7 @@ def build_audit_summary(audit_run, *, issues=None):
     custom_work_items = build_custom_work_items(audit_run)
 
     summary = {
+        "diagnosis": build_diagnosis(audit_run, score_breakdown, recommendations),
         "top_issues": build_top_issues(recommendations),
         "quick_wins": build_quick_wins(recommendations),
         "featured_recommendations": build_featured_recommendations(recommendations),
@@ -533,6 +594,8 @@ def build_audit_summary(audit_run, *, issues=None):
         "product_modules": product_modules,
         "custom_work_items": custom_work_items,
         "service_fit": product_modules,
+        "recommended_next_step": build_recommended_next_step(recommendations, product_modules),
+        "captured_context": build_captured_context(audit_run),
         "pages_crawled": audit_run.pages_crawled,
         "scores": serialize_score_snapshot(audit_run),
         "gauge_offsets": build_gauge_offsets(audit_run),
