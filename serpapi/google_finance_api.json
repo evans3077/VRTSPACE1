@@ -1,0 +1,717 @@
+GET
+
+
+https://serpapi.com/search.json?engine=google_finance&q=GOOGL:NASDAQ
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_finance",
+  q: "GOOGL:NASDAQ",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "68511fb2bd6b297da7ae5669",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/2b6c4a75cac4a1f7/68511fb2bd6b297da7ae5669.json",
+    "created_at": "2025-06-17 07:56:34 UTC",
+    "processed_at": "2025-06-17 07:56:34 UTC",
+    "google_finance_url": "https://www.google.com/finance/quote/GOOGL:NASDAQ?hl=en",
+    "raw_html_file": "https://serpapi.com/searches/2b6c4a75cac4a1f7/68511fb2bd6b297da7ae5669.html",
+    "total_time_taken": 1.52
+  },
+  "search_parameters": {
+    "engine": "google_finance",
+    "q": "GOOGL:NASDAQ",
+    "hl": "en"
+  },
+  "markets": {
+    "us": [
+      {
+        "stock": ".DJI:INDEXDJX",
+        "link": "https://www.google.com/finance/quote/.DJI:INDEXDJX",
+        "serpapi_link": "https://serpapi.com/search.json?engine=google_finance&hl=en&q=.DJI%3AINDEXDJX",
+        "name": "Dow Jones",
+        "price": 42515.09,
+        "price_movement": {
+          "percentage": 0.751937,
+          "value": 317.30078,
+          "movement": "Up"
+        }
+      },
+      ...
+    ],
+    "europe": [
+      {
+        "stock": "DAX:INDEXDB",
+        "link": "https://www.google.com/finance/quote/DAX:INDEXDB",
+        "serpapi_link": "https://serpapi.com/search.json?engine=google_finance&hl=en&q=DAX%3AINDEXDB",
+        "name": "DAX",
+        "price": 23388.94,
+        "price_movement": {
+          "percentage": 1.3088237,
+          "value": 310.1797,
+          "movement": "Down"
+        }
+      },
+      ...
+    ],
+    "asia": [
+      {
+        "stock": "NI225:INDEXNIKKEI",
+        "link": "https://www.google.com/finance/quote/NI225:INDEXNIKKEI",
+        "serpapi_link": "https://serpapi.com/search.json?engine=google_finance&hl=en&q=NI225%3AINDEXNIKKEI",
+        "name": "Nikkei 225",
+        "price": 38536.74,
+        "price_movement": {
+          "percentage": 0.58836424,
+          "value": 225.41016,
+          "movement": "Up"
+        }
+      },
+      ...
+    ],
+    "currencies": [
+      {
+        "stock": "EUR-USD",
+        "link": "https://www.google.com/finance/quote/EUR-USD",
+        "serpapi_link": "https://serpapi.com/search.json?engine=google_finance&hl=en&q=EUR-USD",
+        "name": "EUR / USD",
+        "price": 1.156085,
+        "price_movement": {
+          "percentage": 0.08787346,
+          "value": 0.001015,
+          "movement": "Up"
+        }
+      },
+      ...
+    ],
+    "crypto": [
+      {
+        "stock": "BTC-USD",
+        "link": "https://www.google.com/finance/quote/BTC-USD",
+        "serpapi_link": "https://serpapi.com/search.json?engine=google_finance&hl=en&q=BTC-USD",
+        "name": "Bitcoin",
+        "price": 106756.90000000001,
+        "price_movement": {
+          "percentage": 0.05046306000000001,
+          "value": 53.900000000000006,
+          "movement": "Down"
+        }
+      },
+      ...
+    ],
+    "futures": [
+      {
+        "stock": "YMW00:CBOT",
+        "link": "https://www.google.com/finance/quote/YMW00:CBOT",
+        "serpapi_link": "https://serpapi.com/search.json?engine=google_finance&hl=en&q=YMW00%3ACBOT",
+        "name": "Dow Futures",
+        "price": 42230.0,
+        "currency": "USD",
+        "price_movement": {
+          "percentage": 0.7217246,
+          "value": 307.0,
+          "movement": "Down"
+        }
+      },
+      ...
+    ],
+    "top_news": {
+      "link": "https://www.msn.com/en-us/money/savingandinvesting/a-unique-event-for-the-s-p-500-just-occurred-its-6th-time-in-75-years-and-it-has-a-100-success-rate-of-forecasting-future-stock-returns/ar-AA1GRvhC",
+      "snippet": "A Unique Event for the S&P 500 Just Occurred -- Its 6th Time in 75 Years -- and It Has a 100% Success Rate of Forecasting Future Stock Returns",
+      "source": "MSN",
+      "thumbnail": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQmaFUleIxuBwmhWTipo0KCIulNABsH3VsN2MBEg-Og4x_kZxYVDz2KyGAKDVs",
+      "date": "4 minutes ago",
+      "iso_date": "2025-06-17T07:52:09Z"
+    }
+  },
+  "graph": [
+    {
+      "price": 174.95,
+      "currency": "USD",
+      "date": "Jun 16 2025, 09:30 AM UTC-04:00",
+      "volume": 7413
+    },
+    {
+      "price": 174.81,
+      "currency": "USD",
+      "date": "Jun 16 2025, 09:31 AM UTC-04:00",
+      "volume": 100
+    },
+    {
+      "price": 175.15,
+      "currency": "USD",
+      "date": "Jun 16 2025, 09:32 AM UTC-04:00",
+      "volume": 155326
+    },
+    ...
+  ],
+  "summary": {
+    "title": "Alphabet Inc Class A",
+    "stock": "GOOGL",
+    "exchange": "NASDAQ",
+    "price": "$176.77",
+    "extracted_price": 176.77,
+    "currency": "USD",
+    "price_movement": {
+      "percentage": 1.1960682,
+      "value": 2.0999982,
+      "movement": "Up"
+    },
+    "date": "Jun 16 2025, 07:59:48 PM UTC-04:00",
+    "market": {
+      "trading": "After Hours",
+      "price": "$175.42",
+      "extracted_price": 175.42,
+      "currency": "USD",
+      "price_movement": {
+        "percentage": 0.76227237,
+        "value": 1.35244817,
+        "movement": "Down"
+      }
+    },
+    "extensions": [
+      "Closed: Jun 16, 7:59:48 PM GMT-4",
+      "USD",
+      "NASDAQ"
+    ]
+  },
+  "knowledge_graph": {
+    "key_stats": {
+      "tags": [
+        {
+          "text": "Most active",
+          "link": "https://www.google.com/finance/markets/most-active",
+          "serpapi_link": "https://serpapi.com/search.json?engine=google_finance_markets&hl=en&trend=most-active",
+          "description": "One of the most heavily traded stocks during the last trading session"
+        },
+        {
+          "text": "Trending",
+          "description": "This security is a popular search topic on Google"
+        },
+        {
+          "text": "Stock",
+          "description": "Ownership of a fraction of a corporation and the right to claim a share of the corporation's assets and profits equal to the amount of stock owned"
+        },
+        ...
+      ],
+      "stats": [
+        {
+          "label": "Previous close",
+          "description": "The last closing price",
+          "value": "$174.67"
+        },
+        {
+          "label": "Day range",
+          "description": "The range between the high and low prices over the past day",
+          "value": "$174.65 - $176.94"
+        },
+        {
+          "label": "Year range",
+          "description": "The range between the high and low prices over the past 52 weeks",
+          "value": "$140.53 - $207.05"
+        },
+        ...
+      ],
+      "climate_change": {
+        "score": "A-",
+        "link": "https://www.cdp.net/en/responses/7616"
+      }
+    },
+    "about": [
+      {
+        "title": "About",
+        "description": {
+          "snippet": "Alphabet Inc. is an American multinational technology conglomerate holding company headquartered in Mountain View, California. Alphabet is the world's third-largest technology company by revenue, after Amazon and Apple, the largest technology company by profit, and one of the world's most valuable companies. It was created through a restructuring of Google on October 2, 2015, and became the parent holding company of Google and several former Google subsidiaries. Alphabet is listed on the large-cap section of the Nasdaq under the ticker symbols GOOGL and GOOG; both classes of stock are components of major stock market indices such as the S&P 500 and NASDAQ-100. The company is considered one of the Big Five American information technology companies, alongside Amazon, Apple, Meta, and Microsoft.\nThe establishment of Alphabet Inc. was prompted by a desire to make the core Google business \"cleaner and more accountable\" while allowing greater autonomy to group companies that operate in businesses other than Internet services. ",
+          "link": "https://en.wikipedia.org/wiki/Alphabet_Inc.",
+          "link_text": "Wikipedia"
+        },
+        "info": [
+          {
+            "label": "CEO",
+            "value": "Sundar Pichai",
+            "link": "https://www.google.com/search?q=Sundar%20Pichai&hl=en"
+          },
+          {
+            "label": "Founded",
+            "value": "Oct 2, 2015"
+          },
+          {
+            "label": "Headquarters",
+            "value": "Mountain View, CaliforniaUnited States",
+            "link": "https://www.google.com/maps/place/1600%20Amphitheatre%20Parkway%2C%20Mountain%20View%2C%20California%2C%20United%20States?hl=en"
+          },
+          ...
+        ]
+      }
+    ]
+  },
+  "news_results": [
+    {
+      "title": "Top news",
+      "items": [
+        {
+          "snippet": "The Best Stocks to Buy With $1,000 Right Now",
+          "link": "https://www.fool.com/investing/2025/06/16/the-best-stocks-to-buy-with-1000-right-now/",
+          "source": "The Motley Fool",
+          "date": "22 hours ago",
+          "thumbnail": "https://encrypted-tbn3.gstatic.com/images?q=tbn:ANd9GcTmOEq-MQSVajVwxN8jS8v6Iop_Fl3tQXoXjE1tn4NQPggQsuiuP7YKAUssOzA"
+        },
+        ...
+      ]
+    },
+    {
+      "title": "News about Alphabet Inc. CEO Sundar Pichai",
+      "items": [
+        {
+          "snippet": "Google CEO Sundar Pichai’s advice to young people is to work with those who outshine you",
+          "link": "https://fortune.com/2025/06/10/google-ceo-sundar-pichai-advice-young-people/",
+          "source": "Fortune",
+          "date": "6 days ago"
+        },
+        ...
+      ]
+    },
+    {
+      "snippet": "2 Top Artificial Intelligence Stocks to Buy Right Now",
+      "link": "https://finance.yahoo.com/news/2-top-artificial-intelligence-stocks-000000144.html",
+      "source": "Yahoo Finance",
+      "date": "7 hours ago",
+      "thumbnail": "https://encrypted-tbn2.gstatic.com/images?q=tbn:ANd9GcSVLmRQQnXGjKK6wACAnLWPAOwiQKwFDt4GSazkcq_Jx77BC5ssXRKAgFolbm4"
+    },
+    ...
+  ],
+  "financials": [
+    {
+      "title": "Income Statement",
+      "results": [
+        {
+          "date": "Mar 2025",
+          "period_type": "Quarterly",
+          "table": [
+            {
+              "title": "Revenue",
+              "description": "The total amount of income generated by the sale of goods or services related to the company's primary operations",
+              "value": "90234000000",
+              "change": "12.04%"
+            },
+            ...
+          ]
+        },
+        ...
+        {
+          "date": "2021",
+          "period_type": "Annual",
+          "table": [
+            {
+              "title": "Revenue",
+              "description": "The total amount of income generated by the sale of goods or services related to the company's primary operations",
+              "value": "257637000000",
+              "change": "41.15%"
+            },
+            ...
+          ]
+        },
+        ...
+      ]
+    },
+    {
+      "title": "Balance Sheet",
+      "results": [
+        {
+          "date": "Mar 2025",
+          "period_type": "Quarterly",
+          "table": [
+            {
+              "title": "Cash and short-term investments",
+              "description": "Investments that are relatively liquid and have maturities between 3 months and one year",
+              "value": "95328000000",
+              "change": "-11.81%"
+            },
+            ...
+          ]
+        },
+        ...
+        {
+          "date": "2021",
+          "period_type": "Annual",
+          "table": [
+            {
+              "title": "Cash and short-term investments",
+              "description": "Investments that are relatively liquid and have maturities between 3 months and one year",
+              "value": "139649000000",
+              "change": "2.16%"
+            },
+            ...
+          ]
+        },
+        ...
+      ]
+    },
+    {
+      "title": "Cash Flow",
+      "results": [
+        {
+          "date": "Mar 2025",
+          "period_type": "Quarterly",
+          "table": [
+            {
+              "title": "Net income",
+              "description": "Company’s earnings for a period net of operating costs, taxes, and interest",
+              "value": "34540000000",
+              "change": "45.97%"
+            },
+            ...
+          ]
+        },
+        ...
+        {
+          "date": "2021",
+          "period_type": "Annual",
+          "table": [
+            {
+              "title": "Net income",
+              "description": "Company’s earnings for a period net of operating costs, taxes, and interest",
+              "value": "76033000000",
+              "change": "88.81%"
+            },
+            ...
+          ]
+        },
+        ...
+      ]
+    }
+  ],
+  "discover_more": [
+    {
+      "title": "You may be interested in",
+      "items": [
+        {
+          "stock": ".DJI:INDEXDJX",
+          "serpapi_link": "https://serpapi.com/search.json?engine=google_finance&hl=en&q=.DJI%3AINDEXDJX",
+          "link": "https://www.google.com/finance/quote/.DJI:INDEXDJX",
+          "name": "Dow Jones Industrial Average",
+          "price": "42,515.09",
+          "extracted_price": 42515.09,
+          "price_movement": {
+            "percentage": 0.75,
+            "movement": "Up"
+          }
+        },
+        ...
+      ]
+    },
+    {
+      "title": "People also search for",
+      "items": [
+        {
+          "stock": "GOOG:NASDAQ",
+          "serpapi_link": "https://serpapi.com/search.json?engine=google_finance&hl=en&q=GOOG%3ANASDAQ",
+          "link": "https://www.google.com/finance/quote/GOOG:NASDAQ",
+          "name": "Alphabet Inc Class C",
+          "price": "$177.94",
+          "extracted_price": 177.94,
+          "currency": "$",
+          "price_movement": {
+            "percentage": 1.17,
+            "movement": "Up"
+          }
+        },
+        ...
+      ]
+    }
+  ]
+}
+Example with 
+q
+:
+WMT:NYSE
+, and 
+window
+:
+MAX
+The window parameter allows selection from a variety of date ranges. Only summary, and graph results are served for searches with window parameter.
+
+GET
+
+
+https://serpapi.com/search.json?engine=google_finance&q=WMT:NYSE&window=MAX
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_finance",
+  q: "WMT:NYSE",
+  window: "MAX",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "652f0440914a81521a094004",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/d2634031e3148d90/652f0440914a81521a094004.json",
+    "created_at": "2023-10-17 22:01:36 UTC",
+    "processed_at": "2023-10-17 22:01:36 UTC",
+    "google_finance_url": "https://www.google.com/finance/quote/WMT:NYSE?hl=en&window=MAX",
+    "raw_html_file": "https://serpapi.com/searches/d2634031e3148d90/652f0440914a81521a094004.html",
+    "prettify_html_file": "https://serpapi.com/searches/d2634031e3148d90/652f0440914a81521a094004.prettify",
+    "total_time_taken": 1.37
+  },
+  "search_parameters": {
+    "engine": "google_finance",
+    "q": "WMT:NYSE",
+    "hl": "en",
+    "window": "MAX"
+  },
+  "graph": [
+    {
+      "price": 1.28,
+      "currency": "USD",
+      "date": "Oct 21 1983, 04:00 PM UTC-04:00",
+      "volume": 1004000
+    },
+    {
+      "price": 1.27,
+      "currency": "USD",
+      "date": "Oct 28 1983, 04:00 PM UTC-04:00",
+      "volume": 673800
+    },
+    {
+      "price": 1.27,
+      "currency": "USD",
+      "date": "Nov 04 1983, 04:00 PM UTC-04:00",
+      "volume": 960500
+    },
+    ...
+  ],
+  "summary": {
+    "title": "Walmart Inc",
+    "stock": "WMT",
+    "exchange": "NYSE",
+    "price": "USD161.42",
+    "extracted_price": 161.42,
+    "currency": "USD",
+    "price_movement": {
+      "percentage": 12510.943384615,
+      "value": 160.14,
+      "movement": "Up"
+    },
+    "date": "Oct 17 2023, 04:27:10 PM UTC-04:00",
+    "market": {
+      "price": "USD161.21",
+      "extracted_price": 161.21,
+      "currency": "USD",
+      "price_movement": {
+        "percentage": 0.1300901,
+        "value": 0.20999146,
+        "movement": "Down"
+      }
+    },
+    "extensions": [
+      "Oct 17, 04:27:10 PM UTC-4",
+      "USD",
+      "NYSE"
+    ]
+  }
+}
+key_events
+example with 
+q
+:
+GOOGL:NASDAQ
+, and  
+window
+:
+1Y
+Usually when window parameter is set to 6M and above, key_events will be present in the result. Individual key_event is also added to the relevant graph item that occurs at the same day.
+
+GET
+
+
+https://serpapi.com/search.json?engine=google_finance&q=GOOGL:NASDAQ&window=1Y
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_finance",
+  q: "GOOGL:NASDAQ",
+  window: "1Y",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+
+JSON Example
+
+{
+  ...
+  "key_events": [
+    {
+      "title": "Alphabet Stock Falls After Google Parent Reports Earnings",
+      "link": "https://www.wsj.com/livecoverage/stock-market-news-today-02-02-2023/card/alphabet-earnings-what-to-expect-GFg3qwVtkUaBwme427Hq",
+      "source": "The Wall Street Journal",
+      "source_date": "Feb 02 2023, 06:31 PM UTC-05:00",
+      "date": "Feb 03 2023, 04:00 PM UTC-05:00",
+      "price_movement": {
+        "percentage": 0.027473547,
+        "movement": "Down"
+      }
+    },
+    {
+      "title": "Alphabet is increasing its stock buyback program by $70B",
+      "link": "https://www.bizjournals.com/sanjose/news/2023/04/25/alphabet-ups-stock-buyback-program-by-70b.html",
+      "source": "The Business Journals",
+      "source_date": "Apr 25 2023, 04:28 PM UTC-05:00",
+      "date": "Apr 26 2023, 03:00 PM UTC-05:00",
+      "price_movement": {
+        "percentage": 0.0013480983,
+        "movement": "Down"
+      }
+    },
+    {
+      "title": "Alphabet Shares Jump After AI-Focused Developer Conference",
+      "link": "https://www.redherring.com/internet/alphabet-shares-jump-after-ai-focused-developer-conference/",
+      "source": "Red Herring",
+      "source_date": "May 12 2023, 02:00 AM UTC-05:00",
+      "date": "May 11 2023, 03:00 PM UTC-05:00",
+      "price_movement": {
+        "percentage": 0.043131992,
+        "movement": "Up"
+      }
+    },
+    ...
+  ],
+  "graph": [
+    ...
+    {
+      "price": 104.78,
+      "currency": "USD",
+      "date": "Feb 03 2023, 04:00 PM UTC-05:00",
+      "volume": 65309261,
+      "key_event": {
+        "title": "Alphabet Stock Falls After Google Parent Reports Earnings",
+        "link": "https://www.wsj.com/livecoverage/stock-market-news-today-02-02-2023/card/alphabet-earnings-what-to-expect-GFg3qwVtkUaBwme427Hq",
+        "source": "The Wall Street Journal",
+        "source_date": "Feb 02 2023, 06:31 PM UTC-05:00",
+        "date": "Feb 03 2023, 04:00 PM UTC-05:00",
+        "price_movement": {
+          "percentage": 0.027473547,
+          "movement": "Down"
+        }
+      }
+    },
+    ...
+    {
+      "price": 103.71,
+      "currency": "USD",
+      "date": "Apr 26 2023, 04:00 PM UTC-05:00",
+      "volume": 53347560,
+      "key_event": {
+        "title": "Alphabet is increasing its stock buyback program by $70B",
+        "link": "https://www.bizjournals.com/sanjose/news/2023/04/25/alphabet-ups-stock-buyback-program-by-70b.html",
+        "source": "The Business Journals",
+        "source_date": "Apr 25 2023, 04:28 PM UTC-05:00",
+        "date": "Apr 26 2023, 03:00 PM UTC-05:00",
+        "price_movement": {
+          "percentage": 0.0013480983,
+          "movement": "Down"
+        }
+      }
+    },
+    ...
+    {
+      "price": 116.57,
+      "currency": "USD",
+      "date": "May 11 2023, 04:00 PM UTC-05:00",
+      "volume": 78900029,
+      "key_event": {
+        "title": "Alphabet Shares Jump After AI-Focused Developer Conference",
+        "link": "https://www.redherring.com/internet/alphabet-shares-jump-after-ai-focused-developer-conference/",
+        "source": "Red Herring",
+        "source_date": "May 12 2023, 02:00 AM UTC-05:00",
+        "date": "May 11 2023, 03:00 PM UTC-05:00",
+        "price_movement": {
+          "percentage": 0.043131992,
+          "movement": "Up"
+        }
+      }
+    },
+    ...
+  ]
+}
+suggestions
+example with 
+q
+:
+MSFTR:
+Usually when the query does not return any results, suggestions will be present in the result.
+
+GET
+
+
+https://serpapi.com/search.json?engine=google_finance&q=MSFTR:
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_finance",
+  q: "MSFTR:",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+
+JSON Example
+
+{
+  ...
+  "suggestions": [
+    {
+      "stock": "MSFT:NASDAQ",
+      "serpapi_link": "https://serpapi.com/search.json?engine=google_finance&hl=en&q=MSFT%3ANASDAQ",
+      "link": "https://www.google.com/finance/quote/MSFT:NASDAQ",
+      "name": "Microsoft Corp",
+      "price": "$501.81",
+      "extracted_price": 501.81,
+      "currency": "$",
+      "price_movement": {
+        "percentage": 0.066,
+        "movement": "Up"
+      }
+    },
+    ...
+  ],
+  ...
+}

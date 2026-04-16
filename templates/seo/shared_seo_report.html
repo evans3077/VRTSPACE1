@@ -1,0 +1,176 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="padding-bottom: 2rem;">
+    <div class="container-fluid">
+        <div class="section-heading">
+            <p class="eyebrow">Shared SEO Report</p>
+            <h1 style="max-width: none;">{{ project.name }}</h1>
+            <p class="section-text" style="max-width: 760px;">
+                Stakeholder-ready SEO strategy report showing benchmark evidence, execution priorities, campaign progress, and outreach direction.
+            </p>
+            <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <a class="button button-secondary" href="{% url 'seo:shared-seo-report-pdf' share_link.token %}" target="_blank" rel="noopener">View PDF</a>
+                <a class="button button-secondary" href="{% url 'seo:shared-seo-report-pdf' share_link.token %}?download=1">Download PDF</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="packages-section" style="padding-top: 0;">
+    <div class="container-fluid page-stack">
+        <div class="system-grid">
+            <article class="system-card"><p class="eyebrow">Domain</p><h3>{{ report_payload.project.domain }}</h3><p>{{ report_payload.profile.location }}</p></article>
+            <article class="system-card"><p class="eyebrow">Goal</p><h3 style="font-size: 1.05rem;">{{ report_payload.profile.target_goal }}</h3><p>Declared SEO objective</p></article>
+            <article class="system-card"><p class="eyebrow">Competitors</p><h3>{{ report_payload.benchmark_summary.available_competitors|default:0 }}</h3><p>Benchmarked directly</p></article>
+            <article class="system-card"><p class="eyebrow">Execution Items</p><h3>{{ report_payload.value_summary.execution_items|default:0 }}</h3><p>Actionable SEO tasks</p></article>
+        </div>
+
+        <article class="system-card" style="border-top: 4px solid var(--signal);">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Executive Summary</p>
+                <h2 style="font-size: 2rem;">What this SEO report shows</h2>
+            </div>
+            <div style="display: grid; gap: 0.75rem; color: #64748b; line-height: 1.6;">
+                <div>This report freezes the current SEO benchmark state for <strong style="color: #f8fafc;">{{ report_payload.project.domain }}</strong>.</div>
+                <div>The benchmark compares the site against accepted competitors, then turns the structural gaps into execution items, campaign objects, and outreach targets.</div>
+                <div>Use the sections below to review why competitors were accepted, what page patterns they use, and which tasks should be implemented first.</div>
+            </div>
+        </article>
+
+        <div class="layout-split-wide">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Benchmark Summary</p>
+                    <h2 style="font-size: 2rem;">Current market signal</h2>
+                </div>
+                <div class="system-grid">
+                    <article class="system-card"><p class="eyebrow">Precision</p><h3>{{ report_payload.benchmark_summary.average_relevance|default:0 }}</h3><p>Average competitor relevance</p></article>
+                    <article class="system-card"><p class="eyebrow">Filtered Out</p><h3>{{ report_payload.benchmark_summary.filtered_out_competitors|default:0 }}</h3><p>Low-fit competitors excluded</p></article>
+                    <article class="system-card"><p class="eyebrow">SERP Queries</p><h3>{{ report_payload.discovery.queries|length }}</h3><p>Global discovery queries used</p></article>
+                </div>
+                {% if report_payload.discovery.queries %}
+                <div style="margin-top: 1rem; color: #64748b; line-height: 1.6;">
+                    <strong style="display: block; color: #f8fafc; margin-bottom: 0.25rem;">Queries used</strong>
+                    {{ report_payload.discovery.queries|join:", " }}
+                </div>
+                {% endif %}
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Execution Value</p>
+                    <h2 style="font-size: 2rem;">What the system advanced</h2>
+                </div>
+                <div class="system-grid">
+                    <article class="system-card"><p class="eyebrow">Campaigns</p><h3>{{ report_payload.campaign_value_summary.campaign_count|default:0 }}</h3><p>Tracked execution campaigns</p></article>
+                    <article class="system-card"><p class="eyebrow">Briefs</p><h3>{{ report_payload.campaign_value_summary.brief_count|default:0 }}</h3><p>Editorial briefs linked</p></article>
+                    <article class="system-card"><p class="eyebrow">Drafts</p><h3>{{ report_payload.campaign_value_summary.draft_count|default:0 }}</h3><p>Content drafts created</p></article>
+                    <article class="system-card"><p class="eyebrow">Outreach</p><h3>{{ report_payload.campaign_value_summary.outreach_target_count|default:0 }}</h3><p>Backlink targets linked to campaigns</p></article>
+                </div>
+            </article>
+        </div>
+
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Competitor Decisions</p>
+                <h2 style="font-size: 2rem;">Why benchmark sites were accepted or filtered out</h2>
+            </div>
+            <div class="panel-scroll">
+                {% for item in report_payload.competitor_trace %}
+                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: #f8fafc;">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
+                        <strong>{{ item.domain }}</strong>
+                        <span class="score-pill {% if item.included %}score-high{% else %}score-low{% endif %}" style="font-size: 0.7rem;">{{ item.final_decision_label }}</span>
+                    </div>
+                    <div style="margin-top: 0.55rem; color: #64748b; font-size: 0.88rem; line-height: 1.5;">
+                        {{ item.fit.reason }}
+                    </div>
+                    <div class="seo-inline-tags" style="margin-top: 0.55rem;">
+                        <span class="seo-inline-tag">Pages profiled: {{ item.page_count|default:0 }}</span>
+                        <span class="seo-inline-tag">Best score: {{ item.fit.best_page_score|default:0 }}</span>
+                        <span class="seo-inline-tag">Matching pages: {{ item.fit.matching_pages|default:0 }}</span>
+                    </div>
+                </div>
+                {% empty %}
+                <div style="padding: 1rem; border-radius: 16px; background: #f8fafc; color: #64748b;">No competitor trace was stored for this report.</div>
+                {% endfor %}
+            </div>
+        </article>
+
+        <div class="layout-split-wide">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Keyword Queue</p>
+                    <h2 style="font-size: 2rem;">Search opportunities</h2>
+                </div>
+                <div class="panel-scroll">
+                    {% for item in report_payload.keyword_opportunities %}
+                    <div style="padding: 1rem; border-radius: 16px; background: #f8fafc;">
+                        <strong>{{ item.keyword }}</strong>
+                        <div style="color: #64748b; margin-top: 0.35rem;">{{ item.reason }}</div>
+                    </div>
+                    {% empty %}
+                    <div style="padding: 1rem; border-radius: 16px; background: #f8fafc; color: #64748b;">No keyword opportunities were stored.</div>
+                    {% endfor %}
+                </div>
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Execution Queue</p>
+                    <h2 style="font-size: 2rem;">What to do first</h2>
+                </div>
+                <div class="panel-scroll panel-scroll-tall">
+                    {% for item in report_payload.execution_queue %}
+                    <div style="padding: 1rem 1.1rem; border-radius: 18px; background: #f8fafc;">
+                        <strong>{{ item.title }}</strong>
+                        <div style="margin-top: 0.45rem; color: #64748b;">{{ item.deliverable }}</div>
+                        {% if item.target_urls %}
+                        <div style="margin-top: 0.55rem; color: #64748b; font-size: 0.82rem;">
+                            <strong style="color: #f8fafc;">Where to apply</strong>
+                            {% for url in item.target_urls %}
+                            <div class="url-wrap-mono" style="font-size: 0.76rem; color: #64748b; margin-top: 0.15rem;">{{ url }}</div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+                        <div style="margin-top: 0.55rem; color: #64748b; font-size: 0.84rem; line-height: 1.5;">
+                            {% for step in item.action_steps|slice:":3" %}
+                            <div>{{ forloop.counter }}. {{ step }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% empty %}
+                    <div style="padding: 1rem; border-radius: 16px; background: #f8fafc; color: #64748b;">No execution queue items were stored.</div>
+                    {% endfor %}
+                </div>
+            </article>
+        </div>
+
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Campaign Pipeline</p>
+                <h2 style="font-size: 2rem;">Execution continuity</h2>
+            </div>
+            <div class="panel-scroll">
+                {% for item in report_payload.campaigns %}
+                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: #f8fafc;">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; flex-wrap: wrap;">
+                        <strong>{{ item.title }}</strong>
+                        <span class="score-pill score-medium" style="font-size: 0.7rem;">{{ item.status|title }}</span>
+                    </div>
+                    <div style="margin-top: 0.45rem; color: #64748b; font-size: 0.84rem;">
+                        Validation: {{ item.validation_status|title }} | Draft: {{ item.draft_title|default:"Not created" }}
+                    </div>
+                    <div style="margin-top: 0.45rem; color: #64748b; font-size: 0.84rem;">
+                        Outreach targets: {{ item.backlink_prospect_count }} | Acquired links: {{ item.acquired_backlink_count }}
+                    </div>
+                </div>
+                {% empty %}
+                <div style="padding: 1rem; border-radius: 16px; background: #f8fafc; color: #64748b;">No campaign pipeline data was stored.</div>
+                {% endfor %}
+            </div>
+        </article>
+    </div>
+</section>
+{% endblock %}

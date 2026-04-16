@@ -1,0 +1,210 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="padding-bottom: 2rem;">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Operations Dashboard</p>
+            <h1 style="max-width: none;">Live SaaS demand and inquiry visibility</h1>
+            <p class="section-text" style="max-width: 860px;">
+                Internal view of current product demand, inquiry flow, audit volume, project stages, and available geography signals.
+            </p>
+        </div>
+    </div>
+</section>
+
+<section class="packages-section" style="padding-top: 0;">
+    <div class="container" style="display: grid; gap: 2rem;">
+        <div class="system-grid">
+            <article class="system-card"><p class="eyebrow">Today</p><h3>{{ kpis.leads_today }}</h3><p>New inquiries</p></article>
+            <article class="system-card"><p class="eyebrow">This Week</p><h3>{{ kpis.leads_week }}</h3><p>New inquiries</p></article>
+            <article class="system-card"><p class="eyebrow">Today</p><h3>{{ kpis.audits_today }}</h3><p>Audit requests</p></article>
+            <article class="system-card"><p class="eyebrow">This Week</p><h3>{{ kpis.audits_week }}</h3><p>Audit requests</p></article>
+            <article class="system-card"><p class="eyebrow">Qualified</p><h3>{{ kpis.qualified_audits }}</h3><p>Qualified audit requests</p></article>
+            <article class="system-card"><p class="eyebrow">Projects</p><h3>{{ kpis.active_projects }}</h3><p>Active non-archived projects</p></article>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1.2fr 0.8fr; gap: 2rem; align-items: start;">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Daily Demand</p>
+                    <h2 style="font-size: 2rem;">Last 7 days</h2>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); text-align: left;">
+                                <th style="padding: 0.8rem 0;">Date</th>
+                                <th style="padding: 0.8rem 0;">Inquiries</th>
+                                <th style="padding: 0.8rem 0;">Audits</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for item in daily_activity %}
+                            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                <td style="padding: 0.8rem 0;">{{ item.label }}</td>
+                                <td style="padding: 0.8rem 0; font-weight: 700;">{{ item.leads }}</td>
+                                <td style="padding: 0.8rem 0; font-weight: 700;">{{ item.audits }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Demand Mix</p>
+                    <h2 style="font-size: 2rem;">Inquiry interest areas</h2>
+                </div>
+                <div style="display: grid; gap: 0.75rem;">
+                    {% for item in interest_mix %}
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.85rem 1rem; background: #f8fafc; border-radius: 14px;">
+                        <strong>{{ item.label }}</strong>
+                        <span>{{ item.count }}</span>
+                    </div>
+                    {% empty %}
+                    <div style="padding: 0.85rem 1rem; background: #f8fafc; border-radius: 14px;">No inquiry demand recorded yet.</div>
+                    {% endfor %}
+                </div>
+            </article>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; align-items: start;">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Weekly Demand</p>
+                    <h2 style="font-size: 1.6rem;">Last 8 weeks</h2>
+                </div>
+                <div style="display: grid; gap: 0.75rem;">
+                    {% for item in weekly_activity %}
+                    <div style="padding: 0.8rem 1rem; background: #f8fafc; border-radius: 14px;">
+                        <strong style="display: block;">{{ item.label }}</strong>
+                        <span style="font-size: 0.9rem; color: #64748b;">Inquiries: {{ item.leads }} | Audits: {{ item.audits }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Countries</p>
+                    <h2 style="font-size: 1.6rem;">Top captured locations</h2>
+                </div>
+                <div style="display: grid; gap: 0.75rem;">
+                    {% for item in geo_breakdown.countries %}
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.8rem 1rem; background: #f8fafc; border-radius: 14px;">
+                        <strong>{{ item.label }}</strong>
+                        <span>{{ item.count }}</span>
+                    </div>
+                    {% empty %}
+                    <div style="padding: 0.8rem 1rem; background: #f8fafc; border-radius: 14px;">No country data captured yet.</div>
+                    {% endfor %}
+                </div>
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Regions</p>
+                    <h2 style="font-size: 1.6rem;">Top region signals</h2>
+                </div>
+                <div style="display: grid; gap: 0.75rem;">
+                    {% for item in geo_breakdown.regions %}
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.8rem 1rem; background: #f8fafc; border-radius: 14px;">
+                        <strong>{{ item.label }}</strong>
+                        <span>{{ item.count }}</span>
+                    </div>
+                    {% empty %}
+                    <div style="padding: 0.8rem 1rem; background: #f8fafc; border-radius: 14px;">No region data captured yet.</div>
+                    {% endfor %}
+                </div>
+            </article>
+        </div>
+
+        <div style="display: grid; grid-template-columns: 0.9fr 1.1fr; gap: 2rem; align-items: start;">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Project Stages</p>
+                    <h2 style="font-size: 2rem;">Pipeline state</h2>
+                </div>
+                <div style="display: grid; gap: 0.75rem;">
+                    {% for item in stage_mix %}
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; padding: 0.85rem 1rem; background: #f8fafc; border-radius: 14px;">
+                        <strong>{{ item.label }}</strong>
+                        <span>{{ item.count }}</span>
+                    </div>
+                    {% endfor %}
+                </div>
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Recent Inquiries</p>
+                    <h2 style="font-size: 2rem;">Lead queue</h2>
+                </div>
+                <div style="overflow-x: auto;">
+                    <table style="width: 100%; border-collapse: collapse; min-width: 620px;">
+                        <thead>
+                            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); text-align: left;">
+                                <th style="padding: 0.8rem 0.4rem;">Name</th>
+                                <th style="padding: 0.8rem 0.4rem;">Interest</th>
+                                <th style="padding: 0.8rem 0.4rem;">Country</th>
+                                <th style="padding: 0.8rem 0.4rem;">Score</th>
+                                <th style="padding: 0.8rem 0.4rem;">Created</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for lead in recent_leads %}
+                            <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                                <td style="padding: 0.8rem 0.4rem;">{{ lead.name }}</td>
+                                <td style="padding: 0.8rem 0.4rem;">{{ lead.get_interest_area_display }}</td>
+                                <td style="padding: 0.8rem 0.4rem;">{{ lead.submission_context.country|default:"-" }}</td>
+                                <td style="padding: 0.8rem 0.4rem;">{{ lead.score }}</td>
+                                <td style="padding: 0.8rem 0.4rem;">{{ lead.created_at }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr><td colspan="5" style="padding: 0.8rem 0.4rem;">No inquiries yet.</td></tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </article>
+        </div>
+
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Recent Audit Requests</p>
+                <h2 style="font-size: 2rem;">Audit intake queue</h2>
+            </div>
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; min-width: 820px;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); text-align: left;">
+                            <th style="padding: 0.8rem 0.4rem;">Company</th>
+                            <th style="padding: 0.8rem 0.4rem;">Website</th>
+                            <th style="padding: 0.8rem 0.4rem;">Country</th>
+                            <th style="padding: 0.8rem 0.4rem;">Score</th>
+                            <th style="padding: 0.8rem 0.4rem;">Status</th>
+                            <th style="padding: 0.8rem 0.4rem;">Created</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for audit in recent_audits %}
+                        <tr style="border-bottom: 1px solid rgba(255, 255, 255, 0.05);">
+                            <td style="padding: 0.8rem 0.4rem;">{{ audit.company_name|default:"-" }}</td>
+                            <td style="padding: 0.8rem 0.4rem;">{{ audit.website }}</td>
+                            <td style="padding: 0.8rem 0.4rem;">{{ audit.submission_context.country|default:"-" }}</td>
+                            <td style="padding: 0.8rem 0.4rem;">{{ audit.score }}</td>
+                            <td style="padding: 0.8rem 0.4rem;">{{ audit.get_status_display }}</td>
+                            <td style="padding: 0.8rem 0.4rem;">{{ audit.created_at }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="6" style="padding: 0.8rem 0.4rem;">No audit requests yet.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </div>
+</section>
+{% endblock %}

@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRT Space Billing"
+  short_description: "Add subscriptions, payments, and feature gating to VRT Space"
+  default_prompt: "Use $vrt-space-billing to implement VRT SPACE billing, subscriptions, or plan enforcement."

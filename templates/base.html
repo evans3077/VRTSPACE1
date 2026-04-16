@@ -1,0 +1,346 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% firstof page_title "VRT SPACE AGENCY" as resolved_page_title %}
+    {% firstof meta_description "VRT SPACE AGENCY delivers SEO audits, AI visibility insights, and growth workspaces." as resolved_meta_description %}
+    {% firstof og_title resolved_page_title as resolved_og_title %}
+    {% firstof og_description resolved_meta_description as resolved_og_description %}
+    {% firstof og_type "website" as resolved_og_type %}
+    {% firstof twitter_card "summary" as resolved_twitter_card %}
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{{ resolved_page_title }}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <meta name="description" content="{{ resolved_meta_description }}">
+    {% if canonical_url %}
+    <link rel="canonical" href="{{ canonical_url }}">
+    {% endif %}
+    {% if meta_robots %}
+    <meta name="robots" content="{{ meta_robots }}">
+    {% endif %}
+    <meta property="og:title" content="{{ resolved_og_title }}">
+    <meta property="og:description" content="{{ resolved_og_description }}">
+    <meta property="og:type" content="{{ resolved_og_type }}">
+    {% if canonical_url %}
+    <meta property="og:url" content="{{ canonical_url }}">
+    {% endif %}
+    <meta name="twitter:card" content="{{ resolved_twitter_card }}">
+    <meta name="twitter:title" content="{{ resolved_og_title }}">
+    <meta name="twitter:description" content="{{ resolved_og_description }}">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="{% static 'css/site.css' %}">
+    <link rel="stylesheet" href="{% static 'css/vrt-space-core.css' %}">
+    <script src="https://unpkg.com/htmx.org@1.9.12"></script>
+    <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    {% if schema_json %}
+    <script type="application/ld+json">{{ schema_json|safe }}</script>
+    {% endif %}
+    {% block extra_head %}{% endblock %}
+</head>
+<body>
+    <header class="site-header" x-data="{ openMenu: null, _closeTimer: null, scheduleClose() { this._closeTimer = setTimeout(() => { this.openMenu = null; }, 150); }, cancelClose() { clearTimeout(this._closeTimer); } }">
+        <div class="container nav-shell">
+            <a class="brand" href="/">VRT SPACE AGENCY</a>
+            <div class="nav-actions">
+                <nav class="nav-links" aria-label="Primary">
+                    <!-- Platform Mega-Menu -->
+                    <div class="nav-item-wrapper" @mouseenter="cancelClose(); openMenu = 'platform'" @mouseleave="scheduleClose()">
+                        <button class="mega-menu-trigger">
+                            Platform <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
+                        </button>
+                        <div class="mega-menu-panel" :class="{ 'is-open': openMenu === 'platform' }">
+                            <div class="nav-column">
+                                <span class="nav-category-head">Intelligence Hubs</span>
+                                <div class="nav-card-group">
+                                    <a href="{% url 'seo:workspace-seo' %}" class="nav-card">
+                                        <div class="nav-card-icon"><i class="fas fa-search"></i></div>
+                                        <div class="nav-card-info">
+                                            <span class="nav-card-title">SEO Intelligence</span>
+                                            <p class="nav-card-desc">Crawl budget optimization, phantom keywords, and technical gap analysis.</p>
+                                        </div>
+                                    </a>
+                                    <a href="{% url 'aeo:workspace-aeo' %}" class="nav-card">
+                                        <div class="nav-card-icon"><i class="fas fa-robot"></i></div>
+                                        <div class="nav-card-info">
+                                            <span class="nav-card-title">AEO Strategy</span>
+                                            <p class="nav-card-desc">AI discovery engine optimization and LLM citation acceleration.</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="nav-column">
+                                <span class="nav-category-head">Production Systems</span>
+                                <div class="nav-card-group">
+                                    <a href="{% url 'content:workspace-content' %}" class="nav-card">
+                                        <div class="nav-card-icon"><i class="fas fa-pen-nib"></i></div>
+                                        <div class="nav-card-info">
+                                            <span class="nav-card-title">Content Forge</span>
+                                            <p class="nav-card-desc">Recursive content optimization and high-precision Answer Unit generation.</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                            <div class="nav-column">
+                                <span class="nav-category-head">Management</span>
+                                <div class="nav-card-group">
+                                    <a href="{% url 'tools:workspace-dashboard' %}" class="nav-card">
+                                        <div class="nav-card-icon"><i class="fas fa-th-large"></i></div>
+                                        <div class="nav-card-info">
+                                            <span class="nav-card-title">Project Control</span>
+                                            <p class="nav-card-desc">Omni-channel visibility tracking and credit pool management.</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Solutions Mega-Menu -->
+                    <div class="nav-item-wrapper" @mouseenter="cancelClose(); openMenu = 'solutions'" @mouseleave="scheduleClose()">
+                        <button class="mega-menu-trigger">
+                            Solutions <i class="fas fa-chevron-down" style="font-size: 0.7rem; opacity: 0.5;"></i>
+                        </button>
+                        <div class="mega-menu-panel" :class="{ 'is-open': openMenu === 'solutions' }">
+                            <div class="nav-column">
+                                <span class="nav-category-head">By Use Case</span>
+                                <div class="nav-card-group">
+                                    <a href="{% url 'core:services' %}" class="nav-card">
+                                        <div class="nav-card-icon"><i class="fas fa-building"></i></div>
+                                        <div class="nav-card-info">
+                                            <span class="nav-card-title">Enterprise Dominance</span>
+                                            <p class="nav-card-desc">Large-scale semantic authority for complex internal architectures.</p>
+                                        </div>
+                                    </a>
+                                    <a href="{% url 'core:services' %}" class="nav-card">
+                                        <div class="nav-card-icon"><i class="fas fa-rocket"></i></div>
+                                        <div class="nav-card-info">
+                                            <span class="nav-card-title">Startup Acceleration</span>
+                                            <p class="nav-card-desc">Rapid visibility gains for new products and market entries.</p>
+                                        </div>
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <a href="{% url 'core:packages' %}">Pricing</a>
+                    <a href="{% url 'core:home' %}#audit">Free Audit</a>
+                </nav>
+
+                {% if user.is_authenticated %}
+                <div class="nav-user-shell" x-data="{ openProfile: false }" @mouseleave="openProfile = false">
+                    <button class="button button-secondary nav-account-link" @mouseenter="openProfile = true">
+                        <i class="fas fa-user-circle" style="font-size: 1.1rem;"></i>
+                        <span>Account</span>
+                    </button>
+                    <div class="workspace-menu-panel glass-panel" x-show="openProfile" x-transition @mouseenter="openProfile = true">
+                        <div class="profile-header" style="padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-glass); margin-bottom: 0.75rem;">
+                            <span style="display: block; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800;">Identity Verified</span>
+                            <span style="font-weight: 700; color: var(--text-primary);">{{ user.email }}</span>
+                        </div>
+                        <a href="{% url 'tools:workspace-dashboard' %}"><i class="fas fa-columns"></i> Dashboard Console</a>
+                        <a href="{% url 'tools:account-dashboard' %}"><i class="fas fa-cog"></i> Settings</a>
+                        <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 0.5rem 0;"></div>
+                        <a href="{% url 'tools:workspace-logout' %}" style="color: var(--error) !important;"><i class="fas fa-power-off"></i> Systems Exit</a>
+                    </div>
+                </div>
+                <a class="button button-primary nav-cta" href="{% url 'tools:workspace-dashboard' %}">Open Workspace</a>
+                {% else %}
+                <a class="button button-secondary nav-auth-link" href="{% url 'tools:workspace-login' %}">Sign in</a>
+                <a class="button button-primary nav-cta" href="{% url 'tools:workspace-signup' %}">Apply for Access</a>
+                {% endif %}
+            </div>
+            <!-- Hamburger for mobile -->
+            <button class="nav-hamburger" id="nav-hamburger" aria-label="Open navigation" aria-expanded="false" aria-controls="nav-mobile-drawer">
+                <span></span><span></span><span></span>
+            </button>
+        </div>
+    </header>
+    {% if messages %}
+    <div class="container flash-stack">
+        {% for message in messages %}
+        <div class="flash flash-{{ message.tags|default:'info' }}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+    <footer class="site-footer">
+        <div class="container footer-shell">
+            <div>
+                <strong>VRT SPACE AGENCY</strong>
+                <p>SEO, AEO, audits, workspaces, analytics, and custom build paths designed as one product system.</p>
+            </div>
+            <div class="footer-links">
+                <a href="{% url 'core:services' %}">Solutions</a>
+                <a href="{% url 'core:home' %}#tools">Tools</a>
+                <a href="{% url 'core:packages' %}">Packages</a>
+                <a href="{% url 'core:home' %}#contact">Custom Work</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Premium Mobile Navigation Overlay -->
+    <div class="nav-mobile-drawer" id="nav-mobile-drawer" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+        <div class="mobile-drawer-content glass-panel">
+            <button class="nav-mobile-close" id="nav-mobile-close" aria-label="Close navigation">&times;</button>
+            <div class="nav-mobile-brand gradient-text">VRT SPACE AGENCY</div>
+            <nav class="nav-mobile-links" aria-label="Mobile primary" x-data="{ openSub: null }">
+                <!-- Platform Cluster -->
+                <div class="mobile-nav-group">
+                    <span class="nav-category-head" style="margin-bottom: 1rem;">The Platform</span>
+                    <a href="{% url 'seo:workspace-seo' %}" style="--i:1">SEO Intelligence</a>
+                    <a href="{% url 'aeo:workspace-aeo' %}" style="--i:2">AEO Strategy</a>
+                    <a href="{% url 'content:workspace-content' %}" style="--i:3">Content Forge</a>
+                </div>
+
+                <!-- Solutions Cluster -->
+                <div class="mobile-nav-group" style="margin-top: 2rem;">
+                    <span class="nav-category-head" style="margin-bottom: 1rem;">Solutions</span>
+                    <a href="{% url 'core:services' %}" style="--i:4">Enterprise Growth</a>
+                    <a href="{% url 'core:services' %}" style="--i:5">Startup Acceleration</a>
+                </div>
+
+                <!-- Commercial Cluster -->
+                <div class="mobile-nav-group" style="margin-top: 2rem;">
+                    <span class="nav-category-head" style="margin-bottom: 1rem;">Success</span>
+                    <a href="{% url 'core:packages' %}" style="--i:6">Pricing & Packages</a>
+                    <a href="{% url 'core:home' %}#audit" style="--i:7">Free Live Audit</a>
+                </div>
+
+                {% if user.is_staff %}
+                <a href="{% url 'analytics:operations-dashboard' %}" style="--i:8">Operations Center</a>
+                {% endif %}
+            </nav>
+            <div class="nav-mobile-actions" style="--i:9">
+                {% if user.is_authenticated %}
+                <a class="button button-secondary" href="{% url 'tools:account-dashboard' %}"><i class="fas fa-user"></i> Account</a>
+                <a class="button button-secondary" href="{% url 'tools:workspace-logout' %}">Sign out</a>
+                <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}">Open Workspace</a>
+                {% else %}
+                <a class="button button-secondary" href="{% url 'tools:workspace-login' %}">Sign in</a>
+                <a class="button button-primary" href="{% url 'tools:workspace-signup' %}">Create Workspace</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+
+    <script>
+    (function() {
+        // Premium Header Scroll Logic
+        var header = document.querySelector('.site-header');
+        function handleScroll() {
+            if (window.scrollY > 20) {
+                header.classList.add('is-scrolled');
+            } else {
+                header.classList.remove('is-scrolled');
+            }
+        }
+        window.addEventListener('scroll', handleScroll);
+        handleScroll(); // Initial check
+
+        var hamburger = document.getElementById('nav-hamburger');
+        var drawer = document.getElementById('nav-mobile-drawer');
+        var closeBtn = document.getElementById('nav-mobile-close');
+        if (!hamburger || !drawer) return;
+
+        function openDrawer() {
+            drawer.classList.add('is-open');
+            document.body.style.overflow = 'hidden';
+        }
+        function closeDrawer() {
+            drawer.classList.remove('is-open');
+            document.body.style.overflow = '';
+        }
+
+        hamburger.addEventListener('click', openDrawer);
+        if (closeBtn) closeBtn.addEventListener('click', closeDrawer);
+        drawer.addEventListener('click', function(e) {
+            if (e.target === drawer) closeDrawer();
+        });
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') closeDrawer();
+        });
+
+        var auditExpandBtn = document.getElementById('audit-form-expand');
+        var auditAdvancedSection = document.getElementById('audit-form-advanced');
+        if (auditExpandBtn && auditAdvancedSection) {
+            auditExpandBtn.addEventListener('click', function() {
+                var isExpanded = auditExpandBtn.getAttribute('aria-expanded') === 'true';
+                if (!isExpanded) {
+                    auditExpandBtn.setAttribute('aria-expanded', 'true');
+                    auditAdvancedSection.classList.add('is-open');
+                    auditAdvancedSection.setAttribute('aria-hidden', 'false');
+                    auditAdvancedSection.style.display = 'flex';
+                    auditAdvancedSection.style.flexDirection = 'column';
+                    var label = document.getElementById('audit-expand-label');
+                    if (label) label.textContent = 'Hide advanced context';
+                } else {
+                    auditExpandBtn.setAttribute('aria-expanded', 'false');
+                    auditAdvancedSection.classList.remove('is-open');
+                    auditAdvancedSection.setAttribute('aria-hidden', 'true');
+                    auditAdvancedSection.style.display = 'none';
+                    var label = document.getElementById('audit-expand-label');
+                    if (label) label.textContent = 'Add context for a richer report';
+                }
+            });
+        }
+        
+        // Premium Global Loader Logic
+        var intLoader = document.getElementById('intelligence-loader');
+        var loaderTitle = document.getElementById('loader-dynamic-title');
+        var loaderSubtitle = document.getElementById('loader-dynamic-subtitle');
+        
+        if (intLoader) {
+            var loaderPhases = [
+                { title: "Initializing Intelligence Matrix", subtitle: "Connecting to global network..." },
+                { title: "Analyzing Competitor Overlap", subtitle: "Extracting semantic relevance..." },
+                { title: "Mapping Target SERP", subtitle: "Simulating intent signals..." },
+                { title: "Scoring Content Gaps", subtitle: "Calculating readiness..." },
+                { title: "Structuring Final Output", subtitle: "Finalizing recommendation vectors..." }
+            ];
+            
+            document.querySelectorAll('form').forEach(function(form) {
+                var action = (form.getAttribute('action') || '').toLowerCase();
+                // Trigger loader on major analysis points
+                if (action.includes('audit') || action.includes('aeo') || action.includes('seo') || action.includes('content')) {
+                    // Do not trigger on simple GET or local switches
+                    if (form.getAttribute('method') && form.getAttribute('method').toLowerCase() === 'post') {
+                        form.addEventListener('submit', function(e) {
+                            // Let the form submit natively, but show the overlay immediately
+                            intLoader.classList.add('active');
+                            document.body.style.overflow = 'hidden';
+                            
+                            var phaseIdx = 0;
+                            setInterval(function() {
+                                phaseIdx = (phaseIdx + 1) % loaderPhases.length;
+                                if (loaderTitle) loaderTitle.textContent = loaderPhases[phaseIdx].title;
+                                if (loaderSubtitle) loaderSubtitle.textContent = loaderPhases[phaseIdx].subtitle;
+                            }, 3000); // Shift text every 3 seconds
+                        });
+                    }
+                }
+            });
+        }
+    })();
+    </script>
+
+    <!-- Global Intelligence Loader Overlay -->
+    <div id="intelligence-loader" class="global-loader-overlay">
+        <div class="loader-circuit-container">
+            <div class="loader-ring-outer"></div>
+            <div class="loader-ring-inner"></div>
+            <div class="loader-core-pulse"></div>
+        </div>
+        <div class="loader-text-container">
+            <div id="loader-dynamic-title" class="loader-title">Connecting to API Engine</div>
+            <div id="loader-dynamic-subtitle" class="loader-subtitle">Preparing initial parameters...</div>
+        </div>
+    </div>
+</body>
+</html>
+

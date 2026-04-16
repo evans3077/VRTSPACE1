@@ -1,0 +1,174 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero" style="padding-bottom: 2rem;">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow">Shared Audit Report</p>
+            <h1 style="max-width: none;">{{ audit_run.normalized_domain }}</h1>
+            <p class="section-text" style="max-width: 760px;">
+                Stakeholder-ready summary shared from VRT SPACE. This report focuses on the detected gaps, where they appear, and the corrective path.
+            </p>
+            <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+                <a class="button button-secondary" href="{% url 'tools:shared-audit-report-pdf' share_link.token %}" target="_blank" rel="noopener">View PDF</a>
+                <a class="button button-secondary" href="{% url 'tools:shared-audit-report-pdf' share_link.token %}?download=1">Download PDF</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="packages-section" style="padding-top: 0;">
+    <div class="container" style="display: grid; gap: 2rem;">
+        <div class="system-grid">
+            <article class="system-card"><p class="eyebrow">Overall</p><h3>{{ audit_run.overall_score }}</h3><p>Saved audit score</p></article>
+            <article class="system-card"><p class="eyebrow">Pages</p><h3>{{ audit_run.pages_crawled }}</h3><p>Pages crawled</p></article>
+            <article class="system-card"><p class="eyebrow">Issues</p><h3>{{ issue_summary.total|default:0 }}</h3><p>Detected issues in this report</p></article>
+            <article class="system-card"><p class="eyebrow">Completed</p><h3>{{ audit_run.completed_at|date:"M d, Y" }}</h3><p>Report timestamp</p></article>
+        </div>
+
+        <article class="system-card" style="border-top: 4px solid var(--signal);">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Executive Summary</p>
+                <h2 style="font-size: 2rem;">What this audit means</h2>
+            </div>
+            <div style="display: grid; gap: 0.75rem; color: #64748b; line-height: 1.6;">
+                <div>This report summarizes the current saved audit state for <strong style="color: #f8fafc;">{{ audit_run.normalized_domain }}</strong>.</div>
+                {% if change_report %}
+                <div>{{ change_report.summary.headline }} New issues: {{ change_report.new_issue_count }}. Resolved issues: {{ change_report.resolved_issue_count }}.</div>
+                {% endif %}
+                <div>
+                    The highest-priority items below show both the corrective action and the pages or page groups where the issue is currently visible.
+                </div>
+            </div>
+        </article>
+
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; align-items: start;">
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Score Breakdown</p>
+                    <h2 style="font-size: 2rem;">Where the site stands</h2>
+                </div>
+                <div style="display: grid; gap: 0.75rem;">
+                    {% for key, item in score_breakdown.items %}
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: #f8fafc;">
+                        <strong>{{ item.label }}</strong>
+                        <div style="color: #64748b; font-size: 0.9rem; margin-top: 0.25rem;">Score {{ item.score }} | {{ item.issues }} issues</div>
+                        {% if item.next_step %}
+                        <div style="margin-top: 0.55rem; color: #64748b; font-size: 0.85rem; line-height: 1.5;">
+                            <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Next step</strong>
+                            {{ item.next_step }}
+                        </div>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Issue Summary</p>
+                    <h2 style="font-size: 2rem;">Where pressure is concentrated</h2>
+                </div>
+                <div style="display: grid; gap: 0.75rem;">
+                    {% for category, count in issue_summary.by_category.items %}
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: #f8fafc; display: flex; justify-content: space-between; gap: 1rem;">
+                        <span style="text-transform: capitalize;">{{ category|cut:"_" }}</span>
+                        <strong>{{ count }}</strong>
+                    </div>
+                    {% empty %}
+                    <div style="padding: 0.9rem 1rem; border-radius: 14px; background: #f8fafc; color: #64748b;">No categorized issues were stored for this audit.</div>
+                    {% endfor %}
+                </div>
+            </article>
+        </div>
+
+        {% if context_analysis %}
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Market Context</p>
+                <h2 style="font-size: 2rem;">Competitive benchmark notes</h2>
+            </div>
+            <div style="display: grid; gap: 0.75rem;">
+                {% for insight in context_analysis.insights %}
+                <div style="padding: 0.9rem 1rem; border-radius: 14px; background: #f8fafc; color: #64748b;">{{ insight }}</div>
+                {% empty %}
+                <div style="padding: 0.9rem 1rem; border-radius: 14px; background: #f8fafc; color: #64748b;">No market or competitor benchmark notes were stored for this audit.</div>
+                {% endfor %}
+            </div>
+        </article>
+        {% endif %}
+
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Priority Recommendations</p>
+                <h2 style="font-size: 2rem;">What to fix first</h2>
+            </div>
+            <div style="display: grid; gap: 1rem;">
+                {% for recommendation in recommendations %}
+                <div style="padding: 1rem 1.1rem; border-radius: 18px; background: #f8fafc;">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
+                        <strong>{{ recommendation.title }}</strong>
+                        <span class="score-pill score-high" style="font-size: 0.7rem;">{{ recommendation.category }}</span>
+                    </div>
+                    {% if recommendation.description %}
+                    <div style="margin-top: 0.65rem; color: #64748b; font-size: 0.9rem; line-height: 1.5;">{{ recommendation.description }}</div>
+                    {% endif %}
+                    <div style="margin-top: 0.75rem; color: #64748b; font-size: 0.88rem; line-height: 1.5;">
+                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Solution</strong>
+                        {{ recommendation.recommended_fix }}
+                    </div>
+                    {% if recommendation.page_examples %}
+                    <div style="margin-top: 0.75rem; color: #64748b; font-size: 0.82rem; line-height: 1.5;">
+                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Where this appears</strong>
+                        {{ recommendation.affected_pages_count|default:recommendation.page_examples|length }} pages including:
+                        {% for url in recommendation.page_examples %}
+                        <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; margin-top: 0.15rem; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ url }}</div>
+                        {% endfor %}
+                    </div>
+                    {% elif recommendation.page_url %}
+                    <div style="margin-top: 0.75rem; color: #64748b; font-size: 0.82rem; line-height: 1.5;">
+                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Where this appears</strong>
+                        <div style="font-family: monospace; font-size: 0.76rem; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ recommendation.page_url }}</div>
+                    </div>
+                    {% endif %}
+                    {% if recommendation.estimated_impact %}
+                    <div style="margin-top: 0.75rem; color: #64748b; font-size: 0.82rem; line-height: 1.5;">
+                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Expected result</strong>
+                        {{ recommendation.estimated_impact }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% empty %}
+                <div style="padding: 0.9rem 1rem; border-radius: 14px; background: #f8fafc; color: #64748b;">No recommendations were stored for this report.</div>
+                {% endfor %}
+            </div>
+        </article>
+
+        {% if product_modules %}
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Recommended Modules</p>
+                <h2 style="font-size: 2rem;">What this unlocks next</h2>
+            </div>
+            <div class="system-grid">
+                {% for module in product_modules %}
+                <div class="system-card" style="border-top: 4px solid var(--signal);">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline; margin-bottom: 0.35rem;">
+                        <strong>{{ module.title }}</strong>
+                        <span class="score-pill score-high" style="font-size: 0.7rem;">{{ module.plan }}</span>
+                    </div>
+                    <div style="color: #64748b; font-size: 0.9rem; line-height: 1.5;">{{ module.reason }}</div>
+                    {% if module.impact %}
+                    <div style="margin-top: 0.75rem; color: #64748b; font-size: 0.85rem; line-height: 1.5;">
+                        <strong style="display: block; color: #f8fafc; margin-bottom: 0.2rem;">Outcome</strong>
+                        {{ module.impact }}
+                    </div>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

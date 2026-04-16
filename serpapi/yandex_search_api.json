@@ -1,0 +1,809 @@
+{
+"search_metadata":
+{
+"id":
+"695928798c24bd247f1be807",
+"status":
+"Success",
+"json_endpoint":
+"https://serpapi.com/searches/29b85c993ba06d41/695928798c24bd247f1be807.json",
+"created_at":
+"2026-01-03 14:32:25 UTC",
+"processed_at":
+"2026-01-03 14:32:25 UTC",
+"yandex_url":
+"https://yandex.com/search/?text=Coffee&lang=en&lr=84",
+"raw_html_file":
+"https://serpapi.com/searches/29b85c993ba06d41/695928798c24bd247f1be807.html",
+"total_time_taken":
+0.92
+},
+"search_parameters":
+{
+"text":
+"Coffee",
+"engine":
+"yandex",
+"lang":
+"en",
+"lr":
+"84",
+"yandex_domain":
+"yandex.com",
+"device":
+"desktop"
+},
+"search_information":
+{
+"within":
+,
+"organic_results_state":
+"Results for exact spelling",
+"query_displayed":
+"Coffee"
+},
+"organic_results":
+[
+{
+"position":
+1,
+"title":
+"Coffees of the World: 66 Coffee Types | TasteAtlas",
+"link":
+"https://www.tasteatlas.com/coffee",
+"displayed_link":
+"tasteatlas.com › coffee",
+"snippet":
+"Everything about coffees. What's the best, the worst and the most popular coffee in the world? Discover national, regional and local coffee varieties around the world."
+},
+{
+"position":
+2,
+"title":
+"Coffee - Wikipedia",
+"link":
+"https://en.wikipedia.org/wiki/Coffee",
+"displayed_link":
+"en.wikipedia.org › Coffee",
+"snippet":
+"Coffee is a beverage brewed from roasted, ground coffee beans. Darkly colored, bitter, and slightly acidic, coffee has a stimulating effect on humans..."
+},
+{
+"position":
+3,
+"title":
+"Coffee • The Nutrition Source",
+"link":
+"https://nutritionsource.hsph.harvard.edu/food-features/coffee/",
+"displayed_link":
+"nutritionsource.hsph.harvard.edu › food-features",
+"snippet":
+"Coffee and Health. Coffee is an intricate mixture of more than a thousand chemicals. [1] The cup of coffee you order from a coffee shop is likely different from the..."
+},
+{
+"position":
+4,
+"title":
+"The History of Coffee | Origin of Coffee - YouTube",
+"link":
+"https://www.youtube.com/watch?v=wuIiy5c_iHw",
+"displayed_link":
+"youtube.com › watch",
+"snippet":
+"#Coffee #HistoryExplained #ExploreModeCoffee is the second most popular beverage in the world second only to water. In the U.S. alone, more than 450 million ...Duration 10 minutes 1 second375K viewsPublished on12 Sep 2019"
+},
+{
+"position":
+5,
+"title":
+"6 Science-Backed Health Benefits Of Coffee – Forbes Health",
+"link":
+"https://www.forbes.com/health/nutrition/coffee-health-benefits/",
+"displayed_link":
+"forbes.com › health › nutrition › coffee-health",
+"snippet":
+"Table of Contents6 Health Benefits of Coffee, According To ExpertsWhat Are the Drawbacks of Coffee?"
+},
+{
+"position":
+6,
+"title":
+"Different Types of Coffee, Roasts, and Drinks",
+"link":
+"https://www.allrecipes.com/article/types-of-coffee/",
+"displayed_link":
+"allrecipes.com › article › types-of-coffee",
+"snippet":
+"That's why we're doing a deep dive into different kinds of coffee, from beans and roasts, to classic drinks and inventive recipes."
+},
+{
+"position":
+7,
+"title":
+"The History Of Coffee Origins and Coffee Story | Nescafé IN",
+"link":
+"https://www.nescafe.com/in/coffee-culture/knowledge/coffee-history",
+"displayed_link":
+"nescafe.com › in › coffee-culture › knowledge › coffee",
+"snippet":
+"Coffee origins - Starting in Ethiopia and moving its way across the globe, coffee has an extensive history and interesting coffee story that dates back as far as 800 AD."
+},
+{
+"position":
+8,
+"title":
+"freepik.com/free-photos-vectors/coffee",
+"link":
+"https://www.freepik.com/free-photos-vectors/coffee",
+"displayed_link":
+"freepik.com › free-photos-vectors › coffee",
+"snippet":
+"Links to the page contain: Coffee vector created by pch.vector -www.freepik.com...."
+},
+{
+"position":
+9,
+"title":
+"COFFEE Definition & Meaning - Merriam-Webster",
+"link":
+"https://www.merriam-webster.com/dictionary/coffee",
+"displayed_link":
+"merriam-webster.com › dictionary › coffee",
+"snippet":
+"The meaning of COFFEE is a beverage made by percolation, infusion, or decoction from the roasted and ground seeds of a coffee plant."
+},
+{
+"position":
+10,
+"title":
+"coffee - Wiktionary, the free dictionary",
+"link":
+"https://en.wiktionary.org/wiki/coffee",
+"displayed_link":
+"en.wiktionary.org › wiki › coffee",
+"snippet":
+"The great use of coffee in France is supposed to have abated the prevalency of the gravel, for where coffee is used as a constant beverage, the gravel and the gout are..."
+}
+],
+"knowledge_graph":
+{
+"title":
+"Coffee",
+"header_images":
+[
+"https://avatars.mds.yandex.net/get-entity_search/1545396/807605499/SUx182_2x",
+"https://avatars.mds.yandex.net/get-entity_search/2327175/1212659445/SUx182",
+"https://avatars.mds.yandex.net/get-entity_search/1244778/1222766576/SUx182",
+"https://avatars.mds.yandex.net/get-entity_search/1981853/1194783675/SUx182",
+"https://avatars.mds.yandex.net/get-entity_search/5509992/1229021866/SUx182",
+"https://avatars.mds.yandex.net/get-entity_search/5283930/1202341942/SUx182",
+"https://avatars.mds.yandex.net/get-entity_search/7751290/1227278609/SUx182",
+"https://avatars.mds.yandex.net/get-entity_search/5734168/983980527/SUx182"
+],
+"description":
+"Beverage brewed from roasted, ground coffee beans. Darkly colored, bitter, and slightly acidic, coffee has a stimulating effect on humans, primarily due to its caffeine content, but decaffeinated coffee is also commercially available. There are also various coffee substitutes.",
+"source":
+{
+"name":
+"en.wikipedia.org",
+"link":
+"http://en.wikipedia.org/wiki/Coffee"
+},
+"see_also":
+[
+{
+"name":
+"Kopi Luwak",
+"link":
+"https://yandex.com/search/?lr=84&text=Kopi%20Luwak&win=614&lang=en&msid=1767450747229146-10463814238228418245-balancer-l7leveler-kubr-yp-sas-356-BAL-673&noreask=1&ento=0oCglydXc0MDI0ODISDnJ1dzQzOTEwOmFzc29jGAN6CFNlZSBhbHNv2gtKAQ",
+"image":
+"https://avatars.mds.yandex.net/get-entity_search/10640679/1169513556/S88x88Smart_2x"
+},
+{
+"name":
+"Coffee bean",
+"link":
+"https://yandex.com/search/?lr=84&text=Coffee%20bean&win=614&lang=en&msid=1767450747229146-10463814238228418245-balancer-l7leveler-kubr-yp-sas-356-BAL-673&noreask=1&ento=0oCglydXcyNzk2MDgSDnJ1dzQzOTEwOmFzc29jGAN6CFNlZSBhbHNvrJzmqQ",
+"image":
+"https://avatars.mds.yandex.net/get-entity_search/5505928/1227085870/S88x88Smart_2x"
+},
+{
+"name":
+"Tea",
+"link":
+"https://yandex.com/search/?lr=84&text=Organic%20Tea&win=614&lang=en&msid=1767450747229146-10463814238228418245-balancer-l7leveler-kubr-yp-sas-356-BAL-673&noreask=1&ento=0oCghydXc4MjYxNxIOcnV3NDM5MTA6YXNzb2MYA3oIU2VlIGFsc2_1eHMM",
+"image":
+"https://avatars.mds.yandex.net/get-entity_search/1671503/1229041576/S88x88Smart_2x"
+},
+{
+"name":
+"Espresso",
+"link":
+"https://yandex.com/search/?lr=84&text=Caffe%20Espresso&win=614&lang=en&msid=1767450747229146-10463814238228418245-balancer-l7leveler-kubr-yp-sas-356-BAL-673&noreask=1&ento=0oCglydXczODkwMDUSDnJ1dzQzOTEwOmFzc29jGAN6CFNlZSBhbHNvpG5_kQ",
+"image":
+"https://avatars.mds.yandex.net/get-entity_search/5449393/1227423906/S88x88Smart_2x"
+},
+{
+"name":
+"Cappuccino",
+"link":
+"https://yandex.com/search/?lr=84&text=Dry%20cappuccino&win=614&lang=en&msid=1767450747229146-10463814238228418245-balancer-l7leveler-kubr-yp-sas-356-BAL-673&noreask=1&ento=0oCgpydXcxMzg1ODUyEg5ydXc0MzkxMDphc3NvYxgDeghTZWUgYWxzb_GqkXE",
+"image":
+"https://avatars.mds.yandex.net/get-entity_search/4964907/1230423928/S88x88Smart_2x"
+},
+{
+"name":
+"Latte",
+"link":
+"https://yandex.com/search/?lr=84&text=Cafe%20latte&win=614&lang=en&msid=1767450747229146-10463814238228418245-balancer-l7leveler-kubr-yp-sas-356-BAL-673&noreask=1&ento=0oCgpydXcyNzM1MTQzEg5ydXc0MzkxMDphc3NvYxgDeghTZWUgYWxzbyfNrvc",
+"image":
+"https://avatars.mds.yandex.net/get-entity_search/2327175/1227437370/S88x88Smart_2x"
+},
+{
+"name":
+"Instant coffee",
+"link":
+"https://yandex.com/search/?lr=84&text=Instant%20coffee&win=614&lang=en&msid=1767450747229146-10463814238228418245-balancer-l7leveler-kubr-yp-sas-356-BAL-673&noreask=1&ento=0oCghydXc5NTM5OBIOcnV3NDM5MTA6YXNzb2MYA3oIU2VlIGFsc29Ofba9",
+"image":
+"https://avatars.mds.yandex.net/get-entity_search/5283930/1229049239/S88x88Smart_2x"
+},
+{
+"name":
+"Caffè Americano",
+"link":
+"https://yandex.com/search/?lr=84&text=Caff%C3%A8%20Americano&win=614&lang=en&msid=1767450747229146-10463814238228418245-balancer-l7leveler-kubr-yp-sas-356-BAL-673&noreask=1&ento=0oCgpydXcyOTc4NjkwEg5ydXc0MzkxMDphc3NvYxgDeghTZWUgYWxzby7NNX8"
+},
+{
+"name":
+"Flat white",
+"link":
+"https://yandex.com/search/?lr=84&text=Flat%20white&win=614&lang=en&msid=1767450747229146-10463814238228418245-balancer-l7leveler-kubr-yp-sas-356-BAL-673&noreask=1&ento=0oCgpydXczNTI0MDEzEg5ydXc0MzkxMDphc3NvYxgDeghTZWUgYWxzbz3WCkg"
+},
+{
+"name":
+"Raph Coffee",
+"link":
+"https://yandex.com/search/?lr=84&text=Raf%20coffee&win=614&lang=en&msid=1767450747229146-10463814238228418245-balancer-l7leveler-kubr-yp-sas-356-BAL-673&noreask=1&ento=0oCgpydXc3NjA4MzI4Eg5ydXc0MzkxMDphc3NvYxgDeghTZWUgYWxzb121l3o"
+}
+]
+},
+"pagination":
+{
+"current":
+1,
+"next":
+"https://yandex.com/search/?lr=84&text=Coffee&win=614&lang=en&msid=1767450747229146-10463814238228418245-balancer-l7leveler-kubr-yp-sas-356-BAL-673&p=1&rnd=49832",
+"other_pages":
+{
+"2":
+"https://yandex.com/search/?lr=84&text=Coffee&win=614&lang=en&msid=1767450747229146-10463814238228418245-balancer-l7leveler-kubr-yp-sas-356-BAL-673&p=1",
+"3":
+"https://yandex.com/search/?lr=84&text=Coffee&win=614&lang=en&msid=1767450747229146-10463814238228418245-balancer-l7leveler-kubr-yp-sas-356-BAL-673&p=2",
+"4":
+"https://yandex.com/search/?lr=84&text=Coffee&win=614&lang=en&msid=1767450747229146-10463814238228418245-balancer-l7leveler-kubr-yp-sas-356-BAL-673&p=3",
+"5":
+"https://yandex.com/search/?lr=84&text=Coffee&win=614&lang=en&msid=1767450747229146-10463814238228418245-balancer-l7leveler-kubr-yp-sas-356-BAL-673&p=4"
+}
+},
+"serpapi_pagination":
+{
+"current":
+1,
+"next_link":
+"https://serpapi.com/search.json?device=desktop&engine=yandex&lang=en&lr=84&p=1&text=Coffee&yandex_domain=yandex.com",
+"next":
+"https://serpapi.com/search.json?device=desktop&engine=yandex&lang=en&lr=84&p=1&text=Coffee&yandex_domain=yandex.com",
+"other_pages":
+{
+"2":
+"https://serpapi.com/search.json?device=desktop&engine=yandex&lang=en&lr=84&p=1&text=Coffee&yandex_domain=yandex.com",
+"3":
+"https://serpapi.com/search.json?device=desktop&engine=yandex&lang=en&lr=84&p=2&text=Coffee&yandex_domain=yandex.com",
+"4":
+"https://serpapi.com/search.json?device=desktop&engine=yandex&lang=en&lr=84&p=3&text=Coffee&yandex_domain=yandex.com",
+"5":
+"https://serpapi.com/search.json?device=desktop&engine=yandex&lang=en&lr=84&p=4&text=Coffee&yandex_domain=yandex.com"
+}
+}
+}
+
+GET
+
+
+https://serpapi.com/search.json?engine=yandex&text=Coffee&yandex_domain=yandex.com&lang=en&lr=84
+
+Code to integrate
+
+cURLRubyPythonJavaScriptGoPHPJavaRust.NETGoogle Sheets
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "yandex",
+  text: "Coffee",
+  yandex_domain: "yandex.com",
+  lang: "en",
+  lr: "84",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+organic_results = results[:organic_results]
+API Parameters
+Search Query
+text
+
+Required
+
+Parameter defines the search query. You can use anything that you would use in a regular Yandex search.
+
+Localization
+yandex_domain
+
+Optional
+
+Parameter defines the Yandex domain to use. It defaults to yandex.com. Head to the Yandex domains for a full list of supported Yandex domains.
+
+A default lr is used for each yandex_domain.
+Example: 84(US) for yandex.com
+
+A default lang parameter en(English) is used for yandex.com
+
+lang
+
+Optional
+
+Parameter defines the language to use for the Yandex search. Head to the Yandex languages for a full list of supported Yandex languages.
+It defaults to en when yandex_domain is yandex.com.
+
+Geographic Location
+lr
+
+Optional
+
+Parameter defines country or region ID to limit the search results to. Head to the Yandex locations for a full list of supported Yandex locations.
+
+If parameter is not set - the matching location of selected yandex_domain is used, e.g. 84 for yandex.com.
+
+Advanced Yandex Parameters
+family_mode
+
+Optional
+
+Parameter enables or disables Family Mode (safe search). It can be set to:
+- Off(0)
+- Moderate(1)
+- Strict(2).
+It defaults to Moderate(1).
+
+fix_typo
+
+Optional
+
+Parameter enables or disables automatic spelling correction. It can be set to: true - false. It defaults to true.
+
+groups_on_page
+
+Optional
+
+Parameter defines the maximum number of groups displayed on a single results page. It defaults to 20.
+
+Pagination
+p
+
+Optional
+
+Parameter defines page number. Pagination starts from 0.
+
+Serpapi Parameters
+engine
+
+Required
+
+Set parameter to yandex to use the Yandex API engine.
+
+no_cache
+
+Optional
+
+Parameter will force SerpApi to fetch the Yandex results even if a cached version is already present. A cache is served only if the query and all parameters are exactly the same. Cache expires after 1h. Cached searches are free, and are not counted towards your searches per month. It can be set to false (default) to allow results from the cache, or true to disallow results from the cache. no_cache and async parameters should not be used together.
+
+async
+
+Optional
+
+Parameter defines the way you want to submit your search to SerpApi. It can be set to false (default) to open an HTTP connection and keep it open until you got your search results, or true to just submit your search to SerpApi and retrieve them later. In this case, you'll need to use our Searches Archive API to retrieve your results. async and no_cache parameters should not be used together. async should not be used on accounts with Ludicrous Speed enabled.
+
+zero_trace
+
+Optional
+
+Enterprise only. Parameter enables ZeroTrace mode. It can be set to false (default) or true. Enable this mode to skip storing search parameters, search files, and search metadata on our servers. This may make debugging more difficult.
+
+api_key
+
+Required
+
+Parameter defines the SerpApi private key to use.
+
+output
+
+Optional
+
+Parameter defines the final output you want. It can be set to json (default) to get a structured JSON of the results, or html to get the raw html retrieved.
+
+API Results
+JSON Results
+JSON output includes structured data for organic results, knowledge graph, inline images and inline videos.
+
+A search status is accessible through search_metadata.status. It flows this way: Processing -> Success || Error. If a search has failed, error will contain an error message. search_metadata.id is the search ID inside SerpApi.
+
+HTML Results
+HTML output is useful to debug JSON results or support features not supported yet by SerpApi.
+HTML output gives you the raw HTML results from Yandex.
+
+API Examples
+Example results for 
+text
+:
+coffee
+GET
+
+
+https://serpapi.com/search.json?engine=yandex&text=coffee
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "yandex",
+  text: "coffee",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+organic_results = results[:organic_results]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "67740095c057491092b28d28",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/bb85db7bea38c00a/67740095c057491092b28d28.json",
+    "created_at": "2024-12-31 14:32:53 UTC",
+    "processed_at": "2024-12-31 14:32:53 UTC",
+    "yandex_url": "https://yandex.com/search/?text=coffee",
+    "raw_html_file": "https://serpapi.com/searches/bb85db7bea38c00a/67740095c057491092b28d28.html",
+    "total_time_taken": 1.4
+  },
+  "search_parameters": {
+    "text": "coffee",
+    "engine": "yandex"
+  },
+  "search_information": {
+    "organic_results_state": "Results for exact spelling",
+    "query_displayed": "coffee"
+  },
+  "organic_results": [
+    {
+      "position": 1,
+      "title": "Coffee - Wikipedia",
+      "link": "https://en.wikipedia.org/wiki/Coffee",
+      "displayed_link": "en.wikipedia.org›Coffee",
+      "snippet": "In a commonly repeated legend, Kaldi, a 9th-century Ethiopian goatherd, first observed the coffee plant after seeing his flock energized by chewing on the plant.[3]..."
+    },
+    {
+      "position": 2,
+      "title": "Coffee: A Full Overview. If you are like most people... | Medium",
+      "link": "https://inovize.medium.com/coffee-a-full-overview-269be1d5d5e2",
+      "displayed_link": "inovize.medium.com›coffee-a-full-overview-…",
+      "snippet": "Coffee is a delicious and fascinating drink. In this article, we will dive into everything you need to know about coffee, from its origin and history to its types and uses."
+    },
+    {
+      "position": 3,
+      "title": "10 Surprising Facts About Coffee",
+      "link": "https://www.linkedin.com/pulse/10-surprising-facts-coffee-abdelrhman-ali",
+      "displayed_link": "linkedin.com›pulse/10-surprising-facts-coffee-…",
+      "snippet": "Coffee is one of the world's most beloved beverages, consumed by millions of people every day."
+    },
+    {
+      "position": 4,
+      "title": "Coffee | Origin, Types, Uses, History, & Facts | Britannica",
+      "link": "https://www.britannica.com/topic/coffee",
+      "displayed_link": "britannica.com›topic/coffee",
+      "snippet": "coffee beans, ground coffee, cup of coffee. ... Coffee is a beverage brewed from the roasted and ground seeds of the tropical evergreen coffee plant."
+    },
+    {
+      "position": 5,
+      "title": "Different Types of Coffee, Roasts, and Drinks",
+      "link": "https://www.allrecipes.com/article/types-of-coffee/",
+      "displayed_link": "allrecipes.com›article/types-of-coffee/",
+      "snippet": "Black coffee is more simple and humble: hot water dripped over ground coffee beans for a low-to medium-concentration of coffee and caffeine."
+    },
+    ...
+  ],
+  "pagination": {
+    "current": 1,
+    "next": "https://yandex.com/search/?msid=1735655635226972-10463814238228418245-balancer-l7leveler-kubr-yp-sas-547-BAL-952&lang=en&text=coffee&clid=214688&lr=84&p=1&rnd=16024",
+    "other_pages": {
+      "2": "https://yandex.com/search/?msid=1735655635226972-10463814238228418245-balancer-l7leveler-kubr-yp-sas-547-BAL-952&lang=en&text=coffee&clid=214688&lr=84&p=1",
+      "3": "https://yandex.com/search/?msid=1735655635226972-10463814238228418245-balancer-l7leveler-kubr-yp-sas-547-BAL-952&lang=en&text=coffee&clid=214688&lr=84&p=2",
+      "4": "https://yandex.com/search/?msid=1735655635226972-10463814238228418245-balancer-l7leveler-kubr-yp-sas-547-BAL-952&lang=en&text=coffee&clid=214688&lr=84&p=3",
+      "5": "https://yandex.com/search/?msid=1735655635226972-10463814238228418245-balancer-l7leveler-kubr-yp-sas-547-BAL-952&lang=en&text=coffee&clid=214688&lr=84&p=4"
+    }
+  },
+  "serpapi_pagination": {
+    "current": 1,
+    "next_link": "https://serpapi.com/search.json?device=desktop&engine=yandex&lang=en&lr=84&p=1&text=coffee&yandex_domain=yandex.com",
+    "next": "https://serpapi.com/search.json?device=desktop&engine=yandex&lang=en&lr=84&p=1&text=coffee&yandex_domain=yandex.com",
+    "other_pages": {
+      "2": "https://serpapi.com/search.json?device=desktop&engine=yandex&lang=en&lr=84&p=1&text=coffee&yandex_domain=yandex.com",
+      "3": "https://serpapi.com/search.json?device=desktop&engine=yandex&lang=en&lr=84&p=2&text=coffee&yandex_domain=yandex.com",
+      "4": "https://serpapi.com/search.json?device=desktop&engine=yandex&lang=en&lr=84&p=3&text=coffee&yandex_domain=yandex.com",
+      "5": "https://serpapi.com/search.json?device=desktop&engine=yandex&lang=en&lr=84&p=4&text=coffee&yandex_domain=yandex.com"
+    }
+  }
+}
+More complex examples with multiple optional parameters
+The URL below fetches:
+
+• The forth page (p=3) of the results,
+• for the search "apple" (q=apple),
+• with the French language and domain (lang=fr, yandex_domain=yandex.com.fr)
+GET
+
+
+https://serpapi.com/search.json?engine=yandex&text=apple&p=3&lang=fr&yandex_domain=yandex.com.fr
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "yandex",
+  text: "apple",
+  p: "3",
+  lang: "fr",
+  yandex_domain: "yandex.com.fr",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "67743f3006e74539e8d5955d",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/f6abcc89493ef5ff/67743f3006e74539e8d5955d.json",
+    "created_at": "2024-12-31 19:00:00 UTC",
+    "processed_at": "2024-12-31 19:00:00 UTC",
+    "yandex_url": "https://yandex.com.fr/search/?text=apple&lang=fr&p=3",
+    "raw_html_file": "https://serpapi.com/searches/f6abcc89493ef5ff/67743f3006e74539e8d5955d.html",
+    "total_time_taken": 1.19
+  },
+  "search_parameters": {
+    "text": "apple",
+    "engine": "yandex",
+    "lang": "fr",
+    "p": "3",
+    "yandex_domain": "yandex.fr"
+  },
+  "search_information": {
+    "organic_results_state": "Results for exact spelling",
+    "query_displayed": "apple"
+  },
+  "organic_results": [
+    {
+      "position": 1,
+      "title": "emojipedia.org/fr/apple",
+      "link": "https://emojipedia.org/fr/apple",
+      "displayed_link": "emojipedia.org›fr/apple",
+      "snippet": "Links to the page contain: native Apple emojis...."
+    },
+    {
+      "position": 2,
+      "title": "Apple : Les dernières actualités, tests et bons plans - Frandroid",
+      "link": "https://www.frandroid.com/produits/apple",
+      "displayed_link": "frandroid.com›produits/apple",
+      "snippet": "L’Apple Watch Series 9 (45 mm, Cellular) ne résiste pas aux promotions de Noël et perd 200 € de son prix chez Boulanger."
+    },
+    {
+      "position": 3,
+      "title": "Apple : les articles et enquêtes de la rédaction de Numerama",
+      "link": "https://www.numerama.com/tag/apple/",
+      "displayed_link": "numerama.com›tag/apple/",
+      "snippet": "Sur le papier, Apple Intelligence offre plusieurs fonctions bien pratiques."
+    },
+    ...
+  ],
+  "pagination": {
+    "current": 4,
+    "next": "https://yandex.com.fr/search/?lang=fr&win=255&suggest_reqid=519949689861149953096633912886385&text=apple&lr=124&msid=173567164831523-10463814238228418245-balancer-l7leveler-kubr-yp-sas-672-BAL-1392&p=4&load-blocks=advanced-search&rnd=78468",
+    "other_pages": {
+      "2": "https://yandex.com.fr/search/?lang=fr&win=255&suggest_reqid=519949689861149953096633912886385&text=apple&lr=124&msid=173567164831523-10463814238228418245-balancer-l7leveler-kubr-yp-sas-672-BAL-1392&p=1&load-blocks=advanced-search&rnd=1138",
+      "3": "https://yandex.com.fr/search/?lang=fr&win=255&suggest_reqid=519949689861149953096633912886385&text=apple&lr=124&msid=173567164831523-10463814238228418245-balancer-l7leveler-kubr-yp-sas-672-BAL-1392&p=2&load-blocks=advanced-search&rnd=1138",
+      "5": "https://yandex.com.fr/search/?lang=fr&win=255&suggest_reqid=519949689861149953096633912886385&text=apple&lr=124&msid=173567164831523-10463814238228418245-balancer-l7leveler-kubr-yp-sas-672-BAL-1392&p=4&load-blocks=advanced-search&rnd=1138",
+      "6": "https://yandex.com.fr/search/?lang=fr&win=255&suggest_reqid=519949689861149953096633912886385&text=apple&lr=124&msid=173567164831523-10463814238228418245-balancer-l7leveler-kubr-yp-sas-672-BAL-1392&p=5&load-blocks=advanced-search&rnd=1138"
+    }
+  },
+  "serpapi_pagination": {
+    "current": 4,
+    "next_link": "https://serpapi.com/search.json?device=desktop&engine=yandex&lang=fr&lr=124&p=4&text=apple&yandex_domain=yandex.com.fr",
+    "next": "https://serpapi.com/search.json?device=desktop&engine=yandex&lang=fr&lr=124&p=4&text=apple&yandex_domain=yandex.com.fr",
+    "other_pages": {
+      "2": "https://serpapi.com/search.json?device=desktop&engine=yandex&lang=fr&lr=124&p=1&text=apple&yandex_domain=yandex.com.fr",
+      "3": "https://serpapi.com/search.json?device=desktop&engine=yandex&lang=fr&lr=124&p=2&text=apple&yandex_domain=yandex.com.fr",
+      "5": "https://serpapi.com/search.json?device=desktop&engine=yandex&lang=fr&lr=124&p=4&text=apple&yandex_domain=yandex.com.fr",
+      "6": "https://serpapi.com/search.json?device=desktop&engine=yandex&lang=fr&lr=124&p=5&text=apple&yandex_domain=yandex.com.fr"
+    }
+  }
+}
+Example using
+|
+(OR) operator
+Note that lang have to be set to null to make the search work
+
+GET
+
+
+https://serpapi.com/search.json?engine=yandex&text=Late+Breakfast+|+Early+Lunch&lr=84&lang=null&yandex_domain=yandex.com
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "yandex",
+  text: "Late Breakfast | Early Lunch",
+  lr: "84",
+  lang: "null",
+  yandex_domain: "yandex.com",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+
+JSON Example
+
+{
+  ...
+  "organic_results": [
+    {
+      "position": 1,
+      "title": "Late Breakfast Early Lunch... - YouTube",
+      "link": "https://www.youtube.com/watch?v=ztr_TROa7I8",
+      "displayed_link": "youtube.com›watch",
+      "snippet": "О сервисе Прессе Авторские права Связаться с нами Авторам Рекламодателям..."
+    },
+    {
+      "position": 2,
+      "title": "Does Late Breakfast and Early Dinner Really Help Us Lose...",
+      "link": "https://possible.in/is-late-breakfast-and-early-dinner-for-weight-loss-a-reality-or-myth.html",
+      "displayed_link": "possible.in›is-late-breakfast-and-early-dinner-…",
+      "snippet": "Being consistent with late breakfast and early dinner will make your body adapted to the routine, but you cannot always follow it in certain social conditions where you have to compromise your routine."
+    },
+    {
+      "position": 3,
+      "title": "Late breakfast, or early lunch WOW Guru",
+      "link": "https://wordsanswers.info/puzzle/wow-guru-answers/wow-guru-yushan/wow-guru-yushan-level-1614/late-breakfast-or-early-lunch-1614",
+      "displayed_link": "wordsanswers.info›puzzle/wow-guru-answers/wow-…",
+      "snippet": "It helps you with WOW Guru Late breakfast, or early lunch answers, some additional solutions and useful tips and tricks. In addition to WOW Guru, the developer Fugo Games has created other amazing games."
+    },
+    ...
+  ],
+  ...
+}
+
+Example results for 
+text
+:
+Coffee
+, 
+lang
+:
+ru,en
+Yandex Search API supports multiple languages. You can specify the language of the search results using the lang parameter. The lang parameter accepts a comma-separated two-letter list of languages.
+
+GET
+
+
+https://serpapi.com/search.json?engine=yandex&text=Coffee&lang=ru,en
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "yandex",
+  text: "Coffee",
+  lang: "ru,en",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+organic_results = results[:organic_results]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "65eb0b70914a81d45f9e37af",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/a8cbecfa43d41868/65eb0b70914a81d45f9e37af.json",
+    "created_at": "2024-03-08 12:58:24 UTC",
+    "processed_at": "2024-03-08 12:58:24 UTC",
+    "yandex_url": "https://yandex.com/search/?text=Coffee&lang=ru,en&lr=84&rstr=-84",
+    "raw_html_file": "https://serpapi.com/searches/a8cbecfa43d41868/65eb0b70914a81d45f9e37af.html",
+    "total_time_taken": 1.97
+  },
+  "search_parameters": {
+    "text": "Coffee",
+    "engine": "yandex",
+    "lang": "ru,en",
+    "lr": "84",
+    "yandex_domain": "yandex.com",
+    "device": "desktop"
+  },
+  "search_information": {
+    "organic_results_state": "Results for exact spelling",
+    "query_displayed": "Coffee"
+  },
+  "organic_results": [
+    {
+      "position": 1,
+      "title": "Coffee Around the World",
+      "link": "https://www.nationalgeographic.com/travel/article/coffee-around-the-world",
+      "displayed_link": "nationalgeographic.com›travel/article/coffee-…",
+      "snippet": "Every coffee has particular characteristics, but there are taste generalizations for the three major coffee-growing regions that can be helpful to keep in mind"
+    },
+    {
+      "position": 2,
+      "title": "Coffee Concentrate Market Size & Growth Report By 2033",
+      "link": "https://www.factmr.com/report/1755/coffee-concentrate-market",
+      "displayed_link": "factmr.com›report/1755/coffee-concentrate-market",
+      "snippet": "Analysis of Coffee Concentrates Market Covering 30+ Countries Including Analysis of US, Canada, UK, Germany, France, Nordics, GCC countries, Japan, Korea and many more."
+    },
+    {
+      "position": 3,
+      "title": "Кофейная индустрия Латинской Америки",
+      "link": "https://marketpublishers.ru/lists/12406/news.html",
+      "displayed_link": "marketpublishers.ru›lists/12406/news.html",
+      "snippet": "Колумбия славится своим мягким и сбалансированным кофе. Это третий по величине производитель кофе в мире и второй по величине в Латинской Америке."
+    },
+  ...
+  ],
+...
+}
+JSON structure overview
+{
+  "organic_results": [
+    {
+      "position": "Integer - Organic result position",
+      "title": "String - Organic result title",
+      "link": "String - Organic result link",
+      "displayed_link": "String - Organic result displayed link",
+      "snippet": "String - Organic result snippet",
+    },
+    ...
+  ],
+  "knowledge_graph": {
+    "title": "String - Knowledge graph title",
+    ...
+  }
+}

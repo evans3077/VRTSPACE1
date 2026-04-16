@@ -1,0 +1,1052 @@
+from urllib.parse import urlencode
+
+from django.contrib import messages
+from django.contrib.auth import get_user_model, login, logout, update_session_auth_hash
+from django.contrib.auth.mixins import LoginRequiredMixin, UserPassesTestMixin
+from django.conf import settings
+from django.core.cache import cache
+from django.http import Http404, HttpResponse, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
+from django.urls import reverse
+from django.utils import timezone
+from django.views import View
+from django.views.generic import DetailView
+
+from apps.core.site_content import PACKAGES
+from apps.leads.billing import (
+    BillingError,
+    build_action_access_context,
+    build_credit_action_guide,
+    can_access_audit_feature,
+    get_billing_state,
+    get_effective_capabilities,
+    get_limited_audit_history,
+    get_limited_recommendations,
+    record_usage,
+    spend_action_credits,
+)
+from apps.leads.auth import (
+    GoogleOAuthError,
+    build_google_authorize_url,
+    create_google_oauth_state,
+    exchange_google_code_for_userinfo,
+    get_or_create_user_from_google_profile,
+    is_google_oauth_enabled,
+)
+from apps.leads.forms import (
+    AuditRequestForm,
+    AccountPasswordForm,
+    AccountProfileForm,
+    WorkspaceAuditStartForm,
+    WorkspaceLoginForm,
+    WorkspaceProjectForm,
+    WorkspaceSignupForm,
+)
+from apps.leads.models import ClientProject, UsageRecord
+from apps.leads.services import (
+    create_workspace_project_for_user,
+    create_audit_request_from_form,
+    get_workspace_projects,
+    get_workspace_project_summaries,
+    resolve_workspace_project,
+    set_active_workspace_project,
+    sync_client_project_from_audit_run,
+)
+
+from .audit_exports import (
+    build_absolute_app_url,
+    build_audit_csv_export,
+    build_audit_export_payload,
+    get_or_create_audit_share_link,
+)
+from .automation import get_workspace_schedule
+from .jobs import enqueue_public_site_audit
+from .models import AuditRun, AuditShareLink
+from .pdf_reports import build_audit_report_pdf
+from .services import extract_domain, normalize_url
+
+
+def _decorate_product_modules(product_modules, billing_plans):
+    plan_map = {card["slug"]: card for card in billing_plans}
+    decorated = []
+    for module in product_modules or []:
+        plan_slug = str(module.get("plan", "")).strip().lower()
+        card = plan_map.get(plan_slug)
+        item = dict(module)
+        item["plan_slug"] = plan_slug
+        item["cta_label"] = module.get("cta_label") or f"Upgrade to {module.get('plan', 'Plan')}"
+        item["can_checkout"] = bool(card and not card.get("is_current") and not card.get("is_custom"))
+        item["is_current_plan"] = bool(card and card.get("is_current"))
+        item["is_custom_scope"] = bool(card and card.get("is_custom"))
+        decorated.append(item)
+    return decorated
+
+
+class PublicAuditCreateView(View):
+    rate_limit = 3
+    rate_window = 900
+
+    def post(self, request, *args, **kwargs):
+        ip_address = request.META.get("REMOTE_ADDR", "unknown")
+        cache_key = f"rate-limit:{self.__class__.__name__}:{ip_address}"
+        attempts = cache.get(cache_key, 0)
+        
+        # Bypass rate limit for staff users
+        if not request.user.is_staff and attempts >= self.rate_limit:
+            messages.error(request, "Too many audit requests. Try again in a few minutes.")
+            return redirect("/#audit")
+            
+        cache.set(cache_key, attempts + 1, timeout=self.rate_window)
+
+        form = AuditRequestForm(request.POST)
+        if not form.is_valid():
+            from apps.core.views import HomePageView, build_home_context
+            from apps.leads.forms import LeadCaptureForm
+
+            context = build_home_context(
+                request,
+                lead_form=LeadCaptureForm(),
+                audit_form=form,
+            )
+            return render(request, HomePageView.template_name, context, status=400)
+
+        normalized_start_url = normalize_url(form.cleaned_data["website"])
+        normalized_domain = extract_domain(normalized_start_url)
+        existing_run = (
+            AuditRun.objects.filter(
+                normalized_domain=normalized_domain,
+                status__in={AuditRun.Status.PENDING, AuditRun.Status.RUNNING},
+            )
+            .order_by("-created_at")
+            .first()
+        )
+        if existing_run:
+            messages.info(
+                request,
+                "An audit for this website is already in progress. Opening the current result instead of creating a duplicate run.",
+            )
+            return redirect("tools:audit-result", pk=existing_run.pk)
+
+        audit_request = create_audit_request_from_form(form, request=request)
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain=normalized_domain or "pending",
+            start_url=normalized_start_url,
+        )
+
+        sync_client_project_from_audit_run(audit_run)
+        enqueue_public_site_audit(audit_run.pk)
+        messages.success(request, "Audit started. We are analyzing the site now.")
+        return redirect("tools:audit-result", pk=audit_run.pk)
+
+
+class AuditResultDetailView(DetailView):
+    model = AuditRun
+    template_name = "tools/audit_result.html"
+    context_object_name = "audit_run"
+
+    def get_queryset(self):
+        return AuditRun.objects.prefetch_related("pages", "issues")
+
+    def get(self, request, *args, **kwargs):
+        self.object = self.get_queryset().filter(pk=kwargs.get("pk")).first()
+        if not self.object:
+            messages.warning(
+                request,
+                "That audit report is no longer available. Run a new audit or open your workspace for the latest saved results.",
+            )
+            if request.user.is_authenticated:
+                return redirect("tools:workspace-dashboard")
+            return redirect("core:home")
+        context = self.get_context_data(object=self.object)
+        return self.render_to_response(context)
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        audit_run = self.object
+        summary = audit_run.summary or {}
+        scores = summary.get("scores", {})
+        score_breakdown = summary.get("score_breakdown", {})
+        recommendations = summary.get("recommendations", [])
+        featured_recommendations = summary.get("featured_recommendations", recommendations[:6])
+        product_modules = summary.get("product_modules", [])
+        custom_work_items = summary.get("custom_work_items", [])
+
+        gauge_list = []
+        metric_map = [
+            ("Technical", "technical"),
+            ("AEO", "aeo"),
+            ("On-page", "on_page"),
+            ("Content", "content"),
+            ("Internal", "internal_linking"),
+            ("Speed", "performance"),
+            ("Accessibility", "accessibility"),
+            ("Best Practices", "best_practices"),
+            ("SEO", "seo"),
+        ]
+
+        for label, key in metric_map:
+            raw_score = scores.get(key, 0)
+            score = raw_score if isinstance(raw_score, (int, float)) else 0
+            # Normalize offset for smaller 50px gauges (circumference ~138.23)
+            small_offset = round(138.23 * (1 - score / 100))
+            
+            gauge_list.append({
+                "label": label,
+                "score": score,
+                "offset": small_offset,
+                "color": "#16a34a" if score >= 90 else "#ea580c" if score >= 50 else "#dc2626"
+            })
+        context["gauge_list"] = gauge_list
+        context["score_breakdown"] = score_breakdown
+        visible_recommendations, locked_recommendation_count = get_limited_recommendations(
+            recommendations,
+            self.request.user,
+        )
+        recommendation_limit = get_effective_capabilities(self.request.user)["premium_recommendation_limit"]
+        if settings.AUDIT_TIER_ENFORCEMENT and recommendation_limit is not None:
+            product_modules = product_modules[:recommendation_limit]
+        context["recommendations"] = visible_recommendations
+        context["featured_recommendations"] = featured_recommendations
+        featured_root_causes = {
+            item.get("root_cause_key")
+            for item in featured_recommendations
+            if item.get("root_cause_key")
+        }
+        context["secondary_recommendations"] = [
+            item
+            for item in visible_recommendations
+            if item.get("root_cause_key") not in featured_root_causes
+        ]
+        context["product_modules"] = product_modules
+        context["custom_work_items"] = custom_work_items
+        context["packages"] = PACKAGES
+        context["audit_tier_enforcement"] = settings.AUDIT_TIER_ENFORCEMENT
+        context["pages"] = audit_run.pages.all()
+        context["is_processing"] = audit_run.status in {AuditRun.Status.PENDING, AuditRun.Status.RUNNING}
+        context["locked_recommendation_count"] = locked_recommendation_count
+        return context
+from .admin_utils import get_service_recommendations
+
+
+class AgencyAuditDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    model = AuditRun
+    template_name = "tools/agency_audit.html"
+    context_object_name = "audit_run"
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def get_queryset(self):
+        return AuditRun.objects.prefetch_related("pages", "issues", "audit_request")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        audit_run = self.object
+        context["pages"] = audit_run.pages.all()
+        context["issues"] = audit_run.issues.all()
+        context["service_recommendations"] = get_service_recommendations(audit_run)
+        context["recommendations"] = (audit_run.summary or {}).get("recommendations", [])
+        context["score_breakdown"] = (audit_run.summary or {}).get("score_breakdown", {})
+
+        # Group issues by category
+        from collections import defaultdict
+
+        issues_by_cat = defaultdict(list)
+        for issue in audit_run.issues.all():
+            issues_by_cat[issue.category].append(issue)
+        context["issues_by_category"] = dict(issues_by_cat)
+
+        return context
+
+
+class ProjectDashboardDetailView(LoginRequiredMixin, UserPassesTestMixin, DetailView):
+    model = ClientProject
+    template_name = "tools/project_dashboard.html"
+    context_object_name = "project"
+
+    def test_func(self):
+        return self.request.user.is_staff
+
+    def get_queryset(self):
+        return ClientProject.objects.select_related("audit_request", "latest_audit_run")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project = self.object
+        audit_history = (
+            project.audit_request.audit_runs.order_by("-created_at")
+            if project.audit_request_id
+            else AuditRun.objects.none()
+        )
+        latest_audit = project.latest_audit_run or audit_history.first()
+        latest_summary = latest_audit.summary if latest_audit and isinstance(latest_audit.summary, dict) else {}
+        audit_history_list = list(audit_history)
+        audit_history_with_delta = []
+        for index, audit in enumerate(audit_history_list):
+            next_older = audit_history_list[index + 1] if index + 1 < len(audit_history_list) else None
+            delta = None if next_older is None else audit.overall_score - next_older.overall_score
+            audit_history_with_delta.append({"audit": audit, "delta": delta})
+
+        context["latest_audit"] = latest_audit
+        context["audit_history"] = audit_history
+        context["audit_history_with_delta"] = audit_history_with_delta
+        context["score_breakdown"] = latest_summary.get("score_breakdown", {})
+        context["recommendations"] = latest_summary.get("recommendations", [])
+        context["product_modules"] = latest_summary.get("product_modules") or latest_summary.get("service_fit", [])
+        context["custom_work_items"] = latest_summary.get("custom_work_items", [])
+        context["packages"] = PACKAGES
+        context["audit_tier_enforcement"] = settings.AUDIT_TIER_ENFORCEMENT
+        return context
+
+
+class WorkspaceSignupView(View):
+    template_name = "tools/workspace_signup.html"
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect("tools:workspace-dashboard")
+        audit_run = self._get_audit_run()
+        form = WorkspaceSignupForm(initial={"email": audit_run.audit_request.email if audit_run and audit_run.audit_request_id else ""})
+        return render(
+            request,
+            self.template_name,
+            {
+                "form": form,
+                "audit_run": audit_run,
+                "selected_package": self._get_selected_package(),
+                "google_oauth_enabled": is_google_oauth_enabled(),
+                "google_oauth_url": self._build_google_oauth_url(),
+                "login_url": self._build_auth_url("tools:workspace-login"),
+            },
+        )
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect("tools:workspace-dashboard")
+        audit_run = self._get_audit_run()
+        form = WorkspaceSignupForm(request.POST)
+        if not form.is_valid():
+            return render(
+                request,
+                self.template_name,
+                {
+                    "form": form,
+                    "audit_run": audit_run,
+                    "selected_package": self._get_selected_package(),
+                    "google_oauth_enabled": is_google_oauth_enabled(),
+                    "google_oauth_url": self._build_google_oauth_url(),
+                    "login_url": self._build_auth_url("tools:workspace-login"),
+                },
+                status=400,
+            )
+
+        email = form.cleaned_data["email"]
+        password = form.cleaned_data["password"]
+        user = get_user_model().objects.create_user(username=email, email=email, password=password)
+        login(request, user)
+
+        if audit_run and audit_run.audit_request_id:
+            project = sync_client_project_from_audit_run(audit_run)
+            project.owner = user
+            project.save(update_fields=["owner", "updated_at"])
+
+        return redirect("tools:workspace-dashboard")
+
+    def _get_audit_run(self):
+        audit_pk = self.request.GET.get("audit") or self.request.POST.get("audit")
+        if not audit_pk:
+            return None
+        return AuditRun.objects.filter(pk=audit_pk).select_related("audit_request").first()
+
+    def _get_selected_package(self):
+        package_name = (self.request.GET.get("package") or self.request.POST.get("package") or "").strip().lower()
+        if not package_name:
+            return None
+        return next((package for package in PACKAGES if package["name"].lower() == package_name), None)
+
+    def _build_auth_url(self, route_name):
+        query = {}
+        audit_pk = self.request.GET.get("audit") or self.request.POST.get("audit")
+        package_name = self.request.GET.get("package") or self.request.POST.get("package")
+        if audit_pk:
+            query["audit"] = audit_pk
+        if package_name:
+            query["package"] = package_name
+        base_url = reverse(route_name)
+        if not query:
+            return base_url
+        return f"{base_url}?{urlencode(query)}"
+
+    def _build_google_oauth_url(self):
+        return self._build_auth_url("tools:google-oauth-start")
+
+
+class WorkspaceLoginView(View):
+    template_name = "tools/workspace_login.html"
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect("tools:workspace-dashboard")
+        return render(request, self.template_name, self._build_context(form=WorkspaceLoginForm(request=request)))
+
+    def post(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect("tools:workspace-dashboard")
+        form = WorkspaceLoginForm(request=request, data=request.POST)
+        if not form.is_valid():
+            return render(request, self.template_name, self._build_context(form=form), status=400)
+
+        login(request, form.get_user())
+        self._link_audit_to_user(form.get_user())
+        return redirect("tools:workspace-dashboard")
+
+    def _build_context(self, *, form):
+        signup_url = self._build_auth_url("tools:workspace-signup")
+        return {
+            "form": form,
+            "audit_run": self._get_audit_run(),
+            "selected_package": self._get_selected_package(),
+            "google_oauth_enabled": is_google_oauth_enabled(),
+            "google_oauth_url": self._build_auth_url("tools:google-oauth-start"),
+            "signup_url": signup_url,
+        }
+
+    def _build_auth_url(self, route_name):
+        query = {}
+        audit_pk = self.request.GET.get("audit") or self.request.POST.get("audit")
+        package_name = self.request.GET.get("package") or self.request.POST.get("package")
+        if audit_pk:
+            query["audit"] = audit_pk
+        if package_name:
+            query["package"] = package_name
+        base_url = reverse(route_name)
+        if not query:
+            return base_url
+        return f"{base_url}?{urlencode(query)}"
+
+    def _get_audit_run(self):
+        audit_pk = self.request.GET.get("audit") or self.request.POST.get("audit")
+        if not audit_pk:
+            return None
+        return AuditRun.objects.filter(pk=audit_pk).select_related("audit_request").first()
+
+    def _get_selected_package(self):
+        package_name = (self.request.GET.get("package") or self.request.POST.get("package") or "").strip().lower()
+        if not package_name:
+            return None
+        return next((package for package in PACKAGES if package["name"].lower() == package_name), None)
+
+    def _link_audit_to_user(self, user):
+        audit_run = self._get_audit_run()
+        if not audit_run or not audit_run.audit_request_id:
+            return
+        project = sync_client_project_from_audit_run(audit_run)
+        project.owner = user
+        project.save(update_fields=["owner", "updated_at"])
+
+
+class GoogleOAuthStartView(View):
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return redirect("tools:workspace-dashboard")
+        if not is_google_oauth_enabled():
+            messages.error(request, "Google sign-in is not configured yet.")
+            return redirect("tools:workspace-login")
+
+        state = create_google_oauth_state()
+        request.session["google_oauth_state"] = state
+        request.session["google_oauth_audit"] = request.GET.get("audit", "")
+        request.session["google_oauth_package"] = request.GET.get("package", "")
+
+        redirect_uri = request.build_absolute_uri(reverse("tools:google-oauth-callback"))
+        return redirect(build_google_authorize_url(redirect_uri=redirect_uri, state=state))
+
+
+class GoogleOAuthCallbackView(View):
+    def get(self, request, *args, **kwargs):
+        if not is_google_oauth_enabled():
+            messages.error(request, "Google sign-in is not configured yet.")
+            return redirect("tools:workspace-login")
+
+        session_state = request.session.get("google_oauth_state")
+        callback_state = request.GET.get("state", "")
+        if not session_state or session_state != callback_state:
+            messages.error(request, "Google sign-in could not be verified. Try again.")
+            return redirect("tools:workspace-login")
+
+        if request.GET.get("error"):
+            messages.error(request, "Google sign-in was cancelled.")
+            return redirect("tools:workspace-login")
+
+        code = request.GET.get("code", "")
+        if not code:
+            messages.error(request, "Google sign-in did not return an authorization code.")
+            return redirect("tools:workspace-login")
+
+        redirect_uri = request.build_absolute_uri(reverse("tools:google-oauth-callback"))
+        try:
+            profile = exchange_google_code_for_userinfo(code=code, redirect_uri=redirect_uri)
+        except GoogleOAuthError as exc:
+            messages.error(request, str(exc))
+            return redirect("tools:workspace-login")
+
+        user = get_or_create_user_from_google_profile(profile)
+        login(request, user)
+        self._link_audit_to_user(request, user)
+        self._clear_google_session(request)
+        return redirect("tools:workspace-dashboard")
+
+    def _link_audit_to_user(self, request, user):
+        audit_pk = request.session.get("google_oauth_audit")
+        if not audit_pk:
+            return
+        audit_run = AuditRun.objects.filter(pk=audit_pk).select_related("audit_request").first()
+        if not audit_run or not audit_run.audit_request_id:
+            return
+        project = sync_client_project_from_audit_run(audit_run)
+        project.owner = user
+        project.save(update_fields=["owner", "updated_at"])
+
+    def _clear_google_session(self, request):
+        for key in ("google_oauth_state", "google_oauth_audit", "google_oauth_package"):
+            request.session.pop(key, None)
+
+
+class WorkspaceLogoutView(View):
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return redirect("core:home")
+
+
+class AccountDashboardView(LoginRequiredMixin, View):
+    template_name = "tools/account_dashboard.html"
+
+    def get(self, request, *args, **kwargs):
+        return render(request, self.template_name, self._build_context(request))
+
+    def _build_context(self, request, *, profile_form=None, password_form=None):
+        billing_state = get_billing_state(request.user)
+        subscription = billing_state["subscription"]
+        return {
+            "profile_form": profile_form or AccountProfileForm(instance=request.user),
+            "password_form": password_form or AccountPasswordForm(user=request.user),
+            "billing_state": billing_state,
+            "current_subscription": subscription,
+            "workspace_count": len(get_workspace_projects(request.user)),
+            "page_title": "Account | VRT SPACE AGENCY",
+            "meta_description": "Personal account settings, billing, and security controls.",
+            "meta_robots": "noindex, nofollow",
+            "canonical_url": request.build_absolute_uri(request.path),
+        }
+
+
+class AccountProfileUpdateView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        form = AccountProfileForm(request.POST, instance=request.user)
+        if not form.is_valid():
+            view = AccountDashboardView()
+            return render(
+                request,
+                view.template_name,
+                view._build_context(request, profile_form=form),
+                status=400,
+            )
+        form.save()
+        messages.success(request, "Account profile updated.")
+        return redirect("tools:account-dashboard")
+
+
+class AccountPasswordUpdateView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        form = AccountPasswordForm(user=request.user, data=request.POST)
+        if not form.is_valid():
+            view = AccountDashboardView()
+            return render(
+                request,
+                view.template_name,
+                view._build_context(request, password_form=form),
+                status=400,
+            )
+        user = form.save()
+        update_session_auth_hash(request, user)
+        messages.success(request, "Password updated.")
+        return redirect("tools:account-dashboard")
+
+
+class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
+    model = ClientProject
+    template_name = "tools/workspace_dashboard.html"
+    context_object_name = "project"
+
+    def get_object(self, queryset=None):
+        project = resolve_workspace_project(self.request, self.request.user)
+        if project:
+            return project
+        return ClientProject(
+            name="Workspace",
+            website="",
+            normalized_domain="",
+            latest_score=0,
+        )
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        project = self.object
+        generated_content_count = 0
+        latest_generated_content = None
+        content_draft_count = 0
+        if getattr(project, "pk", None):
+            from apps.content.models import GeneratedContent
+
+            content_qs = GeneratedContent.objects.filter(project=project)
+            generated_content_count = content_qs.count()
+            content_draft_count = generated_content_count
+            latest_generated_content = content_qs.order_by("-created_at").first()
+        latest_audit = getattr(project, "latest_audit_run", None)
+        latest_summary = latest_audit.summary if latest_audit and isinstance(latest_audit.summary, dict) else {}
+        latest_seo_snapshot = project.seo_snapshots.order_by("-created_at").first() if getattr(project, "pk", None) else None
+        latest_aeo_audit = project.aeo_audits.order_by("-created_at").first() if getattr(project, "pk", None) else None
+        # SEO campaign/execution counts for the Command Card
+        seo_active_campaign_count = 0
+        seo_execution_item_count = 0
+        if latest_seo_snapshot and getattr(project, "pk", None):
+            try:
+                from apps.seo.models import SEOCampaign
+                seo_active_campaign_count = SEOCampaign.objects.filter(
+                    project=project
+                ).exclude(status="completed").count()
+                # Execution items live in the snapshot JSON
+                snap_data = latest_seo_snapshot.data if hasattr(latest_seo_snapshot, "data") else {}
+                if isinstance(snap_data, dict):
+                    seo_execution_item_count = len(snap_data.get("execution_queue", []))
+            except Exception:
+                pass
+        audit_history, locked_history_count = get_limited_audit_history(project, self.request.user)
+        audit_history_list = list(audit_history)
+        change_report_map = {
+            report.audit_run_id: report
+            for report in project.change_reports.select_related("audit_run", "previous_audit_run")[:5]
+        } if getattr(project, "pk", None) else {}
+        audit_history_with_delta = []
+        for index, audit in enumerate(audit_history_list):
+            next_older = audit_history_list[index + 1] if index + 1 < len(audit_history_list) else None
+            delta = None if next_older is None else audit.overall_score - next_older.overall_score
+            audit_history_with_delta.append(
+                {
+                    "audit": audit,
+                    "delta": delta,
+                    "change_report": change_report_map.get(audit.pk),
+                }
+            )
+        recommendations, locked_recommendation_count = get_limited_recommendations(
+            latest_summary.get("recommendations", []),
+            self.request.user,
+        )
+        billing_state = get_billing_state(self.request.user)
+        schedule = get_workspace_schedule(project)
+        latest_change_report = getattr(latest_audit, "change_report", None) if latest_audit else None
+        fix_queue_recommendations = latest_summary.get("featured_recommendations") or recommendations[:6]
+        latest_share_link = (
+            AuditShareLink.objects.filter(audit_run=latest_audit).order_by("-created_at").first()
+            if latest_audit
+            else None
+        )
+        share_allowed, _ = can_access_audit_feature(self.request.user, "stakeholder_sharing_enabled")
+        export_allowed, _ = can_access_audit_feature(self.request.user, "export_reports_enabled")
+        email_allowed, _ = can_access_audit_feature(self.request.user, "email_reports_enabled")
+        context["latest_audit"] = latest_audit
+        context["audit_history"] = audit_history
+        context["audit_history_with_delta"] = audit_history_with_delta
+        context["score_breakdown"] = latest_summary.get("score_breakdown", {})
+        context["recommendations"] = recommendations
+        context["fix_queue_recommendations"] = fix_queue_recommendations
+        context["latest_generated_content"] = latest_generated_content
+        context["content_draft_count"] = content_draft_count
+        context["seo_active_campaign_count"] = seo_active_campaign_count
+        context["seo_execution_item_count"] = seo_execution_item_count
+        context["product_modules"] = _decorate_product_modules(
+            latest_summary.get("product_modules", []),
+            billing_state["plans"],
+        )
+        context["custom_work_items"] = latest_summary.get("custom_work_items", [])
+        context["context_analysis"] = latest_summary.get("context_analysis", {})
+        context["packages"] = PACKAGES
+        context["audit_tier_enforcement"] = settings.AUDIT_TIER_ENFORCEMENT
+        context["locked_history_count"] = locked_history_count
+        context["locked_recommendation_count"] = locked_recommendation_count
+        context["billing_state"] = billing_state
+        context["current_subscription"] = billing_state["subscription"]
+        context["current_capabilities"] = billing_state["capabilities"]
+        context["usage_summary"] = billing_state["usage"]
+        context["credit_summary"] = billing_state["credits"]
+        context["credit_overview"] = billing_state["credit_overview"]
+        context["credit_activity"] = billing_state["credit_activity"]
+        context["recent_credit_entries"] = billing_state["recent_credit_entries"]
+        context["credit_action_guide"] = (
+            build_credit_action_guide(project, self.request.user)
+            if getattr(project, "pk", None)
+            else []
+        )
+        context["audit_export_action"] = (
+            build_action_access_context(
+                self.request.user,
+                "export",
+                project=project,
+                feature_name="export_reports_enabled",
+                label="Audit exports",
+            )
+            if getattr(project, "pk", None)
+            else {}
+        )
+        context["audit_share_action"] = (
+            build_action_access_context(
+                self.request.user,
+                "share",
+                project=project,
+                feature_name="stakeholder_sharing_enabled",
+                label="Stakeholder sharing",
+            )
+            if getattr(project, "pk", None)
+            else {}
+        )
+        context["billing_plans"] = billing_state["plans"]
+        context["audit_schedule"] = schedule
+        context["latest_change_report"] = latest_change_report
+        context["generated_content_count"] = generated_content_count
+        context["latest_seo_snapshot"] = latest_seo_snapshot
+        context["latest_aeo_audit"] = latest_aeo_audit
+        context["latest_share_link"] = latest_share_link
+        context["latest_share_url"] = build_absolute_app_url(f"/share/audits/{latest_share_link.token}/") if latest_share_link else ""
+        context["share_reports_allowed"] = share_allowed
+        context["export_reports_allowed"] = export_allowed
+        context["email_reports_allowed"] = email_allowed
+        context["workspace_projects"] = get_workspace_projects(self.request.user)
+        context["workspace_project_summaries"] = get_workspace_project_summaries(self.request.user)
+        context["project_form"] = WorkspaceProjectForm(
+            prefix="project",
+            initial={
+                "business_type": getattr(project, "business_type", "") if getattr(project, "pk", None) else "",
+                "business_subtype": getattr(project, "business_subtype", "") if getattr(project, "pk", None) else "",
+                "target_audience": getattr(project, "target_audience", "") if getattr(project, "pk", None) else "",
+                "location_mode": getattr(project, "location_mode", "targeted") if getattr(project, "pk", None) else "targeted",
+                "location_country": getattr(project, "location_country", "") if getattr(project, "pk", None) else "",
+                "location_scope": getattr(project, "location_scope", "") if getattr(project, "pk", None) else "",
+                "location_area": getattr(project, "location_area", "") if getattr(project, "pk", None) else "",
+                "location": getattr(project, "location", "") if getattr(project, "pk", None) else "",
+                "target_goal": getattr(project, "target_goal", "") if getattr(project, "pk", None) else "",
+                "primary_service": getattr(project, "primary_service", "") if getattr(project, "pk", None) else "",
+            }
+        )
+        context["audit_start_form"] = WorkspaceAuditStartForm(
+            prefix="audit",
+            initial={
+                "email": self.request.user.email,
+                "company_name": project.name if getattr(project, "pk", None) else "",
+                "website": getattr(project, "website", "") if getattr(project, "pk", None) else "",
+                "business_type": getattr(project, "business_type", "") if getattr(project, "pk", None) else "",
+                "business_subtype": getattr(project, "business_subtype", "") if getattr(project, "pk", None) else "",
+                "target_audience": getattr(project, "target_audience", "") if getattr(project, "pk", None) else "",
+                "location_mode": getattr(project, "location_mode", "targeted") if getattr(project, "pk", None) else "targeted",
+                "location_country": getattr(project, "location_country", "") if getattr(project, "pk", None) else "",
+                "location_scope": getattr(project, "location_scope", "") if getattr(project, "pk", None) else "",
+                "location_area": getattr(project, "location_area", "") if getattr(project, "pk", None) else "",
+                "location": getattr(project, "location", "") if getattr(project, "pk", None) else "",
+                "target_goal": getattr(project, "target_goal", "") if getattr(project, "pk", None) else "",
+                "primary_service": getattr(project, "primary_service", "") if getattr(project, "pk", None) else "",
+            }
+        )
+        return context
+
+
+class WorkspaceProjectSelectView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        project = resolve_workspace_project(
+            request,
+            request.user,
+            project_id=request.POST.get("project_id"),
+            fallback=False,
+        )
+        if project is None:
+            messages.error(request, "That workspace project is not available for this account.")
+            return redirect("tools:workspace-dashboard")
+
+        set_active_workspace_project(request, project)
+        messages.success(request, f"Workspace switched to {project.name}.")
+        next_url = request.POST.get("next", "").strip()
+        if next_url.startswith("/"):
+            return redirect(next_url)
+        return redirect("tools:workspace-dashboard")
+
+
+class WorkspaceProjectCreateView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        form = WorkspaceProjectForm(request.POST, prefix="project")
+        if not form.is_valid():
+            dashboard_view = WorkspaceDashboardView()
+            dashboard_view.request = request
+            dashboard_view.object = dashboard_view.get_object()
+            context = dashboard_view.get_context_data(object=dashboard_view.object)
+            context["project_form"] = form
+            return dashboard_view.render_to_response(context, status=400)
+
+        project, created = create_workspace_project_for_user(
+            request.user,
+            name=form.cleaned_data["name"],
+            website=form.cleaned_data["website"],
+            business_type=form.cleaned_data.get("business_type", ""),
+            business_subtype=form.cleaned_data.get("business_subtype", ""),
+            location=form.cleaned_data.get("location", ""),
+            location_mode=form.cleaned_data.get("location_mode", "targeted"),
+            location_country=form.cleaned_data.get("location_country", ""),
+            location_scope=form.cleaned_data.get("location_scope", ""),
+            location_area=form.cleaned_data.get("location_area", ""),
+            target_goal=form.cleaned_data.get("target_goal", ""),
+            primary_service=form.cleaned_data.get("primary_service", ""),
+            target_audience=form.cleaned_data.get("target_audience", ""),
+        )
+        set_active_workspace_project(request, project)
+        if created:
+            messages.success(request, f"{project.name} is ready. Run an audit when you want a fresh crawl, or move straight into SEO, AEO, or content setup.")
+        else:
+            messages.info(request, f"{project.name} already existed, so the workspace reopened that project instead of creating a duplicate.")
+        return redirect("tools:workspace-dashboard")
+
+
+class WorkspaceAuditStartView(LoginRequiredMixin, View):
+    def post(self, request, *args, **kwargs):
+        active_project = resolve_workspace_project(request, request.user)
+        form = WorkspaceAuditStartForm(request.POST, prefix="audit")
+        if not form.is_valid():
+            dashboard_view = WorkspaceDashboardView()
+            dashboard_view.request = request
+            dashboard_view.object = dashboard_view.get_object()
+            context = dashboard_view.get_context_data(object=dashboard_view.object)
+            context["audit_start_form"] = form
+            return dashboard_view.render_to_response(context, status=400)
+
+        audit_request = create_audit_request_from_form(form, request=request)
+        normalized_start_url = normalize_url(form.cleaned_data["website"])
+        normalized_domain = extract_domain(normalized_start_url)
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain=normalized_domain or "pending",
+            start_url=normalized_start_url,
+        )
+        project = sync_client_project_from_audit_run(audit_run)
+        if active_project and getattr(active_project, "pk", None) and active_project.owner_id == request.user.id:
+            if not project.owner_id:
+                project.owner = request.user
+            if not project.audit_request_id:
+                project.audit_request = audit_request
+            project.save(update_fields=["owner", "audit_request", "updated_at"])
+        set_active_workspace_project(request, project)
+        enqueue_public_site_audit(audit_run.pk)
+        messages.success(request, "Audit started. The workspace will attach to this audit automatically as the results are saved.")
+        return redirect("tools:audit-result", pk=audit_run.pk)
+
+
+class AuditReportPdfView(DetailView):
+    model = AuditRun
+
+    def get_queryset(self):
+        return AuditRun.objects.prefetch_related("pages", "issues")
+
+    def get(self, request, *args, **kwargs):
+        audit_run = self.get_object()
+        if audit_run.status != AuditRun.Status.COMPLETED:
+            return HttpResponse("Audit report is not available until the audit completes.", status=409)
+
+        pdf_bytes = build_audit_report_pdf(audit_run)
+        disposition = "attachment" if request.GET.get("download") == "1" else "inline"
+        filename = f"audit-report-{audit_run.normalized_domain or audit_run.pk}.pdf"
+        response = HttpResponse(pdf_bytes, content_type="application/pdf")
+        response["Content-Disposition"] = f'{disposition}; filename="{filename}"'
+        return response
+
+
+class WorkspaceAuditAccessMixin(LoginRequiredMixin):
+    def get_workspace_audit(self, pk):
+        audit_run = (
+            AuditRun.objects.select_related("audit_request", "audit_request__client_project")
+            .filter(pk=pk)
+            .first()
+        )
+        project = getattr(getattr(audit_run, "audit_request", None), "client_project", None)
+        if not audit_run or not project:
+            raise Http404
+        if self.request.user.is_staff or project.owner_id == self.request.user.id:
+            return audit_run
+        raise Http404
+
+    def ensure_completed_audit(self, audit_run):
+        if audit_run.status != AuditRun.Status.COMPLETED:
+            raise Http404
+        return audit_run
+
+
+class WorkspaceAuditExportJsonView(WorkspaceAuditAccessMixin, View):
+    def get(self, request, *args, **kwargs):
+        audit_run = self.get_workspace_audit(kwargs["pk"])
+        action = build_action_access_context(
+            request.user,
+            "export",
+            project=getattr(getattr(audit_run, "audit_request", None), "client_project", None),
+            feature_name="export_reports_enabled",
+            label="Audit exports",
+        )
+        if settings.AUDIT_TIER_ENFORCEMENT and not action["available"]:
+            return JsonResponse({"error": action["blocked_message"] or action["next_unlock_message"]}, status=403)
+        if audit_run.status != AuditRun.Status.COMPLETED:
+            return JsonResponse({"error": "Exports are only available after the audit completes."}, status=409)
+        self.ensure_completed_audit(audit_run)
+        try:
+            _entry, estimate = spend_action_credits(
+                request.user,
+                "export",
+                project=getattr(getattr(audit_run, "audit_request", None), "client_project", None),
+                note="Audit JSON export",
+                reference_key=f"audit-export-json:{audit_run.pk}",
+                metadata={"audit_run_id": audit_run.pk, "format": "json"},
+                reuse_reference=True,
+            )
+            if not estimate.get("reused_existing_charge"):
+                record_usage(request.user, UsageRecord.Metric.EXPORT)
+        except BillingError as exc:
+            return JsonResponse({"error": str(exc)}, status=403)
+        return JsonResponse(build_audit_export_payload(audit_run), status=200)
+
+
+class WorkspaceAuditExportCsvView(WorkspaceAuditAccessMixin, View):
+    def get(self, request, *args, **kwargs):
+        audit_run = self.get_workspace_audit(kwargs["pk"])
+        action = build_action_access_context(
+            request.user,
+            "export",
+            project=getattr(getattr(audit_run, "audit_request", None), "client_project", None),
+            feature_name="export_reports_enabled",
+            label="Audit exports",
+        )
+        if settings.AUDIT_TIER_ENFORCEMENT and not action["available"]:
+            return HttpResponse(action["blocked_message"] or action["next_unlock_message"], status=403)
+        if audit_run.status != AuditRun.Status.COMPLETED:
+            return HttpResponse("Exports are only available after the audit completes.", status=409)
+        self.ensure_completed_audit(audit_run)
+        try:
+            _entry, estimate = spend_action_credits(
+                request.user,
+                "export",
+                project=getattr(getattr(audit_run, "audit_request", None), "client_project", None),
+                note="Audit CSV export",
+                reference_key=f"audit-export-csv:{audit_run.pk}",
+                metadata={"audit_run_id": audit_run.pk, "format": "csv"},
+                reuse_reference=True,
+            )
+            if not estimate.get("reused_existing_charge"):
+                record_usage(request.user, UsageRecord.Metric.EXPORT)
+        except BillingError as exc:
+            return HttpResponse(str(exc), status=403)
+        response = HttpResponse(build_audit_csv_export(audit_run), content_type="text/csv")
+        response["Content-Disposition"] = f'attachment; filename="audit-export-{audit_run.pk}.csv"'
+        return response
+
+
+class WorkspaceAuditShareCreateView(WorkspaceAuditAccessMixin, View):
+    def post(self, request, *args, **kwargs):
+        audit_run = self.get_workspace_audit(kwargs["pk"])
+        action = build_action_access_context(
+            request.user,
+            "share",
+            project=getattr(getattr(audit_run, "audit_request", None), "client_project", None),
+            feature_name="stakeholder_sharing_enabled",
+            label="Stakeholder sharing",
+        )
+        if settings.AUDIT_TIER_ENFORCEMENT and not action["available"]:
+            if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                return JsonResponse({"error": action["blocked_message"] or action["next_unlock_message"]}, status=403)
+            raise Http404
+
+        if audit_run.status != AuditRun.Status.COMPLETED:
+            return JsonResponse({"error": "Shared reports are only available after the audit completes."}, status=409)
+        self.ensure_completed_audit(audit_run)
+        try:
+            spend_action_credits(
+                request.user,
+                "share",
+                project=getattr(getattr(audit_run, "audit_request", None), "client_project", None),
+                note="Audit stakeholder share link",
+                reference_key=f"audit-share:{audit_run.pk}",
+                metadata={"audit_run_id": audit_run.pk},
+                reuse_reference=True,
+            )
+        except BillingError as exc:
+            if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+                return JsonResponse({"error": str(exc)}, status=403)
+            messages.error(request, str(exc))
+            return redirect("tools:workspace-dashboard")
+        share_link = get_or_create_audit_share_link(audit_run, created_by=request.user)
+        payload = {
+            "share_url": build_absolute_app_url(f"/share/audits/{share_link.token}/"),
+            "pdf_url": build_absolute_app_url(f"/share/audits/{share_link.token}/report.pdf"),
+            "expires_at": share_link.expires_at.isoformat() if share_link.expires_at else None,
+        }
+        if request.headers.get("X-Requested-With") == "XMLHttpRequest":
+            return JsonResponse(payload, status=200)
+
+        request.session["latest_share_url"] = payload["share_url"]
+        return redirect("tools:workspace-dashboard")
+
+
+class SharedAuditReportView(DetailView):
+    model = AuditShareLink
+    slug_field = "token"
+    slug_url_kwarg = "token"
+    template_name = "tools/shared_audit_report.html"
+    context_object_name = "share_link"
+
+    def get_queryset(self):
+        return AuditShareLink.objects.select_related("audit_run")
+
+    def get_object(self, queryset=None):
+        share_link = super().get_object(queryset=queryset)
+        if share_link.expires_at and share_link.expires_at <= timezone.now():
+            raise Http404
+        if share_link.audit_run.status != AuditRun.Status.COMPLETED:
+            raise Http404
+        share_link.access_count += 1
+        share_link.last_accessed_at = timezone.now()
+        share_link.save(update_fields=["access_count", "last_accessed_at", "updated_at"])
+        return share_link
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        audit_run = self.object.audit_run
+        summary = audit_run.summary or {}
+        context["audit_run"] = audit_run
+        context["score_breakdown"] = summary.get("score_breakdown", {})
+        context["recommendations"] = (summary.get("featured_recommendations") or summary.get("recommendations", []))[:6]
+        context["context_analysis"] = summary.get("context_analysis", {})
+        context["issue_summary"] = summary.get("issue_summary", {})
+        context["product_modules"] = summary.get("product_modules", [])[:4]
+        context["change_report"] = getattr(audit_run, "change_report", None)
+        return context
+
+
+class SharedAuditReportPdfView(DetailView):
+    model = AuditShareLink
+    slug_field = "token"
+    slug_url_kwarg = "token"
+
+    def get_queryset(self):
+        return AuditShareLink.objects.select_related("audit_run")
+
+    def get(self, request, *args, **kwargs):
+        share_link = self.get_object()
+        if share_link.expires_at and share_link.expires_at <= timezone.now():
+            raise Http404
+        if share_link.audit_run.status != AuditRun.Status.COMPLETED:
+            raise Http404
+        pdf_bytes = build_audit_report_pdf(share_link.audit_run)
+        response = HttpResponse(pdf_bytes, content_type="application/pdf")
+        response["Content-Disposition"] = f'inline; filename="shared-audit-report-{share_link.audit_run.pk}.pdf"'
+        return response

@@ -1,0 +1,51 @@
+{% if user.is_authenticated and not user.is_staff %}
+<div class="workspace-command-bar">
+    <div class="container-fluid">
+        <div class="workspace-command-bar-inner">
+
+            {# ── Left: Breadcrumb ── #}
+            <a class="workspace-command-breadcrumb" href="{% url 'tools:workspace-dashboard' %}">
+                <i class="fas fa-th-large"></i>
+                <span>Workspace</span>
+                <span class="bc-sep">/</span>
+                <span class="bc-project">{{ active_workspace_project.name|default:"Dashboard" }}</span>
+            </a>
+
+            {# ── Center: Tab Rail ── #}
+            <nav class="workspace-tab-rail" aria-label="Workspace modules">
+                <a class="workspace-tab-pill {% if workspace_nav_current == 'workspace' %}is-active{% endif %}"
+                   href="{% url 'tools:workspace-dashboard' %}">
+                    <i class="fas fa-th-large"></i>Overview
+                </a>
+                <a class="workspace-tab-pill {% if workspace_nav_current == 'seo' %}is-active{% endif %}"
+                   href="{% url 'seo:workspace-seo' %}">
+                    <i class="fas fa-search"></i>SEO
+                </a>
+                <a class="workspace-tab-pill {% if workspace_nav_current == 'aeo' %}is-active{% endif %}"
+                   href="{% url 'aeo:workspace-aeo' %}">
+                    <i class="fas fa-robot"></i>AEO
+                </a>
+                <a class="workspace-tab-pill {% if workspace_nav_current == 'content' %}is-active{% endif %}"
+                   href="{% url 'content:workspace-content' %}">
+                    <i class="fas fa-pen-nib"></i>Content
+                </a>
+            </nav>
+
+            {# ── Right: Credit Chip ── #}
+            {% if workspace_billing_state.credits %}
+            {% with credit=workspace_billing_state.credits.0 %}
+            <div class="ws-credit-chip">
+                <i class="fas fa-bolt" style="color: var(--brand-primary); font-size: 0.7rem;"></i>
+                <span>{{ credit.label }}:</span>
+                <span class="chip-value">
+                    {% if credit.unlimited %}∞{% else %}{{ credit.remaining }}{% endif %}
+                </span>
+            </div>
+            {% endwith %}
+            {% endif %}
+
+        </div>
+    </div>
+</div>
+{% endif %}
+

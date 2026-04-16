@@ -1,0 +1,1059 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{# ─── Inline AEO Page Styles ──────────────────────────────────────────────── #}
+<style>
+/* ── Score Ring ── */
+.aeo-score-ring {
+    width: 100px; height: 100px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-direction: column;
+    position: relative;
+    flex-shrink: 0;
+}
+.aeo-score-ring::before {
+    content: '';
+    position: absolute; inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(var(--ring-color, #38bdf8) var(--ring-pct, 0%), rgba(255,255,255,0.06) 0%);
+    mask: radial-gradient(circle at center, transparent 62%, black 63%);
+    -webkit-mask: radial-gradient(circle at center, transparent 62%, black 63%);
+}
+.aeo-score-ring .ring-inner { position: relative; z-index: 1; text-align: center; }
+.aeo-score-ring .ring-num { font-size: 1.6rem; font-weight: 900; line-height: 1; letter-spacing: -0.04em; }
+.aeo-score-ring .ring-label { font-size: 0.55rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-secondary); margin-top: 2px; white-space: nowrap; }
+
+/* ── Stat Strip ── */
+.aeo-stat-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+    gap: 1px;
+    background: var(--border-glass);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--border-glass);
+}
+.aeo-stat-cell {
+    background: rgba(15,23,42,0.8);
+    padding: 1rem 1.25rem;
+    text-align: center;
+}
+.aeo-stat-cell .stat-num { font-size: 1.5rem; font-weight: 900; letter-spacing: -0.04em; display: block; }
+.aeo-stat-cell .stat-label { font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; display: block; margin-top: 2px; }
+
+/* ── Engine Card ── */
+.llm-engine-card {
+    border-radius: 20px;
+    padding: 1.5rem;
+    border: 1px solid rgba(255,255,255,0.08);
+    background: rgba(255,255,255,0.03);
+    transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+}
+.llm-engine-card:hover {
+    border-color: rgba(255,255,255,0.15);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.3);
+}
+.llm-engine-card.cited { background: rgba(74,222,128,0.04); border-color: rgba(74,222,128,0.2); }
+.llm-engine-card.not-cited { background: rgba(248,113,113,0.04); border-color: rgba(248,113,113,0.15); }
+
+/* ── Progress Bar ── */
+.aeo-bar { height: 5px; border-radius: 999px; background: rgba(255,255,255,0.07); overflow: hidden; }
+.aeo-bar .fill { height: 100%; border-radius: 999px; }
+
+/* ── Inline Pill ── */
+.aeo-pill {
+    display: inline-flex; align-items: center; gap: 0.3rem;
+    font-size: 0.7rem; font-weight: 700; padding: 0.2rem 0.6rem;
+    border-radius: 999px; white-space: nowrap;
+}
+.aeo-pill-green  { background: rgba(74,222,128,0.12); color: #4ade80; border: 1px solid rgba(74,222,128,0.2); }
+.aeo-pill-red    { background: rgba(248,113,113,0.12); color: #f87171; border: 1px solid rgba(248,113,113,0.2); }
+.aeo-pill-amber  { background: rgba(251,191,36,0.12);  color: #fbbf24; border: 1px solid rgba(251,191,36,0.2); }
+.aeo-pill-blue   { background: rgba(56,189,248,0.12);  color: #38bdf8; border: 1px solid rgba(56,189,248,0.2); }
+.aeo-pill-purple { background: rgba(168,85,247,0.12);  color: #a855f7; border: 1px solid rgba(168,85,247,0.2); }
+.aeo-pill-orange { background: rgba(251,146,60,0.12);  color: #fb923c; border: 1px solid rgba(251,146,60,0.2); }
+
+/* ── Rec Card ── */
+.aeo-rec { border-radius: 18px; overflow: hidden; }
+.aeo-rec-head { padding: 1.25rem 1.5rem; display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; }
+.aeo-rec-body { padding: 0 1.5rem 1.5rem; display: grid; gap: 0.85rem; }
+.aeo-block { border-radius: 12px; padding: 1rem 1.15rem; }
+.aeo-block-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; font-weight: 700; margin-bottom: 0.35rem; }
+.aeo-block-text { font-size: 0.88rem; line-height: 1.6; }
+
+/* ── Evidence Card ── */
+.evidence-card { background: rgba(255,255,255,0.04); border-radius: 10px; padding: 0.9rem 1rem; border: 1px solid rgba(255,255,255,0.07); }
+.evidence-card-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; font-weight: 700; margin-bottom: 0.35rem; }
+.evidence-card-text { font-size: 0.85rem; color: #cbd5e1; line-height: 1.55; }
+
+/* ── Benchmark Table ── */
+.bench-table { width: 100%; border-collapse: collapse; min-width: 640px; }
+.bench-table th { padding: 0.85rem 1rem; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; font-weight: 700; text-align: center; background: rgba(255,255,255,0.03); border-bottom: 1px solid rgba(255,255,255,0.08); }
+.bench-table th:first-child { text-align: left; }
+.bench-table td { padding: 0.85rem 1rem; font-size: 0.88rem; color: #f1f5f9; text-align: center; border-bottom: 1px solid rgba(255,255,255,0.05); }
+.bench-table td:first-child { text-align: left; }
+.bench-table tr:hover td { background: rgba(255,255,255,0.02); }
+.bench-score { font-size: 1rem; font-weight: 800; }
+.bench-score-green  { color: #4ade80; }
+.bench-score-amber  { color: #fbbf24; }
+.bench-score-red    { color: #f87171; }
+
+/* ── Section Header ── */
+.aeo-section-head { margin-bottom: 1.5rem; }
+.aeo-section-head .eyebrow { color: var(--brand-primary); font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 700; display: block; margin-bottom: 0.4rem; }
+.aeo-section-head h2 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 0.5rem; color: #f1f5f9; }
+.aeo-section-head p { color: #94a3b8; line-height: 1.65; max-width: 680px; margin: 0; font-size: 0.92rem; }
+
+/* ── Context Row ── */
+.ctx-row { padding: 0.8rem 1rem; border-radius: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); }
+.ctx-row .ctx-label { font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; display: block; margin-bottom: 0.2rem; }
+.ctx-row .ctx-val { font-size: 0.9rem; font-weight: 600; color: #f1f5f9; }
+
+/* ── History Table ── */
+.hist-table { width: 100%; border-collapse: collapse; min-width: 560px; }
+.hist-table th { padding: 0.75rem 0.75rem; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; font-weight: 700; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.hist-table td { padding: 0.8rem 0.75rem; font-size: 0.85rem; color: #f1f5f9; border-bottom: 1px solid rgba(255,255,255,0.04); vertical-align: middle; }
+
+/* ── Hero Gradient Card ── */
+.aeo-hero-card {
+    background: linear-gradient(135deg, rgba(56,189,248,0.07) 0%, rgba(129,140,248,0.07) 50%, rgba(168,85,247,0.07) 100%);
+    border: 1px solid rgba(56,189,248,0.15);
+    border-radius: 24px;
+    padding: 2rem;
+    position: relative;
+    overflow: hidden;
+}
+.aeo-hero-card::before {
+    content: '';
+    position: absolute; top: -80px; right: -80px;
+    width: 260px; height: 260px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+    pointer-events: none;
+}
+
+/* ── Section Module Spacing ── */
+.aeo-module { margin-bottom: 1.75rem; }
+
+/* ── Responsive Grids ── */
+@media (max-width: 768px) {
+    .aeo-hero-split { grid-template-columns: 1fr !important; }
+    .aeo-scores-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    .aeo-entity-grid { grid-template-columns: 1fr !important; }
+    .aeo-engine-grid { grid-template-columns: 1fr !important; }
+}
+</style>
+
+{% include "includes/workspace_nav.html" %}
+
+{# ─── Hub Header ─────────────────────────────────────────────────────────── #}
+<div class="container-fluid">
+    <div class="ws-hub-header">
+        <div class="ws-hub-header-left">
+            <div class="ws-hub-eyebrow"><i class="fas fa-robot"></i> AEO Strategy Hub</div>
+            <h1 class="ws-hub-title">{% if project %}{{ project.name }}{% else %}Answer Engine Optimization{% endif %}</h1>
+            <p class="ws-hub-description">
+                AI visibility and answer-readiness analysis. Scores your site on how ChatGPT, Gemini, and Perplexity extract, cite, and surface your content — then tells you exactly what to fix.
+            </p>
+        </div>
+        <div class="ws-hub-header-right">
+            {% if latest_aeo_audit %}
+            <div class="ws-status-tag">
+                <span class="ws-status-dot dot-green"></span>
+                Last run: {{ latest_aeo_audit.created_at|date:"M j, Y" }}
+                {% if aeo_payload.context.target_keyword %}
+                &middot; <span style="color: var(--brand-primary); font-weight: 700;">{{ aeo_payload.context.target_keyword }}</span>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="ws-status-tag">
+                <span class="ws-status-dot dot-muted"></span>
+                No AEO snapshot yet
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+{% if latest_aeo_audit %}
+<nav class="page-jump-nav" aria-label="AEO sections">
+    <div class="container-fluid">
+        <div class="page-jump-links">
+            <a class="page-jump-link" href="#aeo-readiness"><i class="fas fa-bullseye" aria-hidden="true"></i> Readiness</a>
+            <a class="page-jump-link" href="#aeo-scores"><i class="fas fa-chart-pie" aria-hidden="true"></i> Scores</a>
+            <a class="page-jump-link" href="#aeo-llm-visibility"><i class="fas fa-robot" aria-hidden="true"></i> AI Engines</a>
+            <a class="page-jump-link" href="#aeo-recommendations"><i class="fas fa-lightbulb" aria-hidden="true"></i> Fixes</a>
+            <a class="page-jump-link" href="#aeo-benchmark"><i class="fas fa-chart-bar" aria-hidden="true"></i> Benchmark</a>
+            <a class="page-jump-link" href="#aeo-history"><i class="fas fa-history" aria-hidden="true"></i> History</a>
+            <a class="page-jump-link" href="#aeo-run"><i class="fas fa-redo" aria-hidden="true"></i> Run Again</a>
+        </div>
+    </div>
+</nav>
+{% endif %}
+
+<section class="packages-section" style="padding-top: 0;">
+<div class="container-fluid page-stack">
+
+    {# ── State: No project ── #}
+    {% if not project %}
+    <article class="system-card" style="border-top: 4px solid var(--brand-primary);">
+        <p class="eyebrow">Getting Started</p>
+        <h2>Create a workspace first</h2>
+        <p style="color: #94a3b8; line-height: 1.6; margin-bottom: 1.5rem;">AEO analysis needs a workspace project and at least one completed audit to generate meaningful scores.</p>
+        <div style="display: flex; gap: 0.75rem; flex-wrap: wrap;">
+            <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}#start-audit">Start with audit</a>
+            <a class="button button-secondary" href="{% url 'tools:workspace-dashboard' %}#new-project">Create workspace</a>
+        </div>
+    </article>
+
+    {# ── State: No audit yet ── #}
+    {% elif not project.latest_audit_run %}
+    <article class="system-card" style="border-top: 4px solid #ea580c;">
+        <p class="eyebrow" style="color: #fb923c;">Audit Required</p>
+        <h2>Run the first audit to unlock AEO</h2>
+        <p style="color: #94a3b8; line-height: 1.6; margin-bottom: 1.5rem;">AEO scoring is built from your site's crawl data, page structure, and content signals. It needs at least one completed audit.</p>
+        <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
+            {% csrf_token %}
+            <button type="submit" class="button button-primary">Run first audit</button>
+        </form>
+    </article>
+
+    {% else %}
+
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    {# ROW 1: Run Form  +  Score Summary                                        #}
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    <div style="display: grid; grid-template-columns: 1fr 1.6fr; gap: 2rem; align-items: start; margin-bottom: 1.75rem;" class="aeo-hero-split">
+
+        {# ── Run Form ── #}
+        <article id="aeo-run" class="system-card">
+            <div class="aeo-section-head">
+                <span class="eyebrow">{% if latest_aeo_audit %}Refresh Analysis{% else %}Run Analysis{% endif %}</span>
+                <h2 style="font-size: 1.5rem;">Generate AEO snapshot</h2>
+            </div>
+            {% if workspace_credit_actions %}{% for item in workspace_credit_actions %}{% if item.slug == "aeo" %}
+            <div style="padding: 0.85rem 1rem; border-radius: 12px; background: rgba(56,189,248,0.06); border: 1px solid rgba(56,189,248,0.15); margin-bottom: 1.25rem;">
+                <p style="font-size: 0.78rem; color: #94a3b8; margin: 0 0 0.15rem;">Cost per run</p>
+                <strong style="color: #38bdf8; font-size: 1rem;">{{ item.cost }} credits</strong>
+                {% if item.remaining is not None %}<span style="font-size: 0.78rem; color: #94a3b8;"> &middot; {{ item.remaining }} remaining</span>{% endif %}
+            </div>
+            {% endif %}{% endfor %}{% endif %}
+            <form method="post" class="premium-form">
+                {% csrf_token %}
+                {% for field in form %}
+                <div class="form-group">
+                    <label>{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.help_text %}<small class="text-muted">{{ field.help_text }}</small>{% endif %}
+                    {% if field.errors %}<div class="text-error">{{ field.errors|join:", " }}</div>{% endif %}
+                </div>
+                {% endfor %}
+                <button type="submit" class="button-mega" style="width: 100%; margin-top: 1rem;">
+                    <i class="fas fa-bolt"></i> &nbsp;Run Intelligence Scan
+                </button>
+            </form>
+            <p style="font-size: 0.78rem; color: #94a3b8; margin-top: 0.85rem; line-height: 1.5;">Reuses the existing site crawl — no extra crawl needed. Each run generates fresh AI citability predictions.</p>
+        </article>
+
+        {# ── Latest Score Card ── #}
+        {% if latest_aeo_audit %}
+        <article id="aeo-scores" class="system-card" style="background: linear-gradient(135deg, rgba(56,189,248,0.05) 0%, rgba(129,140,248,0.05) 100%); border-color: rgba(56,189,248,0.12);">
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; margin-bottom: 1.5rem;">
+                <div>
+                    <span class="eyebrow">Latest snapshot &mdash; {{ latest_aeo_audit.created_at|date:"M j, Y" }}</span>
+                    <h2 style="font-size: 1.5rem; margin: 0;">AEO Dimension Scores</h2>
+                </div>
+                {% if aeo_payload.context.target_keyword %}
+                <span class="aeo-pill aeo-pill-blue"><i class="fas fa-crosshairs"></i> {{ aeo_payload.context.target_keyword }}</span>
+                {% endif %}
+            </div>
+
+            <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem;" class="aeo-scores-grid">
+                {# Visibility #}
+                {% with s=aeo_payload.scores.visibility_score %}
+                <div style="text-align: center; padding: 1.25rem 0.75rem; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);">
+                    <div class="aeo-score-ring" style="--ring-pct: {% widthratio s 100 360 %}deg; --ring-color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %}; margin: 0 auto 0.85rem;">
+                        <div class="ring-inner">
+                            <span class="ring-num" style="color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %};">{{ s }}</span>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.8rem; font-weight: 800; color: #f1f5f9; margin: 0 0 0.25rem; text-transform: uppercase; letter-spacing: 0.05em;">Visibility</p>
+                    <p style="font-size: 0.7rem; color: #94a3b8; margin: 0; line-height: 1.4;">LLM recognition & AI snippet presence</p>
+                </div>
+                {% endwith %}
+                {# Entity #}
+                {% with s=aeo_payload.scores.entity_score %}
+                <div style="text-align: center; padding: 1.25rem 0.75rem; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);">
+                    <div class="aeo-score-ring" style="--ring-pct: {% widthratio s 100 360 %}deg; --ring-color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %}; margin: 0 auto 0.85rem;">
+                        <div class="ring-inner">
+                            <span class="ring-num" style="color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %};">{{ s }}</span>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.8rem; font-weight: 800; color: #f1f5f9; margin: 0 0 0.25rem; text-transform: uppercase; letter-spacing: 0.05em;">Entity</p>
+                    <p style="font-size: 0.7rem; color: #94a3b8; margin: 0; line-height: 1.4;">Business identity & schema clarity</p>
+                </div>
+                {% endwith %}
+                {# Structure #}
+                {% with s=aeo_payload.scores.structure_score %}
+                <div style="text-align: center; padding: 1.25rem 0.75rem; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);">
+                    <div class="aeo-score-ring" style="--ring-pct: {% widthratio s 100 360 %}deg; --ring-color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %}; margin: 0 auto 0.85rem;">
+                        <div class="ring-inner">
+                            <span class="ring-num" style="color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %};">{{ s }}</span>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.8rem; font-weight: 800; color: #f1f5f9; margin: 0 0 0.25rem; text-transform: uppercase; letter-spacing: 0.05em;">Structure</p>
+                    <p style="font-size: 0.7rem; color: #94a3b8; margin: 0; line-height: 1.4;">Heading hierarchy & answer-first layout</p>
+                </div>
+                {% endwith %}
+                {# Completeness #}
+                {% with s=aeo_payload.scores.completeness_score %}
+                <div style="text-align: center; padding: 1.25rem 0.75rem; border-radius: 16px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07);">
+                    <div class="aeo-score-ring" style="--ring-pct: {% widthratio s 100 360 %}deg; --ring-color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %}; margin: 0 auto 0.85rem;">
+                        <div class="ring-inner">
+                            <span class="ring-num" style="color: {% if s >= 70 %}#4ade80{% elif s >= 50 %}#fbbf24{% else %}#f87171{% endif %};">{{ s }}</span>
+                        </div>
+                    </div>
+                    <p style="font-size: 0.8rem; font-weight: 800; color: #f1f5f9; margin: 0 0 0.25rem; text-transform: uppercase; letter-spacing: 0.05em;">Completeness</p>
+                    <p style="font-size: 0.7rem; color: #94a3b8; margin: 0; line-height: 1.4;">Content depth & FAQ coverage</p>
+                </div>
+                {% endwith %}
+            </div>
+        </article>
+        {% else %}
+        <article class="system-card">
+            <p class="eyebrow">Latest Snapshot</p>
+            <h2 style="font-size: 1.5rem;">No AEO snapshot yet</h2>
+            <p style="color: #94a3b8; line-height: 1.6;">Run the form on the left to generate the first AEO analysis.</p>
+        </article>
+        {% endif %}
+    </div>
+
+    {% if latest_aeo_audit %}
+
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    {# CITATION READINESS HERO                                                  #}
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    {% if aeo_payload.scores.citation_readiness %}
+    <div id="aeo-readiness" class="aeo-module">
+        <div class="aeo-hero-card">
+            <div style="display: grid; grid-template-columns: 160px 1fr; gap: 2.5rem; align-items: center;" class="aeo-hero-split">
+
+                {# Big Number #}
+                <div style="text-align: center;">
+                    <div style="font-size: clamp(4rem, 8vw, 5.5rem); font-weight: 900; line-height: 1; letter-spacing: -0.05em; color: {% if aeo_payload.scores.citation_readiness >= 70 %}#4ade80{% elif aeo_payload.scores.citation_readiness >= 50 %}#fbbf24{% else %}#f87171{% endif %}; text-shadow: 0 0 40px {% if aeo_payload.scores.citation_readiness >= 70 %}rgba(74,222,128,0.4){% elif aeo_payload.scores.citation_readiness >= 50 %}rgba(251,191,36,0.4){% else %}rgba(248,113,113,0.4){% endif %};">
+                        {{ aeo_payload.scores.citation_readiness }}
+                    </div>
+                    <div style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.14em; color: #94a3b8; margin-top: 0.4rem; font-weight: 700;">Citation Readiness</div>
+                    <div style="font-size: 0.72rem; color: #64748b;">/100 composite</div>
+                </div>
+
+                {# Engine Gap Bars #}
+                <div>
+                    <p style="font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.12em; color: #94a3b8; margin: 0 0 1.25rem;">AI engine citation distance</p>
+                    <div style="display: grid; gap: 1.1rem;">
+                        {% for eg in aeo_payload.engine_gaps %}
+                        <div>
+                            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.4rem;">
+                                <span style="font-size: 0.85rem; font-weight: 800; color: {{ eg.color }};">{{ eg.engine }}</span>
+                                <div style="display: flex; align-items: center; gap: 0.5rem;">
+                                    <span style="font-size: 0.75rem; color: #94a3b8;">{{ eg.score }}/100</span>
+                                    {% if eg.cited %}
+                                    <span class="aeo-pill aeo-pill-green">&#10003; Cited</span>
+                                    {% else %}
+                                    <span class="aeo-pill aeo-pill-red">&#8722;{{ eg.gap }} pts</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                            <div class="aeo-bar">
+                                <div class="fill" style="width: {{ eg.score }}%; max-width: 100%; background: {% if eg.cited %}#4ade80{% elif eg.score >= 55 %}#fbbf24{% else %}#f87171{% endif %}; position: relative;"></div>
+                            </div>
+                            {% if not eg.cited %}
+                            <p style="font-size: 0.72rem; color: #94a3b8; margin: 0.25rem 0 0; line-height: 1.4;">{{ eg.lever }}</p>
+                            {% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            {# Top Priority Fix #}
+            {% if aeo_payload.top_priority_fix %}
+            <div style="margin-top: 1.75rem; padding: 1.25rem 1.5rem; border-radius: 16px; background: rgba(251,146,60,0.08); border: 1px solid rgba(251,146,60,0.25); display: grid; grid-template-columns: auto 1fr; gap: 1rem; align-items: flex-start;">
+                <div style="width: 36px; height: 36px; border-radius: 10px; background: rgba(251,146,60,0.15); display: flex; align-items: center; justify-content: center; flex-shrink: 0;">
+                    <i class="fas fa-bolt" style="color: #fb923c; font-size: 0.9rem;"></i>
+                </div>
+                <div>
+                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.4rem; flex-wrap: wrap;">
+                        <span style="font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: #fb923c;">Top Priority Fix</span>
+                        <span class="aeo-pill aeo-pill-orange">Priority {{ aeo_payload.top_priority_fix.priority_score }}</span>
+                    </div>
+                    <p style="margin: 0 0 0.35rem; font-size: 0.95rem; font-weight: 700; color: #f1f5f9; line-height: 1.4;">{{ aeo_payload.top_priority_fix.issue }}</p>
+                    <p style="margin: 0; font-size: 0.85rem; color: #cbd5e1; line-height: 1.55;">{{ aeo_payload.top_priority_fix.fix }}</p>
+                </div>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    {# BUSINESS CONTEXT + AUDIT BASE                                            #}
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    <div id="aeo-entity" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem; margin-bottom: 1.75rem;" class="aeo-entity-grid">
+        <article class="system-card">
+            <div class="aeo-section-head">
+                <span class="eyebrow">Business Context</span>
+                <h2 style="font-size: 1.4rem;">What the AEO engine used</h2>
+            </div>
+            <div style="display: grid; gap: 0.6rem;">
+                {% if aeo_payload.context.target_keyword %}
+                <div class="ctx-row" style="background: rgba(249,115,22,0.06); border-color: rgba(249,115,22,0.2);">
+                    <span class="ctx-label">Target Query</span>
+                    <span class="ctx-val" style="color: #fb923c;">{{ aeo_payload.context.target_keyword }}</span>
+                </div>
+                {% endif %}
+                {% if aeo_payload.context.primary_service %}
+                <div class="ctx-row"><span class="ctx-label">Primary Service</span><span class="ctx-val">{{ aeo_payload.context.primary_service }}</span></div>
+                {% endif %}
+                {% if aeo_payload.context.business_type %}
+                <div class="ctx-row"><span class="ctx-label">Business Type</span><span class="ctx-val">{{ aeo_payload.context.business_type }}</span></div>
+                {% endif %}
+                {% if aeo_payload.context.location %}
+                <div class="ctx-row"><span class="ctx-label">Location</span><span class="ctx-val">{{ aeo_payload.context.location }}</span></div>
+                {% endif %}
+                {% if aeo_payload.context.target_goal %}
+                <div class="ctx-row"><span class="ctx-label">Business Goal</span><span class="ctx-val">{{ aeo_payload.context.target_goal }}</span></div>
+                {% endif %}
+                {% if not aeo_payload.context.primary_service and not aeo_payload.context.location %}
+                <div style="padding: 1rem; border-radius: 12px; background: rgba(234,88,12,0.07); border: 1px solid rgba(234,88,12,0.2); color: #fca5a5; font-size: 0.85rem; line-height: 1.5;">
+                    <strong style="color: #fb923c;">Entity context is incomplete.</strong><br>
+                    Add your service, location, and business type in workspace settings to significantly improve entity scores.
+                    <a href="{% url 'tools:workspace-dashboard' %}" style="display: block; margin-top: 0.5rem; color: #fb923c; font-weight: 700;">Update workspace settings &rarr;</a>
+                </div>
+                {% endif %}
+            </div>
+        </article>
+
+        <article class="system-card">
+            <div class="aeo-section-head">
+                <span class="eyebrow">Audit Base</span>
+                <h2 style="font-size: 1.4rem;">Crawl data used</h2>
+            </div>
+            {% if latest_aeo_audit.source_audit_run %}
+            <div style="display: grid; gap: 0.6rem;">
+                <div class="ctx-row"><span class="ctx-label">Domain</span><span class="ctx-val">{{ latest_aeo_audit.source_audit_run.normalized_domain }}</span></div>
+                <div class="ctx-row"><span class="ctx-label">Pages Crawled</span><span class="ctx-val">{{ latest_aeo_audit.source_audit_run.pages_crawled }}</span></div>
+                <div class="ctx-row"><span class="ctx-label">Overall Audit Score</span><span class="ctx-val" style="color: #38bdf8;">{{ latest_aeo_audit.source_audit_run.overall_score }}/100</span></div>
+                <div class="ctx-row"><span class="ctx-label">AEO Score (Audit Layer)</span><span class="ctx-val" style="color: #38bdf8;">{{ latest_aeo_audit.source_audit_run.aeo_score|default:"—" }}</span></div>
+                <a href="{% url 'tools:audit-result' latest_aeo_audit.source_audit_run.pk %}" class="button button-secondary" style="margin-top: 0.5rem; display: inline-block;">View source audit report &rarr;</a>
+            </div>
+            {% else %}
+            <p style="color: #94a3b8; font-size: 0.88rem;">Source audit not linked to this snapshot.</p>
+            {% endif %}
+        </article>
+    </div>
+
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    {# INTELLIGENCE MODULE                                                       #}
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    {% if aeo_intelligence %}
+    <div class="aeo-module">
+        <article class="system-card">
+            <div class="aeo-section-head">
+                <span class="eyebrow" style="color: #fb923c;">Active Market Intelligence</span>
+                <h2>Answer Engine Evidence</h2>
+                <p>Real-time data extracted from search engines — how algorithms currently summarise your target query, who ranks in the local map pack, and what follow-up questions people ask.</p>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem;">
+                {% if aeo_intelligence.aeo_overview and aeo_intelligence.aeo_overview.snippets %}
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 1.25rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <strong style="color: #f1f5f9; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-robot" style="color: #38bdf8;"></i> AI Summary Snippets</strong>
+                        <span class="aeo-pill aeo-pill-green">Ranking</span>
+                    </div>
+                    <div style="display: grid; gap: 0.75rem; max-height: 240px; overflow-y: auto;">
+                        {% for snippet in aeo_intelligence.aeo_overview.snippets %}
+                        <div style="padding: 0.75rem; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);">
+                            <p style="margin: 0; font-size: 0.85rem; color: #cbd5e1; line-height: 1.6;">{{ snippet }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                {% if aeo_intelligence.related_questions %}
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 1.25rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <strong style="color: #f1f5f9; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-comments" style="color: #818cf8;"></i> People Also Ask</strong>
+                        <span class="aeo-pill aeo-pill-purple">Intent Signals</span>
+                    </div>
+                    <div style="display: grid; gap: 0.75rem; max-height: 240px; overflow-y: auto;">
+                        {% for q in aeo_intelligence.related_questions %}
+                        <div style="padding: 0.75rem; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);">
+                            <strong style="display: block; color: #f1f5f9; font-size: 0.88rem; margin-bottom: 0.35rem;">{{ q.question }}</strong>
+                            {% if q.snippet %}<p style="margin: 0 0 0.35rem; font-size: 0.8rem; color: #94a3b8; line-height: 1.5;">{{ q.snippet }}</p>{% endif %}
+                            {% if q.link %}<a href="{{ q.link }}" target="_blank" rel="noopener" style="font-size: 0.75rem; color: #38bdf8;">Source &rarr;</a>{% endif %}
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+                {% if aeo_intelligence.local_pack %}
+                <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 1.25rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <strong style="color: #f1f5f9; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-map-marker-alt" style="color: #4ade80;"></i> Local Pack</strong>
+                        <span class="aeo-pill aeo-pill-green">Map Targeting</span>
+                    </div>
+                    <div style="display: grid; gap: 0.75rem; max-height: 240px; overflow-y: auto;">
+                        {% for place in aeo_intelligence.local_pack %}
+                        <div style="padding: 0.75rem; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; gap: 1rem;">
+                            <div>
+                                <strong style="display: block; color: #f1f5f9; font-size: 0.88rem;">{{ place.position }}. {{ place.title }}</strong>
+                                <div style="margin-top: 0.25rem; font-size: 0.78rem; color: #94a3b8;">
+                                    {% if place.rating %}<span style="color: #fbbf24;"><i class="fas fa-star"></i> {{ place.rating }}</span> {% if place.reviews %}({{ place.reviews }}){% endif %} &middot; {% endif %}
+                                    {{ place.type|default:"Business" }}
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% if aeo_intelligence.aeo_overview and aeo_intelligence.aeo_overview.sources %}
+            <div style="margin-top: 1.25rem; padding: 1rem 1.25rem; border-radius: 12px; background: rgba(56,189,248,0.05); border: 1px solid rgba(56,189,248,0.12);">
+                <p style="font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: #38bdf8; font-weight: 700; margin: 0 0 0.65rem;">AI Output Sources Currently Ranking</p>
+                <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                    {% for source in aeo_intelligence.aeo_overview.sources %}
+                    <a href="{{ source.link }}" target="_blank" rel="noopener" style="display: inline-flex; align-items: center; padding: 0.35rem 0.75rem; border-radius: 999px; background: rgba(255,255,255,0.05); color: #94a3b8; font-size: 0.78rem; text-decoration: none; border: 1px solid rgba(255,255,255,0.1); transition: color 0.2s, border-color 0.2s;" onmouseover="this.style.color='#f1f5f9';this.style.borderColor='rgba(255,255,255,0.2)'" onmouseout="this.style.color='#94a3b8';this.style.borderColor='rgba(255,255,255,0.1)'">
+                        {{ source.text|default:source.link }}
+                    </a>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </article>
+    </div>
+    {% endif %}
+
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    {# LLM CITABILITY TRACKER                                                   #}
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    {% if latest_aeo_audit.visibility_snapshots.all %}
+    <div class="aeo-module">
+        <article id="aeo-llm-visibility" class="system-card">
+            <div class="aeo-section-head">
+                <span class="eyebrow">LLM Citation Engine</span>
+                <h2>AI Citability Tracker</h2>
+                <p>Predicted citation behaviour across ChatGPT, Gemini, and Perplexity for the active keyword. Each engine weights completely different signals.</p>
+            </div>
+            {% if aeo_payload.context.target_keyword %}
+            <div style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.45rem 1rem; border-radius: 999px; background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2); color: #38bdf8; font-size: 0.8rem; font-weight: 700; margin-bottom: 1.5rem;">
+                <i class="fas fa-crosshairs" style="font-size: 0.72rem;"></i> {{ aeo_payload.context.target_keyword }}
+            </div>
+            {% endif %}
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;" class="aeo-engine-grid">
+                {% for snapshot in latest_aeo_audit.visibility_snapshots.all %}
+
+                {% if snapshot.engine == "chatgpt" %}
+                <div class="llm-engine-card {% if snapshot.answer_present %}cited{% else %}not-cited{% endif %}">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.1rem;">
+                        <div>
+                            <div style="font-size: 1.1rem; font-weight: 800; color: #10a37f; display: flex; align-items: center; gap: 0.4rem;">
+                                <span style="font-size: 1.1rem;">🤖</span> ChatGPT
+                            </div>
+                            <div style="font-size: 0.68rem; color: #94a3b8; margin-top: 0.2rem; line-height: 1.3;">Answer structure &middot; FAQ schema &middot; Entity clarity</div>
+                        </div>
+                        {% if snapshot.answer_present %}
+                        <span class="aeo-pill aeo-pill-green">&#10003; Cited</span>
+                        {% else %}
+                        <span class="aeo-pill aeo-pill-red">&#10007; Not Cited</span>
+                        {% endif %}
+                    </div>
+                    <div style="padding: 0.65rem 0.85rem; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); margin-bottom: 1rem;">
+                        <p style="font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin: 0 0 0.2rem;">Simulated prompt</p>
+                        <p style="font-size: 0.83rem; color: #cbd5e1; margin: 0; font-style: italic;">&ldquo;{{ snapshot.prompt }}&rdquo;</p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.9rem;">
+                        <div style="flex: 1; height: 5px; border-radius: 999px; background: rgba(255,255,255,0.07); overflow: hidden;">
+                            {% if snapshot.citation_frequency == 2 %}<div style="width: 90%; height: 100%; background: #4ade80; border-radius: 999px;"></div>
+                            {% elif snapshot.citation_frequency == 1 %}<div style="width: 50%; height: 100%; background: #fbbf24; border-radius: 999px;"></div>
+                            {% else %}<div style="width: 12%; height: 100%; background: #f87171; border-radius: 999px;"></div>{% endif %}
+                        </div>
+                        <span style="font-size: 0.78rem; font-weight: 700; white-space: nowrap; color: {% if snapshot.citation_frequency == 2 %}#4ade80{% elif snapshot.citation_frequency == 1 %}#fbbf24{% else %}#f87171{% endif %};">{% if snapshot.citation_frequency == 2 %}High{% elif snapshot.citation_frequency == 1 %}Moderate{% else %}Low{% endif %}</span>
+                    </div>
+                    <p style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.55; margin: 0; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.85rem;">{{ snapshot.notes }}</p>
+                </div>
+
+                {% elif snapshot.engine == "gemini" %}
+                <div class="llm-engine-card {% if snapshot.answer_present %}cited{% else %}not-cited{% endif %}">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.1rem;">
+                        <div>
+                            <div style="font-size: 1.1rem; font-weight: 800; color: #4285f4; display: flex; align-items: center; gap: 0.4rem;">
+                                <span style="font-size: 1.1rem;">&#x2726;</span> Gemini
+                            </div>
+                            <div style="font-size: 0.68rem; color: #94a3b8; margin-top: 0.2rem; line-height: 1.3;">E-E-A-T &middot; Schema markup &middot; Local presence</div>
+                        </div>
+                        {% if snapshot.answer_present %}
+                        <span class="aeo-pill aeo-pill-green">&#10003; Cited</span>
+                        {% else %}
+                        <span class="aeo-pill aeo-pill-red">&#10007; Not Cited</span>
+                        {% endif %}
+                    </div>
+                    <div style="padding: 0.65rem 0.85rem; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); margin-bottom: 1rem;">
+                        <p style="font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin: 0 0 0.2rem;">Simulated prompt</p>
+                        <p style="font-size: 0.83rem; color: #cbd5e1; margin: 0; font-style: italic;">&ldquo;{{ snapshot.prompt }}&rdquo;</p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.9rem;">
+                        <div style="flex: 1; height: 5px; border-radius: 999px; background: rgba(255,255,255,0.07); overflow: hidden;">
+                            {% if snapshot.citation_frequency == 2 %}<div style="width: 90%; height: 100%; background: #4ade80; border-radius: 999px;"></div>
+                            {% elif snapshot.citation_frequency == 1 %}<div style="width: 50%; height: 100%; background: #fbbf24; border-radius: 999px;"></div>
+                            {% else %}<div style="width: 12%; height: 100%; background: #f87171; border-radius: 999px;"></div>{% endif %}
+                        </div>
+                        <span style="font-size: 0.78rem; font-weight: 700; white-space: nowrap; color: {% if snapshot.citation_frequency == 2 %}#4ade80{% elif snapshot.citation_frequency == 1 %}#fbbf24{% else %}#f87171{% endif %};">{% if snapshot.citation_frequency == 2 %}High{% elif snapshot.citation_frequency == 1 %}Moderate{% else %}Low{% endif %}</span>
+                    </div>
+                    <p style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.55; margin: 0; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.85rem;">{{ snapshot.notes }}</p>
+                </div>
+
+                {% elif snapshot.engine == "perplexity" %}
+                <div class="llm-engine-card {% if snapshot.answer_present %}cited{% else %}not-cited{% endif %}">
+                    <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 1.1rem;">
+                        <div>
+                            <div style="font-size: 1.1rem; font-weight: 800; color: #a855f7; display: flex; align-items: center; gap: 0.4rem;">
+                                <span style="font-size: 1.1rem;">&#x2A01;</span> Perplexity
+                            </div>
+                            <div style="font-size: 0.68rem; color: #94a3b8; margin-top: 0.2rem; line-height: 1.3;">Content depth &middot; Fact density &middot; Word count</div>
+                        </div>
+                        {% if snapshot.answer_present %}
+                        <span class="aeo-pill aeo-pill-green">&#10003; Cited</span>
+                        {% else %}
+                        <span class="aeo-pill aeo-pill-red">&#10007; Not Cited</span>
+                        {% endif %}
+                    </div>
+                    <div style="padding: 0.65rem 0.85rem; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); margin-bottom: 1rem;">
+                        <p style="font-size: 0.62rem; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; margin: 0 0 0.2rem;">Simulated prompt</p>
+                        <p style="font-size: 0.83rem; color: #cbd5e1; margin: 0; font-style: italic;">&ldquo;{{ snapshot.prompt }}&rdquo;</p>
+                    </div>
+                    <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.9rem;">
+                        <div style="flex: 1; height: 5px; border-radius: 999px; background: rgba(255,255,255,0.07); overflow: hidden;">
+                            {% if snapshot.citation_frequency == 2 %}<div style="width: 90%; height: 100%; background: #4ade80; border-radius: 999px;"></div>
+                            {% elif snapshot.citation_frequency == 1 %}<div style="width: 50%; height: 100%; background: #fbbf24; border-radius: 999px;"></div>
+                            {% else %}<div style="width: 12%; height: 100%; background: #f87171; border-radius: 999px;"></div>{% endif %}
+                        </div>
+                        <span style="font-size: 0.78rem; font-weight: 700; white-space: nowrap; color: {% if snapshot.citation_frequency == 2 %}#4ade80{% elif snapshot.citation_frequency == 1 %}#fbbf24{% else %}#f87171{% endif %};">{% if snapshot.citation_frequency == 2 %}High{% elif snapshot.citation_frequency == 1 %}Moderate{% else %}Low{% endif %}</span>
+                    </div>
+                    <p style="font-size: 0.82rem; color: #cbd5e1; line-height: 1.55; margin: 0; border-top: 1px solid rgba(255,255,255,0.06); padding-top: 0.85rem;">{{ snapshot.notes }}</p>
+                </div>
+                {% endif %}
+
+                {% endfor %}
+            </div>
+        </article>
+    </div>
+    {% endif %}
+
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    {# RECOMMENDATIONS                                                           #}
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    <div class="aeo-module">
+        <article id="aeo-recommendations" class="system-card">
+            <div class="aeo-section-head">
+                <span class="eyebrow">AEO Recommendations</span>
+                <h2>What AI systems need from this site</h2>
+                <p>Each item is clustered by root cause so you fix the structural gap, not just the symptom. Priority scores reflect content evidence and AI citation patterns.</p>
+            </div>
+            <div style="display: grid; gap: 1.25rem;">
+                {% for rec in aeo_payload.recommendations %}
+                <div class="aeo-rec" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-left: 4px solid {% if rec.priority_score >= 85 %}#f87171{% elif rec.priority_score >= 70 %}#fb923c{% else %}#38bdf8{% endif %};">
+                    <div class="aeo-rec-head">
+                        <div style="display: flex; gap: 0.4rem; flex-wrap: wrap; align-items: center;">
+                            <span class="aeo-pill aeo-pill-blue">AEO</span>
+                            <span class="aeo-pill {% if rec.priority_score >= 85 %}aeo-pill-red{% elif rec.priority_score >= 70 %}aeo-pill-orange{% else %}aeo-pill-blue{% endif %}">Priority {{ rec.priority_score }}</span>
+                            {% if rec.category %}<span class="aeo-pill aeo-pill-green">{{ rec.category }}</span>{% endif %}
+                            {% if rec.confidence_label %}<span class="aeo-pill aeo-pill-purple">{{ rec.confidence_label }}</span>{% endif %}
+                            {% if rec.cluster_size and rec.cluster_size > 1 %}<span class="aeo-pill aeo-pill-amber">{{ rec.cluster_size }} signals</span>{% endif %}
+                        </div>
+                    </div>
+                    <div class="aeo-rec-body">
+                        <h4 style="font-size: 1rem; color: #f1f5f9; margin: 0; line-height: 1.4; font-weight: 700;">{{ rec.issue }}</h4>
+
+                        <div class="evidence-card">
+                            <div class="evidence-card-label">Why AI systems ignore this</div>
+                            <div class="evidence-card-text">{{ rec.why_ai_ignores_this }}</div>
+                        </div>
+
+                        <div class="aeo-block" style="background: rgba(74,222,128,0.05); border: 1px solid rgba(74,222,128,0.15);">
+                            <div class="aeo-block-label" style="color: #4ade80;">Fix</div>
+                            <div class="aeo-block-text" style="color: #d1fae5;">{{ rec.fix }}</div>
+                        </div>
+
+                        {% if rec.example_rewrite %}
+                        <div class="aeo-block" style="background: rgba(56,189,248,0.05); border: 1px solid rgba(56,189,248,0.12);">
+                            <div class="aeo-block-label" style="color: #38bdf8;">Example Rewrite</div>
+                            <div class="aeo-block-text" style="color: #bae6fd; font-style: italic;">{{ rec.example_rewrite }}</div>
+                        </div>
+                        {% endif %}
+
+                        {% if rec.action_steps %}
+                        <div>
+                            <p style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.1em; color: #94a3b8; font-weight: 700; margin: 0 0 0.5rem;">Action Steps</p>
+                            <div style="display: grid; gap: 0.4rem;">
+                                {% for step in rec.action_steps %}
+                                <div style="display: flex; gap: 0.65rem; align-items: flex-start; font-size: 0.85rem; color: #cbd5e1; line-height: 1.5;">
+                                    <span style="min-width: 20px; height: 20px; border-radius: 999px; background: var(--signal, #f97316); color: white; font-size: 0.62rem; font-weight: 800; display: flex; align-items: center; justify-content: center; flex-shrink: 0; margin-top: 0.1rem;">{{ forloop.counter }}</span>
+                                    {{ step }}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        {% endif %}
+
+                        {% if rec.expected_impact or rec.where_to_apply %}
+                        <div style="display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 0.75rem; padding-top: 0.5rem; border-top: 1px solid rgba(255,255,255,0.06);">
+                            {% if rec.expected_impact %}
+                            <p style="font-size: 0.8rem; color: #94a3b8; line-height: 1.5; margin: 0; max-width: 480px;">
+                                <strong style="color: #f1f5f9;">Expected impact:</strong> {{ rec.expected_impact }}
+                            </p>
+                            {% endif %}
+                            {% if rec.where_to_apply %}
+                            <div>
+                                <p style="font-size: 0.65rem; text-transform: uppercase; letter-spacing: 0.08em; color: #94a3b8; font-weight: 700; margin: 0 0 0.3rem;">Apply to</p>
+                                {% for url in rec.where_to_apply %}
+                                <div style="font-family: monospace; font-size: 0.74rem; color: #94a3b8; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 280px;">{{ url }}</div>
+                                {% endfor %}
+                            </div>
+                            {% endif %}
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% empty %}
+                <div style="padding: 2rem; border-radius: 16px; background: rgba(74,222,128,0.04); border: 1px solid rgba(74,222,128,0.15); text-align: center;">
+                    <i class="fas fa-check-circle" style="font-size: 1.75rem; color: #4ade80; display: block; margin-bottom: 0.75rem;"></i>
+                    <p style="font-size: 0.95rem; color: #f1f5f9; font-weight: 700; margin: 0 0 0.35rem;">All dimensions above threshold</p>
+                    <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Try a more specific target keyword to surface detailed signals.</p>
+                </div>
+                {% endfor %}
+            </div>
+        </article>
+    </div>
+
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    {# COMPETITOR BENCHMARK                                                      #}
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    <div class="aeo-module">
+        <article id="aeo-benchmark" class="system-card">
+            <div class="aeo-section-head">
+                <span class="eyebrow">Competitive Intelligence</span>
+                <h2>AEO Benchmark</h2>
+                <p>Side-by-side AEO dimension comparison against competitors found in your market. Scores computed from the same signals used for your site.</p>
+            </div>
+            {% if competitor_benchmark.client %}
+            {% if not competitor_benchmark.has_data %}
+            <div style="padding: 2.5rem 2rem; border-radius: 16px; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1); text-align: center;">
+                <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(56,189,248,0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
+                    <i class="fas fa-search" style="color: #38bdf8; font-size: 1.25rem;"></i>
+                </div>
+                <p style="font-size: 1rem; font-weight: 700; color: #f1f5f9; margin: 0 0 0.5rem;">No competitors discovered yet</p>
+                <p style="font-size: 0.88rem; color: #94a3b8; line-height: 1.65; margin: 0 auto 1.5rem; max-width: 460px;">Run an SEO discovery audit to extract competitors from the SERP. Once discovered, they appear here for AEO comparison. You can also add competitors manually.</p>
+                <a class="button button-secondary" href="{% url 'seo:workspace-seo' %}">Add competitors in SEO workspace &rarr;</a>
+            </div>
+            {% else %}
+            <div style="overflow-x: auto; border-radius: 14px; border: 1px solid rgba(255,255,255,0.08);">
+                <table class="bench-table">
+                    <thead>
+                        <tr>
+                            <th style="text-align: left;">Site</th>
+                            <th>Readiness</th>
+                            <th>Visibility</th>
+                            <th>Entity</th>
+                            <th>Structure</th>
+                            <th>Completeness</th>
+                            <th>FAQ Schema</th>
+                            <th>Avg Words</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% with site=competitor_benchmark.client %}
+                        <tr style="background: rgba(56,189,248,0.04);">
+                            <td>
+                                <span style="font-size: 0.82rem; font-weight: 800; color: #38bdf8; display: block;">Your Site</span>
+                                <span style="font-size: 0.72rem; color: #94a3b8;">{{ site.domain }}</span>
+                            </td>
+                            <td><span class="bench-score bench-score-{% if site.readiness >= 70 %}green{% elif site.readiness >= 50 %}amber{% else %}red{% endif %}">{{ site.readiness }}</span></td>
+                            <td><span class="bench-score bench-score-{% if site.visibility >= 70 %}green{% elif site.visibility >= 50 %}amber{% else %}red{% endif %}">{{ site.visibility }}</span></td>
+                            <td><span class="bench-score bench-score-{% if site.entity >= 70 %}green{% elif site.entity >= 50 %}amber{% else %}red{% endif %}">{{ site.entity }}</span></td>
+                            <td><span class="bench-score bench-score-{% if site.structure >= 70 %}green{% elif site.structure >= 50 %}amber{% else %}red{% endif %}">{{ site.structure }}</span></td>
+                            <td><span class="bench-score bench-score-{% if site.completeness >= 70 %}green{% elif site.completeness >= 50 %}amber{% else %}red{% endif %}">{{ site.completeness }}</span></td>
+                            <td>{% if site.has_faq_schema %}<span style="color:#4ade80;font-weight:700;">Yes</span>{% else %}<span style="color:#f87171;">No</span>{% endif %}</td>
+                            <td><span style="color: {% if site.avg_words >= 500 %}#4ade80{% elif site.avg_words >= 200 %}#fbbf24{% else %}#f87171{% endif %}; font-weight: 700;">{{ site.avg_words }}</span></td>
+                        </tr>
+                        {% endwith %}
+                        {% for comp in competitor_benchmark.competitors %}
+                        <tr>
+                            <td>
+                                <span style="font-size: 0.82rem; font-weight: 700; color: #f1f5f9; display: block;">{{ comp.label }}</span>
+                                {% if comp.source == "local_pack" %}<span class="aeo-pill aeo-pill-amber" style="margin-top: 0.2rem;">Local Pack</span>
+                                {% elif comp.source == "serp_source" %}<span class="aeo-pill aeo-pill-purple" style="margin-top: 0.2rem;">AI Source</span>
+                                {% else %}<span style="font-size: 0.7rem; color: #94a3b8;">{{ comp.domain }}</span>{% endif %}
+                            </td>
+                            {% if comp.unknown %}
+                            <td colspan="7" style="color: #94a3b8; font-size: 0.8rem; font-style: italic; text-align: left;">Spotted in AI results — run SEO analysis to score this domain</td>
+                            {% else %}
+                            <td><span class="bench-score bench-score-{% if comp.readiness >= 70 %}green{% elif comp.readiness >= 50 %}amber{% else %}red{% endif %}">{{ comp.readiness }}</span></td>
+                            <td><span class="bench-score bench-score-{% if comp.visibility >= 70 %}green{% elif comp.visibility >= 50 %}amber{% else %}red{% endif %}">{{ comp.visibility }}</span></td>
+                            <td><span class="bench-score bench-score-{% if comp.entity >= 70 %}green{% elif comp.entity >= 50 %}amber{% else %}red{% endif %}">{{ comp.entity }}</span></td>
+                            <td><span class="bench-score bench-score-{% if comp.structure >= 70 %}green{% elif comp.structure >= 50 %}amber{% else %}red{% endif %}">{{ comp.structure }}</span></td>
+                            <td><span class="bench-score bench-score-{% if comp.completeness >= 70 %}green{% elif comp.completeness >= 50 %}amber{% else %}red{% endif %}">{{ comp.completeness }}</span></td>
+                            <td>{% if comp.has_faq_schema %}<span style="color:#4ade80;font-weight:700;">Yes</span>{% else %}<span style="color:#f87171;">No</span>{% endif %}</td>
+                            <td><span style="color: {% if comp.avg_words >= 500 %}#4ade80{% elif comp.avg_words >= 200 %}#fbbf24{% else %}#f87171{% endif %}; font-weight: 700;">{{ comp.avg_words }}</span></td>
+                            {% endif %}
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            <div style="margin-top: 1rem; padding: 0.85rem 1.1rem; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 0.65rem;">
+                <i class="fas fa-info-circle" style="color: #94a3b8; flex-shrink: 0;"></i>
+                <p style="font-size: 0.8rem; color: #94a3b8; margin: 0; line-height: 1.5;">Scores above 68 are in the citation zone for most LLM engines. Add competitors via the SEO workspace for full scored benchmarks.</p>
+            </div>
+            {% endif %}
+            {% else %}
+            <p style="color: #94a3b8;">Run an AEO analysis first to unlock competitor benchmarking.</p>
+            {% endif %}
+        </article>
+    </div>
+
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    {# AEO HISTORY                                                               #}
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    <div class="aeo-module">
+        <article id="aeo-history" class="system-card">
+            <div class="aeo-section-head">
+                <span class="eyebrow">AEO History</span>
+                <h2>Snapshot progression</h2>
+                <p>Track how your citation readiness scores evolve across keyword targets and time.</p>
+            </div>
+            <div style="overflow-x: auto;">
+                <table class="hist-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Keyword</th>
+                            <th>Visibility</th>
+                            <th>Entity</th>
+                            <th>Structure</th>
+                            <th>Completeness</th>
+                            <th>LLM Citations</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for audit in aeo_history %}
+                        <tr>
+                            <td style="color: #94a3b8; font-size: 0.82rem; white-space: nowrap;">{{ audit.created_at|date:"M j, Y" }}</td>
+                            <td style="max-width: 200px;">
+                                <span style="display: block; font-size: 0.82rem; color: #f1f5f9; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ audit.target_keyword|default:"—" }}</span>
+                            </td>
+                            <td><span class="bench-score bench-score-{% if audit.visibility_score >= 70 %}green{% elif audit.visibility_score >= 50 %}amber{% else %}red{% endif %}">{{ audit.visibility_score }}</span></td>
+                            <td><span class="bench-score bench-score-{% if audit.entity_score >= 70 %}green{% elif audit.entity_score >= 50 %}amber{% else %}red{% endif %}">{{ audit.entity_score }}</span></td>
+                            <td><span class="bench-score bench-score-{% if audit.structure_score >= 70 %}green{% elif audit.structure_score >= 50 %}amber{% else %}red{% endif %}">{{ audit.structure_score }}</span></td>
+                            <td><span class="bench-score bench-score-{% if audit.completeness_score >= 70 %}green{% elif audit.completeness_score >= 50 %}amber{% else %}red{% endif %}">{{ audit.completeness_score }}</span></td>
+                            <td>
+                                {% with snaps=audit.visibility_snapshots.all %}
+                                {% if snaps %}
+                                <div style="display: flex; gap: 0.3rem; flex-wrap: wrap;">
+                                    {% for snap in snaps %}
+                                    <span class="aeo-pill {% if snap.answer_present %}aeo-pill-green{% else %}aeo-pill-red{% endif %}">
+                                        {% if snap.answer_present %}&#10003;{% else %}&#10007;{% endif %} {{ snap.get_engine_display }}
+                                    </span>
+                                    {% endfor %}
+                                </div>
+                                {% else %}<span style="color: #94a3b8; font-size: 0.78rem;">—</span>{% endif %}
+                                {% endwith %}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr><td colspan="7" style="color: #94a3b8; padding: 1.25rem 0; text-align: center;">Only the current snapshot is available.</td></tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </article>
+    </div>
+
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    {# CROSS-MODULE FOOTER                                                       #}
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 0.5rem;">
+        <article class="system-card" style="border-top: 3px solid #38bdf8;">
+            <p class="eyebrow" style="color: #38bdf8;">Apply to SEO</p>
+            <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Entity gaps feed the keyword strategy</h3>
+            <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.6; margin-bottom: 1.25rem;">AEO entity and answer recommendations overlap with SEO content gaps. Use the SEO workspace to build keyword-backed campaign items.</p>
+            <a class="button button-secondary" href="{% url 'seo:workspace-seo' %}">Open SEO workspace &rarr;</a>
+        </article>
+        <article class="system-card" style="border-top: 3px solid #4ade80;">
+            <p class="eyebrow" style="color: #4ade80;">Create Content</p>
+            <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Write answer-optimised content</h3>
+            <p style="font-size: 0.85rem; color: #94a3b8; line-height: 1.6; margin-bottom: 1.25rem;">Take recommended fixes and generate structured answer-first content from the content workspace. Each draft is linked to its AEO signal.</p>
+            <a class="button button-secondary" href="{% url 'content:workspace-content' %}">Open Content workspace &rarr;</a>
+        </article>
+    </div>
+
+{% block extra_head %}
+<!-- FAQ Schema (JSON-LD) for AEO Intelligence -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How is my AEO Readiness Score calculated?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The AEO Readiness Score is a composite metric derived from visibility, structural integrity, entity density, and citation completeness. It measures the probability of your brand being cited as the definitive answer by Large Language Models like ChatGPT and Gemini."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do LLMs (Large Language Models) actually 'discover' my site?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "LLMs discover sites through pre-training datasets and real-time retrieval-augmented generation (RAG). If your content is structured with high entity-density and technical schema, it is identified as a high-relevance source for synthesis."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What are 'Entity Clusters' and how do they impact AEO?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Entity Clusters are groups of related topics that define semantic completeness. AI models see a 'Knowledge Graph'; VRTSPACE identifies missing entities your domain needs to complete the cluster and win the citation."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the impact of Schema.org on AI retrieval architecture?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Schema acts as the primary handshake between your server and an AI retriever. JSON-LD provides machine-readable summaries that LLMs ingest with 100% accuracy, increasing citation probability."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What does 'Citation Coverage' represent in the benchmarks?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Citation Coverage measures how often your brand is referenced across AI search engines. It indicates whether your domain is serving as the 'ground-truth' data source for generative responses."
+      }
+    }
+  ]
+}
+</script>
+{% endblock %}
+
+    {% endif %}{# /if latest_aeo_audit #}
+    {% endif %}{# /if project #}
+
+    <section class="faq-section" style="margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--border-glass);">
+        <div class="container section-heading" style="text-align: center; margin-bottom: 2rem;">
+            <p class="eyebrow" style="color: var(--brand-primary);">AEO Intelligence FAQ</p>
+            <h2>Decoding AI Visibility</h2>
+        </div>
+        <div class="container faq-accordion">
+            <details class="faq-item">
+                <summary class="faq-question">
+                    <h3>How is my AEO Readiness Score calculated?</h3>
+                    <span class="faq-icon"></span>
+                </summary>
+                <div class="faq-answer">
+                    <span class="direct-answer">The AEO Readiness Score is a composite metric focusing on semantic visibility, entity density, technical structure, and informational completeness.</span>
+                    <p>
+                        We analyze your content's "answer-ready" density—the ability for AI models to rapidly ingest and cite your information. 
+                        By benchmarking your technical schema and topical authority against the entities currently winning the "citation box," 
+                        we provide a high-precision probability of your brand being the primary answer for a specific user query.
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary class="faq-question">
+                    <h3>How do LLMs (Large Language Models) actually 'discover' my site?</h3>
+                    <span class="faq-icon"></span>
+                </summary>
+                <div class="faq-answer">
+                    <span class="direct-answer">LLMs discover your site through a combination of traditional crawling, massive pre-training datasets, and real-time retrieval blocks.</span>
+                    <p>
+                        When an AI agent like Perplexity or SearchGPT answers a query, it often performs a real-time web search (RAG). 
+                        If your site is correctly structured with high entity-density and technical schema, the LLM's retriever identifies 
+                        your content as a high-relevance source and uses it to synthesize the final answer.
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary class="faq-question">
+                    <h3>What are 'Entity Clusters' and how do they impact AEO?</h3>
+                    <span class="faq-icon"></span>
+                </summary>
+                <div class="faq-answer">
+                    <span class="direct-answer">Entity Clusters are groups of related people, places, and things that define a topic's semantic neighborhood.</span>
+                    <p>
+                        AI models don't just see words; they see a "Knowledge Graph." If your content lacks the expected neighboring 
+                        entities for your topic, the model views your expertise as incomplete. VRTSPACE helps you identify these 
+                        missing entities so you can complete the cluster and win the citation over less comprehensive competitors.
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary class="faq-question">
+                    <h3>What is the impact of Schema.org on AI retrieval architecture?</h3>
+                    <span class="faq-icon"></span>
+                </summary>
+                <div class="faq-answer">
+                    <span class="direct-answer">Schema.org metadata acts as the primary "Handshake" between your server and an AI retriever agent.</span>
+                    <p>
+                        By providing precise JSON-LD (Schema) for your products, FAQs, and articles, you provide a clear, 
+                        machine-readable summary that the model can ingest with 100% accuracy. This removes the "hallucination risk" 
+                        for the AI and significantly increases your chances of being quoted as the factual source.
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary class="faq-question">
+                    <h3>What does 'Citation Coverage' represent in the benchmarks?</h3>
+                    <span class="faq-icon"></span>
+                </summary>
+                <div class="faq-answer">
+                    <span class="direct-answer">Citation Coverage measures the frequency of your brand appearing as a primary source across major LLM search engines.</span>
+                    <p>
+                        Unlike traditional search impressions, AEO visibility hinges on being a cited source. Our engine simulates queries 
+                        across models like Perplexity, SearchGPT, and Gemini to determine if your domain is providing the ground-truth data. 
+                        High coverage means your content is effectively structured for retrieval and is seen as highly authoritative by AI agents.
+                    </p>
+                </div>
+            </details>
+
+            <details class="faq-item">
+                <summary class="faq-question">
+                    <h3>How does 'Zero-Click' search impact my conversion attribution?</h3>
+                    <span class="faq-icon"></span>
+                </summary>
+                <div class="faq-answer">
+                    <span class="direct-answer">In the AEO era, conversion shifts from "Link Clicks" to "Brand Citations" and "User Attribution" in AI answers.</span>
+                    <p>
+                        If a user gets their answer directly from an AI without visiting your site, traditional tracking fails. 
+                        We help you track "Indirect Conversion" by monitoring the frequency of your brand being mentioned as the 
+                        authoritative source, ensuring you get credit for the systemic influence your brand is creating in the discovery layer.
+                    </p>
+                </div>
+            </details>
+        </div>
+    </section>
+
+</div>
+</section>
+{% endblock %}

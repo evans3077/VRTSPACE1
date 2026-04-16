@@ -1,0 +1,290 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero-premium account-hero" style="padding-bottom: 2rem;">
+    <div class="container">
+        <div class="section-heading">
+            <p class="eyebrow text-accent">Account</p>
+            <h1 class="gradient-text" style="max-width: none;">Personal dashboard</h1>
+            <p class="section-text account-page-text text-muted" style="max-width: 760px;">
+                Manage personal details, billing access, password updates, and subscription state separately from workspace operations.
+            </p>
+            <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center;">
+                <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}">Open workspace</a>
+                <a class="button button-secondary" href="#billing">Billing</a>
+                <a class="button button-secondary" href="#credits">Credits</a>
+                {% if current_subscription and current_subscription.stripe_customer_id %}
+                <form method="post" action="{% url 'tools:workspace-billing-portal' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="return_to" value="{% url 'tools:account-dashboard' %}">
+                    <button type="submit" class="button button-secondary">Manage billing</button>
+                </form>
+                {% else %}
+                <a class="button button-secondary" href="#plans">Choose plan</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="packages-section account-surface" style="padding-top: 0;">
+    <div class="container page-stack">
+        <article class="system-card account-panel">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Account Navigation</p>
+                <h2 style="font-size: 2rem;">Personal settings and billing</h2>
+            </div>
+            <div class="workspace-subnav">
+                <a class="workspace-subnav-link" href="#profile">
+                    <i class="fas fa-user" aria-hidden="true"></i>
+                    <span>Profile</span>
+                </a>
+                <a class="workspace-subnav-link" href="#security">
+                    <i class="fas fa-lock" aria-hidden="true"></i>
+                    <span>Security</span>
+                </a>
+                <a class="workspace-subnav-link" href="#billing">
+                    <i class="fas fa-credit-card" aria-hidden="true"></i>
+                    <span>Billing</span>
+                </a>
+                <a class="workspace-subnav-link" href="#credits">
+                    <i class="fas fa-coins" aria-hidden="true"></i>
+                    <span>Credits</span>
+                </a>
+            </div>
+        </article>
+
+        <div class="system-grid">
+            <article class="system-card account-panel">
+                <p class="eyebrow">Account email</p>
+                <h3>{{ request.user.email }}</h3>
+                <p class="account-page-text">Primary sign-in identity</p>
+            </article>
+            <article class="system-card account-panel">
+                <p class="eyebrow">Plan</p>
+                <h3>{{ billing_state.capabilities.name|default:"Free" }}</h3>
+                <p class="account-page-text">{{ billing_state.capabilities.price_label|default:"No paid subscription yet" }}</p>
+            </article>
+            <article class="system-card account-panel">
+                <p class="eyebrow">Workspace credits</p>
+                <h3>{% if billing_state.credit_overview.unlimited %}Unlimited{% else %}{{ billing_state.credit_overview.remaining|default:0 }}{% endif %}</h3>
+                <p class="account-page-text">{{ billing_state.credit_overview.used|default:0 }} used this cycle</p>
+            </article>
+            <article class="system-card account-panel">
+                <p class="eyebrow">Workspaces</p>
+                <h3>{{ workspace_count }}</h3>
+                <p class="account-page-text">Independent projects attached to this account</p>
+            </article>
+        </div>
+
+        <div class="layout-split-wide">
+            <article id="profile" class="system-card account-panel">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Profile</p>
+                    <h2 style="font-size: 2rem;">Personal details</h2>
+                </div>
+                <form method="post" action="{% url 'tools:account-profile-update' %}" class="premium-form">
+                    {% csrf_token %}
+                    {% for field in profile_form %}
+                    <div class="form-group">
+                        <label class="account-form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.errors %}
+                        <span style="font-size: 0.82rem; color: #fca5a5;">{{ field.errors|join:", " }}</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="button button-primary">Save profile</button>
+                </form>
+            </article>
+
+            <article id="security" class="system-card account-panel">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Security</p>
+                    <h2 style="font-size: 2rem;">Login details</h2>
+                </div>
+                <form method="post" action="{% url 'tools:account-password-update' %}" class="premium-form">
+                    {% csrf_token %}
+                    {% for field in password_form %}
+                    <div class="form-group">
+                        <label class="account-form-label">{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <span class="account-help-text text-muted">{{ field.help_text|safe }}</span>
+                        {% endif %}
+                        {% if field.errors %}
+                        <span style="font-size: 0.82rem; color: #fca5a5;">{{ field.errors|join:", " }}</span>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="button button-primary">Update password</button>
+                </form>
+            </article>
+        </div>
+
+        <div class="layout-split-wide">
+            <article id="billing" class="system-card account-panel">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Billing</p>
+                    <h2 style="font-size: 2rem;">Subscription and plan access</h2>
+                </div>
+                <div class="account-stack">
+                    <div class="account-note-card">
+                        Current plan: <strong>{{ billing_state.capabilities.name|default:"Free" }}</strong>
+                    </div>
+                    <div class="account-note-card">
+                        Credits remaining: <strong>{% if billing_state.credit_overview.unlimited %}Unlimited{% else %}{{ billing_state.credit_overview.remaining|default:0 }}{% endif %}</strong>
+                    </div>
+                    {% if current_subscription and current_subscription.stripe_customer_id %}
+                    <form method="post" action="{% url 'tools:workspace-billing-portal' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="return_to" value="{% url 'tools:account-dashboard' %}">
+                        <button type="submit" class="button button-primary">Open billing portal</button>
+                    </form>
+                    {% else %}
+                    <a class="button button-primary" href="#plans">Choose a plan below</a>
+                    {% endif %}
+                </div>
+            </article>
+
+            <article id="plans" class="system-card account-panel" style="grid-column: 1 / -1;">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1.5rem;">
+                    <p class="eyebrow">Plans</p>
+                    <h2 style="font-size: 2rem;">Available upgrades</h2>
+                    <p class="account-page-text" style="max-width: 740px;">
+                        Compare plans without losing the page. Open the plan you need, review limits and credits, then go directly to checkout from that card.
+                    </p>
+                </div>
+                <div class="billing-plan-accordion" id="billing-plan-accordion">
+                    {% for plan in billing_state.plans %}
+                    <details class="billing-plan-card{% if plan.is_current %} is-current{% endif %}"{% if plan.is_current or forloop.first %} open{% endif %}>
+                        <summary class="billing-plan-summary">
+                            <div class="billing-plan-summary-main">
+                                <div class="billing-plan-header-row">
+                                    <h3>{{ plan.name }}</h3>
+                                    {% if plan.is_current %}
+                                    <span class="billing-plan-badge">Current Plan</span>
+                                    {% endif %}
+                                </div>
+                                <div class="billing-plan-price">{{ plan.price }}</div>
+                                <p class="billing-plan-description">{{ plan.description }}</p>
+                            </div>
+                            <div class="billing-plan-summary-side">
+                                <span class="billing-plan-summary-label">Monthly credits</span>
+                                <strong>
+                                    {% if plan.credits.workspace is None %}
+                                    Unlimited
+                                    {% else %}
+                                    {{ plan.credits.workspace }}
+                                    {% endif %}
+                                </strong>
+                                <span class="billing-plan-summary-hint">Open details</span>
+                            </div>
+                        </summary>
+                        <div class="billing-plan-body">
+                            <div class="billing-plan-columns">
+                                <div class="billing-plan-section">
+                                    <strong class="billing-plan-section-title">Limits and capacity</strong>
+                                    <ul class="billing-limit-list">
+                                        {% for limit in plan.limits_summary %}
+                                        <li>
+                                            <i class="fas fa-check" aria-hidden="true"></i>
+                                            <span><strong>{{ limit.label }}:</strong> {{ limit.display }}</span>
+                                        </li>
+                                        {% endfor %}
+                                        <li>
+                                            <i class="fas fa-coins" aria-hidden="true"></i>
+                                            <span>
+                                                <strong>Workspace credits:</strong>
+                                                {% if plan.credits.workspace is None %}
+                                                Unlimited
+                                                {% else %}
+                                                {{ plan.credits.workspace }} workspace credits each month
+                                                {% endif %}
+                                            </span>
+                                        </li>
+                                    </ul>
+                                </div>
+                                <div class="billing-plan-section">
+                                    <strong class="billing-plan-section-title">What this unlocks</strong>
+                                    <ul class="billing-limit-list billing-feature-list">
+                                        {% for feature in plan.features %}
+                                        <li>
+                                            <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                                            <span>{{ feature }}</span>
+                                        </li>
+                                        {% endfor %}
+                                    </ul>
+                                </div>
+                            </div>
+
+                            <div class="billing-plan-actions">
+                                {% if plan.is_current %}
+                                <button class="button button-secondary" disabled style="width: 100%; opacity: 0.7;">Active Plan</button>
+                                {% elif plan.is_custom %}
+                                <a href="{% url 'core:home' %}#contact" class="button button-secondary" style="width: 100%; text-align: center; display: block;">Contact Sales</a>
+                                {% elif plan.is_free %}
+                                <div class="billing-plan-footnote">Included by default</div>
+                                {% else %}
+                                <form method="post" action="{% url 'tools:workspace-billing-checkout' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="plan" value="{{ plan.slug }}">
+                                    <input type="hidden" name="return_to" value="{% url 'tools:account-dashboard' %}">
+                                    <button type="submit" class="button {% if plan.action_direction == 'upgrade' %}button-primary{% else %}button-secondary{% endif %}" style="width: 100%;">
+                                        {{ plan.action_label }}
+                                    </button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </details>
+                    {% endfor %}
+                </div>
+            </article>
+
+            <article id="credits" class="system-card account-panel">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow">Recent credit activity</p>
+                    <h2 style="font-size: 2rem;">Latest usage</h2>
+                </div>
+                <div class="account-stack">
+                    {% for entry in billing_state.recent_credit_entries %}
+                    <div class="account-note-card">
+                        <div class="account-note-card-head">
+                            <strong>{{ entry.label }}</strong>
+                            <span>{{ entry.amount }}</span>
+                        </div>
+                        {% if entry.project_name %}
+                        <div class="account-note-card-meta">{{ entry.project_name }}</div>
+                        {% endif %}
+                    </div>
+                    {% empty %}
+                    <div class="account-note-card account-page-text">No recent account activity yet.</div>
+                    {% endfor %}
+                </div>
+            </article>
+        </div>
+    </div>
+</section>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+    var accordion = document.getElementById("billing-plan-accordion");
+    if (!accordion) {
+        return;
+    }
+    var cards = accordion.querySelectorAll("details.billing-plan-card");
+    cards.forEach(function (card) {
+        card.addEventListener("toggle", function () {
+            if (!card.open) {
+                return;
+            }
+            cards.forEach(function (other) {
+                if (other !== card) {
+                    other.removeAttribute("open");
+                }
+            });
+        });
+    });
+});
+</script>
+{% endblock %}

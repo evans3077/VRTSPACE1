@@ -1,0 +1,613 @@
+{
+"search_metadata":
+{
+"id":
+"6959270e8c24bd247f1be7cc",
+"status":
+"Success",
+"json_endpoint":
+"https://serpapi.com/searches/51007f3048bc7b4a/6959270e8c24bd247f1be7cc.json",
+"created_at":
+"2026-01-03 14:26:22 UTC",
+"processed_at":
+"2026-01-03 14:26:22 UTC",
+"bing_news_url":
+"https://www.bing.com/news/search?q=Coffee",
+"raw_html_file":
+"https://serpapi.com/searches/51007f3048bc7b4a/6959270e8c24bd247f1be7cc.html",
+"total_time_taken":
+0.93
+},
+"search_parameters":
+{
+"engine":
+"bing_news",
+"q":
+"Coffee",
+"device":
+"desktop"
+},
+"organic_results":
+[
+{
+"title":
+"Instant coffee sales are spiking — here are the best after testing 10 brands",
+"link":
+"https://www.yahoo.com/lifestyle/home-garden/kitchen/article/best-instant-coffee-170135186.html",
+"snippet":
+"We sipped options from Starbucks, Illy, Verve Coffee Roasters and more, and found some strong contenders for busy mornings.",
+"source":
+"Yahoo",
+"date":
+"21h",
+"thumbnail":
+"https://th.bing.com/th?id=OVFT.Jstmx3e53ZToL_E0MkJGDy&pid=News&w=234&h=132&c=14&rs=2&qlt=90"
+},
+{
+"title":
+"These three discoveries change how we understand coffee and the heart",
+"link":
+"https://newatlas.com/diet-nutrition/three-huge-discoveries-coffee/",
+"snippet":
+"Coffee is one of the most widely consumed psychoactive substances on the planet, yet despite more than two billion cups being ...",
+"source":
+"New Atlas",
+"date":
+"13h",
+"thumbnail":
+"https://th.bing.com/th?id=OVFT.g7ofPgI4uEf5fD9TsoRF4y&pid=News&w=234&h=132&c=14&rs=2&qlt=90"
+},
+{
+"title":
+"Longevity: Here's how coffee may benefit healthy aging",
+"link":
+"https://www.medicalnewstoday.com/articles/roundup-coffee-and-longevity-3-studies-explore-how-coffee-may-benefit-healthy-aging",
+"snippet":
+"Coffee may boost longevity and lower diabetes risk according to the latest research. Here is what the evidence tells us.",
+"source":
+"Medical News Today",
+"date":
+"2d",
+"thumbnail":
+"https://th.bing.com/th?id=OVFT.Zd60lMX1ziLrwQOnfSEJwC&pid=News&w=234&h=132&c=14&rs=2&qlt=90"
+},
+{
+"title":
+"The 4 most common types of coffee beans and how they differ",
+"link":
+"https://www.msn.com/en-us/health/nutrition/the-4-most-common-types-of-coffee-beans-and-how-they-differ/ar-AA1TtGcw?ocid=BingNewsVerp",
+"snippet":
+"Of the 130-plus types of coffee beans out there, only four are commonly used or commercially grown, and between those four, ...",
+"source":
+"Food Republic on MSN",
+"date":
+"14h",
+"thumbnail":
+"https://th.bing.com/th?id=OVFT.wRLMvGs5ZEvXayp26yVCny&pid=News&w=234&h=132&c=14&rs=2&qlt=90"
+},
+{
+"title":
+"4 Reasons ‘Coffee Badging’ Is Making A Comeback In 2026",
+"link":
+"https://www.forbes.com/sites/bryanrobinson/2026/01/03/4-reasons-coffee-badging-is-making-a-comeback-in-2026/",
+"snippet":
+"Learn the reasons office "coffee badging" is making a comeback as we head into 2026 and what the future holds for this ...",
+"source":
+"Forbes",
+"date":
+"4h",
+"thumbnail":
+"https://th.bing.com/th?id=OVFT.ee5hYUB8CUPhFc6xm0di4i&pid=News&w=234&h=132&c=14&rs=2&qlt=90"
+},
+{
+"title":
+"Deadstock isn’t done with Old Town — a new sneaker-themed coffee shop is on the way",
+"link":
+"https://www.msn.com/en-us/foodanddrink/foodnews/deadstock-isn-t-done-with-old-town-a-new-sneaker-themed-coffee-shop-is-on-the-way/ar-AA1TmQeu?ocid=BingNewsVerp",
+"snippet":
+"The sneaker culture-inspired coffee shop announced earlier this month that it would close its original storefront by 2026.",
+"source":
+"OregonLive.com on MSN",
+"date":
+"2d",
+"thumbnail":
+"https://th.bing.com/th?id=OVFT.tfOhH5krRPEdFiD4Hz8DAi&pid=News&w=234&h=132&c=14&rs=2&qlt=90"
+},
+{
+"title":
+"Drinking Coffee Every Day Could Add Up to 2 Years to Your Life, Study Finds",
+"link":
+"https://www.msn.com/en-us/health/other/scientists-find-drinking-coffee-every-day-could-add-up-to-2-years-to-your-life/ar-AA1Tsb1X?ocid=BingNewsVerp",
+"snippet":
+"Researchers say the popular drink may boost longevity. Regular coffee consumption of two to three cups per day was associated ...",
+"source":
+"Prevention on MSN",
+"date":
+"1d",
+"thumbnail":
+"https://www.bing.com/th?id=OVFT.YexOSE3K3OSV2-SWUX8rrC&pid=News&w=234&h=132&c=14&rs=2&qlt=90"
+},
+{
+"title":
+"Coffee lovers with tiny kitchens are rushing to get Keurig’s new compact coffee maker while it’s on sale",
+"link":
+"https://www.masslive.com/shopping-deals/2025/12/coffee-lovers-with-tiny-kitchens-are-rushing-to-get-keurigs-new-compact-coffee-maker-while-its-on-sale.html",
+"snippet":
+"Keurig has introduced the K-Mini Mate Coffee Maker, marking the company’s most compact single-serve brewer to date. At just 4 ...",
+"source":
+"MassLive",
+"date":
+"2d",
+"thumbnail":
+"https://www.bing.com/th?id=OVFT.Zs9Mi1-JzT-zCl3r9DwEYi&pid=News&w=234&h=132&c=14&rs=2&qlt=90"
+},
+{
+"title":
+"Montgomery veteran launches coffee brand to pay homage to his neighborhood",
+"link":
+"https://www.msn.com/en-us/money/other/montgomery-veteran-launches-coffee-brand-to-pay-homage-to-his-neighborhood/ar-AA1T8zGh?ocid=BingNewsVerp",
+"snippet":
+"A Montgomery-born veteran and former firefighter has launched Southlawn Coffee Company, an online specialty-coffee start-up ...",
+"source":
+"WSFA 12 News on MSN",
+"date":
+"6d",
+"thumbnail":
+"https://www.bing.com/th?id=OVFT.wmHItQVlZJmUhIYs3kCLoy&pid=News&w=234&h=132&c=14&rs=2&qlt=90"
+},
+{
+"title":
+"Coffee pods generate thousands of tonnes of waste in Australia. Here's what is being done about it",
+"link":
+"https://www.msn.com/en-au/news/brisbane/coffee-pods-generate-thousands-of-tonnes-of-waste-in-australia-here-s-what-is-being-done-about-it/ar-AA1TtnI6?ocid=BingNewsVerp",
+"snippet":
+"Between 10 and 20 per cent of the 3 million coffee pods Australians consume daily are actually recycled. Here's what's being ...",
+"source":
+"ABC (Australian Broadcasting Corporation) on MSN",
+"date":
+"17h",
+"thumbnail":
+"https://www.bing.com/th?id=OVFT.OedBoMVBOnNcpdXcvFEEeC&pid=News&w=234&h=132&c=14&rs=2&qlt=90"
+},
+{
+"title":
+"Spanish Coffee",
+"link":
+"https://www.foodandwine.com/spanish-coffee-cocktail-recipe-11874789",
+"snippet":
+"A showstopping Spanish Coffee recipe inspired by Portland’s Huber’s Café, combining ignited rum, citrus liqueur, Kahlúa, hot coffee, and lightly sweetened whipped cream.",
+"source":
+"Food & Wine",
+"date":
+"1d"
+},
+{
+"title":
+"The 20 Best Coffee Table Books for 2026",
+"link":
+"https://www.wsj.com/arts-culture/books/best-coffee-table-books-2026-gift-guide-e8ae58c0",
+"snippet":
+"For those who resolve to read more in the new year.",
+"source":
+"The Wall Street Journal",
+"date":
+"6d",
+"thumbnail":
+"https://www.bing.com/th?id=OVFT.QMYce5Ss7T_mTyefjezaTi&pid=News&w=234&h=132&c=14&rs=2&qlt=90"
+}
+]
+}
+
+GET
+
+
+https://serpapi.com/search.json?engine=bing_news&q=Coffee
+
+Code to integrate
+
+cURLRubyPythonJavaScriptGoPHPJavaRust.NETGoogle Sheets
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_news",
+  q: "Coffee",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+organic_results = results[:organic_results]
+API Parameters
+Search Query
+q
+
+Required
+
+Parameter defines the search query. You can use anything that you would use in a regular Bing search. (e.g., 'query', NOT, OR, site:, filetype:, near:, ip:, loc:, feed: etc.).
+
+Geographic Location
+mkt
+
+Optional
+
+The market where the results come from (e.g. en-US). Typically, mkt is the country where the user is making the request from. However, it could be a different country if the user is not located in a country where Bing delivers results. The market must be in the form <language code>-<country code>. For example, en-US. The string is case insensitive. For a list of possible market values, see Market Codes.
+
+NOTE: If known, you are encouraged to always specify the market. Specifying the market helps Bing route the request and return an appropriate and optimal response. If you specify a market that is not listed in Market Codes, Bing uses a best fit market code based on an internal mapping that is subject to change.
+
+This parameter and the cc query parameter are mutually exclusive—do not specify both.
+
+Localization
+cc
+
+Optional
+
+Parameter defines the country to search from. It follows the 2-character ISO_3166-1 format. (e.g., us for United States, de for Germany, gb for United Kingdom, etc.).
+
+Pagination
+first
+
+Optional
+
+Parameter controls the offset of the organic results. This parameter defaults to 1. (e.g., first=10 will move the 10th organic result to the first position).
+
+count
+
+Optional
+
+Parameter controls the number of results per page. This parameter is only a suggestion and might not reflect actual results returned.
+
+Advanced Bing News Parameters
+qft
+
+Optional
+
+Parameter defines results sorted by date. If the parameter is not set, it will default to the "Best match" sorting, otherwise, if set to: e.g. interval="4", it will show results from the past hour. Other options are:
+interval="7": Past 24 hours,
+interval="8": Past 7 days,
+interval="9": Past 30 days,
+sortbydate="1": Most Recent
+
+Advanced Filters
+safeSearch
+
+Optional
+
+Parameter defines the level of filtering for adult content. It can be set to:
+
+Off to return webpages with adult text, images, or videos.
+Moderate to return webpages with adult text, but not adult images or videos.
+Strict to not return webpages with adult text, images, or videos.
+
+Serpapi Parameters
+engine
+
+Required
+
+Set parameter to bing_news to use the Bing News API engine.
+
+device
+
+Optional
+
+Parameter defines the device to use to get the results. It can be set to desktop (default) to use a regular browser, tablet to use a tablet browser (currently using iPads), or mobile to use a mobile browser.
+
+no_cache
+
+Optional
+
+Parameter will force SerpApi to fetch the Bing News results even if a cached version is already present. A cache is served only if the query and all parameters are exactly the same. Cache expires after 1h. Cached searches are free, and are not counted towards your searches per month. It can be set to false (default) to allow results from the cache, or true to disallow results from the cache. no_cache and async parameters should not be used together.
+
+async
+
+Optional
+
+Parameter defines the way you want to submit your search to SerpApi. It can be set to false (default) to open an HTTP connection and keep it open until you got your search results, or true to just submit your search to SerpApi and retrieve them later. In this case, you'll need to use our Searches Archive API to retrieve your results. async and no_cache parameters should not be used together. async should not be used on accounts with Ludicrous Speed enabled.
+
+zero_trace
+
+Optional
+
+Enterprise only. Parameter enables ZeroTrace mode. It can be set to false (default) or true. Enable this mode to skip storing search parameters, search files, and search metadata on our servers. This may make debugging more difficult.
+
+api_key
+
+Required
+
+Parameter defines the SerpApi private key to use.
+
+output
+
+Optional
+
+Parameter defines the final output you want. It can be set to json (default) to get a structured JSON of the results, or html to get the raw html retrieved.
+
+API Results
+JSON Results
+JSON output includes structured data for Organic Results.
+
+A search status is accessible through search_metadata.status. It flows this way: Processing -> Success || Error. If a search has failed, error will contain an error message. search_metadata.id is the search ID inside SerpApi.
+
+HTML Results
+HTML output is useful to debug JSON results or support features not supported yet by SerpApi.
+HTML output gives you the raw HTML results from Bing News.
+
+API Examples
+Example results for 
+q
+:
+Travel
+GET
+
+
+https://serpapi.com/search.json?engine=bing_news&q=Travel&cc=us
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_news",
+  q: "Travel",
+  cc: "us",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+organic_results = results[:organic_results]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "5f367e73de9834045057b8fc",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/56b86fae48e7df05/5f367e73de9834045057b8fc.json",
+    "created_at": "2020-08-14 12:07:15 UTC",
+    "processed_at": "2020-08-14 12:07:15 UTC",
+    "bing_news_url": "https://www.bing.com/news/search?q=travel&cc=us",
+    "raw_html_file": "https://serpapi.com/searches/56b86fae48e7df05/5f367e73de9834045057b8fc.html",
+    "total_time_taken": 2.1
+  },
+  "search_parameters": {
+    "engine": "bing_news",
+    "q": "travel",
+    "cc": "us",
+    "device": "desktop"
+  },
+  "organic_results": [
+    {
+      "title": "New Airline Industry Analysis Shows States With Air Service and Travel Hardest Hit by COVID-19 Pandemic",
+      "link": "https://www.yahoo.com/news/airline-industry-analysis-shows-states-191600373.html",
+      "snippet": "A new analysis by Airlines for America (A4A) – the industry trade group representing major U.S. carriers – shows which states ...",
+      "source": "YAHOO!",
+      "date": "10m",
+      "thumbnail": "https://serpapi.com/searches/681d0ba4b463f30760cb8921/images/a9dc1ce7d64573a05d797153b16e2755b939c46a0720cb1eea6dae9a7dc80a0a.jpeg"
+    },
+    {
+      "title": "Europe Stocks Slump on Travel Rules; Dollar Steady: Markets Wrap",
+      "link": "https://www.msn.com/en-us/finance/markets/us-futures-slip-travel-rules-hit-europe-stocks-markets-wrap/ar-BB17W8rL",
+      "snippet": "U.S. futures edged lower ahead of retail sales data for July, while European stocks slumped as fresh quarantine rules took ...",
+      "source": "Bloomberg on MSN.com",
+      "date": "35m",
+      "thumbnail": "https://serpapi.com/searches/681d0ba4b463f30760cb8921/images/a9dc1ce7d64573a05d797153b16e275546b0ebf2f4b239682400fe00962f433d.jpeg"
+    },
+    {
+      "title": "Never Buy Travel Insurance For These Kinds Of Trips",
+      "link": "https://www.forbes.com/advisor/travel-insurance/never-buy-for-these-trips/",
+      "snippet": "Some trips aren't meant to be insured. Or they can't be insured. And while the list of trips for which you should never buy ...",
+      "source": "Forbes",
+      "date": "1h",
+      "thumbnail": "https://serpapi.com/searches/681d0ba4b463f30760cb8921/images/a9dc1ce7d64573a05d797153b16e27550d8b47eeb022d953d8f14f4d0efe57fb.jpeg"
+    },
+    {
+      "title": "France Off No Quarantine List, Included In Advice Against ‘All But Essential’ Travel",
+      "link": "https://www.forbes.com/sites/advisoruk/2020/08/14/france-off-travel-corridors-and-fco-exempt-list/",
+      "snippet": "From 4am Saturday, travellers returning to the UK from France must self-isolate for 14 days. How will this affect you if you ...",
+      "source": "Forbes",
+      "date": "1h",
+      "thumbnail": "https://serpapi.com/searches/681d0ba4b463f30760cb8921/images/a9dc1ce7d64573a05d797153b16e275519364666e96b407cb679711ec56dadfc.jpeg"
+    },
+    {
+      "title": "Coral Gables travel agency offers $250 credit for travelers who get tested for COVID-19",
+      "link": "https://www.miamiherald.com/news/business/tourism-cruises/article244928247.html",
+      "snippet": "When Felix Brambilla saw people crowded at Key West bars in June after the city reopened to tourists, he worried about the ...",
+      "source": "Miami Herald",
+      "date": "1h",
+      "thumbnail": "https://serpapi.com/searches/681d0ba4b463f30760cb8921/images/a9dc1ce7d64573a05d797153b16e27559ea975729629db64bb40a1f06d2509eb.jpeg"
+    },
+    {
+      "title": "UK travel firms say France quarantine move is 'devastating blow'",
+      "link": "https://www.msn.com/en-gb/news/uknews/uk-travel-firms-say-france-quarantine-move-is-devastating-blow/ar-BB17XnuS",
+      "snippet": "Industry body calls for end to ‘stop-and-go changes’ to coronavirus travel measures ...",
+      "source": "The Guardian on MSN.com",
+      "date": "1h",
+      "thumbnail": "https://serpapi.com/searches/681d0ba4b463f30760cb8921/images/a9dc1ce7d64573a05d797153b16e2755e30ee937a14e061d93df33bbae0df820.jpeg"
+    },
+    {
+      "title": "European stocks tumble after the UK adds six more countries to its COVID-19 travel quarantine list",
+      "link": "https://markets.businessinsider.com/news/stocks/euro-stocks-tumble-6-countries-added-uk-quarantine-list-2020-8-1029504603",
+      "snippet": "European stocks fell on Friday as the UK added six more countries to its 14-day COVID-19 quarantine list. The UK's benchmark ...",
+      "source": "Business Insider",
+      "date": "44m",
+      "thumbnail": "https://www.bing.com/th?id=ON.8F6CC7714C86CC3D1808A920205DAB5E&pid=News&w=234&h=132&c=14&rs=2&qlt=90"
+    },
+    ...
+  ]
+}
+Example results for 
+q
+:
+Sports
+(mobile)
+GET
+
+
+https://serpapi.com/search.json?engine=bing_news&q=Sports&cc=us&device=mobile
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_news",
+  q: "Sports",
+  cc: "us",
+  device: "mobile",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+organic_results = results[:organic_results]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "5f3680efde9834044adc34c8",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/a1445da0cb29a975/5f3680efde9834044adc34c8.json",
+    "created_at": "2020-08-14 12:17:51 UTC",
+    "processed_at": "2020-08-14 12:17:51 UTC",
+    "bing_news_url": "https://www.bing.com/news/search?q=sports&cc=us",
+    "raw_html_file": "https://serpapi.com/searches/a1445da0cb29a975/5f3680efde9834044adc34c8.html",
+    "total_time_taken": 5.99
+  },
+  "search_parameters": {
+    "engine": "bing_news",
+    "q": "sports",
+    "cc": "us",
+    "device": "mobile"
+  },
+  "organic_results": [
+    {
+      "title": "Nuggets’ history against the Jazz in the NBA playoffs",
+      "link": "https://www.denverpost.com/2020/08/14/nuggets-jazz-nba-playoffs-history/",
+      "source": "The Denver Post",
+      "date": "15m",
+      "thumbnail": "https://serpapi.com/searches/681d0d62e22fede280ee6ef2/images/f9f57175c094be79c736a4beffb0871922a1d210592dc092ebd0e05cebf5399c.jpeg",
+      "similar_results": [
+        {
+          "title": "NBA Playoffs: Portland Trail Blazers, Memphis Grizzlies play-in series …",
+          "link": "https://www.foxnews.com/sports/nba-playoffs-2020-trail-blazers-grizzlies-play-in-series",
+          "source": "Fox News",
+          "date": "1h"
+        },
+        {
+          "title": "NBA roundup: Lillard, Blazers claim final play-in berth",
+          "link": "https://www.reuters.com/article/us-basketball-nba-roundup/nba-roundup-lillard-blazers-claim-final-play-in-berth-idUSKCN25A0IT",
+          "source": "Reuters",
+          "date": "6h"
+        },
+        {
+          "title": "NBA: Damian Lillard and the Portland Trail Blazers claim final play-in berth",
+          "link": "https://www.straitstimes.com/sport/basketball/nba-damian-lillard-and-the-portland-trail-blazers-claim-final-play-in-berth",
+          "source": "The Straits Times",
+          "date": "5h"
+        },
+        {
+          "title": "NBA: Trail Blazers edge Nets to keep playoff bid alive",
+          "link": "https://mb.com.ph/2020/08/14/nba-trail-blazers-edge-nets-to-keep-playoff-bid-alive/",
+          "source": "Manila Bulletin",
+          "date": "3h"
+        }
+      ]
+    },
+    {
+      "title": "Patriots Mailbag: Who Will Be Pats’ Starting QB, Running Back In 2020?",
+      "link": "https://nesn.com/2020/08/patriots-mailbag-who-will-be-pats-starting-qb-running-back-in-2020/",
+      "source": "NESN",
+      "date": "15m",
+      "thumbnail": "https://serpapi.com/searches/681d0d62e22fede280ee6ef2/images/f9f57175c094be79c736a4beffb087194fb4dac90720e1133d5d5c14f9bec175.jpeg",
+      "similar_results": [
+        {
+          "title": "NFL's COVID-19 training camp rules for Broncos",
+          "link": "https://broncoswire.usatoday.com/2020/08/14/nfl-training-camp-rules-for-covid-19-offseason/",
+          "source": "USA Today",
+          "date": "1h"
+        },
+        {
+          "title": "Five bold predictions for Patriots' 2020 training camp",
+          "link": "https://www.nbcsports.com/boston/patriots/five-bold-predictions-patriots-2020-training-camp",
+          "source": "NBC Sports",
+          "date": "6h"
+        }
+      ]
+    },
+    {
+      "title": "Sarina Wiegman to succeed Neville as England head coach …",
+      "link": "https://www.theguardian.com/football/2020/aug/14/sarina-wiegman-to-succeed-neville-as-england-manager-from-september-2021",
+      "source": "The Guardian",
+      "date": "17m",
+      "thumbnail": "https://serpapi.com/searches/681d0d62e22fede280ee6ef2/images/f9f57175c094be79c736a4beffb087190ca3e00935f1ddef88bc89cff3819fe1.jpeg"
+    },
+    {
+      "title": "Three bold predictions for Panthers in 2020: Matt Rhule swings a big …",
+      "link": "https://www.cbssports.com/nfl/news/three-bold-predictions-for-panthers-in-2020-matt-rhule-swings-a-big-trade-christian-mccaffrey-makes-history/",
+      "source": "CBSSports.com",
+      "date": "7m",
+      "thumbnail": "https://serpapi.com/searches/681d0d62e22fede280ee6ef2/images/f9f57175c094be79c736a4beffb08719dcd4e929ce28d13827d8bcf1a3032f03.jpeg"
+    },
+    {
+      "title": "Mics picked up the Nets' aggressive strategy to defend Damian Lillard",
+      "link": "https://ftw.usatoday.com/2020/08/blazers-nets-damian-lillard-defense-mics",
+      "source": "USA Today",
+      "date": "16m",
+      "thumbnail": "https://serpapi.com/searches/681d0d62e22fede280ee6ef2/images/f9f57175c094be79c736a4beffb08719dfc21d0f8cb2758e5ac90e1a17051637.jpeg",
+      "similar_results": [
+        {
+          "title": "Damian Lillard, Trail Blazers steal a win they had to have",
+          "link": "https://www.msn.com/en-ca/sports/nba/damian-lillard-trail-blazers-steal-a-win-they-had-to-have/ar-BB17WYjt",
+          "source": "Sporting News on MSN.com",
+          "date": "6h"
+        },
+        {
+          "title": "NBA Playoffs: Portland Trail Blazers, Memphis Grizzlies play-in series …",
+          "link": "https://www.foxnews.com/sports/nba-playoffs-2020-trail-blazers-grizzlies-play-in-series",
+          "source": "Fox News",
+          "date": "1h"
+        },
+        {
+          "title": "NBA Roundup: Lillard lifts Blazers to play-in; Suns hot but go home; Spurs …",
+          "link": "https://mb.com.ph/2020/08/14/nba-roundup-lillard-lifts-blazers-to-play-in-suns-hot-but-go-home-spurs-miss-playoffs-after-22-seasons/",
+          "source": "Manila Bulletin",
+          "date": "2h"
+        }
+      ]
+    },
+    ...
+  ],
+  "trending_results": [
+    {
+      "title": "Grills Fauci on COVID",
+      "link": "https://www.bing.com/news/topicview?q=Matthew+McConaughey+Fauci&filters=tnTID%3d%22BE10374B-AD52-4f4f-8B59-3CC8C69600C0%22+tnVersion%3d%223656472%22+Segment%3d%22popularnow.carousel%22+tnCol%3d%220%22+tnOrder%3d%223e9b777b-869e-4d5d-9073-fb769907c045%22&nvaug=%5bNewsVertical+topicviewtype%3d\"2\"%5d&form=NWBTTC",
+      "thumbnail": "https://www.bing.com/th?id=OPN.RTNews_bqFaO6O4nVt8suF6N1fX7A&rs=2&qlt=80&pid=1.11&w=100&h=100&c=14&rs=2&qlt=90"
+    },
+    {
+      "title": "Speaking at DNC",
+      "link": "https://www.bing.com/news/topicview?q=Michael+Bloomberg+speaking+DNC&filters=tnTID%3d%2215F0B175-5BC6-43e5-8653-A457FB40859D%22+tnVersion%3d%223656472%22+Segment%3d%22popularnow.carousel%22+tnCol%3d%221%22+tnOrder%3d%223e9b777b-869e-4d5d-9073-fb769907c045%22&nvaug=%5bNewsVertical+topicviewtype%3d\"2\"%5d&form=NWBTTC",
+      "thumbnail": "https://www.bing.com/th?id=OPN.RTNews_o4hq6En2Su-0emOvBrrtYg&rs=2&qlt=80&pid=1.11&w=100&h=100&c=14&rs=2&qlt=90"
+    },
+    {
+      "title": "Discrimination charges",
+      "link": "https://www.bing.com/news/topicview?q=Yale+DOJ&filters=tnTID%3d%222689A831-DD0E-4339-854F-0CCE9407C061%22+tnVersion%3d%223656472%22+Segment%3d%22popularnow.carousel%22+tnCol%3d%222%22+tnOrder%3d%223e9b777b-869e-4d5d-9073-fb769907c045%22&nvaug=%5bNewsVertical+topicviewtype%3d\"2\"%5d&form=NWBTTC",
+      "thumbnail": "https://www.bing.com/th?id=OPN.RTNews_ZP1PY26f5Uz9nd2oxxwP5A&rs=2&qlt=80&pid=1.11&w=100&h=100&c=14&rs=2&qlt=90"
+    },
+    {
+      "title": "Seized from terrorists",
+      "link": "https://www.bing.com/news/topicview?q=Cryptocurrency+terrorism&filters=tnTID%3d%2208EF8523-2190-4ada-8C78-7E521053EA5D%22+tnVersion%3d%223656472%22+Segment%3d%22popularnow.carousel%22+tnCol%3d%223%22+tnOrder%3d%223e9b777b-869e-4d5d-9073-fb769907c045%22&nvaug=%5bNewsVertical+topicviewtype%3d\"2\"%5d&form=NWBTTC",
+      "thumbnail": "https://www.bing.com/th?id=OPN.RTNews_7JvZiOS25uk9OGequ1zgkg&rs=2&qlt=80&pid=1.11&w=100&h=100&c=14&rs=2&qlt=90"
+    },
+    {
+      "title": "Ejected from stands",
+      "link": "https://www.bing.com/news/topicview?q=Stephen+Strasburg+ejected&filters=tnTID%3d%22F4726827-02C4-480b-9890-4689FC214473%22+tnVersion%3d%223656472%22+Segment%3d%22popularnow.carousel%22+tnCol%3d%224%22+tnOrder%3d%223e9b777b-869e-4d5d-9073-fb769907c045%22&nvaug=%5bNewsVertical+topicviewtype%3d\"2\"%5d&form=NWBTTC",
+      "thumbnail": "https://www.bing.com/th?id=OPN.RTNews_ZWaI9ol3hV9EhPhRelokvQ&rs=2&qlt=80&pid=1.11&w=100&h=100&c=14&rs=2&qlt=90"
+    },
+    ...
+  ]
+}

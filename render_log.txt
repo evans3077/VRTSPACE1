@@ -1,0 +1,50 @@
+2026-03-28T12:44:26.09271507Z            ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+2026-03-28T12:44:26.09271791Z   File "/opt/render/project/src/.venv/lib/python3.14/site-packages/gunicorn/util.py", line 370, in import_app
+2026-03-28T12:44:26.09272109Z     mod = importlib.import_module(module)
+2026-03-28T12:44:26.092735921Z   File "/opt/render/project/python/Python-3.14.3/lib/python3.14/importlib/__init__.py", line 88, in import_module
+2026-03-28T12:44:26.092739991Z     return _bootstrap._gcd_import(name[level:], package, level)
+2026-03-28T12:44:26.092743761Z            ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-03-28T12:44:26.092747061Z   File "<frozen importlib._bootstrap>", line 1398, in _gcd_import
+2026-03-28T12:44:26.092749922Z   File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+2026-03-28T12:44:26.092752862Z   File "<frozen importlib._bootstrap>", line 1335, in _find_and_load_unlocked
+2026-03-28T12:44:26.092782322Z ModuleNotFoundError: No module named 'app'
+2026-03-28T12:44:29.198426941Z ==> No open ports detected, continuing to scan...
+2026-03-28T12:44:29.279624379Z ==> Docs on specifying a port: https://render.com/docs/web-services#port-binding
+2026-03-28T12:44:44.818262412Z ==> Running 'gunicorn app:app'
+2026-03-28T12:44:46.224883123Z Traceback (most recent call last):
+2026-03-28T12:44:46.225892483Z   File "/opt/render/project/src/.venv/bin/gunicorn", line 7, in <module>
+2026-03-28T12:44:46.225909174Z     sys.exit(run())
+2026-03-28T12:44:46.225912324Z              ~~~^^
+2026-03-28T12:44:46.225916134Z   File "/opt/render/project/src/.venv/lib/python3.14/site-packages/gunicorn/app/wsgiapp.py", line 66, in run
+2026-03-28T12:44:46.225921294Z     WSGIApplication("%(prog)s [OPTIONS] [APP_MODULE]", prog=prog).run()
+2026-03-28T12:44:46.225924294Z     ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^
+2026-03-28T12:44:46.225926304Z   File "/opt/render/project/src/.venv/lib/python3.14/site-packages/gunicorn/app/base.py", line 235, in run
+2026-03-28T12:44:46.225928264Z     super().run()
+2026-03-28T12:44:46.225930204Z     ~~~~~~~~~~~^^
+2026-03-28T12:44:46.225932214Z   File "/opt/render/project/src/.venv/lib/python3.14/site-packages/gunicorn/app/base.py", line 71, in run
+2026-03-28T12:44:46.225934164Z     Arbiter(self).run()
+2026-03-28T12:44:46.225936135Z     ~~~~~~~^^^^^^
+2026-03-28T12:44:46.225938864Z   File "/opt/render/project/src/.venv/lib/python3.14/site-packages/gunicorn/arbiter.py", line 57, in __init__
+2026-03-28T12:44:46.225941965Z     self.setup(app)
+2026-03-28T12:44:46.225945215Z     ~~~~~~~~~~^^^^^
+2026-03-28T12:44:46.225948415Z   File "/opt/render/project/src/.venv/lib/python3.14/site-packages/gunicorn/arbiter.py", line 117, in setup
+2026-03-28T12:44:46.225951505Z     self.app.wsgi()
+2026-03-28T12:44:46.225954435Z     ~~~~~~~~~~~~~^^
+2026-03-28T12:44:46.225969656Z   File "/opt/render/project/src/.venv/lib/python3.14/site-packages/gunicorn/app/base.py", line 66, in wsgi
+2026-03-28T12:44:46.225973936Z     self.callable = self.load()
+2026-03-28T12:44:46.225977116Z                     ~~~~~~~~~^^
+2026-03-28T12:44:46.225980436Z   File "/opt/render/project/src/.venv/lib/python3.14/site-packages/gunicorn/app/wsgiapp.py", line 57, in load
+2026-03-28T12:44:46.225984026Z     return self.load_wsgiapp()
+2026-03-28T12:44:46.225986026Z            ~~~~~~~~~~~~~~~~~^^
+2026-03-28T12:44:46.225988906Z   File "/opt/render/project/src/.venv/lib/python3.14/site-packages/gunicorn/app/wsgiapp.py", line 47, in load_wsgiapp
+2026-03-28T12:44:46.225993276Z     return util.import_app(self.app_uri)
+2026-03-28T12:44:46.225995406Z            ~~~~~~~~~~~~~~~^^^^^^^^^^^^^^
+2026-03-28T12:44:46.225997366Z   File "/opt/render/project/src/.venv/lib/python3.14/site-packages/gunicorn/util.py", line 370, in import_app
+2026-03-28T12:44:46.225999406Z     mod = importlib.import_module(module)
+2026-03-28T12:44:46.226001437Z   File "/opt/render/project/python/Python-3.14.3/lib/python3.14/importlib/__init__.py", line 88, in import_module
+2026-03-28T12:44:46.226003857Z     return _bootstrap._gcd_import(name[level:], package, level)
+2026-03-28T12:44:46.226005866Z            ~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+2026-03-28T12:44:46.226007847Z   File "<frozen importlib._bootstrap>", line 1398, in _gcd_import
+2026-03-28T12:44:46.226009857Z   File "<frozen importlib._bootstrap>", line 1371, in _find_and_load
+2026-03-28T12:44:46.226011897Z   File "<frozen importlib._bootstrap>", line 1335, in _find_and_load_unlocked
+2026-03-28T12:44:46.226021937Z ModuleNotFoundError: No module named 'app'

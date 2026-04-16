@@ -1,0 +1,545 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{% include "includes/workspace_nav.html" %}
+
+{# ── Hub Header ─────────────────────────────────────────────────────────── #}
+<div class="container-fluid" style="padding-bottom: 0;">
+    <div class="ws-hub-header">
+        <div class="ws-hub-header-left">
+            <div class="ws-hub-eyebrow"><i class="fas fa-pen-nib"></i> AI Content Engine</div>
+            <h1 class="ws-hub-title">Generate draft content from workspace context</h1>
+            <p class="ws-hub-description">
+                Create structured drafts for service pages, landing pages, articles, and answer blocks using the current audit plus the latest SEO and tracking context.
+            </p>
+        </div>
+        <div class="ws-hub-header-right">
+            {% if project and project.latest_audit_run %}
+            <div class="ws-status-tag">
+                <span class="ws-status-dot dot-green"></span>
+                {{ generated_content_list|length }} draft{{ generated_content_list|length|pluralize }} &middot; {{ editorial_tasks|length }} queued
+            </div>
+            {% else %}
+            <div class="ws-status-tag">
+                <span class="ws-status-dot dot-muted"></span>
+                Audit required to generate
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+
+<section class="dashboard-stack" style="padding-top: 1rem;">
+    <div class="container-fluid">
+
+        {# ── Metric row: only show when there is an active project ── #}
+        {% if project %}
+        <div class="metric-grid-premium" style="margin-bottom: 2rem;">
+            <div class="metric-card-premium">
+                <p class="eyebrow">Workspace</p>
+                <h3>{{ project.name }}</h3>
+            </div>
+            <div class="metric-card-premium">
+                <p class="eyebrow">Base Audit Score</p>
+                <h3>{% if project.latest_audit_run %}{{ project.latest_audit_run.overall_score }}{% else %}—{% endif %}</h3>
+            </div>
+            <div class="metric-card-premium">
+                <p class="eyebrow">Drafts</p>
+                <h3>{{ generated_content_list|length }}</h3>
+            </div>
+            <div class="metric-card-premium">
+                <p class="eyebrow">Editorial Queue</p>
+                <h3>{{ editorial_tasks|length }}</h3>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if optimization_engine and project and project.latest_audit_run %}
+        <!-- Phase D: Content Optimization Engine -->
+        <article id="content-optimization-engine" class="system-card" style="margin-bottom: 2rem;">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1.5rem;">
+                <p class="eyebrow" style="color: var(--signal);">Content Optimization Engine</p>
+                <h2 style="font-size: 2rem;">Gap Analysis &amp; Keyword Intelligence</h2>
+                <p style="color: var(--text-secondary); line-height: 1.6; max-width: 740px;">
+                    Competitive content gaps identified from accepted market competitors, enriched with live SERP intent signals and AEO-sourced queries.
+                </p>
+            </div>
+
+            {% if optimization_engine.gap_analysis.missing_layers or optimization_engine.gap_analysis.thin_content %}
+            <div class="system-grid" style="gap: 1.5rem; margin-bottom: 2rem;">
+                <!-- Missing Content Layers -->
+                {% if optimization_engine.gap_analysis.missing_layers %}
+                <div class="alert-panel alert-panel-danger" style="margin: 0;">
+                    <div class="alert-panel-header">
+                        <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i> Missing Page Layers
+                    </div>
+                    <div style="display: grid; gap: 0.75rem;">
+                        {% for gap in optimization_engine.gap_analysis.missing_layers %}
+                        <div class="precision-gap-card precision-gap-card-danger">
+                            <div class="precision-gap-header">
+                                <h4 class="precision-gap-title">{{ gap.title }}</h4>
+                                {% if gap.target_keyword %}
+                                <span class="precision-gap-keyword">{{ gap.target_keyword }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="precision-gap-stats">
+                                <div class="precision-stat">
+                                    <span class="precision-stat-label">Competitor Presence</span>
+                                    <span class="precision-stat-value">{{ gap.competitor_presence }} out of {{ gap.competitor_count }}</span>
+                                </div>
+                            </div>
+                            <p class="precision-gap-action"><strong>Next Step:</strong> {{ gap.action }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <!-- Thin Content Gaps -->
+                {% if optimization_engine.gap_analysis.thin_content %}
+                <div class="alert-panel alert-panel-warning" style="margin: 0;">
+                    <div class="alert-panel-header">
+                        <i class="fas fa-file-alt" style="color: #ea580c;"></i> Thin Content Detected
+                    </div>
+                    <div style="display: grid; gap: 0.75rem;">
+                        {% for item in optimization_engine.gap_analysis.thin_content %}
+                        <div class="precision-gap-card precision-gap-card-warning">
+                            <div class="precision-gap-header">
+                                <h4 class="precision-gap-title">{{ item.title }}</h4>
+                                {% if item.target_keyword %}
+                                <span class="precision-gap-keyword">{{ item.target_keyword }}</span>
+                                {% endif %}
+                            </div>
+                            <div class="precision-gap-stats">
+                                <div class="precision-stat">
+                                    <span class="precision-stat-label">Your Depth</span>
+                                    <span class="precision-stat-value">{{ item.site_avg_word_count }} words</span>
+                                </div>
+                                <div class="precision-stat">
+                                    <span class="precision-stat-label">Competitor Baseline</span>
+                                    <span class="precision-stat-value">{{ item.competitor_avg_word_count }} words</span>
+                                </div>
+                            </div>
+                            <p class="precision-gap-action"><strong>Next Step:</strong> {{ item.action }}</p>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+            {% else %}
+            <div class="ws-empty-state" style="margin-bottom: 2rem;">
+                <div class="ws-empty-icon"><i class="fas fa-microscope"></i></div>
+                <p class="ws-empty-title">Waiting on Competitive Data</p>
+                <p class="ws-empty-desc" style="max-width: 500px; margin: 0 auto;">There are no execution gaps detected against tracking targets at the moment. When competitor vulnerabilities hit the threshold, precision metrics tracking Missing Layers and Content Depth ratios will appear here.</p>
+            </div>
+            {% endif %}
+
+            <!-- Keyword Intent Clusters -->
+            {% if optimization_engine.keyword_clusters %}
+            <div>
+                <strong style="display: block; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--brand-primary); margin-bottom: 1.25rem;">Keyword Intent Clusters</strong>
+                <div class="data-card-grid">
+                    {% for cluster_name, keywords in optimization_engine.keyword_clusters.items %}
+                    <div class="keyword-cluster-card">
+                        <p class="keyword-cluster-title">{{ cluster_name }}</p>
+                        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem;">
+                            {% for kw in keywords %}
+                            <span class="keyword-pill">{{ kw }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endif %}
+        </article>
+        {% endif %}
+
+        <div class="layout-split" style="margin-top: 1.5rem;">
+            
+            <article class="system-card" id="generate">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1.5rem;">
+                    <p class="eyebrow">Generator</p>
+                    <h2 style="font-size: 1.7rem;">Build structured output</h2>
+                </div>
+                
+                {% if not project %}
+                <div class="ws-empty-state">
+                    <div class="ws-empty-icon"><i class="fas fa-folder-plus"></i></div>
+                    <p class="ws-empty-title">No workspace linked</p>
+                    <p class="ws-empty-desc">Create a project first. Content generation lives inside a project so drafts, audits, SEO briefs and credit usage stay consistent.</p>
+                    <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center;">
+                        <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}#start-audit"><i class="fas fa-play"></i> Start with audit</a>
+                        <a class="button button-secondary" href="{% url 'tools:workspace-dashboard' %}#new-project">Create workspace</a>
+                    </div>
+                </div>
+                {% elif not project.latest_audit_run %}
+                <div class="ws-empty-state">
+                    <div class="ws-empty-icon"><i class="fas fa-search"></i></div>
+                    <p class="ws-empty-title">Audit required</p>
+                    <p class="ws-empty-desc">Run the first audit before generating content. The engine uses the audit as the base context for page decisions, internal links, and score gaps.</p>
+                    <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin-top: 1.5rem;">
+                        {% csrf_token %}
+                        <button type="submit" class="button button-primary"><i class="fas fa-play"></i> Run first audit</button>
+                    </form>
+                </div>
+                {% else %}
+                
+                {% if workspace_credit_actions %}
+                    {% for item in workspace_credit_actions %}
+                        {% if item.slug == "content" %}
+                        <div class="evidence-card" style="background: rgba(139, 92, 246, 0.1); border-color: rgba(139, 92, 246, 0.3); margin-bottom: 1.5rem;">
+                            <div class="evidence-card-text">
+                                Generation estimated at <strong>{{ item.credits }} credits</strong>. {{ item.next_step }}
+                            </div>
+                        </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+                
+                <form method="post" action="{% url 'content:workspace-content-generate' %}" class="premium-form">
+                    {% csrf_token %}
+                    {% for field in form %}
+                    <div class="form-group">
+                        <label>{{ field.label }}</label>
+                        {{ field }}
+                        {% if field.help_text %}
+                        <small class="text-muted">{{ field.help_text }}</small>
+                        {% endif %}
+                        {% for error in field.errors %}
+                        <div class="text-error">{{ error }}</div>
+                        {% endfor %}
+                    </div>
+                    {% endfor %}
+                    <button type="submit" class="button button-primary" style="margin-top: 1rem; width: 100%;"><i class="fas fa-bolt"></i> Generate Engine Draft</button>
+                </form>
+                {% endif %}
+            </article>
+
+            <article class="system-card">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1.25rem;">
+                    <p class="eyebrow" style="color: var(--brand-primary);">Generator Architecture</p>
+                    <h2 style="font-size: 1.5rem;">What the engine produces</h2>
+                    <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0.35rem;line-height: 1.6;">Each draft is structured across three layers — SEO metadata, execution formatting, and briefing intelligence.</p>
+                </div>
+                <div style="display: grid; gap: 1rem;">
+                    <div class="evidence-card" style="margin:0; border-left: 3px solid var(--brand-primary);">
+                        <span class="evidence-card-label">SEO Package</span>
+                        <div class="evidence-card-text">Title tag, meta title, meta description, schema JSON — structured for indexing.</div>
+                    </div>
+                    <div class="evidence-card" style="margin:0; border-left: 3px solid var(--brand-secondary);">
+                        <span class="evidence-card-label">Execution Structuring</span>
+                        <div class="evidence-card-text">Answer-first intro, section layout, strict FAQ block formatting, CTA integrations.</div>
+                    </div>
+                    <div class="evidence-card" style="margin:0; border-left: 3px solid #22c55e;">
+                        <span class="evidence-card-label">Briefing Layer</span>
+                        <div class="evidence-card-text">Keyword targets, competitor evidence bridging, internal link routing — ready to publish.</div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid rgba(255,255,255,0.06);">
+                    <p class="eyebrow" style="margin-bottom: 0.75rem;">How to begin</p>
+                    <ol style="padding-left: 1.25rem; display: grid; gap: 0.6rem; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6;">
+                        <li>Create a workspace and run the baseline audit</li>
+                        <li>Run SEO intelligence to map competitor clusters</li>
+                        <li>Select a page type and target keyword, then generate</li>
+                        <li>Review, export, and publish the structured draft</li>
+                    </ol>
+                </div>
+            </article>
+        </div>
+
+
+        <article class="system-card" id="editorial-queue">
+            <div style="display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; flex-wrap: wrap; gap: 1rem;">
+                <div class="section-heading" style="text-align: left; margin: 0;">
+                    <p class="eyebrow">Editorial Pipeline</p>
+                    <h2 style="font-size: 1.7rem; margin-bottom: 0;">Generate directly from SEO cluster briefs</h2>
+                </div>
+                {% if project and project.latest_audit_run %}
+                <form method="post" action="{% url 'content:workspace-content-editorial-sync' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button button-secondary">Sync Pipeline from SEO Hub</button>
+                </form>
+                {% endif %}
+            </div>
+            
+            <div class="panel-scroll panel-scroll-tall" style="padding-right: 0.5rem;">
+                {% if not project %}
+                <div class="evidence-card"><div class="evidence-card-text">Create a project first before building a content pipeline.</div></div>
+                {% elif not project.latest_audit_run %}
+                <div class="evidence-card"><div class="evidence-card-text">Run the first audit to unlock the editorial queue for this project.</div></div>
+                {% else %}
+                <div style="display: grid; gap: 1rem;">
+                    {% for task in editorial_tasks %}
+                    {% with brief=task.brief_json %}
+                    <div class="trace-card">
+                        <div class="trace-card-header">
+                            <div>
+                                <p class="trace-card-title">{{ brief.primary_keyword }}</p>
+                                <p class="trace-card-subtitle">{{ brief.output_type_label|title }} &middot; Priority {{ task.priority_score }}/100{% if task.seo_campaign %} &middot; {{ task.seo_campaign.title|truncatechars:30 }}{% endif %}</p>
+                            </div>
+                            <div class="trace-card-badges">
+                                {% if task.status == "queued" %}
+                                <span class="status-badge status-badge-queued">Queued</span>
+                                {% elif task.status == "drafting" %}
+                                <span class="status-badge status-badge-running">Drafting</span>
+                                {% elif task.status == "completed" %}
+                                <span class="status-badge status-badge-done">Completed</span>
+                                {% else %}
+                                <span class="status-badge status-badge-warning">Stale</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="trace-card-body">
+                            <div class="trace-card-sub-grid">
+                                <div class="trace-sub">
+                                    <span class="trace-sub-label">System Rationale</span>
+                                    <p class="trace-sub-text">{{ brief.reason }}</p>
+                                </div>
+                                <div class="trace-sub">
+                                    <span class="trace-sub-label">Target Action</span>
+                                    <p class="trace-sub-text">{{ brief.action }}</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="trace-card-footer">
+                            {% if task.latest_generated_content %}
+                            <a href="{% url 'content:workspace-content-detail' task.latest_generated_content.pk %}" style="color: var(--brand-primary); font-weight: 700; font-size: 0.85rem; text-decoration: none;">
+                                &rarr; Review: {{ task.latest_generated_content.title }}
+                            </a>
+                            {% else %}
+                            <span style="font-size: 0.82rem; color: var(--text-muted);">Draft not yet generated</span>
+                            {% endif %}
+                            <form method="post" action="{% url 'content:workspace-content-generate-from-seo' %}" style="margin: 0;">
+                                {% csrf_token %}
+                                <input type="hidden" name="brief_key" value="{{ task.brief_key }}">
+                                <button type="submit" class="button button-primary" style="font-size: 0.82rem; padding: 0.5rem 1.1rem;">
+                                    {% if task.status == "queued" or task.status == "stale" %}Auto-Generate{% else %}Regenerate{% endif %}
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                    {% endwith %}
+                    {% empty %}
+                    <div class="ws-empty-state">
+                        <div class="ws-empty-icon"><i class="fas fa-file-alt"></i></div>
+                        <p class="ws-empty-title">Pipeline empty</p>
+                        <p class="ws-empty-desc" style="max-width: 450px; margin: 0 auto 1.5rem;">The editorial queue is empty. Sync from the SEO Intelligence Hub to automatically build content briefs from active keyword clusters and missing page layers.</p>
+                        {% if project and project.latest_audit_run %}
+                        <form method="post" action="{% url 'content:workspace-content-editorial-sync' %}">
+                            {% csrf_token %}
+                            <button type="submit" class="button button-primary">Sync Pipeline Now</button>
+                        </form>
+                        {% endif %}
+                    </div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </div>
+        </article>
+
+        <article class="system-card" id="drafts">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1.5rem;">
+                <p class="eyebrow">Asset Library</p>
+                <h2 style="font-size: 1.7rem;">Saved Engine Drafts</h2>
+            </div>
+            <div class="panel-scroll">
+                {% for item in generated_content_list %}
+                <a href="{% url 'content:workspace-content-detail' item.pk %}" class="list-card">
+                    <div class="list-card-header">
+                        <span class="list-card-title">{{ item.title }}</span>
+                        <span class="score-pill score-high">{{ item.get_output_type_display }}</span>
+                    </div>
+                    <div class="list-card-meta">
+                        {{ item.business_type }}{% if item.location %} targeting {{ item.location }}{% endif %}
+                    </div>
+                    
+                    <div class="list-card-footer">
+                        {% if item.source_seo_campaign %}
+                        <div style="color: var(--text-muted); font-size: 0.82rem;">
+                            <strong style="color: var(--text-primary);">System Source:</strong>
+                            {{ item.source_seo_campaign.title }} ({{ item.source_seo_campaign.get_status_display }})
+                        </div>
+                        {% else %}
+                        <div></div>
+                        {% endif %}
+                        
+                        <div style="font-size: 0.82rem; color: var(--brand-primary); font-weight: 700;">View Draft &rarr;</div>
+                    </div>
+                </a>
+                {% empty %}
+                <div class="evidence-card"><div class="evidence-card-text">No generated drafts saved in the Asset Library yet.</div></div>
+                {% endfor %}
+            </div>
+        </article>
+    </div>
+{% block extra_head %}
+<!-- FAQ Schema (JSON-LD) for Content Intelligence -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "FAQPage",
+  "mainEntity": [
+    {
+      "@type": "Question",
+      "name": "How does the Content Forge ensure content is 'Rank Ready' for AI search?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "The Content Forge architects every draft as an 'Answer Unit'—a structurally optimized piece of content with high semantic density. It integrates data from AEO and SEO audits to ensure the entities and schema required by LLMs are correctly formatted."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "How do I avoid 'AI Detection' while maintaining high production speed?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "We focus on meeting the Semantic Quality Score (SQS). By injecting real-time competitor facts and high entity-density, our Forge creates content that is functionally indistinguishable from expert-written material because of its factual precision."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "Can the Forge write in my brand's specific tone-of-voice?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "Yes. The Forge allows you to upload 'Style Entities' and past successful articles to calibrate tone. Our extraction process ensures automated production aligns perfectly with your existing high-end content library."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is 'Recursive Content Optimization'?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "It is a continuous feedback loop where the Forge analyzes the performance of published content and suggests 'Patch Updates' based on new competitor pushes, ensuring your Answer Units stay fresh."
+      }
+    },
+    {
+      "@type": "Question",
+      "name": "What is the 'Semantic Quality Score' (SQS)?",
+      "acceptedAnswer": {
+        "@type": "Answer",
+        "text": "SQS is an internal metric measuring how well your content covers the required semantic entities for a topic compared to top-ranking peers. A high SQS indicates your content is authoritative enough to be cited by major AI models."
+      }
+    }
+  ]
+}
+</script>
+{% endblock %}
+
+<section class="faq-section" style="margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--border-glass);">
+    <div class="container section-heading" style="text-align: center; margin-bottom: 2rem;">
+        <p class="eyebrow" style="color: var(--brand-primary);">Content Intelligence FAQ</p>
+        <h2>Production & Authority Systems</h2>
+    </div>
+    <div class="container faq-accordion">
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>How does the Content Forge ensure content is "Rank Ready" for AI search?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">The Forge builds 'Answer Units'—text architectured for semantic retrieval and high-precision AI discovery.</span>
+                <p>
+                    We go beyond simple word generation. The Content Forge integrates your current AEO and SEO benchmarks to identify 
+                    the exact "Authority Gap" in your existing layers. It then generates drafts that satisfy specific informational 
+                    requirements (entities, schema, formatting) that Large Language Models (LLMs) use to identify primary citation sources. 
+                    This ensures that every piece of content is mission-critical for gaining AI visibility.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>How do I avoid 'AI Detection' while maintaining high production speed?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">We focus on meeting the Semantic Quality Score (SQS)—the same signals used by search engines to index authoritative content.</span>
+                <p>
+                    "AI Detection" is often a proxy for thin, low-information content. By injecting real-time competitor facts and high 
+                    entity-density through our Authority Engine, the Forge creates content that is functionally indistinguishable 
+                    from expert-written material. Factual precision and semantic depth are the ultimate "human" signals that 
+                    algorithms trust most.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>Can the Forge write in my brand's specific tone-of-voice?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">Yes. The Forge uses 'Style Entities' to calibrate the atmospheric and structural tone of every draft.</span>
+                <p>
+                    Tone isn't just about vocabulary; it's about structural pacing and information hierarchy. Our calibration process 
+                    extracts your unique brand signals from your best past articles and applies them to the Forge's output. This ensures 
+                    that your automated production pipeline aligns perfectly with your existing high-end content library and brand guidelines.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>What is 'Recursive Content Optimization'?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">It is a continuous feedback loop that suggests "Patch Updates" as your industry's knowledge graph evolves.</span>
+                <p>
+                    Content isn't static. Recursive optimization ensures that your "Answer Units" stay fresh. If a competitor publishes 
+                    a new fact or angle that changes the industry baseline, the Forge flags the authority gap and allows you to 
+                    generate and inject the necessary updates into your existing published pages with a single click.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>What is the "Semantic Quality Score" (SQS)?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">SQS measures your content's informational completeness relative to the current knowledge-graph leaders in your industry.</span>
+                <p>
+                    A high Semantic Quality Score (SQS) means your content contains the deep informational connections and entity-density 
+                    required to be seen as a "Primary Source" by AI agents. We compare your drafts against the top competitors currently 
+                    winning the SERP to ensure you aren't just matching their word count, but matching their architectural authority.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>How does the Forge handle internal linking architecture automatically?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">The Forge maps every draft against your existing Knowledge Graph to suggest high-value internal link placements.</span>
+                <p>
+                    Internal linking is the "circulatory system" of your site's authority. Our system identifies your "Link-Wealthy" 
+                    pillar pages and suggests contextually relevant anchors within your new drafts, ensuring that equity flows 
+                    efficiently to your target conversion pages from the moment your content is published.
+                </p>
+            </div>
+        </details>
+
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>What formats are supported beyond standard blog posts?</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">The Forge produces Product Comparisons, Whitepapers, Landing Page Copy, and Answer-First FAQ Clusters.</span>
+                <p>
+                    Informing a purchase decision requires diverse content types. Whether you need a 3,000-word industry deep-dive 
+                    or a compact, high-precision product snippet for a conversion page, our templates use the same Authority Engine 
+                    signals to ensure every asset has a high probability of both search ranking and AI discovery.
+                </p>
+            </div>
+        </details>
+    </div>
+</section>
+{% endblock %}

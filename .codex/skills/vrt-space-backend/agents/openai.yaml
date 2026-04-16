@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRT Space Backend"
+  short_description: "Django backend patterns for VRT Space"
+  default_prompt: "Use $vrt-space-backend to implement backend work for VRT SPACE AGENCY."

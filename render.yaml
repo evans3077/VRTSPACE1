@@ -1,0 +1,24 @@
+services:
+  - type: web
+    name: vrt-space-agency
+    runtime: python
+    buildCommand: ./build.sh
+    startCommand: bash start.sh
+    healthCheckPath: /
+    envVars:
+      - key: DJANGO_SETTINGS_MODULE
+        value: config.settings
+      - key: DJANGO_DEBUG
+        value: "0"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL
+        fromDatabase:
+          name: vrt-space-db
+          property: connectionString
+
+databases:
+  - name: vrt-space-db
+    databaseName: vrt_space_agency
+    user: vrt_space_user
+    plan: free

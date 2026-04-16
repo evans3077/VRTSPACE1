@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRT Space Data and API"
+  short_description: "Models, APIs, and analytics contracts"
+  default_prompt: "Use $vrt-space-data-api to shape data models and APIs for VRT SPACE AGENCY."

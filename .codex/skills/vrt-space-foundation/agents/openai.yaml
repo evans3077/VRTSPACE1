@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRT Space Foundation"
+  short_description: "Core project rules and architecture"
+  default_prompt: "Use $vrt-space-foundation to plan or review work for VRT SPACE AGENCY."

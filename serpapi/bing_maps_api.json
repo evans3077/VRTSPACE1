@@ -1,0 +1,1575 @@
+"local_results":
+[
+{
+"items":
+[
+{
+"place_id":
+"YNF63E3215371FC0ED",
+"address":
+"4200 N Lamar Blvd, Austin, TX 78756",
+"gps_coordinates":
+{
+"latitude":
+30.310678482055664,
+"longitude":
+-97.74005889892578
+},
+"phone":
+"(512) 531-9417",
+"website":
+"http://www.houndstoothcoffee.com/%3Futm_source%3Dgoogle%26utm_medium%3Dorganic%26utm_campaign%3Dgooglebusiness",
+"type":
+"Restaurant",
+"thumbnail":
+"https://www.bing.com/th?id=OLC.3B7Wt%2fW13NSSQw480x360&w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Houndstooth Coffee",
+"open_state":
+"Open · Closes 7 PM"
+},
+{
+"place_id":
+"YN57145B70A0E5FB7C",
+"address":
+"1601 W 38th St, Austin, TX 78731",
+"gps_coordinates":
+{
+"latitude":
+30.308393478393555,
+"longitude":
+-97.75042724609375
+},
+"phone":
+"(512) 453-1533",
+"website":
+"https://andersonscoffee.com/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://www.bing.com/th/id/OLC.SQJNoUQEdEmSLA480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Anderson's Coffee Co",
+"open_state":
+"Closed · Opens 9 AM"
+},
+{
+"place_id":
+"YN8525E35BABF9F387",
+"address":
+"5353 Burnet Rd, Austin, TX 78756",
+"gps_coordinates":
+{
+"latitude":
+30.32769012451172,
+"longitude":
+-97.7394027709961
+},
+"phone":
+"(512) 505-8033",
+"website":
+"http://monkeynestcoffee.com/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://www.bing.com/th/id/OLC.XG6XlbCxkYZtyg480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Monkey Nest Coffee",
+"open_state":
+"Open · Closes 7 PM"
+},
+{
+"place_id":
+"YN550092FCB935E8A2",
+"address":
+"221 W North Loop Blvd, Austin, TX 78751",
+"gps_coordinates":
+{
+"latitude":
+30.318578720092773,
+"longitude":
+-97.72456359863281
+},
+"phone":
+"(512) 454-3762",
+"website":
+"http://www.epochcoffee.com/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://www.bing.com/th/id/OLC.ZYK9FjoV72zUnw480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Epoch Coffee",
+"open_state":
+"Open 24 hours"
+},
+{
+"place_id":
+"YNE7BA9179B15CF148",
+"address":
+"3016 Guadalupe St, Austin, TX 78705",
+"gps_coordinates":
+{
+"latitude":
+30.297582626342773,
+"longitude":
+-97.74185943603516
+},
+"website":
+"https://order.toasttab.com/online/caphe-in-coffee-3016-guadalupe-st-b175",
+"type":
+"Restaurant",
+"thumbnail":
+"https://www.bing.com/th/id/OLC.wRF8GIe9EPMYIA480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"CaPhe.in Coffee",
+"open_state":
+"Closed · Opens 9 AM"
+},
+{
+"place_id":
+"YN9B875C7CEDD690DF",
+"address":
+"4615 N Lamar Blvd, Austin, TX 78751",
+"gps_coordinates":
+{
+"latitude":
+30.315574645996094,
+"longitude":
+-97.73482513427734
+},
+"phone":
+"(737) 212-0429",
+"website":
+"https://meritcoffee.com/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://www.bing.com/th?id=OLC.t%2fl1cU49KMYRaQ480x360&w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Merit Coffee Co.",
+"open_state":
+"Open · Closes 7 PM"
+},
+{
+"place_id":
+"YNDC222D0D9C80FD19",
+"address":
+"3825 Lake Austin Blvd, Austin, TX 78703",
+"gps_coordinates":
+{
+"latitude":
+30.295475006103516,
+"longitude":
+-97.78395080566406
+},
+"phone":
+"(512) 477-2900",
+"website":
+"https://mozartscoffee.com/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th?id=OLC.ljpSTWdC%2bMIzIA480x360&w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Mozart's Coffee Roasters",
+"open_state":
+"Open · Closes midnight"
+},
+{
+"place_id":
+"YN9E9569A7A50B4FA4",
+"address":
+"3724 Jefferson St, Austin, TX 78731",
+"gps_coordinates":
+{
+"latitude":
+30.309354782104492,
+"longitude":
+-97.75141906738281
+},
+"phone":
+"(512) 452-2233",
+"website":
+"http://www.faracoffee.com/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th/id/OLC.FCF6kjV5ArkeMg480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Fara Coffee",
+"open_state":
+"Closed · Opens Mon 8 AM"
+},
+{
+"place_id":
+"YNEC3989770D6E7EE5",
+"address":
+"3908 Avenue B, Austin, TX 78751",
+"gps_coordinates":
+{
+"latitude":
+30.30453109741211,
+"longitude":
+-97.73565673828125
+},
+"website":
+"http://terriblelovecoffee.com/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th/id/OLC.arjCnPeW4r3YQQ480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Terrible Love",
+"open_state":
+"Opens in 2 mins"
+},
+{
+"place_id":
+"YN2A68E73548AFD39E",
+"address":
+"2421 San Antonio St, Austin, TX 78705",
+"gps_coordinates":
+{
+"latitude":
+30.288585662841797,
+"longitude":
+-97.74205017089844
+},
+"phone":
+"(512) 420-6950",
+"website":
+"http://www.luckylabcoffee.com/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th?id=OLC.%2fo1irE6PthliIA480x360&w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Lucky Lab Coffee Co.",
+"open_state":
+"Open · Closes 7 PM"
+},
+{
+"place_id":
+"YN2BCA0ED14A3F1E01",
+"address":
+"Austin, Texas",
+"gps_coordinates":
+{
+"latitude":
+30.296125411987305,
+"longitude":
+-97.73297119140625
+},
+"website":
+"http://www.prettycutecoffee.com/",
+"type":
+"Food",
+"thumbnail":
+"https://th.bing.com/th?id=OLC.4fZk8z78tiP%2bQA480x360&w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Pretty Cute Coffee"
+},
+{
+"place_id":
+"YN49C746F3AFE4D7C",
+"address":
+"5000 Burnet Rd, Austin, TX 78756",
+"gps_coordinates":
+{
+"latitude":
+30.321430206298828,
+"longitude":
+-97.73948669433594
+},
+"phone":
+"(512) 256-0011",
+"website":
+"http://www.neighborcoffee.co/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th?id=OLC.BZKSgqYS8T3h%2bg480x360&w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Neighbor Coffee & Friends - Burnet",
+"open_state":
+"Open · Closes 2 PM"
+},
+{
+"place_id":
+"YNC129713DFA89550F",
+"address":
+"3423 Guadalupe St, Austin, TX 78705",
+"gps_coordinates":
+{
+"latitude":
+30.300975799560547,
+"longitude":
+-97.73907470703125
+},
+"website":
+"http://www.civilgoat.com/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th?id=OLC.j%2fKs2Qw9BingWg480x360&w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Civil Goat",
+"open_state":
+"Open · Closes 3 PM"
+},
+{
+"place_id":
+"YNC35D5A41D105B36A",
+"address":
+"3339 Hancock Dr, Austin, TX 78731",
+"gps_coordinates":
+{
+"latitude":
+30.33274269104004,
+"longitude":
+-97.76025390625
+},
+"phone":
+"(512) 419-7877",
+"website":
+"https://russells-bakery-coffee-hancock.square.site/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th/id/OLC.RUIWUtSH3F5b7g480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Russell's Bakery & Coffee @ Hancock",
+"open_state":
+"Open · Closes 5 PM"
+},
+{
+"place_id":
+"YN2DE145208D5EBE24",
+"address":
+"401 Congress Ave, Austin, TX 78701",
+"gps_coordinates":
+{
+"latitude":
+30.266218185424805,
+"longitude":
+-97.7430648803711
+},
+"phone":
+"(512) 394-6051",
+"website":
+"http://www.houndstoothcoffee.com/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th/id/OLC.B7PkJxChxU5eqA480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Houndstooth Coffee",
+"open_state":
+"Open · Closes 7 PM"
+},
+{
+"place_id":
+"YNA61D811270BB4ACB",
+"address":
+"3706 N Lamar Blvd, Austin, TX 78705",
+"gps_coordinates":
+{
+"latitude":
+30.30483055114746,
+"longitude":
+-97.74368286132812
+},
+"phone":
+"(512) 467-2253",
+"website":
+"https://locations.kolachefactory.com/tx/austin/3706-n-lamar-blvd",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th/id/OLC.O53UnDQYIU0fdA480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Kolache Factory",
+"open_state":
+"Open · Closes 2 PM"
+},
+{
+"place_id":
+"YN37868465606A5075",
+"address":
+"109 Jacob Fontaine Ln, Austin, TX 78752",
+"gps_coordinates":
+{
+"latitude":
+30.32516860961914,
+"longitude":
+-97.71481323242188
+},
+"phone":
+"(512) 520-2525",
+"website":
+"http://www.bennucoffee.com/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th/id/OLC.wfervcvw7YopJg480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Bennu Coffee Highland",
+"open_state":
+"Open 24 hours"
+},
+{
+"place_id":
+"YN317C822E424225B",
+"address":
+"500 W Martin Luther King Jr Blvd, Austin, TX 78701",
+"gps_coordinates":
+{
+"latitude":
+30.282329559326172,
+"longitude":
+-97.74341583251953
+},
+"phone":
+"(512) 243-5667",
+"website":
+"http://harazcoffeehouse.com/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th/id/OLC.yxC2UZ7vZilfEQ480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Haraz Coffee House",
+"open_state":
+"Open · Closes 10 PM"
+},
+{
+"place_id":
+"YN1E46C5305AFC6C6E",
+"address":
+"Austin, Texas",
+"gps_coordinates":
+{
+"latitude":
+30.29612159729004,
+"longitude":
+-97.73297882080078
+},
+"phone":
+"(737) 471-9758",
+"website":
+"http://www.sightseercoffee.co/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th/id/OLC.1uSwlCJXxksg8w480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Sightseer Coffee Roasters"
+},
+{
+"place_id":
+"YN2AC2EA409D811CC7",
+"address":
+"2201 Speedway, Austin, TX 78712",
+"gps_coordinates":
+{
+"latitude":
+30.284896850585938,
+"longitude":
+-97.73675537109375
+},
+"phone":
+"(512) 232-0818",
+"website":
+"https://housing.utexas.edu/dining/dining-locations/coffee-shops/longhorn-coffee-co",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th/id/OLC.8F5RfUO4ClJJgg480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Longhorn Coffee Co",
+"open_state":
+"Closed · Opens 10 AM"
+},
+{
+"place_id":
+"YND2BCCFE4EF7BBBB7",
+"address":
+"316 W 12th St, Austin, TX 78701",
+"gps_coordinates":
+{
+"latitude":
+30.274974822998047,
+"longitude":
+-97.7437515258789
+},
+"phone":
+"(737) 717-3103",
+"website":
+"https://www.sweetwaterscafe.com/tx-austin-texas-capitol/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th/id/OLC.8jJQ9JCDjPrqvA480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Sweetwaters Coffee & Tea",
+"open_state":
+"Open · Closes 2 PM"
+},
+{
+"place_id":
+"YND8AAF807461C9E29",
+"address":
+"318 E 5th St, Austin, TX 78701",
+"gps_coordinates":
+{
+"latitude":
+30.266536712646484,
+"longitude":
+-97.73987579345703
+},
+"phone":
+"(737) 802-4329",
+"website":
+"http://malonecoffee.com/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th/id/OLC.GPF9b6vxDIQXhA480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Malone Specialty Coffee",
+"open_state":
+"Open · Closes 2 PM"
+},
+{
+"place_id":
+"YN9F084254849B9980",
+"address":
+"2513 Seton Ave, Austin, TX 78705",
+"gps_coordinates":
+{
+"latitude":
+30.2902889251709,
+"longitude":
+-97.74310302734375
+},
+"website":
+"http://daydreamer.coffee/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th/id/OLC.ccEQx6YALOVAVQ480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Daydreamer Coffee",
+"open_state":
+"Closed · Opens 9 AM"
+},
+{
+"place_id":
+"YNC9C7224F9B9C90E9",
+"address":
+"2308 Whitis Ave, Austin, TX 78712",
+"gps_coordinates":
+{
+"latitude":
+30.28599739074707,
+"longitude":
+-97.74117279052734
+},
+"phone":
+"(469) 501-5440",
+"website":
+"https://housing.utexas.edu/dining/dining-locations/coffee-shops/union-coffee-house",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th/id/OLC.8F5RfUO4ClJJgg480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Union Coffee House",
+"open_state":
+"Closed · Opens noon"
+},
+{
+"place_id":
+"YNC063B9761760EF2",
+"address":
+"2001 E Martin Luther King Jr Blvd, Austin, TX 78702",
+"gps_coordinates":
+{
+"latitude":
+30.279802322387695,
+"longitude":
+-97.71961975097656
+},
+"phone":
+"(512) 478-4700",
+"website":
+"http://www.bennucoffee.com/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th?id=OLC.bLf%2bTsqXPy1VZg480x360&w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Bennu Coffee",
+"open_state":
+"Open 24 hours"
+},
+{
+"place_id":
+"YNA0A4ACC578C22262",
+"address":
+"222 West Ave, Austin, TX 78701",
+"gps_coordinates":
+{
+"latitude":
+30.267589569091797,
+"longitude":
+-97.75209045410156
+},
+"phone":
+"(512) 906-0266",
+"website":
+"http://www.meritcoffee.com/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th/id/OLC.UnRoyAyRMakhWg480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Merit Coffee",
+"open_state":
+"Open · Closes 7 PM"
+},
+{
+"place_id":
+"YNB1DB826AD0936ECF",
+"address":
+"4400 N Lamar Blvd, Austin, TX 78756",
+"gps_coordinates":
+{
+"latitude":
+30.31261444091797,
+"longitude":
+-97.73855590820312
+},
+"phone":
+"(512) 374-9784",
+"website":
+"https://www.starbucks.com/store-locator/store/16778/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th?id=OLC.6e%2fRByuF%2fgqlmA480x360&w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Starbucks",
+"open_state":
+"Open · Closes 9 PM"
+},
+{
+"place_id":
+"YN8CBC6897B3AAC925",
+"address":
+"5775 Airport Blvd, Austin, TX 78752",
+"gps_coordinates":
+{
+"latitude":
+30.32249641418457,
+"longitude":
+-97.71351623535156
+},
+"phone":
+"(512) 454-5425",
+"website":
+"https://kickbuttcoffee.com/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th/id/OLC.GhHoc0zbBtu4xw480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Kick Butt Coffee",
+"open_state":
+"Open · Closes 4 PM"
+},
+{
+"place_id":
+"YNFCA4BAA533F65DA0",
+"address":
+"406 Walsh St, Austin, TX 78703",
+"gps_coordinates":
+{
+"latitude":
+30.271305084228516,
+"longitude":
+-97.75856018066406
+},
+"phone":
+"(512) 645-0786",
+"website":
+"http://www.betterhalfbar.com/",
+"type":
+"Restaurant",
+"thumbnail":
+"https://th.bing.com/th/id/OLC.9b8GPoxbeQAiEA480x360?w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+"title":
+"Better Half Coffee & Cocktails",
+"open_state":
+"Open · Closes 11 PM"
+},
+{
+"place_id":
+"YNA554BEF0D642BFE8",
+"address":
+"411 W 23 St, Austin, TX 78705",
+"gps_coordinates":
+{
+"latitude":
+30.286392211914062,
+"longitude":
+-97.74250030517578
+},
+"website":
+"https://linktr.ee/TrippyBuckCoffee?fbclid=PAZXh0bgNhZW0CMTEAAabL_SdQhHidJFIcwYRKiFoyLWPE7_3VPD7PLFgyfGtVFseVNhjQKClmW5w_aem_j3QCfZahzfV5bSdtjajWvA",
+"type":
+"Restaurant",
+"thumbnail":
+"https://www.bing.com/maps/geoplat/REST/v1/Imagery/Map/RoadVibrant?ms=236,118&key=AnTcaqBi2ypp0xI-OZNi4W_ik2KhjgpqioTAtXLC8GzkMBQRMlyxvxyTnd5b73im&c=en-US&da=n&logo=n&fmt=png&od=1&shading=hill&pp=30.286392,-97.7425;cfp",
+"title":
+"Trippy Buck Coffee Truck",
+"open_state":
+"Closed · Opens Mon 7 AM"
+}
+]
+}
+]
+}
+
+GET
+
+
+https://serpapi.com/search.json?engine=bing_maps&q=Coffee&cp=30.307989~-97.749943
+
+Code to integrate
+
+cURLRubyPythonJavaScriptGoPHPJavaRust.NETGoogle Sheets
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_maps",
+  q: "Coffee",
+  cp: "30.307989~-97.749943",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+local_results[0]_items[0] = results[:local_results[0]][:items[0]]
+API Parameters
+Search Query
+q
+
+Required
+
+Parameter defines the search query. You can use anything that you would use in a regular Bing Maps search.
+
+Geographic Location
+cp
+
+Optional
+
+Parameter defines GPS coordinates of location where you want your q (query) to be applied. It has to be constructed in the next sequence:
+latitude + ~ + longitude
+
+This will form a string that looks like this:
+e.g. 40.7455096~-74.0083012.
+
+Localization
+setlang
+
+Optional
+
+Parameter defines the language to search with. It follows the 2-character ISO_3166-1 format. (e.g., us for United States, de for Germany, gb for United Kingdom, etc.). You can view all supported language codes on Bing Maps.
+
+Advanced Bing Maps Parameters
+place_id
+
+Optional
+
+Parameter defines the unique reference to a place on a Bing Map. Place IDs are available for most locations, including businesses, landmarks, parks, and intersections. You can find the place_id using our Bing Maps API and Bing Local Pack API.
+
+place_id can be used without any other optional parameter including q parameter.
+
+Pagination
+first
+
+Optional
+
+Parameter controls the offset of the local results. This parameter defaults to 0. (e.g. When count=10, the second page result start from first=10).
+
+count
+
+Optional
+
+Parameter controls the number of results per page. This parameter is only a suggestion and might not reflect the returned results.
+
+Maximum results per page is 30
+
+Serpapi Parameters
+engine
+
+Required
+
+Set parameter to bing_maps to use the Bing Maps API engine.
+
+no_cache
+
+Optional
+
+Parameter will force SerpApi to fetch the Bing Maps results even if a cached version is already present. A cache is served only if the query and all parameters are exactly the same. Cache expires after 1h. Cached searches are free, and are not counted towards your searches per month. It can be set to false (default) to allow results from the cache, or true to disallow results from the cache. no_cache and async parameters should not be used together.
+
+async
+
+Optional
+
+Parameter defines the way you want to submit your search to SerpApi. It can be set to false (default) to open an HTTP connection and keep it open until you got your search results, or true to just submit your search to SerpApi and retrieve them later. In this case, you'll need to use our Searches Archive API to retrieve your results. async and no_cache parameters should not be used together. async should not be used on accounts with Ludicrous Speed enabled.
+
+zero_trace
+
+Optional
+
+Enterprise only. Parameter enables ZeroTrace mode. It can be set to false (default) or true. Enable this mode to skip storing search parameters, search files, and search metadata on our servers. This may make debugging more difficult.
+
+api_key
+
+Required
+
+Parameter defines the SerpApi private key to use.
+
+output
+
+Optional
+
+Parameter defines the final output you want. It can be set to json (default) to get a structured JSON of the results, or html to get the raw html retrieved.
+
+API Results
+JSON Results
+JSON output includes structured data for "Local Results", "Place Results", and "Filters".
+
+A search status is accessible through search_metadata.status. It flows this way: Processing -> Success || Error. If a search has failed, error will contain an error message. search_metadata.id is the search ID inside SerpApi.
+
+HTML Results
+HTML output is useful to debug JSON results or support features not supported yet by SerpApi.
+HTML output gives you the raw HTML results from Bing Maps.
+
+API Examples
+Multiple
+Local Results
+example for
+coffee
+For some searches, Bing Maps response multiple sets of local results. In this case, local results are grouped by Coffee shop, Espresso, and etc.
+
+GET
+
+
+https://serpapi.com/search.json?engine=bing_maps&q=coffee&cp=30.307989~-97.749943
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_maps",
+  q: "coffee",
+  cp: "30.307989~-97.749943",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+local_results = results[:local_results]
+
+JSON Example
+
+  {
+    "search_metadata": {
+      "id": "66b19f299656227ec266078e",
+      "status": "Success",
+      "json_endpoint": "https://serpapi.com/searches/e87f2dd0cccf73ec/66b19f299656227ec266078e.json",
+      "created_at": "2024-08-06 03:57:29 UTC",
+      "processed_at": "2024-08-06 03:57:30 UTC",
+      "bing_maps_url": "https://www.bing.com/maps/localoverlaybfpr?q=Coffee&filters=MapCardType%3A%22listing%22+direction_partner%3A%22maps%22&first=0&count=30&cp=30.307989~-97.749943",
+      "raw_html_file": "https://serpapi.com/searches/e87f2dd0cccf73ec/66b19f299656227ec266078e.html",
+      "prettify_html_file": "https://serpapi.com/searches/e87f2dd0cccf73ec/66b19f299656227ec266078e.prettify",
+      "total_time_taken": 2.85
+    },
+    "search_parameters": {
+      "engine": "bing_maps",
+      "q": "Coffee",
+      "cp": "30.307989~-97.749943"
+    },
+    "filters": [
+      {
+        "title": "Coffee shop",
+        "link": "https://www.bing.com/maps?q=Coffee+shop&filters=SearchType%3a%22TopicSearch%22+ParentTopic%3a%22Coffee%22+localypids%3a%22YN860x401931866%2cYN860x15055457%2cYN860x235411731%2cYN860x21505255%2cYN860x15001725%22+local_topicsearch%3a%22520140051%22+toptopicid%3a%22520140000%22&mb=30.383838653564453%7e-97.83783721923828%7e30.23208236694336%7e-97.66205596923828",
+        "serpapi_link": "https://serpapi.com/search.json?cp=30.307989~-97.749943&engine=bing_maps&q=Coffee+shop"
+      },
+      {
+        "title": "Espresso",
+        "link": "https://www.bing.com/maps?q=Espresso&filters=SearchType%3a%22TopicSearch%22+ParentTopic%3a%22Coffee%22+localypids%3a%22YN860x401931866%2cYN860x14979627%2cYN860x15055457%2cYN860x235411731%2cYN860x14976312%22+local_topicsearch%3a%22520840003%22+toptopicid%3a%22520140000%22&mb=30.383838653564453%7e-97.83783721923828%7e30.23208236694336%7e-97.66205596923828",
+        "serpapi_link": "https://serpapi.com/search.json?cp=30.307989~-97.749943&engine=bing_maps&q=Espresso"
+      },
+      {
+        "title": "Coffee set",
+        "link": "https://www.bing.com/maps?q=Coffee+set&filters=SearchType%3a%22TopicSearch%22+ParentTopic%3a%22Coffee%22+localypids%3a%22YN873x538845020534426140%2cYN860x402060152%2cYN860x21516005%2cYN860x15061221%22+local_topicsearch%3a%22520140033%22+toptopicid%3a%22520140000%22&mb=30.383838653564453%7e-97.83783721923828%7e30.23208236694336%7e-97.66205596923828",
+        "serpapi_link": "https://serpapi.com/search.json?cp=30.307989~-97.749943&engine=bing_maps&q=Coffee+set"
+      },
+      ...
+    ],
+    "local_results": [
+      {
+        "title": "Coffee shop",
+        "link": "https://www.bing.com/maps?q=Coffee+shop&filters=SearchType%3a%22TopicSearch%22+ParentTopic%3a%22Coffee%22+localypids%3a%22YN860x401931866%2cYN860x15055457%2cYN860x235411731%2cYN860x21505255%2cYN860x15001725%22+local_topicsearch%3a%22520140051%22+toptopicid%3a%22520140000%22&mb=30.383838653564453%7e-97.83783721923828%7e30.23208236694336%7e-97.66205596923828",
+        "items": [
+          {
+            "place_id": "YN860x401931866",
+            "address": "2727 Exposition Blvd, Austin, TX 78703",
+            "gps_coordinates": {
+              "latitude": 30.304670333862305,
+              "longitude": -97.76438903808594
+            },
+            "thumbnail": "https://th.bing.com/th?id=OLC.MIG5kurEHg%2bTug480x360&w=199&h=122&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+            "title": "Starbucks",
+            "rating": 5,
+            "reviews": 500,
+            "source": "Ubereats",
+            "open_state": "Closed · Opens tomorrow 5 AM",
+            "description": "Delivery • Takeout"
+          },
+          {
+            "place_id": "YN860x15055457",
+            "address": "4400 N Lamar Blvd, Austin, TX 78756",
+            "gps_coordinates": {
+              "latitude": 30.312620162963867,
+              "longitude": -97.73860931396484
+            },
+            "thumbnail": "https://th.bing.com/th?id=OLC.MIG5kurEHg%2bTug480x360&w=199&h=122&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+            "title": "Starbucks",
+            "rating": 4,
+            "reviews": 205,
+            "source": "Facebook",
+            "open_state": "Closed · Opens tomorrow 5:30 AM",
+            "description": "Delivery • Takeout"
+          },
+          ...
+        ]
+      },
+      {
+        "title": "Espresso",
+        "link": "https://www.bing.com/maps?q=Espresso&filters=SearchType%3a%22TopicSearch%22+ParentTopic%3a%22Coffee%22+localypids%3a%22YN860x401931866%2cYN860x14979627%2cYN860x15055457%2cYN860x235411731%2cYN860x14976312%22+local_topicsearch%3a%22520840003%22+toptopicid%3a%22520140000%22&mb=30.383838653564453%7e-97.83783721923828%7e30.23208236694336%7e-97.66205596923828",
+        "items": [
+          {
+            "place_id": "YN860x401931866",
+            "address": "2727 Exposition Blvd, Austin, TX 78703",
+            "gps_coordinates": {
+              "latitude": 30.304670333862305,
+              "longitude": -97.76438903808594
+            },
+            "thumbnail": "https://th.bing.com/th?id=OLC.MIG5kurEHg%2bTug480x360&w=199&h=122&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+            "title": "Starbucks",
+            "rating": 5,
+            "reviews": 500,
+            "source": "Ubereats",
+            "open_state": "Closed · Opens tomorrow 5 AM",
+            "description": "Delivery • Takeout"
+          },
+          {
+            "place_id": "YN860x14979627",
+            "address": "3825 Lake Austin Blvd, Austin, TX 78703",
+            "gps_coordinates": {
+              "latitude": 30.29543113708496,
+              "longitude": -97.78424072265625
+            },
+            "thumbnail": "https://th.bing.com/th?id=OLC.ljpSTWdC%2bMIzIA480x360&w=199&h=122&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+            "title": "Mozart's Coffee Roasters",
+            "rating": 4,
+            "reviews": 369,
+            "source": "Tripadvisor",
+            "open_state": "Open · Closes midnight",
+            "description": "Delivery • Takeout • Great coffee • Good for brownies, chocolate cake"
+          },
+          ...
+        ]
+      },
+      {
+        "title": "Coffee set",
+        "link": "https://www.bing.com/maps?q=Coffee+set&filters=SearchType%3a%22TopicSearch%22+ParentTopic%3a%22Coffee%22+localypids%3a%22YN873x538845020534426140%2cYN860x402060152%2cYN860x21516005%2cYN860x15061221%22+local_topicsearch%3a%22520140033%22+toptopicid%3a%22520140000%22&mb=30.383838653564453%7e-97.83783721923828%7e30.23208236694336%7e-97.66205596923828",
+        "items": [
+          {
+            "place_id": "YN873x538845020534426140",
+            "address": "2025 Guadalupe St, Ste 01-100, Austin, TX 78705",
+            "gps_coordinates": {
+              "latitude": 30.28297996520996,
+              "longitude": -97.74139404296875
+            },
+            "thumbnail": "https://th.bing.com/th?id=OLC.nLi8fuauUhyowA480x360&w=199&h=122&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+            "title": "Target",
+            "rating": 4.5,
+            "reviews": 360,
+            "source": "Ubereats",
+            "open_state": "Closed · Opens tomorrow 7 AM"
+          },
+          {
+            "place_id": "YN860x402060152",
+            "address": "2020 W Anderson Ln, Austin, TX 78757",
+            "gps_coordinates": {
+              "latitude": 30.35554313659668,
+              "longitude": -97.72773742675781
+            },
+            "thumbnail": "https://th.bing.com/th?id=OLC.mOsoVOSjImJz6g480x360&w=199&h=122&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+            "title": "Four Hands",
+            "rating": 4.5,
+            "reviews": 227,
+            "source": "Yelp",
+            "open_state": "Closed · Opens tomorrow 10 AM"
+          },
+          ...
+        ]
+      },
+      ...
+    ]
+  }
+Single
+Local Results
+example for
+coffee shop
+GET
+
+
+https://serpapi.com/search.json?engine=bing_maps&q=coffee+shop&cp=30.307989~-97.749943
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_maps",
+  q: "coffee shop",
+  cp: "30.307989~-97.749943",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+local_results = results[:local_results]
+
+JSON Example
+
+  {
+    "search_metadata": {
+      "id": "66b1a6e39656227ec137b4f4",
+      "status": "Success",
+      "json_endpoint": "https://serpapi.com/searches/2ab920698cd72d73/66b1a6e39656227ec137b4f4.json",
+      "created_at": "2024-08-06 04:30:27 UTC",
+      "processed_at": "2024-08-06 04:30:27 UTC",
+      "bing_maps_url": "https://www.bing.com/maps/localoverlaybfpr?q=Coffee%20shop&filters=MapCardType%3A%22listing%22+direction_partner%3A%22maps%22&first=0&count=30&cp=30.307989~-97.749943",
+      "raw_html_file": "https://serpapi.com/searches/2ab920698cd72d73/66b1a6e39656227ec137b4f4.html",
+      "prettify_html_file": "https://serpapi.com/searches/2ab920698cd72d73/66b1a6e39656227ec137b4f4.prettify",
+      "total_time_taken": 2.97
+    },
+    "search_parameters": {
+      "engine": "bing_maps",
+      "q": "Coffee shop",
+      "cp": "30.307989~-97.749943"
+    },
+    "local_results": [
+      {
+        "items": [
+          {
+            "place_id": "YN860x15001725",
+            "address": "1601 W 38th St, Austin, TX 78731",
+            "gps_coordinates": {
+              "latitude": 30.30838966369629,
+              "longitude": -97.75040435791016
+            },
+            "phone": "(512) 453-1533",
+            "website": "https://andersonscoffee.com/",
+            "price": "$",
+            "price_description": "Very cheap",
+            "type": "Restaurant",
+            "secondary_type": "Coffee House",
+            "thumbnail": "https://www.bing.com/th?id=OLC.SQJNoUQEdEmSLA480x360&w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+            "title": "Anderson's Coffee Company",
+            "rating": 5,
+            "reviews": 7,
+            "source": "Tripadvisor",
+            "open_state": "Closed · Opens tomorrow 09:00",
+            "description": "Delivery • Takeout"
+          },
+          {
+            "place_id": "YN860x15001725",
+            "address": "1601 W 38th St, Austin, TX 78731",
+            "gps_coordinates": {
+              "latitude": 30.30838966369629,
+              "longitude": -97.75040435791016
+            },
+            "phone": "(512) 453-1533",
+            "website": "https://andersonscoffee.com/",
+            "price": "$",
+            "price_description": "Very cheap",
+            "type": "Restaurant",
+            "secondary_type": "Coffee House",
+            "thumbnail": "https://www.bing.com/th?id=OLC.SQJNoUQEdEmSLA480x360&w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+            "title": "Anderson's Coffee Company",
+            "rating": 5,
+            "reviews": 7,
+            "source": "Tripadvisor",
+            "open_state": "Closed · Opens tomorrow 09:00",
+            "description": "Delivery • Takeout"
+          },
+          {
+            "place_id": "YN860x21505255",
+            "address": "3724 Jefferson St, Austin, TX 78731",
+            "gps_coordinates": {
+              "latitude": 30.309242248535156,
+              "longitude": -97.75150299072266
+            },
+            "phone": "(512) 452-2233",
+            "website": "https://www.faracoffee.com/pages/contact-us",
+            "price": "$$",
+            "price_description": "Cheap",
+            "type": "Restaurant",
+            "secondary_type": "Coffee House",
+            "thumbnail": "https://www.bing.com/th?id=OLC.HmKE5io8RHtoEA480x360&w=236&h=118&c=8&rs=1&qlt=80&cdv=1&pid=Local",
+            "title": "Fara Coffee",
+            "rating": 4.5,
+            "reviews": 14,
+            "source": "Yelp",
+            "open_state": "Closed · Opens tomorrow 08:00",
+            "description": "Delivery • Takeout"
+          },
+          ...
+        ]
+      }
+    ]
+  }
+Place Results
+example for 
+place_id
+:
+YN873x14475615034754698960
+(Law Firm)
+GET
+
+
+https://serpapi.com/search.json?engine=bing_maps&place_id=YN873x14475615034754698960
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_maps",
+  place_id: "YN873x14475615034754698960",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+place_results = results[:place_results]
+
+JSON Example
+
+  {
+    "search_metadata": {
+      "id": "66b1b32e965622a179ec698e",
+      "status": "Success",
+      "json_endpoint": "https://serpapi.com/searches/b1dfb6fd8fb3cd66/66b1b32e965622a179ec698e.json",
+      "created_at": "2024-08-06 05:22:54 UTC",
+      "processed_at": "2024-08-06 05:22:55 UTC",
+      "bing_maps_url": "https://www.bing.com/maps/localoverlaybfpr?q=lawyer%20firm&filters=MapCardType%3A%22details%22+direction_partner%3A%22maps%22+local_ypid%3A%22YN873x14475615034754698960%22&first=0&count=30&cp=30.307989~-97.749943",
+      "raw_html_file": "https://serpapi.com/searches/b1dfb6fd8fb3cd66/66b1b32e965622a179ec698e.html",
+      "prettify_html_file": "https://serpapi.com/searches/b1dfb6fd8fb3cd66/66b1b32e965622a179ec698e.prettify",
+      "total_time_taken": 2.57
+    },
+    "search_parameters": {
+      "engine": "bing_maps",
+      "place_id": "YN873x14475615034754698960"
+    },
+    "place_results": {
+      "title": "Robbins Estate Law",
+      "place_id": "YN873x14475615034754698960",
+      "address": "3800 N Lamar Blvd Ste 200, Austin, TX, 78756",
+      "phone": "+1 512-599-9856",
+      "website": "https://www.kylerobbinslaw.com/austin-office-location/",
+      "gps_coordinates": {
+        "latitude": 30.305835723876953,
+        "longitude": -97.74315643310547
+      },
+      "rating": 5,
+      "total_reviews": 11,
+      "rating_provider": "Facebook",
+      "type": "Estate planning law",
+      "claimed": true,
+      "images": [
+        {
+          "thumbnail": "https://www.bing.com/th?id=OLC.rUSVCvCUFypbpA480x360&w=210&h=200&c=8&rs=1&qlt=90&pid=3.1&rm=2",
+          "link": "https://www.bing.com/images/search?view=detailV2&mediaurl=https%3a%2f%2fbpprodstorage.blob.core.windows.net%2fbpblobcontainer%2f3606331%2fimages%2fe13f98e8-8839-4a18-9c9b-f4625bcb744b0I3owR8DruRmvLCLZpPNXwqCLEa43sXLLCNml3hJ9Vx6dQKROgWp-1XR90vPFggCDHmzg4EmWdhymPzSuQ%3ds0.Jpeg&expw=4032&exph=3024&cbid=OLC.rUSVCvCUFypbpA480x360&cbn=local&idpp=local&thid=OLC.rUSVCvCUFypbpA480x360&ypid=YN873x14475615034754698960&useBFPR=0&eeptype=PhotoGroups&dataGroup=local:datagroup.photos&PhotoGroupName=AllPhotos&PageTag=AllPhotos&selectedIndex=0&id=OLC.rUSVCvCUFypbpA480x360&q=lawyer firm&pseg=HomeAndProfessionalServices&noidpclose=0&FORM=LOCIMG"
+        },
+        {
+          "thumbnail": "https://www.bing.com/th?id=OLC.LSadJXBefMj7tw480x360&w=60&h=87&c=8&rs=1&qlt=90&pid=3.1&rm=2",
+          "link": "https://www.bing.com/images/search?view=detailV2&mediaurl=https%3a%2f%2fbpprodstorage.blob.core.windows.net%2fbpblobcontainer%2f3606331%2fimages%2f412e9522-6a8c-4386-b7d8-056e9be63a23rlvF-bv1sr03WNl1Z87WO5hmVIOSygoWx8BIvgRjnbdiDRaseE5WLQdeaz8tahWDBktWYIvdoCTbo2nfzA%3ds0.Jpeg&expw=3024&exph=4032&cbid=OLC.LSadJXBefMj7tw480x360&cbn=local&idpp=local&thid=OLC.LSadJXBefMj7tw480x360&ypid=YN873x14475615034754698960&useBFPR=0&eeptype=PhotoGroups&dataGroup=local:datagroup.photos&PhotoGroupName=AllPhotos&PageTag=AllPhotos&selectedIndex=1&id=OLC.LSadJXBefMj7tw480x360&q=lawyer firm&pseg=HomeAndProfessionalServices&noidpclose=0&FORM=LOCIMG"
+        },
+        {
+          "thumbnail": "https://www.bing.com/th?id=OLC.RaU13g%2fLjc9fUg480x360&w=98&h=87&c=8&rs=1&qlt=90&pid=3.1&rm=2",
+          "link": "https://www.bing.com/images/search?view=detailV2&mediaurl=https%3a%2f%2fbpprodstorage.blob.core.windows.net%2fbpblobcontainer%2f3606331%2fimages%2f40823bdc-3ae2-49a7-9ba7-4d016534d5a6ej8C21kFTGcvptbtMkiOBL6joFuAciBbPgPxBAJ2to-ArrBk4tnc2NDQBxTrJjqSu9xp7InADtheDa8IFg%3ds0.Jpeg&expw=4032&exph=3024&cbid=OLC.RaU13g%2FLjc9fUg480x360&cbn=local&idpp=local&thid=OLC.RaU13g%2FLjc9fUg480x360&ypid=YN873x14475615034754698960&useBFPR=0&eeptype=PhotoGroups&dataGroup=local:datagroup.photos&PhotoGroupName=AllPhotos&PageTag=AllPhotos&selectedIndex=2&id=OLC.RaU13g%2FLjc9fUg480x360&q=lawyer firm&pseg=HomeAndProfessionalServices&noidpclose=0&FORM=LOCIMG"
+        },
+        ...
+      ],
+      "directions": "https://www.bing.com/maps?&mepi=127~Directions~Unknown~Direction_Button&ty=0&rtp=pos.30.305835723876953_-97.74315643310547__Robbins%20Estate%20Law__e_~&mode=d&v=2&sV=1",
+      "open_state": "Closed · Opens 8 AM",
+      "hours": {
+        "Tuesday": [
+          "8 a.m. - 5:30 p.m."
+        ],
+        "Wednesday": [
+          "8 a.m. - 5:30 p.m."
+        ],
+        "Thursday": [
+          "8 a.m. - 5:30 p.m."
+        ],
+        ...
+      },
+      "service_areas": "Texas",
+      "reviews": [
+        {
+          "source": "Facebook",
+          "source_logo": "https://th.bing.com/th?id=OLC.FacebookSquareLogo2.png&w=24&h=24&pid=Local",
+          "rating": 5,
+          "total_reviews": 11,
+          "reviews": [
+            {
+              "rating": -1,
+              "date": "Apr 20, 2021",
+              "text": "Knowledgeable, explains, pleasant to work with.",
+              "user_name": "Norma Gibbs",
+              "link": "https://www.facebook.com/norma.gibbs.10/posts/1846269892216693"
+            }
+          ],
+          "see_all_link": "https://www.facebook.com/robbinsestatelaw/"
+        },
+        {
+          "source": "Yelp",
+          "source_logo": "https://th.bing.com/th?id=OLC.Yelp_Filled.png&w=24&h=24&pid=Local",
+          "rating": 5,
+          "total_reviews": 28
+        },
+        {
+          "source": "Expertise",
+          "rating": 5,
+          "total_reviews": 151
+        },
+        ...
+      ],
+      "social": [
+        {
+          "name": "Facebook",
+          "link": "https://www.facebook.com/robbinsestatelaw/",
+          "thumbnail": "https://serpapi.com/searches/66b1b32e965622a179ec698e/images/63de1d029ad48aa830d1fc1b75048c1527c0c2fa8c4446bc65272cb268e4bf60531461312ff80156.png"
+        },
+        {
+          "name": "X",
+          "link": "https://twitter.com/kylerobns",
+          "thumbnail": "https://serpapi.com/searches/66b1b32e965622a179ec698e/images/63de1d029ad48aa830d1fc1b75048c15b5b5df66287f43dd4d29db037300af82414d281a3e182862.png"
+        },
+        {
+          "name": "LinkedIn",
+          "link": "https://www.linkedin.com/company/the-law-offices-of-kyle-robbins/",
+          "thumbnail": "https://serpapi.com/searches/66b1b32e965622a179ec698e/images/63de1d029ad48aa830d1fc1b75048c15c8c0c899bc072fd2807532b8e8ba75c0412bb3474e99cd2e.png"
+        },
+        ...
+      ],
+      "people_also_search_for": [
+        {
+          "items": [
+            {
+              "title": "State Bar of Texas",
+              "place_id": "873x128148529",
+              "link": "https://www.bing.com/maps?q=State+Bar+of+Texas&filters=local_ypid%3A%22873x128148529%22",
+              "thumbnail": "https://th.bing.com/th?id=OLC.tCrqSoEoPbXWZg480x360&w=138&h=110&c=7&rs=1&qlt=80&cdv=1&pid=Local",
+              "rating": 1,
+              "reviews": 2,
+              "source": "Yelp.ca"
+            },
+            {
+              "title": "Travis County District Attorney",
+              "place_id": "873x12833544625987158937",
+              "link": "https://www.bing.com/maps?q=Travis+County+District+Attorney&filters=local_ypid%3A%22873x12833544625987158937%22",
+              "thumbnail": "https://th.bing.com/th?id=OLC.fpZU9NdSpSxA1w480x360&w=138&h=110&c=7&rs=1&qlt=80&cdv=1&pid=Local",
+              "rating": 1.5
+            },
+            {
+              "title": "Mike Massey Law",
+              "place_id": "873x12705033011827649480",
+              "link": "https://www.bing.com/maps?q=Mike+Massey+Law&filters=local_ypid%3A%22873x12705033011827649480%22",
+              "thumbnail": "https://th.bing.com/th?id=OLC.qh7N54gIMW60LQ480x360&w=138&h=110&c=7&rs=1&qlt=80&cdv=1&pid=Local",
+              "rating": 5,
+              "reviews": 6,
+              "source": "Facebook"
+            },
+            ...
+          ]
+        }
+      ]
+    }
+  }
+Place Results
+example for 
+place_id
+:
+YN860x189741933
+(Restaurant)
+GET
+
+
+https://serpapi.com/search.json?engine=bing_maps&place_id=YN860x189741933
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "bing_maps",
+  place_id: "YN860x189741933",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+place_results = results[:place_results]
+
+JSON Example
+
+  {
+    "search_metadata": {
+      "id": "66b2d5c8965622cdabb34aa9",
+      "status": "Success",
+      "json_endpoint": "https://serpapi.com/searches/0b4603d02784eb45/66b2d5c8965622cdabb34aa9.json",
+      "created_at": "2024-08-07 02:02:48 UTC",
+      "processed_at": "2024-08-07 02:02:48 UTC",
+      "bing_maps_url": "https://www.bing.com/maps/localoverlaybfpr?q=chipotle&filters=MapCardType%3A%22details%22+direction_partner%3A%22maps%22+local_ypid%3A%22YN860x189741933%22&first=0&count=30&cp=30.307989~-97.749943",
+      "raw_html_file": "https://serpapi.com/searches/0b4603d02784eb45/66b2d5c8965622cdabb34aa9.html",
+      "prettify_html_file": "https://serpapi.com/searches/0b4603d02784eb45/66b2d5c8965622cdabb34aa9.prettify",
+      "total_time_taken": 0.8
+    },
+    "search_parameters": {
+      "engine": "bing_maps",
+      "place_id": "YN860x189741933"
+    },
+    "place_results": {
+      "title": "Chipotle Mexican Grill",
+      "place_id": "YN860x189741933",
+      "address": "4400 N Lamar Blvd, Austin, TX, 78756",
+      "phone": "+1 512-419-9898",
+      "gps_coordinates": {
+        "latitude": 30.31258201599121,
+        "longitude": -97.73860931396484
+      },
+      "rating": 4.6,
+      "total_reviews": 0,
+      "rating_provider": "Ubereats",
+      "claimed": true,
+      "directions": "https://www.bing.com/maps?&mepi=103~Directions~Unknown~Direction_Button&ty=0&rtp=pos.30.31258201599121_-97.73860931396484__Chipotle%20Mexican%20Grill__e_~&mode=d&v=2&sV=1",
+      "menu": "https://www.chipotle.com/menu",
+      "open_state": "Open · Closes 11 PM",
+      "hours": {
+        "Tuesday": [
+          "10:45 am - 11 pm"
+        ],
+        "Wednesday": [
+          "10:45 am - 11 pm"
+        ],
+        "Thursday": [
+          "10:45 am - 11 pm"
+        ],
+        ...
+      },
+      "service_options": [
+        "Dine-in",
+        "Takeout / Delivery"
+      ],
+      "customer_says": [
+        {
+          "title": "Service",
+          "text": "Service is generally praised for being efficient, friendly and fast. Some guests mention that the staff can be grumpy or less than ideal."
+        },
+        {
+          "title": "Food",
+          "text": "Food is described as good, fresh and tasty with a variety of meat and topping options. Some guests mention that they love the spicy food but were unable to get refills for non-carbonated drinks."
+        },
+        {
+          "title": "Cleanliness",
+          "text": "The business is known for its clean atmosphere, with reviewers praising the cleanliness of the store and restrooms."
+        },
+        {
+          "title": "Drinks",
+          "text": "Drinks are not refillable and the workers pull all the tea and fruit drinks early before closing. Some guests were charged for a large drink."
+        }
+      ],
+      "reviews": [
+        {
+          "source": "Ubereats",
+          "source_logo": "https://th.bing.com/th?id=OLC.UberEatsLogo.png&w=24&h=24&pid=Local",
+          "rating": 4.6,
+          "total_reviews": 107
+        },
+        {
+          "source": "Yelp",
+          "source_logo": "https://th.bing.com/th?id=OLC.Yelp_Filled.png&w=24&h=24&pid=Local",
+          "rating": 3.3,
+          "total_reviews": 87
+        }
+      ],
+      "social": [
+        {
+          "name": "Facebook",
+          "link": "https://www.facebook.com/Chipotle-Mexican-Grill-158523007491774/",
+          "thumbnail": "https://serpapi.com/searches/66b2d5c8965622cdabb34aa9/images/c6b1be75692a9ceb5e0ba681cd73faafc949592348241e23ce6e9b3017dbc8a8bf771284e86e94c5.png"
+        },
+        {
+          "name": "X",
+          "link": "https://twitter.com/ChipotleTweets",
+          "thumbnail": "https://serpapi.com/searches/66b2d5c8965622cdabb34aa9/images/c6b1be75692a9ceb5e0ba681cd73faaf95265c33fb3284638b6d9228190fa1b559019c44b41e1680.png"
+        },
+        {
+          "name": "Instagram",
+          "link": "https://instagram.com/chipotle",
+          "thumbnail": "https://serpapi.com/searches/66b2d5c8965622cdabb34aa9/images/c6b1be75692a9ceb5e0ba681cd73faaf291ea2df445c552c05e8008f8f086fee4612692d6f4b3945.png"
+        }
+      ],
+      "amenities": [
+        "Outdoor seating",
+        "Delivery"
+      ]
+    }
+  }
+JSON structure overview
+{
+  ...
+
+  "filters": [
+    {
+      "title": "String - title of the filter",
+      "link": "String - URL to the Bing Maps page with the filter applied",
+      "serpapi_link": "String - SerpApi's API URL of the link"
+    }
+  ]
+  "local_results": [  
+    {
+      "title": "String - title of the local result",
+      "link": "String - URL to the Bing Maps page",
+      "items": [
+        {
+          "place_id": "String - ID of the entity",
+          "address": "String - address of the entity",
+          "gps_coordinates": {
+            "latitude": "Float",
+            "longitude": "Float"
+          },
+          "phone": "String - phone number of the entity",
+          "website": "String - website of the entity",
+          "price": "String - price level of the entity",
+          "price_description": "String - description of the price (e.g. cheap, very cheap)",
+          "type": "String - type of the entity (e.g. Restaurant)",
+          "secondary_type": "String - secondary type of the entity (e.g. Coffee House)",
+          "thumbnail": "String - Thumbnail's URL of the entity",
+          "title": "String - title of the entity",
+          "rating": "Float - rating of the entity",
+          "reviews": "Integer - number of reviews of the entity",
+          "source": "String - source of the review",
+          "open_state": "String - open hours of the entity",
+          "description": "String - description of the entity",
+        },
+        ...
+      ]
+    }
+  ],
+  "place_results": {
+    "title": "String - title of the entity",
+    "place_id": "String - ID of the entity",
+    "address": "String - address of the entity",
+    "gps_coordinates": {
+      "latitude": "Float",
+      "longitude": "Float"
+    },
+    "phone": "String - phone number of the entity",
+    "website": "String - website of the entity",
+    "rating": "Float - rating of the entity",
+    "reviews": "Integer - number of reviews of the entity",
+    "rating_provider": "String - Platform that provides the rating (e.g. Yelp)",
+    "type": "String - type of the entity",
+    "claimed": "Boolean - whether the entity is claimed by the owner",
+    "images": [
+      {
+        "thumbnail": "String - URL of the thumbnail",
+        "link": "String - URL to the Bing Images search"
+      }
+    ],
+    "directions": "String - URL of the Bing Maps' direction to the entity",
+    "open_state": "String - open hours of the entity"
+    "hours": "Hash - open hours of each day of the entity",
+    "service_ares": "String - entity's service area",
+    "reviews": [
+      {
+        "source": "String - source of the review",
+        "source_logo": "String - URL of the source's logo",
+        "rating": "Float - rating of the review",
+        "total_reviews": "String - total number of reviews",
+        "reviews": [
+          {
+            "rating": "Float - rating of the review",
+            "date": "String - date of the review",
+            "text": "String - text of the review",
+            "user_name": "String - name of the user who wrote the review",
+            "link": "String - URL to the review in the source platform"
+          }
+        ],
+        "see_all_link": "String - URL to view all the review in source platform"
+      }
+    ],
+    "customer_say": [
+      {
+        "title": "String - title of the customer say",
+        "text": "String - text of the customer say"
+      }
+    ],
+    "social": [
+      {
+        "name": "String - Social platform name",
+        "link": "String - URL to the social profile",
+        "thumbnail": "String - Thumbnail URL of the social platform's logo"
+      }
+    ],
+    "amenities": "Array - amenities of the entity (e.g. Wi-Fi, Outdoor seating)",
+    "people_also_search_for": [
+      {
+        "title": "String",
+        "items": [
+          {
+            "title": "String - title of the entity",
+            "place_id": "String - ID of the entity",
+            "link": "String - URL to the entity in Bing Maps",
+            "rating": "Float - rating of the entity",
+            "reviews": "Integer - number of reviews of the entity",
+            "source": "String - source of the review"
+          }
+        ]
+      }
+    ]
+  }
+}

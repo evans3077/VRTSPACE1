@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRT Space Frontend"
+  short_description: "UI, UX, and conversion rules"
+  default_prompt: "Use $vrt-space-frontend to build pages for VRT SPACE AGENCY."

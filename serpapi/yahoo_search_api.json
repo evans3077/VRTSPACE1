@@ -1,0 +1,1374 @@
+{
+"search_metadata":
+{
+"id":
+"695927708c24bd247f1be7dc",
+"status":
+"Success",
+"json_endpoint":
+"https://serpapi.com/searches/637b5aeb6914bc20/695927708c24bd247f1be7dc.json",
+"created_at":
+"2026-01-03 14:28:00 UTC",
+"processed_at":
+"2026-01-03 14:28:00 UTC",
+"yahoo_url":
+"https://search.yahoo.com/search?p=coffee+mug&ei=UTF-8&fr=fp-tts",
+"raw_html_file":
+"https://serpapi.com/searches/637b5aeb6914bc20/695927708c24bd247f1be7dc.html",
+"total_time_taken":
+0.88
+},
+"search_parameters":
+{
+"engine":
+"yahoo",
+"p":
+"coffee mug",
+"device":
+"desktop"
+},
+"search_information":
+{
+"query_displayed":
+"coffee mug"
+},
+"organic_results":
+[
+{
+"position":
+1,
+"title":
+"Amazon.com: Coffee Cups & Mugs: Home & Kitchen",
+"link":
+"https://www.amazon.com/Mugs/b?node=367142011",
+"displayed_link":
+"Amazonwww.amazon.com › Mugs › b",
+"snippet":
+"Amazonwww.amazon.com › Mugs › b"
+},
+{
+"position":
+2,
+"title":
+"Coffee Mugs & Tea Cups - Target",
+"link":
+"https://www.target.com/c/coffee-mugs-tea-cups-glassware-drinkware-kitchen-dining/-/N-4yklc",
+"displayed_link":
+"Targetwww.target.com › c › coffee-mugs-tea-cups-glassware",
+"snippet":
+"Targetwww.target.com › c › coffee-mugs-tea-cups-glassware",
+"snippet_highlighted_words":
+[
+"Coffee"
+]
+},
+{
+"position":
+3,
+"title":
+"Coffee Mugs in Drinkware - Walmart.com",
+"link":
+"https://www.walmart.com/browse/home/coffee-mugs/4044_623679_639999_3148543_9383607",
+"displayed_link":
+"Walmartwww.walmart.com › browse › home",
+"snippet":
+"Walmartwww.walmart.com › browse › home",
+"snippet_highlighted_words":
+[
+"mug",
+"mug"
+]
+},
+{
+"position":
+4,
+"title":
+"Best Cups for Coffee & Coffee Mugs for Hot Drinks | Crate ...",
+"link":
+"https://www.crateandbarrel.com/dining-and-entertaining/coffee-mugs/1",
+"displayed_link":
+"Crate & Barrelwww.crateandbarrel.com › dining-and-entertaining",
+"snippet":
+"Crate & Barrelwww.crateandbarrel.com › dining-and-entertaining",
+"snippet_highlighted_words":
+[
+"mug"
+]
+},
+{
+"position":
+5,
+"title":
+"Coffee Mugs - Etsy",
+"link":
+"https://www.etsy.com/market/coffee_mugs",
+"displayed_link":
+"Etsywww.etsy.com › market › coffee_mugs",
+"snippet":
+"Etsywww.etsy.com › market › coffee_mugs",
+"snippet_highlighted_words":
+[
+"coffee"
+]
+},
+{
+"position":
+6,
+"title":
+"Mugs - Macy's",
+"link":
+"https://www.macys.com/shop/home/kitchen-dining/dining-entertaining/glassware-drinkware/mugs?id=71247",
+"displayed_link":
+"Macy'swww.macys.com › glassware-drinkware › mugs",
+"snippet":
+"Macy'swww.macys.com › glassware-drinkware › mugs"
+},
+{
+"position":
+7,
+"title":
+"The Best Coffee Mugs of 2026, Tested by Our Editors - Food & Wine",
+"link":
+"https://www.foodandwine.com/lifestyle/kitchen/best-coffee-mugs",
+"displayed_link":
+"Food & Winewww.foodandwine.com › kitchen › best-coffee-mugs",
+"date":
+"Dec 4, 2025",
+"snippet":
+"Here's our list of the best coffee mugs tested by our coffee-loving editors. The number one spot went to Year & Day’s Mugs. These mugs had everything we could want in a design, including a...",
+"snippet_highlighted_words":
+[
+"Year & Day’s"
+]
+}
+],
+"related_searches":
+{
+"bottom":
+[
+{
+"query":
+"heated coffee mug",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd8035BXNyoA;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3JlbC1ib3Q-?p=heated+coffee+mug&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Agossip&fr=fp-tts",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=yahoo&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Agossip&p=heated+coffee+mug"
+},
+{
+"query":
+"coffee mug warmer",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd8045BXNyoA;_ylu=Y29sbwNiZjEEcG9zAzUEdnRpZAMEc2VjA3JlbC1ib3Q-?p=coffee+mug+warmer&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Agossip&fr=fp-tts",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=yahoo&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Agossip&p=coffee+mug+warmer"
+},
+{
+"query":
+"stanley coffee mug",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd804JBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzIEdnRpZAMEc2VjA3JlbC1ib3Q-?p=stanley+coffee+mug&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Agossip&fr=fp-tts",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=yahoo&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Agossip&p=stanley+coffee+mug"
+},
+{
+"query":
+"coffee mug etsy",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd805JBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzYEdnRpZAMEc2VjA3JlbC1ib3Q-?p=coffee+mug+etsy&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Aseaview&fr=fp-tts",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=yahoo&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Aseaview&p=coffee+mug+etsy"
+},
+{
+"query":
+"yeti coffee mug",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd804ZBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzMEdnRpZAMEc2VjA3JlbC1ib3Q-?p=yeti+coffee+mug&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Agossip&fr=fp-tts",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=yahoo&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Agossip&p=yeti+coffee+mug"
+},
+{
+"query":
+"coffee mug personalized",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd805ZBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzcEdnRpZAMEc2VjA3JlbC1ib3Q-?p=coffee+mug+personalized&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Aseaview&fr=fp-tts",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=yahoo&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Aseaview&p=coffee+mug+personalized"
+},
+{
+"query":
+"coffee mug large",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd804pBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzQEdnRpZAMEc2VjA3JlbC1ib3Q-?p=coffee+mug+large&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Aseaview&fr=fp-tts",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=yahoo&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Aseaview&p=coffee+mug+large"
+},
+{
+"query":
+"coffee mug wiki",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd805pBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzgEdnRpZAMEc2VjA3JlbC1ib3Q-?p=coffee+mug+wiki&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Aseaview&fr=fp-tts",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=yahoo&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Aseaview&p=coffee+mug+wiki"
+}
+],
+"right":
+[
+{
+"query":
+"coffee mug warmer",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd807JBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3JlbC1lYXN0?p=coffee+mug+warmer&fr2=p%3As%2Cv%3Aw%2Cm%3Aat-e%2Cct%3Agossip&fr=fp-tts",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=yahoo&fr2=p%3As%2Cv%3Aw%2Cm%3Aat-e%2Cct%3Agossip&p=coffee+mug+warmer"
+},
+{
+"query":
+"coffee mug holder",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd807ZBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzIEdnRpZAMEc2VjA3JlbC1lYXN0?p=coffee+mug+holder&fr2=p%3As%2Cv%3Aw%2Cm%3Aat-e%2Cct%3Agossip&fr=fp-tts",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=yahoo&fr2=p%3As%2Cv%3Aw%2Cm%3Aat-e%2Cct%3Agossip&p=coffee+mug+holder"
+},
+{
+"query":
+"coffee mug tree",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd807pBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzMEdnRpZAMEc2VjA3JlbC1lYXN0?p=coffee+mug+tree&fr2=p%3As%2Cv%3Aw%2Cm%3Aat-e%2Cct%3Agossip&fr=fp-tts",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=yahoo&fr2=p%3As%2Cv%3Aw%2Cm%3Aat-e%2Cct%3Agossip&p=coffee+mug+tree"
+},
+{
+"query":
+"coffee mug clip art",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd8075BXNyoA;_ylu=Y29sbwNiZjEEcG9zAzQEdnRpZAMEc2VjA3JlbC1lYXN0?p=coffee+mug+clip+art&fr2=p%3As%2Cv%3Aw%2Cm%3Aat-e%2Cct%3Agossip&fr=fp-tts",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=yahoo&fr2=p%3As%2Cv%3Aw%2Cm%3Aat-e%2Cct%3Agossip&p=coffee+mug+clip+art"
+},
+{
+"query":
+"coffee mug with lid",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd808JBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzUEdnRpZAMEc2VjA3JlbC1lYXN0?p=coffee+mug+with+lid&fr2=p%3As%2Cv%3Aw%2Cm%3Aat-e%2Cct%3Agossip&fr=fp-tts",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=yahoo&fr2=p%3As%2Cv%3Aw%2Cm%3Aat-e%2Cct%3Agossip&p=coffee+mug+with+lid"
+},
+{
+"query":
+"coffee mug template",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd808ZBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzYEdnRpZAMEc2VjA3JlbC1lYXN0?p=coffee+mug+template&fr2=p%3As%2Cv%3Aw%2Cm%3Aat-e%2Cct%3Agossip&fr=fp-tts",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=yahoo&fr2=p%3As%2Cv%3Aw%2Cm%3Aat-e%2Cct%3Agossip&p=coffee+mug+template"
+},
+{
+"query":
+"coffee mug designs",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd808pBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzcEdnRpZAMEc2VjA3JlbC1lYXN0?p=coffee+mug+designs&fr2=p%3As%2Cv%3Aw%2Cm%3Aat-e%2Cct%3Agossip&fr=fp-tts",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=yahoo&fr2=p%3As%2Cv%3Aw%2Cm%3Aat-e%2Cct%3Agossip&p=coffee+mug+designs"
+},
+{
+"query":
+"coffee mug sets",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd8085BXNyoA;_ylu=Y29sbwNiZjEEcG9zAzgEdnRpZAMEc2VjA3JlbC1lYXN0?p=coffee+mug+sets&fr2=p%3As%2Cv%3Aw%2Cm%3Aat-e%2Cct%3Agossip&fr=fp-tts",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=yahoo&fr2=p%3As%2Cv%3Aw%2Cm%3Aat-e%2Cct%3Agossip&p=coffee+mug+sets"
+}
+]
+},
+"trending_searches":
+{
+"results":
+[
+{
+"position":
+1,
+"title":
+"1US-Venezuela TensionsTrump bombs Venezuela, US ‘captures’ Maduro: All that we know",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd809JBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3Nj?p=US-Venezuela+Tensions&fr2=p%3As%2Cv%3Aw%2Cm%3Atn%2Cct%3Aall%2Cpg%3A1%2Cstl%3Atxt%2Ckt%3Aorg%2Cb%3A&fr=fp-tts",
+"trending":
+0
+},
+{
+"position":
+2,
+"title":
+"2Swiss Ski Resort FireSwiss ski resort fire kills 40+, 115 injured",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd809ZBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3Nj?p=Swiss+Ski+Resort+Fire&fr2=p%3As%2Cv%3Aw%2Cm%3Atn%2Cct%3Aall%2Cpg%3A1%2Cstl%3Atxt%2Ckt%3Aorg%2Cb%3A&fr=fp-tts",
+"trending":
+0
+},
+{
+"position":
+3,
+"title":
+"3Mexico Earthquake6.5 magnitude earthquake hits southern Mexico, killing 2",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd809pBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3Nj?p=Mexico+Earthquake&fr2=p%3As%2Cv%3Aw%2Cm%3Atn%2Cct%3Aall%2Cpg%3A1%2Cstl%3Atxt%2Ckt%3Aorg%2Cb%3A&fr=fp-tts",
+"trending":
+0
+},
+{
+"position":
+4,
+"title":
+"4Tony Dokoupil CBS NewsTony Dokoupil vows independent CBS Evening News",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd8095BXNyoA;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3Nj?p=Tony+Dokoupil+CBS+News&fr2=p%3As%2Cv%3Aw%2Cm%3Atn%2Cct%3Aall%2Cpg%3A1%2Cstl%3Atxt%2Ckt%3Aorg%2Cb%3A&fr=fp-tts",
+"trending":
+0
+},
+{
+"position":
+5,
+"title":
+"5Taylor Swift NYE WeddingTaylor Swift attends Este Haim's NYE wedding in gold gown",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd80.JBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3Nj?p=Taylor+Swift+NYE+Wedding&fr2=p%3As%2Cv%3Aw%2Cm%3Atn%2Cct%3Aall%2Cpg%3A1%2Cstl%3Atxt%2Ckt%3Aorg%2Cb%3A&fr=fp-tts",
+"trending":
+0
+},
+{
+"position":
+6,
+"title":
+"6Michigan Football NewsMichigan football lose all-Big Ten OL to transfer portal",
+"link":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd80.ZBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3Nj?p=Michigan+Football+News&fr2=p%3As%2Cv%3Aw%2Cm%3Atn%2Cct%3Aall%2Cpg%3A1%2Cstl%3Atxt%2Ckt%3Aorg%2Cb%3A&fr=fp-tts",
+"trending":
+0
+}
+]
+},
+"ads_results":
+[
+{
+"position":
+1,
+"block_position":
+"top",
+"favicon":
+"https://up.yimg.com/ib/th?pid=AdsPlus&id=ODF.QhaTy7HPvKoaJWwye8j2CQ&w=32&h=32&c=1&rs=1&qlt=95",
+"title":
+"Shop Coffee Mug - Amazon - Amazon.com® Official Site",
+"link":
+"https://www.bing.com/aclick?ld=e8IX9SwmFh4xc6xWt-rO4ZvzVUCUxSbxZgz9zQxLwi59fdwAAVYOncueV9B779VVvhb4iRFrYZBrlHa4roPA8KWIkbRYNkz_0YRhjVHVstksLDHwPmwGmUZDFPiIQw1mRvL6ALmLETdd42FClrHnkJCiOAmnibd4MDad9ibDRQyi7BPJ_HRkApUnoU51hgJ_biQAd5nijN3Tl4i6WkY76ha3dOtXE&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZnMlMmYlM2ZpZSUzZFVURjglMjZrZXl3b3JkcyUzZGNvZmZlZSUyYm11ZyUyNmluZGV4JTNkYXBzJTI2dGFnJTNkbWgwYi0yMCUyNnJlZiUzZHBkX3NsXzR6M3V6a2lqa3RfZSUyNmFkZ3JwaWQlM2QxMzMxNTExMTM3Mjg4MDMzJTI2aHZhZGlkJTNkODMyMTk3Mjk4OTk0OTglMjZodm5ldHclM2RvJTI2aHZxbXQlM2RlJTI2aHZibXQlM2RiZSUyNmh2ZGV2JTNkYyUyNmh2bG9jaW50JTNkJTI2aHZsb2NwaHklM2Q3MTkwMCUyNmh2dGFyZ2lkJTNka3dkLTgzMjIwNjUwNTA3NDQ1JTNhbG9jLTE5MCUyNmh5ZGFkY3IlM2QxMzkyNl8xMzQ3MzQxMSUyNm1jaWQlM2RkYTAyNzUxYjZlYjUzMjRmOTNjNDYxMTE1ZmI5YjEzYiUyNm1zY2xraWQlM2QzNzEyNmFjYTgwZTUxMmE3YWEyNDAzOTNhNzk3MmVhMg&rlid=37126aca80e512a7aa240393a7972ea2",
+"snippet":
+"Compare prices of top rated Coffee Mug. Find deals & shop now. Browse best sellers and find deals on Coffee Mug at Amazon®. Shop Now!",
+"sitelinks":
+{
+"expanded":
+[
+{
+"title":
+"Books to Read",
+"link":
+"https://r.search.yahoo.com/rdclks/dWU9NXZvbmk0ZGtsaTlyaCZ1dD0xNzY3NDUwNDgxNzI4JnVvPTgzMjE5NzI5ODk5NDk4Jmx0PTImcz0xJmVzPWVad012emdyYUt2NnQya2pnZHJIU19fejFRWjVIODVGR1BGU200Nmh3SF9RX1E0WEk3Q1NnWFpfUDFXTUVvaURCMFBWWGNVMHpDVWRyeVEt/RV=2/RE=1770042482/RO=14/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de8bC6hVqTH52SStwzx9GECpjVUCUxZypVkHYb1l8DLwgRipsLxXKoefEuIF-bz9dK0w-fk15YHQqSWKikHE0AC0cXN5sGlBQbn7RuRpT8sPoZFhdrmPOVsS1HcJc5YO5FS-rLoBDxiVrZNGdYyCKMlaM2gYpgNnChgqjiCkik8Qx1pOTMVC_KLXwWmz1EBhghjz9DLIjROktSk979RCS5QkZTKZsg%26u%3daHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZnMlMmYlM2ZpZSUzZHV0ZjglMjZrZXl3b3JkcyUzZGZsb3JpZGElMmJkbXYlMmJwcmFjdGljZSUyYnRlc3QlMmJxdWVzdGlvbnMlMmJpbiUyYnJ1c3NpYW4lMjZpbmRleCUzZGFwcyUyNnRhZyUzZG1oMGItMjAlMjZyZWYlM2RwZF9zbF80ejN1emtpamt0X2UlMjZhZGdycGlkJTNkMTMzMTUxMTEzNzI4ODAzMyUyNmh2YWRpZCUzZDgzMjE5NzI5ODk5NDk4JTI2aHZuZXR3JTNkbyUyNmh2cW10JTNkZSUyNmh2Ym10JTNkYmUlMjZodmRldiUzZGMlMjZodmxvY2ludCUzZCUyNmh2bG9jcGh5JTNkNzE5MDAlMjZodnRhcmdpZCUzZGt3ZC04MzIyMDY1MDUwNzQ0NSUzYWxvYy0xOTAlMjZoeWRhZGNyJTNkMTM5MjZfMTM0NzM0MTElMjZtY2lkJTNkZGEwMjc1MWI2ZWI1MzI0ZjkzYzQ2MTExNWZiOWIxM2IlMjZtc2Nsa2lkJTNkOTFlZDEwOTViNDIwMTQ2NTExMzg3OWNjOTM1MmI1YTQ%26rlid%3d91ed1095b4201465113879cc9352b5a4/RK=2/RS=Bzit99zs2yi..2CC3JW6FuNqNzw-;_ylt=AwrFa2JxJ1lpbd80vpBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA292LXRvcA--;_ylc=cnQDMQ--?IG=0ac56b62f630439cb902df6e5b8d546f",
+"snippet":
+"Discover a Wide Selection Of Books
+Suitable For Every Reader's..."
+},
+{
+"title":
+"All-In-One Online Store",
+"link":
+"https://r.search.yahoo.com/rdclks/dWU9NXZvbmk0ZGtsaTlyaCZ1dD0xNzY3NDUwNDgxNzI4JnVvPTgzMjE5NzI5ODk5NDk4Jmx0PTImcz0xJmVzPWVad012emdyYUt2NnQya2pnZHJIU19fejFRWjVIODVGR1BGU200Nmh3SF9RX1E0WEk3Q1NnWFpfUDFXTUVvaURCMFBWWGNVMHpDVWRyeVEt/RV=2/RE=1770042482/RO=14/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de8a_KbtqD-JSgYw7N3k0kDmjVUCUzh8JwMZ6gRK6M0ywcvHAL8O5PqA1_28R19knelmvGpqIq2EtgGXZwzp3dY6JS97QTvnJ9rKIXJ9heV48UVFVec6csTHGrDqLwLrF7nGZfQSRMWiTW2nh6bFxlpUOoIJjljdU5ITDKuW-fwglKRHZRYHva9hCcdI9qxNo4fLRWZso92rM0vEd-ANconxPy3j5I%26u%3daHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZnMlMmYlM2ZpZSUzZHV0ZjglMjZrZXl3b3JkcyUzZGJhY2t5YXJkJTJiZm9vdGJhbGwlMmJmaWVsZCUyYmdvYWwlMmJwb3N0cyUyNmluZGV4JTNkYXBzJTI2dGFnJTNkbWgwYi0yMCUyNnJlZiUzZHBkX3NsXzR6M3V6a2lqa3RfZSUyNmFkZ3JwaWQlM2QxMzMxNTExMTM3Mjg4MDMzJTI2aHZhZGlkJTNkODMyMTk3Mjk4OTk0OTglMjZodm5ldHclM2RvJTI2aHZxbXQlM2RlJTI2aHZibXQlM2RiZSUyNmh2ZGV2JTNkYyUyNmh2bG9jaW50JTNkJTI2aHZsb2NwaHklM2Q3MTkwMCUyNmh2dGFyZ2lkJTNka3dkLTgzMjIwNjUwNTA3NDQ1JTNhbG9jLTE5MCUyNmh5ZGFkY3IlM2QxMzkyNl8xMzQ3MzQxMSUyNm1jaWQlM2RkYTAyNzUxYjZlYjUzMjRmOTNjNDYxMTE1ZmI5YjEzYiUyNm1zY2xraWQlM2Q3ODdhNzdjOTUwNDgxMDc2ZGNiMDFlOTA3NzNhM2EzNQ%26rlid%3d787a77c950481076dcb01e90773a3a35/RK=2/RS=7ZI_PWy6da9JnF818zSTysPLVF8-;_ylt=AwrFa2JxJ1lpbd80v5BXNyoA;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA292LXRvcA--;_ylc=cnQDMQ--?IG=0ac56b62f630439cb902df6e5b8d546f",
+"snippet":
+"Step up your game and refresh your
+clothing with premium sports..."
+}
+]
+}
+}
+],
+"inline_videos":
+{
+"see_more_link":
+"https://video.search.yahoo.com/search/video;_ylt=AwrFa2JxJ1lpbd802pBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzQEdnRpZAMEc2VjA3Nj?p=coffee+mug&fr=fp-tts",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=yahoo_videos&p=coffee+mug",
+"items":
+[
+{
+"position":
+1,
+"link":
+"https://video.search.yahoo.com/search/video;_ylt=AwrFa2JxJ1lpbd801pBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzQEdnRpZAMEc2VjA3Nj?p=coffee+mug&fr=fp-tts&turl=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOVP.1W60XOos2sat0hcfACvwgAHgFo%3Fpid%3DApi%26w%3D296%26h%3D156%26c%3D7%26p%3D0&rurl=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DuoYt5z7m35A&tit=7+Best+Travel+Coffee+Mugs+In+2025&pos=01&vid=12017b927b4d9a5f1315bb85d7b7b7f2&sigr=dXN9u9kkLMD9&sigt=yfiDyapd8RFc&sigi=plom3AEjWvBB",
+"thumbnail":
+"https://up.yimg.com/ib/th/id/OVP.1W60XOos2sat0hcfACvwgAHgFo?pid=Api&w=296&h=156&c=7&p=0&rs=1&qlt=95",
+"source":
+"YouTube",
+"title":
+"7 Best Travel Coffee Mugs In 2025",
+"date":
+"Sep 15, 2024",
+"duration":
+"12:45",
+"views":
+"2.6K Views"
+},
+{
+"position":
+2,
+"link":
+"https://video.search.yahoo.com/search/video;_ylt=AwrFa2JxJ1lpbd8015BXNyoA;_ylu=Y29sbwNiZjEEcG9zAzQEdnRpZAMEc2VjA3Nj?p=coffee+mug&fr=fp-tts&turl=https%3A%2F%2Ftse2.mm.bing.net%2Fth%2Fid%2FOVP.D6P_0mC1OZhIeQrjcVPfHgHgFo%3Fpid%3DApi%26w%3D296%26h%3D156%26c%3D7%26p%3D0&rurl=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DvWSpiq-noQY&tit=Top+10+Best+Coffee+Mugs+to+Keep+Coffee+Hots+in+2025+%7C+In-Depth+Reviews+%26+Buying+Guide&pos=11&vid=fcfb850a932a3c102ac0ab04ec839a08&sigr=AXYCNoLdQsEj&sigt=z8tCUQbX9La1&sigi=wNlumNXmfwtC",
+"thumbnail":
+"https://up.yimg.com/ib/th/id/OVP.D6P_0mC1OZhIeQrjcVPfHgHgFo?pid=Api&w=296&h=156&c=7&p=0&rs=1&qlt=95",
+"source":
+"YouTube",
+"title":
+"Top 10 Best Coffee Mugs to Keep Coffee Hots in 2025 | In-Depth Reviews & Buying Guide",
+"date":
+"Jul 17, 2023",
+"duration":
+"6:39",
+"views":
+"28.2K Views"
+},
+{
+"position":
+3,
+"link":
+"https://video.search.yahoo.com/search/video;_ylt=AwrFa2JxJ1lpbd802JBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzQEdnRpZAMEc2VjA3Nj?p=coffee+mug&fr=fp-tts&turl=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOVP.G9vZMbwp-I9MHF0MoUrYyAEsDh%3Fpid%3DApi%26w%3D296%26h%3D156%26c%3D7%26p%3D0&rurl=https%3A%2F%2Fwww.youtube.com%2Fwatch%3Fv%3DXnm6c0Ac5ck&tit=I+Tested+30+Travel+Coffee+Mugs+%E2%80%93+The+Ultimate+Showdown%21&pos=21&vid=89c21aa52753877291fce16be5ed8556&sigr=9S0ncvVGoInv&sigt=qzvqxrMt0C4f&sigi=S7KKxXQNqtX7",
+"thumbnail":
+"https://up.yimg.com/ib/th/id/OVP.G9vZMbwp-I9MHF0MoUrYyAEsDh?pid=Api&w=296&h=156&c=7&p=0&rs=1&qlt=95",
+"source":
+"YouTube",
+"title":
+"I Tested 30 Travel Coffee Mugs – The Ultimate Showdown!",
+"date":
+"Apr 4, 2025",
+"duration":
+"26:15",
+"views":
+"22.4K Views"
+}
+]
+},
+"inline_images":
+{
+"items":
+[
+{
+"link":
+"https://images.search.yahoo.com/search/images;_ylt=AwrFa2JxJ1lpbd80zpBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzIEdnRpZAMEc2VjA3Nj?p=coffee+mug&fr=fp-tts&th=446&tw=474&imgurl=https%3A%2F%2Fm.media-amazon.com%2Fimages%2FI%2F71PkZIcLQWL._AC_SL1500_.jpg&rurl=https%3A%2F%2Fwww.amazon.com%2Fvancasso-Cappuccino-Dishwasher-Microwave-Assorted%2Fdp%2FB0B64VR56P&size=130KB&name=Amazon.com+%7C+vancasso+Moda+Coffee+Mugs+Set+of+6-12+oz+Ceramic+Coffee+...&oid=1&h=1412&w=1499&turl=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.vUT5pWbwqGsHUE2s1qCOAgHaG-%3Fpid%3DApi&tt=Amazon.com+%7C+vancasso+Moda+Coffee+Mugs+Set+of+6-12+oz+Ceramic+Coffee+...&sigr=EqKEnPQ9vYN0&sigit=bKLE5psFYTPs&sigi=3a3gOwGzr4Ea&sign=V7Phi27VZIK.&sigt=V7Phi27VZIK.",
+"thumbnail":
+"https://up.yimg.com/ib/th/id/OIP.vUT5pWbwqGsHUE2s1qCOAgHaG-?pid=Api&rs=1&c=1&qlt=95&w=129&h=122",
+"title":
+"Amazon.com | vancasso Moda Coffee Mugs Set of 6-12 oz Ceramic Coffee ..."
+},
+{
+"link":
+"https://images.search.yahoo.com/search/images;_ylt=AwrFa2JxJ1lpbd80z5BXNyoA;_ylu=Y29sbwNiZjEEcG9zAzIEdnRpZAMEc2VjA3Nj?p=coffee+mug&fr=fp-tts&th=474&tw=474&imgurl=https%3A%2F%2Fm.media-amazon.com%2Fimages%2FI%2F61g9gF-eHeL._AC_.jpg&rurl=https%3A%2F%2Fwww.amazon.com%2Fmasoline-Ceramic-Coffee-Microwave-Diahwasher%2Fdp%2FB0BW7LF38K&size=122KB&name=Amazon.com+%7C+masoline+24+oz+Large+Ceramic+Coffee+mugs%2C+Extra+Large+Tea+...&oid=2&h=1400&w=1400&turl=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.EQjN0oImb1E5w7FaIu7ZBwHaHa%3Fpid%3DApi&tt=Amazon.com+%7C+masoline+24+oz+Large+Ceramic+Coffee+mugs%2C+Extra+Large+Tea+...&sigr=LqxrEt49Ezal&sigit=WctCXEGGbD8U&sigi=1X9x.7HfyUWk&sign=fiLw5qjdg.UV&sigt=fiLw5qjdg.UV",
+"thumbnail":
+"https://up.yimg.com/ib/th/id/OIP.EQjN0oImb1E5w7FaIu7ZBwHaHa?pid=Api&rs=1&c=1&qlt=95&w=122&h=122",
+"title":
+"Amazon.com | masoline 24 oz Large Ceramic Coffee mugs, Extra Large Tea ..."
+},
+{
+"link":
+"https://images.search.yahoo.com/search/images;_ylt=AwrFa2JxJ1lpbd800JBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzIEdnRpZAMEc2VjA3Nj?p=coffee+mug&fr=fp-tts&th=474&tw=474&imgurl=https%3A%2F%2Fwww.arakucoffee.in%2Fcdn%2Fshop%2Ffiles%2FARAKU_Latte_Mug_Mood.jpg%3Fv%3D1687414870%26width%3D2048&rurl=https%3A%2F%2Fwww.arakucoffee.in%2Fproducts%2Fcoffee-mug-blue&size=431KB&name=Buy+Coffee+Mug+Blue+%7C+Cups+%26+Mugs+%7C+Araku+Coffee+%7C+Serveware+...&oid=3&h=2048&w=2048&turl=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.DlQXeieRDEVpNhL3ah466AHaHa%3Fpid%3DApi&tt=Buy+Coffee+Mug+Blue+%7C+Cups+%26+Mugs+%7C+Araku+Coffee+%7C+Serveware+...&sigr=8Qq8bUbQMcKq&sigit=oBkJgpi1MCtf&sigi=tvGYYD0Afotg&sign=EUp7Xt3Esmb5&sigt=EUp7Xt3Esmb5",
+"thumbnail":
+"https://up.yimg.com/ib/th/id/OIP.DlQXeieRDEVpNhL3ah466AHaHa?pid=Api&rs=1&c=1&qlt=95&w=122&h=122",
+"title":
+"Buy Coffee Mug Blue | Cups & Mugs | Araku Coffee | Serveware ..."
+},
+{
+"link":
+"https://images.search.yahoo.com/search/images;_ylt=AwrFa2JxJ1lpbd800ZBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzIEdnRpZAMEc2VjA3Nj?p=coffee+mug&fr=fp-tts&th=521&tw=474&imgurl=https%3A%2F%2Fii1.pepperfry.com%2Fmedia%2Fcatalog%2Fproduct%2Fc%2Fd%2F1100x1210%2Fcdi-black-matt-finish-coffee-mugs---set-of-6--cdi-black-matt-finish-coffee-mugs---set-of-6--2i0e7h.jpg&rurl=https%3A%2F%2Fwww.pepperfry.com%2Fcdi-round-shape-tea-cups-in-six-different-colours-6-pcs-set-1314061.html&size=178KB&name=Buy+Classic+250ml+%28Set+of+6%29+Coffee+Mug+by+Cdi+Online+-+Coffee+Mugs+...&oid=4&h=1210&w=1100&turl=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.QmtrSFY6ptGJTtTetElZMAHaIJ%3Fpid%3DApi&tt=Buy+Classic+250ml+%28Set+of+6%29+Coffee+Mug+by+Cdi+Online+-+Coffee+Mugs+...&sigr=__L7r5MVyqK_&sigit=qxFOrrnntcg_&sigi=MJsYHPps8hDJ&sign=PyzOZcq3a80S&sigt=PyzOZcq3a80S",
+"thumbnail":
+"https://up.yimg.com/ib/th/id/OIP.QmtrSFY6ptGJTtTetElZMAHaIJ?pid=Api&rs=1&c=1&qlt=95&w=111&h=122",
+"title":
+"Buy Classic 250ml (Set of 6) Coffee Mug by Cdi Online - Coffee Mugs ..."
+},
+{
+"link":
+"https://images.search.yahoo.com/search/images;_ylt=AwrFa2JxJ1lpbd800pBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzIEdnRpZAMEc2VjA3Nj?p=coffee+mug&fr=fp-tts&th=474&tw=474&imgurl=https%3A%2F%2Fm.media-amazon.com%2Fimages%2FI%2F61lh9VEDNVS.jpg&rurl=https%3A%2F%2Far.inspiredpencil.com%2Fpictures-2023%2Fcoffee-mugs-images&size=97KB&name=Coffee+Mugs+Images&oid=5&h=1500&w=1500&turl=https%3A%2F%2Ftse1.mm.bing.net%2Fth%2Fid%2FOIP.0mLOSUPCIsZ4g4mwmPEwEgHaHa%3Fpid%3DApi&tt=Coffee+Mugs+Images&sigr=k_ePHM_grYsD&sigit=RwPI96VIWBDZ&sigi=5_oJHmkdI4p8&sign=8ZJAbvewBRYC&sigt=8ZJAbvewBRYC",
+"thumbnail":
+"https://up.yimg.com/ib/th/id/OIP.0mLOSUPCIsZ4g4mwmPEwEgHaHa?pid=Api&rs=1&c=1&qlt=95&w=122&h=122",
+"title":
+"Coffee Mugs Images"
+}
+],
+"see_more_link":
+"https://images.search.yahoo.com/search/images;_ylt=AwrFa2JxJ1lpbd8005BXNyoA;_ylu=Y29sbwNiZjEEcG9zAzIEdnRpZAMEc2VjA3Nj?p=coffee+mug&fr=fp-tts",
+"serpapi_link":
+"https://serpapi.com/search.json?device=desktop&engine=yahoo_images&p=coffee+mug"
+},
+"pagination":
+{
+"current":
+1,
+"next":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd8065BXNyoA;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3BhZ2luYXRpb24-?fr=fp-tts&p=coffee+mug&b=8&pz=7&bct=0&xargs=0&pstart=10",
+"other_pages":
+{
+"2":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd8055BXNyoA;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3BhZ2luYXRpb24-?fr=fp-tts&p=coffee+mug&b=8&pz=7&bct=0&xargs=0&pstart=10",
+"3":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd806JBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3BhZ2luYXRpb24-?fr=fp-tts&p=coffee+mug&b=15&pz=7&bct=0&xargs=0&pstart=19",
+"4":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd806ZBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3BhZ2luYXRpb24-?fr=fp-tts&p=coffee+mug&b=22&pz=7&bct=0&xargs=0&pstart=28",
+"5":
+"https://search.yahoo.com/search;_ylt=AwrFa2JxJ1lpbd806pBXNyoA;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3BhZ2luYXRpb24-?fr=fp-tts&p=coffee+mug&b=29&pz=7&bct=0&xargs=0&pstart=37"
+}
+},
+"serpapi_pagination":
+{
+"current":
+1,
+"next_link":
+"https://serpapi.com/search.json?b=8&device=desktop&engine=yahoo&p=coffee+mug",
+"next":
+"https://serpapi.com/search.json?b=8&device=desktop&engine=yahoo&p=coffee+mug",
+"other_pages":
+{
+"2":
+"https://serpapi.com/search.json?b=8&device=desktop&engine=yahoo&p=coffee+mug",
+"3":
+"https://serpapi.com/search.json?b=15&device=desktop&engine=yahoo&p=coffee+mug",
+"4":
+"https://serpapi.com/search.json?b=22&device=desktop&engine=yahoo&p=coffee+mug",
+"5":
+"https://serpapi.com/search.json?b=29&device=desktop&engine=yahoo&p=coffee+mug"
+}
+},
+"shopping_results":
+[
+{
+"link":
+"https://www.bing.com/aclick?ld=e8xTXSC3nzHDch_cDGpkiR8jVUCUwVctADM57jnIKbFpXYGezMAmRmKcGJzVkX18ARyhdWrWYw4KBfLGJqs6OIAlY-mzNLtKYsKhhONVk46ZjLaND8RWSe4BZxn2JcSGZm25iiNphJ12Eo38Opu79Ytuhd5ibQoo4i96ZZWgWBoPVYEHp7xCvI3s5xxtOIPZ0stmZIwcKWBj0W1D4o4pFWWkXAMcU&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZlNwb29udGlxdWVzLVN0YWlubGVzcy1TdGVlbC1UcmF2ZWwtSGFuZGxlJTJmZHAlMmZCMEQ5MVZXMU5QJTJmcmVmJTNkYXNjX2RmX0IwRDkxVlcxTlAlM2Z0YWclM2RiaW5nc2hvcHBpbmdhLTIwJTI2bGlua0NvZGUlM2RkZjAlMjZodmFkaWQlM2Q4MDA1ODM4MjEzODgwOSUyNmh2bmV0dyUzZG8lMjZodnFtdCUzZGUlMjZodmJtdCUzZGJlJTI2aHZkZXYlM2RjJTI2aHZsb2NpbnQlM2QlMjZodmxvY3BoeSUzZDcxOTAwJTI2aHZ0YXJnaWQlM2RwbGEtNDU4MzY1Nzg1Njk3NDc5NCUyNnBzYyUzZDElMjZtc2Nsa2lkJTNkNDcyMjk3ODAyOGU0MTcwOWZlMjZmZWQ5MGY5NjNkZTc&rlid=4722978028e41709fe26fed90f963de7",
+"thumbnail":
+"https://sp.yimg.com/ib/th?id=OPHS.cpNvWBUbxoC%2fZA474C474&o=5&pid=21.1&w=174&h=174",
+"original_image":
+"https://sp.yimg.com/ib/th?id=OPHS.cpNvWBUbxoC%2fZA474C474&o=5&pid=21.1",
+"price":
+"$28.42",
+"extracted_price":
+28.42,
+"seller":
+"Amazon.com",
+"rating":
+0,
+"reviews":
+"24"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8o3mUcre0xycdB1PdwZiZHTVUCUyst8KCQCTkiPolKct5IW49G2zkBe6rgktJOdTuqB0Rzkx9AwCfCiVEBILhNaXism0Nh9hVU5PVRnDjq6ngBJYUujJISS5I_fmMP3_aKLLiI5Wut4sP0b2PJGaEm8PYsNmd-LrlGAZD9NFGjbdyPJHLIUU9N0n0DVIDdE17qvuU_4x-MQb2ZoYux9J2rbYI2Xw&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZlNlbGYtSGVhdGluZy1BZGp1c3RhYmxlLUNvbnRyb2xsZWQtVGVtcGVyYXR1cmUtQWRqdXN0bWVudCUyZmRwJTJmQjBEUlFZSDMySCUyZnJlZiUzZGFzY19kZl9CMERSUVlIMzJIJTNmdGFnJTNkYmluZ3Nob3BwaW5nYS0yMCUyNmxpbmtDb2RlJTNkZGYwJTI2aHZhZGlkJTNkODA3NDU1ODMzMzUzMjglMjZodm5ldHclM2RvJTI2aHZxbXQlM2RlJTI2aHZibXQlM2RiZSUyNmh2ZGV2JTNkYyUyNmh2bG9jaW50JTNkJTI2aHZsb2NwaHklM2Q3MTkwMCUyNmh2dGFyZ2lkJTNkcGxhLTQ1ODQzNDUwNTA3NzkyMzUlMjZwc2MlM2QxJTI2bXNjbGtpZCUzZDJkMTEyMGRhZWY5YjFiMTJhNDIwNDk4M2M4ZTlhNGQx&rlid=2d1120daef9b1b12a4204983c8e9a4d1",
+"thumbnail":
+"https://sp.yimg.com/ib/th?id=OPHS.3hK3%2fVL15p92Rg474C474&o=5&pid=21.1&w=174&h=174",
+"original_image":
+"https://sp.yimg.com/ib/th?id=OPHS.3hK3%2fVL15p92Rg474C474&o=5&pid=21.1",
+"price":
+"$109.99",
+"extracted_price":
+109.99,
+"seller":
+"Amazon.com",
+"rating":
+0,
+"reviews":
+"30"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8GEJ-vQdyfSxlhYd9diCJ1zVUCUxueR7vdXwiZBR_EQsZeZEACnoT0wQxgCE4kefo0NYqgcw3ofWR12eoCHQMqxfAUee7EZ7Ema4lra-SPBYE_vOspeVX4Q0GhMCFcdSgheJbOnNB3Bk0fErQ3esD-6PZJz_Lui0Aexvi8MMboCAS7k1tQCyFY2fZR-Mi5sj4DbnsebSxo07-xQjx6UobmnRFt6s&u=aHR0cHMlM2ElMmYlMmZ3d3cuYW1hem9uLmNvbSUyZkdBVURPUkEtR2lmdHMtRGFkLURhdWdodGVyLUNocmlzdG1hcyUyZmRwJTJmQjBEMkw3TkdONSUyZnJlZiUzZGFzY19kZl9CMEQyTDdOR041JTNmdGFnJTNkYmluZ3Nob3BwaW5nYS0yMCUyNmxpbmtDb2RlJTNkZGYwJTI2aHZhZGlkJTNkODA3NDU1NzYxMjIzNTQlMjZodm5ldHclM2RvJTI2aHZxbXQlM2RlJTI2aHZibXQlM2RiZSUyNmh2ZGV2JTNkYyUyNmh2bG9jaW50JTNkJTI2aHZsb2NwaHklM2Q3MTkwMCUyNmh2dGFyZ2lkJTNkcGxhLTQ1ODQzNDUwNDU2MzQwOTIlMjZwc2MlM2QxJTI2bXNjbGtpZCUzZDlkZGQ3ZWEzYjZiZTE0NTgxYzAyMTdmYTkxY2MzYjNk&rlid=9ddd7ea3b6be14581c0217fa91cc3b3d",
+"thumbnail":
+"https://sp.yimg.com/ib/th?id=OPHS.%2f624e3tFiUuwKg474C474&o=5&pid=21.1&w=174&h=174",
+"original_image":
+"https://sp.yimg.com/ib/th?id=OPHS.%2f624e3tFiUuwKg474C474&o=5&pid=21.1",
+"price":
+"$19.95",
+"extracted_price":
+19.95,
+"old_price":
+"$29.95",
+"extracted_old_price":
+29.95,
+"seller":
+"Amazon.com",
+"rating":
+0,
+"reviews":
+"24"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8fMZBvIkK6VPQ6MgQqWW_0DVUCUwW1uqiuTxLO8pKZ-IZoTx7kl9q8bbUXOVl_BbBVFR8FqOoD9NFVL1oSxqI_xTV1DJ1tcp8QS4LmLG5Ms90w1dGqEXeCbFfBulGESkQc99QUIDJGgoeEIZ5ryd5qjID78sK99HgwgRYk3v8iNEh47IoohbZA86vXQYbz7WozUNRmhEKe63XZaQVfYG3vqlRnY0&u=aHR0cHMlM2ElMmYlMmZ3d3cubWFja2VuemllLWNoaWxkcy5jb20lMmZzdGVybGluZy1jaGVjay1tdWclMmY4OTIwNC01NDAuaHRtbCUzZm1zY2xraWQlM2RlYTQ2M2M0YTkyYWYxYmY1NGFiMDU1MTNiNWRkNWJjZCUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jYW1wYWlnbiUzZEhNX1NTX05vbi1CcmFuZGVkX1RvcFNLVSUyNnV0bV90ZXJtJTNkNDU4NTkyNTU2NzM0MDE2MiUyNnV0bV9jb250ZW50JTNkdG9wJTI1MjBza3U&rlid=ea463c4a92af1bf54ab05513b5dd5bcd",
+"thumbnail":
+"https://sp.yimg.com/ib/th?id=OPHS.7zbq6DS3Xsc1jA474C474&o=5&pid=21.1&w=174&h=174",
+"original_image":
+"https://sp.yimg.com/ib/th?id=OPHS.7zbq6DS3Xsc1jA474C474&o=5&pid=21.1",
+"price":
+"$59.95",
+"extracted_price":
+59.95,
+"seller":
+"MacKenzie-Childs",
+"rating":
+0,
+"reviews":
+"165"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8btWxlxcy0GweijvdxgBLIDVUCUzn6HJmagfW_Zh7aIGrwMeQjU2chUR21SB_EBvYr9ADyMPwbSj6SDWnl3gM1pYOFz3JtAP6zd4cSJHnyIt2dfl99utvKLj3GVJ73fvQf2AuBwu0Y0r-Woki1XG3nnYLHlGFukuM-pa6D6mCXMTB5H03Sq_U4XtYxsq1qLFBInbY5L5RJ9aTTaXimaoE_4-2cCc&u=aHR0cHMlM2ElMmYlMmZhZC5kb3VibGVjbGljay5uZXQlMmZzZWFyY2hhZHMlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q5MjcwMDAzNjkxMzQwMTMyNiUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwMDg1MDc0MjY1NCUyNmRzX3NfaW52ZW50b3J5X2ZlZWRfaWQlM2Q5NzcwMDAwMDAwMTczNDc3OSUyNmRzX2FfY2lkJTNkNDA1NTI0ODIyJTI2ZHNfYV9jYWlkJTNkOTIyNDM0MjI5NiUyNmRzX2FfYWdpZCUzZDkzNzM0Mzc4MDU1JTI2ZHNfYV9saWQlM2RwbGEtOTIzNzI3MzAyODQ3JTI2JTI2ZHNfZV9hZGlkJTNkODEwMjAyNjc1NTU2MTAlMjZkc19lX3RhcmdldF9pZCUzZHBsYS00NTg0NjE5ODkyOTY0MzIxJTI2ZHNfZV9wcm9kdWN0X2dyb3VwX2lkJTNkNDU4NDYxOTg5Mjk2NDMyMSUyNmRzX2VfcHJvZHVjdF9pZCUzZDkyMzgzMjg3JTI2ZHNfZV9wcm9kdWN0X2NvdW50cnklM2RVUyUyNmRzX2VfcHJvZHVjdF9sYW5ndWFnZSUzZGVuJTI2ZHNfZV9wcm9kdWN0X2NoYW5uZWwlM2RPbmxpbmUlMjZkc19lX25ldHdvcmslM2RvJTI2ZHNfdXJsX3YlM2QyJTI2ZHNfZGVzdF91cmwlM2RodHRwcyUzYSUyZiUyZnd3dy50YXJnZXQuY29tJTJmcCUyZm93YWxhLTEyb3otc21vb3Roc2lwLXNsaWRlci1zdGFpbmxlc3Mtc3RlZWwtdHJhdmVsLW11Zy1zbGVlay13aGl0ZSUyZi0lMmZBLTkyMzgzMjg3JTNmVENJRCUzZFBEUy05MjI0MzQyMjk2JTI2Z2NsaWQlM2QwZjRiYjYxYTVhNWQxYmQ5YmU3YmRmNDM3ZDJmYjk2YSUyNmdjbHNyYyUzZDNwLmRzJTI2ZHNfcmwlM2QxMjQ2OTc4JTI2bXNjbGtpZCUzZDBmNGJiNjFhNWE1ZDFiZDliZTdiZGY0MzdkMmZiOTZh&rlid=0f4bb61a5a5d1bd9be7bdf437d2fb96a",
+"thumbnail":
+"https://sp.yimg.com/ib/th?id=OPHS.dNaFQpxYAfPr2A474C474&o=5&pid=21.1&w=174&h=174",
+"original_image":
+"https://sp.yimg.com/ib/th?id=OPHS.dNaFQpxYAfPr2A474C474&o=5&pid=21.1",
+"price":
+"$24.99",
+"extracted_price":
+24.99,
+"seller":
+"Target",
+"extensions":
+[
+"Free shipping"
+]
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8TyS62th8orN-2lT2RlOf2jVUCUx3UQMbzgtDm2a9mYZqMsC3cQnlZDXco7f11xzTxF-KUqgaw1-cGOm094C9YJCyKcEW_OsjZRBsPZnWzXyL0QaHHp69qo5Ev7YlK8nrt-mXnEyEQtZfFTwW6IoTrQbkR-GK3qJPz1Ob5CRSvCkj2D1VgGq0C4LZNPhoWFgbJsK4KuUOJMCapSu_sVrA3X5YXhw&u=aHR0cHMlM2ElMmYlMmZ3d3cubWFja2VuemllLWNoaWxkcy5jb20lMmZyb3lhbC1jaGVjay1tdWclMmY4OTIwNC0yNDAuaHRtbCUzZm1zY2xraWQlM2Q5MGNlNWJhYmQ2YzExNzVhMDY2NDMyZjJmMWIzMjA2NCUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jYW1wYWlnbiUzZEhNX1NTX05vbi1CcmFuZGVkX1RvcFNLVSUyNnV0bV90ZXJtJTNkNDU4NTkyNTU2NzM0MDE2MiUyNnV0bV9jb250ZW50JTNkdG9wJTI1MjBza3U&rlid=90ce5babd6c1175a066432f2f1b32064",
+"thumbnail":
+"https://sp.yimg.com/ib/th?id=OPHS.XTZJ1LkCzHLNsw474C474&o=5&pid=21.1&w=174&h=174",
+"original_image":
+"https://sp.yimg.com/ib/th?id=OPHS.XTZJ1LkCzHLNsw474C474&o=5&pid=21.1",
+"price":
+"$59.95",
+"extracted_price":
+59.95,
+"seller":
+"MacKenzie-Childs",
+"rating":
+0,
+"reviews":
+"17"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8TUvUKzeCazsYzHOzI44eETVUCUyogD_3McgNaoAnTFoPlkyT_01n0wqzUlmLm6bt_2NlpyRmYH3WEDIsB-3zFShtCiXTvo0CVJjgBlWogLBFsVgmLetjwghxjl-l99Nq05ywl_AX4fzTsx6PqgliZ877YBEHBdgJP0VDCSefvtVgKghJNnIt9qs9gQo1S24FzPxde30fINxp8Fk1DPNwtR0NHbE&u=aHR0cHMlM2ElMmYlMmZzaG9wLnRlZ29vZS5jb20lMmZwcm9kdWN0JTJmM2QtYm9va3NoZWxmLW11Zy1hLW5vdmVsdHktY29mZmVlLWN1cC1kZXNpZ24tMTc1NzYwNTYwMiUzZnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZEdMQVNTX0JPT0tfTVVHJTI2dXRtX2NhbXBhaWduJTNkU2hvcF9UZWdvb2VfTGFiZWxfR0xBU1NfQk9PS19NVUdfMjUxMTAzJTI2dXRtX2NvbnRlbnQlM2Q4OTkzMSUyNnV0bV90ZXJtJTNkY29mZmVlJTI1MjBtdWclMjZtc2Nsa2lkJTNkZWE2MTliMTZjMTMxMTQ4NTYwMDJmMjRmZTY0M2E3MDc&rlid=ea619b16c13114856002f24fe643a707",
+"thumbnail":
+"https://sp.yimg.com/ib/th?id=OPHS.fxA%2feMGWLZgIYg474C474&o=5&pid=21.1&w=174&h=174",
+"original_image":
+"https://sp.yimg.com/ib/th?id=OPHS.fxA%2feMGWLZgIYg474C474&o=5&pid=21.1",
+"price":
+"$17.04",
+"extracted_price":
+17.04,
+"seller":
+"Tegooe"
+},
+{
+"link":
+"https://www.bing.com/aclick?ld=e8dxVmKIH-LHlQbdvmkQXLHjVUCUwTjdb_lmDlkYem06W0FgHzsx67tPm2GLpuiShYWzEcAwU6oKL-BY25uqr1s3MtHYVuPrCRYDfisKzfRBCgQ7XEvy3ReAluym41l2JUzHDvoBEgCSYzG8YS88OnESWViq9wd8EJf2gIj_362NePd7TbI2jczVF5nCf3qDxtfo5xSMykPiKGudplwucA1A5hAog&u=aHR0cHMlM2ElMmYlMmZ3d3cuaG9iYnlsb2JieS5jb20lMmZob21lLWRlY29yLWZyYW1lcyUyZmtpdGNoZW4tZGlubmVyd2FyZSUyZm11Z3MtZHJpbmt3YXJlJTJmc3BlY2tsZWQtY29mZmVlLW11Zy1zZXQlMmZwJTJmODEyMjIyNDMlM2Ztc2Nsa2lkJTNkZjgxYTIzZWUyMDc4MWJhMDUzNWE0YWI3MDcwYTFlNjElMjZ1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZ1dG1fY2FtcGFpZ24lM2RTaG9wcGluZy1DYXRjaCUyNTIwQWxsJTI2dXRtX3Rlcm0lM2Q0NTg2MjAwNDQ1ODE3Mjc0JTI2dXRtX2NvbnRlbnQlM2RDYXRjaCUyNTIwQWxs&rlid=f81a23ee20781ba0535a4ab7070a1e61",
+"thumbnail":
+"https://sp.yimg.com/ib/th?id=OPHS.kFOaouqb3E6O7A474C474&o=5&pid=21.1&w=174&h=174",
+"original_image":
+"https://sp.yimg.com/ib/th?id=OPHS.kFOaouqb3E6O7A474C474&o=5&pid=21.1",
+"price":
+"$11.99",
+"extracted_price":
+11.99,
+"seller":
+"Hobby Lobby"
+}
+]
+}
+
+GET
+
+
+https://serpapi.com/search.json?engine=yahoo&p=coffee+mug
+
+Code to integrate
+
+cURLRubyPythonJavaScriptGoPHPJavaRust.NETGoogle Sheets
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "yahoo",
+  p: "coffee mug",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+organic_results = results[:organic_results]
+API Parameters
+Search Query
+p
+
+Required
+
+Parameter defines the search query. You can use anything that you would use in a regular Yahoo! search.
+
+Localization
+yahoo_domain
+
+Optional
+
+Parameter defines the Yahoo! domain to use. It defaults to search.yahoo.com. If specified domain is allowed, it will be prepended to the domain (e.g., fr.search.yahoo.com). You can check a full list of supported Yahoo! domains.
+
+vc
+
+Optional
+
+Parameter defines the country to use for the Yahoo! search. It's a two-letter country code. (e.g., us for the United States, uk for United Kingdom, or fr for France) Head to the Yahoo! countries for a full list of supported Yahoo! countries.
+
+vl
+
+Optional
+
+Parameter defines language to limit the search to. It uses lang_{two-letter language code} to specify languages. (e.g., vl=lang_fr will only search French). fl will be set to 1 if this parameter is used. You can check a full list of supported Yahoo! languages.
+
+Pagination
+b
+
+Optional
+
+Parameter defines the result offset. It skips the given number of results. It's used for pagination. (e.g., 1 (default) is the first page of results, 11 is the 2nd page of results, 21 is the 3rd page of results, etc.).
+
+Advanced Filters
+vm
+
+Optional
+
+Parameter defines the level of filtering for adult content. Strict: r, Moderate: i, Off: p
+
+vs
+
+Optional
+
+Filter results by top-level domains separated by ','. (e.g., .com,.org)
+
+vf
+
+Optional
+
+all formats or specific file format like pdf or txt. You can check a full list of supported Yahoo! file formats.
+
+fr2
+
+Optional
+
+Parameter is responsible for rendering positions and expansions for some elements (e.g., p:s,v:w,m:trendingdomain_center to expand Related Trending Searches).
+
+d
+
+Optional
+
+Parameter specifies the destination for related topics. By including a unique identifier for the destination page, this parameter directs users to specific content related to their search query, providing them with more targeted results. (e.g. {"dn":"topic","ykid":"71698d3e-6ef0-4fcd-8551-1ffe56058857","pos":"0","oq":"Coffee","rq":"Drinking"})
+
+Serpapi Parameters
+engine
+
+Required
+
+Set parameter to yahoo to use the Yahoo API engine.
+
+device
+
+Optional
+
+Parameter defines the device to use to get the results. It can be set to desktop (default) to use a regular browser, tablet to use a tablet browser (currently using iPads), or mobile to use a mobile browser.
+
+no_cache
+
+Optional
+
+Parameter will force SerpApi to fetch the Yahoo results even if a cached version is already present. A cache is served only if the query and all parameters are exactly the same. Cache expires after 1h. Cached searches are free, and are not counted towards your searches per month. It can be set to false (default) to allow results from the cache, or true to disallow results from the cache. no_cache and async parameters should not be used together.
+
+async
+
+Optional
+
+Parameter defines the way you want to submit your search to SerpApi. It can be set to false (default) to open an HTTP connection and keep it open until you got your search results, or true to just submit your search to SerpApi and retrieve them later. In this case, you'll need to use our Searches Archive API to retrieve your results. async and no_cache parameters should not be used together. async should not be used on accounts with Ludicrous Speed enabled.
+
+zero_trace
+
+Optional
+
+Enterprise only. Parameter enables ZeroTrace mode. It can be set to false (default) or true. Enable this mode to skip storing search parameters, search files, and search metadata on our servers. This may make debugging more difficult.
+
+api_key
+
+Required
+
+Parameter defines the SerpApi private key to use.
+
+output
+
+Optional
+
+Parameter defines the final output you want. It can be set to json (default) to get a structured JSON of the results, or html to get the raw html retrieved.
+
+API Results
+JSON Results
+JSON output includes structured data for organic results, ad results.
+
+A search status is accessible through search_metadata.status. It flows this way: Processing -> Success || Error. If a search has failed, error will contain an error message. search_metadata.id is the search ID inside SerpApi.
+
+HTML Results
+HTML output is useful to debug JSON results or support features not supported yet by SerpApi.
+HTML output gives you the raw HTML results from Yahoo!.
+
+API Examples
+Example results for 
+p
+:
+coffee mug
+GET
+
+
+https://serpapi.com/search.json?engine=yahoo&p=coffee+mug
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "yahoo",
+  p: "coffee mug",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+organic_results = results[:organic_results]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "5ddbfd21260ca9b3c92c51b7",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/5776c9753efd34d4/5ddbfd21260ca9b3c92c51b7.json",
+    "created_at": "2019-11-25 16:11:13 UTC",
+    "processed_at": "2019-11-25 16:11:13 UTC",
+    "yahoo_url": "https://search.yahoo.com/search?p=coffee+mug&ei=UTF-8",
+    "raw_html_file": "https://serpapi.com/searches/5776c9753efd34d4/5ddbfd21260ca9b3c92c51b7.html",
+    "total_time_taken": 4.01
+  },
+  "search_parameters": {
+    "engine": "yahoo",
+    "p": "coffee mug"
+  },
+  "search_information": {
+    "query_displayed": "coffee mug",
+    "total_results": 42400000
+  },
+  "organic_results": [
+    {
+      "position": 1,
+      "title": "TOUCH Travel Mug | Coffee Mugs | Nespresso",
+      "link": "https://www.nespresso.com/fr/fr/order/accessories/original/touch-travel-mug",
+      "displayed_link": "www.nespresso.com/.../original/touch-travel-mug",
+      "cached_page_link": "http://cc.bingj.com/cache.aspx?q=coffee+mug&d=4669587303368449&mkt=fr-FR&setlang=fr-FR&w=Bcoxxe15BzlLe4gmTK6vzcwmNpMwzTxS"
+    },
+    {
+      "position": 2,
+      "title": "Nos Mugs, Tumblers et accessoires | Starbucks Coffee Company",
+      "link": "https://www.starbucks.fr/salon-de-caf%C3%A9/marchandises",
+      "displayed_link": "www.starbucks.fr/salon-de-café/marchandises",
+      "snippet": "Mug Duo 3oz France / Lyon . Mug Duo 3oz France / Marseille. Les French Press. Coffee Press 4 cup. Press 3 cup S/S Red . Coffee Press 8 cup. Coffee Press 4 cup Black. Coffee Press 8 cup Black. Salon de café. Nos Mugs, Tumblers et accessoires; Facebook; In ...",
+      "cached_page_link": "http://cc.bingj.com/cache.aspx?q=coffee+mug&d=4718386720739598&mkt=fr-FR&setlang=fr-FR&w=9YH7xOccoLlhrLSm2vEcanjuDPbLJbAj"
+    },
+    {
+      "position": 3,
+      "title": "Descendents - Coffee Mug - YouTube",
+      "link": "https://www.youtube.com/watch?v=b1ktIMJ-Grk",
+      "displayed_link": "www.youtube.com/watch?v=b1ktIMJ-Grk",
+      "snippet": "26/12/2012 · George Harrison on John Lennon and The Beatles | The Dick Cavett Show - Duration: 11:15. The Dick Cavett Show 437,021 views",
+      "cached_page_link": "http://cc.bingj.com/cache.aspx?q=coffee+mug&d=4830369395444401&mkt=fr-FR&setlang=fr-FR&w=9c31Ssw_lkiUmUQLxz9R5ju8rQNmYcvY"
+    },
+    {
+      "position": 4,
+      "title": "Personalized coffee mug | Etsy",
+      "link": "https://www.etsy.com/fr/market/personalized_coffee_mug",
+      "displayed_link": "www.etsy.com/fr/market/personalized_coffee_mug",
+      "snippet": "Vous avez cherché ceci : personalized coffee mug ! Etsy accueille des milliers de produits et cadeaux faits main, vintage et uniques en lien avec votre recherche. Quel que soit ce que vous cherchez ou votre situation géographique, les vendeurs de notre place de marché internationale peuvent vous aider à trouver des options uniques et à ...",
+      "cached_page_link": "http://cc.bingj.com/cache.aspx?q=coffee+mug&d=4898925670110574&mkt=fr-FR&setlang=fr-FR&w=iZxF6E8TnwSzxl4UZj89B7tWPsVWmPCx"
+    },
+    {
+      "position": 5,
+      "title": "Coffee Mug Best Reviews and Top Discounts | coffee-mug",
+      "link": "https://www.coffee-mug.org/",
+      "displayed_link": "www.coffee-mug.org",
+      "snippet": "We inspected 5 finest 2019 coffee mugs over the previous 2 years. Distinguish which coffee mugs matches you. Filter by Brands or by Contigo, Boelter and Thermos.",
+      "cached_page_link": "http://cc.bingj.com/cache.aspx?q=coffee+mug&d=4719550656227999&mkt=fr-FR&setlang=fr-FR&w=kUDzv6lV75hiNHnvR6O4-_N5LSjqqf-r"
+    },
+    {
+      "position": 6,
+      "title": "Coffee Tumblers and Mugs | YETI",
+      "link": "https://www.yeti.com/en_US/coffee-tumblers",
+      "displayed_link": "www.yeti.com/en_US/coffee-tumblers",
+      "snippet": "Can't go without your morning or afternoon cup of joe? No worries. Shop for your go-to coffee tumblers or mugs at YETI today.",
+      "cached_page_link": "http://cc.bingj.com/cache.aspx?q=coffee+mug&d=4777777529554360&mkt=fr-FR&setlang=fr-FR&w=fZa4TOtzYjB8rp0kDlPsbwupE_15c9co"
+    },
+    {
+      "position": 7,
+      "title": "Mugs - CafePress",
+      "link": "https://www.cafepress.com/+mugs",
+      "displayed_link": "www.cafepress.com/+mugs",
+      "snippet": "Shop Mugs from CafePress. Browse tons of unique designs or create your own custom coffee mug with text and images. Our mugs are made of durable ceramic that’s ...",
+      "cached_page_link": "http://cc.bingj.com/cache.aspx?q=coffee+mug&d=4663565759349124&mkt=fr-FR&setlang=fr-FR&w=nAW44wkIxzlIvqzEt6SiZkORRvVZLBby"
+    },
+    {
+      "position": 8,
+      "title": "Expert machine expresso, cafetière, café et thé - MaxiCoffee",
+      "link": "https://www.maxicoffee.com/",
+      "displayed_link": "www.maxicoffee.com",
+      "snippet": "Numéro 1 sur les machines à café automatiques et le café en grains ou en capsules, nous proposons également une large gamme de thés.",
+      "cached_page_link": "http://cc.bingj.com/cache.aspx?q=coffee+mug&d=4936841643623765&mkt=fr-FR&setlang=fr-FR&w=Sn5c_EdZ0ELFBAyy4-dPfqkjNxf3BUef"
+    },
+    {
+      "position": 9,
+      "title": "Amazon.com: Coffee Cups & Mugs: Home & Kitchen",
+      "link": "https://www.amazon.com/Mugs/b?node=367142011",
+      "displayed_link": "www.amazon.com/Mugs/b?node=367142011",
+      "snippet": "Coffee Mugs from Amazon.com. One sip from your morning cup of coffee can be the magical ingredient in creating a perfect day, but the way you drink this perfect caffeine concoction all depends on the type of coffee mugs you prefer.",
+      "cached_page_link": "http://cc.bingj.com/cache.aspx?q=coffee+mug&d=4842601468202327&mkt=fr-FR&setlang=fr-FR&w=8V-HmerJYTWaKT8r5tnImJHebvX7crQh"
+    },
+    {
+      "position": 10,
+      "title": "Mug - Wikipedia",
+      "link": "https://en.wikipedia.org/wiki/Mug",
+      "displayed_link": "en.wikipedia.org/wiki/Mug",
+      "snippet": "A mug is a type of cup typically used for drinking hot beverages, such as coffee, hot chocolate, soup, or tea. Mugs usually have handles and hold a larger amount of fluid than other types of cup. Usually a mug holds approximately 8-12 US fluid ounces (350 ml) of liquid; double a tea cup.",
+      "cached_page_link": "http://cc.bingj.com/cache.aspx?q=coffee+mug&d=4781720300359150&mkt=fr-FR&setlang=fr-FR&w=OdXZxOWfdVx-eaBnt3kg9HAKix7XvvvV"
+    }
+  ],
+  "ads_results": [
+    {
+      "position": 1,
+      "block_position": "top",
+      "displayed_link": "www.vistaprint.fr/Cadeauphoto/Mugs",
+      "snippet": "vistaprint.fr a été visité par plus de 100 000 utilisateurs le mois dernier\nAjoutez vos propres photos ou logo! Impression en couleur. Le cadeau parfait. Ajoutez simplement vos photos, vos logos ou l'un de nos nombreux graphismes.\nAjoutez poignée assortie · Optez pour un pêle-mêle · Ajoutez photos spéciales\nTypes: Mugs photo personnalisés, Mugs multi-photos, Mugs magiques",
+      "sitelinks": {
+        "expanded": [
+          {
+            "title": "Mugs panoramiques",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTc0Njk4MDc4OTUxNTIxJmx0PTImcz0xJmVzPXFJdFJ3aE1HUFNfSDB5OTh2QlNjZVdCM1N3ekMxVG8yZkVXeWguR2lBaExwQWlPdHVBLS0-/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de3lfKRbLWv2TP3XTpAwVfAvzVUCUzUs2FJpq2uZm8DK1XESRJZo1KkWDKEQ1gju0Oyod_M73ixgzUSBten-dkM3gEI0G0zRaVfCabocjhTICsOu0WCclA9RM_bEAeNpGQsFlBGGRALDvPxCezJ7SRCzsuPEVZqIaUIUTPux7JtYsZJOJ2z%26u%3daHR0cCUzYSUyZiUyZnd3dy52aXN0YXByaW50LmZyJTJmdnAlMmZnYXRld2F5LmFzcHglM2ZTJTNkOTQzNDI5NTM0MSUyNnByZXVybCUzZCUyZmNhZGVhdXgtcGhvdG8lMmZtdWdzLXBlcnNvbm5hbGlzZXMlMmZtb2RlbGVzJTNmYXR0cmlidXRlJTNkNTMzJTI2bGFuZ2lkJTNkMjAlMjZtayUzZGNvZmZlZSUyNTIwbXVnJTI2YWQlM2RiZSUyNmNydHYlM2Q3NDY5ODA3ODk1MTUyMSUyNmRldmljZSUzZGMlMjZwc3RpZCUzZGt3ZC0zMzAwMjk0Mjg4MyUzYWxvYy0xOTAlMjZwc2l0ZSUzZG1rd2lkJTdjYmsxTjkxR2wlMjZwc2NpZCUzZDkxMjQ0NTA3JTI2cHNhZ2lkJTNkMjg4NzA0NjEwMSUyNnBzbmV0JTNkbyUyNm1zY2xraWQlM2RjNmViMjI4MmQ0NGMxNTAxNTJlNTdmNTkyOTZmNDRkNyUyNmRrd2RpZCUzZDMzMDAyOTQyODgzJTI2cHNxdWVyeSUzZGNvZmZlZSUyNTIwbXVnJTI2cHNsb2MlM2Q0MTE2JTI2cHNwMiUzZDQlMmM3OSVlMiU4MiVhYyUyNnBzcDMlM2Q0MCUyNSUyNnBzZmlkJTNkNzY5NjU5NDU4OTYzNCUyNnBzaW50JTNkJTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX2NhbXBhaWduJTNkQklOR19GUl9GUl9QaG90b2dpZnRfTXVnc19NYWluJTI2dXRtX3Rlcm0lM2Rjb2ZmZWUlMjUyMG11ZyUyNnV0bV9jb250ZW50JTNkTXVnc19Db2ZmZWVfRXhhY3Q%26rlid%3dc6eb2282d44c150152e57f59296f44d7/RK=2/RS=LEZFiaZ8vaLGmTil4mb2Q575RcQ-;_ylt=A2KLfRkj_dtdzDcAWV5jAQx.;_ylu=X3oDMTB2c2lzOGFwBGNvbG8DYmYxBHBvcwMxBHZ0aWQDBHNlYwNvdi10b3A-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b",
+            "snippet": "Faites imprimer votre photo ou\ngraphisme tout autour du mug"
+          },
+          {
+            "title": "Mugs photo",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTc0Njk4MDc4OTUxNTIxJmx0PTImcz0xJmVzPXFJdFJ3aE1HUFNfSDB5OTh2QlNjZVdCM1N3ekMxVG8yZkVXeWguR2lBaExwQWlPdHVBLS0-/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de3TANxr4BmEup_esTQhZks8DVUCUxt4cFiJaWUYX2g8dTrC9khEEZXEzjL2z4QlJgf5uuV-OcreDVpmlGAwpr_E3LgYXH5rBH36S8i7o9IoVvvCX-tybk0K26T2NKOwuBHAX7U3ot0tRY1mPlmjfeecA5EK6wdFFeYPYJ4DbslmXvzfzEH%26u%3daHR0cCUzYSUyZiUyZnd3dy52aXN0YXByaW50LmZyJTJmdnAlMmZnYXRld2F5LmFzcHglM2ZTJTNkOTQzNDI5NTM0MSUyNnByZXVybCUzZCUyZmdhbGxlcnklMmZJSG9BQUFBQkFBQUFBQUElM2QlMmZtdWdzLXBhbm9yYW1pcXVlcy5hc3B4JTI2bWslM2Rjb2ZmZWUlMjUyMG11ZyUyNmFkJTNkYmUlMjZjcnR2JTNkNzQ2OTgwNzg5NTE1MjElMjZkZXZpY2UlM2RjJTI2cHN0aWQlM2Rrd2QtMzMwMDI5NDI4ODMlM2Fsb2MtMTkwJTI2cHNpdGUlM2Rta3dpZCU3Y2JrMU45MUdsJTI2cHNjaWQlM2Q5MTI0NDUwNyUyNnBzYWdpZCUzZDI4ODcwNDYxMDElMjZwc25ldCUzZG8lMjZtc2Nsa2lkJTNkNjVkMmFkZTgyYTQ0MTcyZWU1OTRmMDMzZDc2N2M4NTIlMjZka3dkaWQlM2QzMzAwMjk0Mjg4MyUyNnBzcXVlcnklM2Rjb2ZmZWUlMjUyMG11ZyUyNnBzbG9jJTNkNDExNiUyNnBzcDIlM2Q0JTJjNzklZTIlODIlYWMlMjZwc3AzJTNkNDAlMjUlMjZwc2ZpZCUzZDc2OTY1OTg2MjIwNDglMjZwc2ludCUzZCUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jYW1wYWlnbiUzZEJJTkdfRlJfRlJfUGhvdG9naWZ0X011Z3NfTWFpbiUyNnV0bV90ZXJtJTNkY29mZmVlJTI1MjBtdWclMjZ1dG1fY29udGVudCUzZE11Z3NfQ29mZmVlX0V4YWN0%26rlid%3d65d2ade82a44172ee594f033d767c852/RK=2/RS=1S9fVyOT.DxqEgrIHMD.hdmPf1U-;_ylt=A2KLfRkj_dtdzDcAWl5jAQx.;_ylu=X3oDMTB2c2lzOGFwBGNvbG8DYmYxBHBvcwMxBHZ0aWQDBHNlYwNvdi10b3A-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b",
+            "snippet": "Des centaines de modèles au choix.\nPersonnalisation en quelques min."
+          },
+          {
+            "title": "Voir tous les modèles",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTc0Njk4MDc4OTUxNTIxJmx0PTImcz0xJmVzPXFJdFJ3aE1HUFNfSDB5OTh2QlNjZVdCM1N3ekMxVG8yZkVXeWguR2lBaExwQWlPdHVBLS0-/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de3hAZXtrbGapBaSYued3-cHDVUCUxbVszI-ZiXHzCb8VQhFxZqpu0kvEbeNxY-KaWubv-TqJA_OjX7P3AJvXGziRBmxrVUDgZC9nAc4wp9dwgTThC9RCGc_mzLfTMk6fZlGQAn7Q4NibUQVBGH_y5JLYpKnjJLrG2qMLyECAvpt13kmaZ0%26u%3daHR0cCUzYSUyZiUyZnd3dy52aXN0YXByaW50LmZyJTJmdnAlMmZnYXRld2F5LmFzcHglM2ZTJTNkOTQzNDI5NTM0MSUyNnByZXVybCUzZCUyZm11Z3MtcGVyc29ubmFsaXNlcy5hc3B4JTI2bWslM2Rjb2ZmZWUlMjUyMG11ZyUyNmFkJTNkYmUlMjZjcnR2JTNkNzQ2OTgwNzg5NTE1MjElMjZkZXZpY2UlM2RjJTI2cHN0aWQlM2Rrd2QtMzMwMDI5NDI4ODMlM2Fsb2MtMTkwJTI2cHNpdGUlM2Rta3dpZCU3Y2JrMU45MUdsJTI2cHNjaWQlM2Q5MTI0NDUwNyUyNnBzYWdpZCUzZDI4ODcwNDYxMDElMjZwc25ldCUzZG8lMjZtc2Nsa2lkJTNkMmI5YjU1OWRiODVjMTM0Njk1YjcwODQ2NDU3ZmUzMTElMjZka3dkaWQlM2QzMzAwMjk0Mjg4MyUyNnBzcXVlcnklM2Rjb2ZmZWUlMjUyMG11ZyUyNnBzbG9jJTNkNDExNiUyNnBzcDIlM2Q0JTJjNzklZTIlODIlYWMlMjZwc3AzJTNkNDAlMjUlMjZwc2ZpZCUzZDc2OTY1OTg2MjIwNDklMjZwc2ludCUzZCUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jYW1wYWlnbiUzZEJJTkdfRlJfRlJfUGhvdG9naWZ0X011Z3NfTWFpbiUyNnV0bV90ZXJtJTNkY29mZmVlJTI1MjBtdWclMjZ1dG1fY29udGVudCUzZE11Z3NfQ29mZmVlX0V4YWN0%26rlid%3d2b9b559db85c134695b70846457fe311/RK=2/RS=30jeP_ai0rw4ujg.4p2dbgz9rHc-;_ylt=A2KLfRkj_dtdzDcAW15jAQx.;_ylu=X3oDMTB2c2lzOGFwBGNvbG8DYmYxBHBvcwMxBHZ0aWQDBHNlYwNvdi10b3A-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b",
+            "snippet": "Des centaines de modèles au choix\npour trouver le cadeau parfait."
+          },
+          {
+            "title": "Cadeaux photo",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTc0Njk4MDc4OTUxNTIxJmx0PTImcz0xJmVzPXFJdFJ3aE1HUFNfSDB5OTh2QlNjZVdCM1N3ekMxVG8yZkVXeWguR2lBaExwQWlPdHVBLS0-/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de31OhugU6xpVc6GyZXuU1wGDVUCUxPkILKjcKc9QKBxjo4YH76ZZR3EuHysyrIizZAijr85sWzv8inbQBKgAYlnKIbp9GDXMdL1RMNfGFlIHAmJlXOuurSEq_pKJJt0w3NMzqjL8wsu_66Z-_UvqSnYP7g0XjmKMkdvguuRwpD_9hvSful%26u%3daHR0cHMlM2ElMmYlMmZ3d3cudmlzdGFwcmludC5mciUyZnZwJTJmZ2F0ZXdheS5hc3B4JTNmUyUzZDk0MzQyOTUzNDElMjZQUkVVUkwlM2QlMmZjYWRlYXV4LXBob3RvJTI2bWslM2Rjb2ZmZWUlMjUyMG11ZyUyNmFkJTNkYmUlMjZjcnR2JTNkNzQ2OTgwNzg5NTE1MjElMjZkZXZpY2UlM2RjJTI2cHN0aWQlM2Rrd2QtMzMwMDI5NDI4ODMlM2Fsb2MtMTkwJTI2cHNpdGUlM2Rta3dpZCU3Y2JrMU45MUdsJTI2cHNjaWQlM2Q5MTI0NDUwNyUyNnBzYWdpZCUzZDI4ODcwNDYxMDElMjZwc25ldCUzZG8lMjZtc2Nsa2lkJTNkZGQ0MTk0OTJmMzVmMWE1NjY4ZjVjOTQ5MGU3Y2E0ZDMlMjZka3dkaWQlM2QzMzAwMjk0Mjg4MyUyNnBzcXVlcnklM2Rjb2ZmZWUlMjUyMG11ZyUyNnBzbG9jJTNkNDExNiUyNnBzcDIlM2Q0JTJjNzklZTIlODIlYWMlMjZwc3AzJTNkNDAlMjUlMjZwc2ZpZCUzZDc2OTY1OTg2MjIwNjQlMjZwc2ludCUzZCUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jYW1wYWlnbiUzZEJJTkdfRlJfRlJfUGhvdG9naWZ0X011Z3NfTWFpbiUyNnV0bV90ZXJtJTNkY29mZmVlJTI1MjBtdWclMjZ1dG1fY29udGVudCUzZE11Z3NfQ29mZmVlX0V4YWN0%26rlid%3ddd419492f35f1a5668f5c9490e7ca4d3/RK=2/RS=3yjSnkP4KtzQHcpLgnJbXTxsrs8-;_ylt=A2KLfRkj_dtdzDcAXF5jAQx.;_ylu=X3oDMTB2c2lzOGFwBGNvbG8DYmYxBHBvcwMxBHZ0aWQDBHNlYwNvdi10b3A-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b",
+            "snippet": "Transformez vos souvenirs en\ncadeaux émouvants. Profitez-en."
+          }
+        ]
+      }
+    },
+    {
+      "position": 2,
+      "block_position": "top",
+      "displayed_link": "www.nespresso.com",
+      "snippet": "Découvrez tous les accessoires Nespresso pour dégustez votre café. Tasses, Travel Mug et distibuteur de capsules Nespresso\nLivré partout en France · Service Client 24h/24 · Site officiel Nespresso\nAccessoires | Tasses, Mugs & Gourmandises | Nespresso",
+      "sitelinks": {
+        "expanded": [
+          {
+            "title": "Nespresso Recyclage",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTgxOTEzNjc1NTQ0MDQ4Jmx0PTImcz0xJmVzPVZfbFVWTGdHUFMuU1JPVVlLYXRtYmVfWnBDR2kuM0RpSFM4dC4xaEM2T1pQVjBrRmtBLS0-/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de3ssQhDOJQSN4KgnhKBRZlKTVUCUx2hcEAOOB1jO8kGO-POaoSIB4NNeMUr9UzLLmiRjpxRDCWaWyNi6USjn8CCEcmbF0onvreS7jrlZXH2SvrkJgmjVauOLszHC5NiX9C0cq00IvmMfEtJUv0gf3UWLj6yO_Fk-w1cglvXcqlfKnojHgB%26u%3daHR0cCUzYSUyZiUyZmNsaWNrc2VydmUuZGFydHNlYXJjaC5uZXQlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA0OTQ1MzI0MzMyMiUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwNTQyNTc2ODI3MCUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAwNTQwODk3NzMzNiUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19lX2FkaWQlM2Q4MTkxMzY3NTU0NDA0OCUyNmRzX2VfdGFyZ2V0X2lkJTNka3dkLTgxOTEzNzU1MDc5OTI4JTNhbG9jLTE5MCUyNiUyNmRzX3VybF92JTNkMiUyNmRzX2Rlc3RfdXJsJTNkaHR0cHMlM2ElMmYlMmZhcGlzZXJ2aWNlcy5rcnhkLm5ldCUyZmNsaWNrX3RyYWNrZXIlMmZ0cmFjayUzZmt4Y29uZmlkJTNkcnpoc2xwemw0JTI2a3hjYW1wYWlnbmlkJTNkJTViKkNhbXBhaWduSUQqJTVkJTI2a3hhZHZlcnRpc2VyaWQlM2QlNWIqRW5naW5lQWNjb3VudElEKiU1ZCUyNmt4cGxhY2VtZW50aWQlM2QlNWIqc2VhcmNodGVybSolNWQlMjZreGFkaWQlM2QlNWIqQWRncm91cElEKiU1ZCUyNmt4Y3JlYXRpdmVpZCUzZCU1YipFbmdpbmVBY2NvdW50VHlwZSolNWQlMjZreHNpdGVpZCUzZCU1YipFbmdpbmVBY2NvdW50VHlwZSolNWQlMjZjbGslM2RodHRwcyUzYSUyZiUyZnd3dy5uZXNwcmVzc28uY29tJTJmZW50cmVwcmlzZSUyZnBvaW50cy1kZS1yZWN5Y2xhZ2UuaHRtbCUzZm1zY2xraWQlM2RjOWI4MjJkZTg0OTMxYmRmNmIwZTdmMDU3OWIwYjIzNCUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jYW1wYWlnbiUzZEZSLkFjY2Vzc29pcmVzJTI2dXRtX3Rlcm0lM2QlMjUyQm11ZyUyNTIwJTI1MkJjb2ZmZWUlMjZ1dG1fY29udGVudCUzZFRhc3Nlcw%26rlid%3dc9b822de84931bdf6b0e7f0579b0b234/RK=2/RS=xAbzdRL_pad9nMmU4RTyLG.RqiI-;_ylt=A2KLfRkj_dtdzDcAYl5jAQx.;_ylu=X3oDMTB2cTMwMWo5BGNvbG8DYmYxBHBvcwMyBHZ0aWQDBHNlYwNvdi10b3A-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b",
+            "snippet": "Recyclez vos capsules usagées\nà travers 5500 points de collecte"
+          },
+          {
+            "title": "Commande rapide",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTgxOTEzNjc1NTQ0MDQ4Jmx0PTImcz0xJmVzPVZfbFVWTGdHUFMuU1JPVVlLYXRtYmVfWnBDR2kuM0RpSFM4dC4xaEM2T1pQVjBrRmtBLS0-/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de3gvKMrhppV6tTTlzwkxNfkTVUCUx5paOOZGXHPTFAQzjtbKiaaNzKDDQZHpWZTn-iTV0cRw6hD87Qvcr_MJcuM5x6nSmx5agEm9dHLk7PAMJ19cReAF8X1U58J-Y32kEB5PKgxXigvPbcSBe-4u9TfMMf8zjn8kgP38_xtuCxEg5D-u2Y%26u%3daHR0cCUzYSUyZiUyZmNsaWNrc2VydmUuZGFydHNlYXJjaC5uZXQlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA0OTQ1MzI0MzMyMiUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwNTQyNTc2ODI3MCUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAwNTQwODk3NzMzOSUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19lX2FkaWQlM2Q4MTkxMzY3NTU0NDA0OCUyNmRzX2VfdGFyZ2V0X2lkJTNka3dkLTgxOTEzNzU1MDc5OTI4JTNhbG9jLTE5MCUyNiUyNmRzX3VybF92JTNkMiUyNmRzX2Rlc3RfdXJsJTNkaHR0cHMlM2ElMmYlMmZhcGlzZXJ2aWNlcy5rcnhkLm5ldCUyZmNsaWNrX3RyYWNrZXIlMmZ0cmFjayUzZmt4Y29uZmlkJTNkcnpoc2xwemw0JTI2a3hjYW1wYWlnbmlkJTNkJTViKkNhbXBhaWduSUQqJTVkJTI2a3hhZHZlcnRpc2VyaWQlM2QlNWIqRW5naW5lQWNjb3VudElEKiU1ZCUyNmt4cGxhY2VtZW50aWQlM2QlNWIqc2VhcmNodGVybSolNWQlMjZreGFkaWQlM2QlNWIqQWRncm91cElEKiU1ZCUyNmt4Y3JlYXRpdmVpZCUzZCU1YipFbmdpbmVBY2NvdW50VHlwZSolNWQlMjZreHNpdGVpZCUzZCU1YipFbmdpbmVBY2NvdW50VHlwZSolNWQlMjZjbGslM2RodHRwcyUzYSUyZiUyZnd3dy5uZXNwcmVzc28uY29tJTJmZnIlMmZmciUyZm9yZGVyJTJmY2Fwc3VsZXMlMmZvcmlnaW5hbCUyZiUzZm1zY2xraWQlM2QwMzhiMGU3ZDBiNzUxZGFmYTg5ZjUzYTZmNjU2NzI0NCUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jYW1wYWlnbiUzZEZSLkFjY2Vzc29pcmVzJTI2dXRtX3Rlcm0lM2QlMjUyQm11ZyUyNTIwJTI1MkJjb2ZmZWUlMjZ1dG1fY29udGVudCUzZFRhc3Nlcw%26rlid%3d038b0e7d0b751dafa89f53a6f6567244/RK=2/RS=0rmuYallKbN_lKOaCKzL8s_rEvk-;_ylt=A2KLfRkj_dtdzDcAY15jAQx.;_ylu=X3oDMTB2cTMwMWo5BGNvbG8DYmYxBHBvcwMyBHZ0aWQDBHNlYwNvdi10b3A-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b",
+            "snippet": "Commandez vos Capsules Nespresso\nChoisissez votre mode de livraison"
+          }
+        ]
+      }
+    },
+    {
+      "position": 3,
+      "block_position": "top",
+      "displayed_link": "www.snapfish.com/Photo/Mug",
+      "snippet": "Make Custom Photo Gifts, Mugs, Water Bottles & More. Create A Mug to Reflect Your Style! Shop our Wide Selection of Sizes & Styles for the Perfect Gift at the Best Prices.\nShop All Photo Gifts · Live Customer Support · Learn What's New · Make a Beautiful Gift\nTypes: 11 ounce, 16 ounce, 15 ounce, Insulated Water Bottle, Insulated Tumbler\nThe Best Place to Print Photos - Digital Trends",
+      "sitelinks": {
+        "expanded": [
+          {
+            "title": "Free Shipping Over $29",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTc2NDg0ODk1NTAwMzQ5Jmx0PTImcz0xJmVzPUlIT21mcXdHUFNfUEhnRjl6cmJoaHdrRmFEeXV3QTlDU05jdVhuS1FVYUlEaUZLVnBnLS0-/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de3HrMz0YVMx09Y440cDima2jVUCUzjzlkzH3P0mW8-5mEahoOPVDFvVCTHObzv4HoeLhgMupeTWsZ5afZcjCglR-W4AuwkN3CTYr7Do5zHWdZmUIN5AtNlNV2DGqrf5GuXYgFJapihTUb6ic6Y4xA3UMY1zsRul6fwxdDsnxFctXrQkV2A%26u%3daHR0cCUzYSUyZiUyZmNsaWNrc2VydmUuZGFydHNlYXJjaC5uZXQlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA0MTg5MTY3MzgyOCUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwNDg2MDYyNTgzNyUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAwMjYyOTEyOTI2OSUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19lX2FkaWQlM2Q3NjQ4NDg5NTUwMDM0OSUyNmRzX2VfdGFyZ2V0X2lkJTNka3dkLTc2NDg0OTk1MTU4OTYyJTNhbG9jLTE5MCUyNiUyNmRzX3VybF92JTNkMiUyNmRzX2Rlc3RfdXJsJTNkaHR0cHMlM2ElMmYlMmZ3d3cuc25hcGZpc2guY29tJTJmc25hcGZpc2gtY291cG9ucyUzZmNpZCUzZHVzJTdjc2VtJTdjb3RoJTdjYm5nJTdjbmItbXVnLWZyZWVzaGlwLWVuaG4tc2wtdGh4cyU3Y3dlYiU3Y25vbiU3Y3NpdGUlMjZDSUQlM2R1cyU3Y3NlbSU3YyU1YipFbmdpbmVBY2NvdW50VHlwZSolNWQlN2NzZiU3YyU1YipDYW1wYWlnbiolNWQlN2NhbGwlN2NvdGglN2MlNWIqc2VhcmNodGVybSolNWQlMjZtc2Nsa2lkJTNkNDJjZTEwYzIxZjFjMWQ4YmY3ODQ0ZDE5ZTIzZjQxZjM%26rlid%3d42ce10c21f1c1d8bf7844d19e23f41f3/RK=2/RS=qWHlUxJ.mXXaQHm6.RegYDSD7hc-;_ylt=A2KLfRkj_dtdzDcAal5jAQx.;_ylu=X3oDMTB2NXA1cDV0BGNvbG8DYmYxBHBvcwMzBHZ0aWQDBHNlYwNvdi10b3A-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b",
+            "snippet": "Create a Custom Ornament, Mug,\nBlanket, Water Bottle, Cards & More"
+          },
+          {
+            "title": "70% Off Photo Mugs",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTc2NDg0ODk1NTAwMzQ5Jmx0PTImcz0xJmVzPUlIT21mcXdHUFNfUEhnRjl6cmJoaHdrRmFEeXV3QTlDU05jdVhuS1FVYUlEaUZLVnBnLS0-/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de3ccB4uNi0HiH87CNXkmMjDTVUCUzNDIgR8qxWLC387wN9v5j-n2ncgg9p75r7T_ms7HFnfU7Jvtxas-iOJhjYs-H36cG-XIYODU9sThosk9j-zxkiflA73zmh2s62xeeIsm-QLTGb8VBx0gEkYfBLLiphRKFh-xj1QmoP2yslJWjghb0F%26u%3daHR0cCUzYSUyZiUyZmNsaWNrc2VydmUuZGFydHNlYXJjaC5uZXQlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA0MTg5MTY3MzgyOCUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwNDg2MDYyNTgzNyUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAwMjYyOTEyOTI3OCUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19lX2FkaWQlM2Q3NjQ4NDg5NTUwMDM0OSUyNmRzX2VfdGFyZ2V0X2lkJTNka3dkLTc2NDg0OTk1MTU4OTYyJTNhbG9jLTE5MCUyNiUyNmRzX3VybF92JTNkMiUyNmRzX2Rlc3RfdXJsJTNkaHR0cHMlM2ElMmYlMmZ3d3cuc25hcGZpc2guY29tJTJmcGhvdG8tbXVncyUzZmNpZCUzZHVzJTdjc2VtJTdjb3RoJTdjYm5nJTdjbmItbXVnLTcwb2ZmLWVuaG4tc2wtdGh4cyU3Y3dlYiU3Y25vbiU3Y3NpdGUlMjZDSUQlM2R1cyU3Y3NlbSU3YyU1YipFbmdpbmVBY2NvdW50VHlwZSolNWQlN2NzZiU3YyU1YipDYW1wYWlnbiolNWQlN2NhbGwlN2NvdGglN2MlNWIqc2VhcmNodGVybSolNWQlMjZtc2Nsa2lkJTNkYjM3OWE2ZWEyMTIyMWJlMTI0M2FmYjMxZGMwMWQ4MTE%26rlid%3db379a6ea21221be1243afb31dc01d811/RK=2/RS=GiOI0K.y7JmtM.9vym6kf562W2E-;_ylt=A2KLfRkj_dtdzDcAa15jAQx.;_ylu=X3oDMTB2NXA1cDV0BGNvbG8DYmYxBHBvcwMzBHZ0aWQDBHNlYwNvdi10b3A-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b",
+            "snippet": "Share your Favorite Memories &\nCreate a Mug or Bottle in Minutes!"
+          }
+        ]
+      }
+    },
+    {
+      "position": 4,
+      "block_position": "top",
+      "displayed_link": "www.amsterdamprinting.com/CustomMugs/MugSale",
+      "snippet": "Easy Online Ordering & Low Min Qty. 100% Satisfaction Guaranteed. Buy Now!\nSatisfaction Guaranteed · Dedicated Service · Exclusive Patented Design\nRated A+ - Better Business Bureau",
+      "sitelinks": {
+        "expanded": [
+          {
+            "title": "Full-Color Photo Mugs",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTc4NjE1MTg3ODc3OTk5Jmx0PTImcz0xJmVzPTRpNEF1b29HUFMuM3NFWTYzN0t4eWpzNDRRQ0U0SmlWMmpjeHQ5TE9PNXNiLmd6ZA--/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de3XB0OFBJhz6upKopz4XkqfzVUCUzfuySqE3z810oIgbI2omhVnp8zvQCH48lww4pWeh51wMDfiYTW82sWv_MaFVq_UddyFvIAVbc-i_tKCwcebS5uBssciUGbJNojQ_WY87_dXJ8Q-ot-0EQT7jFsr-_2N2ovOtn-cUYF5_-O_sBxj3Ft%26u%3daHR0cCUzYSUyZiUyZmNsaWNrc2VydmUuZGFydHNlYXJjaC5uZXQlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA0MTE1MTE5MDU5MSUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwNDgwMTkwNTIyNiUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAwMzQ3Mjk0ODcyOCUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19lX2FkaWQlM2Q3ODYxNTE4Nzg3Nzk5OSUyNmRzX2VfdGFyZ2V0X2lkJTNka3dkLTMwNDQzMjU2MzMwJTNhbG9jLTE5MCUyNiUyNmRzX3VybF92JTNkMiUyNmRzX2Rlc3RfdXJsJTNkaHR0cHMlM2ElMmYlMmZ3d3cuYW1zdGVyZGFtcHJpbnRpbmcuY29tJTJmcCUyZmZ1bGwtY29sb3ItY2VyYW1pYy1tdWctMTEtb3olM2ZpZCUzZDQyNjEyJTI2Y291cG9uJTNkQUgzNjIlMjZzY2lkJTNkUFNQSUE1NDY4JTI2dHJhY2tpbmdfaWQlM2RwJTI2cG9wdXAlM2RubyUyNnNpdGVsaW5rcyUzZEZ1bGxDb2xvclBob3RvTXVncyUyNm1ya2djbCUzZDkxMyUyNm1ya2dhZGlkJTNkMTgwMTA2NDIyOCUyNnJrZ19pZCUzZDAlMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fa2V5d29yZCUzZE1TTl9BZEdyb3VwJTI2dXRtX2NhbXBhaWduJTNkSW1wcmludGVkJTJiTXVncyUyYi0lMmJCJTI2Y3JlYXRpdmUlM2Q3ODYxNTE4Nzg3Nzk5OSUyNmRldmljZSUzZGMlMjZtYXRjaHR5cGUlM2RlJTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX2NhbXBhaWduJTNkRHJpbmt3YXJlJTI1MjAtJTI1MjBJbXByaW50ZWQlMjUyME11Z3MlMjUyMC0lMjUyMEIlMjZ1dG1fdGVybSUzZGNvZmZlZSUyNTIwbXVnJTI2dXRtX2NvbnRlbnQlM2RDb2ZmZWUlMjUyME11Z3M%26rlid%3da748660981c91cae133c3bd27cea02be/RK=2/RS=8FjGfQd7K_fVf6vs_Aznq0f_tjE-;_ylt=A2KLfRkj_dtdzDcAcV5jAQx.;_ylu=X3oDMTB2cjdrdGVyBGNvbG8DYmYxBHBvcwM0BHZ0aWQDBHNlYwNvdi10b3A-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b"
+          },
+          {
+            "title": "$0.99 Printed Logo Mugs",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTc4NjE1MTg3ODc3OTk5Jmx0PTImcz0xJmVzPTRpNEF1b29HUFMuM3NFWTYzN0t4eWpzNDRRQ0U0SmlWMmpjeHQ5TE9PNXNiLmd6ZA--/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de37hcTgsFf4RNepH0_YQubyzVUCUw-MRDBCk1C8OM-Kpv3y_Belz45MXqYL7N5f3XE1hnqmdJKwM_ep8ftetcNX4SnqcyHC9V49WJjiel80ZIXs21GgOEXmLbDODS3Tfu0H2-RRQRvLLLhEg0QCzmX7QfE6PFRq2v5y3J2tsEwCopaejCy%26u%3daHR0cCUzYSUyZiUyZmNsaWNrc2VydmUuZGFydHNlYXJjaC5uZXQlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA0MTE1MTE5MDU5MSUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwNDgwMTkwNTIyNiUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAwMzQ3Mjk0ODczMSUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19lX2FkaWQlM2Q3ODYxNTE4Nzg3Nzk5OSUyNmRzX2VfdGFyZ2V0X2lkJTNka3dkLTMwNDQzMjU2MzMwJTNhbG9jLTE5MCUyNiUyNmRzX3VybF92JTNkMiUyNmRzX2Rlc3RfdXJsJTNkaHR0cHMlM2ElMmYlMmZ3d3cuYW1zdGVyZGFtcHJpbnRpbmcuY29tJTJmZGVmYXVsdC5hc3B4JTNmZm9jdXNpZCUzZFBQQ19pbXByaW50ZWRtdWcuaHRtJTI2c2NpZCUzZFBTUElBNTQ2OSUyNmNvdXBvbiUzZEFIMzYyJTI2dHJhY2tpbmdfaWQlM2RwJTI2cG9wdXAlM2RubyUyNnNpdGVsaW5rcyUzZDA5OVByaW50ZWRMb2dvTXVncyUyNm1ya2djbCUzZDkxMyUyNm1ya2dhZGlkJTNkMTgwMTA2NDIyOCUyNnJrZ19pZCUzZDAlMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fa2V5d29yZCUzZE1TTl9BZEdyb3VwJTI2dXRtX2NhbXBhaWduJTNkSW1wcmludGVkJTJiTXVncyUyYi0lMmJCJTI2Y3JlYXRpdmUlM2Q3ODYxNTE4Nzg3Nzk5OSUyNmRldmljZSUzZGMlMjZtYXRjaHR5cGUlM2RlJTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX2NhbXBhaWduJTNkRHJpbmt3YXJlJTI1MjAtJTI1MjBJbXByaW50ZWQlMjUyME11Z3MlMjUyMC0lMjUyMEIlMjZ1dG1fdGVybSUzZGNvZmZlZSUyNTIwbXVnJTI2dXRtX2NvbnRlbnQlM2RDb2ZmZWUlMjUyME11Z3M%26rlid%3dd2fd085ec69819735ba155853bbbb47a/RK=2/RS=N4fBEJ4sOdGzuBqhSVPDSFdThvE-;_ylt=A2KLfRkj_dtdzDcAcl5jAQx.;_ylu=X3oDMTB2cjdrdGVyBGNvbG8DYmYxBHBvcwM0BHZ0aWQDBHNlYwNvdi10b3A-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b"
+          },
+          {
+            "title": "Colored Ceramic Mug 16 oz",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTc4NjE1MTg3ODc3OTk5Jmx0PTImcz0xJmVzPTRpNEF1b29HUFMuM3NFWTYzN0t4eWpzNDRRQ0U0SmlWMmpjeHQ5TE9PNXNiLmd6ZA--/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de3Y4aSFKXB-XDWfJBWyqHlYzVUCUwgRIVcTpwDya1NlQJ1QFhkXLJjGSK3y6bTXA8S8Y_z6AHOGNp4hhzUOK02b1C3KKsHK41wFN6a2J_erJzY9AGTf3cm_agVEx9i1_iibvG0XHKeta70CIfSNO_Ao75dksW6gRxDpTGG2nSIm0B1bGP4%26u%3daHR0cCUzYSUyZiUyZmNsaWNrc2VydmUuZGFydHNlYXJjaC5uZXQlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA0MTE1MTE5MDU5MSUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwNDgwMTkwNTIyNiUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAwMzQ3Mjk0ODczNCUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19lX2FkaWQlM2Q3ODYxNTE4Nzg3Nzk5OSUyNmRzX2VfdGFyZ2V0X2lkJTNka3dkLTMwNDQzMjU2MzMwJTNhbG9jLTE5MCUyNiUyNmRzX3VybF92JTNkMiUyNmRzX2Rlc3RfdXJsJTNkaHR0cHMlM2ElMmYlMmZ3d3cuYW1zdGVyZGFtcHJpbnRpbmcuY29tJTJmcCUyZmhpbG8tYmlzdHJvLW11Zy0xNi1veiUzZmlkJTNkNDM3MTglMjZjb3Vwb24lM2RBSDM2MiUyNnNjaWQlM2RQU1BJQTU0NjklMjZ0cmFja2luZ19pZCUzZHAlMjZzaXRlbGlua3MlM2RDb2xvcmVkQ2VyYW1pY011ZzE2b3olMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fa2V5d29yZCUzZE1TTl9BZEdyb3VwJTI2dXRtX2NhbXBhaWduJTNkSW1wcmludGVkJTJiTXVncyUyYi0lMmJCJTI2Y3JlYXRpdmUlM2Q3ODYxNTE4Nzg3Nzk5OSUyNmRldmljZSUzZGMlMjZtYXRjaHR5cGUlM2RlJTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX2NhbXBhaWduJTNkRHJpbmt3YXJlJTI1MjAtJTI1MjBJbXByaW50ZWQlMjUyME11Z3MlMjUyMC0lMjUyMEIlMjZ1dG1fdGVybSUzZGNvZmZlZSUyNTIwbXVnJTI2dXRtX2NvbnRlbnQlM2RDb2ZmZWUlMjUyME11Z3M%26rlid%3d62f2aeb16ca91ef0ec33f36a918abfee/RK=2/RS=AC87aX1fXFfw_Q_6WuXSxTc4TuE-;_ylt=A2KLfRkj_dtdzDcAc15jAQx.;_ylu=X3oDMTB2cjdrdGVyBGNvbG8DYmYxBHBvcwM0BHZ0aWQDBHNlYwNvdi10b3A-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b"
+          },
+          {
+            "title": "Hilo Bistro Mug 16 oz",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTc4NjE1MTg3ODc3OTk5Jmx0PTImcz0xJmVzPTRpNEF1b29HUFMuM3NFWTYzN0t4eWpzNDRRQ0U0SmlWMmpjeHQ5TE9PNXNiLmd6ZA--/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de32-xzYJZvktCTuAvICfYIJTVUCUyoM_9v2yX51dY1e0aG91SKUnmQIph0eVaGHQPGaFta-bRpdK8plSAHZcfGae9O8rda5YX9OqSDkr3FGAaT4tRCdJK1Gah2SgS-VLdY3wMw09Js5fXazrs1NxX1r_tPKByFkPmVgYF4kojkFE73Ss-P%26u%3daHR0cCUzYSUyZiUyZmNsaWNrc2VydmUuZGFydHNlYXJjaC5uZXQlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA0MTE1MTE5MDU5MSUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwNDgwMTkwNTIyNiUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAwMzQ3Mjk0ODc0MCUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19lX2FkaWQlM2Q3ODYxNTE4Nzg3Nzk5OSUyNmRzX2VfdGFyZ2V0X2lkJTNka3dkLTMwNDQzMjU2MzMwJTNhbG9jLTE5MCUyNiUyNmRzX3VybF92JTNkMiUyNmRzX2Rlc3RfdXJsJTNkaHR0cHMlM2ElMmYlMmZ3d3cuYW1zdGVyZGFtcHJpbnRpbmcuY29tJTJmcCUyZmhpbG8tYmlzdHJvLW11Zy0xNi1veiUzZmlkJTNkNDM3MTglMjZjb3Vwb24lM2RBSDM2MiUyNnNjaWQlM2RQU1BJQTU0NjklMjZ0cmFja2luZ19pZCUzZHAlMjZzaXRlbGlua3MlM2RIaWxvQmlzdHJvTXVnMTZveiUyNnV0bV9tZWRpdW0lM2RjcGMlMjZ1dG1fc291cmNlJTNkYmluZyUyNnV0bV9rZXl3b3JkJTNkTVNOX0FkR3JvdXAlMjZ1dG1fY2FtcGFpZ24lM2RJbXByaW50ZWQlMmJNdWdzJTJiLSUyYkIlMjZjcmVhdGl2ZSUzZDc4NjE1MTg3ODc3OTk5JTI2ZGV2aWNlJTNkYyUyNm1hdGNodHlwZSUzZGUlMjZ1dG1fc291cmNlJTNkYmluZyUyNnV0bV9tZWRpdW0lM2RjcGMlMjZ1dG1fY2FtcGFpZ24lM2REcmlua3dhcmUlMjUyMC0lMjUyMEltcHJpbnRlZCUyNTIwTXVncyUyNTIwLSUyNTIwQiUyNnV0bV90ZXJtJTNkY29mZmVlJTI1MjBtdWclMjZ1dG1fY29udGVudCUzZENvZmZlZSUyNTIwTXVncw%26rlid%3d19fbccc84cc0198b90139113b1e39f2c/RK=2/RS=5QFPVBl_3fC1HJpW6cyk4D0RuxA-;_ylt=A2KLfRkj_dtdzDcAdF5jAQx.;_ylu=X3oDMTB2cjdrdGVyBGNvbG8DYmYxBHBvcwM0BHZ0aWQDBHNlYwNvdi10b3A-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b"
+          }
+        ]
+      }
+    },
+    {
+      "position": 5,
+      "block_position": "bottom",
+      "displayed_link": "www.shop411.com/Mugs Coffee",
+      "snippet": "Search Mugs Coffee on Shop411. Let the Savings Begin.\nSearch by Price · Millions of Items · Shop Now · Research. Shop. Save.",
+      "sitelinks": {
+        "expanded": [
+          {
+            "title": "Great Brands for Sale",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTg0NTI1MDY0NzY5NzMzJmx0PTImcz0xJmVzPS5ZaDE3MkVHUFM5dkpmdzlxc0ljajlqUWpYSlZyb0ouamhaNWR6QUNaS2hic3lZZw--/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de35_GV2pAyhkabtqFfZMJSajVUCUx8ZW03WzR-yPgw_rNhu0p3i24Fvmx82-usZ21SDrFADiaEsiwmI7WtqiL6TB8vbZopVRVWY24GaV-ejgKtBpo6QFunJIAHlipaT1f1C87m0qEcj4ZEFtYcHU0HbU6YFvh3vMKDCCfwOYvJyyTzeqe1%26u%3dd3d3LnNob3A0MTEuY29tJTJmc2xwJTNmJTI2cSUzZE11Z3MlMjUyMENvZmZlZSUyNnNpZCUzZDhmMmE0ZjllLWM4ZjEtNDM0OS1iNGUwLTIzMDQ3ODRlMWU0NC0wLXNmX21zZSUyNmt3aWQlM2Rjb2ZmZWUlMjUyMG11ZyUyNmNpZCUzZDg0NTI1MDY0NzY5NzMz%26rlid%3d6eb2e9ab36231c63cbf2b470cb008707/RK=2/RS=mqhrqswLvZ_XZLVTdZx1vUz6HXM-;_ylt=A2KLfRkj_dtdzDcAjl5jAQx.;_ylu=X3oDMTEyaDFtbTljBGNvbG8DYmYxBHBvcwMxBHZ0aWQDBHNlYwNvdi1ib3R0b20-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b"
+          },
+          {
+            "title": "Our Lowest Price",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTg0NTI1MDY0NzY5NzMzJmx0PTImcz0xJmVzPS5ZaDE3MkVHUFM5dkpmdzlxc0ljajlqUWpYSlZyb0ouamhaNWR6QUNaS2hic3lZZw--/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de33HusEz9WcdgnlpFFx_cf2TVUCUy7oPpZj25ZJb7FlnPUSiqA7QunmjzM7tqM90JMKkYUuBeyb2iP6kDLpidECYlmbh1q3pSCY02wvXHOseIXvqwrebxbqt85Z-LOyaMXPyOZ9pnzlB0dyZQRIxoSmfBY8JNuyhIrE7nPl3N6uGkte0JS%26u%3dd3d3LnNob3A0MTEuY29tJTJmc2xwJTNmJTI2cSUzZE11Z3MlMjUyMENvZmZlZSUyNnNpZCUzZDhmMmE0ZjllLWM4ZjEtNDM0OS1iNGUwLTIzMDQ3ODRlMWU0NC0wLXNmX21zZSUyNmt3aWQlM2Rjb2ZmZWUlMjUyMG11ZyUyNmNpZCUzZDg0NTI1MDY0NzY5NzMz%26rlid%3d828ff747e5e619a736c2aa9c18c5b07b/RK=2/RS=TRbSVrmoUO4uGyTMzhR3nuyyybs-;_ylt=A2KLfRkj_dtdzDcAj15jAQx.;_ylu=X3oDMTEyaDFtbTljBGNvbG8DYmYxBHBvcwMxBHZ0aWQDBHNlYwNvdi1ib3R0b20-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b"
+          },
+          {
+            "title": "Our Best Deals",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTg0NTI1MDY0NzY5NzMzJmx0PTImcz0xJmVzPS5ZaDE3MkVHUFM5dkpmdzlxc0ljajlqUWpYSlZyb0ouamhaNWR6QUNaS2hic3lZZw--/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de3ynbcdjtLKK18IqJgq_VaiTVUCUwPGNs80Prss9d4XbAfg7j_onbgRd4vAlyHmOQ9fUhQEW7ooqszjuV7l-bMSZNU7eObb74oPZtvYOj__0ZYLGcu1dfwpoDPIJLJhA8t0mgdVOnghtCXvFVbrJ4n_b-AiCPedytmyAsiWSZw1ou-n4B2%26u%3dd3d3LnNob3A0MTEuY29tJTJmc2xwJTNmJTI2cSUzZE11Z3MlMjUyMENvZmZlZSUyNnNpZCUzZDhmMmE0ZjllLWM4ZjEtNDM0OS1iNGUwLTIzMDQ3ODRlMWU0NC0wLXNmX21zZSUyNmt3aWQlM2Rjb2ZmZWUlMjUyMG11ZyUyNmNpZCUzZDg0NTI1MDY0NzY5NzMz%26rlid%3d44e09d8a6e6c1b99f799c051934f1dfa/RK=2/RS=AIJyHp9Px876epqOAasxRl0lzsc-;_ylt=A2KLfRkj_dtdzDcAkF5jAQx.;_ylu=X3oDMTEyaDFtbTljBGNvbG8DYmYxBHBvcwMxBHZ0aWQDBHNlYwNvdi1ib3R0b20-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b"
+          },
+          {
+            "title": "Compare Prices",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTg0NTI1MDY0NzY5NzMzJmx0PTImcz0xJmVzPS5ZaDE3MkVHUFM5dkpmdzlxc0ljajlqUWpYSlZyb0ouamhaNWR6QUNaS2hic3lZZw--/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de3hpQkZtXmrtCuK_1fpKgfbjVUCUz_GTYo8tzsqCpFCTKeoQjw5wyMexo0CLXpmQOkKe9ffYbug5qjLb4fArSuskEe2yVrZDWiE_PcmIA1Of8FMnXHsbkt-BfjCebWXW86dSjxb-R0SBt-yd8eAkiqC9eMcj6Qp0yhqgBhFNZGsoxxeOpl%26u%3dd3d3LnNob3A0MTEuY29tJTJmc2xwJTNmJTI2cSUzZE11Z3MlMjUyMENvZmZlZSUyNnNpZCUzZDhmMmE0ZjllLWM4ZjEtNDM0OS1iNGUwLTIzMDQ3ODRlMWU0NC0wLXNmX21zZSUyNmt3aWQlM2Rjb2ZmZWUlMjUyMG11ZyUyNmNpZCUzZDg0NTI1MDY0NzY5NzMz%26rlid%3dbefe14d9bbb21e0d39c3490246919bef/RK=2/RS=WtjYqoyXXKx_D0YDwSIK5SrpaIs-;_ylt=A2KLfRkj_dtdzDcAkV5jAQx.;_ylu=X3oDMTEyaDFtbTljBGNvbG8DYmYxBHBvcwMxBHZ0aWQDBHNlYwNvdi1ib3R0b20-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b"
+          }
+        ]
+      }
+    },
+    {
+      "position": 6,
+      "block_position": "bottom",
+      "displayed_link": "www.vistaprint.fr/Cadeauphoto/Mugs",
+      "snippet": "vistaprint.fr a été visité par plus de 100 000 utilisateurs le mois dernier\nAjoutez vos propres photos ou logo! Impression en couleur. Le cadeau parfait. Ajoutez simplement vos photos, vos logos ou l'un de nos nombreux graphismes.\nAjoutez poignée assortie · Optez pour un pêle-mêle · Ajoutez photos spéciales\nTypes: Mugs photo personnalisés, Mugs multi-photos, Mugs magiques",
+      "sitelinks": {
+        "expanded": [
+          {
+            "title": "Mugs panoramiques",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTc0Njk4MDc4OTUxNTIxJmx0PTImcz0xJmVzPXFJdFJ3aE1HUFNfSDB5OTh2QlNjZVdCM1N3ekMxVG8yZkVXeWguR2lBaExwQWlPdHVBLS0-/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de3lfKRbLWv2TP3XTpAwVfAvzVUCUzUs2FJpq2uZm8DK1XESRJZo1KkWDKEQ1gju0Oyod_M73ixgzUSBten-dkM3gEI0G0zRaVfCabocjhTICsOu0WCclA9RM_bEAeNpGQsFlBGGRALDvPxCezJ7SRCzsuPEVZqIaUIUTPux7JtYsZJOJ2z%26u%3daHR0cCUzYSUyZiUyZnd3dy52aXN0YXByaW50LmZyJTJmdnAlMmZnYXRld2F5LmFzcHglM2ZTJTNkOTQzNDI5NTM0MSUyNnByZXVybCUzZCUyZmNhZGVhdXgtcGhvdG8lMmZtdWdzLXBlcnNvbm5hbGlzZXMlMmZtb2RlbGVzJTNmYXR0cmlidXRlJTNkNTMzJTI2bGFuZ2lkJTNkMjAlMjZtayUzZGNvZmZlZSUyNTIwbXVnJTI2YWQlM2RiZSUyNmNydHYlM2Q3NDY5ODA3ODk1MTUyMSUyNmRldmljZSUzZGMlMjZwc3RpZCUzZGt3ZC0zMzAwMjk0Mjg4MyUzYWxvYy0xOTAlMjZwc2l0ZSUzZG1rd2lkJTdjYmsxTjkxR2wlMjZwc2NpZCUzZDkxMjQ0NTA3JTI2cHNhZ2lkJTNkMjg4NzA0NjEwMSUyNnBzbmV0JTNkbyUyNm1zY2xraWQlM2RjNmViMjI4MmQ0NGMxNTAxNTJlNTdmNTkyOTZmNDRkNyUyNmRrd2RpZCUzZDMzMDAyOTQyODgzJTI2cHNxdWVyeSUzZGNvZmZlZSUyNTIwbXVnJTI2cHNsb2MlM2Q0MTE2JTI2cHNwMiUzZDQlMmM3OSVlMiU4MiVhYyUyNnBzcDMlM2Q0MCUyNSUyNnBzZmlkJTNkNzY5NjU5NDU4OTYzNCUyNnBzaW50JTNkJTI2dXRtX3NvdXJjZSUzZGJpbmclMjZ1dG1fbWVkaXVtJTNkY3BjJTI2dXRtX2NhbXBhaWduJTNkQklOR19GUl9GUl9QaG90b2dpZnRfTXVnc19NYWluJTI2dXRtX3Rlcm0lM2Rjb2ZmZWUlMjUyMG11ZyUyNnV0bV9jb250ZW50JTNkTXVnc19Db2ZmZWVfRXhhY3Q%26rlid%3dc6eb2282d44c150152e57f59296f44d7/RK=2/RS=LEZFiaZ8vaLGmTil4mb2Q575RcQ-;_ylt=A2KLfRkj_dtdzDcAl15jAQx.;_ylu=X3oDMTEybTJxYTNuBGNvbG8DYmYxBHBvcwMyBHZ0aWQDBHNlYwNvdi1ib3R0b20-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b"
+          },
+          {
+            "title": "Mugs photo",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTc0Njk4MDc4OTUxNTIxJmx0PTImcz0xJmVzPXFJdFJ3aE1HUFNfSDB5OTh2QlNjZVdCM1N3ekMxVG8yZkVXeWguR2lBaExwQWlPdHVBLS0-/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de3TANxr4BmEup_esTQhZks8DVUCUxt4cFiJaWUYX2g8dTrC9khEEZXEzjL2z4QlJgf5uuV-OcreDVpmlGAwpr_E3LgYXH5rBH36S8i7o9IoVvvCX-tybk0K26T2NKOwuBHAX7U3ot0tRY1mPlmjfeecA5EK6wdFFeYPYJ4DbslmXvzfzEH%26u%3daHR0cCUzYSUyZiUyZnd3dy52aXN0YXByaW50LmZyJTJmdnAlMmZnYXRld2F5LmFzcHglM2ZTJTNkOTQzNDI5NTM0MSUyNnByZXVybCUzZCUyZmdhbGxlcnklMmZJSG9BQUFBQkFBQUFBQUElM2QlMmZtdWdzLXBhbm9yYW1pcXVlcy5hc3B4JTI2bWslM2Rjb2ZmZWUlMjUyMG11ZyUyNmFkJTNkYmUlMjZjcnR2JTNkNzQ2OTgwNzg5NTE1MjElMjZkZXZpY2UlM2RjJTI2cHN0aWQlM2Rrd2QtMzMwMDI5NDI4ODMlM2Fsb2MtMTkwJTI2cHNpdGUlM2Rta3dpZCU3Y2JrMU45MUdsJTI2cHNjaWQlM2Q5MTI0NDUwNyUyNnBzYWdpZCUzZDI4ODcwNDYxMDElMjZwc25ldCUzZG8lMjZtc2Nsa2lkJTNkNjVkMmFkZTgyYTQ0MTcyZWU1OTRmMDMzZDc2N2M4NTIlMjZka3dkaWQlM2QzMzAwMjk0Mjg4MyUyNnBzcXVlcnklM2Rjb2ZmZWUlMjUyMG11ZyUyNnBzbG9jJTNkNDExNiUyNnBzcDIlM2Q0JTJjNzklZTIlODIlYWMlMjZwc3AzJTNkNDAlMjUlMjZwc2ZpZCUzZDc2OTY1OTg2MjIwNDglMjZwc2ludCUzZCUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jYW1wYWlnbiUzZEJJTkdfRlJfRlJfUGhvdG9naWZ0X011Z3NfTWFpbiUyNnV0bV90ZXJtJTNkY29mZmVlJTI1MjBtdWclMjZ1dG1fY29udGVudCUzZE11Z3NfQ29mZmVlX0V4YWN0%26rlid%3d65d2ade82a44172ee594f033d767c852/RK=2/RS=1S9fVyOT.DxqEgrIHMD.hdmPf1U-;_ylt=A2KLfRkj_dtdzDcAmF5jAQx.;_ylu=X3oDMTEybTJxYTNuBGNvbG8DYmYxBHBvcwMyBHZ0aWQDBHNlYwNvdi1ib3R0b20-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b"
+          },
+          {
+            "title": "Voir tous les modèles",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTc0Njk4MDc4OTUxNTIxJmx0PTImcz0xJmVzPXFJdFJ3aE1HUFNfSDB5OTh2QlNjZVdCM1N3ekMxVG8yZkVXeWguR2lBaExwQWlPdHVBLS0-/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de3hAZXtrbGapBaSYued3-cHDVUCUxbVszI-ZiXHzCb8VQhFxZqpu0kvEbeNxY-KaWubv-TqJA_OjX7P3AJvXGziRBmxrVUDgZC9nAc4wp9dwgTThC9RCGc_mzLfTMk6fZlGQAn7Q4NibUQVBGH_y5JLYpKnjJLrG2qMLyECAvpt13kmaZ0%26u%3daHR0cCUzYSUyZiUyZnd3dy52aXN0YXByaW50LmZyJTJmdnAlMmZnYXRld2F5LmFzcHglM2ZTJTNkOTQzNDI5NTM0MSUyNnByZXVybCUzZCUyZm11Z3MtcGVyc29ubmFsaXNlcy5hc3B4JTI2bWslM2Rjb2ZmZWUlMjUyMG11ZyUyNmFkJTNkYmUlMjZjcnR2JTNkNzQ2OTgwNzg5NTE1MjElMjZkZXZpY2UlM2RjJTI2cHN0aWQlM2Rrd2QtMzMwMDI5NDI4ODMlM2Fsb2MtMTkwJTI2cHNpdGUlM2Rta3dpZCU3Y2JrMU45MUdsJTI2cHNjaWQlM2Q5MTI0NDUwNyUyNnBzYWdpZCUzZDI4ODcwNDYxMDElMjZwc25ldCUzZG8lMjZtc2Nsa2lkJTNkMmI5YjU1OWRiODVjMTM0Njk1YjcwODQ2NDU3ZmUzMTElMjZka3dkaWQlM2QzMzAwMjk0Mjg4MyUyNnBzcXVlcnklM2Rjb2ZmZWUlMjUyMG11ZyUyNnBzbG9jJTNkNDExNiUyNnBzcDIlM2Q0JTJjNzklZTIlODIlYWMlMjZwc3AzJTNkNDAlMjUlMjZwc2ZpZCUzZDc2OTY1OTg2MjIwNDklMjZwc2ludCUzZCUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jYW1wYWlnbiUzZEJJTkdfRlJfRlJfUGhvdG9naWZ0X011Z3NfTWFpbiUyNnV0bV90ZXJtJTNkY29mZmVlJTI1MjBtdWclMjZ1dG1fY29udGVudCUzZE11Z3NfQ29mZmVlX0V4YWN0%26rlid%3d2b9b559db85c134695b70846457fe311/RK=2/RS=30jeP_ai0rw4ujg.4p2dbgz9rHc-;_ylt=A2KLfRkj_dtdzDcAmV5jAQx.;_ylu=X3oDMTEybTJxYTNuBGNvbG8DYmYxBHBvcwMyBHZ0aWQDBHNlYwNvdi1ib3R0b20-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b"
+          },
+          {
+            "title": "Cadeaux photo",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTc0Njk4MDc4OTUxNTIxJmx0PTImcz0xJmVzPXFJdFJ3aE1HUFNfSDB5OTh2QlNjZVdCM1N3ekMxVG8yZkVXeWguR2lBaExwQWlPdHVBLS0-/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de31OhugU6xpVc6GyZXuU1wGDVUCUxPkILKjcKc9QKBxjo4YH76ZZR3EuHysyrIizZAijr85sWzv8inbQBKgAYlnKIbp9GDXMdL1RMNfGFlIHAmJlXOuurSEq_pKJJt0w3NMzqjL8wsu_66Z-_UvqSnYP7g0XjmKMkdvguuRwpD_9hvSful%26u%3daHR0cHMlM2ElMmYlMmZ3d3cudmlzdGFwcmludC5mciUyZnZwJTJmZ2F0ZXdheS5hc3B4JTNmUyUzZDk0MzQyOTUzNDElMjZQUkVVUkwlM2QlMmZjYWRlYXV4LXBob3RvJTI2bWslM2Rjb2ZmZWUlMjUyMG11ZyUyNmFkJTNkYmUlMjZjcnR2JTNkNzQ2OTgwNzg5NTE1MjElMjZkZXZpY2UlM2RjJTI2cHN0aWQlM2Rrd2QtMzMwMDI5NDI4ODMlM2Fsb2MtMTkwJTI2cHNpdGUlM2Rta3dpZCU3Y2JrMU45MUdsJTI2cHNjaWQlM2Q5MTI0NDUwNyUyNnBzYWdpZCUzZDI4ODcwNDYxMDElMjZwc25ldCUzZG8lMjZtc2Nsa2lkJTNkZGQ0MTk0OTJmMzVmMWE1NjY4ZjVjOTQ5MGU3Y2E0ZDMlMjZka3dkaWQlM2QzMzAwMjk0Mjg4MyUyNnBzcXVlcnklM2Rjb2ZmZWUlMjUyMG11ZyUyNnBzbG9jJTNkNDExNiUyNnBzcDIlM2Q0JTJjNzklZTIlODIlYWMlMjZwc3AzJTNkNDAlMjUlMjZwc2ZpZCUzZDc2OTY1OTg2MjIwNjQlMjZwc2ludCUzZCUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jYW1wYWlnbiUzZEJJTkdfRlJfRlJfUGhvdG9naWZ0X011Z3NfTWFpbiUyNnV0bV90ZXJtJTNkY29mZmVlJTI1MjBtdWclMjZ1dG1fY29udGVudCUzZE11Z3NfQ29mZmVlX0V4YWN0%26rlid%3ddd419492f35f1a5668f5c9490e7ca4d3/RK=2/RS=3yjSnkP4KtzQHcpLgnJbXTxsrs8-;_ylt=A2KLfRkj_dtdzDcAml5jAQx.;_ylu=X3oDMTEybTJxYTNuBGNvbG8DYmYxBHBvcwMyBHZ0aWQDBHNlYwNvdi1ib3R0b20-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b"
+          }
+        ]
+      }
+    },
+    {
+      "position": 7,
+      "block_position": "bottom",
+      "displayed_link": "www.nespresso.com",
+      "snippet": "Découvrez tous les accessoires Nespresso pour dégustez votre café. Tasses, Travel Mug et distibuteur de capsules Nespresso\nLivré partout en France · Service Client 24h/24 · Site officiel Nespresso\nAccessoires | Tasses, Mugs & Gourmandises | Nespresso",
+      "sitelinks": {
+        "expanded": [
+          {
+            "title": "Nespresso Recyclage",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTgxOTEzNjc1NTQ0MDQ4Jmx0PTImcz0xJmVzPVZfbFVWTGdHUFMuU1JPVVlLYXRtYmVfWnBDR2kuM0RpSFM4dC4xaEM2T1pQVjBrRmtBLS0-/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de3ssQhDOJQSN4KgnhKBRZlKTVUCUx2hcEAOOB1jO8kGO-POaoSIB4NNeMUr9UzLLmiRjpxRDCWaWyNi6USjn8CCEcmbF0onvreS7jrlZXH2SvrkJgmjVauOLszHC5NiX9C0cq00IvmMfEtJUv0gf3UWLj6yO_Fk-w1cglvXcqlfKnojHgB%26u%3daHR0cCUzYSUyZiUyZmNsaWNrc2VydmUuZGFydHNlYXJjaC5uZXQlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA0OTQ1MzI0MzMyMiUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwNTQyNTc2ODI3MCUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAwNTQwODk3NzMzNiUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19lX2FkaWQlM2Q4MTkxMzY3NTU0NDA0OCUyNmRzX2VfdGFyZ2V0X2lkJTNka3dkLTgxOTEzNzU1MDc5OTI4JTNhbG9jLTE5MCUyNiUyNmRzX3VybF92JTNkMiUyNmRzX2Rlc3RfdXJsJTNkaHR0cHMlM2ElMmYlMmZhcGlzZXJ2aWNlcy5rcnhkLm5ldCUyZmNsaWNrX3RyYWNrZXIlMmZ0cmFjayUzZmt4Y29uZmlkJTNkcnpoc2xwemw0JTI2a3hjYW1wYWlnbmlkJTNkJTViKkNhbXBhaWduSUQqJTVkJTI2a3hhZHZlcnRpc2VyaWQlM2QlNWIqRW5naW5lQWNjb3VudElEKiU1ZCUyNmt4cGxhY2VtZW50aWQlM2QlNWIqc2VhcmNodGVybSolNWQlMjZreGFkaWQlM2QlNWIqQWRncm91cElEKiU1ZCUyNmt4Y3JlYXRpdmVpZCUzZCU1YipFbmdpbmVBY2NvdW50VHlwZSolNWQlMjZreHNpdGVpZCUzZCU1YipFbmdpbmVBY2NvdW50VHlwZSolNWQlMjZjbGslM2RodHRwcyUzYSUyZiUyZnd3dy5uZXNwcmVzc28uY29tJTJmZW50cmVwcmlzZSUyZnBvaW50cy1kZS1yZWN5Y2xhZ2UuaHRtbCUzZm1zY2xraWQlM2RjOWI4MjJkZTg0OTMxYmRmNmIwZTdmMDU3OWIwYjIzNCUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jYW1wYWlnbiUzZEZSLkFjY2Vzc29pcmVzJTI2dXRtX3Rlcm0lM2QlMjUyQm11ZyUyNTIwJTI1MkJjb2ZmZWUlMjZ1dG1fY29udGVudCUzZFRhc3Nlcw%26rlid%3dc9b822de84931bdf6b0e7f0579b0b234/RK=2/RS=xAbzdRL_pad9nMmU4RTyLG.RqiI-;_ylt=A2KLfRkj_dtdzDcAoF5jAQx.;_ylu=X3oDMTEyZWVkbWJsBGNvbG8DYmYxBHBvcwMzBHZ0aWQDBHNlYwNvdi1ib3R0b20-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b"
+          },
+          {
+            "title": "Commande rapide",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTgxOTEzNjc1NTQ0MDQ4Jmx0PTImcz0xJmVzPVZfbFVWTGdHUFMuU1JPVVlLYXRtYmVfWnBDR2kuM0RpSFM4dC4xaEM2T1pQVjBrRmtBLS0-/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de3gvKMrhppV6tTTlzwkxNfkTVUCUx5paOOZGXHPTFAQzjtbKiaaNzKDDQZHpWZTn-iTV0cRw6hD87Qvcr_MJcuM5x6nSmx5agEm9dHLk7PAMJ19cReAF8X1U58J-Y32kEB5PKgxXigvPbcSBe-4u9TfMMf8zjn8kgP38_xtuCxEg5D-u2Y%26u%3daHR0cCUzYSUyZiUyZmNsaWNrc2VydmUuZGFydHNlYXJjaC5uZXQlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA0OTQ1MzI0MzMyMiUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwNTQyNTc2ODI3MCUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAwNTQwODk3NzMzOSUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19lX2FkaWQlM2Q4MTkxMzY3NTU0NDA0OCUyNmRzX2VfdGFyZ2V0X2lkJTNka3dkLTgxOTEzNzU1MDc5OTI4JTNhbG9jLTE5MCUyNiUyNmRzX3VybF92JTNkMiUyNmRzX2Rlc3RfdXJsJTNkaHR0cHMlM2ElMmYlMmZhcGlzZXJ2aWNlcy5rcnhkLm5ldCUyZmNsaWNrX3RyYWNrZXIlMmZ0cmFjayUzZmt4Y29uZmlkJTNkcnpoc2xwemw0JTI2a3hjYW1wYWlnbmlkJTNkJTViKkNhbXBhaWduSUQqJTVkJTI2a3hhZHZlcnRpc2VyaWQlM2QlNWIqRW5naW5lQWNjb3VudElEKiU1ZCUyNmt4cGxhY2VtZW50aWQlM2QlNWIqc2VhcmNodGVybSolNWQlMjZreGFkaWQlM2QlNWIqQWRncm91cElEKiU1ZCUyNmt4Y3JlYXRpdmVpZCUzZCU1YipFbmdpbmVBY2NvdW50VHlwZSolNWQlMjZreHNpdGVpZCUzZCU1YipFbmdpbmVBY2NvdW50VHlwZSolNWQlMjZjbGslM2RodHRwcyUzYSUyZiUyZnd3dy5uZXNwcmVzc28uY29tJTJmZnIlMmZmciUyZm9yZGVyJTJmY2Fwc3VsZXMlMmZvcmlnaW5hbCUyZiUzZm1zY2xraWQlM2QwMzhiMGU3ZDBiNzUxZGFmYTg5ZjUzYTZmNjU2NzI0NCUyNnV0bV9zb3VyY2UlM2RiaW5nJTI2dXRtX21lZGl1bSUzZGNwYyUyNnV0bV9jYW1wYWlnbiUzZEZSLkFjY2Vzc29pcmVzJTI2dXRtX3Rlcm0lM2QlMjUyQm11ZyUyNTIwJTI1MkJjb2ZmZWUlMjZ1dG1fY29udGVudCUzZFRhc3Nlcw%26rlid%3d038b0e7d0b751dafa89f53a6f6567244/RK=2/RS=0rmuYallKbN_lKOaCKzL8s_rEvk-;_ylt=A2KLfRkj_dtdzDcAoV5jAQx.;_ylu=X3oDMTEyZWVkbWJsBGNvbG8DYmYxBHBvcwMzBHZ0aWQDBHNlYwNvdi1ib3R0b20-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b"
+          }
+        ]
+      }
+    },
+    {
+      "position": 8,
+      "block_position": "bottom",
+      "displayed_link": "www.snapfish.com/Photo/Mug",
+      "snippet": "Make Custom Photo Gifts, Mugs, Water Bottles & More. Create A Mug to Reflect Your Style! Shop our Wide Selection of Sizes & Styles for the Perfect Gift at the Best Prices.\nShop All Photo Gifts · Live Customer Support · Learn What's New · Make a Beautiful Gift\nTypes: 11 ounce, 16 ounce, 15 ounce, Insulated Water Bottle, Insulated Tumbler\nThe Best Place to Print Photos - Digital Trends",
+      "sitelinks": {
+        "expanded": [
+          {
+            "title": "Free Shipping Over $29",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTc2NDg0ODk1NTAwMzQ5Jmx0PTImcz0xJmVzPUlIT21mcXdHUFNfUEhnRjl6cmJoaHdrRmFEeXV3QTlDU05jdVhuS1FVYUlEaUZLVnBnLS0-/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de3HrMz0YVMx09Y440cDima2jVUCUzjzlkzH3P0mW8-5mEahoOPVDFvVCTHObzv4HoeLhgMupeTWsZ5afZcjCglR-W4AuwkN3CTYr7Do5zHWdZmUIN5AtNlNV2DGqrf5GuXYgFJapihTUb6ic6Y4xA3UMY1zsRul6fwxdDsnxFctXrQkV2A%26u%3daHR0cCUzYSUyZiUyZmNsaWNrc2VydmUuZGFydHNlYXJjaC5uZXQlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA0MTg5MTY3MzgyOCUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwNDg2MDYyNTgzNyUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAwMjYyOTEyOTI2OSUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19lX2FkaWQlM2Q3NjQ4NDg5NTUwMDM0OSUyNmRzX2VfdGFyZ2V0X2lkJTNka3dkLTc2NDg0OTk1MTU4OTYyJTNhbG9jLTE5MCUyNiUyNmRzX3VybF92JTNkMiUyNmRzX2Rlc3RfdXJsJTNkaHR0cHMlM2ElMmYlMmZ3d3cuc25hcGZpc2guY29tJTJmc25hcGZpc2gtY291cG9ucyUzZmNpZCUzZHVzJTdjc2VtJTdjb3RoJTdjYm5nJTdjbmItbXVnLWZyZWVzaGlwLWVuaG4tc2wtdGh4cyU3Y3dlYiU3Y25vbiU3Y3NpdGUlMjZDSUQlM2R1cyU3Y3NlbSU3YyU1YipFbmdpbmVBY2NvdW50VHlwZSolNWQlN2NzZiU3YyU1YipDYW1wYWlnbiolNWQlN2NhbGwlN2NvdGglN2MlNWIqc2VhcmNodGVybSolNWQlMjZtc2Nsa2lkJTNkNDJjZTEwYzIxZjFjMWQ4YmY3ODQ0ZDE5ZTIzZjQxZjM%26rlid%3d42ce10c21f1c1d8bf7844d19e23f41f3/RK=2/RS=qWHlUxJ.mXXaQHm6.RegYDSD7hc-;_ylt=A2KLfRkj_dtdzDcAqF5jAQx.;_ylu=X3oDMTEyMWU5azBvBGNvbG8DYmYxBHBvcwM0BHZ0aWQDBHNlYwNvdi1ib3R0b20-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b"
+          },
+          {
+            "title": "70% Off Photo Mugs",
+            "link": "https://r.search.yahoo.com/cbclk2/dWU9RUUzMkYwOTRGRURENDYxRSZ1dD0xNTc0Njk4Mjc1MzAzJnVvPTc2NDg0ODk1NTAwMzQ5Jmx0PTImcz0xJmVzPUlIT21mcXdHUFNfUEhnRjl6cmJoaHdrRmFEeXV3QTlDU05jdVhuS1FVYUlEaUZLVnBnLS0-/RV=2/RE=1574727075/RO=10/RU=https%3a%2f%2fwww.bing.com%2faclick%3fld%3de3ccB4uNi0HiH87CNXkmMjDTVUCUzNDIgR8qxWLC387wN9v5j-n2ncgg9p75r7T_ms7HFnfU7Jvtxas-iOJhjYs-H36cG-XIYODU9sThosk9j-zxkiflA73zmh2s62xeeIsm-QLTGb8VBx0gEkYfBLLiphRKFh-xj1QmoP2yslJWjghb0F%26u%3daHR0cCUzYSUyZiUyZmNsaWNrc2VydmUuZGFydHNlYXJjaC5uZXQlMmZsaW5rJTJmY2xpY2slM2ZsaWQlM2Q0MzcwMDA0MTg5MTY3MzgyOCUyNmRzX3Nfa3dnaWQlM2Q1ODcwMDAwNDg2MDYyNTgzNyUyNmRzX3hfYWR4aWQlM2Q4MzcwMDAwMjYyOTEyOTI3OCUyNmRzX3hfYWR4dHlwZSUzZDElMjZkc19lX2FkaWQlM2Q3NjQ4NDg5NTUwMDM0OSUyNmRzX2VfdGFyZ2V0X2lkJTNka3dkLTc2NDg0OTk1MTU4OTYyJTNhbG9jLTE5MCUyNiUyNmRzX3VybF92JTNkMiUyNmRzX2Rlc3RfdXJsJTNkaHR0cHMlM2ElMmYlMmZ3d3cuc25hcGZpc2guY29tJTJmcGhvdG8tbXVncyUzZmNpZCUzZHVzJTdjc2VtJTdjb3RoJTdjYm5nJTdjbmItbXVnLTcwb2ZmLWVuaG4tc2wtdGh4cyU3Y3dlYiU3Y25vbiU3Y3NpdGUlMjZDSUQlM2R1cyU3Y3NlbSU3YyU1YipFbmdpbmVBY2NvdW50VHlwZSolNWQlN2NzZiU3YyU1YipDYW1wYWlnbiolNWQlN2NhbGwlN2NvdGglN2MlNWIqc2VhcmNodGVybSolNWQlMjZtc2Nsa2lkJTNkYjM3OWE2ZWEyMTIyMWJlMTI0M2FmYjMxZGMwMWQ4MTE%26rlid%3db379a6ea21221be1243afb31dc01d811/RK=2/RS=GiOI0K.y7JmtM.9vym6kf562W2E-;_ylt=A2KLfRkj_dtdzDcAqV5jAQx.;_ylu=X3oDMTEyMWU5azBvBGNvbG8DYmYxBHBvcwM0BHZ0aWQDBHNlYwNvdi1ib3R0b20-?p=coffee+mug&IG=628b7d1957fd4c97b00000000093b71b"
+          }
+        ]
+      }
+    },
+    {
+      "position": 9,
+      "displayed_link": "www.photoweb.fr/Customiser/Mug-Photos",
+      "snippet": "Le Mug Idéal pour vous accompagner dès le petit déjeuner ! Personnalisez votre Mug pour un effet Waouh garanti !\nL’offre de livres photo est vaste également - Focus-Numérique"
+    },
+    {
+      "position": 10,
+      "displayed_link": "www.quill.com/products/coffee",
+      "snippet": "Fast & Free Shipping on Orders Over $45. Shop Now."
+    },
+    {
+      "position": 11,
+      "displayed_link": "gifi.fr",
+      "snippet": "Découvrez notre Sélection Art de la Table. Profitez de nos Petits Prix avec Gifi. Découvrez notre Collection Art de la Table. Équipez vous avec Gifi au Meilleur Prix."
+    },
+    {
+      "position": 12,
+      "displayed_link": "www.bruneau.fr/Recherche/Mug",
+      "snippet": "Spécialiste de Fournitures et Mobilier de bureau depuis plus de 60 ans"
+    },
+    {
+      "position": 13,
+      "displayed_link": "www.urbanoutfitters.com",
+      "snippet": "Free Shipping on Orders Over $50! Plus Free Returns. Dedicated To Inspire Customers Through a Unique Combination Of Products and Creativity."
+    },
+    {
+      "position": 14,
+      "displayed_link": "orientaltrading.com",
+      "snippet": "Explore Our Collection of Unique Party Supplies Available at Oriental Trading®."
+    },
+    {
+      "position": 15,
+      "displayed_link": "www.miniinthebox.com/Famille&Animaux",
+      "snippet": "Grande Sélection De Tasse Et Mug Pour Vous. Livraison Gratuite, Economisez!"
+    },
+    {
+      "position": 16,
+      "displayed_link": "www.made-in-china.com",
+      "snippet": "Find China Manufacturers Of Coffee Mugs. Order Now!"
+    }
+  ],
+  "pagination": {
+    "current": 1,
+    "next": "https://fr.search.yahoo.com/search;_ylt=A2KLfRkj_dtdzDcArl5jAQx.;_ylu=X3oDMTEzajVvczlrBGNvbG8DYmYxBHBvcwMxBHZ0aWQDBHNlYwNwYWdpbmF0aW9u?p=coffee+mug&ei=UTF-8&b=11&pstart=24",
+    "other_pages": {
+      "2": "https://fr.search.yahoo.com/search;_ylt=A2KLfRkj_dtdzDcAql5jAQx.;_ylu=X3oDMTEzajVvczlrBGNvbG8DYmYxBHBvcwMxBHZ0aWQDBHNlYwNwYWdpbmF0aW9u?p=coffee+mug&ei=UTF-8&b=11&pstart=24",
+      "3": "https://fr.search.yahoo.com/search;_ylt=A2KLfRkj_dtdzDcAq15jAQx.;_ylu=X3oDMTEzajVvczlrBGNvbG8DYmYxBHBvcwMxBHZ0aWQDBHNlYwNwYWdpbmF0aW9u?p=coffee+mug&ei=UTF-8&b=21&pstart=47",
+      "4": "https://fr.search.yahoo.com/search;_ylt=A2KLfRkj_dtdzDcArF5jAQx.;_ylu=X3oDMTEzajVvczlrBGNvbG8DYmYxBHBvcwMxBHZ0aWQDBHNlYwNwYWdpbmF0aW9u?p=coffee+mug&ei=UTF-8&b=31&pstart=70",
+      "5": "https://fr.search.yahoo.com/search;_ylt=A2KLfRkj_dtdzDcArV5jAQx.;_ylu=X3oDMTEzajVvczlrBGNvbG8DYmYxBHBvcwMxBHZ0aWQDBHNlYwNwYWdpbmF0aW9u?p=coffee+mug&ei=UTF-8&b=41&pstart=93"
+    }
+  },
+  "serpapi_pagination": {
+    "current": 1,
+    "next_link": "https://serpapi.com/search.json?b=11&engine=yahoo&p=coffee+mug",
+    "next": "https://serpapi.com/search.json?b=11&engine=yahoo&p=coffee+mug",
+    "other_pages": {
+      "2": "https://serpapi.com/search.json?b=11&engine=yahoo&p=coffee+mug",
+      "3": "https://serpapi.com/search.json?b=21&engine=yahoo&p=coffee+mug",
+      "4": "https://serpapi.com/search.json?b=31&engine=yahoo&p=coffee+mug",
+      "5": "https://serpapi.com/search.json?b=41&engine=yahoo&p=coffee+mug"
+    }
+  }
+}
+More complex examples with multiple optional parameters
+The URL below fetches:
+
+• Starting from 101st result(b=101),
+• for the search "Coffee mug",
+• using de.search.yahoo.com in the Germany,
+• with the adult content filter off,
+• using the demo SerpApi key,
+• and output the results in JSON.
+GET
+
+
+https://serpapi.com/search.json?engine=yahoo&q=coffee+mug&b=101&vm=p&vs=.com,.org,.cn&yahoo_domain=de
+
+Code to integrate
+
+cURLRubyPythonJavaScriptGoPHPJavaRust.NETGoogle Sheets
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "yahoo",
+  q: "coffee mug",
+  b: "101",
+  vm: "p",
+  vs: ".com,.org,.cn",
+  yahoo_domain: "de",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+organic_results = results[:organic_results]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "63403603e7d08a78d89beda1",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/d399f6070d9aea33/63403603e7d08a78d89beda1.json",
+    "created_at": "2022-10-07 14:21:55 UTC",
+    "processed_at": "2022-10-07 14:21:56 UTC",
+    "yahoo_url": "https://de.search.yahoo.com/search?b=101&vm=p&p=Coffee&vs=.com%2C.org%2C.cn&ei=UTF-8&fr=fp-tts",
+    "raw_html_file": "https://serpapi.com/searches/d399f6070d9aea33/63403603e7d08a78d89beda1.html",
+    "total_time_taken": 2.23
+  },
+  "search_parameters": {
+    "engine": "yahoo",
+    "p": "Coffee",
+    "b": "101",
+    "vm": "p",
+    "vs": ".com,.org,.cn",
+    "device": "desktop"
+  },
+  "search_information": {
+    "query_displayed": "Coffee",
+    "total_results": 3320130816
+  },
+  "organic_results": [
+    {
+      "position": 1,
+      "title": "Here Is A Coffee Lovers Guide To The Best Coffee Plantations In...",
+      "link": "https://www.news18.com/news/lifestyle/here-is-a-coffee-lovers-guide-to-the-best-coffee-plantations-in-india-6107449.html",
+      "displayed_link": "www.news18.com › news › lifestyle",
+      "snippet": "Vor 1 Tag · Chikhaldara, Maharashtra. One of the only coffee plantations in Maharashtra, Chikhaldara is about 600kms from Pune. Pretty lakes, waterfalls, and the hilly terrains of Amravati. It is a bird watcher’s paradise with several old forts to keep the history nerds engaged. As it is still relatively unknown on the tourist map, this plantation should ...",
+      "cached_page_link": "https://cc.bingj.com/cache.aspx?q=Coffee+(site%3a.com+OR+site%3a.org+OR+site%3a.cn)&d=3359683651762&mkt=de-DE&setlang=de-DE&w=LJNNLMxOaX4A_bQ9TTtnkTTwen5rKwv9"
+    },
+    {
+      "position": 2,
+      "title": "Lavazza Coffee: Capsules, Pods, Ground Coffee, and Beans",
+      "link": "https://www.lavazzausa.com/en/coffee",
+      "displayed_link": "www.lavazzausa.com › en › coffee",
+      "snippet": "Choose the coffee that best suits your needs: roasted and ground, whole beans, practical and easy-to-use capsules, or any of the other solutions we offer in our online shop. Lavazza dedicated over 120 years to create the best blends of coffee beans from all over the world: we love coffee and we honor coffee through innovation and sustainability. Discover the rich and flavorful universe of Lavazza.",
+      "cached_page_link": "https://cc.bingj.com/cache.aspx?q=Coffee+(site%3a.com+OR+site%3a.org+OR+site%3a.cn)&d=1710060688885&mkt=de-DE&setlang=de-DE&w=AehtVyq1gQFjX-PC0paoELzrqEb3LFiT"
+    },
+    {
+      "position": 3,
+      "title": "Indianapolis coffee: Tinker Coffee hosting coffee competitions",
+      "link": "https://www.indystar.com/story/entertainment/dining/restaurants/2022/10/06/indianapolis-coffee-tinker-coffee-hosting-coffee-competitions/69541924007/",
+      "displayed_link": "www.indystar.com › story › entertainment",
+      "snippet": "Vor 22 Stunden · The U.S. Coffee Championships preliminaries run from 9 a.m. to 5 p.m., when finalists are announced. Competing roasters will be sampling their coffee for the audience from 9 a.m. to 11:30 a.m."
+    },
+    {
+      "position": 4,
+      "title": "The 7 Best Coffee Makers of 2022 | Reviews by Wirecutter",
+      "link": "https://www.nytimes.com/wirecutter/reviews/best-coffee-maker/",
+      "displayed_link": "www.nytimes.com › wirecutter › reviews",
+      "snippet": "19.11.2021 · For people who want pour-over-quality coffee as well as the convenience of a one-button machine, we recommend the OXO Brew 9 Cup Coffee Maker. Of all the methods we’ve tested, we think the OXO ...",
+      "cached_page_link": "https://cc.bingj.com/cache.aspx?q=Coffee+(site%3a.com+OR+site%3a.org+OR+site%3a.cn)&d=4605184349529402&mkt=de-DE&setlang=de-DE&w=1TcinpqksN8uMm827rMXE0bHlqjrngb3"
+    },
+    {
+      "position": 5,
+      "title": "New and Noteworthy Coffee Packaging | plasticstoday.com",
+      "link": "https://www.plasticstoday.com/packaging/new-and-noteworthy-coffee-packaging",
+      "displayed_link": "www.plasticstoday.com › packaging › new-and-noteworthy-coffee",
+      "snippet": "29.09.2022 · According to an August 2022 report from Transparency Market Research, the global coffee packaging market was valued at $749.6 million in 2021, and is projected to grow at 4.7% yearly from 2022 to 2027 to reach a market value of $991.6 million. We center our tribute on flexible-packaging-packed coffee found on Twitter, grab a cuppa joe and enjoy ...",
+      "cached_page_link": "https://cc.bingj.com/cache.aspx?q=Coffee+(site%3a.com+OR+site%3a.org+OR+site%3a.cn)&d=2671536704724&mkt=de-DE&setlang=de-DE&w=UpCOne_jyHV45P6ywCYrWSIRjSTro68B"
+    },
+    {
+      "position": 6,
+      "title": "How Fresh Is Starbucks Coffee - starbmag",
+      "link": "https://starbmag.com/how-fresh-is-starbucks-coffee/",
+      "displayed_link": "starbmag.com › how-fresh-is-starbucks-coffee",
+      "snippet": "Immediately you open the seal of your coffee; its shelf-life starts to decrease as oxygen enters the bottle, making it spoil quickly. If you have tasted fresh coffee from Starbucks, you are likely to notice a change in taste in spoilt coffee. The coffee may taste sour or bitter, have a weird smell, or tastes moldy.",
+      "cached_page_link": "https://cc.bingj.com/cache.aspx?q=Coffee+(site%3a.com+OR+site%3a.org+OR+site%3a.cn)&d=3633839118420&mkt=de-DE&setlang=de-DE&w=mm3TftzCWPdjq6Eh_HMMghXLpuXF1DNn"
+    },
+    {
+      "position": 7,
+      "title": "Want peace? Drink coffee | MindaNews",
+      "link": "https://www.mindanews.com/feature/2022/10/want-peace-drink-coffee/",
+      "displayed_link": "www.mindanews.com › feature › 2022",
+      "snippet": "04.10.2022 · Coffee for Peace sells its coffee beans from P1,000 to 1,400 per kilo, depending on the quality. Coffee can be harvested three years after planting, and can be productive for 20 to 30 years. In Mindanao, Pantoja said the most common varieties grown are arabica and robusta. Arabica coffee is known to thrive in the highlands, and robusta in the ...",
+      "cached_page_link": "https://cc.bingj.com/cache.aspx?q=Coffee+(site%3a.com+OR+site%3a.org+OR+site%3a.cn)&d=2397194966169&mkt=de-DE&setlang=de-DE&w=QyVOCqrYco0vhimiYLvkS8OmDHfpgbTs"
+    }
+  ],
+  "related_searches": {
+    "bottom": [
+      {
+        "query": "coffee shop online",
+        "link": "https://de.search.yahoo.com/search;_ylt=AwrFGqoGNkBjK4AR9DwzCQx.;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3JlbC1ib3Q-?p=coffee+shop+online&vs=.com%2C.org%2C.cn&vm=p&ei=UTF-8&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Auni&fr=fp-tts"
+      },
+      {
+        "query": "coffee solidworks support",
+        "link": "https://de.search.yahoo.com/search;_ylt=AwrFGqoGNkBjK4AR.DwzCQx.;_ylu=Y29sbwNiZjEEcG9zAzUEdnRpZAMEc2VjA3JlbC1ib3Q-?p=coffee+solidworks+support&vs=.com%2C.org%2C.cn&vm=p&ei=UTF-8&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Auni&fr=fp-tts"
+      },
+      {
+        "query": "coffee software",
+        "link": "https://de.search.yahoo.com/search;_ylt=AwrFGqoGNkBjK4AR9TwzCQx.;_ylu=Y29sbwNiZjEEcG9zAzIEdnRpZAMEc2VjA3JlbC1ib3Q-?p=coffee+software&vs=.com%2C.org%2C.cn&vm=p&ei=UTF-8&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Auni&fr=fp-tts"
+      },
+      {
+        "query": "coffee solidcam",
+        "link": "https://de.search.yahoo.com/search;_ylt=AwrFGqoGNkBjK4AR.TwzCQx.;_ylu=Y29sbwNiZjEEcG9zAzYEdnRpZAMEc2VjA3JlbC1ib3Q-?p=coffee+solidcam&vs=.com%2C.org%2C.cn&vm=p&ei=UTF-8&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Auni&fr=fp-tts"
+      },
+      {
+        "query": "coffee solid",
+        "link": "https://de.search.yahoo.com/search;_ylt=AwrFGqoGNkBjK4AR9jwzCQx.;_ylu=Y29sbwNiZjEEcG9zAzMEdnRpZAMEc2VjA3JlbC1ib3Q-?p=coffee+solid&vs=.com%2C.org%2C.cn&vm=p&ei=UTF-8&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Auni&fr=fp-tts"
+      },
+      {
+        "query": "coffee perfect",
+        "link": "https://de.search.yahoo.com/search;_ylt=AwrFGqoGNkBjK4AR.jwzCQx.;_ylu=Y29sbwNiZjEEcG9zAzcEdnRpZAMEc2VjA3JlbC1ib3Q-?p=coffee+perfect&vs=.com%2C.org%2C.cn&vm=p&ei=UTF-8&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Auni&fr=fp-tts"
+      },
+      {
+        "query": "coffee solidworks",
+        "link": "https://de.search.yahoo.com/search;_ylt=AwrFGqoGNkBjK4AR9zwzCQx.;_ylu=Y29sbwNiZjEEcG9zAzQEdnRpZAMEc2VjA3JlbC1ib3Q-?p=coffee+solidworks&vs=.com%2C.org%2C.cn&vm=p&ei=UTF-8&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Auni&fr=fp-tts"
+      },
+      {
+        "query": "coffee solidworks download",
+        "link": "https://de.search.yahoo.com/search;_ylt=AwrFGqoGNkBjK4AR.zwzCQx.;_ylu=Y29sbwNiZjEEcG9zAzgEdnRpZAMEc2VjA3JlbC1ib3Q-?p=coffee+solidworks+download&vs=.com%2C.org%2C.cn&vm=p&ei=UTF-8&fr2=p%3As%2Cv%3Aw%2Cm%3Ars-bottom%2Cct%3Auni&fr=fp-tts"
+      }
+    ]
+  },
+  "pagination": {
+    "current": 15,
+    "previous": "https://de.search.yahoo.com/search;_ylt=AwrFGqoGNkBjK4AR_DwzCQx.;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3BhZ2luYXRpb24-?p=Coffee&vs=.com%2C.org%2C.cn&vm=p&fr=fp-tts&b=92&pz=7&xargs=0",
+    "next": "https://de.search.yahoo.com/search;_ylt=AwrFGqoGNkBjK4ARAT0zCQx.;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3BhZ2luYXRpb24-?p=Coffee&vs=.com%2C.org%2C.cn&vm=p&fr=fp-tts&b=106&pz=7&xargs=0",
+    "other_pages": {
+      "13": "https://de.search.yahoo.com/search;_ylt=AwrFGqoGNkBjK4AR_TwzCQx.;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3BhZ2luYXRpb24-?p=Coffee&vs=.com%2C.org%2C.cn&vm=p&fr=fp-tts&b=85&pz=7&xargs=0",
+      "14": "https://de.search.yahoo.com/search;_ylt=AwrFGqoGNkBjK4AR_jwzCQx.;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3BhZ2luYXRpb24-?p=Coffee&vs=.com%2C.org%2C.cn&vm=p&fr=fp-tts&b=92&pz=7&xargs=0",
+      "16": "https://de.search.yahoo.com/search;_ylt=AwrFGqoGNkBjK4AR_zwzCQx.;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3BhZ2luYXRpb24-?p=Coffee&vs=.com%2C.org%2C.cn&vm=p&fr=fp-tts&b=106&pz=7&xargs=0",
+      "17": "https://de.search.yahoo.com/search;_ylt=AwrFGqoGNkBjK4ARAD0zCQx.;_ylu=Y29sbwNiZjEEcG9zAzEEdnRpZAMEc2VjA3BhZ2luYXRpb24-?p=Coffee&vs=.com%2C.org%2C.cn&vm=p&fr=fp-tts&b=113&pz=7&xargs=0"
+    }
+  },
+  "serpapi_pagination": {
+    "current": 15,
+    "previous_link": "https://serpapi.com/search.json?b=92&device=desktop&engine=yahoo&p=Coffee&vm=p&vs=.com%2C.org%2C.cn",
+    "previous": "https://serpapi.com/search.json?b=92&device=desktop&engine=yahoo&p=Coffee&vm=p&vs=.com%2C.org%2C.cn",
+    "next_link": "https://serpapi.com/search.json?b=106&device=desktop&engine=yahoo&p=Coffee&vm=p&vs=.com%2C.org%2C.cn",
+    "next": "https://serpapi.com/search.json?b=106&device=desktop&engine=yahoo&p=Coffee&vm=p&vs=.com%2C.org%2C.cn",
+    "other_pages": {
+      "13": "https://serpapi.com/search.json?b=85&device=desktop&engine=yahoo&p=Coffee&vm=p&vs=.com%2C.org%2C.cn",
+      "14": "https://serpapi.com/search.json?b=92&device=desktop&engine=yahoo&p=Coffee&vm=p&vs=.com%2C.org%2C.cn",
+      "16": "https://serpapi.com/search.json?b=106&device=desktop&engine=yahoo&p=Coffee&vm=p&vs=.com%2C.org%2C.cn",
+      "17": "https://serpapi.com/search.json?b=113&device=desktop&engine=yahoo&p=Coffee&vm=p&vs=.com%2C.org%2C.cn"
+    }
+  }
+}

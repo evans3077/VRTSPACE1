@@ -1,0 +1,4 @@
+interface:
+  display_name: "VRT Space UI System"
+  short_description: "Design audit dashboards and product UI for VRT Space"
+  default_prompt: "Use $vrt-space-ui-system to design or implement VRT SPACE audit UI, dashboards, or product components."

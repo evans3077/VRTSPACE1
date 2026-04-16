@@ -1,0 +1,461 @@
+GET
+
+
+https://serpapi.com/search.json?engine=google_ai_overview&page_token=KIVu-nictZPdjrI4GMeTPdkrWU8cFXV0dBKyKbUgiigy6OgJQawFQapUBpmzvZe9qr2aLYzO6I5vsm-yW0Ip7dPn4__L88efoR8Ff_36i3c87tlzrZamaZVQSkJcdemu5rAscmsbGrLY9X5PkhCLaRkC1VCh6hivs_e1EiaaPA2xIr9r8ixxXqfhEkova0UWlq-jEgnFhJW8UMRRKXsTmyWXiUIJ-2JTJ2jZxnTINvK-8zgJBtEiM4JSEVG0Vw7DW57Qactqdo1PwW_NHv-psiqObMusqpNU7ZM-OFlWFbNWdVxzdtwE_NsBv5YSJMblF5K71vwcgkAqlvk0569vIPXsx0D5pALt0Tbd6yAqUD4jJfxVZYAu0dN8gc6H9MfREVKlyu2WWszcgQx4zCKlD0dGnmJ_wEu6mI5BBfQJHkknc_69LGK8gP5e65BzXTeDDEziu0wH0KitCRdXqK1i_qnXYpZLDV-6ApW7TlzvmoJE585mMs2icNfe4-28-dYBDwVGl31yZNcc9acEefre8kxQ1apS_YLQGFMuZZ7OAPSl_T0cXAD0hZDXTPjDUMp3ehlfAj3fAL2Uu3G55eJyL_isTbLgl7NcPpRLJ5-lLdwWMCDKD-E4FyvHE3CEfTrN0JkAzC8qCliQQ35jiMk5pQ9FFx-6WoU5gmBiqJIKJBW6eRflSYaFMTpXQhDwB8EtQgDMuyJcj-EP9iVwh5nSSA9O3PXh-MWakaC52oRuJREk3dxcmNHd6qeaz_1_uHq8NZMzV3if621rEmkOL62Za4KMnKuhX7XmmesIKAieuSZXXOFPcEXWKG_N71zTgitvTatgm3M1tv_k-l-1ZoEXf3xu-zTZkm_92obr02LIdCKkM_9oyVJMuo2t5Wmx8WBvdsfnfUzJg-2vn6XG4JitSwfRo2l5TTErO_GxnNI4KPtR2YnWMfXXpV0YU1FwWvG7NyOVXlyJvK129AUN6TFI3JPk4MZ4OfLdKNzoShtnpl3RfNxij748svedxMtmmI3e-gc6kgJFVye-qg48j7Rwo71OcbA7dA9-NBe2o2napHMzmuMFQWqr9zSVtJXmKbbej73jI7XHPaymnfBdEIqsmPg6RI_L1URaVmiJuY6N2ZtYb3U3zSen3mjV611h0y3tyDHbi_W_AU9HHA0
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_ai_overview",
+  page_token: "KIVu-nictZPdjrI4GMeTPdkrWU8cFXV0dBKyKbUgiigy6OgJQawFQapUBpmzvZe9qr2aLYzO6I5vsm-yW0Ip7dPn4__L88efoR8Ff_36i3c87tlzrZamaZVQSkJcdemu5rAscmsbGrLY9X5PkhCLaRkC1VCh6hivs_e1EiaaPA2xIr9r8ixxXqfhEkova0UWlq-jEgnFhJW8UMRRKXsTmyWXiUIJ-2JTJ2jZxnTINvK-8zgJBtEiM4JSEVG0Vw7DW57Qactqdo1PwW_NHv-psiqObMusqpNU7ZM-OFlWFbNWdVxzdtwE_NsBv5YSJMblF5K71vwcgkAqlvk0569vIPXsx0D5pALt0Tbd6yAqUD4jJfxVZYAu0dN8gc6H9MfREVKlyu2WWszcgQx4zCKlD0dGnmJ_wEu6mI5BBfQJHkknc_69LGK8gP5e65BzXTeDDEziu0wH0KitCRdXqK1i_qnXYpZLDV-6ApW7TlzvmoJE585mMs2icNfe4-28-dYBDwVGl31yZNcc9acEefre8kxQ1apS_YLQGFMuZZ7OAPSl_T0cXAD0hZDXTPjDUMp3ehlfAj3fAL2Uu3G55eJyL_isTbLgl7NcPpRLJ5-lLdwWMCDKD-E4FyvHE3CEfTrN0JkAzC8qCliQQ35jiMk5pQ9FFx-6WoU5gmBiqJIKJBW6eRflSYaFMTpXQhDwB8EtQgDMuyJcj-EP9iVwh5nSSA9O3PXh-MWakaC52oRuJREk3dxcmNHd6qeaz_1_uHq8NZMzV3if621rEmkOL62Za4KMnKuhX7XmmesIKAieuSZXXOFPcEXWKG_N71zTgitvTatgm3M1tv_k-l-1ZoEXf3xu-zTZkm_92obr02LIdCKkM_9oyVJMuo2t5Wmx8WBvdsfnfUzJg-2vn6XG4JitSwfRo2l5TTErO_GxnNI4KPtR2YnWMfXXpV0YU1FwWvG7NyOVXlyJvK129AUN6TFI3JPk4MZ4OfLdKNzoShtnpl3RfNxij748svedxMtmmI3e-gc6kgJFVye-qg48j7Rwo71OcbA7dA9-NBe2o2napHMzmuMFQWqr9zSVtJXmKbbej73jI7XHPaymnfBdEIqsmPg6RI_L1URaVmiJuY6N2ZtYb3U3zSen3mjV611h0y3tyDHbi_W_AU9HHA0",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+ai_overview = results[:ai_overview]
+
+JSON Example
+
+{
+  "search_metadata": {
+    "id": "6704d8e815afff064f16921d",
+    "status": "Success",
+    "json_endpoint": "https://serpapi.com/searches/b71a9505c46d58cd/6704d8e815afff064f16921d.json",
+    "created_at": "2024-10-08 07:02:00 UTC",
+    "processed_at": "2024-10-08 07:02:00 UTC",
+    "google_ai_overview_url": "https://www.google.com/async/folsrch?uule=w+CAIQICIaQXVzdGluLFRleGFzLFVuaXRlZCBTdGF0ZXM&gl=us&hl=en&yv=3&cs=0&ei=3NgEZ6eoKsfFp84PkJnYyQk&async=_basejs:/xjs/_/js/k%3Dxjs.s.en_US.IPwIHgHAxUU.es5.O/am%3DAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAAAABCgQCAAAAAAACgAAAAAAAAAAAAAAAAAAAAAQCACAkBAAAAQAAAAWAAAiQEIAACAAAAQEAAAQIAL4_ScAAAAAAAAAAACIAGACAAAAAAAuAAAIFAEAAAACAAAwAAAAEAAAAAAAoAAAAACgAAAAAAAAAAAAAAAAAAAEEIB-AAAAAAAAAAAAAAIAAAAAwAAFAAL4AQAAAEAAAAAQBAAAHJABCAAAAAAAAOA-AHgeMBxSWAAAAAAAAAAAAAAAAAQgQTAHpL8gAAQAAAAAAAAAAAAAAAAAgJSgicsNACQ/dg%3D0/br%3D1/rs%3DACT90oF9ar19S0BoWafPRynlm6pejW3v8A,_basecss:/xjs/_/ss/k%3Dxjs.s.N7uEhNpUhSA.L.B1.O/am%3DQOoQIAQAAAJAHBpAAAAAAAAAAAAAAAAAAAAAIAEAACAAAAAAABAAgAgAsEwCAADyAgAANgAgAADwAQAcEAAYAAAAAAAAkAAAAAAAAgBUCAAAAAAAAIAAAEAEBAAAFAIAAAAAAAAABgAAAACEAAEACOAAQgCgAAkIFAHoRyEAAAAwAACAEBAGGAYgqABgAKegAAAABAAAAQAAAYAQAAAAUEAAAAECAPQIBIABICcCAIQAgAAlABAAAEAAAAABAgEAiJkAHJABCAAAAAAAAAASAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAKAAAAAAAAAAAAAAAAAAAAAAABA/br%3D1/rs%3DACT90oG2wqar9iCOTUVgk3bflc-u0BNSfA,_basecomb:/xjs/_/js/k%3Dxjs.s.en_US.IPwIHgHAxUU.es5.O/ck%3Dxjs.s.N7uEhNpUhSA.L.B1.O/am%3DQOoQIAQAAAJAHBpAAAAAAAAAAAAAAAAAAAAAIAEAACAAAAAAABAAhCgQuEwCAADyCgAANgAgAADwAQAcEAAYAAAQCACAkBAAAAQAAgBWCAAiQEIAAKAAAEQEBAAQNAL4_ScAAAAABgAAAACMAGECCOAAQgCuAAkIFAHoRyECAAAwAACAEBAGGAYgqABgAKegAAAABAAAAQAAAYAQAAAEUMB-AAECAPQIBIABICcCAIQAwAAlABL4AUAAAEABAgEQjJkAHJABCAAAAAAAAOA-AHgeMBxSWAAAAAAAAAAAAAAAAAQgQTAHpL8gAAQAAAAAAAAAAAAAAAAAgJSgicsNACQ/d%3D1/ed%3D1/dg%3D0/br%3D1/ujg%3D1/rs%3DACT90oF6CdxYKsNg0wVitUFBrg92jUhLrQ,_fmt:prog,_id:B2Jtyd&q=how+does+art+work+in+android&mlro=0a5rzhVg-Dr-nhjLti0LENrAucxBae2OZMicnlfNG6eyS_-Lie5s4iFM_p8uhyVesMvHqoMBkGNIPiIIJhhg5e26dwekmq9qinW0jMRw3oWSnWeYgEI5D7RBLbLhG_NHrht4o_ODeIw8lz00&mlros=XKE4ZbPBZ-o&sca_esv=159f37a1251190f9&mgtyp=1",
+    "raw_html_file": "https://serpapi.com/searches/b71a9505c46d58cd/6704d8e815afff064f16921d.html",
+    "total_time_taken": 1.37
+  },
+  "search_parameters": {
+    "engine": "google_ai_overview",
+    "page_token": "KIVu-nictZPdjrI4GMeTPdkrWU8cFXV0dBKyKbUgiigy6OgJQawFQapUBpmzvZe9qr2aLYzO6I5vsm-yW0Ip7dPn4__L88efoR8Ff_36i3c87tlzrZamaZVQSkJcdemu5rAscmsbGrLY9X5PkhCLaRkC1VCh6hivs_e1EiaaPA2xIr9r8ixxXqfhEkova0UWlq-jEgnFhJW8UMRRKXsTmyWXiUIJ-2JTJ2jZxnTINvK-8zgJBtEiM4JSEVG0Vw7DW57Qactqdo1PwW_NHv-psiqObMusqpNU7ZM-OFlWFbNWdVxzdtwE_NsBv5YSJMblF5K71vwcgkAqlvk0569vIPXsx0D5pALt0Tbd6yAqUD4jJfxVZYAu0dN8gc6H9MfREVKlyu2WWszcgQx4zCKlD0dGnmJ_wEu6mI5BBfQJHkknc_69LGK8gP5e65BzXTeDDEziu0wH0KitCRdXqK1i_qnXYpZLDV-6ApW7TlzvmoJE585mMs2icNfe4-28-dYBDwVGl31yZNcc9acEefre8kxQ1apS_YLQGFMuZZ7OAPSl_T0cXAD0hZDXTPjDUMp3ehlfAj3fAL2Uu3G55eJyL_isTbLgl7NcPpRLJ5-lLdwWMCDKD-E4FyvHE3CEfTrN0JkAzC8qCliQQ35jiMk5pQ9FFx-6WoU5gmBiqJIKJBW6eRflSYaFMTpXQhDwB8EtQgDMuyJcj-EP9iVwh5nSSA9O3PXh-MWakaC52oRuJREk3dxcmNHd6qeaz_1_uHq8NZMzV3if621rEmkOL62Za4KMnKuhX7XmmesIKAieuSZXXOFPcEXWKG_N71zTgitvTatgm3M1tv_k-l-1ZoEXf3xu-zTZkm_92obr02LIdCKkM_9oyVJMuo2t5Wmx8WBvdsfnfUzJg-2vn6XG4JitSwfRo2l5TTErO_GxnNI4KPtR2YnWMfXXpV0YU1FwWvG7NyOVXlyJvK129AUN6TFI3JPk4MZ4OfLdKNzoShtnpl3RfNxij748svedxMtmmI3e-gc6kgJFVye-qg48j7Rwo71OcbA7dA9-NBe2o2napHMzmuMFQWqr9zSVtJXmKbbej73jI7XHPaymnfBdEIqsmPg6RI_L1URaVmiJuY6N2ZtYb3U3zSen3mjV611h0y3tyDHbi_W_AU9HHA0"
+  },
+  "ai_overview": {
+    "text_blocks": [
+      {
+        "type": "paragraph",
+        "snippet": "Android Runtime (ART) is the virtual machine that runs apps and some system services on Android devices. ART works by:",
+        "reference_indexes": [
+          0,
+          2,
+          3
+        ]
+      },
+      {
+        "type": "list",
+        "list": [
+          {
+            "title": "Compiling code ahead of time",
+            "snippet": "ART uses Ahead of Time (AOT) compilation to compile code before the app is executed. This is different from Dalvik, the previous virtual machine, which used Just In Time (JIT) compilation. AOT compilation makes the machine code ready before the app runs, which significantly improves runtime performance.",
+            "reference_indexes": [
+              3,
+              4
+            ]
+          },
+          {
+            "title": "Generating a profile",
+            "snippet": "When an app is first run, ART interprets methods that aren't AOT-compiled. It then generates a local profile based on how the app is executed. If the app was installed with a dex metadata file, ART combines the local profile with the cloud profile.",
+            "reference_indexes": [
+              1
+            ]
+          },
+          {
+            "title": "Recompiling the app",
+            "snippet": "When the device is idle and charging, a compilation daemon re-compiles the app based on the profile generated during the first few runs.",
+            "reference_indexes": [
+              1
+            ]
+          },
+          ...
+        ]
+      },
+      {
+        "type": "paragraph",
+        "snippet": "ART has been the default virtual machine for Android since Android 5.0 (Lollipop). However, some older devices may still use Dalvik if they haven't been updated to a newer version of Android.",
+        "reference_indexes": [
+          2
+        ]
+      }
+    ],
+    "references": [
+      {
+        "title": "Android runtime and Dalvik | Android Open Source Project",
+        "link": "https://source.android.com/docs/core/runtime#:~:text=Android%20runtime%20(ART)%20is%20the,major%20features%20implemented%20by%20ART.",
+        "snippet": "Aug 26, 2024 — Android runtime (ART) is the managed runtime used by apps and some system services on Android. ART and its predecessor...",
+        "source": "Android Open Source Project",
+        "index": 0
+      },
+      {
+        "title": "Configure ART - Android Open Source Project",
+        "link": "https://source.android.com/docs/core/runtime/configure",
+        "snippet": "How ART works * An application is initially installed with a dex metadata ( . dm ) file distributed by Play Store, which contains...",
+        "source": "Android Open Source Project",
+        "index": 1
+      },
+      {
+        "title": "Android Runtime 101: ART Component of Android Architecture",
+        "link": "https://medium.com/@acceldia/android-runtime-101-art-component-of-android-architecture-7b89d701c71e#:~:text=Summary,a%20newer%20version%20of%20Android.",
+        "snippet": "Mar 3, 2023 — Summary. In the mobile device domain, different operating systems (OS) exist. Android OS has become highly popular and ...",
+        "source": "Medium",
+        "index": 2
+      },
+      ...
+    ]
+  }
+}
+Example with nested
+text_blocks
+GET
+
+
+https://serpapi.com/search.json?engine=google_ai_overview&page_token=X70N4nicxZTdbuI4FIBv90U2N20hhNAylaKVHZxgfptAKeUGpYkxkN8mgQB38y77Cvsy8zRjJ0BThkq72pXWUhzn_Pn4-Mv5_qe3Ctwfv_21TNMoeaxWsyyr0DCkHqnYoV-1kn1gVxehl8T28g_qKZtEWHoKCYTNxiNKdqMCbGAVW8Z0cnB0b9PTTI_o2qGnTTbW1PRmKhw7uibOpn1hv1Xqgp0ookBWivzWEa3uA1XjURClxpP0RGTdEPINlfmblZA1y2e3TqrzKpvc3-st9lFJKiSoiEtzaAxir4doRRJrzcqwavnMAPyroV4XYTZTgMoy45o7BlzBreFJRNlzdsQQcmdmALkCloJQjI4BABghoMpP87vXcmx6WmilNQAbno5KdYARQuBiGJ8WPDg8RrjM-rPLsFhD8NXofGTATwvGGchOAplPSz7ZeGyWnBqglZFMRRq8Ujwm6tK1byxc_Ys9IVBdNLYykdWz6lB212L1LWavWjVO-M2r429iqL8-47r5zYsSSRqDw8MhbWRWtNX7sAZuc6bs5AxVUoaqQ1N5OJn16_us0qvA2pkoyAvROaLxWpzZANFF4X49UH5K9aKSRx_MCqitaAv0c62IeciwULbugWHJKi5fZ5koCikoOGOj0zOKqMucKLY2MSdMz4E1VKbBHRaJrvKkxNzEPSfVB3dAR5Dzfaz7IL9aThRAiB4N8egjkYI-g2_Kkk8hM4Saob60l7tTjsvcyTg6d1kiQ8zJp_k3VQlzbhZRzKK8tHDNj4yhyrexT5yiV67kpVIviKIAln6FLy_il_-iVNYrCGnOs4hNGXWw6AfkHrvE8kSVHN7fUXZEKPTf_kFjsv8HyPK2RVXgrdwzZN0vILvWthhk6AQZ5pDlbWt5altnyPAHZCNEV3nbKkPGUcgh0yBYfUBWblsnGs-QGX8LsgiUIDNKkMEvISva1gdk48zOTpDJPO76CmT_advKWSPF63MP26zpJYjt1pBMLamWeY00nNQj7aUF12OxG45F43a-8NPHKA7p7XzlPEKpk-4d4V2xfBKvbCu4oTEhwY1txY7ge3GoiNb9tG6ms4PU2_bcfjDd7J1ua2LvE789QLFFd7W79nSX7LqD5lsHD8zec3NoDchsNrPku6Bu1IK91HxoNGUNuE7PHgST7e6wG6zQZmE2ktCeTJyN2-gtI2-N1pErA8nt3qXd0cvLrPGK-s0R8ca1-ujBa7eTvZEnlShuQ3JU3W91BkxiOQlRaoIf2wojQHZBX0hsa06SrSLbsmQvbFJvOgtRlmXBp-k-UuTaTw5GiJg
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_ai_overview",
+  page_token: "X70N4nicxZTdbuI4FIBv90U2N20hhNAylaKVHZxgfptAKeUGpYkxkN8mgQB38y77Cvsy8zRjJ0BThkq72pXWUhzn_Pn4-Mv5_qe3Ctwfv_21TNMoeaxWsyyr0DCkHqnYoV-1kn1gVxehl8T28g_qKZtEWHoKCYTNxiNKdqMCbGAVW8Z0cnB0b9PTTI_o2qGnTTbW1PRmKhw7uibOpn1hv1Xqgp0ookBWivzWEa3uA1XjURClxpP0RGTdEPINlfmblZA1y2e3TqrzKpvc3-st9lFJKiSoiEtzaAxir4doRRJrzcqwavnMAPyroV4XYTZTgMoy45o7BlzBreFJRNlzdsQQcmdmALkCloJQjI4BABghoMpP87vXcmx6WmilNQAbno5KdYARQuBiGJ8WPDg8RrjM-rPLsFhD8NXofGTATwvGGchOAplPSz7ZeGyWnBqglZFMRRq8Ujwm6tK1byxc_Ys9IVBdNLYykdWz6lB212L1LWavWjVO-M2r429iqL8-47r5zYsSSRqDw8MhbWRWtNX7sAZuc6bs5AxVUoaqQ1N5OJn16_us0qvA2pkoyAvROaLxWpzZANFF4X49UH5K9aKSRx_MCqitaAv0c62IeciwULbugWHJKi5fZ5koCikoOGOj0zOKqMucKLY2MSdMz4E1VKbBHRaJrvKkxNzEPSfVB3dAR5Dzfaz7IL9aThRAiB4N8egjkYI-g2_Kkk8hM4Saob60l7tTjsvcyTg6d1kiQ8zJp_k3VQlzbhZRzKK8tHDNj4yhyrexT5yiV67kpVIviKIAln6FLy_il_-iVNYrCGnOs4hNGXWw6AfkHrvE8kSVHN7fUXZEKPTf_kFjsv8HyPK2RVXgrdwzZN0vILvWthhk6AQZ5pDlbWt5altnyPAHZCNEV3nbKkPGUcgh0yBYfUBWblsnGs-QGX8LsgiUIDNKkMEvISva1gdk48zOTpDJPO76CmT_advKWSPF63MP26zpJYjt1pBMLamWeY00nNQj7aUF12OxG45F43a-8NPHKA7p7XzlPEKpk-4d4V2xfBKvbCu4oTEhwY1txY7ge3GoiNb9tG6ms4PU2_bcfjDd7J1ua2LvE789QLFFd7W79nSX7LqD5lsHD8zec3NoDchsNrPku6Bu1IK91HxoNGUNuE7PHgST7e6wG6zQZmE2ktCeTJyN2-gtI2-N1pErA8nt3qXd0cvLrPGK-s0R8ca1-ujBa7eTvZEnlShuQ3JU3W91BkxiOQlRaoIf2wojQHZBX0hsa06SrSLbsmQvbFJvOgtRlmXBp-k-UuTaTw5GiJg",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+ai_overview = results[:ai_overview]
+
+JSON Example
+
+{
+  ...
+  "ai_overview": {
+    "text_blocks": [
+      {
+        "type": "heading",
+        "snippet": "Understanding tax relief: a comprehensive guide"
+      },
+      {
+        "type": "paragraph",
+        "snippet": "Tax relief refers to various government programs and policies designed to help individuals and businesses reduce their tax burden or resolve tax-related debt. It can include general tax cuts, targeted programs benefiting specific groups, or initiatives like the Child Tax Credit (CTC) or the Earned Income Tax Credit (EITC).",
+        "reference_indexes": [
+          5
+        ]
+      },
+      {
+        "type": "heading",
+        "snippet": "Types of tax relief"
+      },
+      {
+        "type": "list",
+        "list": [
+          {
+            "text_blocks": [
+              {
+                "type": "heading",
+                "snippet": "1. Tax provisions"
+              },
+              {
+                "type": "paragraph",
+                "snippet": "These are measures built into the tax system that help lower the amount of tax owed, according to Experian:",
+                "reference_indexes": [
+                  18
+                ]
+              },
+              {
+                "type": "list",
+                "list": [
+                  {
+                    "snippet": "Tax Deductions: Reduce taxable income, thereby lowering the overall tax bill. The IRS allows taxpayers to claim either a standard deduction or itemized deductions, like mortgage interest or medical expenses."
+                  },
+                  {
+                    "snippet": "Tax Credits: Directly reduce the amount of tax owed, dollar for dollar. Some are refundable, potentially leading to a refund even if the tax bill is reduced to zero. Common credits include the EITC and the CTC."
+                  },
+                  {
+                    "snippet": "Exemptions and Exclusions: Certain types of income are deemed non-taxable and are not counted towards your taxable income. Examples include child support payments and employer-sponsored health insurance premiums."
+                  }
+                ],
+                "reference_indexes": [
+                  18,
+                  6,
+                  16
+                ]
+              }
+            ]
+          },
+          {
+            "text_blocks": [
+              {
+                "type": "heading",
+                "snippet": "2. Debt relief programs"
+              },
+              {
+                "type": "paragraph",
+                "snippet": "If you're facing tax debt, the IRS offers programs to help manage and resolve it, including:",
+                "reference_indexes": [
+                  0
+                ]
+              },
+              {
+                "type": "list",
+                "list": [
+                  {
+                    "snippet": "Offer in Compromise (OIC): Allows eligible taxpayers to settle their tax debt for a lower amount than what's owed, notes Raisin. Eligibility depends on factors like ability to pay and the IRS' ability to collect the full amount."
+                  },
+                  {
+                    "snippet": "Installment Agreement: If you can't pay your full tax bill at once, you can arrange monthly payments with the IRS. These can be short-term or long-term options."
+                  },
+                  {
+                    "snippet": "Currently Not Collectible (CNC) Status: For those experiencing severe financial hardship, the IRS may temporarily pause collection efforts. This requires demonstrating financial difficulty through detailed financial information."
+                  },
+                  {
+                    "snippet": "Penalty Abatement: The IRS may reduce or remove penalties under certain circumstances, such as illness or natural disasters. You might qualify for a first-time penalty abatement if you have a history of good tax compliance."
+                  }
+                ],
+                "reference_indexes": [
+                  3,
+                  1,
+                  8
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "type": "heading",
+        "snippet": "Qualifying for tax relief"
+      },
+      {
+        "type": "paragraph",
+        "snippet": "Eligibility for tax relief programs varies depending on the specific program. Generally, the IRS will consider factors like:",
+        "reference_indexes": [
+          3
+        ]
+      },
+      {
+        "type": "list",
+        "list": [
+          {
+            "snippet": "Income level: Many programs have income thresholds."
+          },
+          {
+            "snippet": "Financial hardship: Demonstrating difficulty in paying your tax obligations is often a key factor for debt relief programs."
+          },
+          {
+            "snippet": "Compliance with tax obligations: Filing all required tax returns and making any estimated tax payments is often necessary to be considered for debt relief."
+          }
+        ],
+        "reference_indexes": [
+          12,
+          8,
+          3
+        ]
+      },
+      ...
+    ],
+    "references": [
+      {
+        "title": "How Does Tax Relief Work? - Experian",
+        "link": "https://www.experian.com/blogs/ask-experian/how-does-tax-relief-work/#:~:text=Quick%20Answer,paying%20your%20taxes%20more%20manageable.",
+        "snippet": "Apr 24, 2025 — Quick Answer. Tax relief refers to any IRS provision or program that lowers your tax bill or makes it easier to pay. A tax relief service may help you negotiate...",
+        "source": "Experian",
+        "index": 0
+      },
+      {
+        "title": "How Does Tax Relief Work? - Experian",
+        "link": "https://www.experian.com/blogs/ask-experian/how-does-tax-relief-work/#:~:text=Tax%20relief%20refers%20to%20any%20IRS%20policy%20or%20program%20that,paying%20your%20taxes%20more%20manageable.",
+        "snippet": "Apr 24, 2025 — Quick Answer. Tax relief refers to any IRS provision or program that lowers your tax bill or makes it easier to pay. A tax relief service may help you negotiate...",
+        "source": "Experian",
+        "index": 1
+      },
+      {
+        "title": "Tax Relief Programs in the U.S. - Raisin",
+        "link": "https://www.raisin.com/en-us/taxes/tax-relief#:~:text=support%20you%20need.-,Federal%20tax%20relief%20programs,tax%20professional%20to%20avoid%20scams.",
+        "snippet": "Key takeaways * Tax Relief Options: The IRS offers various programs to help manage tax debt, including Offers in Compromise, installment agreements, and penalty...",
+        "source": "Raisin",
+        "index": 2
+      },
+      ...
+    ]
+  },
+  ...
+}
+Example for product comparison
+GET
+
+
+https://serpapi.com/search.json?engine=google_ai_overview&page_token=8d7bBXicddHLrppAAMbx9E1cuapHRuF4SUxzPIqoYQCFGWAz4Sa3AaZcHHDZR-gzdN1u-jBNn6aNuy66_JL_4kt-X77RtMx_f_iVtC1r1tMp5_wlrqqYRi9BVUy9ZiiD6a2ivP4UpRtL7c-e_uBvROskWOnl0ZzlBh8XtK42gicqr0rfELI72kpn8Trl98ej1lBfLOWmGaJwrpS8rOKSOq0Ts8WsvoD6VlBrOADfvmvd5x0r1SVblAFK4FWcZbGU5kpwr96vTHV2bOkUb2J4Uq82sVkAKo8vpGyuexMLRWcCu8Uq4FttIIGwnxQDEZ_Hms3EBOz1yLHBhHHs1cHmvVC5YyLsW_QcZYkNZRk6KdAdnHCzkOpLLmNVTjAyL0mI-6ODHdFUTnMjh6knnDL1sa3NPRMj3GOXJqZvtUKQQYbz9uFStXetfoACglBxL8imPc7Ci2ujwj-4jSufzggzAaL9VQYIRvs2sRQ2N9BKD02k-WDbXZExeECeH-JWsgHtNDncWpkhuHz8FNmQW9GuWV3FH0karsl_XIgEfvyNwi5oG0I9P6LN1--Hp-5IT_uIjlY__5nLEZgtY_8PygO9Kw
+
+Code to integrate
+
+
+Ruby
+
+require "serpapi" 
+
+client = SerpApi::Client.new(
+  engine: "google_ai_overview",
+  page_token: "8d7bBXicddHLrppAAMbx9E1cuapHRuF4SUxzPIqoYQCFGWAz4Sa3AaZcHHDZR-gzdN1u-jBNn6aNuy66_JL_4kt-X77RtMx_f_iVtC1r1tMp5_wlrqqYRi9BVUy9ZiiD6a2ivP4UpRtL7c-e_uBvROskWOnl0ZzlBh8XtK42gicqr0rfELI72kpn8Trl98ej1lBfLOWmGaJwrpS8rOKSOq0Ts8WsvoD6VlBrOADfvmvd5x0r1SVblAFK4FWcZbGU5kpwr96vTHV2bOkUb2J4Uq82sVkAKo8vpGyuexMLRWcCu8Uq4FttIIGwnxQDEZ_Hms3EBOz1yLHBhHHs1cHmvVC5YyLsW_QcZYkNZRk6KdAdnHCzkOpLLmNVTjAyL0mI-6ODHdFUTnMjh6knnDL1sa3NPRMj3GOXJqZvtUKQQYbz9uFStXetfoACglBxL8imPc7Ci2ujwj-4jSufzggzAaL9VQYIRvs2sRQ2N9BKD02k-WDbXZExeECeH-JWsgHtNDncWpkhuHz8FNmQW9GuWV3FH0karsl_XIgEfvyNwi5oG0I9P6LN1--Hp-5IT_uIjlY__5nLEZgtY_8PygO9Kw",
+  api_key: "697c05cd6b6463eba244ca9769758ae5a3d4bc0e6547fc72797084d3d01665d9"
+)
+
+results = client.search
+ai_overview = results[:ai_overview]
+
+JSON Example
+
+{
+  ...
+  "ai_overview": {
+    "text_blocks": [
+      {
+        "type": "paragraph",
+        "snippet": "The Google Pixel 9 features an ultrasonic fingerprint sensor that is faster and more accurate than the Pixel 8's optical sensor. The Pixel 9 also has a slightly larger display and a higher peak brightness than the Pixel 8. Both phones feature solid cameras, smart AI functions, and OLED displays.",
+        "reference_indexes": [
+          0,
+          1,
+          2,
+          7,
+          8
+        ]
+      },
+      {
+        "type": "expandable",
+        "title": "Camera",
+        "text_blocks": [
+          {
+            "type": "paragraph",
+            "snippet": "The Google Pixel 9 features an upgraded dual rear camera compared to the Pixel 8.",
+            "reference_indexes": [
+              3
+            ]
+          },
+          {
+            "type": "paragraph",
+            "snippet": "The Pixel 9 also features a selfie camera with autofocus.",
+            "reference_indexes": [
+              14
+            ]
+          },
+          {
+            "type": "comparison",
+            "product_labels": [
+              "Google Pixel 9",
+              "Google Pixel 8 128gb"
+            ],
+            "comparison": [
+              {
+                "feature": "Rear camera",
+                "values": [
+                  "50 MP Octa PD wide camera",
+                  "50 MP Octa PD wide camera"
+                ]
+              },
+              {
+                "feature": "Rear camera aperture",
+                "values": [
+                  "ƒ/1.68",
+                  "ƒ/1.68"
+                ]
+              },
+              {
+                "feature": "Rear camera field of view",
+                "values": [
+                  "82°",
+                  "82°"
+                ]
+              },
+              ...
+            ]
+          }
+        ]
+      },
+      {
+        "type": "expandable",
+        "title": "Design",
+        "text_blocks": [
+          {
+            "type": "paragraph",
+            "snippet": "The Google Pixel 9 features a flat aluminum frame and a prominent camera bar.",
+            "reference_indexes": [
+              6
+            ]
+          },
+          {
+            "type": "paragraph",
+            "snippet": "The Pixel 9 also has a matte finish and an iPhone-like feel. The Pixel 8 has an edgeless back and a matte aluminum frame.",
+            "reference_indexes": [
+              12,
+              13,
+              5
+            ]
+          },
+          {
+            "type": "comparison",
+            "product_labels": [
+              "Google Pixel 9",
+              "Google Pixel 8 128gb"
+            ],
+            "comparison": [
+              {
+                "feature": "Weight",
+                "values": [
+                  "7 oz",
+                  "6.6 oz"
+                ]
+              },
+              {
+                "feature": "Dimensions",
+                "values": [
+                  "6 in x 2.8 in x 0.3 in",
+                  "5.9 in x 2.8 in x 0.4 in"
+                ]
+              },
+              {
+                "feature": "Back",
+                "values": [
+                  "Corning Gorilla Glass Victus 2 polished back with satin finish metal frame",
+                  "Edgeless Corning Gorilla Glass Victus back with matte aluminum frame"
+                ]
+              },
+              ...
+            ]
+          }
+        ]
+      },
+      ...
+    ],
+    "references": [
+      {
+        "title": "Google Pixel 8 VS Pixel 9 COMPARED: Is it worth ... - YouTube",
+        "link": "https://www.youtube.com/watch?v=3ierykODNCE&t=81",
+        "snippet": "Oct 25, 2024 — you just have Gorilla Glass Victus. and the display is slightly bigger with the Pixel 9 this year at 6.3. in and the P...",
+        "source": "YouTube · Android Authority",
+        "index": 0
+      },
+      {
+        "title": "Google Pixel 9 vs Google Pixel 8: Don't feel forced to upgrade",
+        "link": "https://www.phonearena.com/reviews/Google-Pixel-9-vs-Google-Pixel-8-Dont-feel-forced-to-upgrade_id6420#:~:text=One%20major%20improvement%20that%20has,into%20the%20Pixel%208%20display.",
+        "snippet": "Mar 26, 2025 — One major improvement that has come with the Pixel 9 series is the use of an ultrasonic fingerprint sensor. That one i...",
+        "source": "PhoneArena",
+        "index": 1
+      },
+      {
+        "title": "Google Pixel 9 vs Pixel 8 - GSMArena.com news",
+        "link": "https://www.gsmarena.com/google_pixel_9_vs_pixel_8_review_battery_camera_price_compared-news-64274.php#:~:text=Display%20comparison,advertised%20peak%20brightness%20%E2%80%93%202%2C000%20nits.",
+        "snippet": "Aug 30, 2024 — Display comparison The Pixel 9 features a 6.3-inch OLED display with a FullHD resolution and a 120Hz maximum refresh r...",
+        "source": "GSMArena.com",
+        "index": 2
+      },
+      ...
+    ]
+  }
+}
