@@ -42,7 +42,7 @@
     {% block extra_head %}{% endblock %}
 </head>
 <body class="{{ shell_theme|default:'' }}">
-    <header class="site-header" x-data="{ openMenu: null, _closeTimer: null, scheduleClose() { this._closeTimer = setTimeout(() => { this.openMenu = null; }, 150); }, cancelClose() { clearTimeout(this._closeTimer); } }">
+    <header class="site-header">
         <div class="container nav-shell">
             <a class="brand" href="/">VRT SPACE AGENCY</a>
             <div class="nav-actions">
@@ -53,16 +53,29 @@
                 </nav>
 
                 {% if user.is_authenticated %}
-                <div class="nav-user-shell" x-data="{ openProfile: false }" @mouseleave="openProfile = false">
-                    <button class="button button-secondary nav-account-link" @mouseenter="openProfile = true">
+                <div class="nav-user-shell" x-data="{ openProfile: false }" @keydown.escape.window="openProfile = false">
+                    <button
+                        type="button"
+                        class="button button-secondary nav-account-trigger"
+                        @click="openProfile = !openProfile"
+                        :aria-expanded="openProfile.toString()"
+                        aria-haspopup="menu"
+                        aria-label="Open account menu">
                         <i class="fas fa-user-circle" style="font-size: 1.1rem;"></i>
                         <span>Account</span>
+                        <i class="fas fa-chevron-down nav-account-trigger-caret"></i>
                     </button>
-                    <div class="workspace-menu-panel glass-panel" x-show="openProfile" x-transition @mouseenter="openProfile = true">
+                    <div
+                        class="workspace-menu-panel glass-panel"
+                        x-cloak
+                        x-show="openProfile"
+                        x-transition.opacity.duration.180ms
+                        @click.outside="openProfile = false">
                         <div class="profile-header" style="padding-bottom: 0.75rem; border-bottom: 1px solid var(--border-glass); margin-bottom: 0.75rem;">
                             <span style="display: block; font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; font-weight: 800;">Identity Verified</span>
                             <span style="font-weight: 700; color: var(--text-primary);">{{ user.email }}</span>
                         </div>
+                        <a href="{% url 'tools:account-dashboard' %}"><i class="fas fa-user"></i> Profile & Billing</a>
                         <a href="{% url 'tools:workspace-dashboard' %}"><i class="fas fa-columns"></i> Dashboard Console</a>
                         <a href="{% url 'tools:account-dashboard' %}"><i class="fas fa-cog"></i> Settings</a>
                         <div style="height: 1px; background: rgba(255,255,255,0.1); margin: 0.5rem 0;"></div>

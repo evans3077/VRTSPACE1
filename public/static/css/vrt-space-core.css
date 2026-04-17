@@ -3198,8 +3198,17 @@ body.shell-light .nav-links a:hover {
 }
 
 body.shell-light .nav-auth-link,
-body.shell-light .nav-account-link {
+body.shell-light .nav-account-link,
+body.shell-light .nav-account-trigger {
     color: var(--text-primary) !important;
+}
+
+body.shell-light .nav-account-trigger {
+    gap: 0.55rem;
+}
+
+body.shell-light .nav-account-trigger-caret {
+    font-size: 0.82rem;
 }
 
 body.shell-light .button-primary,
@@ -3246,6 +3255,42 @@ body.shell-light .workspace-menu-panel {
     background: rgba(255, 255, 255, 0.96) !important;
     border: 1px solid rgba(15, 23, 42, 0.08) !important;
     box-shadow: 0 20px 50px rgba(15, 23, 42, 0.08) !important;
+}
+
+body.shell-light .workspace-menu-panel {
+    min-width: 280px !important;
+    padding: 1rem !important;
+}
+
+body.shell-light .workspace-menu-panel a {
+    display: flex !important;
+    align-items: center !important;
+    gap: 0.75rem !important;
+    padding: 0.85rem 0.95rem !important;
+    border-radius: 14px;
+    color: var(--text-primary) !important;
+    font-weight: 600 !important;
+    transition: background 0.18s ease, color 0.18s ease, transform 0.18s ease !important;
+}
+
+body.shell-light .workspace-menu-panel a:hover,
+body.shell-light .workspace-menu-panel a:focus-visible {
+    background: #f8fafc !important;
+    color: var(--text-primary) !important;
+    transform: translateX(2px);
+    outline: none;
+}
+
+body.shell-light .workspace-menu-panel i {
+    color: #0f766e !important;
+}
+
+body.shell-light .profile-header {
+    color: var(--text-primary) !important;
+}
+
+body.shell-light .profile-header span:first-child {
+    color: var(--text-secondary) !important;
 }
 
 body.shell-light .glass-panel:hover,

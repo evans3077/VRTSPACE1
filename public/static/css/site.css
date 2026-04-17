@@ -116,6 +116,10 @@ a {
     backdrop-filter: blur(12px);
 }
 
+.nav-user-shell {
+    position: relative;
+}
+
 .workspace-menu-panel a {
     padding: 0.75rem 0.9rem;
     border-radius: 14px;
@@ -184,6 +188,20 @@ a {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
+}
+
+.nav-account-trigger {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+}
+
+[x-cloak] {
+    display: none !important;
+}
+
+.nav-account-trigger-caret {
+    font-size: 0.78rem;
 }
 
 .nav-account-link i,
