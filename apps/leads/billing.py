@@ -88,7 +88,7 @@ AUDIT_RESULT_PROFILES = {
         "show_secondary_recommendations": False,
     },
     "starter": {
-        "label": "Starter detail",
+        "label": "Action-ready audit",
         "summary": "Detailed enough to act on the audit inside the workspace, without exposing the full operating depth reserved for larger plans.",
         "top_issue_limit": 4,
         "quick_win_limit": 4,
@@ -102,7 +102,7 @@ AUDIT_RESULT_PROFILES = {
         "show_secondary_recommendations": True,
     },
     "growth": {
-        "label": "Growth detail",
+        "label": "Growth planning layer",
         "summary": "Designed for teams who need deeper audit context, broader score visibility, and enough evidence to keep execution moving.",
         "top_issue_limit": 6,
         "quick_win_limit": 6,
@@ -116,7 +116,7 @@ AUDIT_RESULT_PROFILES = {
         "show_secondary_recommendations": True,
     },
     "authority": {
-        "label": "Authority detail",
+        "label": "Full audit depth",
         "summary": "The deepest audit layer with broader evidence, technical footprint, and the clearest handoff into execution workflows.",
         "top_issue_limit": None,
         "quick_win_limit": None,
@@ -130,7 +130,7 @@ AUDIT_RESULT_PROFILES = {
         "show_secondary_recommendations": True,
     },
     "enterprise": {
-        "label": "Enterprise detail",
+        "label": "Custom audit depth",
         "summary": "Reserved for custom environments that need the full audit surface and broader operational context.",
         "top_issue_limit": None,
         "quick_win_limit": None,
@@ -929,7 +929,7 @@ def build_action_access_context(user, category, *, project=None, feature_name=No
         )
         if future_plan:
             next_unlock_message = (
-                f"Visible in free-pass mode. {future_plan['name']} is the first plan that officially includes this workflow."
+                f"Visible in developer preview. {future_plan['name']} is the first plan that officially includes this workflow."
             )
 
     return {

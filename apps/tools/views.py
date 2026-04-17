@@ -1,4 +1,4 @@
-from urllib.parse import urlencode
+from urllib.parse import urlencode, urlparse
 
 from django.contrib import messages
 from django.contrib.auth import get_user_model, login, logout, update_session_auth_hash
@@ -84,6 +84,43 @@ def _decorate_product_modules(product_modules, billing_plans):
         item["is_custom_scope"] = bool(card and card.get("is_custom"))
         decorated.append(item)
     return decorated
+
+
+def _audit_summary_needs_refresh(summary):
+    if not isinstance(summary, dict):
+        return True
+    top_issues = summary.get("top_issues") or []
+    quick_wins = summary.get("quick_wins") or []
+    featured = summary.get("featured_recommendations") or []
+    next_step = summary.get("recommended_next_step") or {}
+    return bool(
+        (top_issues and "summary" not in top_issues[0])
+        or (quick_wins and "summary" not in quick_wins[0])
+        or (featured and "page_examples" not in featured[0])
+        or (next_step and "checklist" not in next_step)
+    )
+
+
+def _ensure_fresh_audit_summary(audit_run):
+    if not audit_run or audit_run.status != AuditRun.Status.COMPLETED:
+        return audit_run.summary if audit_run and isinstance(audit_run.summary, dict) else {}
+    summary = audit_run.summary if isinstance(audit_run.summary, dict) else {}
+    if not _audit_summary_needs_refresh(summary):
+        return summary
+    summary = build_audit_summary(audit_run)
+    audit_run.summary = summary
+    audit_run.save(update_fields=["summary", "updated_at"])
+    return summary
+
+
+def _short_workspace_url(url):
+    if not url:
+        return ""
+    parsed = urlparse(url)
+    if not parsed.netloc:
+        return str(url)
+    path = parsed.path.rstrip("/") or "/"
+    return f"{parsed.netloc}{path}" if path != "/" else parsed.netloc
 
 
 def _render_home_with_audit_form(request, form, *, status=400):
@@ -244,16 +281,7 @@ class AuditResultDetailView(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         audit_run = self.object
-        summary = audit_run.summary or {}
-        needs_summary_refresh = audit_run.status == AuditRun.Status.COMPLETED and (
-            (summary.get("top_issues") and "summary" not in summary["top_issues"][0])
-            or (summary.get("quick_wins") and "summary" not in summary["quick_wins"][0])
-            or (summary.get("recommended_next_step") and "checklist" not in summary["recommended_next_step"])
-        )
-        if needs_summary_refresh:
-            summary = build_audit_summary(audit_run)
-            audit_run.summary = summary
-            audit_run.save(update_fields=["summary", "updated_at"])
+        summary = _ensure_fresh_audit_summary(audit_run)
         viewer_user = _get_audit_viewer_user(self.request, audit_run)
         audit_profile = get_audit_result_profile(viewer_user)
         scores = summary.get("scores", {})
@@ -764,7 +792,7 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
             content_draft_count = generated_content_count
             latest_generated_content = content_qs.order_by("-created_at").first()
         latest_audit = getattr(project, "latest_audit_run", None)
-        latest_summary = latest_audit.summary if latest_audit and isinstance(latest_audit.summary, dict) else {}
+        latest_summary = _ensure_fresh_audit_summary(latest_audit)
         latest_seo_snapshot = project.seo_snapshots.order_by("-created_at").first() if getattr(project, "pk", None) else None
         latest_aeo_audit = project.aeo_audits.order_by("-created_at").first() if getattr(project, "pk", None) else None
         # SEO campaign/execution counts for the Command Card
@@ -806,7 +834,85 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         billing_state = get_billing_state(self.request.user)
         schedule = get_workspace_schedule(project)
         latest_change_report = getattr(latest_audit, "change_report", None) if latest_audit else None
-        fix_queue_recommendations = latest_summary.get("featured_recommendations") or recommendations[:6]
+        fix_queue_recommendations = (latest_summary.get("featured_recommendations") or recommendations[:6])[:4]
+        issue_summary = latest_summary.get("issue_summary", {}) if isinstance(latest_summary, dict) else {}
+        audit_issue_total = issue_summary.get("total", 0) or len(fix_queue_recommendations)
+        workspace_fix_queue = []
+        for recommendation in fix_queue_recommendations:
+            page_examples = list(recommendation.get("page_examples") or [])
+            if recommendation.get("page_url") and recommendation["page_url"] not in page_examples:
+                page_examples.insert(0, recommendation["page_url"])
+            page_count = recommendation.get("affected_pages_count") or len(page_examples) or recommendation.get("category_issue_count") or 0
+            workspace_fix_queue.append(
+                {
+                    **recommendation,
+                    "display_urls": [_short_workspace_url(url) for url in page_examples[:3]],
+                    "display_page_count": page_count,
+                    "display_steps": list(recommendation.get("technical_steps") or [])[:3],
+                }
+            )
+
+        workspace_modules = [
+            {
+                "label": "Audit",
+                "value": f"{latest_audit.overall_score}/100" if latest_audit else "Required",
+                "summary": (
+                    f"{audit_issue_total} grouped issue{'s' if audit_issue_total != 1 else ''} are waiting in the current fix queue."
+                    if latest_audit
+                    else "Run the first audit to unlock the rest of the workspace."
+                ),
+                "meta": latest_audit.created_at.strftime("%b %d, %Y") if latest_audit else "Needs first run",
+                "href": reverse("tools:audit-result", args=[latest_audit.pk]) if latest_audit else "#start-audit",
+                "cta_label": "Open audit" if latest_audit else "Run first audit",
+                "tone": "audit",
+            },
+            {
+                "label": "SEO",
+                "value": (
+                    f"{seo_active_campaign_count} active"
+                    if latest_seo_snapshot
+                    else ("Ready to run" if latest_audit else "Waiting on audit")
+                ),
+                "summary": (
+                    f"{seo_execution_item_count} execution item{'s' if seo_execution_item_count != 1 else ''} mapped across current SEO work."
+                    if latest_seo_snapshot
+                    else ("Use the audit base to benchmark competitors and map search gaps." if latest_audit else "Audit must finish before SEO can open.")
+                ),
+                "meta": latest_seo_snapshot.created_at.strftime("%b %d, %Y") if latest_seo_snapshot else "",
+                "href": reverse("seo:workspace-seo") if latest_audit else "#start-audit",
+                "cta_label": "Open SEO" if latest_audit else "Start with audit",
+                "tone": "seo",
+            },
+            {
+                "label": "AEO",
+                "value": (
+                    f"{latest_aeo_audit.overall_score}/100"
+                    if latest_aeo_audit and latest_aeo_audit.overall_score is not None
+                    else ("Ready to run" if latest_audit else "Waiting on audit")
+                ),
+                "summary": (
+                    "Use the audit findings to check answer readiness, entity clarity, and AI visibility."
+                    if latest_audit
+                    else "Audit must finish before AEO can open."
+                ),
+                "meta": latest_aeo_audit.created_at.strftime("%b %d, %Y") if latest_aeo_audit else "",
+                "href": reverse("aeo:workspace-aeo") if latest_audit else "#start-audit",
+                "cta_label": "Open AEO" if latest_audit else "Start with audit",
+                "tone": "aeo",
+            },
+        ]
+        if latest_generated_content or content_draft_count:
+            workspace_modules.append(
+                {
+                    "label": "Content support",
+                    "value": f"{content_draft_count} draft{'s' if content_draft_count != 1 else ''}",
+                    "summary": "Generated drafts stay secondary to Audit, SEO, and AEO, and only appear here when there is work ready.",
+                    "meta": latest_generated_content.created_at.strftime("%b %d, %Y") if latest_generated_content else "",
+                    "href": reverse("content:workspace-content"),
+                    "cta_label": "Open content",
+                    "tone": "content",
+                }
+            )
         latest_share_link = (
             AuditShareLink.objects.filter(audit_run=latest_audit).order_by("-created_at").first()
             if latest_audit
@@ -820,11 +926,13 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["audit_history_with_delta"] = audit_history_with_delta
         context["score_breakdown"] = latest_summary.get("score_breakdown", {})
         context["recommendations"] = recommendations
-        context["fix_queue_recommendations"] = fix_queue_recommendations
+        context["fix_queue_recommendations"] = workspace_fix_queue
         context["latest_generated_content"] = latest_generated_content
         context["content_draft_count"] = content_draft_count
         context["seo_active_campaign_count"] = seo_active_campaign_count
         context["seo_execution_item_count"] = seo_execution_item_count
+        context["audit_issue_total"] = audit_issue_total
+        context["workspace_modules"] = workspace_modules
         context["product_modules"] = _decorate_product_modules(
             latest_summary.get("product_modules", []),
             billing_state["plans"],

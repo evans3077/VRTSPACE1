@@ -47,7 +47,7 @@
             <div class="auth-divider"><span>or create with email</span></div>
             {% endif %}
 
-            <form method="post" class="premium-form auth-form">
+            <form method="post" class="premium-form auth-form" novalidate>
                 {% csrf_token %}
                 {% if audit_run %}
                 <input type="hidden" name="audit" value="{{ audit_run.pk }}">
@@ -56,11 +56,17 @@
                 <input type="hidden" name="package" value="{{ selected_package.name|lower }}">
                 {% endif %}
 
+                {% if form.non_field_errors %}
+                <div class="flash flash-error" role="alert">
+                    <span class="flash-text">{{ form.non_field_errors|join:", " }}</span>
+                </div>
+                {% endif %}
+
                 <div class="form-group">
                     <label for="{{ form.email.id_for_label }}">Business email</label>
                     {{ form.email }}
                     {% if form.email.errors %}
-                    <div class="text-error">{{ form.email.errors|join:", " }}</div>
+                    <span class="text-error">{{ form.email.errors|join:", " }}</span>
                     {% endif %}
                 </div>
 
@@ -68,11 +74,11 @@
                     <label for="{{ form.password.id_for_label }}">Create password</label>
                     {{ form.password }}
                     {% if form.password.errors %}
-                    <div class="text-error">{{ form.password.errors|join:", " }}</div>
+                    <span class="text-error">{{ form.password.errors|join:", " }}</span>
                     {% endif %}
                 </div>
 
-                <button type="submit" class="button button-primary button-block">Create Workspace</button>
+                <button type="submit" class="button button-primary button-block">Create Workspace <i class="fas fa-arrow-right" aria-hidden="true"></i></button>
             </form>
 
             <p class="auth-assist-text">

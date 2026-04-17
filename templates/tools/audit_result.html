@@ -3,7 +3,7 @@
 {% block content %}
 {% if is_processing %}
 <section class="public-shell-section">
-    <div class="container result-state-panel glass-panel">
+    <div class="container result-state-panel glass-panel" data-audit-status="{{ audit_run.status }}">
         <p class="feature-tag">Audit In Progress</p>
         <h1>We are analyzing {{ audit_run.normalized_domain|default:audit_run.start_url }}</h1>
         <p class="lead">
@@ -45,9 +45,44 @@
     </div>
 </section>
 <script>
-setTimeout(function () {
-    window.location.reload();
-}, 5000);
+(function () {
+    var panel = document.querySelector("[data-audit-status]");
+    if (!panel) {
+        return;
+    }
+
+    function pollAudit() {
+        fetch(window.location.href, {
+            headers: {
+                "X-Requested-With": "XMLHttpRequest"
+            },
+            cache: "no-store"
+        })
+            .then(function (response) { return response.text(); })
+            .then(function (html) {
+                var parser = new DOMParser();
+                var doc = parser.parseFromString(html, "text/html");
+                var refreshed = doc.querySelector("[data-audit-status]");
+                var status = refreshed ? refreshed.getAttribute("data-audit-status") : "completed";
+
+                if (status === "pending" || status === "running") {
+                    window.setTimeout(pollAudit, 5000);
+                    return;
+                }
+
+                panel.style.transition = "opacity 220ms ease";
+                panel.style.opacity = "0.55";
+                window.setTimeout(function () {
+                    window.location.reload();
+                }, 220);
+            })
+            .catch(function () {
+                window.setTimeout(pollAudit, 5000);
+            });
+    }
+
+    window.setTimeout(pollAudit, 5000);
+})();
 </script>
 {% elif audit_run.status == "failed" %}
 <section class="public-shell-section">
@@ -72,9 +107,9 @@ setTimeout(function () {
             <div class="public-chip-row">
                 <span class="premium-pill">Overall score: {{ audit_run.overall_score|default:"-" }}</span>
                 <span class="premium-pill">Pages scanned: {{ audit_run.pages_crawled|default:0 }}</span>
-                <span class="premium-pill">Detail layer: {{ audit_profile.label }}</span>
+                <span class="premium-pill">Report depth: {{ audit_profile.label }}</span>
                 {% if not audit_tier_enforcement %}
-                <span class="premium-pill">Free-pass mode active for testing</span>
+                <span class="premium-pill">Developer preview: plan limits are off</span>
                 {% endif %}
             </div>
             <div class="hero-actions public-hero-actions">
@@ -207,32 +242,49 @@ setTimeout(function () {
         <article class="public-capability-card audit-diagnosis-card">
             <div class="report-list-head">
                 <strong>What happens next</strong>
-                <span class="pill-accent">{{ audit_profile.label }}</span>
+                <span class="pill-accent">Next move</span>
             </div>
-            <div class="report-detail-block audit-next-panel">
-                <strong>{{ diagnosis.next_step_title|default:recommended_next_step.title|default:"Review the first fix" }}</strong>
-                <p>{{ diagnosis.next_step_body|default:recommended_next_step.body|default:"Use the workspace to keep the audit, SEO, and AEO work connected." }}</p>
-            </div>
-            {% if recommended_next_step.checklist %}
-            <div class="audit-action-list audit-next-step-list">
-                {% for step in recommended_next_step.checklist %}
-                <div class="audit-action-step">{{ step }}</div>
-                {% endfor %}
-            </div>
-            {% endif %}
-            {% if captured_context.target_goal or captured_context.primary_service or captured_context.location %}
-            <div class="audit-context-list">
-                {% if captured_context.primary_service %}<span class="report-url-chip">Service: {{ captured_context.primary_service }}</span>{% endif %}
-                {% if captured_context.target_goal %}<span class="report-url-chip">Goal: {{ captured_context.target_goal }}</span>{% endif %}
-                {% if captured_context.location %}<span class="report-url-chip">Location: {{ captured_context.location }}</span>{% endif %}
-            </div>
-            {% endif %}
-            <div class="public-cta-actions">
-                {% if viewer_has_workspace %}
-                <a href="{% url 'tools:workspace-dashboard' %}" class="button button-primary button-block">Continue in workspace</a>
-                {% else %}
-                <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-primary button-block">Save this audit</a>
+            <div class="audit-next-stack">
+                <div class="report-detail-block audit-next-panel">
+                    <strong>{{ diagnosis.next_step_title|default:recommended_next_step.title|default:"Review the first fix" }}</strong>
+                    <p>{{ diagnosis.next_step_body|default:recommended_next_step.body|default:"Use the workspace to keep the audit, SEO, and AEO work connected." }}</p>
+                </div>
+                {% if recommended_next_step.checklist %}
+                <div class="audit-action-list audit-next-step-list">
+                    {% for step in recommended_next_step.checklist %}
+                    <div class="audit-action-step">{{ step }}</div>
+                    {% endfor %}
+                </div>
                 {% endif %}
+                {% if captured_context.target_goal or captured_context.primary_service or captured_context.location %}
+                <div class="audit-context-grid">
+                    {% if captured_context.primary_service %}
+                    <div class="audit-context-card">
+                        <span>Primary offer</span>
+                        <strong>{{ captured_context.primary_service }}</strong>
+                    </div>
+                    {% endif %}
+                    {% if captured_context.target_goal %}
+                    <div class="audit-context-card">
+                        <span>Main goal</span>
+                        <strong>{{ captured_context.target_goal }}</strong>
+                    </div>
+                    {% endif %}
+                    {% if captured_context.location %}
+                    <div class="audit-context-card">
+                        <span>Target market</span>
+                        <strong>{{ captured_context.location }}</strong>
+                    </div>
+                    {% endif %}
+                </div>
+                {% endif %}
+                <div class="public-cta-actions audit-next-actions">
+                    {% if viewer_has_workspace %}
+                    <a href="{% url 'tools:workspace-dashboard' %}" class="button button-primary button-block">Continue in workspace</a>
+                    {% else %}
+                    <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-primary button-block">Save this audit</a>
+                    {% endif %}
+                </div>
             </div>
         </article>
     </div>

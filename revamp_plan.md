@@ -53,6 +53,11 @@ This plan tracks the revamp work driven by the Markdown review, especially `prom
 - Rebuilt `templates/tools/audit_result.html` around a diagnosis-first, plan-aware audit experience with clearer borders, more deliberate upgrade pressure, and controlled reveal by plan
 - Refined the audit result experience again so grouped issues now surface affected URLs, clearer human fix language, three-step action lists, value-aware metric colors, and a lightweight in-progress animation for the live audit state
 - Updated `apps/tools/views.py` so older completed audits automatically refresh into the newer audit-summary contract when opened instead of rendering stale summary structures
+- Rebuilt `templates/tools/workspace_dashboard.html` into a clearer workspace flow with one command center instead of duplicate competing sections, better project/current-workspace balance, clearer credits presentation, stacked module rows, and a less cramped audit history section
+- Fixed workspace fix-queue page counts by preparing display counts and URLs explicitly in `apps/tools/views.py` instead of relying on the broken template math that was rendering misleading `0 pages including` text
+- Changed the workspace testing banner language from vague `free-pass mode` wording to an explicit developer-mode notice, and this should be removed before production once tier-enforcement testing is complete
+- Softened the live-audit processing experience so the in-progress screen now polls in the background and only performs a single reload when the audit is ready, instead of visibly refreshing the page every cycle
+- Rebalanced the main workspace layout again so projects, audit start, current-workspace summary, credits, create-workspace, command center, and fix queue now use the available width more intentionally, with stronger contrast in credits and priority panels and less clipping in the side cards
 - Updated account and workspace dashboard surfaces so they now show audit runs remaining and tracked-website capacity alongside credits
 - Ran `python manage.py check` successfully after the changes
 
@@ -63,6 +68,7 @@ This plan tracks the revamp work driven by the Markdown review, especially `prom
 - The public site should emphasize only Audit, SEO, and AEO.
 - The current public shell still exposes extra modules and technical language too early.
 - The public visual system was previously leaning too dark for the simplified product story, so the marketing shell now needs to stay bright, clear, and high-contrast by default.
+- Contrast is still inconsistent across some public and authenticated surfaces, especially secondary text, pills, helper copy, and smaller dashboard cards, so a dedicated contrast normalization pass still needs to happen site-wide.
 - Uniformity matters most on the conversion path, so homepage, pricing, auth, and audit-result surfaces should feel like one connected journey rather than separate subsystems.
 - Result pages are now a separate priority slice in the revamp, because post-run screens need clearer next actions, better contrast, and simpler stakeholder presentation.
 - The main audit result route now aligns much better with the revamp direction than before, and the first-screen SEO and AEO result surfaces now follow that direction much more closely.
@@ -70,6 +76,7 @@ This plan tracks the revamp work driven by the Markdown review, especially `prom
 - The homepage already has a workable audit CTA and a strong form base, so the revamp should simplify and tighten rather than rebuild from scratch.
 - The audit now needs to act as a controlled SaaS diagnosis rather than a full technical dump: free results stay concise, Starter is meaningfully more detailed, and Growth / Authority expose the deeper layers.
 - The audit result page now communicates value more clearly in the first diagnosis blocks, but the same clarity standard still needs to spread into the rest of the audit-related workspace surfaces.
+- The main workspace route now aligns much better with the revamp direction, but the same cleanup still needs to carry through the deeper SEO, AEO, and any optional content-adjacent authenticated views.
 - Plan policy now needs to stay consistent everywhere the user can feel it: homepage, public audit creation, workspace reruns, the result page, and the account dashboard.
 - The audit intake only needs enough business context to make the next SEO and AEO layers smarter; competitor and market-detail prompts do not belong in the first public form anymore.
 
@@ -95,11 +102,13 @@ This plan tracks the revamp work driven by the Markdown review, especially `prom
 - Check the new light shell in-browser and tune any remaining low-contrast components or spacing mismatches in homepage cards, pricing, and service detail layouts
 - Continue refactoring longer product surfaces like the full audit result detail and selected workspace-adjacent pages that still rely heavily on older inline styling
 - Continue the same result-page cleanup for the remaining long-scroll detail sections in the richer SEO and AEO views where older inline styling still appears
+- Run a deliberate contrast-ratio cleanup across the full site so helper text, chips, badges, metric labels, and side-card content stay readable without relying on visual guesswork
 - Return focus to the audit product surfaces and tighten the audit-specific journey now that the first-screen SEO and AEO result blocks are aligned
 - Keep the audit form progressive and low-friction as future public edits continue
 - Review whether anonymous public audits should later inherit a stronger account-linked limit beyond the current email/account matching behavior
 - Continue tightening workspace audit, SEO, and AEO long-scroll sections so the deeper product shell matches the new audit result quality bar
 - Carry the same issue grouping, recommendation clarity, and visible-progress language into the broader workspace audit surfaces after this public audit-result pass
+- Remove the developer-mode tier-limit notice before production once enforcement verification is complete
 
 ### Phase 2: Public conversion polish
 

@@ -3277,6 +3277,12 @@ body.shell-light .journey-phase {
     color: var(--brand-primary);
 }
 
+body.shell-light .premium-pill {
+    border-radius: 18px;
+    padding: 0.7rem 0.95rem;
+    line-height: 1.35;
+}
+
 body.shell-light .hero-content .lead,
 body.shell-light .nav-card-desc,
 body.shell-light .workspace-nav-text,
@@ -3327,6 +3333,10 @@ body.shell-light textarea:focus,
 body.shell-light .form-control:focus {
     border-color: #14b8a6 !important;
     box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.12) !important;
+}
+
+body.shell-light input[type="hidden"] {
+    display: none !important;
 }
 
 body.shell-light .site-footer {
@@ -4293,6 +4303,660 @@ body.shell-light .agency-dashboard td {
     color: var(--text-secondary);
 }
 
+body.shell-light .workspace-shell-header-wrap {
+    padding-bottom: 0;
+}
+
+body.shell-light .workspace-shell-header {
+    border-bottom: none;
+    margin-bottom: 0;
+    padding-bottom: 1.4rem;
+}
+
+body.shell-light .workspace-header-actions {
+    min-width: min(100%, 320px);
+}
+
+body.shell-light .workspace-header-button-row {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+body.shell-light .workspace-audit-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+body.shell-light .workspace-dev-pill {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.45rem 0.85rem;
+    border-radius: 999px;
+    border: 1px solid rgba(124, 58, 237, 0.16);
+    background: rgba(245, 243, 255, 0.96);
+    color: #7c3aed;
+    font-size: 0.76rem;
+    font-weight: 700;
+}
+
+body.shell-light .workspace-shell-main {
+    padding-top: 1.25rem;
+}
+
+body.shell-light .workspace-page-stack {
+    display: grid;
+    gap: 1.5rem;
+}
+
+body.shell-light .workspace-top-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(340px, 0.95fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+body.shell-light .workspace-primary-stack,
+body.shell-light .workspace-secondary-stack {
+    display: grid;
+    gap: 1.5rem;
+}
+
+body.shell-light .workspace-primary-stack {
+    grid-template-columns: minmax(280px, 0.78fr) minmax(0, 1.22fr);
+    align-items: start;
+}
+
+body.shell-light .workspace-primary-stack > :first-child {
+    grid-column: 1 / -1;
+}
+
+body.shell-light .workspace-primary-stack > :nth-child(2) {
+    grid-column: 1;
+}
+
+body.shell-light .workspace-primary-stack > :nth-child(3) {
+    grid-column: 2;
+}
+
+body.shell-light .workspace-secondary-stack {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+}
+
+body.shell-light .workspace-secondary-stack > :first-child {
+    grid-column: 1 / -1;
+}
+
+body.shell-light .workspace-top-layout > *,
+body.shell-light .workspace-primary-stack > *,
+body.shell-light .workspace-secondary-stack > * {
+    min-width: 0;
+    width: 100%;
+}
+
+body.shell-light .workspace-overview-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.8fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+body.shell-light .workspace-side-stack {
+    display: grid;
+    gap: 1.5rem;
+}
+
+body.shell-light .workspace-section-head {
+    text-align: left !important;
+    margin-bottom: 1rem !important;
+}
+
+body.shell-light .workspace-section-head h2 {
+    margin: 0.2rem 0 0.45rem;
+    font-size: clamp(1.5rem, 2vw, 2rem);
+    color: var(--text-primary) !important;
+}
+
+body.shell-light .workspace-section-head .section-text {
+    max-width: 760px;
+    margin-left: 0;
+}
+
+body.shell-light .workspace-project-list {
+    display: grid;
+    gap: 0.9rem;
+}
+
+body.shell-light .workspace-projects-card,
+body.shell-light .workspace-summary-card,
+body.shell-light .workspace-credits-card,
+body.shell-light .workspace-command-card,
+body.shell-light .workspace-fix-queue-card,
+body.shell-light .workspace-history-card {
+    padding: 1.5rem;
+}
+
+body.shell-light .workspace-project-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1.2fr) minmax(180px, 0.7fr) minmax(180px, 0.75fr);
+    gap: 1rem;
+    padding: 1rem 1.05rem;
+    border-radius: 20px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: #f8fafc;
+    align-items: start;
+}
+
+body.shell-light .workspace-project-row.is-active {
+    border-color: rgba(20, 184, 166, 0.18);
+    background: linear-gradient(180deg, rgba(240, 253, 250, 0.96), rgba(255, 255, 255, 0.98));
+}
+
+body.shell-light .workspace-project-title-row {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    flex-wrap: wrap;
+}
+
+body.shell-light .workspace-project-title-row strong,
+body.shell-light .workspace-project-domain,
+body.shell-light .workspace-project-stats strong,
+body.shell-light .workspace-fix-title,
+body.shell-light .workspace-history-table strong {
+    color: var(--text-primary) !important;
+}
+
+body.shell-light .workspace-project-subtitle,
+body.shell-light .workspace-project-meta-line,
+body.shell-light .workspace-project-stats span,
+body.shell-light .workspace-support-note,
+body.shell-light .workspace-panel-intro,
+body.shell-light .workspace-fix-copy,
+body.shell-light .workspace-fix-block p,
+body.shell-light .workspace-fix-evidence,
+body.shell-light .workspace-history-note-row td {
+    color: var(--text-secondary) !important;
+}
+
+body.shell-light .workspace-project-domain {
+    margin-top: 0.35rem;
+    font-weight: 700;
+    word-break: break-all;
+}
+
+body.shell-light .workspace-project-meta-line {
+    margin-top: 0.22rem;
+    font-size: 0.9rem;
+}
+
+body.shell-light .workspace-project-stats {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+body.shell-light .workspace-project-stats span {
+    display: block;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+body.shell-light .workspace-project-stats strong {
+    display: block;
+    margin-top: 0.3rem;
+    font-size: 1.05rem;
+}
+
+body.shell-light .workspace-project-actions {
+    display: grid;
+    gap: 0.8rem;
+    align-content: start;
+    justify-items: start;
+}
+
+body.shell-light .workspace-project-tags {
+    margin-top: 0 !important;
+}
+
+body.shell-light .workspace-summary-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.9rem;
+}
+
+body.shell-light .workspace-current-domain {
+    margin-bottom: 1rem;
+    padding: 0.9rem 1rem;
+    border-radius: 16px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: #f8fafc;
+    color: var(--text-primary);
+    font-weight: 700;
+    line-height: 1.5;
+    word-break: break-all;
+}
+
+body.shell-light .workspace-summary-grid .stat-tile h3,
+body.shell-light .workspace-empty-steps .stat-tile h3,
+body.shell-light .workspace-credit-balance-card h3 {
+    color: var(--text-primary) !important;
+    letter-spacing: -0.04em;
+}
+
+body.shell-light .workspace-summary-card .stat-tile h3 {
+    font-size: clamp(1.8rem, 3vw, 2.4rem);
+}
+
+body.shell-light .workspace-empty-launch {
+    display: grid;
+    gap: 1rem;
+}
+
+body.shell-light .workspace-empty-launch h2,
+body.shell-light .workspace-command-card h2,
+body.shell-light .workspace-fix-queue-card h2,
+body.shell-light .workspace-history-card h2 {
+    color: var(--text-primary) !important;
+}
+
+body.shell-light .workspace-empty-launch p {
+    margin: 0;
+}
+
+body.shell-light .workspace-empty-steps {
+    display: grid;
+    gap: 0.9rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+body.shell-light .workspace-action-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.3fr) minmax(320px, 0.8fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+body.shell-light .workspace-action-panel,
+body.shell-light .workspace-action-panel summary {
+    background: rgba(255, 255, 255, 0.98);
+}
+
+body.shell-light .workspace-create-summary {
+    flex-wrap: wrap;
+    align-items: flex-start;
+}
+
+body.shell-light .workspace-action-panel .workspace-create-summary h2 {
+    margin: 0;
+    font-size: clamp(1.35rem, 2vw, 1.9rem);
+}
+
+body.shell-light .workspace-action-panel .button {
+    white-space: nowrap;
+}
+
+body.shell-light .workspace-action-panel-compact .workspace-create-summary .button {
+    margin-left: auto;
+}
+
+body.shell-light .workspace-action-panel {
+    min-height: 100%;
+}
+
+body.shell-light .workspace-action-panel summary {
+    min-height: 100%;
+}
+
+body.shell-light .workspace-form-grid {
+    display: grid;
+    gap: 0.9rem;
+}
+
+body.shell-light .workspace-form-field {
+    display: grid;
+    gap: 0.32rem;
+}
+
+body.shell-light .workspace-form-field span:first-child {
+    font-weight: 700;
+    color: var(--text-primary);
+}
+
+body.shell-light .workspace-form-error {
+    color: #991b1b;
+    font-size: 0.82rem;
+}
+
+body.shell-light .workspace-command-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+
+body.shell-light .workspace-command-card,
+body.shell-light .workspace-fix-queue-card,
+body.shell-light .workspace-history-card {
+    padding: 1.5rem;
+}
+
+body.shell-light .workspace-priority-list,
+body.shell-light .workspace-module-list,
+body.shell-light .workspace-fix-queue-list {
+    display: grid;
+    gap: 0.85rem;
+}
+
+body.shell-light .workspace-module-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 1rem;
+    padding: 1rem 1.05rem;
+    border-radius: 18px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: #f8fafc;
+    align-items: center;
+}
+
+body.shell-light .workspace-module-row-audit {
+    border-left: 4px solid rgba(20, 184, 166, 0.8);
+}
+
+body.shell-light .workspace-module-row-seo {
+    border-left: 4px solid rgba(15, 23, 42, 0.8);
+}
+
+body.shell-light .workspace-module-row-aeo {
+    border-left: 4px solid rgba(56, 189, 248, 0.8);
+}
+
+body.shell-light .workspace-module-row-content {
+    border-left: 4px solid rgba(34, 197, 94, 0.8);
+}
+
+body.shell-light .workspace-module-row-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+body.shell-light .workspace-module-row-main h3 {
+    margin: 0.15rem 0 0.4rem;
+    font-size: clamp(1.35rem, 2vw, 1.8rem);
+    color: var(--text-primary) !important;
+}
+
+body.shell-light .workspace-module-row-main p {
+    margin: 0;
+}
+
+body.shell-light .workspace-module-row-actions {
+    display: flex;
+    align-items: center;
+}
+
+body.shell-light .workspace-credit-balance-card {
+    display: grid;
+    gap: 1rem;
+    padding: 1rem;
+    border-radius: 18px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: #f8fafc !important;
+}
+
+body.shell-light .workspace-credit-balance-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+
+body.shell-light .workspace-credit-balance-top .eyebrow {
+    margin-bottom: 0.3rem;
+}
+
+body.shell-light .workspace-credit-balance-top h3 {
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 2.8rem);
+}
+
+body.shell-light .workspace-credit-balance-meta {
+    display: grid;
+    gap: 0.65rem;
+}
+
+body.shell-light .workspace-credit-balance-meta div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.85rem;
+    padding: 0.8rem 0.9rem;
+    border-radius: 14px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: rgba(255, 255, 255, 0.96);
+    color: var(--text-primary) !important;
+}
+
+body.shell-light .workspace-credit-balance-meta span,
+body.shell-light .workspace-credit-balance-meta strong {
+    color: var(--text-primary) !important;
+}
+
+body.shell-light .workspace-credit-balance-meta span {
+    font-size: 0.92rem;
+}
+
+body.shell-light .workspace-credit-balance-meta strong {
+    font-size: 0.98rem;
+}
+
+body.shell-light .workspace-priority-list {
+    margin-bottom: 1rem;
+}
+
+body.shell-light .workspace-command-card .section-text {
+    color: var(--text-secondary) !important;
+}
+
+body.shell-light .workspace-command-card .command-priority-item {
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: linear-gradient(180deg, rgba(248, 250, 252, 0.96), rgba(255, 255, 255, 0.98)) !important;
+    color: var(--text-primary) !important;
+    box-shadow: none;
+}
+
+body.shell-light .workspace-command-card .command-priority-num {
+    box-shadow: none;
+}
+
+body.shell-light .workspace-command-card .command-priority-text,
+body.shell-light .workspace-command-card .command-priority-text strong,
+body.shell-light .workspace-command-card .command-priority-text a {
+    color: var(--text-primary) !important;
+}
+
+body.shell-light .workspace-command-card .command-priority-text a {
+    font-weight: 700;
+    text-decoration: none;
+}
+
+body.shell-light .workspace-command-card .command-priority-text a:hover {
+    color: #0f766e !important;
+}
+
+body.shell-light .workspace-fix-card {
+    display: grid;
+    gap: 0.8rem;
+    padding: 1rem 1.05rem;
+    border-radius: 18px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: #f8fafc;
+}
+
+body.shell-light .workspace-fix-queue-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+body.shell-light .workspace-fix-chip-row,
+body.shell-light .workspace-fix-url-list {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+}
+
+body.shell-light .workspace-fix-title {
+    display: block;
+    font-size: 1.05rem;
+}
+
+body.shell-light .workspace-fix-copy {
+    margin: 0;
+    line-height: 1.6;
+}
+
+body.shell-light .workspace-fix-block strong,
+body.shell-light .workspace-fix-step,
+body.shell-light .workspace-history-links a {
+    color: var(--text-primary);
+}
+
+body.shell-light .workspace-fix-block p {
+    margin: 0.28rem 0 0;
+}
+
+body.shell-light .workspace-fix-step-list {
+    display: grid;
+    gap: 0.45rem;
+}
+
+body.shell-light .workspace-fix-step {
+    padding: 0.7rem 0.85rem;
+    border-radius: 14px;
+    border: 1px solid rgba(15, 23, 42, 0.07);
+    background: rgba(255, 255, 255, 0.92);
+    line-height: 1.5;
+}
+
+body.shell-light .workspace-fix-evidence {
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+
+body.shell-light .workspace-history-table-shell {
+    overflow-x: auto;
+}
+
+body.shell-light .workspace-history-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 720px;
+}
+
+body.shell-light .workspace-history-table th,
+body.shell-light .workspace-history-table td {
+    padding: 0.85rem 0.45rem;
+    text-align: left;
+    border-bottom: 1px solid rgba(15, 23, 42, 0.08);
+    color: var(--text-secondary);
+}
+
+body.shell-light .workspace-history-table th {
+    font-size: 0.76rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--text-primary);
+}
+
+body.shell-light .workspace-history-links {
+    display: flex;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    margin-top: 0.35rem;
+}
+
+body.shell-light .workspace-history-links a {
+    font-size: 0.82rem;
+}
+
+body.shell-light .workspace-history-note-row td {
+    background: #f8fafc;
+    font-size: 0.88rem;
+}
+
+body.shell-light .workspace-delta {
+    font-weight: 700;
+}
+
+body.shell-light .workspace-delta-up {
+    color: #15803d;
+}
+
+body.shell-light .workspace-delta-down {
+    color: #b91c1c;
+}
+
+body.shell-light .workspace-delta-flat {
+    color: #64748b;
+}
+
+body.shell-light .workspace-history-lock {
+    margin-top: 1rem;
+}
+
+@media (max-width: 1180px) {
+    body.shell-light .workspace-top-layout,
+    body.shell-light .workspace-overview-grid,
+    body.shell-light .workspace-action-grid,
+    body.shell-light .workspace-command-grid,
+    body.shell-light .workspace-project-row,
+    body.shell-light .workspace-fix-queue-list {
+        grid-template-columns: 1fr;
+    }
+
+    body.shell-light .workspace-primary-stack,
+    body.shell-light .workspace-secondary-stack {
+        grid-template-columns: 1fr;
+    }
+
+    body.shell-light .workspace-primary-stack > :first-child,
+    body.shell-light .workspace-primary-stack > :nth-child(2),
+    body.shell-light .workspace-primary-stack > :nth-child(3),
+    body.shell-light .workspace-secondary-stack > :first-child {
+        grid-column: auto;
+    }
+
+    body.shell-light .workspace-project-actions {
+        justify-items: stretch;
+    }
+
+    body.shell-light .workspace-empty-steps {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 820px) {
+    body.shell-light .workspace-summary-grid,
+    body.shell-light .workspace-project-stats {
+        grid-template-columns: 1fr;
+    }
+
+    body.shell-light .workspace-header-button-row,
+    body.shell-light .workspace-module-row {
+        grid-template-columns: 1fr;
+    }
+
+    body.shell-light .workspace-module-row-actions .button {
+        width: 100%;
+    }
+}
+
 body.shell-light .workspace-dashboard-shell [style*="color: #f8fafc"],
 body.shell-light .workspace-dashboard-shell [style*="color:#f8fafc"],
 body.shell-light .agency-dashboard [style*="color: white"],
@@ -5235,8 +5899,13 @@ body.shell-light .audit-next-panel {
     border-radius: 18px;
 }
 
+body.shell-light .audit-next-stack {
+    display: grid;
+    gap: 1rem;
+}
+
 body.shell-light .audit-next-step-list {
-    margin-top: 1rem;
+    margin-top: 0;
 }
 
 body.shell-light .audit-next-step-card {
@@ -5251,11 +5920,35 @@ body.shell-light .audit-next-step-card p {
     color: var(--text-secondary);
 }
 
-body.shell-light .audit-context-list {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
-    margin: 1rem 0;
+body.shell-light .audit-context-grid {
+    display: grid;
+    gap: 0.75rem;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+body.shell-light .audit-context-card {
+    display: grid;
+    gap: 0.3rem;
+    padding: 0.9rem 1rem;
+    border-radius: 16px;
+    border: 1px solid rgba(15, 23, 42, 0.08);
+    background: rgba(248, 250, 252, 0.94);
+}
+
+body.shell-light .audit-context-card span {
+    color: var(--text-secondary);
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+body.shell-light .audit-context-card strong {
+    color: var(--text-primary);
+    line-height: 1.45;
+}
+
+body.shell-light .audit-next-actions {
+    margin-top: 0;
 }
 
 body.shell-light .audit-inline-lock {
@@ -5278,6 +5971,10 @@ body.shell-light .audit-upsell-panel {
     }
 
     body.shell-light .audit-processing-shell {
+        grid-template-columns: 1fr;
+    }
+
+    body.shell-light .audit-context-grid {
         grid-template-columns: 1fr;
     }
 }

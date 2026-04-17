@@ -9,7 +9,7 @@ from .location_services import get_country_choices, get_country_ui_metadata, val
 
 class StructuredLocationMixin:
     location = forms.CharField(required=False, widget=forms.HiddenInput())
-    location_display = forms.CharField(required=False)
+    location_display = forms.CharField(required=False, widget=forms.HiddenInput())
 
     def clean_location(self):
         return self.cleaned_data.get("location", "").strip()
@@ -113,6 +113,11 @@ class AuditRequestForm(BusinessContextMixin, StructuredLocationMixin, forms.Mode
             "primary_service": forms.TextInput(attrs={"placeholder": "Used car sales"}),
             "market_context": forms.Textarea(attrs={"rows": 3, "placeholder": "Market, audience, location, or commercial context that should shape the audit."}),
             "notes": forms.Textarea(attrs={"rows": 4, "placeholder": "What should this audit focus on first? Share the offer, audience, or visibility issue you care about most."}),
+            # Legacy location fields — overwritten by StructuredLocationMixin.clean(), never shown to user
+            "location_mode": forms.HiddenInput(),
+            "location_country": forms.HiddenInput(),
+            "location_scope": forms.HiddenInput(),
+            "location_area": forms.HiddenInput(),
         }
 
     def clean_website(self):
@@ -200,6 +205,11 @@ class WorkspaceProjectForm(BusinessContextMixin, StructuredLocationMixin, forms.
             "target_audience": forms.TextInput(attrs={"placeholder": "The buyers or users you want this project to reach"}),
             "target_goal": forms.TextInput(attrs={"placeholder": "Increase qualified leads from search"}),
             "primary_service": forms.TextInput(attrs={"placeholder": "Used car sales"}),
+            # Legacy location fields — overwritten by StructuredLocationMixin.clean(), never shown to user
+            "location_mode": forms.HiddenInput(),
+            "location_country": forms.HiddenInput(),
+            "location_scope": forms.HiddenInput(),
+            "location_area": forms.HiddenInput(),
         }
 
     def clean_name(self):
@@ -247,6 +257,11 @@ class WorkspaceAuditStartForm(BusinessContextMixin, StructuredLocationMixin, for
             "target_goal": forms.TextInput(attrs={"placeholder": "Increase qualified leads from search"}),
             "primary_service": forms.TextInput(attrs={"placeholder": "Used car sales"}),
             "notes": forms.Textarea(attrs={"rows": 3, "placeholder": "What should this first audit focus on?"}),
+            # Legacy location fields — overwritten by StructuredLocationMixin.clean(), never shown to user
+            "location_mode": forms.HiddenInput(),
+            "location_country": forms.HiddenInput(),
+            "location_scope": forms.HiddenInput(),
+            "location_area": forms.HiddenInput(),
         }
 
     def clean_company_name(self):

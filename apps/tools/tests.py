@@ -721,7 +721,7 @@ class ProjectDashboardTests(TestCase):
         dashboard_response = self.client.get(reverse("tools:workspace-dashboard"))
         self.assertEqual(dashboard_response.status_code, 200)
         self.assertContains(dashboard_response, "Open SEO")
-        self.assertContains(dashboard_response, "Free-pass mode")
+        self.assertContains(dashboard_response, "Developer mode")
 
     def test_workspace_dashboard_shows_audit_history_and_delta(self):
         user = get_user_model().objects.create_user(
@@ -945,7 +945,7 @@ class ProjectDashboardTests(TestCase):
         response = self.client.get(reverse("tools:audit-result", args=[audit_run.pk]))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Free-pass mode for testing")
+        self.assertContains(response, "Developer preview: plan limits are off")
         self.assertContains(response, "4 on-page issues")
         self.assertContains(response, "View Growth plan")
         self.assertContains(response, reverse("tools:workspace-signup"))

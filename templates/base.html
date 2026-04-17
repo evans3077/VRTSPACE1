@@ -33,6 +33,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
     <link rel="stylesheet" href="{% static 'css/site.css' %}">
     <link rel="stylesheet" href="{% static 'css/vrt-space-core.css' %}">
+    <link rel="stylesheet" href="{% static 'css/ui-polish.css' %}">
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     {% if schema_json %}
@@ -81,9 +82,11 @@
         </div>
     </header>
     {% if messages %}
-    <div class="container flash-stack">
+    <div class="container flash-stack" role="alert" aria-live="polite">
         {% for message in messages %}
-        <div class="flash flash-{{ message.tags|default:'info' }}">{{ message }}</div>
+        <div class="flash flash-{{ message.tags|default:'info' }}" role="status">
+            <span class="flash-text">{{ message }}</span>
+        </div>
         {% endfor %}
     </div>
     {% endif %}

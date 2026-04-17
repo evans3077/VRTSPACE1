@@ -5,12 +5,12 @@
     <div class="container hero-split public-hero-split">
         <div class="public-hero-copy">
             <p class="feature-tag">Shared Audit Report</p>
-            <h1>{{ audit_run.normalized_domain }}</h1>
-            <p class="lead">
+            <h1 style="max-width: 760px;">{{ audit_run.normalized_domain }}</h1>
+            <p class="lead" style="max-width: 620px; line-height: 1.7;">
                 Stakeholder-ready summary of the saved audit state, the main issues detected, and the clearest next
                 steps to take.
             </p>
-            <div class="hero-actions public-hero-actions">
+            <div class="hero-actions public-hero-actions" style="margin-top: 1.25rem;">
                 <a class="button button-secondary" href="{% url 'tools:shared-audit-report-pdf' share_link.token %}" target="_blank" rel="noopener">View PDF</a>
                 <a class="button button-secondary" href="{% url 'tools:shared-audit-report-pdf' share_link.token %}?download=1">Download PDF</a>
             </div>
