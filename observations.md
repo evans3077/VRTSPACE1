@@ -71,7 +71,9 @@ A targeted CSS layer (23 sections, ~870 lines) applied *after* `vrt-space-core.c
 
 | Section | What It Fixed |
 |---|---|
-| 1. Contrast | `.eyebrow` raised from #64748b → #475569. Dark theme labels to #cbd5e1. |
+| 0. Global Borders | Elevated default `--border-glass` alpha from 0.08/0.10 to 0.22 (light) and 0.16 (dark) ensuring all div boxes have clear, visible outlines |
+| 1. Layout & Grid | Flattened the bugged 4-column `workspace-dashboard` into a clean 2-column masonry flow. Fixed `method-section` background bleeding by introducing a premium slate-100 tier wrapper. |
+| 2. Contrast & Typography | Redefined global text tokens for Light mode to Slate-950/Slate-900. Boosted standard paragraph text to `font-weight: 500;` to counteract subpixel antialiasing "light bleed" that caused text to appear washed out. |
 | 2. Flash messages | Added 4px border-left color strip, flex layout, WCAG-compliant text colors per type |
 | 3. Forms | `min-height: 46px` inputs (touch targets), stronger label contrast, block error text, suppressed native select double arrows |
 | 4. Empty states | Removed `opacity: 0.5` on icons, stronger empty state borders on shell-light |

@@ -118,6 +118,7 @@ class AuditRequestForm(BusinessContextMixin, StructuredLocationMixin, forms.Mode
             "location_country": forms.HiddenInput(),
             "location_scope": forms.HiddenInput(),
             "location_area": forms.HiddenInput(),
+            "location": forms.HiddenInput(),
         }
 
     def clean_website(self):
@@ -210,6 +211,7 @@ class WorkspaceProjectForm(BusinessContextMixin, StructuredLocationMixin, forms.
             "location_country": forms.HiddenInput(),
             "location_scope": forms.HiddenInput(),
             "location_area": forms.HiddenInput(),
+            "location": forms.HiddenInput(),
         }
 
     def clean_name(self):
@@ -262,6 +264,7 @@ class WorkspaceAuditStartForm(BusinessContextMixin, StructuredLocationMixin, for
             "location_country": forms.HiddenInput(),
             "location_scope": forms.HiddenInput(),
             "location_area": forms.HiddenInput(),
+            "location": forms.HiddenInput(),
         }
 
     def clean_company_name(self):
