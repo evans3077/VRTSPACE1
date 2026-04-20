@@ -116,3 +116,8 @@ The `ui-polish.css` strategy (additive layer) was chosen over patching `vrt-spac
 1. Zero-risk to existing design system
 2. Easy rollback
 3. Clearly documents "what was improved and why"
+
+
+## Workspace AI Guidelines
+
+*   **File Editing Strategy:** Always edit files in small, highly targeted batches (preferring exact targeted chunk replacements over full-file overrides). This minimizes string matching failures caused by invisible formatting differences and prevents infinite file editing loops.

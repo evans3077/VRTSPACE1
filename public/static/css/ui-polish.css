@@ -1034,22 +1034,20 @@ body.shell-light .systems-section .system-card {
     content: '';
     position: absolute;
     top: 24px;
-    /* start from centre of first node */
     bottom: 24px;
-    /* end at centre of last node */
     left: 20px !important;
     width: 4px !important;
     background: linear-gradient(to bottom,
-            rgba(56, 189, 248, 0.9),
-            rgba(129, 140, 248, 0.9),
-            rgba(34, 211, 238, 0.5));
-    z-index: 2 !important;
-    /* Move in front of card borders */
+            #10b981 0%,
+            #f59e0b 50%,
+            #ef4444 100%) !important;
+    z-index: 1 !important;
 }
 
 /* Each step: a padded row with space for the side node */
 .case-step {
     position: relative;
+    z-index: 2 !important;
     display: flex !important;
     flex-direction: column !important;
     gap: 0.35rem !important;
@@ -1103,24 +1101,7 @@ body.shell-light .systems-section .system-card {
     color: #10b981 !important;
 }
 
-/* Sequential Colors & Delays (10s cycle) -> Green, Orange, Red */
-.case-step:nth-child(1) .step-num {
-    border-color: #10b981 !important;
-    color: #10b981 !important;
-    animation-delay: 0s !important;
-}
-
-.case-step:nth-child(2) .step-num {
-    border-color: #f59e0b !important;
-    color: #f59e0b !important;
-    animation-delay: 2.5s !important;
-}
-
-.case-step:nth-child(3) .step-num {
-    border-color: #ef4444 !important;
-    color: #ef4444 !important;
-    animation-delay: 5s !important;
-}
+/* Sequence is now controlled globally by Universal Matrix (Section 36) */
 
 /* Step label (h3): clear, readable, not gradient-clipped */
 .case-step h3 {
@@ -1144,9 +1125,9 @@ body.shell-light .systems-section .system-card {
 /* Shell-light overrides */
 body.shell-light .case-study-content::before {
     background: linear-gradient(to bottom,
-            rgba(15, 118, 110, 0.55),
-            rgba(20, 184, 166, 0.4),
-            rgba(45, 212, 191, 0.2));
+            #10b981 0%,
+            #f59e0b 50%,
+            #ef4444 100%) !important;
 }
 
 body.shell-light .case-step {
@@ -1162,24 +1143,7 @@ body.shell-light .step-num {
     background: #ffffff !important;
 }
 
-body.shell-light .case-step:nth-child(1) .step-num {
-    border-color: #0f766e !important;
-    color: #0f766e !important;
-    box-shadow: 0 0 0 4px rgba(15, 118, 110, 0.1);
-}
-
-body.shell-light .case-step:nth-child(2) .step-num {
-    border-color: #0d9488 !important;
-    color: #0d9488 !important;
-    box-shadow: 0 0 0 4px rgba(13, 148, 136, 0.1);
-}
-
-body.shell-light .case-step:nth-child(3) .step-num {
-    border-color: #14b8a6 !important;
-    color: #14b8a6 !important;
-    box-shadow: 0 0 0 4px rgba(20, 184, 166, 0.1);
-    background: #ffffff !important;
-}
+/* Sequence is now controlled globally by Universal Matrix (Section 36) */
 
 body.shell-light .case-step h3 {
     color: #64748b !important;
@@ -1228,13 +1192,14 @@ body.shell-light .case-step p {
             rgba(129, 140, 248, 0.85),
             rgba(34, 211, 238, 0.75),
             rgba(34, 211, 238, 0.3)) !important;
-    z-index: 2 !important;
-    /* Move in front of card borders */
+    z-index: 1 !important;
+    /* Move below card borders */
 }
 
 /* Each step item */
 .method-list li {
     position: relative !important;
+    z-index: 2 !important;
     padding: 1.5rem 1rem 1.5rem 4rem !important;
     counter-increment: method-step !important;
     background: rgba(255, 255, 255, 0.03);
@@ -1290,24 +1255,7 @@ body.shell-light .case-step p {
     color: #10b981 !important;
 }
 
-/* Sequential Colors & Delays (10s cycle) -> Orange, Teal, Red */
-.method-list li:nth-child(3n+1)::before {
-    border-color: #f59e0b !important;
-    color: #f59e0b !important;
-    animation-delay: 0s !important;
-}
-
-.method-list li:nth-child(3n+2)::before {
-    border-color: #0d9488 !important;
-    color: #0d9488 !important;
-    animation-delay: 3.33s !important;
-}
-
-.method-list li:nth-child(3n+3)::before {
-    border-color: #ef4444 !important;
-    color: #ef4444 !important;
-    animation-delay: 6.66s !important;
-}
+/* Sequence is now controlled globally by Universal Matrix (Section 36) */
 
 /* Hover: boost the glow */
 .method-list li:hover::before {
@@ -1338,20 +1286,7 @@ body.shell-light .method-list li::before {
     background: #ffffff !important;
 }
 
-body.shell-light .method-list li:nth-child(3n+1)::before {
-    border-color: #f59e0b !important;
-    color: #f59e0b !important;
-}
-
-body.shell-light .method-list li:nth-child(3n+2)::before {
-    border-color: #0d9488 !important;
-    color: #0d9488 !important;
-}
-
-body.shell-light .method-list li:nth-child(3n+3)::before {
-    border-color: #ef4444 !important;
-    color: #ef4444 !important;
-}
+/* Sequence is now controlled globally by Universal Matrix (Section 36) */
 
 
 /* ══════════════════════════════════════════════════════════════════
@@ -1505,7 +1440,11 @@ body.shell-light .systems-section .system-card {
 .method-list::before {
     width: 4px !important;
     left: 20px !important;
-    /* Adjust for 4px width to keep center at 22px */
+    background: linear-gradient(to bottom,
+            #10b981 0%,
+            #f59e0b 33%,
+            #ef4444 66%,
+            #3b82f6 100%) !important;
     opacity: 0.9 !important;
 }
 
@@ -1635,7 +1574,7 @@ body.shell-light .journey-card:hover::before {
 
 /* 1: ORANGE (LIGHT) */
 :is(
-  .hero-proof-card, .feature-card-premium, .experience-card, .journey-card, .faq-item, .system-card, .service-card, .public-step-card, .contact-form, .audit-panel .system-card, .method-list li, label:nth-of-type(3n+1) input, label:nth-of-type(3n+1) textarea, label:nth-of-type(3n+1) select
+  .feature-card-premium, .experience-card, .journey-card, .faq-item, .system-card, .service-card, .public-step-card, .contact-form, .audit-panel .system-card, label:nth-of-type(3n+1) input, label:nth-of-type(3n+1) textarea, label:nth-of-type(3n+1) select
 ):nth-child(3n + 1) {
     --box-brand-solid: #f59e0b;
     --box-brand-glow: rgba(245, 158, 11, 0.4);
@@ -1643,7 +1582,7 @@ body.shell-light .journey-card:hover::before {
 
 /* 2: BLUE/GREEN (DARKER) */
 :is(
-  .hero-proof-card, .feature-card-premium, .experience-card, .journey-card, .faq-item, .system-card, .service-card, .public-step-card, .contact-form, .audit-panel .system-card, .method-list li, label:nth-of-type(3n+2) input, label:nth-of-type(3n+2) textarea, label:nth-of-type(3n+2) select
+  .feature-card-premium, .experience-card, .journey-card, .faq-item, .system-card, .service-card, .public-step-card, .contact-form, .audit-panel .system-card, label:nth-of-type(3n+2) input, label:nth-of-type(3n+2) textarea, label:nth-of-type(3n+2) select
 ):nth-child(3n + 2) {
     --box-brand-solid: #0d9488;
     --box-brand-glow: rgba(13, 148, 136, 0.4);
@@ -1651,7 +1590,7 @@ body.shell-light .journey-card:hover::before {
 
 /* 3: RED (LIGHTER / VIBRANT) */
 :is(
-  .hero-proof-card, .feature-card-premium, .experience-card, .journey-card, .faq-item, .system-card, .service-card, .public-step-card, .contact-form, .audit-panel .system-card, .method-list li, label:nth-of-type(3n+3) input, label:nth-of-type(3n+3) textarea, label:nth-of-type(3n+3) select
+  .feature-card-premium, .experience-card, .journey-card, .faq-item, .system-card, .service-card, .public-step-card, .contact-form, .audit-panel .system-card, label:nth-of-type(3n+3) input, label:nth-of-type(3n+3) textarea, label:nth-of-type(3n+3) select
 ):nth-child(3n + 3) {
     --box-brand-solid: #ef4444;
     --box-brand-glow: rgba(239, 68, 68, 0.4);
@@ -1659,21 +1598,12 @@ body.shell-light .journey-card:hover::before {
 
 /* Base execution for outer bounding boxes & sequence delays */
 :is(
-  .hero-proof-card, .feature-card-premium, .experience-card, .journey-card, .faq-item, .system-card, .service-card, .public-step-card, .contact-form, .audit-panel .system-card
+  .feature-card-premium, .experience-card, .journey-card, .faq-item, .system-card, .service-card, .public-step-card, .contact-form, .audit-panel .system-card
 ) {
     border: 1.5px solid var(--box-brand-solid, var(--border-glass)) !important;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275) !important;
     color: var(--box-brand-solid) !important; /* Passes color to currentColor in sequence */
 }
-
-/* Specific Animators for Proof & Card Sequence */
-.hero-proof-card {
-    animation: orb-glow-sequence 10s infinite ease-in-out !important;
-}
-
-.hero-proof-card:nth-child(3n+1) { animation-delay: 0s !important; }
-.hero-proof-card:nth-child(3n+2) { animation-delay: 3.33s !important; }
-.hero-proof-card:nth-child(3n+3) { animation-delay: 6.66s !important; }
 
 /* Global Hover Glow application */
 :is(
@@ -1688,6 +1618,89 @@ body.shell-light .journey-card:hover::before {
     box-shadow: 0 0 15px 3px var(--box-brand-glow, transparent) !important;
 }
 
-body.shell-light :is(.hero-proof-card, .feature-card-premium, .experience-card, .journey-card, .faq-item, .system-card, .service-card, .public-step-card, .contact-form, .audit-panel .system-card) {
+body.shell-light :is(.feature-card-premium, .experience-card, .journey-card, .faq-item, .system-card, .service-card, .public-step-card, .contact-form, .audit-panel .system-card) {
     border-color: var(--box-brand-solid, rgba(15, 23, 42, 0.15)) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   36. SPECIALIZED 4-STEP SEQUENTIAL BRANDING
+   Enforces Green, Orange, Red, Blue for Method List and Proof Cards.
+   Synchronizes outer boxes with inner circles.
+   ══════════════════════════════════════════════════════════════════ */
+
+/* Animation exclusively on inner circles */
+:is(.method-list li::before, .case-step .step-num) {
+    animation: orb-glow-sequence 10s infinite ease-in-out !important;
+}
+
+/* 1: ORANGE */
+.method-list li:nth-child(4n+1),
+.case-step:nth-child(4n+1) {
+    --box-brand-solid: #f59e0b;
+    --box-brand-glow: rgba(245, 158, 11, 0.4);
+}
+.method-list li:nth-child(4n+1)::before,
+.case-step:nth-child(4n+1) .step-num {
+    animation-delay: 0s !important;
+}
+
+/* 2: TEAL (Green/Blue) */
+.method-list li:nth-child(4n+2),
+.case-step:nth-child(4n+2) {
+    --box-brand-solid: #14b8a6;
+    --box-brand-glow: rgba(20, 184, 166, 0.4);
+}
+.method-list li:nth-child(4n+2)::before,
+.case-step:nth-child(4n+2) .step-num {
+    animation-delay: 2.5s !important;
+}
+
+/* 3: RED */
+.method-list li:nth-child(4n+3),
+.case-step:nth-child(4n+3) {
+    --box-brand-solid: #ef4444;
+    --box-brand-glow: rgba(239, 68, 68, 0.4);
+}
+.method-list li:nth-child(4n+3)::before,
+.case-step:nth-child(4n+3) .step-num {
+    animation-delay: 5s !important;
+}
+
+/* 4: TEAL (Green/Blue) */
+.method-list li:nth-child(4n+4),
+.case-step:nth-child(4n+4) {
+    --box-brand-solid: #14b8a6;
+    --box-brand-glow: rgba(20, 184, 166, 0.4);
+}
+.method-list li:nth-child(4n+4)::before,
+.case-step:nth-child(4n+4) .step-num {
+    animation-delay: 7.5s !important;
+}
+
+/* Apply colors to BOTH outer div boxes and inner circles */
+.method-list li, .case-step {
+    border-color: var(--box-brand-solid) !important;
+}
+
+.method-list li::before, .case-step .step-num {
+    border-color: var(--box-brand-solid) !important;
+    color: var(--box-brand-solid) !important;
+}
+
+body.shell-light .method-list li, 
+body.shell-light .case-step {
+    border-color: var(--box-brand-solid) !important;
+}
+
+body.shell-light .method-list li::before, 
+body.shell-light .case-step .step-num {
+    border-color: var(--box-brand-solid) !important;
+    color: var(--box-brand-solid) !important;
+    background: transparent !important;
+}
+
+/* Hover consistency for circles only */
+.method-list li:hover::before, 
+.case-step:hover .step-num {
+    box-shadow: 0 0 20px 4px var(--box-brand-glow, transparent) !important;
 }
