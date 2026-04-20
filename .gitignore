@@ -10,5 +10,5 @@ db.sqlite3
 .env.production
 .env.production.local
 venv/
-static/
+# static/
 *.env
