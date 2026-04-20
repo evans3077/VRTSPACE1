@@ -1785,13 +1785,23 @@ body.shell-light .case-step .step-num {
     font-size: 1.05rem !important;
 }
 
-/* Map the 4-color glowing sequences locally without DOM replacing */
-.public-service-card:nth-child(4n+1):hover,
-.public-step-card:nth-child(4n+1):hover { border-color: #f59e0b !important; }
-.public-service-card:nth-child(4n+2):hover,
-.public-step-card:nth-child(4n+2):hover { border-color: #14b8a6 !important; }
-.public-service-card:nth-child(4n+3):hover,
-.public-step-card:nth-child(4n+3):hover { border-color: #ef4444 !important; }
+/* Inject extremely slow, subtle glowing loop */
+.public-service-card, .public-step-card {
+    background: var(--bg-surface) !important; /* Forces opaque body to hide the journey connector track behind it */
+    animation: orb-glow-sequence 20s infinite ease-in-out !important;
+}
+
+/* Ensure the delays are perfectly mapped to the 4-color steps across the 20s cycle */
+.public-service-card:nth-child(4n+1), .public-step-card:nth-child(4n+1) { animation-delay: 0s !important; }
+.public-service-card:nth-child(4n+2), .public-step-card:nth-child(4n+2) { animation-delay: 5s !important; }
+.public-service-card:nth-child(4n+3), .public-step-card:nth-child(4n+3) { animation-delay: 10s !important; }
+.public-service-card:nth-child(4n+4), .public-step-card:nth-child(4n+4) { animation-delay: 15s !important; }
+
+/* Map the exact glow colors locally */
+.public-service-card:nth-child(4n+1), .public-step-card:nth-child(4n+1) { --box-brand-solid: #f59e0b; color: #f59e0b; }
+.public-service-card:nth-child(4n+2), .public-step-card:nth-child(4n+2) { --box-brand-solid: #14b8a6; color: #14b8a6; }
+.public-service-card:nth-child(4n+3), .public-step-card:nth-child(4n+3) { --box-brand-solid: #ef4444; color: #ef4444; }
+.public-service-card:nth-child(4n+4), .public-step-card:nth-child(4n+4) { --box-brand-solid: #38bdf8; color: #38bdf8; }
 
 /* ══════════════════════════════════════════════════════════════════
    39. SERVICES ROUTE - JOURNEY CONNECTOR LINE
@@ -1801,7 +1811,8 @@ body.shell-light .case-step .step-num {
     z-index: 1;
 }
 
-.public-step-grid::before {
+/* Horizontal track used on the full wide grids */
+.public-step-grid:not(.compact)::before {
     content: '';
     position: absolute;
     top: 50%;
@@ -1810,6 +1821,28 @@ body.shell-light .case-step .step-num {
     right: 5%;
     height: 2px;
     background: linear-gradient(90deg, transparent, var(--brand-primary), var(--brand-secondary), transparent);
+    opacity: 0.3;
+    z-index: -1;
+}
+
+/* Force perfect symmetry on service footers regardless of text length */
+.public-service-footer {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 1rem !important;
+    margin-top: auto !important;
+}
+
+/* Vertical track explicitly for the compact vertical stacked grid on hero right-panel */
+.public-step-grid.compact::before {
+    content: '';
+    position: absolute;
+    top: 5%;
+    bottom: 5%;
+    left: 3rem; 
+    width: 2px;
+    background: linear-gradient(180deg, transparent, var(--brand-primary), var(--brand-secondary), transparent);
     opacity: 0.3;
     z-index: -1;
 }
