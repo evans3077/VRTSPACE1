@@ -1754,3 +1754,62 @@ body.shell-light .case-step .step-num {
         display: flex !important;
     }
 }
+
+/* ══════════════════════════════════════════════════════════════════
+   38. LOCALIZED SERVICES ROUTE BUMPS
+   Safely scales typography and adds hover states without grid disruption.
+   ══════════════════════════════════════════════════════════════════ */
+.public-service-card, .public-step-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease !important;
+}
+
+/* Elevate and pulse lightly on hover (Instead of breaking 3D flips) */
+.public-service-card:hover {
+    transform: translateY(-8px) scale(1.01) !important;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
+    border-color: var(--brand-primary) !important;
+}
+
+/* Slightly increase base typography for better viewing */
+.public-service-card h3 {
+    font-size: 1.5rem !important;
+}
+.public-service-card p {
+    font-size: 1.1rem !important;
+}
+
+.public-step-card h3 {
+    font-size: 1.35rem !important;
+}
+.public-step-card p {
+    font-size: 1.05rem !important;
+}
+
+/* Map the 4-color glowing sequences locally without DOM replacing */
+.public-service-card:nth-child(4n+1):hover,
+.public-step-card:nth-child(4n+1):hover { border-color: #f59e0b !important; }
+.public-service-card:nth-child(4n+2):hover,
+.public-step-card:nth-child(4n+2):hover { border-color: #14b8a6 !important; }
+.public-service-card:nth-child(4n+3):hover,
+.public-step-card:nth-child(4n+3):hover { border-color: #ef4444 !important; }
+
+/* ══════════════════════════════════════════════════════════════════
+   39. SERVICES ROUTE - JOURNEY CONNECTOR LINE
+   ══════════════════════════════════════════════════════════════════ */
+.public-step-grid {
+    position: relative;
+    z-index: 1;
+}
+
+.public-step-grid::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    left: 5%;
+    right: 5%;
+    height: 2px;
+    background: linear-gradient(90deg, transparent, var(--brand-primary), var(--brand-secondary), transparent);
+    opacity: 0.3;
+    z-index: -1;
+}

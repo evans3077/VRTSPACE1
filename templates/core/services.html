@@ -1,23 +1,18 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="public-shell-section">
+<section class="public-shell-section" style="padding-top: 1.5rem !important; padding-bottom: 4.5rem !important;">
     <div class="container hero-split public-hero-split">
         <div class="public-hero-copy">
             <p class="feature-tag">Services</p>
-            <h1>Three connected services that make website visibility easier to improve.</h1>
-            <p class="lead">
+            <h1 class="gradient-text" style="font-size: 3rem; margin-bottom: 1.5rem; line-height: 1.2;">Three connected services that make website visibility easier to improve.</h1>
+            <p class="lead" style="font-size: 1.25rem;">
                 Start with an audit, understand the SEO gaps, improve AI visibility, and keep progress moving inside
                 one workspace.
             </p>
-            <div class="hero-actions public-hero-actions">
+            <div class="hero-actions" style="justify-content: flex-start; margin-top: 2.5rem;">
                 <a class="button button-mega" href="{% url 'core:home' %}#audit">Start Free Audit</a>
                 <a class="button button-secondary" href="{% url 'core:packages' %}">See Pricing</a>
-            </div>
-            <div class="trust-bar tag-row public-chip-row">
-                <span class="premium-pill">Audit-first diagnosis</span>
-                <span class="premium-pill">Clear next steps</span>
-                <span class="premium-pill">Workspace follow-through</span>
             </div>
         </div>
         <div class="public-hero-panel glass-panel">
