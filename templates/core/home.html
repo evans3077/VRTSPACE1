@@ -2,7 +2,7 @@
 
 
 {% block content %}
-<section class="hero-split container">
+<section class="hero-split container" style="padding-top: 1.5rem !important; padding-bottom: 4.5rem !important;">
     <div class="hero-content">
         <p class="feature-tag">Website Visibility Analysis</p>
         <h1 class="gradient-text">Understand Your Website, Fix What Matters, Improve Over Time.</h1>
@@ -12,11 +12,6 @@
         <div class="hero-actions" style="justify-content: flex-start; margin-top: 2rem;">
             <a class="button button-mega" href="{% url 'tools:workspace-signup' %}">Start Free Audit</a>
             <a class="button button-secondary" href="#journey">See How It Works</a>
-        </div>
-        <div class="trust-bar tag-row" style="margin-top: 3rem; opacity: 0.7;">
-            {% for signal in trust_signals %}
-            <span class="premium-pill">{{ signal }}</span>
-            {% endfor %}
         </div>
     </div>
     <div class="workbench-visual">
@@ -85,7 +80,7 @@
     <div class="container hero-proof-grid">
         {% for item in results %}
         <article class="hero-proof-card glass-panel"
-            style="padding: 1.5rem; text-align: center; border: none; background: transparent !important;">
+            style="padding: 2rem; text-align: center;">
             <strong class="gradient-text"
                 style="font-size: 3rem; display: block; margin-bottom: 0.25rem;">{{ item.value }}</strong>
             <span class="text-secondary"
@@ -319,8 +314,12 @@
 
                     <button class="button-mega" type="submit" style="width: 100%; margin-top: 1.5rem;">Run Audit
                         Now</button>
+                    
+                    <p class="form-note text-muted" style="margin-top: 1.25rem; text-align: center; font-size: 0.85rem; line-height: 1.5; padding-top: 1.25rem; border-top: 1px solid var(--border-glass);">
+                        <i class="fas fa-info-circle opacity-75" style="margin-right: 0.25rem;"></i>
+                        Use this to get the diagnosis first. Free accounts include two starter audits, then deeper work continues through credits and paid plans.
+                    </p>
                 </form>
-                <p class="form-note text-muted" style="margin-top: 1rem;">Use this to get the diagnosis first. Free accounts include two starter audits, then deeper work continues through credits and paid plans.</p>
             </div>
         </div>
     </div>

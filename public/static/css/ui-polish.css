@@ -1035,7 +1035,7 @@ body.shell-light .systems-section .system-card {
     position: absolute;
     top: 24px;
     bottom: 24px;
-    left: 20px !important;
+    left: 26px !important;
     width: 4px !important;
     background: linear-gradient(to bottom,
             #10b981 0%,
@@ -1067,7 +1067,7 @@ body.shell-light .systems-section .system-card {
 /* Step node circle — replaces the bare .step-num text */
 .step-num {
     position: absolute !important;
-    left: 0px !important;
+    left: 6px !important;
     top: 50% !important;
     transform: translateY(-50%) !important;
 
@@ -1183,7 +1183,7 @@ body.shell-light .case-step p {
 .method-list::before {
     content: '' !important;
     position: absolute !important;
-    left: 20px !important;
+    left: 26px !important;
     top: 22px !important;
     bottom: 22px !important;
     width: 4px !important;
@@ -1223,7 +1223,7 @@ body.shell-light .case-step p {
 .method-list li::before {
     content: counter(method-step, decimal-leading-zero) !important;
     position: absolute !important;
-    left: 0 !important;
+    left: 6px !important;
     top: 50% !important;
     transform: translateY(-50%) !important;
 
@@ -1635,7 +1635,8 @@ body.shell-light :is(.feature-card-premium, .experience-card, .journey-card, .fa
 
 /* 1: ORANGE */
 .method-list li:nth-child(4n+1),
-.case-step:nth-child(4n+1) {
+.case-step:nth-child(4n+1),
+.hero-proof-card:nth-child(4n+1) {
     --box-brand-solid: #f59e0b;
     --box-brand-glow: rgba(245, 158, 11, 0.4);
 }
@@ -1646,7 +1647,8 @@ body.shell-light :is(.feature-card-premium, .experience-card, .journey-card, .fa
 
 /* 2: TEAL (Green/Blue) */
 .method-list li:nth-child(4n+2),
-.case-step:nth-child(4n+2) {
+.case-step:nth-child(4n+2),
+.hero-proof-card:nth-child(4n+2) {
     --box-brand-solid: #14b8a6;
     --box-brand-glow: rgba(20, 184, 166, 0.4);
 }
@@ -1657,7 +1659,8 @@ body.shell-light :is(.feature-card-premium, .experience-card, .journey-card, .fa
 
 /* 3: RED */
 .method-list li:nth-child(4n+3),
-.case-step:nth-child(4n+3) {
+.case-step:nth-child(4n+3),
+.hero-proof-card:nth-child(4n+3) {
     --box-brand-solid: #ef4444;
     --box-brand-glow: rgba(239, 68, 68, 0.4);
 }
@@ -1668,7 +1671,8 @@ body.shell-light :is(.feature-card-premium, .experience-card, .journey-card, .fa
 
 /* 4: TEAL (Green/Blue) */
 .method-list li:nth-child(4n+4),
-.case-step:nth-child(4n+4) {
+.case-step:nth-child(4n+4),
+.hero-proof-card:nth-child(4n+4) {
     --box-brand-solid: #14b8a6;
     --box-brand-glow: rgba(20, 184, 166, 0.4);
 }
@@ -1678,7 +1682,7 @@ body.shell-light :is(.feature-card-premium, .experience-card, .journey-card, .fa
 }
 
 /* Apply colors to BOTH outer div boxes and inner circles */
-.method-list li, .case-step {
+.method-list li, .case-step, .hero-proof-card {
     border-color: var(--box-brand-solid) !important;
 }
 
@@ -1688,7 +1692,8 @@ body.shell-light :is(.feature-card-premium, .experience-card, .journey-card, .fa
 }
 
 body.shell-light .method-list li, 
-body.shell-light .case-step {
+body.shell-light .case-step,
+body.shell-light .hero-proof-card {
     border-color: var(--box-brand-solid) !important;
 }
 
@@ -1703,4 +1708,49 @@ body.shell-light .case-step .step-num {
 .method-list li:hover::before, 
 .case-step:hover .step-num {
     box-shadow: 0 0 20px 4px var(--box-brand-glow, transparent) !important;
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   37. HOMEPAGE MOBILE-FIRST ENFORCEMENT SWEEP
+   Overrides massive inline paddings, widths, and structural issues
+   found across the DOM during the mobile audit.
+   ══════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+    /* Crush inline 8rem paddings */
+    .feature-showcase-section,
+    .diagnostic-section,
+    .journey-section,
+    [style*="padding: 8rem 0;"] {
+        padding-top: 4rem !important;
+        padding-bottom: 4rem !important;
+    }
+
+    /* Typography scaling for massive headings */
+    [style*="font-size: 3.5rem"], 
+    [style*="font-size: 3rem"] {
+        font-size: 2.25rem !important;
+        line-height: 1.2 !important;
+    }
+    
+    /* Hero Buttons - Stack to 100% width */
+    .hero-actions {
+        flex-direction: column !important;
+        align-items: stretch !important;
+        gap: 1rem !important;
+    }
+    .hero-actions .button {
+        width: 100% !important;
+    }
+
+    /* Diagnostic Box Padding */
+    .audit-panel .premium-form,
+    .audit-workflow {
+        padding: 1.5rem !important; 
+    }
+    
+    /* Layout fix for sidebar splits */
+    .layout-split-sidebar {
+        flex-direction: column !important;
+        display: flex !important;
+    }
 }
