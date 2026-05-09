@@ -1,14 +1,13 @@
+from datetime import timedelta
+from unittest.mock import patch
+
 from django.contrib.auth import get_user_model
 from django.test import TestCase, override_settings
 from django.urls import reverse
-from unittest.mock import patch
-
-from apps.core.plan_catalog import get_plan_definition
-from apps.tools.models import AuditRun
-
-from datetime import timedelta
-
 from django.utils import timezone
+
+from apps.core.plan_catalog import get_plan_definition, get_plan_monthly_amount_cents
+from apps.tools.models import AuditRun
 
 from .billing import (
     build_plan_cards,
@@ -540,3 +539,55 @@ class WorkspaceProjectHealthTests(TestCase):
         self.assertEqual(len(summaries), 1)
         self.assertEqual(summaries[0]["health_status"], "green")
         self.assertEqual(summaries[0]["latest_audit_overall_score"], 92)
+
+
+class StripePlanAlignmentTests(TestCase):
+    EXPECTED_AMOUNTS = {
+        "free": 0,
+        "starter": 5900,
+        "growth": 14900,
+        "authority": 34900,
+        "enterprise": None,
+    }
+
+    def test_plan_definitions_carry_expected_monthly_amount_cents(self):
+        for slug, expected in self.EXPECTED_AMOUNTS.items():
+            with self.subTest(slug=slug):
+                self.assertEqual(get_plan_monthly_amount_cents(slug), expected)
+
+    def test_plan_metadata_persists_monthly_amount_cents(self):
+        sync_workspace_plan_catalog()
+        starter = WorkspacePlan.objects.get(slug="starter")
+        growth = WorkspacePlan.objects.get(slug="growth")
+        authority = WorkspacePlan.objects.get(slug="authority")
+
+        self.assertEqual(starter.metadata.get("monthly_amount_cents"), 5900)
+        self.assertEqual(growth.metadata.get("monthly_amount_cents"), 14900)
+        self.assertEqual(authority.metadata.get("monthly_amount_cents"), 34900)
+
+    @override_settings(
+        STRIPE_PRICE_IDS={
+            "starter": "price_test_starter",
+            "growth": "price_test_growth",
+            "authority": "price_test_authority",
+            "enterprise": "",
+        }
+    )
+    def test_sync_writes_stripe_price_ids_from_settings(self):
+        sync_workspace_plan_catalog()
+
+        self.assertEqual(WorkspacePlan.objects.get(slug="starter").stripe_price_id, "price_test_starter")
+        self.assertEqual(WorkspacePlan.objects.get(slug="growth").stripe_price_id, "price_test_growth")
+        self.assertEqual(WorkspacePlan.objects.get(slug="authority").stripe_price_id, "price_test_authority")
+
+    @override_settings(STRIPE_PRICE_IDS={"starter": "", "growth": "", "authority": "", "enterprise": ""})
+    def test_sync_preserves_manually_set_stripe_price_id_when_env_blank(self):
+        sync_workspace_plan_catalog()
+        starter = WorkspacePlan.objects.get(slug="starter")
+        starter.stripe_price_id = "price_manual_override"
+        starter.save(update_fields=["stripe_price_id"])
+
+        sync_workspace_plan_catalog()
+
+        starter.refresh_from_db()
+        self.assertEqual(starter.stripe_price_id, "price_manual_override")

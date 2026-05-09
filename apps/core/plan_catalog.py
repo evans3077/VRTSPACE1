@@ -3,6 +3,7 @@ PLAN_DEFINITIONS = [
         "slug": "free",
         "name": "Free",
         "price_label": "$0",
+        "monthly_amount_cents": 0,
         "label": "Audit entry layer",
         "description": "Run two starter audits, save one website, and review the guided diagnosis before deciding whether to go deeper.",
         "sort_order": 0,
@@ -55,6 +56,7 @@ PLAN_DEFINITIONS = [
         "slug": "starter",
         "name": "Starter",
         "price_label": "$59",
+        "monthly_amount_cents": 5900,
         "label": "Focused operator plan",
         "description": "Detailed audits for operators managing a small number of sites and ready to act on the findings inside the workspace.",
         "sort_order": 10,
@@ -107,6 +109,7 @@ PLAN_DEFINITIONS = [
         "slug": "growth",
         "name": "Growth",
         "price_label": "$149",
+        "monthly_amount_cents": 14900,
         "label": "Team growth plan",
         "description": "The operating plan for teams that want recurring audits, deeper SEO and AEO execution, reporting, and structured content work.",
         "sort_order": 20,
@@ -159,6 +162,7 @@ PLAN_DEFINITIONS = [
         "slug": "authority",
         "name": "Authority",
         "price_label": "$349",
+        "monthly_amount_cents": 34900,
         "label": "Authority operating system",
         "description": "Full execution plan for teams running audit, SEO, AEO, content, reporting, and authority-building as one connected system.",
         "sort_order": 30,
@@ -211,6 +215,7 @@ PLAN_DEFINITIONS = [
         "slug": "enterprise",
         "name": "Enterprise",
         "price_label": "Custom",
+        "monthly_amount_cents": None,
         "label": "Custom environments",
         "description": "Reserved for multi-market delivery, custom integrations, high-touch reporting, and bespoke implementation.",
         "sort_order": 40,
@@ -322,7 +327,15 @@ def build_plan_metadata(definition):
         "audience": definition.get("audience", ""),
         "marketing_features": list(definition.get("features", [])),
         "upgrade_message": definition.get("upgrade_message", ""),
+        "monthly_amount_cents": definition.get("monthly_amount_cents"),
     }
+
+
+def get_plan_monthly_amount_cents(slug):
+    definition = get_plan_definition(slug)
+    if definition is None:
+        return None
+    return definition.get("monthly_amount_cents")
 
 
 def build_marketing_packages(*, include_free=False):
