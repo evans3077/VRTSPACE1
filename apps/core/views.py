@@ -195,6 +195,96 @@ class PackagesView(TemplateView):
             "plans": build_plan_cards(self.request.user),
         }
 
+class ForAgenciesView(TemplateView):
+    template_name = "core/for_agencies.html"
+
+    def get_context_data(self, **kwargs):
+        ref = self.request.GET.get("ref", "").strip()
+        return {
+            "page_title": "SEO & AI Visibility Platform for Agencies | VRT SPACE",
+            "meta_description": (
+                "Manage all your clients' SEO and AI visibility in one workspace. "
+                "Run audits, track scores, and show measurable progress. Built for agencies."
+            ),
+            "og_title": "SEO & AI Visibility Platform for Agencies | VRT SPACE",
+            "og_description": (
+                "Your clients are invisible in AI search. Show them the gap — and fix it. "
+                "VRT SPACE gives agencies one workspace for every client's SEO and AEO health."
+            ),
+            "canonical_url": self.request.build_absolute_uri(self.request.path),
+            "meta_robots": "index,follow",
+            "schema_json": json.dumps(
+                {
+                    "@context": "https://schema.org",
+                    "@type": "WebPage",
+                    "name": "VRT SPACE for Agencies",
+                    "description": "Manage client SEO and AI visibility in one workspace.",
+                    "url": self.request.build_absolute_uri(self.request.path),
+                    "provider": {
+                        "@type": "Organization",
+                        "name": "VRT SPACE AGENCY",
+                    },
+                }
+            ),
+            "audit_form": AuditRequestForm(initial={"ref": ref} if ref else {}),
+            "ref": ref,
+            "shell_theme": "shell-light",
+            "agency_stats": [
+                {"value": "3–15", "label": "Client sites managed per agency"},
+                {"value": "8 of 10", "label": "Queries where clients are invisible in AI answers"},
+                {"value": "Weekly", "label": "Automated score tracking and delta alerts"},
+            ],
+            "pain_points": [
+                {
+                    "icon": "fas fa-random",
+                    "title": "Context-switching between tools",
+                    "body": "Ahrefs for backlinks, GSC for search, separate tools for AI — no single view of a client's health.",
+                },
+                {
+                    "icon": "fas fa-eye-slash",
+                    "title": "No AI visibility data",
+                    "body": "None of the tools you already pay for tell you if your client is being cited in ChatGPT, Gemini, or Perplexity.",
+                },
+                {
+                    "icon": "fas fa-chart-bar",
+                    "title": "Can't show progress over time",
+                    "body": "Clients ask 'Is it working?' You have no automated score history to point at.",
+                },
+            ],
+            "platform_features": [
+                {
+                    "icon": "fas fa-th-large",
+                    "tag": "Dashboard",
+                    "title": "Bird's-eye view of every client",
+                    "body": "One screen shows all your client sites with their overall score, the most at-risk category, and how the score has moved since the last audit.",
+                },
+                {
+                    "icon": "fas fa-robot",
+                    "tag": "AEO",
+                    "title": "AI search visibility — measured",
+                    "body": "See exactly which of your client's target queries are answered by AI and whether their brand is cited. No guessing.",
+                },
+                {
+                    "icon": "fas fa-history",
+                    "tag": "Progress",
+                    "title": "Score deltas that justify the retainer",
+                    "body": "Every audit run is saved. When a client asks if the work is paying off, you show them the score moving from 54 to 71 over 60 days.",
+                },
+                {
+                    "icon": "fas fa-calendar-check",
+                    "tag": "Automation",
+                    "title": "Scheduled audits — no manual triggers",
+                    "body": "Set weekly or monthly audit schedules per client. Get notified when a score drops so you catch regressions before the client does.",
+                },
+            ],
+            "plan_comparison": [
+                {"name": "Starter", "price": "$59/mo", "clients": "3 sites", "audits": "8 audits/mo", "highlight": False},
+                {"name": "Growth", "price": "$149/mo", "clients": "10 sites", "audits": "24 audits/mo", "highlight": True},
+                {"name": "Authority", "price": "$349/mo", "clients": "25 sites", "audits": "80 audits/mo", "highlight": False},
+            ],
+        }
+
+
 def location_autocomplete(request):
     query = request.GET.get("q", "").strip()
     if len(query) < 2:

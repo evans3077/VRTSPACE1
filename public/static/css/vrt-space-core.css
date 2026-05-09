@@ -6225,3 +6225,32 @@ body.shell-light .audit-upsell-panel {
         transform: translate(-50%, -50%) rotate(360deg);
     }
 }
+
+/* ── Agency landing page ─────────────────────────────────────────────────── */
+.agency-hero {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 4rem;
+    align-items: center;
+    padding-top: 3rem;
+    padding-bottom: 5rem;
+}
+
+.agency-hero-content {
+    text-align: left;
+}
+
+.agency-hero-visual {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media (max-width: 860px) {
+    .agency-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .agency-hero-visual {
+        justify-content: flex-start;
+    }
+}
