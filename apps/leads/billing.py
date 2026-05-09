@@ -2,6 +2,7 @@ import calendar
 import hashlib
 import hmac
 import json
+import logging
 import time
 from datetime import date
 from datetime import datetime
@@ -12,6 +13,8 @@ from django.conf import settings
 from django.db.models import Sum
 from django.db.models import Q
 from django.utils import timezone
+
+logger = logging.getLogger(__name__)
 
 from apps.core.plan_catalog import (
     build_marketing_packages,
@@ -739,7 +742,54 @@ def spend_credits(user, category, *, amount=1, project=None, note="", reference_
             "shadow_amount": amount if shadow_mode else 0,
         },
     )
+    _maybe_dispatch_credit_alerts(
+        user,
+        subscription=subscription,
+        period_start=period_start,
+        period_end=period_end,
+        now=now,
+    )
     return entry
+
+
+def _maybe_dispatch_credit_alerts(user, *, subscription, period_start, period_end, now=None):
+    try:
+        from .credit_alerts import (
+            evaluate_credit_alert_thresholds,
+            record_credit_alert,
+        )
+        from .notifications import send_credit_alert_email
+        from .models import CreditAlert
+
+        balance = get_total_credit_balance_summary(user, now=now)
+        thresholds = evaluate_credit_alert_thresholds(
+            user,
+            balance=balance,
+            period_start=period_start,
+            period_end=period_end,
+        )
+        for threshold in thresholds:
+            delivered = True
+            error_message = ""
+            try:
+                send_credit_alert_email(user, threshold_pct=threshold, balance=balance)
+            except Exception as exc:  # pragma: no cover - email backend failures
+                delivered = False
+                error_message = str(exc)
+                logger.exception("Failed to send credit alert email for user=%s threshold=%s", user.pk, threshold)
+            record_credit_alert(
+                user,
+                threshold_pct=threshold,
+                balance=balance,
+                period_start=period_start,
+                period_end=period_end,
+                subscription=subscription,
+                channel=CreditAlert.Channel.EMAIL,
+                delivered=delivered,
+                error_message=error_message,
+            )
+    except Exception:
+        logger.exception("Credit alert dispatch failed for user=%s", getattr(user, "pk", None))
 
 
 def _get_project_complexity_band(project):

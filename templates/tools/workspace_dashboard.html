@@ -395,13 +395,35 @@
                         <p class="eyebrow">Credits</p>
                         <h2>Balance</h2>
                     </div>
+                    {% if credit_alert_band == 100 %}
+                    <div class="workspace-credit-banner workspace-credit-banner-critical">
+                        <strong>You've used all of this month's credits.</strong>
+                        <span>Top up to keep audits and refreshes running, or wait for next cycle to refresh automatically.</span>
+                        <a href="{% url 'tools:account-dashboard' %}#billing">Top up &rarr;</a>
+                    </div>
+                    {% elif credit_alert_band == 90 %}
+                    <div class="workspace-credit-banner workspace-credit-banner-warning">
+                        <strong>You're at 90% of this month's credits.</strong>
+                        <span>Top up to avoid a mid-cycle pause, or pace the rest of the month.</span>
+                        <a href="{% url 'tools:account-dashboard' %}#billing">Top up &rarr;</a>
+                    </div>
+                    {% elif credit_alert_band == 75 %}
+                    <div class="workspace-credit-banner workspace-credit-banner-info">
+                        <strong>75% of this month's credits used.</strong>
+                        <span>Worth a glance to plan the rest of the month.</span>
+                    </div>
+                    {% endif %}
                     <div class="workspace-credit-balance-card">
                         <div class="workspace-credit-balance-top">
                             <div>
                                 <p class="eyebrow">Remaining</p>
                                 <h3>{% if credit_overview.unlimited %}Unlimited{% else %}{{ credit_overview.remaining|default:0 }}{% endif %}</h3>
                             </div>
+                            {% if credit_usage_pct is not None %}
+                            <span class="score-pill {% if credit_alert_band == 100 %}score-low{% elif credit_alert_band == 90 %}score-low{% elif credit_alert_band == 75 %}score-med{% else %}score-high{% endif %}">{{ credit_usage_pct }}% used</span>
+                            {% else %}
                             <span class="score-pill score-high">Workspace usage</span>
+                            {% endif %}
                         </div>
                         <div class="workspace-credit-balance-meta">
                             <div><span>Used this cycle</span><strong>{{ credit_overview.used|default:0 }}</strong></div>

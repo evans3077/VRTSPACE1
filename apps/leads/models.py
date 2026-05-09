@@ -279,4 +279,42 @@ class WorkspaceCreditLedger(TimestampedModel):
     def __str__(self):
         return f"{self.user} - {self.category} ({self.delta})"
 
-# Create your models here.
+
+class CreditAlert(TimestampedModel):
+    class Channel(models.TextChoices):
+        EMAIL = "email", "Email"
+        IN_APP = "in_app", "In-app"
+        BOTH = "both", "Both"
+
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="credit_alerts",
+    )
+    subscription = models.ForeignKey(
+        WorkspaceSubscription,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="credit_alerts",
+    )
+    period_start = models.DateField()
+    period_end = models.DateField()
+    threshold_pct = models.PositiveSmallIntegerField()
+    used_at_alert = models.PositiveIntegerField(default=0)
+    granted_at_alert = models.PositiveIntegerField(default=0)
+    channel = models.CharField(max_length=12, choices=Channel.choices, default=Channel.EMAIL)
+    delivered = models.BooleanField(default=True)
+    error_message = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ("-period_start", "-threshold_pct", "-created_at")
+        constraints = [
+            models.UniqueConstraint(
+                fields=["user", "period_start", "threshold_pct"],
+                name="uniq_credit_alert_per_user_period_threshold",
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.user} {self.threshold_pct}% ({self.period_start})"
