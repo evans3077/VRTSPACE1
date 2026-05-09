@@ -1451,6 +1451,23 @@ def sync_subscription_from_checkout_session(session_data):
     subscription.metadata = session_data
     subscription.save()
     ensure_plan_credit_grants(subscription.user)
+
+    # Record affiliate commission if this user was referred
+    session_id = session_data.get("id", "")
+    amount_total = session_data.get("amount_total") or 0
+    if session_id and amount_total:
+        try:
+            from .affiliate import record_affiliate_commission
+            record_affiliate_commission(
+                subscription.user,
+                stripe_session_id=session_id,
+                plan_slug=plan_slug,
+                amount_cents=amount_total,
+                is_recurring=False,
+            )
+        except Exception:
+            logger.exception("Affiliate commission recording failed for session %s", session_id)
+
     return subscription
 
 

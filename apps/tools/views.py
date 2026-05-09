@@ -537,6 +537,14 @@ class WorkspaceSignupView(View):
             project.owner = user
             project.save(update_fields=["owner", "updated_at"])
 
+        ref_code = (request.GET.get("ref") or request.POST.get("ref") or "").strip()
+        if ref_code:
+            try:
+                from apps.leads.affiliate import record_affiliate_referral
+                record_affiliate_referral(user, ref_code)
+            except Exception:
+                pass
+
         return redirect("tools:workspace-dashboard")
 
     def _get_audit_run(self):
@@ -555,10 +563,13 @@ class WorkspaceSignupView(View):
         query = {}
         audit_pk = self.request.GET.get("audit") or self.request.POST.get("audit")
         package_name = self.request.GET.get("package") or self.request.POST.get("package")
+        ref = self.request.GET.get("ref") or self.request.POST.get("ref")
         if audit_pk:
             query["audit"] = audit_pk
         if package_name:
             query["package"] = package_name
+        if ref:
+            query["ref"] = ref
         base_url = reverse(route_name)
         if not query:
             return base_url
@@ -603,10 +614,13 @@ class WorkspaceLoginView(View):
         query = {}
         audit_pk = self.request.GET.get("audit") or self.request.POST.get("audit")
         package_name = self.request.GET.get("package") or self.request.POST.get("package")
+        ref = self.request.GET.get("ref") or self.request.POST.get("ref")
         if audit_pk:
             query["audit"] = audit_pk
         if package_name:
             query["package"] = package_name
+        if ref:
+            query["ref"] = ref
         base_url = reverse(route_name)
         if not query:
             return base_url

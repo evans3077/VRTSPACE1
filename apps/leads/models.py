@@ -280,6 +280,88 @@ class WorkspaceCreditLedger(TimestampedModel):
         return f"{self.user} - {self.category} ({self.delta})"
 
 
+class Affiliate(TimestampedModel):
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="affiliate_profile",
+    )
+    name = models.CharField(max_length=160)
+    email = models.EmailField()
+    code = models.SlugField(unique=True, max_length=40)
+    commission_rate_first_pct = models.DecimalField(max_digits=5, decimal_places=2, default="25.00")
+    commission_rate_recurring_pct = models.DecimalField(max_digits=5, decimal_places=2, default="15.00")
+    is_active = models.BooleanField(default=True)
+    notes = models.TextField(blank=True)
+
+    class Meta:
+        ordering = ("name",)
+
+    def __str__(self):
+        return f"{self.name} ({self.code})"
+
+
+class AffiliateReferral(TimestampedModel):
+    affiliate = models.ForeignKey(
+        Affiliate,
+        on_delete=models.CASCADE,
+        related_name="referrals",
+    )
+    referred_user = models.OneToOneField(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        related_name="affiliate_referral",
+    )
+    ref_code_used = models.CharField(max_length=40)
+    converted_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ("-created_at",)
+
+    def __str__(self):
+        return f"{self.affiliate.code} → {self.referred_user}"
+
+
+class AffiliateCommission(TimestampedModel):
+    affiliate = models.ForeignKey(
+        Affiliate,
+        on_delete=models.CASCADE,
+        related_name="commissions",
+    )
+    referral = models.ForeignKey(
+        AffiliateReferral,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="commissions",
+    )
+    referred_user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="affiliate_commissions",
+    )
+    stripe_checkout_session_id = models.CharField(max_length=120, unique=True)
+    plan_slug = models.CharField(max_length=40, blank=True)
+    amount_cents = models.PositiveIntegerField(default=0)
+    commission_cents = models.PositiveIntegerField(default=0)
+    commission_rate_pct = models.DecimalField(max_digits=5, decimal_places=2, default="0.00")
+    is_recurring = models.BooleanField(default=False)
+    period_year = models.PositiveSmallIntegerField()
+    period_month = models.PositiveSmallIntegerField()
+    paid_out = models.BooleanField(default=False)
+    paid_out_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ("-period_year", "-period_month", "-created_at")
+
+    def __str__(self):
+        return f"{self.affiliate.code} +${self.commission_cents / 100:.2f} ({self.period_year}-{self.period_month:02d})"
+
+
 class CreditAlert(TimestampedModel):
     class Channel(models.TextChoices):
         EMAIL = "email", "Email"

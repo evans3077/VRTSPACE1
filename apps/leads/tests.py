@@ -31,7 +31,11 @@ from .credit_alerts import (
     get_credit_usage_percentage,
     record_credit_alert,
 )
+from .affiliate import get_affiliate_by_code, record_affiliate_commission, record_affiliate_referral
 from .models import (
+    Affiliate,
+    AffiliateCommission,
+    AffiliateReferral,
     AuditRequest,
     ClientProject,
     CreditAlert,
@@ -987,3 +991,103 @@ class CreditTopupTests(TestCase):
 
         self.assertEqual(response.status_code, 302)
         self.assertEqual(response["Location"], "https://stripe.test/redirect")
+
+
+class AffiliateReferralTests(TestCase):
+    def setUp(self):
+        User = get_user_model()
+        self.influencer = Affiliate.objects.create(
+            name="Test Influencer",
+            email="inf@example.com",
+            code="testinf",
+            commission_rate_first_pct="25.00",
+            commission_rate_recurring_pct="15.00",
+        )
+        self.user = User.objects.create_user(username="ref_user@x.com", email="ref_user@x.com", password="pass")
+
+    def test_get_affiliate_by_code_returns_affiliate(self):
+        af = get_affiliate_by_code("testinf")
+        self.assertEqual(af.pk, self.influencer.pk)
+
+    def test_get_affiliate_by_code_returns_none_for_unknown(self):
+        self.assertIsNone(get_affiliate_by_code("bogus"))
+
+    def test_get_affiliate_by_code_returns_none_for_inactive(self):
+        self.influencer.is_active = False
+        self.influencer.save()
+        self.assertIsNone(get_affiliate_by_code("testinf"))
+
+    def test_record_affiliate_referral_creates_record(self):
+        referral = record_affiliate_referral(self.user, "testinf")
+        self.assertIsNotNone(referral)
+        self.assertEqual(referral.affiliate, self.influencer)
+        self.assertEqual(referral.referred_user, self.user)
+
+    def test_record_affiliate_referral_is_idempotent(self):
+        r1 = record_affiliate_referral(self.user, "testinf")
+        r2 = record_affiliate_referral(self.user, "testinf")
+        self.assertEqual(r1.pk, r2.pk)
+
+    def test_record_affiliate_referral_ignores_unknown_code(self):
+        result = record_affiliate_referral(self.user, "nope")
+        self.assertIsNone(result)
+
+
+class AffiliateCommissionTests(TestCase):
+    def setUp(self):
+        User = get_user_model()
+        self.influencer = Affiliate.objects.create(
+            name="Commission Influencer",
+            email="ci@example.com",
+            code="ciinf",
+            commission_rate_first_pct="25.00",
+            commission_rate_recurring_pct="15.00",
+        )
+        self.user = User.objects.create_user(username="comuser@x.com", email="comuser@x.com", password="pass")
+        record_affiliate_referral(self.user, "ciinf")
+
+    def test_record_commission_creates_record(self):
+        commission = record_affiliate_commission(
+            self.user,
+            stripe_session_id="cs_test_001",
+            plan_slug="starter",
+            amount_cents=5900,
+            is_recurring=False,
+        )
+        self.assertIsNotNone(commission)
+        self.assertEqual(commission.affiliate, self.influencer)
+        self.assertEqual(commission.amount_cents, 5900)
+        self.assertEqual(commission.commission_cents, 1475)  # 25% of 5900
+
+    def test_record_commission_is_idempotent(self):
+        c1 = record_affiliate_commission(self.user, stripe_session_id="cs_test_002", plan_slug="starter", amount_cents=5900)
+        c2 = record_affiliate_commission(self.user, stripe_session_id="cs_test_002", plan_slug="starter", amount_cents=5900)
+        self.assertEqual(c1.pk, c2.pk)
+
+    def test_recurring_uses_lower_rate(self):
+        commission = record_affiliate_commission(
+            self.user,
+            stripe_session_id="cs_test_003",
+            plan_slug="starter",
+            amount_cents=5900,
+            is_recurring=True,
+        )
+        self.assertEqual(commission.commission_cents, 885)  # 15% of 5900
+
+    def test_no_referral_returns_none(self):
+        User = get_user_model()
+        other = User.objects.create_user(username="noref@x.com", email="noref@x.com", password="pass")
+        result = record_affiliate_commission(other, stripe_session_id="cs_test_004", plan_slug="starter", amount_cents=5900)
+        self.assertIsNone(result)
+
+    def test_signup_with_ref_creates_referral(self):
+        User = get_user_model()
+        response = self.client.post(
+            reverse("tools:workspace-signup") + "?ref=ciinf",
+            {"email": "newref@example.com", "password": "ComplexPass123!"},
+        )
+        self.assertEqual(response.status_code, 302)
+        new_user = User.objects.get(email="newref@example.com")
+        referral = AffiliateReferral.objects.filter(referred_user=new_user).first()
+        self.assertIsNotNone(referral)
+        self.assertEqual(referral.affiliate, self.influencer)

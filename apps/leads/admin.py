@@ -1,6 +1,9 @@
 from django.contrib import admin
 
 from .models import (
+    Affiliate,
+    AffiliateCommission,
+    AffiliateReferral,
     AuditRequest,
     ClientProject,
     Lead,
@@ -63,4 +66,29 @@ class WorkspaceCreditLedgerAdmin(admin.ModelAdmin):
     search_fields = ("user__username", "user__email", "reference_key", "note")
     autocomplete_fields = ("user", "plan", "subscription", "project")
 
-# Register your models here.
+
+@admin.register(Affiliate)
+class AffiliateAdmin(admin.ModelAdmin):
+    list_display = ("name", "code", "email", "commission_rate_first_pct", "commission_rate_recurring_pct", "is_active")
+    list_filter = ("is_active",)
+    search_fields = ("name", "email", "code")
+    prepopulated_fields = {"code": ("name",)}
+
+
+@admin.register(AffiliateReferral)
+class AffiliateReferralAdmin(admin.ModelAdmin):
+    list_display = ("affiliate", "referred_user", "ref_code_used", "converted_at", "created_at")
+    list_filter = ("affiliate",)
+    search_fields = ("referred_user__email", "ref_code_used", "affiliate__code")
+    readonly_fields = ("created_at",)
+
+
+@admin.register(AffiliateCommission)
+class AffiliateCommissionAdmin(admin.ModelAdmin):
+    list_display = (
+        "affiliate", "referred_user", "plan_slug", "amount_cents", "commission_cents",
+        "commission_rate_pct", "is_recurring", "period_year", "period_month", "paid_out",
+    )
+    list_filter = ("affiliate", "is_recurring", "paid_out", "period_year", "period_month")
+    search_fields = ("affiliate__code", "referred_user__email", "stripe_checkout_session_id")
+    readonly_fields = ("created_at",)
