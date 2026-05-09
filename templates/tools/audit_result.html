@@ -112,18 +112,31 @@
                 <span class="premium-pill">Developer preview: plan limits are off</span>
                 {% endif %}
             </div>
+            {% if request.GET.pdf_locked %}
+            <div class="audit-pdf-lock-notice">
+                PDF exports unlock on Starter and above.
+                <a href="{% url 'core:packages' %}">See plans &rarr;</a>
+            </div>
+            {% endif %}
             <div class="hero-actions public-hero-actions">
+                {% if audit_profile.pdf_export_enabled %}
                 <a href="{% url 'tools:audit-report-pdf' audit_run.pk %}" class="button button-secondary" target="_blank" rel="noopener">View PDF</a>
                 <a href="{% url 'tools:audit-report-pdf' audit_run.pk %}?download=1" class="button button-secondary">Download PDF</a>
+                {% endif %}
                 {% if viewer_has_workspace %}
                 <a href="{% url 'tools:workspace-dashboard' %}" class="button button-primary">Open Workspace</a>
                 {% else %}
-                <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-primary">Create Free Workspace</a>
+                <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-primary">Unlock the full audit</a>
                 {% endif %}
                 {% if user.is_staff %}
                 <a href="{% url 'tools:agency-audit' audit_run.pk %}" class="button button-secondary">Agency View</a>
                 {% endif %}
             </div>
+            {% if not viewer_has_workspace %}
+            <p class="hero-cta-note">
+                Save this audit, see every critical issue, track changes over time, and download branded PDF reports on a paid plan. Free workspace to start.
+            </p>
+            {% endif %}
         </div>
         <div class="public-hero-panel glass-panel audit-score-panel audit-hero-score-panel">
             <div class="audit-score-summary">
