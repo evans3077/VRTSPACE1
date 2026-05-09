@@ -988,8 +988,11 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
             if getattr(project, "pk", None)
             else {}
         )
+        from .automation import can_manage_recurring_audits as _can_manage_recurring
+        _can_schedule, _ = _can_manage_recurring(self.request.user)
         context["billing_plans"] = billing_state["plans"]
         context["audit_schedule"] = schedule
+        context["can_manage_recurring_audits"] = _can_schedule
         context["latest_change_report"] = latest_change_report
         context["generated_content_count"] = generated_content_count
         context["latest_seo_snapshot"] = latest_seo_snapshot

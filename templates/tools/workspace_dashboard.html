@@ -437,6 +437,103 @@
                     <p class="workspace-support-note">Billing, top-ups, and personal settings stay in your account area so the workspace can stay focused on execution.</p>
                     <div><a class="button button-secondary" href="{% url 'tools:account-dashboard' %}#billing">Open account</a></div>
                 </article>
+
+                {# ── Scheduled audits card ── #}
+                {% if can_manage_recurring_audits %}
+                <article class="system-card workspace-schedule-card" id="audit-schedule">
+                    <div class="section-heading workspace-section-head">
+                        <p class="eyebrow">Automation</p>
+                        <h2>Scheduled Audits</h2>
+                    </div>
+
+                    {% if audit_schedule and audit_schedule.is_active %}
+                    <div class="workspace-schedule-status workspace-schedule-status-active">
+                        <i class="fas fa-circle workspace-schedule-status-dot"></i>
+                        <span>Active &mdash; {{ audit_schedule.get_cadence_display }} reruns</span>
+                        {% if audit_schedule.next_run_at %}
+                        <span class="workspace-schedule-next">Next run {{ audit_schedule.next_run_at|date:"M j, Y" }}</span>
+                        {% endif %}
+                    </div>
+                    {% elif audit_schedule %}
+                    <div class="workspace-schedule-status workspace-schedule-status-paused">
+                        <i class="fas fa-pause-circle workspace-schedule-status-dot"></i>
+                        <span>Paused</span>
+                    </div>
+                    {% else %}
+                    <p class="workspace-schedule-hint">
+                        Set a weekly or monthly cadence and the workspace reruns automatically.
+                        You get notified when scores shift — no manual trigger needed.
+                    </p>
+                    {% endif %}
+
+                    <details class="workspace-schedule-form-wrap"{% if not audit_schedule or not audit_schedule.is_active %} open{% endif %}>
+                        <summary class="workspace-schedule-form-toggle">
+                            {% if audit_schedule and audit_schedule.is_active %}Edit schedule{% else %}Set up schedule{% endif %}
+                        </summary>
+                        <form method="post" action="{% url 'tools:workspace-audit-schedule' %}" class="workspace-schedule-form">
+                            {% csrf_token %}
+                            <div class="workspace-schedule-row">
+                                <label class="workspace-form-field">
+                                    <span>Cadence</span>
+                                    <select name="cadence" class="form-control">
+                                        <option value="weekly" {% if audit_schedule and audit_schedule.cadence == "weekly" %}selected{% endif %}>Weekly</option>
+                                        <option value="monthly" {% if audit_schedule and audit_schedule.cadence == "monthly" %}selected{% endif %}>Monthly</option>
+                                    </select>
+                                </label>
+                                <label class="workspace-schedule-toggle-row">
+                                    <input type="checkbox" name="is_active" value="1"
+                                        {% if audit_schedule and audit_schedule.is_active %}checked{% endif %}>
+                                    <span>Active</span>
+                                </label>
+                            </div>
+
+                            {% if email_reports_allowed %}
+                            <div class="workspace-schedule-row" style="flex-direction: column; gap: 0.5rem;">
+                                <label class="workspace-schedule-toggle-row">
+                                    <input type="checkbox" name="alert_on_score_drop" value="1"
+                                        {% if audit_schedule and audit_schedule.alert_on_score_drop %}checked{% endif %}>
+                                    <span>Alert me when the score drops</span>
+                                </label>
+                                <label class="workspace-schedule-toggle-row">
+                                    <input type="checkbox" name="alert_on_new_issues" value="1"
+                                        {% if audit_schedule and audit_schedule.alert_on_new_issues %}checked{% endif %}>
+                                    <span>Alert me on new issues</span>
+                                </label>
+                            </div>
+                            {% else %}
+                            <p class="workspace-schedule-hint" style="font-size: 0.78rem;">
+                                <i class="fas fa-lock"></i>
+                                Score-drop alerts require an email-reports plan.
+                                <a href="{% url 'core:packages' %}">Upgrade</a>
+                            </p>
+                            {% endif %}
+
+                            <button type="submit" class="button button-primary" style="width: 100%; margin-top: 0.5rem;">Save schedule</button>
+                        </form>
+                    </details>
+
+                    {% if audit_schedule and audit_schedule.last_error_message %}
+                    <p class="workspace-schedule-error">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        {{ audit_schedule.last_error_message }}
+                    </p>
+                    {% endif %}
+                </article>
+                {% else %}
+                {# Teaser for users who can't manage schedules — locked feature #}
+                <article class="system-card workspace-schedule-card workspace-schedule-locked">
+                    <div class="section-heading workspace-section-head">
+                        <p class="eyebrow">Automation</p>
+                        <h2>Scheduled Audits</h2>
+                    </div>
+                    <p class="workspace-schedule-hint">
+                        Automatically rerun audits weekly or monthly and get alerted when a client score drops.
+                        Available from the Starter plan.
+                    </p>
+                    <a href="{% url 'core:packages' %}" class="button button-secondary" style="width: 100%;">See plans</a>
+                </article>
+                {% endif %}
+
                 {% else %}
                 <article class="system-card workspace-empty-launch">
                     <p class="eyebrow text-accent">Getting started</p>
