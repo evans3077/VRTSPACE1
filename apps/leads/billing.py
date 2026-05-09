@@ -223,10 +223,15 @@ def get_workspace_plans():
 
 
 def sync_workspace_plan_catalog():
+    configured_price_ids = getattr(settings, "STRIPE_PRICE_IDS", {}) or {}
     for definition in get_plan_definitions(include_free=False):
+        defaults = build_workspace_plan_defaults(definition)
+        env_price_id = configured_price_ids.get(definition["slug"]) or ""
+        if env_price_id:
+            defaults["stripe_price_id"] = env_price_id
         WorkspacePlan.objects.update_or_create(
             slug=definition["slug"],
-            defaults=build_workspace_plan_defaults(definition),
+            defaults=defaults,
         )
 
 
