@@ -1222,6 +1222,11 @@ class AuditReportPdfView(DetailView):
         if audit_run.status != AuditRun.Status.COMPLETED:
             return HttpResponse("Audit report is not available until the audit completes.", status=409)
 
+        viewer = request.user if request.user.is_authenticated else None
+        viewer_profile = get_audit_result_profile(viewer)
+        if not viewer_profile.get("pdf_export_enabled", False):
+            return redirect(f"{reverse('tools:audit-result', kwargs={'pk': audit_run.pk})}?pdf_locked=1")
+
         pdf_bytes = build_audit_report_pdf(audit_run)
         disposition = "attachment" if request.GET.get("download") == "1" else "inline"
         filename = f"audit-report-{audit_run.normalized_domain or audit_run.pk}.pdf"

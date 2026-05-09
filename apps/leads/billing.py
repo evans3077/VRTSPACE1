@@ -76,7 +76,7 @@ AUDIT_RESULT_PROFILES = {
     "free": {
         "label": "Starter diagnosis",
         "summary": "Clear enough to confirm the main blockers, but intentionally shaped to push the next decision instead of dumping everything.",
-        "top_issue_limit": 3,
+        "top_issue_limit": 2,
         "quick_win_limit": 3,
         "featured_recommendation_limit": 3,
         "secondary_recommendation_limit": 0,
@@ -86,6 +86,7 @@ AUDIT_RESULT_PROFILES = {
         "show_context_analysis": False,
         "show_custom_work_items": False,
         "show_secondary_recommendations": False,
+        "pdf_export_enabled": False,
     },
     "starter": {
         "label": "Action-ready audit",
@@ -100,6 +101,7 @@ AUDIT_RESULT_PROFILES = {
         "show_context_analysis": False,
         "show_custom_work_items": True,
         "show_secondary_recommendations": True,
+        "pdf_export_enabled": True,
     },
     "growth": {
         "label": "Growth planning layer",
@@ -114,6 +116,7 @@ AUDIT_RESULT_PROFILES = {
         "show_context_analysis": True,
         "show_custom_work_items": True,
         "show_secondary_recommendations": True,
+        "pdf_export_enabled": True,
     },
     "authority": {
         "label": "Full audit depth",
@@ -128,6 +131,7 @@ AUDIT_RESULT_PROFILES = {
         "show_context_analysis": True,
         "show_custom_work_items": True,
         "show_secondary_recommendations": True,
+        "pdf_export_enabled": True,
     },
     "enterprise": {
         "label": "Custom audit depth",
@@ -142,6 +146,7 @@ AUDIT_RESULT_PROFILES = {
         "show_context_analysis": True,
         "show_custom_work_items": True,
         "show_secondary_recommendations": True,
+        "pdf_export_enabled": True,
     },
 }
 

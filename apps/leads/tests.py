@@ -10,8 +10,10 @@ from apps.core.plan_catalog import get_plan_definition, get_plan_monthly_amount_
 from apps.tools.models import AuditRun
 
 from .billing import (
+    AUDIT_RESULT_PROFILES,
     build_plan_cards,
     estimate_credit_cost,
+    get_audit_result_profile,
     get_credit_balance_summary,
     get_total_credit_balance_summary,
     spend_action_credits,
@@ -591,3 +593,24 @@ class StripePlanAlignmentTests(TestCase):
 
         starter.refresh_from_db()
         self.assertEqual(starter.stripe_price_id, "price_manual_override")
+
+
+class AuditResultProfileTests(TestCase):
+    def test_free_profile_caps_top_issues_at_two(self):
+        self.assertEqual(AUDIT_RESULT_PROFILES["free"]["top_issue_limit"], 2)
+
+    def test_free_profile_locks_pdf_export(self):
+        self.assertFalse(AUDIT_RESULT_PROFILES["free"]["pdf_export_enabled"])
+
+    def test_paid_profiles_unlock_pdf_export(self):
+        for slug in ("starter", "growth", "authority", "enterprise"):
+            with self.subTest(slug=slug):
+                self.assertTrue(
+                    AUDIT_RESULT_PROFILES[slug]["pdf_export_enabled"],
+                    f"{slug} profile should allow PDF export",
+                )
+
+    def test_anonymous_viewer_resolves_to_free_profile(self):
+        profile = get_audit_result_profile(None)
+        self.assertFalse(profile["pdf_export_enabled"])
+        self.assertEqual(profile["top_issue_limit"], 2)
