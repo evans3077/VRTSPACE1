@@ -6225,3 +6225,104 @@ body.shell-light .audit-upsell-panel {
         transform: translate(-50%, -50%) rotate(360deg);
     }
 }
+
+/* ── Score progress timeline ─────────────────────────────────────────────── */
+.workspace-progress-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.workspace-progress-timeline {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    min-height: 140px;
+}
+
+.workspace-progress-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    min-width: 52px;
+    flex: 1;
+    position: relative;
+}
+
+.workspace-progress-bar-wrap {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: flex-end;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    border: 1px solid var(--border-glass);
+    border-bottom: none;
+    overflow: hidden;
+}
+
+.workspace-progress-bar {
+    width: 100%;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    transition: height 0.3s ease;
+    min-height: 4px;
+}
+
+.workspace-progress-score {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+}
+
+.workspace-progress-score strong {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.workspace-progress-date {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-align: center;
+    white-space: nowrap;
+}
+
+.workspace-progress-link {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+}
+
+.workspace-progress-link:hover {
+    opacity: 1;
+    color: var(--brand-primary);
+}
+
+.workspace-progress-narrative {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-glass);
+}
+
+.workspace-progress-narrative-positive {
+    background: rgba(16, 185, 129, 0.06);
+    border-color: rgba(16, 185, 129, 0.2);
+    color: var(--success);
+}
+
+.workspace-progress-narrative-negative {
+    background: rgba(239, 68, 68, 0.06);
+    border-color: rgba(239, 68, 68, 0.2);
+    color: var(--error, #ef4444);
+}
