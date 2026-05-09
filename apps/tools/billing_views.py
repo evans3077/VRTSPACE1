@@ -12,8 +12,10 @@ from apps.leads.billing import (
     BillingError,
     create_billing_portal_session,
     create_checkout_session,
+    create_topup_checkout_session,
     create_workspace_rerun_for_user,
     get_plan_by_slug,
+    get_topup_pack,
     get_workspace_subscription,
     handle_stripe_webhook_event,
     is_active_subscription,
@@ -60,6 +62,42 @@ class WorkspaceCheckoutCreateView(LoginRequiredMixin, View):
             session = create_checkout_session(
                 user=request.user,
                 plan=plan,
+                success_url=request.build_absolute_uri(success_path),
+                cancel_url=request.build_absolute_uri(cancel_path),
+            )
+        except BillingError as exc:
+            messages.error(request, str(exc))
+            return redirect("tools:account-dashboard")
+
+        return redirect(session["url"])
+
+
+class WorkspaceTopupCreateView(LoginRequiredMixin, View):
+    def get(self, request, *args, **kwargs):
+        return self._handle(request, request.GET)
+
+    def post(self, request, *args, **kwargs):
+        return self._handle(request, request.POST)
+
+    def _handle(self, request, data):
+        pack_slug = data.get("pack", "").strip()
+        return_to = data.get("return_to", "").strip()
+
+        pack = get_topup_pack(pack_slug)
+        if not pack:
+            messages.error(request, "That credit top-up is not available.")
+            return redirect("tools:account-dashboard")
+
+        try:
+            success_path = f"{reverse('tools:workspace-billing-success')}?session_id={{CHECKOUT_SESSION_ID}}"
+            cancel_path = reverse("tools:workspace-billing-cancel")
+            if return_to.startswith("/"):
+                quoted_return_to = quote(return_to, safe="/#?=&")
+                success_path = f"{success_path}&next={quoted_return_to}"
+                cancel_path = f"{cancel_path}?next={quoted_return_to}"
+            session = create_topup_checkout_session(
+                user=request.user,
+                pack=pack,
                 success_url=request.build_absolute_uri(success_path),
                 cancel_url=request.build_absolute_uri(cancel_path),
             )

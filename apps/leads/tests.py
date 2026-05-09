@@ -15,9 +15,14 @@ from .billing import (
     estimate_credit_cost,
     get_audit_result_profile,
     get_credit_balance_summary,
+    get_topup_pack,
+    get_topup_packs,
     get_total_credit_balance_summary,
+    grant_topup_credits,
     spend_action_credits,
     spend_credits,
+    sync_checkout_session,
+    sync_topup_from_checkout_session,
     sync_workspace_plan_catalog,
 )
 from .credit_alerts import (
@@ -815,3 +820,170 @@ class CreditAlertIntegrationTests(TestCase):
         self.assertIsNotNone(alert)
         self.assertFalse(alert.delivered)
         self.assertIn("smtp down", alert.error_message)
+
+
+class CreditTopupTests(TestCase):
+    PACKS = [
+        {
+            "slug": "topup-10",
+            "name": "10 credits",
+            "credits": 10,
+            "price_label": "$10",
+            "amount_cents": 1000,
+            "stripe_price_id": "price_test_topup_10",
+        },
+        {
+            "slug": "topup-30",
+            "name": "30 credits",
+            "credits": 30,
+            "price_label": "$25",
+            "amount_cents": 2500,
+            "stripe_price_id": "price_test_topup_30",
+        },
+        {
+            "slug": "topup-70",
+            "name": "70 credits",
+            "credits": 70,
+            "price_label": "$50",
+            "amount_cents": 5000,
+            "stripe_price_id": "price_test_topup_70",
+        },
+    ]
+
+    def setUp(self):
+        sync_workspace_plan_catalog()
+        self.user = get_user_model().objects.create_user(
+            username="topup-buyer",
+            email="topup@example.com",
+            password="pass1234",
+        )
+        starter = WorkspacePlan.objects.get(slug="starter")
+        WorkspaceSubscription.objects.create(
+            user=self.user,
+            plan=starter,
+            status=WorkspaceSubscription.Status.ACTIVE,
+        )
+
+    @override_settings(STRIPE_TOPUP_PACKS=PACKS)
+    def test_get_topup_pack_returns_match(self):
+        pack = get_topup_pack("topup-30")
+        self.assertEqual(pack["credits"], 30)
+        self.assertEqual(pack["price_label"], "$25")
+
+    @override_settings(STRIPE_TOPUP_PACKS=PACKS)
+    def test_get_topup_pack_unknown_returns_none(self):
+        self.assertIsNone(get_topup_pack("topup-doesnotexist"))
+
+    @override_settings(STRIPE_TOPUP_PACKS=PACKS)
+    def test_grant_topup_credits_creates_bonus_entry(self):
+        pack = get_topup_pack("topup-30")
+        entry = grant_topup_credits(self.user, pack, checkout_session_id="cs_test_001")
+
+        self.assertEqual(entry.kind, WorkspaceCreditLedger.Kind.BONUS)
+        self.assertEqual(entry.delta, 30)
+        self.assertEqual(entry.category, "workspace")
+        self.assertEqual(entry.reference_key, "topup:cs_test_001")
+        self.assertEqual(entry.metadata["pack_slug"], "topup-30")
+
+    @override_settings(STRIPE_TOPUP_PACKS=PACKS)
+    def test_grant_topup_credits_is_idempotent_per_session_id(self):
+        pack = get_topup_pack("topup-10")
+        first = grant_topup_credits(self.user, pack, checkout_session_id="cs_test_dup")
+        second = grant_topup_credits(self.user, pack, checkout_session_id="cs_test_dup")
+
+        self.assertEqual(first.pk, second.pk)
+        self.assertEqual(
+            WorkspaceCreditLedger.objects.filter(
+                user=self.user,
+                kind=WorkspaceCreditLedger.Kind.BONUS,
+                reference_key="topup:cs_test_dup",
+            ).count(),
+            1,
+        )
+
+    @override_settings(STRIPE_TOPUP_PACKS=PACKS)
+    def test_topup_grant_increases_balance_remaining(self):
+        before = get_total_credit_balance_summary(self.user)
+        before_remaining = before["remaining"]
+
+        pack = get_topup_pack("topup-70")
+        grant_topup_credits(self.user, pack, checkout_session_id="cs_test_grant")
+
+        after = get_total_credit_balance_summary(self.user)
+        self.assertEqual(after["remaining"], before_remaining + 70)
+
+    @override_settings(STRIPE_TOPUP_PACKS=PACKS)
+    def test_sync_topup_from_session_routes_correctly(self):
+        session = {
+            "id": "cs_test_sync",
+            "client_reference_id": str(self.user.pk),
+            "mode": "payment",
+            "metadata": {"user_id": str(self.user.pk), "topup_pack": "topup-10"},
+        }
+        entry = sync_topup_from_checkout_session(session)
+
+        self.assertIsNotNone(entry)
+        self.assertEqual(entry.delta, 10)
+
+    @override_settings(STRIPE_TOPUP_PACKS=PACKS)
+    def test_sync_checkout_session_dispatches_payment_to_topup(self):
+        session = {
+            "id": "cs_test_dispatch",
+            "client_reference_id": str(self.user.pk),
+            "mode": "payment",
+            "metadata": {"user_id": str(self.user.pk), "topup_pack": "topup-30"},
+        }
+        entry = sync_checkout_session(session)
+
+        self.assertIsNotNone(entry)
+        self.assertEqual(entry.kind, WorkspaceCreditLedger.Kind.BONUS)
+        self.assertEqual(entry.delta, 30)
+
+    @override_settings(STRIPE_TOPUP_PACKS=PACKS)
+    def test_sync_checkout_session_dispatches_subscription_when_no_topup_metadata(self):
+        session = {
+            "id": "cs_test_sub_dispatch",
+            "client_reference_id": str(self.user.pk),
+            "mode": "subscription",
+            "metadata": {"user_id": str(self.user.pk), "plan_slug": "growth"},
+            "customer": "cus_test",
+            "subscription": "sub_test",
+        }
+
+        result = sync_checkout_session(session)
+
+        # Result should be a WorkspaceSubscription, not a ledger entry
+        self.assertIsInstance(result, WorkspaceSubscription)
+        self.assertEqual(result.user_id, self.user.pk)
+
+    @override_settings(STRIPE_TOPUP_PACKS=PACKS)
+    def test_sync_topup_with_unknown_pack_returns_none(self):
+        session = {
+            "id": "cs_test_unknown",
+            "client_reference_id": str(self.user.pk),
+            "mode": "payment",
+            "metadata": {"user_id": str(self.user.pk), "topup_pack": "topup-bogus"},
+        }
+        self.assertIsNone(sync_topup_from_checkout_session(session))
+
+    @override_settings(STRIPE_TOPUP_PACKS=PACKS)
+    def test_topup_view_requires_known_pack(self):
+        self.client.force_login(self.user)
+        response = self.client.post(reverse("tools:workspace-billing-topup"), {"pack": "topup-bogus"})
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("/account/", response["Location"])
+
+    @override_settings(STRIPE_TOPUP_PACKS=PACKS, STRIPE_PUBLISHABLE_KEY="pk_test", STRIPE_SECRET_KEY="sk_test", STRIPE_ENABLED=True)
+    def test_topup_view_creates_checkout_and_redirects(self):
+        self.client.force_login(self.user)
+        with patch(
+            "apps.leads.billing.requests.post",
+            return_value=type("R", (), {"status_code": 200, "json": lambda self: {"id": "cs_redirect", "url": "https://stripe.test/redirect"}, "text": ""})(),
+        ):
+            response = self.client.post(
+                reverse("tools:workspace-billing-topup"),
+                {"pack": "topup-10"},
+            )
+
+        self.assertEqual(response.status_code, 302)
+        self.assertEqual(response["Location"], "https://stripe.test/redirect")

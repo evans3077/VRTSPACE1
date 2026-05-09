@@ -278,6 +278,33 @@ STRIPE_PRICE_IDS = {
     "enterprise": first_env("STRIPE_PRICE_ENTERPRISE"),
 }
 
+STRIPE_TOPUP_PACKS = [
+    {
+        "slug": "topup-10",
+        "name": "10 credits",
+        "credits": 10,
+        "price_label": "$10",
+        "amount_cents": 1000,
+        "stripe_price_id": first_env("STRIPE_PRICE_TOPUP_10"),
+    },
+    {
+        "slug": "topup-30",
+        "name": "30 credits",
+        "credits": 30,
+        "price_label": "$25",
+        "amount_cents": 2500,
+        "stripe_price_id": first_env("STRIPE_PRICE_TOPUP_30"),
+    },
+    {
+        "slug": "topup-70",
+        "name": "70 credits",
+        "credits": 70,
+        "price_label": "$50",
+        "amount_cents": 5000,
+        "stripe_price_id": first_env("STRIPE_PRICE_TOPUP_70"),
+    },
+]
+
 SERP_DISCOVERY_PROVIDER = first_env("SERP_DISCOVERY_PROVIDER", default="serpapi,duckduckgo")
 SERPAPI_API_KEY = first_env("SERPAPI_API_KEY", "SERP_API_KEY")
 SERP_DISCOVERY_QUERY_LIMIT = int(os.environ.get("SERP_DISCOVERY_QUERY_LIMIT", "4"))
