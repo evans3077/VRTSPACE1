@@ -10,6 +10,7 @@ from datetime import timezone as dt_timezone
 
 import requests
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from django.db.models import Q
 from django.utils import timezone
@@ -1267,6 +1268,117 @@ def fetch_checkout_session(session_id):
 
 def sync_subscription_from_checkout_session_id(session_id):
     session_data = fetch_checkout_session(session_id)
+    return sync_checkout_session(session_data)
+
+
+def get_topup_packs():
+    return list(getattr(settings, "STRIPE_TOPUP_PACKS", []) or [])
+
+
+def get_topup_pack(slug):
+    for pack in get_topup_packs():
+        if pack.get("slug") == slug:
+            return pack
+    return None
+
+
+def create_topup_checkout_session(*, user, pack, success_url, cancel_url):
+    if not settings.STRIPE_ENABLED:
+        raise BillingError("Stripe billing is not configured.")
+
+    price_id = validate_stripe_price_id(pack.get("stripe_price_id", ""), plan_name=pack.get("name", "credit top-up"))
+
+    subscription = get_workspace_subscription(user)
+    customer_id = subscription.stripe_customer_id if subscription and subscription.stripe_customer_id else ""
+
+    payload = {
+        "mode": "payment",
+        "success_url": success_url,
+        "cancel_url": cancel_url,
+        "client_reference_id": str(user.pk),
+        "customer_email": user.email,
+        "line_items[0][price]": price_id,
+        "line_items[0][quantity]": "1",
+        "metadata[user_id]": str(user.pk),
+        "metadata[topup_pack]": pack["slug"],
+        "metadata[topup_credits]": str(pack["credits"]),
+    }
+    if customer_id:
+        payload["customer"] = customer_id
+        payload.pop("customer_email", None)
+
+    response = requests.post(
+        f"{STRIPE_API_BASE}/checkout/sessions",
+        auth=(settings.STRIPE_SECRET_KEY, ""),
+        data=payload,
+        timeout=20,
+    )
+    if response.status_code >= 400:
+        raise BillingError(f"Stripe top-up checkout creation failed: {response.text[:200]}")
+    return response.json()
+
+
+def grant_topup_credits(user, pack, *, checkout_session_id, now=None):
+    if not user or not getattr(user, "is_authenticated", False):
+        return None
+    period_start, period_end = get_credit_record_window(now=now)
+    subscription = get_workspace_subscription(user)
+    plan = subscription.plan if subscription else None
+    reference_key = f"topup:{checkout_session_id}"[:120]
+
+    existing = WorkspaceCreditLedger.objects.filter(
+        user=user,
+        reference_key=reference_key,
+        kind=WorkspaceCreditLedger.Kind.BONUS,
+    ).first()
+    if existing:
+        return existing
+
+    return WorkspaceCreditLedger.objects.create(
+        user=user,
+        plan=plan,
+        subscription=subscription,
+        category=WORKSPACE_CREDIT_CATEGORY,
+        kind=WorkspaceCreditLedger.Kind.BONUS,
+        delta=pack["credits"],
+        period_start=period_start,
+        period_end=period_end,
+        note=f"Top-up: {pack['name']}",
+        reference_key=reference_key,
+        metadata={
+            "source": "topup",
+            "pack_slug": pack["slug"],
+            "pack_credits": pack["credits"],
+            "pack_amount_cents": pack.get("amount_cents", 0),
+            "checkout_session_id": checkout_session_id,
+        },
+    )
+
+
+def sync_topup_from_checkout_session(session_data):
+    user_id = session_data.get("client_reference_id") or (session_data.get("metadata") or {}).get("user_id")
+    if not user_id:
+        return None
+    pack_slug = (session_data.get("metadata") or {}).get("topup_pack", "")
+    pack = get_topup_pack(pack_slug)
+    if not pack:
+        return None
+    user = get_user_model().objects.filter(pk=user_id).first()
+    if not user:
+        return None
+    return grant_topup_credits(
+        user,
+        pack,
+        checkout_session_id=session_data.get("id", "") or pack_slug,
+    )
+
+
+def sync_checkout_session(session_data):
+    if not session_data:
+        return None
+    metadata = session_data.get("metadata") or {}
+    if session_data.get("mode") == "payment" or metadata.get("topup_pack"):
+        return sync_topup_from_checkout_session(session_data)
     return sync_subscription_from_checkout_session(session_data)
 
 
@@ -1387,7 +1499,7 @@ def handle_stripe_webhook_event(event):
     data = (event.get("data") or {}).get("object", {})
 
     if event_type == "checkout.session.completed":
-        return sync_subscription_from_checkout_session(data)
+        return sync_checkout_session(data)
     if event_type in {
         "customer.subscription.created",
         "customer.subscription.updated",

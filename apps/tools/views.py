@@ -713,14 +713,18 @@ class AccountDashboardView(LoginRequiredMixin, View):
         return render(request, self.template_name, self._build_context(request))
 
     def _build_context(self, request, *, profile_form=None, password_form=None):
+        from apps.leads.billing import get_topup_packs
+
         billing_state = get_billing_state(request.user)
         subscription = billing_state["subscription"]
+        topup_packs = [pack for pack in get_topup_packs() if pack.get("stripe_price_id")]
         return {
             "profile_form": profile_form or AccountProfileForm(instance=request.user),
             "password_form": password_form or AccountPasswordForm(user=request.user),
             "billing_state": billing_state,
             "current_subscription": subscription,
             "workspace_count": len(get_workspace_projects(request.user)),
+            "topup_packs": topup_packs,
             "page_title": "Account | VRT SPACE AGENCY",
             "meta_description": "Personal account settings, billing, and security controls.",
             "meta_robots": "noindex, nofollow",

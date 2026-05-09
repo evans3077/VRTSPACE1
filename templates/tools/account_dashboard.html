@@ -296,6 +296,33 @@
                     </div>
                 </article>
 
+                {% if topup_packs %}
+                <article id="topup" class="account-card account-card-compact">
+                    <div class="account-card-heading">
+                        <p class="eyebrow">Top up</p>
+                        <h2>Buy more credits</h2>
+                    </div>
+                    <p class="account-page-text account-topup-intro">
+                        Out of credits before the cycle ends? Add a one-off pack to your workspace. Top-up credits land instantly and apply to the current cycle.
+                    </p>
+                    <div class="account-topup-grid">
+                        {% for pack in topup_packs %}
+                        <form method="post" action="{% url 'tools:workspace-billing-topup' %}" class="account-topup-card">
+                            {% csrf_token %}
+                            <input type="hidden" name="pack" value="{{ pack.slug }}">
+                            <input type="hidden" name="return_to" value="{% url 'tools:account-dashboard' %}#credits">
+                            <div class="account-topup-card-head">
+                                <strong>{{ pack.credits }} credits</strong>
+                                <span class="account-topup-price">{{ pack.price_label }}</span>
+                            </div>
+                            <button type="submit" class="button button-secondary button-block">Buy {{ pack.credits }} credits</button>
+                        </form>
+                        {% endfor %}
+                    </div>
+                    <p class="workspace-support-note">All top-up purchases are one-off; your subscription stays unchanged.</p>
+                </article>
+                {% endif %}
+
                 <article id="credits" class="account-card account-card-compact">
                     <div class="account-card-heading">
                         <p class="eyebrow">Recent credit activity</p>
