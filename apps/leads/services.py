@@ -4,10 +4,27 @@ from django.contrib.auth import get_user_model
 from django.db.models import Count
 from django.utils import timezone
 
+from apps.tools.models import AuditRun
 from apps.tools.services import extract_domain, normalize_url
 
 from .models import AuditRequest, ClientProject, Lead
 from .intake_options import get_business_type_label
+
+STALE_AUDIT_THRESHOLD_DAYS = 30
+AT_RISK_SCORE_THRESHOLD = 60
+HEALTHY_SCORE_THRESHOLD = 80
+
+CATEGORY_SCORE_LABELS = (
+    ("technical_score", "Technical"),
+    ("on_page_score", "On-page"),
+    ("content_score", "Content"),
+    ("aeo_score", "AEO"),
+    ("internal_linking_score", "Internal linking"),
+    ("performance_score", "Performance"),
+    ("accessibility_score", "Accessibility"),
+    ("best_practices_score", "Best practices"),
+    ("seo_score", "SEO"),
+)
 
 ACTIVE_WORKSPACE_PROJECT_SESSION_KEY = "active_workspace_project_id"
 
@@ -139,7 +156,7 @@ def get_workspace_projects(user):
     return list(get_workspace_project_queryset(user))
 
 
-def summarize_workspace_project(project):
+def summarize_workspace_project(project, *, previous_audit=None):
     business_type_label = get_business_type_label(project.business_type)
     focus_tags = ["Audit"]
     if getattr(project, "seo_snapshot_count", 0) or getattr(project, "seo_profile_id", None):
@@ -160,6 +177,9 @@ def summarize_workspace_project(project):
     else:
         project_type_label = "Audit project"
 
+    latest_audit = getattr(project, "latest_audit_run", None)
+    health = _build_project_health(project, latest_audit, previous_audit)
+
     return {
         "pk": project.pk,
         "name": project.name,
@@ -179,6 +199,73 @@ def summarize_workspace_project(project):
         "aeo_audit_count": getattr(project, "aeo_audit_count", 0),
         "generated_content_count": getattr(project, "generated_content_count", 0),
         "has_latest_audit": bool(getattr(project, "latest_audit_run_id", None)),
+        **health,
+    }
+
+
+def _build_project_health(project, latest_audit, previous_audit):
+    if latest_audit is None:
+        return {
+            "latest_audit_overall_score": None,
+            "latest_audit_completed_at": None,
+            "score_delta": None,
+            "at_risk_category_label": None,
+            "at_risk_category_score": None,
+            "audit_age_days": None,
+            "audit_is_stale": False,
+            "health_status": "muted",
+            "health_label": "No audit yet",
+        }
+
+    latest_completed_at = latest_audit.completed_at or latest_audit.created_at
+    audit_age_days = (timezone.now() - latest_completed_at).days if latest_completed_at else None
+    audit_is_stale = bool(audit_age_days is not None and audit_age_days > STALE_AUDIT_THRESHOLD_DAYS)
+
+    if previous_audit is None and getattr(project, "audit_request_id", None):
+        previous_audit = (
+            AuditRun.objects.filter(
+                audit_request_id=project.audit_request_id,
+                status=AuditRun.Status.COMPLETED,
+            )
+            .exclude(pk=latest_audit.pk)
+            .order_by("-created_at")
+            .first()
+        )
+
+    score_delta = None
+    if previous_audit is not None:
+        score_delta = latest_audit.overall_score - previous_audit.overall_score
+
+    at_risk_label = None
+    at_risk_score = None
+    for field, label in CATEGORY_SCORE_LABELS:
+        score = getattr(latest_audit, field, None)
+        if score is None or score == 0:
+            continue
+        if score >= AT_RISK_SCORE_THRESHOLD:
+            continue
+        if at_risk_score is None or score < at_risk_score:
+            at_risk_score = score
+            at_risk_label = label
+
+    overall = latest_audit.overall_score
+    if overall >= HEALTHY_SCORE_THRESHOLD:
+        health_status, health_label = "green", "Healthy"
+    elif overall >= AT_RISK_SCORE_THRESHOLD:
+        health_status, health_label = "amber", "Needs attention"
+    else:
+        health_status, health_label = "red", "Critical"
+
+    return {
+        "latest_audit_overall_score": overall,
+        "latest_audit_completed_at": latest_completed_at,
+        "score_delta": score_delta,
+        "at_risk_category_label": at_risk_label,
+        "at_risk_category_score": at_risk_score,
+        "audit_age_days": audit_age_days,
+        "audit_is_stale": audit_is_stale,
+        "health_status": health_status,
+        "health_label": health_label,
     }
 
 

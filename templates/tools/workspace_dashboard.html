@@ -64,12 +64,16 @@
                     </div>
                     <div class="workspace-project-list">
                         {% for item in workspace_project_summaries %}
-                        <article class="workspace-project-row{% if project.pk == item.pk %} is-active{% endif %}">
+                        <article class="workspace-project-row workspace-project-health-{{ item.health_status }}{% if project.pk == item.pk %} is-active{% endif %}">
                             <div class="workspace-project-main">
                                 <div class="workspace-project-title-row">
+                                    <span class="workspace-health-dot health-{{ item.health_status }}" title="{{ item.health_label }}" aria-label="{{ item.health_label }}"></span>
                                     <strong>{{ item.name }}</strong>
                                     {% if project.pk == item.pk %}
                                     <span class="score-pill score-high">Current workspace</span>
+                                    {% endif %}
+                                    {% if item.at_risk_category_label %}
+                                    <span class="score-pill score-low workspace-project-risk-pill">{{ item.at_risk_category_label }} at risk</span>
                                     {% endif %}
                                 </div>
                                 <div class="workspace-project-subtitle">{{ item.project_type_label }}</div>
@@ -80,9 +84,31 @@
                                 {% if item.primary_service %}
                                 <div class="workspace-project-meta-line">{{ item.primary_service }}</div>
                                 {% endif %}
+                                <div class="workspace-project-meta-line workspace-project-audit-age">
+                                    {% if item.latest_audit_completed_at %}
+                                    Last audit {{ item.latest_audit_completed_at|timesince }} ago
+                                    {% if item.audit_is_stale %}
+                                    <span class="workspace-project-stale-flag">Stale &mdash; rerun recommended</span>
+                                    {% endif %}
+                                    {% else %}
+                                    No audit yet
+                                    {% endif %}
+                                </div>
                             </div>
                             <div class="workspace-project-stats">
-                                <div><span>Score</span><strong>{{ item.latest_score }}</strong></div>
+                                <div>
+                                    <span>Score</span>
+                                    <strong>{% if item.latest_audit_overall_score is not None %}{{ item.latest_audit_overall_score }}{% else %}&mdash;{% endif %}</strong>
+                                    {% if item.score_delta is not None %}
+                                        {% if item.score_delta > 0 %}
+                                        <span class="workspace-delta workspace-delta-up">+{{ item.score_delta }}</span>
+                                        {% elif item.score_delta < 0 %}
+                                        <span class="workspace-delta workspace-delta-down">{{ item.score_delta }}</span>
+                                        {% else %}
+                                        <span class="workspace-delta workspace-delta-flat">0</span>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
                                 <div><span>SEO</span><strong>{{ item.seo_snapshot_count }}</strong></div>
                                 <div><span>AEO</span><strong>{{ item.aeo_audit_count }}</strong></div>
                                 <div><span>Drafts</span><strong>{{ item.generated_content_count }}</strong></div>

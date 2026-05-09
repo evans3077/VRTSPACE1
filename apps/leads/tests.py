@@ -6,6 +6,10 @@ from unittest.mock import patch
 from apps.core.plan_catalog import get_plan_definition
 from apps.tools.models import AuditRun
 
+from datetime import timedelta
+
+from django.utils import timezone
+
 from .billing import (
     build_plan_cards,
     estimate_credit_cost,
@@ -16,7 +20,11 @@ from .billing import (
     sync_workspace_plan_catalog,
 )
 from .models import AuditRequest, ClientProject, Lead, WorkspaceCreditLedger, WorkspacePlan, WorkspaceSubscription
-from .services import sync_client_project_from_audit_run
+from .services import (
+    get_workspace_project_summaries,
+    summarize_workspace_project,
+    sync_client_project_from_audit_run,
+)
 
 
 class LeadFlowTests(TestCase):
@@ -391,3 +399,144 @@ class WorkspaceCreditSystemTests(TestCase):
         self.assertEqual(entry.subscription, subscription)
         self.assertEqual(entry.metadata["estimated_cost"], estimate["amount"])
         self.assertIn("cost_reason", entry.metadata)
+
+
+class WorkspaceProjectHealthTests(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            username="agency-owner",
+            email="agency@example.com",
+            password="pass1234",
+        )
+        self.audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@northwind.example.com",
+            website="https://northwind.example.com",
+        )
+
+    def _make_project(self, *, latest_audit=None):
+        return ClientProject.objects.create(
+            owner=self.user,
+            audit_request=self.audit_request,
+            latest_audit_run=latest_audit,
+            name="Northwind",
+            website="https://northwind.example.com",
+            normalized_domain="northwind.example.com",
+            contact_email="ops@northwind.example.com",
+        )
+
+    def _make_audit(self, *, overall, completed_days_ago=1, status=AuditRun.Status.COMPLETED, **scores):
+        completed_at = timezone.now() - timedelta(days=completed_days_ago)
+        audit = AuditRun.objects.create(
+            audit_request=self.audit_request,
+            normalized_domain="northwind.example.com",
+            start_url="https://northwind.example.com",
+            pages_crawled=10,
+            overall_score=overall,
+            status=status,
+            completed_at=completed_at,
+            **scores,
+        )
+        AuditRun.objects.filter(pk=audit.pk).update(created_at=completed_at)
+        audit.refresh_from_db()
+        return audit
+
+    def test_no_audit_returns_muted_health(self):
+        project = self._make_project()
+        summary = summarize_workspace_project(project)
+
+        self.assertEqual(summary["health_status"], "muted")
+        self.assertEqual(summary["health_label"], "No audit yet")
+        self.assertIsNone(summary["latest_audit_overall_score"])
+        self.assertIsNone(summary["score_delta"])
+        self.assertIsNone(summary["at_risk_category_label"])
+        self.assertFalse(summary["audit_is_stale"])
+
+    def test_single_audit_has_no_delta(self):
+        audit = self._make_audit(overall=85, technical_score=80, seo_score=82, aeo_score=88)
+        project = self._make_project(latest_audit=audit)
+
+        summary = summarize_workspace_project(project)
+
+        self.assertEqual(summary["latest_audit_overall_score"], 85)
+        self.assertIsNone(summary["score_delta"])
+        self.assertEqual(summary["health_status"], "green")
+        self.assertEqual(summary["health_label"], "Healthy")
+
+    def test_score_delta_calculated_from_previous_audit(self):
+        previous = self._make_audit(overall=60, completed_days_ago=20, technical_score=60)
+        latest = self._make_audit(overall=72, completed_days_ago=2, technical_score=72)
+        project = self._make_project(latest_audit=latest)
+
+        summary = summarize_workspace_project(project)
+
+        self.assertEqual(summary["latest_audit_overall_score"], 72)
+        self.assertEqual(summary["score_delta"], 12)
+        self.assertEqual(summary["health_status"], "amber")
+
+    def test_negative_delta_when_score_drops(self):
+        self._make_audit(overall=80, completed_days_ago=15, technical_score=80)
+        latest = self._make_audit(overall=55, completed_days_ago=1, technical_score=55)
+        project = self._make_project(latest_audit=latest)
+
+        summary = summarize_workspace_project(project)
+
+        self.assertEqual(summary["score_delta"], -25)
+        self.assertEqual(summary["health_status"], "red")
+        self.assertEqual(summary["health_label"], "Critical")
+
+    def test_at_risk_category_picks_lowest_below_threshold(self):
+        latest = self._make_audit(
+            overall=75,
+            technical_score=85,
+            seo_score=70,
+            aeo_score=42,
+            performance_score=55,
+        )
+        project = self._make_project(latest_audit=latest)
+
+        summary = summarize_workspace_project(project)
+
+        self.assertEqual(summary["at_risk_category_label"], "AEO")
+        self.assertEqual(summary["at_risk_category_score"], 42)
+
+    def test_at_risk_ignores_zero_scores(self):
+        latest = self._make_audit(
+            overall=85,
+            technical_score=85,
+            seo_score=82,
+            aeo_score=0,
+            performance_score=88,
+        )
+        project = self._make_project(latest_audit=latest)
+
+        summary = summarize_workspace_project(project)
+
+        self.assertIsNone(summary["at_risk_category_label"])
+
+    def test_audit_is_stale_when_older_than_threshold(self):
+        latest = self._make_audit(overall=80, completed_days_ago=45)
+        project = self._make_project(latest_audit=latest)
+
+        summary = summarize_workspace_project(project)
+
+        self.assertTrue(summary["audit_is_stale"])
+        self.assertGreaterEqual(summary["audit_age_days"], 45)
+
+    def test_audit_not_stale_when_recent(self):
+        latest = self._make_audit(overall=80, completed_days_ago=5)
+        project = self._make_project(latest_audit=latest)
+
+        summary = summarize_workspace_project(project)
+
+        self.assertFalse(summary["audit_is_stale"])
+
+    def test_workspace_summaries_returns_health_for_each(self):
+        latest = self._make_audit(overall=92, technical_score=90, seo_score=88, aeo_score=94)
+        self._make_project(latest_audit=latest)
+
+        summaries = get_workspace_project_summaries(self.user)
+
+        self.assertEqual(len(summaries), 1)
+        self.assertEqual(summaries[0]["health_status"], "green")
+        self.assertEqual(summaries[0]["latest_audit_overall_score"], 92)

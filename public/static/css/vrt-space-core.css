@@ -4563,6 +4563,68 @@ body.shell-light .workspace-project-actions {
     justify-items: start;
 }
 
+body.shell-light .workspace-health-dot {
+    display: inline-block;
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.04);
+}
+
+body.shell-light .workspace-health-dot.health-green {
+    background: #10b981;
+}
+
+body.shell-light .workspace-health-dot.health-amber {
+    background: #f59e0b;
+}
+
+body.shell-light .workspace-health-dot.health-red {
+    background: #ef4444;
+}
+
+body.shell-light .workspace-health-dot.health-muted {
+    background: #cbd5e1;
+}
+
+body.shell-light .workspace-project-row.workspace-project-health-green {
+    border-left: 3px solid #10b981;
+}
+
+body.shell-light .workspace-project-row.workspace-project-health-amber {
+    border-left: 3px solid #f59e0b;
+}
+
+body.shell-light .workspace-project-row.workspace-project-health-red {
+    border-left: 3px solid #ef4444;
+}
+
+body.shell-light .workspace-project-row.workspace-project-health-muted {
+    border-left: 3px solid #cbd5e1;
+}
+
+body.shell-light .workspace-project-risk-pill {
+    margin-left: 0.25rem;
+}
+
+body.shell-light .workspace-project-audit-age {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+}
+
+body.shell-light .workspace-project-stale-flag {
+    color: #b45309;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
 body.shell-light .workspace-project-tags {
     margin-top: 0 !important;
 }
