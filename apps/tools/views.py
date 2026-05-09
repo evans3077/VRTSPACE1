@@ -951,6 +951,12 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["credit_overview"] = billing_state["credit_overview"]
         context["credit_activity"] = billing_state["credit_activity"]
         context["recent_credit_entries"] = billing_state["recent_credit_entries"]
+
+        from apps.leads.credit_alerts import get_alert_band, get_credit_usage_percentage
+
+        credit_usage_pct = get_credit_usage_percentage(billing_state["credit_overview"])
+        context["credit_usage_pct"] = credit_usage_pct
+        context["credit_alert_band"] = get_alert_band(credit_usage_pct)
         context["credit_action_guide"] = (
             build_credit_action_guide(project, self.request.user)
             if getattr(project, "pk", None)

@@ -4849,6 +4849,59 @@ body.shell-light .workspace-credit-balance-card {
     background: #f8fafc !important;
 }
 
+body.shell-light .workspace-credit-banner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.75rem;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.85rem;
+    border-radius: 14px;
+    border: 1px solid;
+    font-size: 0.93rem;
+    line-height: 1.4;
+}
+
+body.shell-light .workspace-credit-banner strong {
+    font-weight: 700;
+}
+
+body.shell-light .workspace-credit-banner a {
+    margin-left: auto;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+body.shell-light .workspace-credit-banner a:hover {
+    text-decoration: underline;
+}
+
+body.shell-light .workspace-credit-banner-info {
+    background: rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.25);
+    color: #1e3a8a;
+}
+
+body.shell-light .workspace-credit-banner-warning {
+    background: rgba(245, 158, 11, 0.10);
+    border-color: rgba(245, 158, 11, 0.30);
+    color: #92400e;
+}
+
+body.shell-light .workspace-credit-banner-warning a {
+    color: #b45309;
+}
+
+body.shell-light .workspace-credit-banner-critical {
+    background: rgba(239, 68, 68, 0.10);
+    border-color: rgba(239, 68, 68, 0.30);
+    color: #991b1b;
+}
+
+body.shell-light .workspace-credit-banner-critical a {
+    color: #b91c1c;
+}
+
 body.shell-light .workspace-credit-balance-top {
     display: flex;
     align-items: flex-start;

@@ -20,7 +20,21 @@ from .billing import (
     spend_credits,
     sync_workspace_plan_catalog,
 )
-from .models import AuditRequest, ClientProject, Lead, WorkspaceCreditLedger, WorkspacePlan, WorkspaceSubscription
+from .credit_alerts import (
+    ALERT_THRESHOLDS,
+    evaluate_credit_alert_thresholds,
+    get_credit_usage_percentage,
+    record_credit_alert,
+)
+from .models import (
+    AuditRequest,
+    ClientProject,
+    CreditAlert,
+    Lead,
+    WorkspaceCreditLedger,
+    WorkspacePlan,
+    WorkspaceSubscription,
+)
 from .services import (
     get_workspace_project_summaries,
     summarize_workspace_project,
@@ -614,3 +628,190 @@ class AuditResultProfileTests(TestCase):
         profile = get_audit_result_profile(None)
         self.assertFalse(profile["pdf_export_enabled"])
         self.assertEqual(profile["top_issue_limit"], 2)
+
+
+class CreditAlertHelperTests(TestCase):
+    def test_percentage_returns_none_for_unlimited(self):
+        self.assertIsNone(get_credit_usage_percentage({"unlimited": True, "granted": None, "used": 5}))
+
+    def test_percentage_returns_none_when_granted_is_zero(self):
+        self.assertIsNone(get_credit_usage_percentage({"unlimited": False, "granted": 0, "used": 0}))
+
+    def test_percentage_returns_none_for_empty_balance(self):
+        self.assertIsNone(get_credit_usage_percentage(None))
+        self.assertIsNone(get_credit_usage_percentage({}))
+
+    def test_percentage_calculates_correctly(self):
+        self.assertEqual(get_credit_usage_percentage({"unlimited": False, "granted": 40, "used": 20}), 50)
+        self.assertEqual(get_credit_usage_percentage({"unlimited": False, "granted": 40, "used": 30}), 75)
+        self.assertEqual(get_credit_usage_percentage({"unlimited": False, "granted": 40, "used": 36}), 90)
+
+    def test_percentage_caps_at_one_hundred(self):
+        self.assertEqual(get_credit_usage_percentage({"unlimited": False, "granted": 40, "used": 80}), 100)
+
+
+class CreditAlertEvaluationTests(TestCase):
+    def setUp(self):
+        self.user = get_user_model().objects.create_user(
+            username="alert-user",
+            email="alerts@example.com",
+            password="pass1234",
+        )
+        self.period_start, self.period_end = (
+            timezone.now().date().replace(day=1),
+            timezone.now().date(),
+        )
+
+    def _balance(self, used, granted=40):
+        return {"unlimited": False, "granted": granted, "used": used, "remaining": max(granted - used, 0)}
+
+    def test_below_first_threshold_returns_no_alerts(self):
+        thresholds = evaluate_credit_alert_thresholds(
+            self.user,
+            balance=self._balance(used=15),
+            period_start=self.period_start,
+            period_end=self.period_end,
+        )
+        self.assertEqual(thresholds, [])
+
+    def test_crossing_fifty_returns_only_fifty(self):
+        thresholds = evaluate_credit_alert_thresholds(
+            self.user,
+            balance=self._balance(used=20),
+            period_start=self.period_start,
+            period_end=self.period_end,
+        )
+        self.assertEqual(thresholds, [50])
+
+    def test_jumping_directly_to_full_returns_all_unalerted_thresholds(self):
+        thresholds = evaluate_credit_alert_thresholds(
+            self.user,
+            balance=self._balance(used=40),
+            period_start=self.period_start,
+            period_end=self.period_end,
+        )
+        self.assertEqual(thresholds, list(ALERT_THRESHOLDS))
+
+    def test_already_recorded_thresholds_are_excluded(self):
+        record_credit_alert(
+            self.user,
+            threshold_pct=50,
+            balance=self._balance(used=20),
+            period_start=self.period_start,
+            period_end=self.period_end,
+        )
+        record_credit_alert(
+            self.user,
+            threshold_pct=75,
+            balance=self._balance(used=30),
+            period_start=self.period_start,
+            period_end=self.period_end,
+        )
+
+        thresholds = evaluate_credit_alert_thresholds(
+            self.user,
+            balance=self._balance(used=36),
+            period_start=self.period_start,
+            period_end=self.period_end,
+        )
+        self.assertEqual(thresholds, [90])
+
+    def test_record_credit_alert_is_idempotent(self):
+        first = record_credit_alert(
+            self.user,
+            threshold_pct=50,
+            balance=self._balance(used=20),
+            period_start=self.period_start,
+            period_end=self.period_end,
+        )
+        second = record_credit_alert(
+            self.user,
+            threshold_pct=50,
+            balance=self._balance(used=20),
+            period_start=self.period_start,
+            period_end=self.period_end,
+        )
+        self.assertIsNotNone(first)
+        self.assertIsNone(second)
+        self.assertEqual(CreditAlert.objects.filter(user=self.user, threshold_pct=50).count(), 1)
+
+    def test_alerts_from_previous_period_do_not_block_new_period(self):
+        previous_period_start = (self.period_start.replace(day=1) - timedelta(days=1)).replace(day=1)
+        previous_period_end = self.period_start - timedelta(days=1)
+        record_credit_alert(
+            self.user,
+            threshold_pct=50,
+            balance=self._balance(used=20),
+            period_start=previous_period_start,
+            period_end=previous_period_end,
+        )
+
+        thresholds = evaluate_credit_alert_thresholds(
+            self.user,
+            balance=self._balance(used=20),
+            period_start=self.period_start,
+            period_end=self.period_end,
+        )
+        self.assertEqual(thresholds, [50])
+
+
+class CreditAlertIntegrationTests(TestCase):
+    def setUp(self):
+        sync_workspace_plan_catalog()
+        self.user = get_user_model().objects.create_user(
+            username="spender",
+            email="spender@example.com",
+            password="pass1234",
+        )
+        self.starter = WorkspacePlan.objects.get(slug="starter")
+        WorkspaceSubscription.objects.create(
+            user=self.user,
+            plan=self.starter,
+            status=WorkspaceSubscription.Status.ACTIVE,
+        )
+
+    @override_settings(AUDIT_TIER_ENFORCEMENT=True)
+    def test_spend_triggers_email_when_threshold_crossed(self):
+        from django.core import mail
+
+        starter_grant = self.starter.metadata.get("credits", {}).get("workspace") or 40
+
+        spend_credits(self.user, "audit", amount=starter_grant // 2)
+
+        self.assertEqual(len(mail.outbox), 1)
+        self.assertIn("50%", mail.outbox[0].subject)
+        self.assertEqual(mail.outbox[0].to, ["spender@example.com"])
+        self.assertEqual(
+            CreditAlert.objects.filter(user=self.user, threshold_pct=50).count(),
+            1,
+        )
+
+    @override_settings(AUDIT_TIER_ENFORCEMENT=True)
+    def test_subsequent_spend_does_not_re_alert_same_threshold(self):
+        from django.core import mail
+
+        starter_grant = self.starter.metadata.get("credits", {}).get("workspace") or 40
+        spend_credits(self.user, "audit", amount=starter_grant // 2)
+        mail.outbox.clear()
+
+        spend_credits(self.user, "audit", amount=1)
+
+        self.assertEqual(len(mail.outbox), 0)
+        self.assertEqual(
+            CreditAlert.objects.filter(user=self.user, threshold_pct=50).count(),
+            1,
+        )
+
+    @override_settings(AUDIT_TIER_ENFORCEMENT=True)
+    def test_email_failure_does_not_break_spend(self):
+        with patch(
+            "apps.leads.notifications.send_credit_alert_email",
+            side_effect=RuntimeError("smtp down"),
+        ):
+            entry = spend_credits(self.user, "audit", amount=20)
+
+        self.assertIsNotNone(entry.pk)
+        alert = CreditAlert.objects.filter(user=self.user, threshold_pct=50).first()
+        self.assertIsNotNone(alert)
+        self.assertFalse(alert.delivered)
+        self.assertIn("smtp down", alert.error_message)
