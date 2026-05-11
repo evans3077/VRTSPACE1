@@ -1,0 +1,13 @@
+Hi {{ affiliate.display_name }},
+
+A new signup just came through your VRTSPACE referral link.
+
+Signup date: {{ attribution.created_at|date:"Y-m-d H:i" }} UTC
+
+We'll let you know when they upgrade to a paid plan — that's when your
+commission gets recorded.
+
+You can see the latest funnel numbers anytime here:
+{{ affiliate.slug|default:"your portal" }}
+
+— The VRTSPACE Partner Team

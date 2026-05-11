@@ -70,6 +70,37 @@ from .recommendations import build_audit_summary
 from .services import extract_domain, normalize_url
 
 
+def _attribute_affiliate_signup(request, user):
+    """Best-effort attribution of a new signup to a referring affiliate.
+
+    Reads the ?ref= param or the persisted vrt_ref cookie, then hands off to
+    apps.affiliates.services. Always defensive — never block signup if the
+    affiliates app fails or isn't installed.
+    """
+    try:
+        from apps.affiliates.middleware import get_referral_slug_from_request
+        from apps.affiliates.services import attribute_signup
+    except Exception:
+        return
+
+    slug = get_referral_slug_from_request(request)
+    if not slug:
+        return
+    try:
+        signup_ip = (
+            request.META.get("HTTP_X_FORWARDED_FOR", "").split(",")[0].strip()
+            or request.META.get("REMOTE_ADDR")
+        )
+        attribute_signup(
+            user=user,
+            affiliate_slug=slug,
+            signup_ip=signup_ip or None,
+        )
+    except Exception:
+        # Attribution failures must never break signup.
+        return
+
+
 def _decorate_product_modules(product_modules, billing_plans):
     plan_map = {card["slug"]: card for card in billing_plans}
     decorated = []
@@ -531,6 +562,7 @@ class WorkspaceSignupView(View):
         password = form.cleaned_data["password"]
         user = get_user_model().objects.create_user(username=email, email=email, password=password)
         login(request, user)
+        _attribute_affiliate_signup(request, user)
 
         if audit_run and audit_run.audit_request_id:
             project = sync_client_project_from_audit_run(audit_run)
@@ -678,8 +710,10 @@ class GoogleOAuthCallbackView(View):
             messages.error(request, str(exc))
             return redirect("tools:workspace-login")
 
-        user = get_or_create_user_from_google_profile(profile)
+        user, created = get_or_create_user_from_google_profile(profile)
         login(request, user)
+        if created:
+            _attribute_affiliate_signup(request, user)
         self._link_audit_to_user(request, user)
         self._clear_google_session(request)
         return redirect("tools:workspace-dashboard")

@@ -69,6 +69,7 @@ def exchange_google_code_for_userinfo(*, code, redirect_uri):
 
 
 def get_or_create_user_from_google_profile(profile):
+    """Return (user, created) so callers can distinguish new signups from logins."""
     email = profile["email"].strip().lower()
     user_model = get_user_model()
     user = (
@@ -88,7 +89,7 @@ def get_or_create_user_from_google_profile(profile):
             updated_fields.append("last_name")
         if updated_fields:
             user.save(update_fields=updated_fields)
-        return user
+        return user, False
 
     user = user_model.objects.create_user(
         username=email,
@@ -98,4 +99,4 @@ def get_or_create_user_from_google_profile(profile):
     )
     user.set_unusable_password()
     user.save(update_fields=["password"])
-    return user
+    return user, True

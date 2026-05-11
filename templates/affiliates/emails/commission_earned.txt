@@ -1,0 +1,13 @@
+Hi {{ affiliate.display_name }},
+
+Good news — you just earned a commission on VRTSPACE.
+
+Amount: {{ amount_display }}
+Type: {{ commission.get_kind_display }}
+Rate applied: {{ commission.commission_rate_pct }}%
+Release date: {{ release_date|date:"Y-m-d" }}
+
+We hold every commission for {{ commission.release_at|timeuntil }} before releasing
+it to your Stripe Connect account. This protects against refunds and chargebacks.
+
+— The VRTSPACE Partner Team

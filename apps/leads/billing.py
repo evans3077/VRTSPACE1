@@ -1512,6 +1512,54 @@ def sync_subscription_from_stripe_subscription(subscription_data, event_id=""):
     return subscription
 
 
+def _fire_affiliate_payment_signal(invoice_data, event_id):
+    """Emit the affiliates.signals.payment_received signal for a paid invoice.
+
+    Defensive: never let an affiliate-side failure abort billing webhook
+    processing. The signal receiver itself handles its own exceptions, but
+    we guard the import + dispatch here as a belt-and-suspenders measure.
+    """
+    try:
+        from apps.affiliates.signals import payment_received
+    except Exception:  # apps.affiliates not installed / import-time error
+        return
+
+    amount_paid = int(invoice_data.get("amount_paid") or 0)
+    if amount_paid <= 0:
+        return
+
+    customer_id = invoice_data.get("customer") or ""
+    if not customer_id:
+        return
+
+    subscription = (
+        WorkspaceSubscription.objects
+        .filter(stripe_customer_id=customer_id)
+        .only("user_id")
+        .first()
+    )
+    if not subscription or not subscription.user_id:
+        return
+
+    billing_reason = invoice_data.get("billing_reason") or ""
+    is_first = billing_reason == "subscription_create"
+
+    try:
+        payment_received.send(
+            sender="stripe.invoice.payment_succeeded",
+            user_id=subscription.user_id,
+            stripe_event_id=event_id,
+            gross_amount_cents=amount_paid,
+            currency=(invoice_data.get("currency") or "usd").lower(),
+            is_first_payment=is_first,
+            stripe_invoice_id=invoice_data.get("id") or "",
+            stripe_charge_id=invoice_data.get("charge") or "",
+            metadata={"billing_reason": billing_reason},
+        )
+    except Exception:
+        logger.exception("Failed to dispatch affiliate payment_received signal.")
+
+
 def handle_stripe_webhook_event(event):
     event_type = event.get("type", "")
     event_id = event.get("id", "")
@@ -1525,6 +1573,9 @@ def handle_stripe_webhook_event(event):
         "customer.subscription.deleted",
     }:
         return sync_subscription_from_stripe_subscription(data, event_id=event_id)
+    if event_type == "invoice.payment_succeeded":
+        _fire_affiliate_payment_signal(data, event_id)
+        return None
     return None
 
 

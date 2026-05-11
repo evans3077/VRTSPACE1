@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="account-shell-hero">
+    <div class="container account-hero-grid">
+        <div class="account-hero-copy">
+            <p class="eyebrow text-accent">Partner Program</p>
+            <h1>Partner with VRTSPACE</h1>
+            <p class="account-page-text">
+                We're inviting a small group of SEO and AI-search creators, agencies, and operators
+                to share VRTSPACE with their audience. {{ first_payment_pct|default:"25" }}% on first
+                payment, {{ recurring_pct|default:"15" }}% recurring, paid out automatically via Stripe.
+            </p>
+            <ul class="account-page-text" style="margin-top:1rem; line-height:1.7;">
+                <li>Invite-only, manually reviewed — quality over volume.</li>
+                <li>Real-time funnel (clicks, signups, paying conversions) inside your portal.</li>
+                <li>Commissions clear after a {{ payout_hold_days|default:"30" }}-day hold to handle refunds.</li>
+                <li>Payouts land in your Stripe account weekly. Zero invoicing on your side.</li>
+            </ul>
+        </div>
+
+        <article class="account-hero-panel">
+            <div class="account-hero-panel-head">
+                <p class="eyebrow">Apply to join</p>
+            </div>
+            <form method="post" class="account-form-grid" style="display:flex;flex-direction:column;gap:0.85rem;">
+                {% csrf_token %}
+                {% if form.non_field_errors %}<div class="flash flash-error">{{ form.non_field_errors }}</div>{% endif %}
+
+                <label>
+                    <span class="eyebrow">Your name</span>
+                    {{ form.name }}
+                    {% if form.name.errors %}<small style="color:var(--error)">{{ form.name.errors|join:" " }}</small>{% endif %}
+                </label>
+
+                <label>
+                    <span class="eyebrow">Email</span>
+                    {{ form.email }}
+                    {% if form.email.errors %}<small style="color:var(--error)">{{ form.email.errors|join:" " }}</small>{% endif %}
+                </label>
+
+                <label>
+                    <span class="eyebrow">Website or social handle</span>
+                    {{ form.website_or_handle }}
+                    {% if form.website_or_handle.errors %}<small style="color:var(--error)">{{ form.website_or_handle.errors|join:" " }}</small>{% endif %}
+                </label>
+
+                <label>
+                    <span class="eyebrow">Audience size</span>
+                    {{ form.audience_size }}
+                </label>
+
+                <label>
+                    <span class="eyebrow">How would you promote VRTSPACE?</span>
+                    {{ form.promotion_plan }}
+                </label>
+
+                <button type="submit" class="button button-primary">Submit application</button>
+            </form>
+        </article>
+    </div>
+</section>
+{% endblock %}
