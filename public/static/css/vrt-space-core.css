@@ -6325,4 +6325,31 @@ body.shell-light .audit-upsell-panel {
     background: rgba(239, 68, 68, 0.06);
     border-color: rgba(239, 68, 68, 0.2);
     color: var(--error, #ef4444);
+/* ── Agency landing page ─────────────────────────────────────────────────── */
+.agency-hero {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 4rem;
+    align-items: center;
+    padding-top: 3rem;
+    padding-bottom: 5rem;
+}
+
+.agency-hero-content {
+    text-align: left;
+}
+
+.agency-hero-visual {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media (max-width: 860px) {
+    .agency-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .agency-hero-visual {
+        justify-content: flex-start;
+    }
 }
