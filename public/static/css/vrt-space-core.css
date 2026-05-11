@@ -3455,6 +3455,38 @@ body.shell-light .public-hero-actions {
     margin-top: 0.25rem;
 }
 
+body.shell-light .audit-pdf-lock-notice {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.65rem 0.9rem;
+    margin-top: 1rem;
+    border-radius: 12px;
+    background: rgba(245, 158, 11, 0.08);
+    border: 1px solid rgba(245, 158, 11, 0.25);
+    color: #92400e;
+    font-size: 0.92rem;
+    font-weight: 500;
+}
+
+body.shell-light .audit-pdf-lock-notice a {
+    color: #b45309;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+body.shell-light .audit-pdf-lock-notice a:hover {
+    text-decoration: underline;
+}
+
+body.shell-light .hero-cta-note {
+    margin-top: 0.7rem;
+    font-size: 0.92rem;
+    color: var(--text-secondary);
+    max-width: 540px;
+    line-height: 1.5;
+}
+
 body.shell-light .public-chip-row {
     display: flex;
     flex-wrap: wrap;
@@ -4563,6 +4595,68 @@ body.shell-light .workspace-project-actions {
     justify-items: start;
 }
 
+body.shell-light .workspace-health-dot {
+    display: inline-block;
+    width: 0.65rem;
+    height: 0.65rem;
+    border-radius: 50%;
+    flex-shrink: 0;
+    box-shadow: 0 0 0 3px rgba(15, 23, 42, 0.04);
+}
+
+body.shell-light .workspace-health-dot.health-green {
+    background: #10b981;
+}
+
+body.shell-light .workspace-health-dot.health-amber {
+    background: #f59e0b;
+}
+
+body.shell-light .workspace-health-dot.health-red {
+    background: #ef4444;
+}
+
+body.shell-light .workspace-health-dot.health-muted {
+    background: #cbd5e1;
+}
+
+body.shell-light .workspace-project-row.workspace-project-health-green {
+    border-left: 3px solid #10b981;
+}
+
+body.shell-light .workspace-project-row.workspace-project-health-amber {
+    border-left: 3px solid #f59e0b;
+}
+
+body.shell-light .workspace-project-row.workspace-project-health-red {
+    border-left: 3px solid #ef4444;
+}
+
+body.shell-light .workspace-project-row.workspace-project-health-muted {
+    border-left: 3px solid #cbd5e1;
+}
+
+body.shell-light .workspace-project-risk-pill {
+    margin-left: 0.25rem;
+}
+
+body.shell-light .workspace-project-audit-age {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    font-size: 0.85rem;
+    margin-top: 0.4rem;
+}
+
+body.shell-light .workspace-project-stale-flag {
+    color: #b45309;
+    font-weight: 600;
+    font-size: 0.78rem;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+}
+
 body.shell-light .workspace-project-tags {
     margin-top: 0 !important;
 }
@@ -4753,6 +4847,59 @@ body.shell-light .workspace-credit-balance-card {
     border-radius: 18px;
     border: 1px solid rgba(15, 23, 42, 0.08);
     background: #f8fafc !important;
+}
+
+body.shell-light .workspace-credit-banner {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 0.75rem;
+    align-items: center;
+    padding: 0.85rem 1rem;
+    margin-bottom: 0.85rem;
+    border-radius: 14px;
+    border: 1px solid;
+    font-size: 0.93rem;
+    line-height: 1.4;
+}
+
+body.shell-light .workspace-credit-banner strong {
+    font-weight: 700;
+}
+
+body.shell-light .workspace-credit-banner a {
+    margin-left: auto;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+body.shell-light .workspace-credit-banner a:hover {
+    text-decoration: underline;
+}
+
+body.shell-light .workspace-credit-banner-info {
+    background: rgba(59, 130, 246, 0.08);
+    border-color: rgba(59, 130, 246, 0.25);
+    color: #1e3a8a;
+}
+
+body.shell-light .workspace-credit-banner-warning {
+    background: rgba(245, 158, 11, 0.10);
+    border-color: rgba(245, 158, 11, 0.30);
+    color: #92400e;
+}
+
+body.shell-light .workspace-credit-banner-warning a {
+    color: #b45309;
+}
+
+body.shell-light .workspace-credit-banner-critical {
+    background: rgba(239, 68, 68, 0.10);
+    border-color: rgba(239, 68, 68, 0.30);
+    color: #991b1b;
+}
+
+body.shell-light .workspace-credit-banner-critical a {
+    color: #b91c1c;
 }
 
 body.shell-light .workspace-credit-balance-top {
@@ -5600,6 +5747,45 @@ body.shell-light .account-stack {
     gap: 0.9rem;
 }
 
+body.shell-light .account-topup-intro {
+    margin-bottom: 1rem;
+}
+
+body.shell-light .account-topup-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+    gap: 0.8rem;
+    margin-bottom: 0.85rem;
+}
+
+body.shell-light .account-topup-card {
+    display: grid;
+    gap: 0.6rem;
+    padding: 0.95rem 1rem;
+    border-radius: 14px;
+    border: 1px solid rgba(15, 23, 42, 0.10);
+    background: #f8fafc;
+}
+
+body.shell-light .account-topup-card-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+
+body.shell-light .account-topup-card-head strong {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--text-primary) !important;
+}
+
+body.shell-light .account-topup-price {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #0f766e;
+}
+
 body.shell-light .account-note-card,
 body.shell-light .account-empty-state {
     padding: 1rem 1.05rem;
@@ -6037,5 +6223,133 @@ body.shell-light .audit-upsell-panel {
 
     to {
         transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+/* ── Score progress timeline ─────────────────────────────────────────────── */
+.workspace-progress-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+
+.workspace-progress-timeline {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+    overflow-x: auto;
+    padding-bottom: 0.5rem;
+    min-height: 140px;
+}
+
+.workspace-progress-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.3rem;
+    min-width: 52px;
+    flex: 1;
+    position: relative;
+}
+
+.workspace-progress-bar-wrap {
+    width: 100%;
+    height: 80px;
+    display: flex;
+    align-items: flex-end;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    border: 1px solid var(--border-glass);
+    border-bottom: none;
+    overflow: hidden;
+}
+
+.workspace-progress-bar {
+    width: 100%;
+    border-radius: var(--radius-sm) var(--radius-sm) 0 0;
+    transition: height 0.3s ease;
+    min-height: 4px;
+}
+
+.workspace-progress-score {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.75rem;
+}
+
+.workspace-progress-score strong {
+    font-size: 0.9rem;
+    color: var(--text-primary);
+}
+
+.workspace-progress-date {
+    font-size: 0.65rem;
+    color: var(--text-muted);
+    text-align: center;
+    white-space: nowrap;
+}
+
+.workspace-progress-link {
+    font-size: 0.6rem;
+    color: var(--text-muted);
+    text-decoration: none;
+    opacity: 0.6;
+    transition: opacity 0.15s;
+}
+
+.workspace-progress-link:hover {
+    opacity: 1;
+    color: var(--brand-primary);
+}
+
+.workspace-progress-narrative {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.75rem;
+    padding: 0.85rem 1rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.84rem;
+    color: var(--text-secondary);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid var(--border-glass);
+}
+
+.workspace-progress-narrative-positive {
+    background: rgba(16, 185, 129, 0.06);
+    border-color: rgba(16, 185, 129, 0.2);
+    color: var(--success);
+}
+
+.workspace-progress-narrative-negative {
+    background: rgba(239, 68, 68, 0.06);
+    border-color: rgba(239, 68, 68, 0.2);
+    color: var(--error, #ef4444);
+/* ── Agency landing page ─────────────────────────────────────────────────── */
+.agency-hero {
+    display: grid;
+    grid-template-columns: 1.15fr 0.85fr;
+    gap: 4rem;
+    align-items: center;
+    padding-top: 3rem;
+    padding-bottom: 5rem;
+}
+
+.agency-hero-content {
+    text-align: left;
+}
+
+.agency-hero-visual {
+    display: flex;
+    justify-content: flex-end;
+}
+
+@media (max-width: 860px) {
+    .agency-hero {
+        grid-template-columns: 1fr;
+    }
+
+    .agency-hero-visual {
+        justify-content: flex-start;
     }
 }

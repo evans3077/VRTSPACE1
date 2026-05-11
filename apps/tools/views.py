@@ -713,14 +713,18 @@ class AccountDashboardView(LoginRequiredMixin, View):
         return render(request, self.template_name, self._build_context(request))
 
     def _build_context(self, request, *, profile_form=None, password_form=None):
+        from apps.leads.billing import get_topup_packs
+
         billing_state = get_billing_state(request.user)
         subscription = billing_state["subscription"]
+        topup_packs = [pack for pack in get_topup_packs() if pack.get("stripe_price_id")]
         return {
             "profile_form": profile_form or AccountProfileForm(instance=request.user),
             "password_form": password_form or AccountPasswordForm(user=request.user),
             "billing_state": billing_state,
             "current_subscription": subscription,
             "workspace_count": len(get_workspace_projects(request.user)),
+            "topup_packs": topup_packs,
             "page_title": "Account | VRT SPACE AGENCY",
             "meta_description": "Personal account settings, billing, and security controls.",
             "meta_robots": "noindex, nofollow",
@@ -951,6 +955,12 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["credit_overview"] = billing_state["credit_overview"]
         context["credit_activity"] = billing_state["credit_activity"]
         context["recent_credit_entries"] = billing_state["recent_credit_entries"]
+
+        from apps.leads.credit_alerts import get_alert_band, get_credit_usage_percentage
+
+        credit_usage_pct = get_credit_usage_percentage(billing_state["credit_overview"])
+        context["credit_usage_pct"] = credit_usage_pct
+        context["credit_alert_band"] = get_alert_band(credit_usage_pct)
         context["credit_action_guide"] = (
             build_credit_action_guide(project, self.request.user)
             if getattr(project, "pk", None)
@@ -1221,6 +1231,11 @@ class AuditReportPdfView(DetailView):
         audit_run = self.get_object()
         if audit_run.status != AuditRun.Status.COMPLETED:
             return HttpResponse("Audit report is not available until the audit completes.", status=409)
+
+        viewer = request.user if request.user.is_authenticated else None
+        viewer_profile = get_audit_result_profile(viewer)
+        if not viewer_profile.get("pdf_export_enabled", False):
+            return redirect(f"{reverse('tools:audit-result', kwargs={'pk': audit_run.pk})}?pdf_locked=1")
 
         pdf_bytes = build_audit_report_pdf(audit_run)
         disposition = "attachment" if request.GET.get("download") == "1" else "inline"

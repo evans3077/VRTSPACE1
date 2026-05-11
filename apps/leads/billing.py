@@ -2,6 +2,7 @@ import calendar
 import hashlib
 import hmac
 import json
+import logging
 import time
 from datetime import date
 from datetime import datetime
@@ -9,9 +10,12 @@ from datetime import timezone as dt_timezone
 
 import requests
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.db.models import Sum
 from django.db.models import Q
 from django.utils import timezone
+
+logger = logging.getLogger(__name__)
 
 from apps.core.plan_catalog import (
     build_marketing_packages,
@@ -79,7 +83,7 @@ AUDIT_RESULT_PROFILES = {
     "free": {
         "label": "Starter diagnosis",
         "summary": "Clear enough to confirm the main blockers, but intentionally shaped to push the next decision instead of dumping everything.",
-        "top_issue_limit": 3,
+        "top_issue_limit": 2,
         "quick_win_limit": 3,
         "featured_recommendation_limit": 3,
         "secondary_recommendation_limit": 0,
@@ -89,6 +93,7 @@ AUDIT_RESULT_PROFILES = {
         "show_context_analysis": False,
         "show_custom_work_items": False,
         "show_secondary_recommendations": False,
+        "pdf_export_enabled": False,
     },
     "starter": {
         "label": "Action-ready audit",
@@ -103,6 +108,7 @@ AUDIT_RESULT_PROFILES = {
         "show_context_analysis": False,
         "show_custom_work_items": True,
         "show_secondary_recommendations": True,
+        "pdf_export_enabled": True,
     },
     "growth": {
         "label": "Growth planning layer",
@@ -117,6 +123,7 @@ AUDIT_RESULT_PROFILES = {
         "show_context_analysis": True,
         "show_custom_work_items": True,
         "show_secondary_recommendations": True,
+        "pdf_export_enabled": True,
     },
     "authority": {
         "label": "Full audit depth",
@@ -131,6 +138,7 @@ AUDIT_RESULT_PROFILES = {
         "show_context_analysis": True,
         "show_custom_work_items": True,
         "show_secondary_recommendations": True,
+        "pdf_export_enabled": True,
     },
     "enterprise": {
         "label": "Custom audit depth",
@@ -145,6 +153,7 @@ AUDIT_RESULT_PROFILES = {
         "show_context_analysis": True,
         "show_custom_work_items": True,
         "show_secondary_recommendations": True,
+        "pdf_export_enabled": True,
     },
 }
 
@@ -226,10 +235,15 @@ def get_workspace_plans():
 
 
 def sync_workspace_plan_catalog():
+    configured_price_ids = getattr(settings, "STRIPE_PRICE_IDS", {}) or {}
     for definition in get_plan_definitions(include_free=False):
+        defaults = build_workspace_plan_defaults(definition)
+        env_price_id = configured_price_ids.get(definition["slug"]) or ""
+        if env_price_id:
+            defaults["stripe_price_id"] = env_price_id
         WorkspacePlan.objects.update_or_create(
             slug=definition["slug"],
-            defaults=build_workspace_plan_defaults(definition),
+            defaults=defaults,
         )
 
 
@@ -732,7 +746,54 @@ def spend_credits(user, category, *, amount=1, project=None, note="", reference_
             "shadow_amount": amount if shadow_mode else 0,
         },
     )
+    _maybe_dispatch_credit_alerts(
+        user,
+        subscription=subscription,
+        period_start=period_start,
+        period_end=period_end,
+        now=now,
+    )
     return entry
+
+
+def _maybe_dispatch_credit_alerts(user, *, subscription, period_start, period_end, now=None):
+    try:
+        from .credit_alerts import (
+            evaluate_credit_alert_thresholds,
+            record_credit_alert,
+        )
+        from .notifications import send_credit_alert_email
+        from .models import CreditAlert
+
+        balance = get_total_credit_balance_summary(user, now=now)
+        thresholds = evaluate_credit_alert_thresholds(
+            user,
+            balance=balance,
+            period_start=period_start,
+            period_end=period_end,
+        )
+        for threshold in thresholds:
+            delivered = True
+            error_message = ""
+            try:
+                send_credit_alert_email(user, threshold_pct=threshold, balance=balance)
+            except Exception as exc:  # pragma: no cover - email backend failures
+                delivered = False
+                error_message = str(exc)
+                logger.exception("Failed to send credit alert email for user=%s threshold=%s", user.pk, threshold)
+            record_credit_alert(
+                user,
+                threshold_pct=threshold,
+                balance=balance,
+                period_start=period_start,
+                period_end=period_end,
+                subscription=subscription,
+                channel=CreditAlert.Channel.EMAIL,
+                delivered=delivered,
+                error_message=error_message,
+            )
+    except Exception:
+        logger.exception("Credit alert dispatch failed for user=%s", getattr(user, "pk", None))
 
 
 def _get_project_complexity_band(project):
@@ -1226,6 +1287,117 @@ def fetch_checkout_session(session_id):
 
 def sync_subscription_from_checkout_session_id(session_id):
     session_data = fetch_checkout_session(session_id)
+    return sync_checkout_session(session_data)
+
+
+def get_topup_packs():
+    return list(getattr(settings, "STRIPE_TOPUP_PACKS", []) or [])
+
+
+def get_topup_pack(slug):
+    for pack in get_topup_packs():
+        if pack.get("slug") == slug:
+            return pack
+    return None
+
+
+def create_topup_checkout_session(*, user, pack, success_url, cancel_url):
+    if not settings.STRIPE_ENABLED:
+        raise BillingError("Stripe billing is not configured.")
+
+    price_id = validate_stripe_price_id(pack.get("stripe_price_id", ""), plan_name=pack.get("name", "credit top-up"))
+
+    subscription = get_workspace_subscription(user)
+    customer_id = subscription.stripe_customer_id if subscription and subscription.stripe_customer_id else ""
+
+    payload = {
+        "mode": "payment",
+        "success_url": success_url,
+        "cancel_url": cancel_url,
+        "client_reference_id": str(user.pk),
+        "customer_email": user.email,
+        "line_items[0][price]": price_id,
+        "line_items[0][quantity]": "1",
+        "metadata[user_id]": str(user.pk),
+        "metadata[topup_pack]": pack["slug"],
+        "metadata[topup_credits]": str(pack["credits"]),
+    }
+    if customer_id:
+        payload["customer"] = customer_id
+        payload.pop("customer_email", None)
+
+    response = requests.post(
+        f"{STRIPE_API_BASE}/checkout/sessions",
+        auth=(settings.STRIPE_SECRET_KEY, ""),
+        data=payload,
+        timeout=20,
+    )
+    if response.status_code >= 400:
+        raise BillingError(f"Stripe top-up checkout creation failed: {response.text[:200]}")
+    return response.json()
+
+
+def grant_topup_credits(user, pack, *, checkout_session_id, now=None):
+    if not user or not getattr(user, "is_authenticated", False):
+        return None
+    period_start, period_end = get_credit_record_window(now=now)
+    subscription = get_workspace_subscription(user)
+    plan = subscription.plan if subscription else None
+    reference_key = f"topup:{checkout_session_id}"[:120]
+
+    existing = WorkspaceCreditLedger.objects.filter(
+        user=user,
+        reference_key=reference_key,
+        kind=WorkspaceCreditLedger.Kind.BONUS,
+    ).first()
+    if existing:
+        return existing
+
+    return WorkspaceCreditLedger.objects.create(
+        user=user,
+        plan=plan,
+        subscription=subscription,
+        category=WORKSPACE_CREDIT_CATEGORY,
+        kind=WorkspaceCreditLedger.Kind.BONUS,
+        delta=pack["credits"],
+        period_start=period_start,
+        period_end=period_end,
+        note=f"Top-up: {pack['name']}",
+        reference_key=reference_key,
+        metadata={
+            "source": "topup",
+            "pack_slug": pack["slug"],
+            "pack_credits": pack["credits"],
+            "pack_amount_cents": pack.get("amount_cents", 0),
+            "checkout_session_id": checkout_session_id,
+        },
+    )
+
+
+def sync_topup_from_checkout_session(session_data):
+    user_id = session_data.get("client_reference_id") or (session_data.get("metadata") or {}).get("user_id")
+    if not user_id:
+        return None
+    pack_slug = (session_data.get("metadata") or {}).get("topup_pack", "")
+    pack = get_topup_pack(pack_slug)
+    if not pack:
+        return None
+    user = get_user_model().objects.filter(pk=user_id).first()
+    if not user:
+        return None
+    return grant_topup_credits(
+        user,
+        pack,
+        checkout_session_id=session_data.get("id", "") or pack_slug,
+    )
+
+
+def sync_checkout_session(session_data):
+    if not session_data:
+        return None
+    metadata = session_data.get("metadata") or {}
+    if session_data.get("mode") == "payment" or metadata.get("topup_pack"):
+        return sync_topup_from_checkout_session(session_data)
     return sync_subscription_from_checkout_session(session_data)
 
 
@@ -1346,7 +1518,7 @@ def handle_stripe_webhook_event(event):
     data = (event.get("data") or {}).get("object", {})
 
     if event_type == "checkout.session.completed":
-        return sync_subscription_from_checkout_session(data)
+        return sync_checkout_session(data)
     if event_type in {
         "customer.subscription.created",
         "customer.subscription.updated",

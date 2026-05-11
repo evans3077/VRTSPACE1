@@ -8,6 +8,7 @@ from .billing_views import (
     WorkspaceBillingPortalView,
     WorkspaceBillingSuccessView,
     WorkspaceCheckoutCreateView,
+    WorkspaceTopupCreateView,
 )
 from .views import (
     AgencyAuditDetailView,
@@ -52,6 +53,7 @@ urlpatterns = [
     path("workspace/projects/select/", WorkspaceProjectSelectView.as_view(), name="workspace-project-select"),
     path("workspace/audits/start/", WorkspaceAuditStartView.as_view(), name="workspace-audit-start"),
     path("workspace/billing/checkout/", WorkspaceCheckoutCreateView.as_view(), name="workspace-billing-checkout"),
+    path("workspace/billing/topup/", WorkspaceTopupCreateView.as_view(), name="workspace-billing-topup"),
     path("workspace/billing/portal/", WorkspaceBillingPortalView.as_view(), name="workspace-billing-portal"),
     path("workspace/billing/success/", WorkspaceBillingSuccessView.as_view(), name="workspace-billing-success"),
     path("workspace/billing/cancel/", WorkspaceBillingCancelView.as_view(), name="workspace-billing-cancel"),

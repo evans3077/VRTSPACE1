@@ -64,12 +64,16 @@
                     </div>
                     <div class="workspace-project-list">
                         {% for item in workspace_project_summaries %}
-                        <article class="workspace-project-row{% if project.pk == item.pk %} is-active{% endif %}">
+                        <article class="workspace-project-row workspace-project-health-{{ item.health_status }}{% if project.pk == item.pk %} is-active{% endif %}">
                             <div class="workspace-project-main">
                                 <div class="workspace-project-title-row">
+                                    <span class="workspace-health-dot health-{{ item.health_status }}" title="{{ item.health_label }}" aria-label="{{ item.health_label }}"></span>
                                     <strong>{{ item.name }}</strong>
                                     {% if project.pk == item.pk %}
                                     <span class="score-pill score-high">Current workspace</span>
+                                    {% endif %}
+                                    {% if item.at_risk_category_label %}
+                                    <span class="score-pill score-low workspace-project-risk-pill">{{ item.at_risk_category_label }} at risk</span>
                                     {% endif %}
                                 </div>
                                 <div class="workspace-project-subtitle">{{ item.project_type_label }}</div>
@@ -80,9 +84,31 @@
                                 {% if item.primary_service %}
                                 <div class="workspace-project-meta-line">{{ item.primary_service }}</div>
                                 {% endif %}
+                                <div class="workspace-project-meta-line workspace-project-audit-age">
+                                    {% if item.latest_audit_completed_at %}
+                                    Last audit {{ item.latest_audit_completed_at|timesince }} ago
+                                    {% if item.audit_is_stale %}
+                                    <span class="workspace-project-stale-flag">Stale &mdash; rerun recommended</span>
+                                    {% endif %}
+                                    {% else %}
+                                    No audit yet
+                                    {% endif %}
+                                </div>
                             </div>
                             <div class="workspace-project-stats">
-                                <div><span>Score</span><strong>{{ item.latest_score }}</strong></div>
+                                <div>
+                                    <span>Score</span>
+                                    <strong>{% if item.latest_audit_overall_score is not None %}{{ item.latest_audit_overall_score }}{% else %}&mdash;{% endif %}</strong>
+                                    {% if item.score_delta is not None %}
+                                        {% if item.score_delta > 0 %}
+                                        <span class="workspace-delta workspace-delta-up">+{{ item.score_delta }}</span>
+                                        {% elif item.score_delta < 0 %}
+                                        <span class="workspace-delta workspace-delta-down">{{ item.score_delta }}</span>
+                                        {% else %}
+                                        <span class="workspace-delta workspace-delta-flat">0</span>
+                                        {% endif %}
+                                    {% endif %}
+                                </div>
                                 <div><span>SEO</span><strong>{{ item.seo_snapshot_count }}</strong></div>
                                 <div><span>AEO</span><strong>{{ item.aeo_audit_count }}</strong></div>
                                 <div><span>Drafts</span><strong>{{ item.generated_content_count }}</strong></div>
@@ -369,13 +395,35 @@
                         <p class="eyebrow">Credits</p>
                         <h2>Balance</h2>
                     </div>
+                    {% if credit_alert_band == 100 %}
+                    <div class="workspace-credit-banner workspace-credit-banner-critical">
+                        <strong>You've used all of this month's credits.</strong>
+                        <span>Top up to keep audits and refreshes running, or wait for next cycle to refresh automatically.</span>
+                        <a href="{% url 'tools:account-dashboard' %}#billing">Top up &rarr;</a>
+                    </div>
+                    {% elif credit_alert_band == 90 %}
+                    <div class="workspace-credit-banner workspace-credit-banner-warning">
+                        <strong>You're at 90% of this month's credits.</strong>
+                        <span>Top up to avoid a mid-cycle pause, or pace the rest of the month.</span>
+                        <a href="{% url 'tools:account-dashboard' %}#billing">Top up &rarr;</a>
+                    </div>
+                    {% elif credit_alert_band == 75 %}
+                    <div class="workspace-credit-banner workspace-credit-banner-info">
+                        <strong>75% of this month's credits used.</strong>
+                        <span>Worth a glance to plan the rest of the month.</span>
+                    </div>
+                    {% endif %}
                     <div class="workspace-credit-balance-card">
                         <div class="workspace-credit-balance-top">
                             <div>
                                 <p class="eyebrow">Remaining</p>
                                 <h3>{% if credit_overview.unlimited %}Unlimited{% else %}{{ credit_overview.remaining|default:0 }}{% endif %}</h3>
                             </div>
+                            {% if credit_usage_pct is not None %}
+                            <span class="score-pill {% if credit_alert_band == 100 %}score-low{% elif credit_alert_band == 90 %}score-low{% elif credit_alert_band == 75 %}score-med{% else %}score-high{% endif %}">{{ credit_usage_pct }}% used</span>
+                            {% else %}
                             <span class="score-pill score-high">Workspace usage</span>
+                            {% endif %}
                         </div>
                         <div class="workspace-credit-balance-meta">
                             <div><span>Used this cycle</span><strong>{{ credit_overview.used|default:0 }}</strong></div>
@@ -627,6 +675,75 @@
                     {% endif %}
                 </div>
             </aside>
+
+        {# ── Score progress timeline ── #}
+        {% if audit_history_with_delta|length > 1 %}
+        <article class="system-card workspace-progress-card">
+            <div class="section-heading workspace-section-head">
+                <p class="eyebrow">Progress</p>
+                <h2>Score over time</h2>
+                <p class="section-text">
+                    {% with first=audit_history_with_delta|last last=audit_history_with_delta|first %}
+                    {% if first and last and first.audit.overall_score is not None and last.audit.overall_score is not None %}
+                    {% with gain=last.audit.overall_score|add:"-"|add:first.audit.overall_score|stringformat:"i" %}
+                    Overall score moved from <strong>{{ first.audit.overall_score }}</strong> to <strong>{{ last.audit.overall_score }}</strong>
+                    across {{ audit_history_with_delta|length }} audit runs.
+                    {% endwith %}
+                    {% endif %}
+                    {% endwith %}
+                </p>
+            </div>
+
+            <div class="workspace-progress-timeline">
+                {% for item in audit_history_with_delta reversed %}
+                <div class="workspace-progress-node">
+                    <div class="workspace-progress-bar-wrap" title="Score: {{ item.audit.overall_score }}">
+                        <div class="workspace-progress-bar"
+                             style="height: {{ item.audit.overall_score|default:0 }}%;
+                                    background: {% if item.audit.overall_score >= 80 %}var(--success){% elif item.audit.overall_score >= 60 %}var(--brand-secondary){% else %}var(--error, #ef4444){% endif %};">
+                        </div>
+                    </div>
+                    <div class="workspace-progress-score">
+                        <strong>{{ item.audit.overall_score }}</strong>
+                        {% if item.delta is not None and item.delta != 0 %}
+                        <span class="workspace-delta {% if item.delta > 0 %}workspace-delta-up{% else %}workspace-delta-down{% endif %}">
+                            {% if item.delta > 0 %}+{% endif %}{{ item.delta }}
+                        </span>
+                        {% endif %}
+                    </div>
+                    <div class="workspace-progress-date">{{ item.audit.created_at|date:"M j" }}</div>
+                    {% if item.audit.status == "completed" %}
+                    <a class="workspace-progress-link" href="{% url 'tools:audit-result' item.audit.pk %}" title="Open report">
+                        <i class="fas fa-external-link-alt"></i>
+                    </a>
+                    {% endif %}
+                </div>
+                {% endfor %}
+            </div>
+
+            {% with oldest=audit_history_with_delta|last newest=audit_history_with_delta|first %}
+            {% if oldest and newest and oldest.audit.overall_score and newest.audit.overall_score %}
+            {% if newest.audit.overall_score > oldest.audit.overall_score %}
+            <div class="workspace-progress-narrative workspace-progress-narrative-positive">
+                <i class="fas fa-arrow-trend-up"></i>
+                <span>Score improved by <strong>+{{ newest.audit.overall_score|add:"-"|add:oldest.audit.overall_score|stringformat:"i"|cut:"-" }}</strong> points since the first run.
+                That's measurable progress you can show to clients.</span>
+            </div>
+            {% elif newest.audit.overall_score < oldest.audit.overall_score %}
+            <div class="workspace-progress-narrative workspace-progress-narrative-negative">
+                <i class="fas fa-arrow-trend-down"></i>
+                <span>Score dropped since the first run. Review the fix queue and rerun to rebuild the baseline.</span>
+            </div>
+            {% else %}
+            <div class="workspace-progress-narrative">
+                <i class="fas fa-minus"></i>
+                <span>Score is holding steady. Push fixes through and rerun to move the needle.</span>
+            </div>
+            {% endif %}
+            {% endif %}
+            {% endwith %}
+        </article>
+        {% endif %}
 
         <article id="audit-history" class="system-card workspace-history-card">
             <div class="section-heading workspace-section-head">

@@ -212,6 +212,22 @@ class PublicAuditFlowTests(TestCase):
             },
         )
 
+        from apps.leads.billing import sync_workspace_plan_catalog
+
+        sync_workspace_plan_catalog()
+        user = get_user_model().objects.create_user(
+            username="pdf-tester",
+            email="pdf@example.com",
+            password="pass1234",
+        )
+        starter_plan = WorkspacePlan.objects.get(slug="starter")
+        WorkspaceSubscription.objects.create(
+            user=user,
+            plan=starter_plan,
+            status=WorkspaceSubscription.Status.ACTIVE,
+        )
+        self.client.force_login(user)
+
         response = self.client.get(reverse("tools:audit-report-pdf", args=[audit_run.pk]))
 
         self.assertEqual(response.status_code, 200)
@@ -2103,3 +2119,50 @@ class AuditExportAndQueueTests(TestCase):
     def test_enqueue_public_site_audit_uses_celery_when_enabled(self, mocked_delay):
         enqueue_public_site_audit(42)
         mocked_delay.assert_called_once_with(42)
+
+
+class AuditReportPdfAccessTests(TestCase):
+    def setUp(self):
+        self.audit_request = AuditRequest.objects.create(
+            company_name="Northwind",
+            email="ops@example.com",
+            website="https://northwind.example.com",
+        )
+        self.audit_run = AuditRun.objects.create(
+            audit_request=self.audit_request,
+            normalized_domain="northwind.example.com",
+            start_url="https://northwind.example.com",
+            pages_crawled=10,
+            overall_score=72,
+            status=AuditRun.Status.COMPLETED,
+        )
+        self.pdf_url = reverse("tools:audit-report-pdf", kwargs={"pk": self.audit_run.pk})
+
+    def test_anonymous_viewer_redirected_with_lock_flag(self):
+        response = self.client.get(self.pdf_url)
+        self.assertEqual(response.status_code, 302)
+        self.assertIn("pdf_locked=1", response["Location"])
+        self.assertIn(f"/tools/audits/{self.audit_run.pk}/", response["Location"])
+
+    def test_starter_subscriber_can_download_pdf(self):
+        from apps.leads.billing import sync_workspace_plan_catalog
+
+        sync_workspace_plan_catalog()
+        user = get_user_model().objects.create_user(
+            username="starter-user",
+            email="starter@example.com",
+            password="pass1234",
+        )
+        starter_plan = WorkspacePlan.objects.get(slug="starter")
+        WorkspaceSubscription.objects.create(
+            user=user,
+            plan=starter_plan,
+            status=WorkspaceSubscription.Status.ACTIVE,
+        )
+        self.client.force_login(user)
+
+        with patch("apps.tools.views.build_audit_report_pdf", return_value=b"%PDF-1.4 fake"):
+            response = self.client.get(self.pdf_url)
+
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response["Content-Type"], "application/pdf")
