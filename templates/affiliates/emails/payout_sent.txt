@@ -1,0 +1,12 @@
+Hi {{ affiliate.display_name }},
+
+Your VRTSPACE payout has been sent.
+
+Amount: {{ amount_display }}
+Sent: {{ payout.completed_at|date:"Y-m-d H:i" }} UTC
+Stripe transfer: {{ payout.stripe_transfer_id }}
+
+Funds typically land in your bank account within 2 business days,
+depending on your Stripe payout schedule.
+
+— The VRTSPACE Partner Team
