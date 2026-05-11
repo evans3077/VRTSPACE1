@@ -44,6 +44,9 @@ from .services import (
     sync_project_seo_campaigns,
     sync_project_competitors,
 )
+from .dataforseo_api import DataForSeoClient
+from apps.aeo.geo_api import GeoApiClient
+
 
 
 class WorkspaceSEOView(LoginRequiredMixin, View):
@@ -312,6 +315,32 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             if project and opportunity_snapshot
             else []
         )
+        
+        # Clinical Precision API Data Fetch (Fallback/Mock structure used if billing inactive)
+        dfs_client = DataForSeoClient()
+        geo_client = GeoApiClient()
+        
+        clinical_search_volume = {}
+        clinical_backlinks = {}
+        geo_shootout = {}
+        
+        if project:
+            # We use the primary service as the keyword for market gap analysis
+            keywords = [getattr(project, "primary_service", "SEO") or "SEO Services"]
+            clinical_search_volume = dfs_client.get_search_volume(keywords)
+            clinical_backlinks = dfs_client.get_backlink_profile(project.normalized_domain or "example.com")
+            
+            # Use top competitors for GEO Shootout
+            competitor_urls = [c.homepage_url for c in project.seo_competitors.filter(is_active=True)[:2]]
+            if not competitor_urls:
+                competitor_urls = ["competitor1.com", "competitor2.com"]
+                
+            geo_shootout = geo_client.run_geo_shootout(
+                brand_name=project.name,
+                service_query=keywords[0],
+                competitors=competitor_urls
+            )
+
         return {
             "project": project,
             "workspace_projects": get_workspace_projects(self.request.user),
@@ -357,6 +386,20 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
                 feature_name="backlink_workspace_enabled",
                 label="Backlink intelligence",
             ) if project else {},
+            "geo_action": build_action_access_context(
+                self.request.user,
+                "geo_shootout",
+                project=project,
+                feature_name="clinical_intelligence_enabled",
+                label="GEO Shootout",
+            ) if project else {},
+            "clinical_action": build_action_access_context(
+                self.request.user,
+                "clinical_data",
+                project=project,
+                feature_name="clinical_intelligence_enabled",
+                label="Clinical Market Data",
+            ) if project else {},
             "seo_campaign_status_choices": SEOCampaign.Status.choices,
             "seo_value_summary": opportunity_payload.get("value_summary", {}),
             "seo_keyword_opportunities": opportunity_payload.get("keyword_opportunities", []),
@@ -372,6 +415,9 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             "seo_refresh_state": refresh_state,
             "latest_seo_share_link": self._get_latest_share_link(project, campaign_items=campaign_items),
             "latest_seo_share_url": self._get_latest_share_url(project, campaign_items=campaign_items),
+            "clinical_search_volume": clinical_search_volume,
+            "clinical_backlinks": clinical_backlinks,
+            "geo_shootout": geo_shootout,
             "page_title": f"{project.name if project else 'Workspace'} SEO Workspace | VRT SPACE AGENCY",
             "meta_description": "Private SEO workspace for competitor-backed benchmark decisions, campaign execution, and stakeholder reporting.",
             "canonical_url": self.request.build_absolute_uri(self.request.path),

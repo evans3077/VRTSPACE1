@@ -58,6 +58,8 @@ CREDIT_ACTIVITY_LABELS = {
     "backlink": "Backlink work",
     "export": "Report exports",
     "share": "Stakeholder shares",
+    "geo_shootout": "GEO Shootouts",
+    "clinical_data": "Clinical Market Data",
 }
 ACTION_FEATURE_LABELS = {
     "recurring_audits_enabled": "Recurring audits",
@@ -71,6 +73,7 @@ ACTION_FEATURE_LABELS = {
     "action_packs_enabled": "Action packs",
     "campaign_tracking_enabled": "Campaign tracking",
     "cross_module_summary_enabled": "Cross-module summaries",
+    "clinical_intelligence_enabled": "Clinical Intelligence Engine",
 }
 AUDIT_RESULT_PROFILES = {
     "free": {
@@ -773,6 +776,12 @@ def estimate_credit_cost(category, *, project=None, payload=None):
     elif category == "backlink":
         amount = min(10, 3 + band)
         reason = "Prospecting cost scales with benchmark depth and supporting asset discovery."
+    elif category == "geo_shootout":
+        amount = 5
+        reason = "Runs a live prompt sequence against Perplexity Sonar Pro and extracts entity confidence."
+    elif category == "clinical_data":
+        amount = 4
+        reason = "Fetches live enterprise search volume and domain authority metrics from DataForSEO."
     else:
         amount = 1
         reason = "Lightweight action against existing workspace data."
@@ -848,6 +857,16 @@ def build_credit_action_guide(project, user=None):
             "slug": "aeo",
             "label": "Check AEO",
             "next_step": "Reuses the same audit and business context for answer-engine visibility.",
+        },
+        {
+            "slug": "geo_shootout",
+            "label": "Run GEO Shootout",
+            "next_step": "Test Perplexity's recommendation engine against your competitors.",
+        },
+        {
+            "slug": "clinical_data",
+            "label": "Unlock Clinical Data",
+            "next_step": "Reveal true enterprise search volume and backlink gaps.",
         },
         {
             "slug": "content",

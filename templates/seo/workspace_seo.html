@@ -55,6 +55,7 @@
             <a class="page-jump-link" href="#seo-roadmap"><i class="fas fa-map"></i> Roadmap</a>
             <a class="page-jump-link" href="#seo-backlinks"><i class="fas fa-link"></i> Backlinks</a>
             <a class="page-jump-link" href="#seo-opportunities"><i class="fas fa-lightbulb"></i> Ideas</a>
+            <a class="page-jump-link" href="#seo-clinical-intelligence" style="color: var(--accent-blue);"><i class="fas fa-brain"></i> Intelligence Engine</a>
         </div>
     </div>
 </nav>
@@ -62,6 +63,139 @@
 
 <section class="dashboard-stack workspace-seo-shell">
     <div class="container-fluid">
+        <!-- CLINICAL INTELLIGENCE MODULE -->
+        {% if geo_shootout or clinical_search_volume %}
+        <div id="seo-clinical-intelligence" class="layout-split-wide" style="margin-bottom: 2rem;">
+            
+            <!-- GEO Shootout Card -->
+            <article class="system-card" style="border: 1px solid var(--accent-blue); box-shadow: 0 4px 20px rgba(0, 153, 255, 0.1);">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                        <p class="eyebrow" style="color: var(--accent-blue);"><i class="fas fa-robot"></i> Generative Engine Optimization</p>
+                        {% if geo_shootout.is_mock %}
+                        <span class="score-pill score-medium" style="font-size: 0.65rem;">Structural Preview</span>
+                        {% endif %}
+                    </div>
+                    <h2 style="font-size: 1.8rem;">The "GEO Shootout"</h2>
+                    <p class="text-muted" style="margin-top:0.2rem;">Testing AI engines to see if they recommend your brand over competitors.</p>
+                </div>
+                
+                
+                {% if geo_action.available %}
+                <div style="padding: 1.25rem; border-radius: 14px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-glass); margin-bottom: 1rem;">
+                    <strong style="color: var(--text-primary); display:block; margin-bottom:0.5rem;">Perplexity Sonar Pro Output:</strong>
+                    <p style="font-family: monospace; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">"{{ geo_shootout.engine_response }}"</p>
+                </div>
+
+                <div class="data-card-grid">
+                    <div class="data-card" style="background: rgba(255,255,255,0.02);">
+                        <span class="data-card-label">Brand Cited</span>
+                        <span class="data-card-value" style="color: {% if geo_shootout.brand_cited %}#10b981{% else %}#ef4444{% endif %};">
+                            {% if geo_shootout.brand_cited %}Yes{% else %}No{% endif %}
+                        </span>
+                    </div>
+                    <div class="data-card" style="background: rgba(255,255,255,0.02);">
+                        <span class="data-card-label">GEO Confidence Score</span>
+                        <span class="data-card-value">{{ geo_shootout.confidence_score }}/100</span>
+                    </div>
+                </div>
+                
+                {% if geo_shootout.is_mock %}
+                <div style="margin-top: 1rem; padding: 0.8rem; background: rgba(59, 130, 246, 0.1); border-left: 3px solid var(--accent-blue); font-size: 0.8rem; color: var(--text-secondary);">
+                    <strong>API Integration Notice:</strong> {{ geo_shootout.mock_notice }} Activate your Perplexity API billing to fetch real-time shootout data.
+                </div>
+                {% endif %}
+                {% else %}
+                <div class="workspace-credit-callout">
+                    <p class="workspace-report-kicker" style="color: var(--accent-blue);"><i class="fas fa-lock"></i> Locked Potential</p>
+                    <h3 style="margin: 0.5rem 0;">Ready to test Perplexity Sonar Pro?</h3>
+                    <p>Run a live Generative Engine Optimization shootout to see if AI cites your brand over competitors. This test uses <strong>{{ geo_action.credits }} workspace credits</strong>.</p>
+                    
+                    {% if geo_action.next_unlock_message %}
+                    <p class="text-muted" style="margin-top:0.5rem; font-size:0.85rem;">{{ geo_action.next_unlock_message }}</p>
+                    <div class="workspace-card-actions" style="margin-top: 1rem;">
+                        <a href="{% url 'tools:account-dashboard' %}#plans" class="button button-primary">Upgrade Plan</a>
+                    </div>
+                    {% else %}
+                    <form method="post" action="{% url 'seo:workspace-seo' %}" style="margin-top: 1rem;">
+                        {% csrf_token %}
+                        <!-- We would hook this to a specific GEO action view, but post to workspace for mock -->
+                        <button type="button" class="button button-primary" onclick="alert('Credit burn triggered for GEO Shootout!');">Run Shootout (-{{ geo_action.credits }} Credits)</button>
+                    </form>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </article>
+
+            <!-- DataForSEO Market Gap -->
+            <article class="system-card" style="border: 1px solid var(--border-glass);">
+                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                    <p class="eyebrow" style="color: var(--text-muted);"><i class="fas fa-database"></i> Clinical Market Data</p>
+                    <h2 style="font-size: 1.8rem;">True Market Gap</h2>
+                    <p class="text-muted" style="margin-top:0.2rem;">Search volume and authority metrics verified via Enterprise APIs.</p>
+                </div>
+
+                {% if clinical_action.available %}
+                <div class="data-card-grid">
+                    {% for kw, data in clinical_search_volume.items %}
+                    <div class="data-card" style="grid-column: span 2;">
+                        <span class="data-card-label">Search Volume for "{{ kw }}"</span>
+                        <span class="data-card-value">{{ data.volume|default:"0" }}</span>
+                        <div class="seo-inline-tags" style="margin-top: 0.5rem; gap: 0.3rem;">
+                            <span class="seo-inline-tag">CPC: ${{ data.cpc }}</span>
+                            <span class="seo-inline-tag">Difficulty: {{ data.difficulty }}/100</span>
+                            {% if data.is_mock %}<span class="seo-inline-tag" style="background: rgba(255,165,0,0.1); color: orange;">Preview Data</span>{% endif %}
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                {% if clinical_backlinks %}
+                <div style="margin-top: 1.5rem; border-top: 1px solid var(--border-glass); padding-top: 1.5rem;">
+                    <h3 style="font-size: 1.1rem; color: var(--text-primary); margin-bottom: 1rem;">Backlink Authority Check</h3>
+                    <div class="data-card-grid">
+                        <div class="data-card">
+                            <span class="data-card-label">Total Backlinks</span>
+                            <span class="data-card-value">{{ clinical_backlinks.backlinks|default:0 }}</span>
+                        </div>
+                        <div class="data-card">
+                            <span class="data-card-label">Referring Domains</span>
+                            <span class="data-card-value">{{ clinical_backlinks.referring_domains|default:0 }}</span>
+                        </div>
+                    </div>
+                </div>
+                {% endif %}
+                
+                {% if clinical_backlinks.is_mock %}
+                 <div style="margin-top: 1rem; padding: 0.8rem; background: rgba(59, 130, 246, 0.1); border-left: 3px solid var(--accent-blue); font-size: 0.8rem; color: var(--text-secondary);">
+                    <strong>API Integration Notice:</strong> DataForSEO billing inactive. Activate keys in .env to unlock real-time structural audits.
+                </div>
+                {% endif %}
+                {% else %}
+                <div class="workspace-credit-callout">
+                    <p class="workspace-report-kicker"><i class="fas fa-lock"></i> Locked Potential</p>
+                    <h3 style="margin: 0.5rem 0;">Fetch exact search volume and backlink gaps</h3>
+                    <p>Stop guessing with inferred audit data. Ping the DataForSEO enterprise endpoints to get true clinical metrics for your targets. Uses <strong>{{ clinical_action.credits }} workspace credits</strong>.</p>
+                    
+                    {% if clinical_action.next_unlock_message %}
+                    <p class="text-muted" style="margin-top:0.5rem; font-size:0.85rem;">{{ clinical_action.next_unlock_message }}</p>
+                    <div class="workspace-card-actions" style="margin-top: 1rem;">
+                        <a href="{% url 'tools:account-dashboard' %}#plans" class="button button-primary">Upgrade Plan</a>
+                    </div>
+                    {% else %}
+                    <form method="post" action="{% url 'seo:workspace-seo' %}" style="margin-top: 1rem;">
+                        {% csrf_token %}
+                        <!-- We would hook this to a specific Market Gap action view, but post to workspace for mock -->
+                        <button type="button" class="button button-primary" onclick="alert('Credit burn triggered for Market Data!');">Fetch Market Data (-{{ clinical_action.credits }} Credits)</button>
+                    </form>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </article>
+        </div>
+        {% endif %}
+        <!-- END CLINICAL INTELLIGENCE MODULE -->
+
         <div id="seo-overview" class="workspace-report-grid">
             <article class="workspace-report-card">
                 <div class="workspace-report-intro">

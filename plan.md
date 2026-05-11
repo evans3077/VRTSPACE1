@@ -224,6 +224,49 @@ That is the bridge between the original build plan and the current strategy plan
 
 ## Active Phase
 
+### Phase 12: Clinical Precision & Advanced API Intelligence
+
+Status: planned
+
+Goal:
+
+Integrate high-value third-party and Google Cloud APIs to provide clinical-grade precision that competitors cannot match, powering predictive insights and high-margin credit burn mechanics.
+
+#### Track A: Clinical SEO Data & Authentication
+- [ ] Implement Google OAuth for Search Console (GSC) workspace connection.
+  Why:
+  Move from estimated traffic to exact clicks, impressions, and CTR.
+  Result:
+  Generate an "Opportunity Finder" action pack to push high-impression Page 2 URLs to Page 1 based on ground truth data.
+- [ ] Integrate DataForSEO API for Search Volume and Backlinks.
+  Why:
+  Enterprise-grade data at lower costs than Ahrefs/Semrush. Provide real "Market Gap Analysis" showing lost search volume.
+- [ ] Integrate Google Indexing API.
+  Why:
+  Instant validation of the VRT SPACE content engine. Generate -> Publish -> Ping Indexing API.
+
+#### Track B: AEO & GEO Verification
+- [ ] Integrate Google Cloud Natural Language API.
+  Why:
+  Check if Google's AI actually recognizes the brand's primary entities.
+  Result:
+  Calculate a clinical "Entity Confidence Score". Low confidence triggers specific Schema/Content action packs.
+- [ ] Integrate Perplexity API (Sonar Pro) for real-time testing.
+  Why:
+  AEO requires testing against real Answer Engines.
+  Result:
+  The "GEO Shootout" compares user vs competitors on Perplexity and generates an "Authority Gap Action Plan" if not cited.
+
+#### Track C: Workspace Monetization & Credit Burns
+- [ ] Implement high-value credit drain mechanisms for premium API checks.
+  Result:
+  Standard audits cost 1 credit. "Entity Confidence Scan" costs 25 credits. "GEO Shootout" costs 50 credits.
+- [ ] Expose "Locked Potential" teasers in the UI.
+  Result:
+  Free/Starter users see the *opportunity* (e.g. "14 pages stuck on Page 2 missing 4,500 impressions") but must upgrade/burn credits to see the exact URLs and Action Packs.
+
+---
+
 ### Phase 11: Product Precision, Packaging, and Decision Quality
 
 Status: in progress
