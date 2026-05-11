@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="account-shell-hero">
+    <div class="container account-hero-grid" style="text-align:center; justify-content:center;">
+        <div class="account-hero-copy" style="max-width:640px; margin:0 auto;">
+            <p class="eyebrow text-accent">Application received</p>
+            <h1>Thanks — we've got your details</h1>
+            <p class="account-page-text">
+                We review every partner application by hand to keep the program small and high-signal.
+                If you're a fit, you'll hear back from us within a few business days with an invite link
+                and Stripe Connect onboarding.
+            </p>
+            <div class="account-hero-actions" style="justify-content:center;">
+                <a class="button button-primary" href="{% url 'core:home' %}">Back to home</a>
+                <a class="button button-secondary" href="{% url 'core:packages' %}">See pricing</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

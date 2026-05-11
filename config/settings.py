@@ -99,6 +99,7 @@ INSTALLED_APPS = [
     "apps.case_studies",
     "apps.tools",
     "apps.analytics",
+    "apps.affiliates",
 ]
 
 MIDDLEWARE = [
@@ -304,6 +305,34 @@ STRIPE_TOPUP_PACKS = [
         "stripe_price_id": first_env("STRIPE_PRICE_TOPUP_70"),
     },
 ]
+
+try:
+    from celery.schedules import crontab as _crontab
+except Exception:
+    _crontab = None
+
+CELERY_BEAT_SCHEDULE = {}
+if _crontab is not None:
+    CELERY_BEAT_SCHEDULE["affiliates-process-payouts-weekly"] = {
+        "task": "affiliates.process_affiliate_payouts",
+        # Mondays at 09:00 UTC — well outside US business-hour Stripe surges.
+        "schedule": _crontab(hour=9, minute=0, day_of_week="mon"),
+    }
+    CELERY_BEAT_SCHEDULE["affiliates-refresh-connect-statuses-daily"] = {
+        "task": "affiliates.refresh_connect_statuses",
+        "schedule": _crontab(hour=8, minute=30),
+    }
+
+AFFILIATE_COOKIE_NAME = "vrt_ref"
+AFFILIATE_COOKIE_MAX_AGE_DAYS = int(os.environ.get("AFFILIATE_COOKIE_MAX_AGE_DAYS", "60"))
+AFFILIATE_COMMISSION_FIRST_PAYMENT_PCT = int(os.environ.get("AFFILIATE_COMMISSION_FIRST_PAYMENT_PCT", "25"))
+AFFILIATE_COMMISSION_RECURRING_PCT = int(os.environ.get("AFFILIATE_COMMISSION_RECURRING_PCT", "15"))
+AFFILIATE_PAYOUT_HOLD_DAYS = int(os.environ.get("AFFILIATE_PAYOUT_HOLD_DAYS", "30"))
+AFFILIATE_STRIPE_CONNECT_ENABLED = os.environ.get("AFFILIATE_STRIPE_CONNECT_ENABLED", "1") == "1"
+AFFILIATE_PROGRAM_FROM_EMAIL = os.environ.get(
+    "AFFILIATE_PROGRAM_FROM_EMAIL",
+    os.environ.get("DEFAULT_FROM_EMAIL", "partners@vrtspace.agency"),
+)
 
 SERP_DISCOVERY_PROVIDER = first_env("SERP_DISCOVERY_PROVIDER", default="serpapi,duckduckgo")
 SERPAPI_API_KEY = first_env("SERPAPI_API_KEY", "SERP_API_KEY")
