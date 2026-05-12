@@ -1,6 +1,13 @@
+import secrets
+
 from django.db import models
+from django.utils import timezone
 
 from apps.core.models import TimestampedModel
+
+
+def _generate_share_token():
+    return secrets.token_urlsafe(24)
 
 
 class VisibilitySnapshot(TimestampedModel):
@@ -31,6 +38,12 @@ class VisibilitySnapshot(TimestampedModel):
 
 
 class AEOAudit(TimestampedModel):
+    class Status(models.TextChoices):
+        QUEUED = "queued", "Queued"
+        RUNNING = "running", "Running"
+        COMPLETED = "completed", "Completed"
+        FAILED = "failed", "Failed"
+
     project = models.ForeignKey(
         "leads.ClientProject",
         on_delete=models.CASCADE,
@@ -56,12 +69,44 @@ class AEOAudit(TimestampedModel):
     structure_score = models.PositiveSmallIntegerField(default=0)
     completeness_score = models.PositiveSmallIntegerField(default=0)
     output_json = models.JSONField(default=dict, blank=True)
+    status = models.CharField(
+        max_length=16,
+        choices=Status.choices,
+        default=Status.COMPLETED,
+    )
+    queries_sent = models.PositiveSmallIntegerField(default=0)
+    engines_used = models.JSONField(default=list, blank=True)
+    competitor_visibility = models.JSONField(default=dict, blank=True)
+    queries_log = models.JSONField(default=list, blank=True)
+    share_token = models.CharField(
+        max_length=64,
+        blank=True,
+        default="",
+        db_index=True,
+    )
+    share_expires_at = models.DateTimeField(null=True, blank=True)
+    precision_mode = models.CharField(
+        max_length=16,
+        default="derived",
+        help_text="'derived' = on-page heuristic; 'live' = real LLM API calls",
+    )
 
     class Meta:
         ordering = ("-created_at",)
 
     def __str__(self):
         return f"AEO audit for {self.project}"
+
+    @property
+    def share_active(self):
+        if not self.share_expires_at:
+            return True
+        return self.share_expires_at >= timezone.now()
+
+    def save(self, *args, **kwargs):
+        if not self.share_token:
+            self.share_token = _generate_share_token()
+        super().save(*args, **kwargs)
 
     @property
     def overall_score(self):

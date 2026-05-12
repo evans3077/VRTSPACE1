@@ -1,6 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import redirect, render
+from django.http import Http404, JsonResponse
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.views import View
 
@@ -10,6 +11,7 @@ from apps.leads.services import get_workspace_projects
 from apps.leads.models import UsageRecord
 
 from .forms import AEOAuditRequestForm
+from .models import AEOAudit
 from .services import build_aeo_payload, build_aeo_competitor_benchmarks, create_aeo_audit, get_latest_aeo_audit
 from apps.seo.models import SEOProjectProfile
 
@@ -177,6 +179,71 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 "meta_description": "Private AEO workspace for answer-engine visibility, citation readiness, and competitor comparison.",
                 "canonical_url": request.build_absolute_uri(request.path),
                 "meta_robots": "noindex, nofollow",
+                "shell_theme": "shell-light",
+            },
+        )
+
+
+class AEOAuditPollView(LoginRequiredMixin, View):
+    """HTMX poll endpoint returning the AEO audit status as JSON.
+
+    The workspace page polls this every few seconds while an audit is RUNNING.
+    Once status is COMPLETED or FAILED the client stops polling and refreshes.
+    """
+
+    def get(self, request, pk, *args, **kwargs):
+        audit = get_object_or_404(
+            AEOAudit.objects.select_related("project"),
+            pk=pk,
+            project__owner=request.user,
+        )
+        return JsonResponse(
+            {
+                "status": audit.status,
+                "precision_mode": audit.precision_mode,
+                "queries_sent": audit.queries_sent,
+                "engines_used": list(audit.engines_used or []),
+                "overall_score": audit.overall_score,
+            }
+        )
+
+
+class AEOShareView(View):
+    """Public read-only AEO snapshot accessed via share_token."""
+
+    template_name = "aeo/aeo_share.html"
+
+    def get(self, request, token, *args, **kwargs):
+        audit = (
+            AEOAudit.objects.select_related("project", "source_audit_run", "seo_profile")
+            .prefetch_related("recommendations", "visibility_snapshots")
+            .filter(share_token=token)
+            .first()
+        )
+        if not audit or not audit.share_active:
+            raise Http404("Share link is invalid or expired.")
+
+        # Rebuild payload live for accuracy
+        if audit.source_audit_run:
+            payload = build_aeo_payload(
+                audit_run=audit.source_audit_run,
+                profile=audit.seo_profile,
+                target_keyword=audit.target_keyword or "",
+            )
+        else:
+            payload = audit.output_json or {}
+
+        return render(
+            request,
+            self.template_name,
+            {
+                "audit": audit,
+                "payload": payload,
+                "snapshots": list(audit.visibility_snapshots.all()),
+                "page_title": f"AEO Visibility — {audit.project.name if audit.project else ''}",
+                "meta_description": "Shared answer-engine visibility snapshot powered by VRT SPACE AGENCY.",
+                "meta_robots": "noindex, nofollow",
+                "canonical_url": request.build_absolute_uri(request.path),
                 "shell_theme": "shell-light",
             },
         )
