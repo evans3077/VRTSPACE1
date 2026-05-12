@@ -10,6 +10,10 @@ from .views import (
     WorkspaceGeneratedContentUpdateView,
     WorkspaceEditorialQueueSyncView,
 )
+from .cms_views import (
+    WorkspaceCMSCredentialView,
+    WorkspaceEditorialTaskPushView,
+)
 
 app_name = "content"
 
@@ -22,4 +26,6 @@ urlpatterns = [
     path("workspace/content/<int:pk>/apply/", WorkspaceGeneratedContentApplyView.as_view(), name="workspace-content-apply"),
     path("workspace/content/<int:pk>/json/", WorkspaceGeneratedContentJsonView.as_view(), name="workspace-content-json"),
     path("workspace/content/<int:pk>/", WorkspaceGeneratedContentDetailView.as_view(), name="workspace-content-detail"),
+    path("workspace/cms/credentials/", WorkspaceCMSCredentialView.as_view(), name="workspace-cms-credentials"),
+    path("workspace/content/tasks/<int:pk>/push/", WorkspaceEditorialTaskPushView.as_view(), name="workspace-content-task-push"),
 ]

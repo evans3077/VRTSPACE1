@@ -728,7 +728,7 @@ class ProjectDashboardTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response["Location"], reverse("tools:workspace-dashboard"))
+        self.assertEqual(response["Location"], reverse("tools:workspace-onboarding"))
 
         user = get_user_model().objects.get(username="user@example.com")
         project = ClientProject.objects.get(audit_request=audit_request)
@@ -911,7 +911,7 @@ class ProjectDashboardTests(TestCase):
         response = self.client.get(reverse("tools:workspace-dashboard"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Continue the work")
+        self.assertContains(response, "Open audit")
         self.assertContains(response, "Open SEO")
         self.assertContains(response, "Open AEO")
         self.assertContains(response, "Balance")
@@ -1047,7 +1047,7 @@ class WorkspaceAuthTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response["Location"], reverse("tools:workspace-dashboard"))
+        self.assertEqual(response["Location"], reverse("tools:workspace-onboarding"))
         user = get_user_model().objects.get(email="googleuser@example.com")
         project = ClientProject.objects.get(audit_request=audit_request)
         self.assertEqual(project.owner, user)

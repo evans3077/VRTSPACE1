@@ -28,11 +28,22 @@ from .views import (
     WorkspaceAuditShareCreateView,
     WorkspaceLoginView,
     WorkspaceLogoutView,
+    WorkspaceOnboardingView,
+    WorkspaceOnboardingStep1View,
+    WorkspaceOnboardingStep2View,
+    WorkspaceOnboardingAuditPollView,
+    WorkspaceOnboardingStep3View,
     WorkspaceProjectCreateView,
     WorkspaceProjectSelectView,
     WorkspaceSignupView,
     SharedAuditReportPdfView,
     SharedAuditReportView,
+)
+from .team_views import (
+    AcceptInviteView,
+    ClientSharedProjectView,
+    RevokeMemberView,
+    WorkspaceTeamView,
 )
 
 app_name = "tools"
@@ -68,4 +79,13 @@ urlpatterns = [
     path("share/audits/<slug:token>/", SharedAuditReportView.as_view(), name="shared-audit-report"),
     path("share/audits/<slug:token>/report.pdf", SharedAuditReportPdfView.as_view(), name="shared-audit-report-pdf"),
     path("workspace/", WorkspaceDashboardView.as_view(), name="workspace-dashboard"),
+    path("workspace/onboarding/", WorkspaceOnboardingView.as_view(), name="workspace-onboarding"),
+    path("workspace/onboarding/step/1/", WorkspaceOnboardingStep1View.as_view(), name="workspace-onboarding-step1"),
+    path("workspace/onboarding/step/2/", WorkspaceOnboardingStep2View.as_view(), name="workspace-onboarding-step2"),
+    path("workspace/onboarding/step/2/status/<int:pk>/", WorkspaceOnboardingAuditPollView.as_view(), name="workspace-onboarding-audit-poll"),
+    path("workspace/onboarding/step/3/", WorkspaceOnboardingStep3View.as_view(), name="workspace-onboarding-step3"),
+    path("workspace/team/", WorkspaceTeamView.as_view(), name="workspace-team"),
+    path("workspace/team/<int:pk>/revoke/", RevokeMemberView.as_view(), name="workspace-team-revoke"),
+    path("workspace/invite/<str:token>/accept/", AcceptInviteView.as_view(), name="workspace-invite-accept"),
+    path("share/clients/<str:token>/", ClientSharedProjectView.as_view(), name="client-shared-project"),
 ]

@@ -569,7 +569,8 @@ class WorkspaceSignupView(View):
             project.owner = user
             project.save(update_fields=["owner", "updated_at"])
 
-        return redirect("tools:workspace-dashboard")
+        # New users land on the onboarding wizard to complete setup
+        return redirect("tools:workspace-onboarding")
 
     def _get_audit_run(self):
         audit_pk = self.request.GET.get("audit") or self.request.POST.get("audit")
@@ -716,6 +717,9 @@ class GoogleOAuthCallbackView(View):
             _attribute_affiliate_signup(request, user)
         self._link_audit_to_user(request, user)
         self._clear_google_session(request)
+        # New users go through onboarding; returning users go to dashboard
+        if created:
+            return redirect("tools:workspace-onboarding")
         return redirect("tools:workspace-dashboard")
 
     def _link_audit_to_user(self, request, user):
@@ -804,6 +808,13 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
     model = ClientProject
     template_name = "tools/workspace_dashboard.html"
     context_object_name = "project"
+
+    def get(self, request, *args, **kwargs):
+        # Hard gate: users without any project must complete step 1 of onboarding
+        has_project = ClientProject.objects.filter(owner=request.user).exists()
+        if not has_project:
+            return redirect("tools:workspace-onboarding")
+        return super().get(request, *args, **kwargs)
 
     def get_object(self, queryset=None):
         project = resolve_workspace_project(self.request, self.request.user)
@@ -1450,6 +1461,318 @@ class SharedAuditReportView(DetailView):
         context["product_modules"] = summary.get("product_modules", [])[:4]
         context["change_report"] = getattr(audit_run, "change_report", None)
         return context
+
+
+# ---------------------------------------------------------------------------
+# P2 – Guided Onboarding Wizard
+# ---------------------------------------------------------------------------
+
+def _resolve_onboarding_step(user):
+    """Return (step, ctx) describing where the user is in the onboarding flow.
+
+    step=1  No project yet — enter website URL.
+    step=2  Project exists, no completed audit — run first audit.
+    step=3  Completed audit exists, no competitors saved — add competitors.
+    step=0  All done — wizard complete.
+    """
+    project = (
+        ClientProject.objects.filter(owner=user)
+        .select_related("latest_audit_run", "audit_request")
+        .order_by("-created_at")
+        .first()
+    )
+
+    if not project:
+        return 1, {"project": None, "running_audit": None, "completed_audit": None}
+
+    completed_audit = None
+    running_audit = None
+
+    # Prefer audits linked via audit_request (canonical path)
+    if project.audit_request_id:
+        completed_audit = (
+            AuditRun.objects.filter(
+                audit_request__client_project=project,
+                status=AuditRun.Status.COMPLETED,
+            )
+            .order_by("-created_at")
+            .first()
+        )
+        running_audit = (
+            AuditRun.objects.filter(
+                audit_request__client_project=project,
+                status__in={AuditRun.Status.PENDING, AuditRun.Status.RUNNING},
+            )
+            .order_by("-created_at")
+            .first()
+        )
+
+    # Fallback: project.latest_audit_run (pre-existing projects that already ran an audit)
+    if not completed_audit and project.latest_audit_run and project.latest_audit_run.status == AuditRun.Status.COMPLETED:
+        completed_audit = project.latest_audit_run
+
+    if not completed_audit:
+        return 2, {"project": project, "running_audit": running_audit, "completed_audit": None}
+
+    if not project.competitor_urls:
+        return 3, {"project": project, "running_audit": None, "completed_audit": completed_audit}
+
+    return 0, {"project": project, "running_audit": None, "completed_audit": completed_audit}
+
+
+class WorkspaceOnboardingView(LoginRequiredMixin, View):
+    """Wizard shell — renders the full onboarding page at the correct step."""
+
+    template_name = "tools/onboarding.html"
+
+    def get(self, request, *args, **kwargs):
+        step, ctx = _resolve_onboarding_step(request.user)
+        if step == 0:
+            return redirect("tools:workspace-dashboard")
+        return render(request, self.template_name, {
+            **ctx,
+            "current_step": step,
+            "page_title": "Set Up Your Workspace | VRT SPACE AGENCY",
+            "meta_robots": "noindex, nofollow",
+            "canonical_url": request.build_absolute_uri(request.path),
+            "shell_theme": "shell-light",
+        })
+
+
+class WorkspaceOnboardingStep1View(LoginRequiredMixin, View):
+    """Step 1 POST — create the project from the submitted URL."""
+
+    def post(self, request, *args, **kwargs):
+        website = (request.POST.get("website") or "").strip()
+        is_htmx = bool(request.headers.get("HX-Request"))
+
+        if not website:
+            return self._error(request, is_htmx, "Please enter your website URL.", step=1)
+
+        normalized_start_url = normalize_url(website)
+        normalized_domain = extract_domain(normalized_start_url)
+
+        if not normalized_domain:
+            return self._error(
+                request, is_htmx,
+                "That doesn't look like a valid website address — please include the domain, e.g. example.com",
+                step=1,
+            )
+
+        allowed, capacity = can_create_workspace_project(request.user, normalized_domain=normalized_domain)
+        if not allowed:
+            msg = capacity.get("blocked_message") or "Unable to create project — you may have reached your plan limit."
+            return self._error(request, is_htmx, msg, step=1)
+
+        project, _ = create_workspace_project_for_user(
+            request.user,
+            name=normalized_domain,
+            website=normalized_start_url,
+        )
+        set_active_workspace_project(request, project)
+
+        if is_htmx:
+            return render(request, "tools/onboarding/_step2_audit.html", {
+                "project": project,
+                "running_audit": None,
+                "completed_audit": None,
+                "current_step": 2,
+            })
+        return redirect("tools:workspace-onboarding")
+
+    def _error(self, request, is_htmx, message, *, step):
+        if is_htmx:
+            return render(request, "tools/onboarding/_step1_site.html", {
+                "error": message,
+                "current_step": 1,
+            }, status=422)
+        messages.error(request, message)
+        return redirect("tools:workspace-onboarding")
+
+
+class WorkspaceOnboardingStep2View(LoginRequiredMixin, View):
+    """Step 2 POST — kick off the first audit against the user's project."""
+
+    def post(self, request, *args, **kwargs):
+        is_htmx = bool(request.headers.get("HX-Request"))
+        project = ClientProject.objects.filter(owner=request.user).order_by("-created_at").first()
+
+        if not project:
+            return redirect("tools:workspace-onboarding")
+
+        normalized_domain = project.normalized_domain or extract_domain(normalize_url(project.website))
+        normalized_start_url = project.website
+
+        # Dedup: if an audit is already running, return the running partial immediately
+        existing_run = (
+            AuditRun.objects.filter(
+                normalized_domain=normalized_domain,
+                status__in={AuditRun.Status.PENDING, AuditRun.Status.RUNNING},
+            )
+            .order_by("-created_at")
+            .first()
+        )
+        if existing_run:
+            if is_htmx:
+                return render(request, "tools/onboarding/_step2_running.html", {
+                    "project": project,
+                    "running_audit": existing_run,
+                    "current_step": 2,
+                })
+            return redirect("tools:workspace-onboarding")
+
+        # Build a minimal AuditRequest linked to the project
+        from apps.leads.models import AuditRequest as AuditRequestModel
+
+        audit_request = AuditRequestModel.objects.create(
+            email=request.user.email,
+            website=normalized_start_url,
+            company_name=project.name or normalized_domain,
+        )
+        if not project.audit_request_id:
+            project.audit_request = audit_request
+            project.save(update_fields=["audit_request", "updated_at"])
+
+        audit_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain=normalized_domain or "pending",
+            start_url=normalized_start_url,
+        )
+
+        # Credit deduction is best-effort — onboarding must never be blocked by credits
+        try:
+            spend_action_credits(
+                request.user,
+                "audit",
+                project=project,
+                note="Onboarding first audit",
+                reference_key=f"onboarding-audit:{audit_run.pk}",
+                metadata={"audit_run_id": audit_run.pk, "source": "onboarding"},
+            )
+            record_usage(request.user, UsageRecord.Metric.AUDIT_RUN, quantity=1)
+        except BillingError:
+            pass
+
+        enqueue_public_site_audit(audit_run.pk)
+
+        if is_htmx:
+            return render(request, "tools/onboarding/_step2_running.html", {
+                "project": project,
+                "running_audit": audit_run,
+                "current_step": 2,
+            })
+        return redirect("tools:workspace-onboarding")
+
+
+class WorkspaceOnboardingAuditPollView(LoginRequiredMixin, View):
+    """HTMX polling endpoint — returns the right partial based on audit status."""
+
+    def get(self, request, pk, *args, **kwargs):
+        audit_run = AuditRun.objects.filter(pk=pk).select_related("audit_request").first()
+        project = ClientProject.objects.filter(owner=request.user).order_by("-created_at").first()
+
+        if not audit_run or not project:
+            return render(request, "tools/onboarding/_step2_audit.html", {
+                "project": project,
+                "running_audit": None,
+                "completed_audit": None,
+                "current_step": 2,
+                "error": "Could not find that audit run. Please try again.",
+            })
+
+        if audit_run.status == AuditRun.Status.FAILED:
+            return render(request, "tools/onboarding/_step2_audit.html", {
+                "project": project,
+                "running_audit": None,
+                "completed_audit": None,
+                "current_step": 2,
+                "error": "The audit failed — please try again.",
+            })
+
+        if audit_run.status == AuditRun.Status.COMPLETED:
+            # Advance to step 3 — pull SERP competitor suggestions
+            suggestions = _get_competitor_suggestions(project)
+            return render(request, "tools/onboarding/_step3_competitors.html", {
+                "project": project,
+                "completed_audit": audit_run,
+                "competitor_suggestions": suggestions,
+                "current_step": 3,
+            })
+
+        # Still pending/running — keep polling
+        return render(request, "tools/onboarding/_step2_running.html", {
+            "project": project,
+            "running_audit": audit_run,
+            "current_step": 2,
+        })
+
+
+class WorkspaceOnboardingStep3View(LoginRequiredMixin, View):
+    """Step 3 POST — save competitor URLs and complete onboarding."""
+
+    def post(self, request, *args, **kwargs):
+        project = ClientProject.objects.filter(owner=request.user).order_by("-created_at").first()
+        if not project:
+            return redirect("tools:workspace-onboarding")
+
+        raw_competitors = request.POST.getlist("competitors")
+        competitor_urls = [
+            url.strip() for url in raw_competitors
+            if url.strip() and url.strip().startswith(("http://", "https://", "www."))
+        ]
+        # Accept bare domains too
+        competitor_urls += [
+            f"https://{url.strip()}"
+            for url in raw_competitors
+            if url.strip()
+            and not url.strip().startswith(("http://", "https://", "www."))
+            and "." in url.strip()
+        ]
+        competitor_urls = list(dict.fromkeys(competitor_urls))[:settings.SEO_COMPETITOR_LIMIT]
+
+        project.competitor_urls = competitor_urls
+        project.save(update_fields=["competitor_urls", "updated_at"])
+
+        messages.success(request, f"Workspace ready. {len(competitor_urls)} competitor{'s' if len(competitor_urls) != 1 else ''} saved.")
+        return redirect("tools:workspace-dashboard")
+
+
+def _get_competitor_suggestions(project):
+    """Return up to SEO_COMPETITOR_LIMIT SERP-discovered competitor URLs.
+
+    Rate-limited: one SERP lookup per onboarding session (cache key per project).
+    Falls back silently to an empty list if discovery is unavailable.
+    """
+    if not project or not getattr(settings, "SERP_DISCOVERY_ENABLED", False):
+        return []
+
+    cache_key = f"onboarding-serp-suggestions:{project.pk}"
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
+
+    try:
+        from apps.seo.discovery import discover_serp_competitors
+
+        # Build a minimal profile from the project
+        profile = {
+            "domain": project.normalized_domain or extract_domain(normalize_url(project.website or "")),
+            "keywords": [],
+            "business_type": project.business_type or "",
+        }
+        result = discover_serp_competitors(project, profile)
+        competitors = (result or {}).get("competitors", [])
+        urls = [
+            c.get("url") or c.get("domain") or ""
+            for c in (competitors or [])
+            if isinstance(c, dict)
+        ]
+        urls = [u for u in urls if u][:settings.SEO_COMPETITOR_LIMIT]
+        # Cache for 24 hours — prevents duplicate SERP calls on page refresh
+        cache.set(cache_key, urls, timeout=86400)
+        return urls
+    except Exception:
+        return []
 
 
 class SharedAuditReportPdfView(DetailView):

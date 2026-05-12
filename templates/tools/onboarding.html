@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="public-shell-section">
+  <div class="container onboarding-shell">
+
+    {# ── Progress bar ── #}
+    <div class="onboarding-progress" aria-label="Setup progress">
+      <div class="onboarding-progress-track">
+        {% for i in "123" %}
+        {% with step_num=forloop.counter %}
+        <div class="onboarding-progress-step{% if step_num == current_step %} is-active{% elif step_num < current_step %} is-done{% endif %}">
+          <span class="onboarding-step-dot">
+            {% if step_num < current_step %}
+            <i class="fa-solid fa-check"></i>
+            {% else %}
+            {{ step_num }}
+            {% endif %}
+          </span>
+          <span class="onboarding-step-label">
+            {% if step_num == 1 %}Your site
+            {% elif step_num == 2 %}First audit
+            {% else %}Competitors
+            {% endif %}
+          </span>
+        </div>
+        {% if not forloop.last %}
+        <div class="onboarding-progress-connector{% if current_step > forloop.counter %} is-done{% endif %}"></div>
+        {% endif %}
+        {% endwith %}
+        {% endfor %}
+      </div>
+    </div>
+
+    {# ── Step content — swapped by HTMX ── #}
+    <div id="onboarding-step-content">
+      {% if current_step == 1 %}
+        {% include "tools/onboarding/_step1_site.html" %}
+      {% elif current_step == 2 %}
+        {% if running_audit %}
+          {% include "tools/onboarding/_step2_running.html" %}
+        {% else %}
+          {% include "tools/onboarding/_step2_audit.html" %}
+        {% endif %}
+      {% elif current_step == 3 %}
+        {% include "tools/onboarding/_step3_competitors.html" %}
+      {% endif %}
+    </div>
+
+    {# ── Skip links for steps 2 & 3 ── #}
+    {% if current_step == 2 or current_step == 3 %}
+    <p class="onboarding-skip-row">
+      <a href="{% url 'tools:workspace-dashboard' %}" class="onboarding-skip-link">
+        Skip for now — I'll finish this later
+      </a>
+    </p>
+    {% endif %}
+
+  </div>
+</section>
+{% endblock %}

@@ -980,7 +980,7 @@ def build_aeo_payload(*, audit_run, profile=None, target_keyword=""):
 # ─── AEO Audit Creator ──────────────────────────────────────────────────────
 
 @transaction.atomic
-def create_aeo_audit(*, project, target_keyword=""):
+def create_aeo_audit(*, project, target_keyword="", run_precision=True):
     audit_run = getattr(project, "latest_audit_run", None)
     if not audit_run or audit_run.status != AuditRun.Status.COMPLETED:
         raise ValueError("A completed audit is required before creating an AEO audit.")
@@ -998,6 +998,7 @@ def create_aeo_audit(*, project, target_keyword=""):
         structure_score=payload["scores"]["structure_score"],
         completeness_score=payload["scores"]["completeness_score"],
         output_json=payload,
+        status=AEOAudit.Status.RUNNING if run_precision else AEOAudit.Status.COMPLETED,
     )
 
     AIRecommendation.objects.bulk_create(
@@ -1139,6 +1140,15 @@ def create_aeo_audit(*, project, target_keyword=""):
                 # Force synchronous snapshot generation so benchmarks populate immediately
                 get_or_build_competitor_snapshot(competitor=comp_obj, audit_run=audit_run, profile=profile)
                 comps_fetched += 1
+
+    if run_precision:
+        # Run real-LLM precision audit. Gracefully degrades if API keys missing.
+        try:
+            from .precision import run_precision_audit
+            run_precision_audit(aeo_audit)
+        except Exception as exc:  # pragma: no cover - defensive
+            from .precision import mark_failed
+            mark_failed(aeo_audit, str(exc)[:200])
 
     return aeo_audit
 

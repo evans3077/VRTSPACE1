@@ -1,0 +1,80 @@
+<div class="onboarding-card glass-panel" id="onboarding-step-content"
+  x-data="competitorWizard({{ competitor_suggestions|safe }})"
+>
+  <div class="onboarding-card-intro">
+    <p class="feature-tag">Step 3 of 3 — Almost done</p>
+    <h2>Who are you competing against?</h2>
+    <p class="section-text">
+      We've suggested a few competitors based on your industry and keywords.
+      Confirm, swap, or add your own — up to {{ competitor_limit|default:4 }}.
+      We'll benchmark your site against these every time you run an audit.
+    </p>
+  </div>
+
+  {% if completed_audit %}
+  <div class="onboarding-audit-badge">
+    <i class="fa-solid fa-circle-check text-success"></i>
+    Audit complete &mdash; overall score
+    <strong>{{ completed_audit.overall_score }}/100</strong>.
+    <a href="{% url 'tools:audit-result' pk=completed_audit.pk %}" class="link-inline" target="_blank">
+      View full report <i class="fa-solid fa-arrow-up-right-from-square"></i>
+    </a>
+  </div>
+  {% endif %}
+
+  <form
+    method="post"
+    action="{% url 'tools:workspace-onboarding-step3' %}"
+    class="premium-form onboarding-form"
+    novalidate
+  >
+    {% csrf_token %}
+
+    <div class="competitor-inputs-shell">
+      <template x-for="(url, idx) in slots" :key="idx">
+        <div class="form-group competitor-input-row">
+          <label :for="'competitor_' + idx" class="form-label sr-only">Competitor {{ idx + 1 }}</label>
+          <div class="input-with-action">
+            <input
+              type="url"
+              :id="'competitor_' + idx"
+              name="competitors"
+              class="form-control"
+              :placeholder="'https://competitor' + (idx + 1) + '.com'"
+              x-model="slots[idx]"
+            >
+            <button
+              type="button"
+              class="button button-ghost button-sm"
+              @click="clear(idx)"
+              x-show="slots[idx]"
+              aria-label="Clear"
+            ><i class="fa-solid fa-xmark"></i></button>
+          </div>
+        </div>
+      </template>
+    </div>
+
+    <div class="onboarding-form-actions">
+      <button type="submit" class="button button-primary onboarding-cta">
+        Save &amp; open workspace <i class="fa-solid fa-arrow-right"></i>
+      </button>
+      <a href="{% url 'tools:workspace-dashboard' %}" class="button button-ghost">
+        Skip competitors for now
+      </a>
+    </div>
+  </form>
+</div>
+
+<script>
+function competitorWizard(suggestions) {
+  // Pad suggestions to 4 slots with empty strings
+  const limit = 4;
+  const initial = [...(suggestions || [])].slice(0, limit);
+  while (initial.length < limit) initial.push('');
+  return {
+    slots: initial,
+    clear(idx) { this.slots[idx] = ''; },
+  };
+}
+</script>

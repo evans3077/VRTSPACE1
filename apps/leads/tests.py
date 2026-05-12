@@ -297,7 +297,7 @@ class WorkspaceCreditSystemTests(TestCase):
 
         self.assertTrue(any(card["slug"] == "free" for card in cards))
         starter = next(card for card in cards if card["slug"] == "starter")
-        self.assertEqual(starter["credits"]["workspace"], 50)
+        self.assertEqual(starter["credits"]["workspace"], 60)
 
     def test_build_plan_cards_uses_move_label_for_lower_tier(self):
         authority = WorkspacePlan.objects.get(slug="authority")
@@ -331,7 +331,7 @@ class WorkspaceCreditSystemTests(TestCase):
         balance = get_total_credit_balance_summary(self.user)
         self.assertEqual(balance["granted"], get_plan_definition("starter")["credits"]["workspace"])
         self.assertEqual(balance["used"], 1)
-        self.assertEqual(balance["remaining"], 49)
+        self.assertEqual(balance["remaining"], 59)
 
     def test_spend_credits_uses_shadow_mode_in_testing(self):
         starter = WorkspacePlan.objects.get(slug="starter")
@@ -341,13 +341,13 @@ class WorkspaceCreditSystemTests(TestCase):
             status=WorkspaceSubscription.Status.ACTIVE,
         )
 
-        entry = spend_credits(self.user, "seo", amount=55, note="SEO refresh")
+        entry = spend_credits(self.user, "seo", amount=65, note="SEO refresh")
 
         balance = get_total_credit_balance_summary(self.user)
         self.assertEqual(entry.delta, 0)
         self.assertTrue(entry.metadata["shadow_mode"])
-        self.assertEqual(entry.metadata["shadow_amount"], 55)
-        self.assertEqual(balance["used"], 55)
+        self.assertEqual(entry.metadata["shadow_amount"], 65)
+        self.assertEqual(balance["used"], 65)
         self.assertEqual(balance["remaining"], 0)
         self.assertEqual(balance["overage"], 5)
         self.assertTrue(balance["is_testing_mode"])

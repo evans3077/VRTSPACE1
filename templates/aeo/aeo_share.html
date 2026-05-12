@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="section aeo-share-shell">
+  <div class="container">
+    <header class="aeo-share-head">
+      <p class="feature-tag">AEO Visibility Snapshot</p>
+      <h1>{{ audit.project.name|default:"Brand" }} — answer-engine visibility</h1>
+      <p class="section-text">
+        Generated {{ audit.created_at|date:"M j, Y" }} from a real audit run by
+        <strong>VRT SPACE AGENCY</strong>. This snapshot shows how
+        <strong>{{ audit.project.normalized_domain|default:audit.project.website }}</strong>
+        appears across ChatGPT, Gemini, and Perplexity for the target keyword
+        &ldquo;{{ audit.target_keyword|default:"(no keyword specified)" }}&rdquo;.
+      </p>
+    </header>
+
+    <div class="aeo-share-scoreband">
+      <div class="aeo-share-scorebox">
+        <p class="eyebrow">Overall AEO Score</p>
+        <p class="aeo-share-score">{{ audit.overall_score }}/100</p>
+      </div>
+      <div class="aeo-share-scorebox">
+        <p class="eyebrow">Visibility</p>
+        <p class="aeo-share-score">{{ audit.visibility_score }}</p>
+      </div>
+      <div class="aeo-share-scorebox">
+        <p class="eyebrow">Entity clarity</p>
+        <p class="aeo-share-score">{{ audit.entity_score }}</p>
+      </div>
+      <div class="aeo-share-scorebox">
+        <p class="eyebrow">Structure</p>
+        <p class="aeo-share-score">{{ audit.structure_score }}</p>
+      </div>
+      <div class="aeo-share-scorebox">
+        <p class="eyebrow">Completeness</p>
+        <p class="aeo-share-score">{{ audit.completeness_score }}</p>
+      </div>
+    </div>
+
+    <div class="aeo-share-engines">
+      <h2>Per-engine citation</h2>
+      <div class="aeo-share-engine-grid">
+        {% for snap in snapshots %}
+        <article class="aeo-share-engine-card">
+          <h3>{{ snap.get_engine_display }}</h3>
+          <p class="aeo-share-engine-status">
+            {% if snap.answer_present %}
+              <span class="status-yes">Cited</span>
+            {% else %}
+              <span class="status-no">Not cited</span>
+            {% endif %}
+            <span class="aeo-share-engine-freq">{{ snap.citation_frequency }}/5 queries</span>
+          </p>
+          <p class="aeo-share-engine-notes">{{ snap.notes }}</p>
+        </article>
+        {% empty %}
+        <p class="section-text">No engine snapshots available for this audit.</p>
+        {% endfor %}
+      </div>
+    </div>
+
+    {% if audit.competitor_visibility.ranking %}
+    <div class="aeo-share-competitors">
+      <h2>Competitor visibility</h2>
+      <p class="section-text">Domains/brands mentioned across the {{ audit.queries_sent }} queries we ran:</p>
+      <ul class="aeo-share-competitor-list">
+        {% for entry in audit.competitor_visibility.ranking %}
+        <li>
+          <span class="aeo-share-competitor-name">{{ entry.0 }}</span>
+          <span class="aeo-share-competitor-mentions">{{ entry.1 }} mention{{ entry.1|pluralize }}</span>
+        </li>
+        {% endfor %}
+      </ul>
+    </div>
+    {% endif %}
+
+    <footer class="aeo-share-footer">
+      <p>
+        Want this for your brand? Run your own free audit at
+        <a href="{% url 'tools:free-seo-audit' %}">VRT SPACE AGENCY</a>.
+      </p>
+    </footer>
+  </div>
+</section>
+{% endblock %}

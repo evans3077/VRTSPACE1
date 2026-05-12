@@ -18,7 +18,7 @@ PLAN_DEFINITIONS = [
             "Upgrade path into SEO, AEO, and workspace history",
         ],
         "credits": {
-            "workspace": 8,
+            "workspace": 5,
         },
         "limits": {
             "audit_runs": 2,
@@ -56,7 +56,7 @@ PLAN_DEFINITIONS = [
     {
         "slug": "starter",
         "name": "Starter",
-        "price_label": "$59",
+        "price_label": "$59/mo",
         "monthly_amount_cents": 5900,
         "label": "Focused operator plan",
         "description": "Detailed audits for operators managing a small number of sites and ready to act on the findings inside the workspace.",
@@ -69,10 +69,10 @@ PLAN_DEFINITIONS = [
             "Detailed audit workspace with action-ready recommendations",
             "3 tracked websites",
             "Starter SEO and AEO runs on top of the audit base",
-            "Credits for reruns, exports, and guided execution",
+            "60 credits per month for reruns, exports, and guided execution",
         ],
         "credits": {
-            "workspace": 40,
+            "workspace": 60,
         },
         "limits": {
             "audit_runs": 8,
@@ -110,7 +110,7 @@ PLAN_DEFINITIONS = [
     {
         "slug": "growth",
         "name": "Growth",
-        "price_label": "$149",
+        "price_label": "$149/mo",
         "monthly_amount_cents": 14900,
         "label": "Team growth plan",
         "description": "The operating plan for teams that want recurring audits, deeper SEO and AEO execution, reporting, and structured content work.",
@@ -126,7 +126,7 @@ PLAN_DEFINITIONS = [
             "Content workflows and stakeholder-ready reporting",
         ],
         "credits": {
-            "workspace": 120,
+            "workspace": 175,
         },
         "limits": {
             "audit_runs": 24,
@@ -164,7 +164,7 @@ PLAN_DEFINITIONS = [
     {
         "slug": "authority",
         "name": "Authority",
-        "price_label": "$349",
+        "price_label": "$349/mo",
         "monthly_amount_cents": 34900,
         "label": "Authority operating system",
         "description": "Full execution plan for teams running audit, SEO, AEO, content, reporting, and authority-building as one connected system.",
@@ -180,7 +180,7 @@ PLAN_DEFINITIONS = [
             "Advanced sharing, automation, and reporting",
         ],
         "credits": {
-            "workspace": 320,
+            "workspace": 450,
         },
         "limits": {
             "audit_runs": 80,
