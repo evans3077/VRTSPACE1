@@ -33,6 +33,27 @@ load_environment()
 
 DJANGO_ENV = os.environ.get("DJANGO_ENV", "dev")
 DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
+
+# ─── Sentry error tracking ──────────────────────────────────────────────────
+# Initialised only when SENTRY_DSN is present in the environment so local dev
+# stays a no-op. Send-default-pii=False because we don't want logged-in user
+# emails leaking into stack traces.
+_SENTRY_DSN = (os.environ.get("SENTRY_DSN") or "").strip()
+if _SENTRY_DSN:
+    try:
+        import sentry_sdk
+        from sentry_sdk.integrations.django import DjangoIntegration
+
+        sentry_sdk.init(
+            dsn=_SENTRY_DSN,
+            integrations=[DjangoIntegration()],
+            traces_sample_rate=float(os.environ.get("SENTRY_TRACES_SAMPLE_RATE", "0.1") or 0.1),
+            environment=DJANGO_ENV,
+            send_default_pii=False,
+        )
+    except ImportError:
+        # sentry-sdk not installed (e.g. very old image) — silently skip.
+        pass
 IS_VERCEL = bool(os.environ.get("VERCEL") or os.environ.get("VERCEL_ENV"))
 IS_RENDER = bool(
     os.environ.get("RENDER")
@@ -248,11 +269,28 @@ else:
         }
     }
 
-EMAIL_BACKEND = os.environ.get(
-    "DJANGO_EMAIL_BACKEND",
-    "django.core.mail.backends.console.EmailBackend",
+# ─── Email configuration ────────────────────────────────────────────────────
+# Auto-select an SMTP backend when EMAIL_HOST is set in the environment (e.g.
+# SendGrid / Resend / Mailgun on Render). Otherwise fall back to the console
+# backend so local dev still works without any setup. The DJANGO_EMAIL_BACKEND
+# override is always honoured if explicitly set.
+
+EMAIL_HOST = os.environ.get("EMAIL_HOST", "")
+EMAIL_PORT = int(os.environ.get("EMAIL_PORT", "587") or 587)
+EMAIL_HOST_USER = os.environ.get("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = os.environ.get("EMAIL_HOST_PASSWORD", "")
+EMAIL_USE_TLS = os.environ.get("EMAIL_USE_TLS", "1") not in ("0", "false", "False", "")
+EMAIL_USE_SSL = os.environ.get("EMAIL_USE_SSL", "0") in ("1", "true", "True")
+EMAIL_TIMEOUT = int(os.environ.get("EMAIL_TIMEOUT", "10") or 10)
+
+_default_email_backend = (
+    "django.core.mail.backends.smtp.EmailBackend"
+    if EMAIL_HOST
+    else "django.core.mail.backends.console.EmailBackend"
 )
+EMAIL_BACKEND = os.environ.get("DJANGO_EMAIL_BACKEND", _default_email_backend)
 DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "hello@vrtspace.agency")
+SERVER_EMAIL = os.environ.get("SERVER_EMAIL", DEFAULT_FROM_EMAIL)
 
 GOOGLE_OAUTH_CLIENT_ID = first_env(
     "GOOGLE_OAUTH_CLIENT_ID",

@@ -7,15 +7,17 @@ class HomePageTests(TestCase):
         response = self.client.get(reverse("core:home"))
 
         self.assertEqual(response.status_code, 200)
+        # Brand + hero H1
         self.assertContains(response, "VRT SPACE AGENCY")
-        self.assertContains(response, "Turn your website into a measurable growth system.")
-        self.assertContains(response, "Run Free Audit")
-        self.assertContains(response, "Core Growth Modules")
+        self.assertContains(response, "Understand Your Website, Fix What Matters")
+        # Three-pillar showcase
+        self.assertContains(response, "Audit first. Then SEO. Then AI visibility.")
+        self.assertContains(response, "Website Audit")
+        self.assertContains(response, "AI Visibility")
+        # Pricing tier names
         self.assertContains(response, "Starter")
-        self.assertContains(response, "Product experience")
-        self.assertContains(response, "User journey")
-        self.assertContains(response, "Create Free Workspace")
-        self.assertContains(response, "Request custom build")
+        # Top-of-funnel CTA
+        self.assertContains(response, "Start Free Audit")
 
     def test_services_index_and_detail_pages_render(self):
         services_response = self.client.get(reverse("core:services"))
@@ -23,10 +25,9 @@ class HomePageTests(TestCase):
         custom_detail_response = self.client.get(reverse("core:service-detail", kwargs={"slug": "website-development"}))
 
         self.assertEqual(services_response.status_code, 200)
-        self.assertContains(services_response, "Browse the VRT SPACE growth system.")
+        self.assertContains(services_response, "Three connected services")
         self.assertEqual(detail_response.status_code, 200)
         self.assertContains(detail_response, "SEO Services")
-        self.assertContains(detail_response, "Run Free Audit")
         self.assertEqual(custom_detail_response.status_code, 200)
         self.assertContains(custom_detail_response, "Request custom scope")
 
@@ -34,7 +35,10 @@ class HomePageTests(TestCase):
         response = self.client.get(reverse("core:packages"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Plans & Packages")
-        self.assertContains(response, "Audit runs:")
-        self.assertContains(response, "Saved runs:")
+        self.assertContains(response, "Choose a plan")
+        # Plan slugs are always rendered
+        self.assertContains(response, "Starter")
+        self.assertContains(response, "Growth")
+        self.assertContains(response, "Authority")
+        # We never want raw HTML-attribute fragments leaking into rendered copy
         self.assertNotContains(response, "display&#x27;")
