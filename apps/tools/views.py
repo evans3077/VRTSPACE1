@@ -1606,6 +1606,22 @@ class WorkspaceOnboardingStep1View(LoginRequiredMixin, View):
         )
         set_active_workspace_project(request, project)
 
+        # Claim an existing audit for this domain if one exists (e.g. user
+        # ran /#audit before signing up). Lets the wizard skip step 2 entirely
+        # so we don't run a duplicate audit on the same site.
+        adopted = _claim_existing_audit_for_project(project, request.user)
+        if adopted:
+            messages.info(request, "We found your previous audit — reusing it instead of running a duplicate.")
+            if is_htmx:
+                suggestions = _get_competitor_suggestions(project)
+                return render(request, "tools/onboarding/_step3_competitors.html", {
+                    "project": project,
+                    "completed_audit": adopted,
+                    "competitor_suggestions": suggestions,
+                    "current_step": 3,
+                })
+            return redirect("tools:workspace-onboarding")
+
         if is_htmx:
             return render(request, "tools/onboarding/_step2_audit.html", {
                 "project": project,
@@ -1629,8 +1645,64 @@ class WorkspaceOnboardingStep1View(LoginRequiredMixin, View):
         return redirect("tools:workspace-onboarding")
 
 
+def _claim_existing_audit_for_project(project, user):
+    """If a completed AuditRun already exists for this domain (e.g. the user
+    ran the free `/#audit` flow before signing up), adopt it onto the project
+    instead of running a duplicate audit.
+
+    Returns the AuditRun that was adopted, or None.
+    """
+    if not project or not project.normalized_domain:
+        return None
+    user_email = (getattr(user, "email", "") or "").strip().lower()
+
+    # Prefer audits whose AuditRequest matches the user's email (most certain
+    # ownership signal); fall back to any unowned audit for that domain.
+    candidates_qs = (
+        AuditRun.objects.filter(
+            normalized_domain=project.normalized_domain,
+            status=AuditRun.Status.COMPLETED,
+        )
+        .select_related("audit_request")
+        .order_by("-created_at")
+    )
+
+    chosen = None
+    if user_email:
+        chosen = candidates_qs.filter(audit_request__email__iexact=user_email).first()
+    if not chosen:
+        # Domain-only match — only adopt if the audit isn't already attached
+        # to another project owner. (audit_request.client_project is a
+        # OneToOneField with related_name="client_project".)
+        for run in candidates_qs[:5]:
+            existing_project = getattr(getattr(run, "audit_request", None), "client_project", None)
+            if existing_project is None or existing_project.pk == project.pk:
+                chosen = run
+                break
+
+    if not chosen:
+        return None
+
+    # Link the AuditRequest + AuditRun to the project if not already linked
+    changed = False
+    if not project.audit_request_id and chosen.audit_request_id:
+        # Make sure no other project already owns this audit_request
+        if not ClientProject.objects.filter(audit_request=chosen.audit_request).exclude(pk=project.pk).exists():
+            project.audit_request = chosen.audit_request
+            changed = True
+    if project.latest_audit_run_id != chosen.pk:
+        project.latest_audit_run = chosen
+        changed = True
+    if changed:
+        project.save(update_fields=["audit_request", "latest_audit_run", "updated_at"])
+    return chosen
+
+
 class WorkspaceOnboardingStep2View(LoginRequiredMixin, View):
-    """Step 2 POST — kick off the first audit against the user's project."""
+    """Step 2 POST — kick off the first audit against the user's project,
+    OR adopt an existing completed audit (e.g. one created via /#audit
+    before signup) and skip ahead to step 3.
+    """
 
     def post(self, request, *args, **kwargs):
         is_htmx = bool(request.headers.get("HX-Request"))
@@ -1642,7 +1714,23 @@ class WorkspaceOnboardingStep2View(LoginRequiredMixin, View):
         normalized_domain = project.normalized_domain or extract_domain(normalize_url(project.website))
         normalized_start_url = project.website
 
-        # Dedup: if an audit is already running, return the running partial immediately
+        # Dedup #1 — adopt a previously-run audit for this domain (anonymous
+        # /#audit before signup, or earlier session). Skips straight to step 3.
+        adopted = _claim_existing_audit_for_project(project, request.user)
+        if adopted:
+            messages.info(request, "We found your previous audit — reusing it instead of running a duplicate.")
+            suggestions = _get_competitor_suggestions(project)
+            if is_htmx:
+                return render(request, "tools/onboarding/_step3_competitors.html", {
+                    "project": project,
+                    "completed_audit": adopted,
+                    "competitor_suggestions": suggestions,
+                    "current_step": 3,
+                })
+            return redirect("tools:workspace-onboarding")
+
+        # Dedup #2 — if an audit is already in-flight for this domain, attach
+        # to it and return the running partial.
         existing_run = (
             AuditRun.objects.filter(
                 normalized_domain=normalized_domain,
