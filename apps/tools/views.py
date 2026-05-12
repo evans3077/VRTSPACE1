@@ -1751,6 +1751,12 @@ def _get_competitor_suggestions(project):
 
     Rate-limited: one SERP lookup per onboarding session (cache key per project).
     Falls back silently to an empty list if discovery is unavailable.
+
+    IMPORTANT: discover_serp_competitors expects an SEOProjectProfile-shaped
+    object with .primary_service, .business_type, .location attributes. We
+    use the real profile when it exists; otherwise we synthesize one from
+    the project's own fields so SERP queries are properly targeted (without
+    these, we get Instagram + travel aggregators in the results).
     """
     if not project or not getattr(settings, "SERP_DISCOVERY_ENABLED", False):
         return []
@@ -1762,13 +1768,31 @@ def _get_competitor_suggestions(project):
 
     try:
         from apps.seo.discovery import discover_serp_competitors
+        from apps.seo.models import SEOProjectProfile
+        from types import SimpleNamespace
 
-        # Build a minimal profile from the project
-        profile = {
-            "domain": project.normalized_domain or extract_domain(normalize_url(project.website or "")),
-            "keywords": [],
-            "business_type": project.business_type or "",
-        }
+        profile = SEOProjectProfile.objects.filter(project=project).first()
+        if profile is None:
+            # Synthesize from ClientProject fields so discovery has the
+            # context it needs (service + location + business type).
+            profile = SimpleNamespace(
+                primary_service=project.primary_service or "",
+                business_type=project.business_type or "",
+                business_subtype=project.business_subtype or "",
+                location=project.location or "",
+                target_goal=project.target_goal or "",
+                target_audience=project.target_audience or "",
+                target_keyword="",
+                target_keywords=[],
+                metadata={},
+            )
+
+        # Bail out if we still don't have enough context — better to show
+        # blank slots than irrelevant Instagram/aggregator suggestions.
+        if not (profile.primary_service or profile.business_type) or not profile.location:
+            cache.set(cache_key, [], timeout=86400)
+            return []
+
         result = discover_serp_competitors(project, profile)
         competitors = (result or {}).get("competitors", [])
         urls = [
