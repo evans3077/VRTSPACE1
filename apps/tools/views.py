@@ -1738,11 +1738,27 @@ class WorkspaceOnboardingAuditPollView(LoginRequiredMixin, View):
                 "current_step": 3,
             })
 
-        # Still pending/running — keep polling
+        # Still pending/running — keep polling. Tie the cosmetic scan-step
+        # animation to real progress signals (pages_crawled + status).
+        pages = audit_run.pages_crawled or 0
+        if audit_run.status == AuditRun.Status.PENDING:
+            progress_step = 0
+        elif pages <= 1:
+            progress_step = 1
+        elif pages <= 3:
+            progress_step = 2
+        elif pages <= 5:
+            progress_step = 3
+        elif pages <= 7:
+            progress_step = 4
+        else:
+            progress_step = 5
         return render(request, "tools/onboarding/_step2_running.html", {
             "project": project,
             "running_audit": audit_run,
             "current_step": 2,
+            "progress_step": progress_step,
+            "progress_pages_crawled": pages,
         })
 
 

@@ -20,22 +20,70 @@
       <div class="audit-progress-fill audit-progress-animated"></div>
     </div>
 
-    <ul class="audit-scan-steps" x-data="auditScanSteps()" x-init="start()">
-      <template x-for="(step, idx) in steps" :key="idx">
-        <li class="audit-scan-step" :class="{ 'is-active': idx === current, 'is-done': idx < current }">
-          <span class="audit-scan-dot">
-            <template x-if="idx < current"><i class="fa-solid fa-check"></i></template>
-            <template x-if="idx === current"><span class="audit-scan-spinner"></span></template>
-            <template x-if="idx > current"><span class="audit-scan-pending-dot"></span></template>
-          </span>
-          <span x-text="step"></span>
-        </li>
-      </template>
+    {# Server-driven scan steps — current step comes from real audit progress
+       (status + pages_crawled). Each 3s poll re-renders this partial so the
+       active step naturally advances as the audit runs. #}
+    {% with steps="Fetching site structure and meta tags|Checking page speed and technical health|Scoring on-page SEO signals|Analysing AEO and AI visibility factors|Mapping internal linking patterns|Building your personalised diagnosis"|cut:"" %}
+    <ul class="audit-scan-steps">
+      {% for label in "Fetching site structure and meta tags|Checking page speed and technical health|Scoring on-page SEO signals|Analysing AEO and AI visibility factors|Mapping internal linking patterns|Building your personalised diagnosis"|cut:"|"|cut:"" %}
+      {# noop — we render via the inline list below #}
+      {% endfor %}
+      <li class="audit-scan-step {% if progress_step > 0 %}is-done{% elif progress_step == 0 %}is-active{% endif %}">
+        <span class="audit-scan-dot">
+          {% if progress_step > 0 %}<i class="fa-solid fa-check"></i>
+          {% elif progress_step == 0 %}<span class="audit-scan-spinner"></span>
+          {% else %}<span class="audit-scan-pending-dot"></span>{% endif %}
+        </span>
+        <span>Fetching site structure and meta tags</span>
+      </li>
+      <li class="audit-scan-step {% if progress_step > 1 %}is-done{% elif progress_step == 1 %}is-active{% endif %}">
+        <span class="audit-scan-dot">
+          {% if progress_step > 1 %}<i class="fa-solid fa-check"></i>
+          {% elif progress_step == 1 %}<span class="audit-scan-spinner"></span>
+          {% else %}<span class="audit-scan-pending-dot"></span>{% endif %}
+        </span>
+        <span>Checking page speed and technical health</span>
+      </li>
+      <li class="audit-scan-step {% if progress_step > 2 %}is-done{% elif progress_step == 2 %}is-active{% endif %}">
+        <span class="audit-scan-dot">
+          {% if progress_step > 2 %}<i class="fa-solid fa-check"></i>
+          {% elif progress_step == 2 %}<span class="audit-scan-spinner"></span>
+          {% else %}<span class="audit-scan-pending-dot"></span>{% endif %}
+        </span>
+        <span>Scoring on-page SEO signals</span>
+      </li>
+      <li class="audit-scan-step {% if progress_step > 3 %}is-done{% elif progress_step == 3 %}is-active{% endif %}">
+        <span class="audit-scan-dot">
+          {% if progress_step > 3 %}<i class="fa-solid fa-check"></i>
+          {% elif progress_step == 3 %}<span class="audit-scan-spinner"></span>
+          {% else %}<span class="audit-scan-pending-dot"></span>{% endif %}
+        </span>
+        <span>Analysing AEO and AI visibility factors</span>
+      </li>
+      <li class="audit-scan-step {% if progress_step > 4 %}is-done{% elif progress_step == 4 %}is-active{% endif %}">
+        <span class="audit-scan-dot">
+          {% if progress_step > 4 %}<i class="fa-solid fa-check"></i>
+          {% elif progress_step == 4 %}<span class="audit-scan-spinner"></span>
+          {% else %}<span class="audit-scan-pending-dot"></span>{% endif %}
+        </span>
+        <span>Mapping internal linking patterns</span>
+      </li>
+      <li class="audit-scan-step {% if progress_step == 5 %}is-active{% endif %}">
+        <span class="audit-scan-dot">
+          {% if progress_step == 5 %}<span class="audit-scan-spinner"></span>
+          {% else %}<span class="audit-scan-pending-dot"></span>{% endif %}
+        </span>
+        <span>Building your personalised diagnosis</span>
+      </li>
     </ul>
+    {% endwith %}
   </div>
 
   <p class="onboarding-poll-note">
     <i class="fa-solid fa-circle-notch fa-spin"></i>
+    {% if progress_pages_crawled %}
+      {{ progress_pages_crawled }} page{{ progress_pages_crawled|pluralize }} scanned so far &middot;
+    {% endif %}
     Checking for results every 3 seconds&hellip;
   </p>
 
@@ -45,27 +93,3 @@
     </a>
   </p>
 </div>
-
-<script>
-function auditScanSteps() {
-  return {
-    steps: [
-      "Fetching site structure and meta tags",
-      "Checking page speed and technical health",
-      "Scoring on-page SEO signals",
-      "Analysing AEO and AI visibility factors",
-      "Mapping internal linking patterns",
-      "Building your personalised diagnosis",
-    ],
-    current: 0,
-    interval: null,
-    start() {
-      this.interval = setInterval(() => {
-        if (this.current < this.steps.length - 1) {
-          this.current++;
-        }
-      }, 5000);
-    },
-  };
-}
-</script>

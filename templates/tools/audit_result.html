@@ -259,8 +259,10 @@
             </div>
             <div class="audit-next-stack">
                 <div class="report-detail-block audit-next-panel">
-                    <strong>{{ diagnosis.next_step_title|default:recommended_next_step.title|default:"Review the first fix" }}</strong>
-                    <p>{{ diagnosis.next_step_body|default:recommended_next_step.body|default:"Use the workspace to keep the audit, SEO, and AEO work connected." }}</p>
+                    {% with d_title=diagnosis.next_step_title|default:"" r_title=recommended_next_step.title|default:"" d_body=diagnosis.next_step_body|default:"" r_body=recommended_next_step.body|default:"" %}
+                    <strong>{% firstof d_title r_title "Review the first fix" %}</strong>
+                    <p>{% firstof d_body r_body "Use the workspace to keep the audit, SEO, and AEO work connected." %}</p>
+                    {% endwith %}
                 </div>
                 {% if recommended_next_step.checklist %}
                 <div class="audit-action-list audit-next-step-list">
