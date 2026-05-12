@@ -49,6 +49,7 @@
                 <nav class="nav-links" aria-label="Primary">
                     <a href="{% url 'core:services' %}">Services</a>
                     <a href="{% url 'core:home' %}#journey">How It Works</a>
+                    <a href="{% url 'aeo:aeo-index' %}">AEO Index</a>
                     <a href="{% url 'core:packages' %}">Pricing</a>
                 </nav>
 
@@ -116,6 +117,7 @@
                 <a href="{% url 'core:services' %}">Services</a>
                 <a href="{% url 'core:packages' %}">Pricing</a>
                 <a href="{% url 'core:home' %}#audit">Free Audit</a>
+                <a href="{% url 'aeo:aeo-index' %}">AEO Visibility Index</a>
                 <a href="{% url 'core:home' %}#contact">Contact</a>
             </div>
         </div>
@@ -131,12 +133,13 @@
                     <span class="nav-category-head" style="margin-bottom: 1rem;">Explore</span>
                     <a href="{% url 'core:services' %}" style="--i:1">Services</a>
                     <a href="{% url 'core:home' %}#journey" style="--i:2">How It Works</a>
-                    <a href="{% url 'core:packages' %}" style="--i:3">Pricing</a>
-                    <a href="{% url 'core:home' %}#audit" style="--i:4">Free Audit</a>
+                    <a href="{% url 'aeo:aeo-index' %}" style="--i:3">AEO Index</a>
+                    <a href="{% url 'core:packages' %}" style="--i:4">Pricing</a>
+                    <a href="{% url 'core:home' %}#audit" style="--i:5">Free Audit</a>
                 </div>
 
                 {% if user.is_staff %}
-                <a href="{% url 'analytics:operations-dashboard' %}" style="--i:5">Operations Center</a>
+                <a href="{% url 'analytics:operations-dashboard' %}" style="--i:6">Operations Center</a>
                 {% endif %}
             </nav>
             <div class="nav-mobile-actions" style="--i:6">

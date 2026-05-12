@@ -299,6 +299,11 @@
                     {% else %}
                     <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-primary button-block">Save this audit</a>
                     {% endif %}
+                    {% if audit_run.normalized_domain %}
+                    <a href="{% url 'aeo:aeo-index-detail' domain=audit_run.normalized_domain %}" class="button button-secondary button-block">
+                        Now check if AI engines cite you <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    {% endif %}
                 </div>
             </div>
         </article>
