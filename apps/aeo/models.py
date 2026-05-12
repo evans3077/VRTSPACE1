@@ -103,6 +103,20 @@ class AEOAudit(TimestampedModel):
             return True
         return self.share_expires_at >= timezone.now()
 
+    @property
+    def overall_score(self):
+        """Composite score: average of the four dimension scores (skip zeros)."""
+        scores = [
+            self.visibility_score,
+            self.entity_score,
+            self.structure_score,
+            self.completeness_score,
+        ]
+        non_zero = [s for s in scores if s]
+        if not non_zero:
+            return 0
+        return round(sum(non_zero) / len(non_zero))
+
     def save(self, *args, **kwargs):
         if not self.share_token:
             self.share_token = _generate_share_token()
@@ -156,20 +170,6 @@ class AEOIndexEntry(TimestampedModel):
             for cited in (self.chatgpt_cited, self.gemini_cited, self.perplexity_cited)
             if cited
         )
-
-    @property
-    def overall_score(self):
-        """Composite score: average of all four dimension scores."""
-        scores = [
-            self.visibility_score,
-            self.entity_score,
-            self.structure_score,
-            self.completeness_score,
-        ]
-        non_zero = [s for s in scores if s]
-        if not non_zero:
-            return 0
-        return round(sum(non_zero) / len(non_zero))
 
 
 class AIRecommendation(TimestampedModel):
