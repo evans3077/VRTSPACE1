@@ -21,8 +21,20 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
     template_name = "aeo/workspace_aeo.html"
 
     def get(self, request, *args, **kwargs):
+        from .precision import is_precision_available
         project = get_workspace_content_project(user=request.user, request=request)
         latest_aeo_audit = get_latest_aeo_audit(project)
+
+        # Surface real-LLM availability so the UI can warn when AEO falls
+        # back to derived scoring (i.e. no API keys configured on the server).
+        precision_engines = is_precision_available()
+        precision_engine_status = [
+            {"engine": "ChatGPT",    "available": precision_engines.get("chatgpt", False)},
+            {"engine": "Gemini",     "available": precision_engines.get("gemini", False)},
+            {"engine": "Perplexity", "available": precision_engines.get("perplexity", False)},
+        ]
+        precision_engines_available = sum(1 for e in precision_engine_status if e["available"])
+
         aeo_history = (
             project.aeo_audits.order_by("-created_at")[:10]
             if project and getattr(project, "pk", None)
@@ -67,6 +79,8 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 "aeo_history": aeo_history,
                 "aeo_intelligence": aeo_intelligence,
                 "competitor_benchmark": competitor_benchmark,
+                "precision_engine_status": precision_engine_status,
+                "precision_engines_available": precision_engines_available,
                 "workspace_credit_actions": build_credit_action_guide(project, request.user) if project else [],
                 "page_title": f"{project.name if project else 'Workspace'} AEO Workspace | VRT SPACE AGENCY",
                 "meta_description": "Private AEO workspace for answer-engine visibility, citation readiness, and competitor comparison.",

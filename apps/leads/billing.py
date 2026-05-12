@@ -59,6 +59,7 @@ CREDIT_ACTIVITY_LABELS = {
     "seo": "SEO context refreshes",
     "aeo": "AEO analyses",
     "content": "Content drafts",
+    "publish": "CMS publishes",
     "backlink": "Backlink work",
     "export": "Report exports",
     "share": "Stakeholder shares",
@@ -843,6 +844,9 @@ def estimate_credit_cost(category, *, project=None, payload=None):
     elif category == "clinical_data":
         amount = 4
         reason = "Fetches live enterprise search volume and domain authority metrics from DataForSEO."
+    elif category == "publish":
+        amount = 1
+        reason = "Pushes an existing draft to the connected CMS — no new content is generated."
     else:
         amount = 1
         reason = "Lightweight action against existing workspace data."

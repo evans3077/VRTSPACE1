@@ -55,3 +55,61 @@ def send_credit_alert_email(user, *, threshold_pct, balance, account_url=None):
     )
     message.send(fail_silently=False)
     return 1
+
+
+# ─── P3 — Team membership invite emails ────────────────────────────────────
+
+ROLE_SUBJECT_VERB = {
+    "owner": "as a workspace owner",
+    "member": "as a workspace member",
+    "client": "with read-only access",
+}
+
+
+def send_membership_invite_email(membership, *, accept_url, inviter_name=""):
+    """Send the accept-invite link (OWNER/MEMBER) or read-only share link (CLIENT).
+
+    Returns 1 on success, 0 if no recipient address is available. Never raises
+    — invites must still be created even if SMTP is mid-incident.
+    """
+    recipient = (membership.invited_email or "").strip()
+    if not recipient:
+        return 0
+
+    project = membership.project
+    project_name = project.name if project else "your workspace"
+    role = (membership.role or "").lower()
+    role_phrase = ROLE_SUBJECT_VERB.get(role, "as a collaborator")
+    inviter = inviter_name or "Your VRT SPACE colleague"
+
+    if role == "client":
+        subject = f"[VRT SPACE] You have a read-only share for {project_name}"
+        lines = [
+            f"{inviter} has shared a read-only snapshot of '{project_name}' with you.",
+            "",
+            "Use this link any time to view the latest audit results and top recommendations:",
+            accept_url,
+            "",
+            "No signup required — the link itself is your credential. Treat it like a password.",
+        ]
+    else:
+        subject = f"[VRT SPACE] Invite to join {project_name}"
+        lines = [
+            f"{inviter} has invited you to join '{project_name}' on VRT SPACE {role_phrase}.",
+            "",
+            "Click here to accept and open the workspace (you may be asked to sign in or sign up first):",
+            accept_url,
+            "",
+            "If you weren't expecting this, you can ignore the message — the invite expires after 30 days.",
+        ]
+
+    try:
+        EmailMessage(
+            subject=subject,
+            body="\n".join(lines),
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[recipient],
+        ).send(fail_silently=True)
+        return 1
+    except Exception:
+        return 0

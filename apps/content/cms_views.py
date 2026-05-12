@@ -97,10 +97,12 @@ class WorkspaceEditorialTaskPushView(LoginRequiredMixin, View):
         )
 
         # Best-effort credit debit; never blocks if billing is in shadow mode.
+        # Uses the lightweight "publish" category (1 credit) since we're only
+        # forwarding an existing draft, not generating content.
         try:
             spend_action_credits(
                 request.user,
-                "content",
+                "publish",
                 project=task.project,
                 note=f"Push to CMS — {task.title[:60]}",
                 reference_key=f"cms-push:{task.pk}",

@@ -197,6 +197,28 @@
 <section class="packages-section workspace-aeo-shell" style="padding-top: 0;">
 <div class="container-fluid page-stack">
 
+    {# ── Precision-mode banner ──────────────────────────────────────────────
+       If fewer than all 3 LLM engines are configured, surface that here so
+       the team knows AEO is running in "derived" mode (heuristics) rather
+       than firing real ChatGPT/Gemini/Perplexity API calls. ───────────── #}
+    {% if precision_engines_available is not None and precision_engines_available < 3 %}
+    <article class="flash flash-warning" style="margin-bottom: 1.25rem;">
+        <p style="margin: 0;">
+            <strong>AEO precision mode:</strong>
+            {% if precision_engines_available == 0 %}
+                No LLM engines are configured — AEO scores fall back to the
+                on-page heuristic. To enable real citation tracking, set
+                <code>OPENAI_API_KEY</code>, <code>GEMINI_API_KEY</code>, and
+                <code>PERPLEXITY_API_KEY</code> in your environment.
+            {% else %}
+                Only {{ precision_engines_available }} of 3 engines are
+                configured. Missing:
+                {% for e in precision_engine_status %}{% if not e.available %}{{ e.engine }}{% if not forloop.last %}, {% endif %}{% endif %}{% endfor %}.
+            {% endif %}
+        </p>
+    </article>
+    {% endif %}
+
     {# ── State: No project ── #}
     {% if not project %}
     <article class="workspace-state-panel">

@@ -127,6 +127,15 @@ class WorkspaceTeamView(LoginRequiredMixin, View):
             messages.error(request, str(exc))
             return redirect("tools:workspace-team")
 
+        from apps.leads.notifications import send_membership_invite_email
+
+        inviter_name = (
+            request.user.get_full_name()
+            or request.user.username
+            or request.user.email
+            or ""
+        )
+
         if role == ROLE_CLIENT:
             share_url = request.build_absolute_uri(
                 reverse(
@@ -134,10 +143,23 @@ class WorkspaceTeamView(LoginRequiredMixin, View):
                     kwargs={"token": membership.magic_token},
                 )
             )
-            messages.success(
-                request,
-                f"Client share link ready. Copy and send: {share_url}",
-            )
+            # CLIENT invites only email if a real address was supplied
+            # (clients without an email still get a copy-paste link).
+            sent = 0
+            if email and "@" in email and not email.endswith("@vrtspace.local"):
+                sent = send_membership_invite_email(
+                    membership, accept_url=share_url, inviter_name=inviter_name
+                )
+            if sent:
+                messages.success(
+                    request,
+                    f"Client share link emailed to {email}. The link is also copyable below.",
+                )
+            else:
+                messages.success(
+                    request,
+                    f"Client share link ready. Copy and send: {share_url}",
+                )
         else:
             accept_url = request.build_absolute_uri(
                 reverse(
@@ -145,10 +167,19 @@ class WorkspaceTeamView(LoginRequiredMixin, View):
                     kwargs={"token": membership.magic_token},
                 )
             )
-            messages.success(
-                request,
-                f"Invite created for {email}. They can accept at: {accept_url}",
+            sent = send_membership_invite_email(
+                membership, accept_url=accept_url, inviter_name=inviter_name
             )
+            if sent:
+                messages.success(
+                    request,
+                    f"Invite emailed to {email}. They have 30 days to accept.",
+                )
+            else:
+                messages.success(
+                    request,
+                    f"Invite created for {email}. Email could not be sent — share this link manually: {accept_url}",
+                )
         return redirect("tools:workspace-team")
 
 
