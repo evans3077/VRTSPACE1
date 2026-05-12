@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="section client-shared-project">
+  <div class="container">
+    <header class="section-heading">
+      <p class="eyebrow">Client view — read only</p>
+      <h1>{{ project.name }}</h1>
+      <p class="section-text">
+        This is a shared, read-only snapshot of your audit and recommendations.
+        Your agency is actively working on the items below.
+      </p>
+    </header>
+
+    {% if latest_audit %}
+    <article class="card">
+      <h2>Latest audit</h2>
+      <p class="section-text">
+        <strong>Overall score:</strong> {{ latest_audit.overall_score }}/100<br>
+        <strong>Pages crawled:</strong> {{ latest_audit.pages_crawled }}<br>
+        <strong>Last run:</strong> {{ latest_audit.created_at|date:"M j, Y" }}
+      </p>
+    </article>
+    {% else %}
+    <p class="section-text">No audit has been run yet.</p>
+    {% endif %}
+
+    {% if recommendations %}
+    <article class="card">
+      <h2>Top recommendations</h2>
+      <ul class="client-rec-list">
+        {% for rec in recommendations %}
+        <li>
+          <strong>{{ rec.title|default:rec.issue }}</strong>
+          {% if rec.recommended_fix or rec.fix %}
+          <p>{{ rec.recommended_fix|default:rec.fix }}</p>
+          {% endif %}
+        </li>
+        {% endfor %}
+      </ul>
+    </article>
+    {% endif %}
+
+    <footer class="client-shared-footer">
+      <p>Powered by <a href="{% url 'tools:free-seo-audit' %}">VRT SPACE AGENCY</a>.</p>
+    </footer>
+  </div>
+</section>
+{% endblock %}

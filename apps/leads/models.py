@@ -1,7 +1,20 @@
+import secrets
+
 from django.db import models
 from django.conf import settings
+from django.utils import timezone
 
 from apps.core.models import TimestampedModel
+
+
+# ─── P3 Membership constants ────────────────────────────────────────────────
+ROLE_OWNER = "owner"
+ROLE_MEMBER = "member"
+ROLE_CLIENT = "client"
+
+
+def _generate_membership_token() -> str:
+    return secrets.token_urlsafe(28)
 
 
 class Lead(TimestampedModel):
@@ -318,3 +331,76 @@ class CreditAlert(TimestampedModel):
 
     def __str__(self):
         return f"{self.user} {self.threshold_pct}% ({self.period_start})"
+
+
+# ─── P3 Workspace Membership ────────────────────────────────────────────────
+
+class WorkspaceMembership(TimestampedModel):
+    """Per-project collaborator. See apps/leads/membership.py for helpers."""
+
+    class Role(models.TextChoices):
+        OWNER = ROLE_OWNER, "Owner"
+        MEMBER = ROLE_MEMBER, "Member"
+        CLIENT = ROLE_CLIENT, "Client"
+
+    class Status(models.TextChoices):
+        PENDING = "pending", "Pending"
+        ACTIVE = "active", "Active"
+        REVOKED = "revoked", "Revoked"
+
+    project = models.ForeignKey(
+        ClientProject,
+        on_delete=models.CASCADE,
+        related_name="memberships",
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.CASCADE,
+        related_name="workspace_memberships",
+    )
+    invited_email = models.EmailField(blank=True)
+    role = models.CharField(max_length=16, choices=Role.choices)
+    status = models.CharField(
+        max_length=16,
+        choices=Status.choices,
+        default=Status.PENDING,
+    )
+    magic_token = models.CharField(
+        max_length=64,
+        unique=True,
+        default=_generate_membership_token,
+        db_index=True,
+    )
+    magic_expires_at = models.DateTimeField(null=True, blank=True)
+    invited_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="memberships_sent",
+    )
+    accepted_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ("-created_at",)
+        constraints = [
+            models.UniqueConstraint(
+                fields=("project", "user"),
+                name="unique_membership_per_user_project",
+                condition=models.Q(user__isnull=False),
+            ),
+        ]
+
+    def __str__(self):
+        identity = self.user.username if self.user_id else self.invited_email
+        return f"{identity or 'pending'} -> {self.project} ({self.role})"
+
+    @property
+    def magic_active(self) -> bool:
+        if self.status not in (self.Status.ACTIVE, self.Status.PENDING):
+            return False
+        if not self.magic_expires_at:
+            return True
+        return self.magic_expires_at >= timezone.now()

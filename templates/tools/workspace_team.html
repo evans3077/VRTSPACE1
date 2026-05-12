@@ -1,0 +1,93 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="section workspace-team">
+  <div class="container">
+    <header class="section-heading">
+      <p class="eyebrow">Team & Sharing</p>
+      <h1>{{ project.name }} — Collaborators</h1>
+      <p class="section-text">
+        Invite teammates with full workspace access, or share a read-only
+        snapshot with your client. Seats: <strong>{{ seats_used }}/{{ seat_limit }}</strong> used.
+      </p>
+    </header>
+
+    {% if messages %}
+    <div class="form-flash">
+      {% for message in messages %}<p>{{ message }}</p>{% endfor %}
+    </div>
+    {% endif %}
+
+    <article class="card workspace-team-invite">
+      <h2>Invite</h2>
+      <form method="post" action="{% url 'tools:workspace-team' %}" class="premium-form">
+        {% csrf_token %}
+        <div class="form-grid-2">
+          <div class="form-group">
+            <label class="form-label" for="invite-email">Email</label>
+            <input id="invite-email" type="email" name="email" class="form-control" placeholder="name@example.com">
+            <p class="form-helper">Required for owner/member invites. Leave blank for a client share link.</p>
+          </div>
+          <div class="form-group">
+            <label class="form-label" for="invite-role">Role</label>
+            <select id="invite-role" name="role" class="form-control">
+              <option value="member">Member — full workspace access</option>
+              <option value="owner">Owner — full + billing</option>
+              <option value="client">Client — read-only share link</option>
+            </select>
+          </div>
+        </div>
+        <button type="submit" class="button button-primary">
+          Send invite <i class="fa-solid fa-paper-plane"></i>
+        </button>
+      </form>
+    </article>
+
+    {% if client_share_url %}
+    <article class="card workspace-team-client-share">
+      <h2>Active client share link</h2>
+      <p class="section-text">Anyone with this link can view (read-only):</p>
+      <code class="workspace-team-share-url">{{ client_share_url }}</code>
+    </article>
+    {% endif %}
+
+    <article class="card workspace-team-list">
+      <h2>Current memberships</h2>
+      {% if memberships %}
+      <table class="workspace-team-table">
+        <thead>
+          <tr>
+            <th>Identity</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>Invited</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for m in memberships %}
+          <tr>
+            <td>{% if m.user %}{{ m.user.email|default:m.user.username }}{% else %}{{ m.invited_email|default:"(pending)" }}{% endif %}</td>
+            <td>{{ m.get_role_display }}</td>
+            <td>{{ m.get_status_display }}</td>
+            <td>{{ m.created_at|date:"M j, Y" }}</td>
+            <td>
+              {% if m.status != "revoked" %}
+              <form method="post" action="{% url 'tools:workspace-team-revoke' pk=m.pk %}" style="display:inline">
+                {% csrf_token %}
+                <button type="submit" class="button button-ghost button-sm">Revoke</button>
+              </form>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+      <p class="section-text">No collaborators yet. Send your first invite above.</p>
+      {% endif %}
+    </article>
+  </div>
+</section>
+{% endblock %}

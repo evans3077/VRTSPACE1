@@ -39,6 +39,12 @@ from .views import (
     SharedAuditReportPdfView,
     SharedAuditReportView,
 )
+from .team_views import (
+    AcceptInviteView,
+    ClientSharedProjectView,
+    RevokeMemberView,
+    WorkspaceTeamView,
+)
 
 app_name = "tools"
 
@@ -78,4 +84,8 @@ urlpatterns = [
     path("workspace/onboarding/step/2/", WorkspaceOnboardingStep2View.as_view(), name="workspace-onboarding-step2"),
     path("workspace/onboarding/step/2/status/<int:pk>/", WorkspaceOnboardingAuditPollView.as_view(), name="workspace-onboarding-audit-poll"),
     path("workspace/onboarding/step/3/", WorkspaceOnboardingStep3View.as_view(), name="workspace-onboarding-step3"),
+    path("workspace/team/", WorkspaceTeamView.as_view(), name="workspace-team"),
+    path("workspace/team/<int:pk>/revoke/", RevokeMemberView.as_view(), name="workspace-team-revoke"),
+    path("workspace/invite/<str:token>/accept/", AcceptInviteView.as_view(), name="workspace-invite-accept"),
+    path("share/clients/<str:token>/", ClientSharedProjectView.as_view(), name="client-shared-project"),
 ]
