@@ -216,4 +216,95 @@ class ContentEditorialTask(TimestampedModel):
     def __str__(self):
         return f"{self.project} - {self.title}"
 
-# Create your models here.
+
+class CMSCredential(TimestampedModel):
+    """P4 — credentials for pushing GeneratedContent to a connected CMS.
+
+    Currently supports WordPress (REST API + Application Passwords).
+    Webflow / Ghost can be added by introducing a `platform` value here.
+    """
+
+    class Platform(models.TextChoices):
+        WORDPRESS = "wordpress", "WordPress"
+        WEBFLOW = "webflow", "Webflow"
+
+    project = models.ForeignKey(
+        "leads.ClientProject",
+        on_delete=models.CASCADE,
+        related_name="cms_credentials",
+    )
+    platform = models.CharField(
+        max_length=24,
+        choices=Platform.choices,
+        default=Platform.WORDPRESS,
+    )
+    site_url = models.URLField(
+        help_text="WordPress site URL (e.g. https://yourdomain.com).",
+    )
+    username = models.CharField(
+        max_length=120,
+        blank=True,
+        help_text="WordPress username (only for password-auth).",
+    )
+    app_password = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="WordPress Application Password (stored verbatim; treat as secret).",
+    )
+    api_token = models.CharField(
+        max_length=255,
+        blank=True,
+        help_text="Webflow API token (when platform=webflow).",
+    )
+    is_active = models.BooleanField(default=True)
+    last_used_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ("-updated_at",)
+        constraints = [
+            models.UniqueConstraint(
+                fields=("project", "platform"),
+                name="unique_cms_credential_per_platform_per_project",
+            ),
+        ]
+
+    def __str__(self):
+        return f"{self.project} -> {self.get_platform_display()}"
+
+
+class CMSPushLog(TimestampedModel):
+    """Append-only log of each push attempt for an editorial task."""
+
+    class Status(models.TextChoices):
+        SUCCESS = "success", "Success"
+        FAILED = "failed", "Failed"
+
+    task = models.ForeignKey(
+        ContentEditorialTask,
+        on_delete=models.CASCADE,
+        related_name="push_logs",
+    )
+    credential = models.ForeignKey(
+        CMSCredential,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="push_logs",
+    )
+    status = models.CharField(max_length=16, choices=Status.choices)
+    remote_post_id = models.CharField(max_length=64, blank=True)
+    remote_post_url = models.URLField(blank=True)
+    response_summary = models.TextField(blank=True)
+    triggered_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        null=True,
+        blank=True,
+        on_delete=models.SET_NULL,
+        related_name="cms_push_triggers",
+    )
+
+    class Meta:
+        ordering = ("-created_at",)
+
+    def __str__(self):
+        return f"{self.task} -> {self.status} ({self.created_at:%Y-%m-%d})"
