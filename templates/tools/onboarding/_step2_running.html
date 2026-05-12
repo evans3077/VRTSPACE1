@@ -1,0 +1,65 @@
+<div
+  class="onboarding-card glass-panel onboarding-audit-running"
+  id="onboarding-step-content"
+  hx-get="{% url 'tools:workspace-onboarding-audit-poll' pk=running_audit.pk %}"
+  hx-trigger="every 3s"
+  hx-target="#onboarding-step-content"
+  hx-swap="outerHTML"
+>
+  <div class="onboarding-card-intro">
+    <p class="feature-tag">Step 2 of 3 — Scanning now</p>
+    <h2>Auditing <span class="text-accent">{{ project.normalized_domain|default:project.website }}</span></h2>
+    <p class="section-text">
+      We're crawling the site and scoring each dimension. This usually takes
+      20–40 seconds. Hold tight — the results are worth it.
+    </p>
+  </div>
+
+  <div class="audit-progress-shell" aria-live="polite" aria-label="Audit in progress">
+    <div class="audit-progress-bar">
+      <div class="audit-progress-fill audit-progress-animated"></div>
+    </div>
+
+    <ul class="audit-scan-steps" x-data="auditScanSteps()" x-init="start()">
+      <template x-for="(step, idx) in steps" :key="idx">
+        <li class="audit-scan-step" :class="{ 'is-active': idx === current, 'is-done': idx < current }">
+          <span class="audit-scan-dot">
+            <template x-if="idx < current"><i class="fa-solid fa-check"></i></template>
+            <template x-if="idx === current"><span class="audit-scan-spinner"></span></template>
+            <template x-if="idx > current"><span class="audit-scan-pending-dot"></span></template>
+          </span>
+          <span x-text="step"></span>
+        </li>
+      </template>
+    </ul>
+  </div>
+
+  <p class="onboarding-poll-note">
+    <i class="fa-solid fa-circle-notch fa-spin"></i>
+    Checking for results every 3 seconds&hellip;
+  </p>
+</div>
+
+<script>
+function auditScanSteps() {
+  return {
+    steps: [
+      "Fetching site structure and meta tags",
+      "Checking page speed and technical health",
+      "Scoring on-page SEO signals",
+      "Analysing AEO and AI visibility factors",
+      "Mapping internal linking patterns",
+      "Building your personalised diagnosis",
+    ],
+    current: 0,
+    interval: null,
+    start() {
+      this.interval = setInterval(() => {
+        if (this.current < this.steps.length - 1) {
+          this.current++;
+        }
+      }, 5000);
+    },
+  };
+}
+</script>

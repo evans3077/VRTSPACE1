@@ -63,6 +63,20 @@ class AEOAudit(TimestampedModel):
     def __str__(self):
         return f"AEO audit for {self.project}"
 
+    @property
+    def overall_score(self):
+        """Composite score: average of all four dimension scores."""
+        scores = [
+            self.visibility_score,
+            self.entity_score,
+            self.structure_score,
+            self.completeness_score,
+        ]
+        non_zero = [s for s in scores if s]
+        if not non_zero:
+            return 0
+        return round(sum(non_zero) / len(non_zero))
+
 
 class AIRecommendation(TimestampedModel):
     aeo_audit = models.ForeignKey(

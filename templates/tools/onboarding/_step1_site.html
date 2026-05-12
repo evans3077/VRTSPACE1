@@ -1,0 +1,42 @@
+<div class="onboarding-card glass-panel" id="onboarding-step-content">
+  <div class="onboarding-card-intro">
+    <p class="feature-tag">Step 1 of 3</p>
+    <h2>What website are we working on?</h2>
+    <p class="section-text">
+      Enter the URL of the site you want to audit. We'll crawl it, score it,
+      and build your workspace around the results.
+    </p>
+  </div>
+
+  {% if error %}
+  <div class="flash flash-error" role="alert">{{ error }}</div>
+  {% endif %}
+
+  <form
+    method="post"
+    action="{% url 'tools:workspace-onboarding-step1' %}"
+    class="premium-form onboarding-form"
+    hx-post="{% url 'tools:workspace-onboarding-step1' %}"
+    hx-target="#onboarding-step-content"
+    hx-swap="outerHTML"
+    novalidate
+  >
+    {% csrf_token %}
+    <div class="form-group">
+      <label for="id_website" class="form-label">Website URL</label>
+      <input
+        type="url"
+        id="id_website"
+        name="website"
+        class="form-control"
+        placeholder="https://yourwebsite.com"
+        autofocus
+        required
+      >
+      <p class="form-hint">Include the full address — e.g. <code>https://example.com</code></p>
+    </div>
+    <button type="submit" class="button button-primary button-block onboarding-cta">
+      Continue <i class="fa-solid fa-arrow-right"></i>
+    </button>
+  </form>
+</div>
