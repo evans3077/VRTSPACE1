@@ -33,7 +33,7 @@
     <div class="competitor-inputs-shell">
       <template x-for="(url, idx) in slots" :key="idx">
         <div class="form-group competitor-input-row">
-          <label :for="'competitor_' + idx" class="form-label sr-only">Competitor {{ idx + 1 }}</label>
+          <label :for="'competitor_' + idx" class="form-label sr-only" x-text="'Competitor ' + (idx + 1)"></label>
           <div class="input-with-action">
             <input
               type="url"
