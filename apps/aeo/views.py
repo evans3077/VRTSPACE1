@@ -11,7 +11,8 @@ from apps.leads.services import get_workspace_projects
 from apps.leads.models import UsageRecord
 
 from .forms import AEOAuditRequestForm
-from .models import AEOAudit
+from .index_service import lookup_or_queue, normalise_domain
+from .models import AEOAudit, AEOIndexEntry
 from .services import build_aeo_payload, build_aeo_competitor_benchmarks, create_aeo_audit, get_latest_aeo_audit
 from apps.seo.models import SEOProjectProfile
 
@@ -243,6 +244,85 @@ class AEOShareView(View):
                 "page_title": f"AEO Visibility — {audit.project.name if audit.project else ''}",
                 "meta_description": "Shared answer-engine visibility snapshot powered by VRT SPACE AGENCY.",
                 "meta_robots": "noindex, nofollow",
+                "canonical_url": request.build_absolute_uri(request.path),
+                "shell_theme": "shell-light",
+            },
+        )
+
+
+class AEOIndexHomeView(View):
+    """Public landing page for the AEO visibility index.
+
+    Indexable, SEO-targeted ("is your brand visible in ChatGPT?").
+    Search box submits to the detail page for a given domain.
+    """
+
+    template_name = "aeo/aeo_index_home.html"
+
+    def get(self, request, *args, **kwargs):
+        top_entries = (
+            AEOIndexEntry.objects.filter(status=AEOIndexEntry.Status.COMPLETED)
+            .order_by("-overall_score", "-last_checked_at")[:12]
+        )
+        recent_lookups = AEOIndexEntry.objects.order_by("-lookup_count")[:8]
+        return render(
+            request,
+            self.template_name,
+            {
+                "top_entries": top_entries,
+                "recent_lookups": recent_lookups,
+                "page_title": "AEO Visibility Index — Is your brand visible in ChatGPT, Gemini, and Perplexity?",
+                "meta_description": "Free public tool: check whether ChatGPT, Gemini, and Perplexity cite your brand. AEO visibility scoring for any domain, powered by VRT SPACE AGENCY.",
+                "canonical_url": request.build_absolute_uri(request.path),
+                "shell_theme": "shell-light",
+            },
+        )
+
+    def post(self, request, *args, **kwargs):
+        raw = (request.POST.get("domain") or "").strip()
+        domain = normalise_domain(raw)
+        if not domain:
+            messages.error(request, "Enter a valid domain.")
+            return redirect("aeo:aeo-index")
+        return redirect("aeo:aeo-index-detail", domain=domain)
+
+
+class AEOIndexDetailView(View):
+    """Public per-domain detail page.
+
+    On first visit, kicks off a lightweight precision pass (rate-limited)
+    and persists the result for future lookups.  All detail pages are
+    indexable to drive organic search traffic.
+    """
+
+    template_name = "aeo/aeo_index_detail.html"
+
+    def get(self, request, domain, *args, **kwargs):
+        domain = normalise_domain(domain)
+        if not domain:
+            raise Http404("Invalid domain.")
+        try:
+            entry = lookup_or_queue(domain)
+        except ValueError:
+            raise Http404("Invalid domain.")
+
+        page_title = f"Is {entry.domain} cited by ChatGPT, Gemini, or Perplexity? | AEO Visibility Index"
+        if entry.status == AEOIndexEntry.Status.COMPLETED:
+            meta = (
+                f"AEO visibility check for {entry.domain}: "
+                f"{entry.engines_cited_count}/3 engines cite this brand. "
+                f"Score: {entry.overall_score}/100."
+            )
+        else:
+            meta = f"Checking AEO visibility for {entry.domain} across ChatGPT, Gemini, and Perplexity."
+
+        return render(
+            request,
+            self.template_name,
+            {
+                "entry": entry,
+                "page_title": page_title,
+                "meta_description": meta,
                 "canonical_url": request.build_absolute_uri(request.path),
                 "shell_theme": "shell-light",
             },

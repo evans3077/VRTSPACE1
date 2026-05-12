@@ -2,6 +2,8 @@ from django.urls import path
 
 from .views import (
     AEOAuditPollView,
+    AEOIndexDetailView,
+    AEOIndexHomeView,
     AEOShareView,
     WorkspaceAEOView,
 )
@@ -19,5 +21,11 @@ urlpatterns = [
         "aeo/share/<str:token>/",
         AEOShareView.as_view(),
         name="aeo-share",
+    ),
+    path("aeo-index/", AEOIndexHomeView.as_view(), name="aeo-index"),
+    path(
+        "aeo-index/<str:domain>/",
+        AEOIndexDetailView.as_view(),
+        name="aeo-index-detail",
     ),
 ]

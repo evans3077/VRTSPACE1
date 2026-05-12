@@ -108,6 +108,55 @@ class AEOAudit(TimestampedModel):
             self.share_token = _generate_share_token()
         super().save(*args, **kwargs)
 
+
+class AEOIndexEntry(TimestampedModel):
+    """
+    Public, indexable AEO visibility cache for the /aeo-index/ tool.
+
+    Anyone can look up a domain to see if it's cited by ChatGPT/Gemini/
+    Perplexity.  We populate this lazily — entries that don't exist are
+    queued (rate-limited to 50/day) so the public index never costs us
+    more than a hard daily ceiling of LLM calls.
+    """
+
+    class Status(models.TextChoices):
+        QUEUED = "queued", "Queued"
+        COMPLETED = "completed", "Completed"
+        FAILED = "failed", "Failed"
+
+    domain = models.CharField(max_length=255, unique=True, db_index=True)
+    brand_name = models.CharField(max_length=200, blank=True)
+    status = models.CharField(
+        max_length=16,
+        choices=Status.choices,
+        default=Status.QUEUED,
+    )
+    overall_score = models.PositiveSmallIntegerField(default=0)
+    chatgpt_cited = models.BooleanField(default=False)
+    gemini_cited = models.BooleanField(default=False)
+    perplexity_cited = models.BooleanField(default=False)
+    chatgpt_frequency = models.PositiveSmallIntegerField(default=0)
+    gemini_frequency = models.PositiveSmallIntegerField(default=0)
+    perplexity_frequency = models.PositiveSmallIntegerField(default=0)
+    queries_log = models.JSONField(default=list, blank=True)
+    last_checked_at = models.DateTimeField(null=True, blank=True)
+    lookup_count = models.PositiveIntegerField(default=0)
+
+    class Meta:
+        ordering = ("-last_checked_at", "-created_at")
+        verbose_name_plural = "AEO index entries"
+
+    def __str__(self):
+        return self.domain
+
+    @property
+    def engines_cited_count(self):
+        return sum(
+            1
+            for cited in (self.chatgpt_cited, self.gemini_cited, self.perplexity_cited)
+            if cited
+        )
+
     @property
     def overall_score(self):
         """Composite score: average of all four dimension scores."""

@@ -1,0 +1,97 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="section aeo-index-detail">
+  <div class="container">
+    <p class="feature-tag">AEO Visibility Index</p>
+    <h1>Is <span class="text-accent">{{ entry.domain }}</span> visible in AI answer engines?</h1>
+
+    {% if entry.status == "completed" %}
+    <div class="aeo-index-result aeo-index-result--done">
+      <div class="aeo-index-scoreband">
+        <div class="aeo-index-scorebox">
+          <p class="eyebrow">Overall AEO score</p>
+          <p class="aeo-index-score-big">{{ entry.overall_score }}<span>/100</span></p>
+        </div>
+        <div class="aeo-index-scorebox">
+          <p class="eyebrow">Engines citing</p>
+          <p class="aeo-index-score-big">{{ entry.engines_cited_count }}<span>/3</span></p>
+        </div>
+        <div class="aeo-index-scorebox">
+          <p class="eyebrow">Last checked</p>
+          <p class="aeo-index-meta">{{ entry.last_checked_at|date:"M j, Y" }}</p>
+        </div>
+      </div>
+
+      <div class="aeo-index-engine-grid">
+        <article class="aeo-index-engine-card {% if entry.chatgpt_cited %}is-cited{% else %}is-missed{% endif %}">
+          <h3>ChatGPT</h3>
+          <p class="aeo-index-engine-status">
+            {% if entry.chatgpt_cited %}
+              <i class="fa-solid fa-check-circle text-success"></i> Cited
+            {% else %}
+              <i class="fa-solid fa-xmark-circle text-muted"></i> Not cited
+            {% endif %}
+          </p>
+          <p class="aeo-index-engine-freq">{{ entry.chatgpt_frequency }}/3 queries</p>
+        </article>
+        <article class="aeo-index-engine-card {% if entry.gemini_cited %}is-cited{% else %}is-missed{% endif %}">
+          <h3>Gemini</h3>
+          <p class="aeo-index-engine-status">
+            {% if entry.gemini_cited %}
+              <i class="fa-solid fa-check-circle text-success"></i> Cited
+            {% else %}
+              <i class="fa-solid fa-xmark-circle text-muted"></i> Not cited
+            {% endif %}
+          </p>
+          <p class="aeo-index-engine-freq">{{ entry.gemini_frequency }}/3 queries</p>
+        </article>
+        <article class="aeo-index-engine-card {% if entry.perplexity_cited %}is-cited{% else %}is-missed{% endif %}">
+          <h3>Perplexity</h3>
+          <p class="aeo-index-engine-status">
+            {% if entry.perplexity_cited %}
+              <i class="fa-solid fa-check-circle text-success"></i> Cited
+            {% else %}
+              <i class="fa-solid fa-xmark-circle text-muted"></i> Not cited
+            {% endif %}
+          </p>
+          <p class="aeo-index-engine-freq">{{ entry.perplexity_frequency }}/3 queries</p>
+        </article>
+      </div>
+    </div>
+    {% elif entry.status == "queued" %}
+    <div class="aeo-index-result aeo-index-result--queued">
+      <i class="fa-solid fa-clock fa-2x"></i>
+      <h2>We're checking {{ entry.domain }}</h2>
+      <p class="section-text">
+        Your lookup is queued. Visibility checks are rate-limited so the
+        free tool stays free. Refresh in a few minutes to see results.
+      </p>
+    </div>
+    {% else %}
+    <div class="aeo-index-result aeo-index-result--failed">
+      <i class="fa-solid fa-triangle-exclamation fa-2x"></i>
+      <h2>Couldn't complete the check</h2>
+      <p class="section-text">
+        We weren't able to query the AI engines for this domain. Try again later.
+      </p>
+    </div>
+    {% endif %}
+
+    <div class="aeo-index-cta">
+      <h2>Want a deeper analysis?</h2>
+      <p class="section-text">
+        Get a full AEO audit with per-page recommendations, FAQ schema
+        guidance, and competitor visibility benchmarks.
+      </p>
+      <a href="{% url 'tools:free-seo-audit' %}" class="button button-primary">
+        Run a free audit <i class="fa-solid fa-arrow-right"></i>
+      </a>
+      <a href="{% url 'aeo:aeo-index' %}" class="button button-ghost">
+        Check another domain
+      </a>
+    </div>
+  </div>
+</section>
+{% endblock %}

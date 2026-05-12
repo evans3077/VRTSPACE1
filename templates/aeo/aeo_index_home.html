@@ -1,0 +1,86 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="section aeo-index-hero">
+  <div class="container">
+    <p class="feature-tag">Free tool</p>
+    <h1>Is your brand visible in ChatGPT, Gemini, and Perplexity?</h1>
+    <p class="section-text">
+      Type any domain to find out whether AI answer engines cite it when
+      people ask about your industry. Results are cached and free.
+    </p>
+
+    <form method="post" action="{% url 'aeo:aeo-index' %}" class="aeo-index-lookup-form premium-form">
+      {% csrf_token %}
+      <div class="form-group">
+        <label class="form-label sr-only" for="domain-input">Domain</label>
+        <div class="input-with-action">
+          <input
+            id="domain-input"
+            type="text"
+            name="domain"
+            class="form-control"
+            placeholder="yourbrand.com"
+            required
+            autofocus
+          >
+          <button type="submit" class="button button-primary">
+            Check visibility <i class="fa-solid fa-arrow-right"></i>
+          </button>
+        </div>
+        {% if messages %}
+        <div class="form-flash">
+          {% for message in messages %}<p>{{ message }}</p>{% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </form>
+  </div>
+</section>
+
+{% if top_entries %}
+<section class="section">
+  <div class="container">
+    <header class="section-heading">
+      <p class="eyebrow">Top performers</p>
+      <h2>Brands most visible to AI answer engines</h2>
+    </header>
+    <ul class="aeo-index-list">
+      {% for entry in top_entries %}
+      <li class="aeo-index-list-item">
+        <a href="{% url 'aeo:aeo-index-detail' domain=entry.domain %}">
+          <span class="aeo-index-domain">{{ entry.domain }}</span>
+          <span class="aeo-index-score">{{ entry.overall_score }}/100</span>
+          <span class="aeo-index-engines">{{ entry.engines_cited_count }}/3 engines</span>
+        </a>
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</section>
+{% endif %}
+
+<section class="section section-muted">
+  <div class="container">
+    <header class="section-heading">
+      <p class="eyebrow">How it works</p>
+      <h2>Three engines, three queries, one score</h2>
+    </header>
+    <div class="grid-3">
+      <article class="card">
+        <h3>1. Real LLM queries</h3>
+        <p>We send three industry-typical queries to ChatGPT, Gemini, and Perplexity.</p>
+      </article>
+      <article class="card">
+        <h3>2. Precise citation detection</h3>
+        <p>We scan each response for your brand name and domain — passive co-occurrence, no priming.</p>
+      </article>
+      <article class="card">
+        <h3>3. Public, cached results</h3>
+        <p>We cache the result so anyone can look it up. Re-check anytime to see how visibility changes.</p>
+      </article>
+    </div>
+  </div>
+</section>
+{% endblock %}
