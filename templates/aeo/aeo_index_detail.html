@@ -63,11 +63,22 @@
     {% elif entry.status == "queued" %}
     <div class="aeo-index-result aeo-index-result--queued">
       <i class="fa-solid fa-clock fa-2x"></i>
+      {% with first_log=entry.queries_log.0 %}
+      {% if first_log.reason == "engine not configured on server" %}
+      <h2>AI engines not yet enabled</h2>
+      <p class="section-text">
+        This free tool runs live ChatGPT, Gemini, and Perplexity queries.
+        Our site administrator hasn't activated the LLM keys for this
+        environment yet — check back soon.
+      </p>
+      {% else %}
       <h2>We're checking {{ entry.domain }}</h2>
       <p class="section-text">
         Your lookup is queued. Visibility checks are rate-limited so the
         free tool stays free. Refresh in a few minutes to see results.
       </p>
+      {% endif %}
+      {% endwith %}
     </div>
     {% else %}
     <div class="aeo-index-result aeo-index-result--failed">

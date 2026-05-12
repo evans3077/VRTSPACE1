@@ -114,6 +114,19 @@ def lookup_or_queue(raw_domain: str, *, run_inline: bool = True) -> AEOIndexEntr
 def run_index_lookup(entry: AEOIndexEntry) -> AEOIndexEntry:
     """Execute the lightweight precision pass for a public index entry."""
     availability = is_precision_available()
+
+    # If NONE of the LLM engines are configured, leave the entry as QUEUED
+    # with a clear marker — never mark it FAILED for an operator-side gap.
+    if not any(availability.values()):
+        entry.status = AEOIndexEntry.Status.QUEUED
+        entry.queries_log = [
+            {"engine": e, "skipped": True, "reason": "engine not configured on server"}
+            for e in availability
+        ]
+        entry.last_checked_at = timezone.now()
+        entry.save()
+        return entry
+
     queries = _build_queries(entry.domain, entry.brand_name)
     queries_log: list[dict] = []
     cited_map: dict[str, int] = {"chatgpt": 0, "gemini": 0, "perplexity": 0}

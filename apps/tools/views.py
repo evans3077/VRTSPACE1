@@ -197,6 +197,12 @@ class PublicAuditCreateView(View):
     rate_limit = 3
     rate_window = 900
 
+    def get(self, request, *args, **kwargs):
+        # The audit form lives on the home page (#audit anchor). If anyone
+        # GETs this endpoint directly (old bookmark, error page CTA, share
+        # link), redirect them to the form instead of returning 405.
+        return redirect("/#audit")
+
     def post(self, request, *args, **kwargs):
         ip_address = request.META.get("REMOTE_ADDR", "unknown")
         cache_key = f"rate-limit:{self.__class__.__name__}:{ip_address}"
