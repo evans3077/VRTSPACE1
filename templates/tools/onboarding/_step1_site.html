@@ -1,10 +1,10 @@
 <div class="onboarding-card glass-panel" id="onboarding-step-content">
   <div class="onboarding-card-intro">
     <p class="feature-tag">Step 1 of 3</p>
-    <h2>What website are we working on?</h2>
+    <h2>Let's set up your workspace</h2>
     <p class="section-text">
-      Enter the URL of the site you want to audit. We'll crawl it, score it,
-      and build your workspace around the results.
+      We need three things to give you a relevant audit and surface competitors
+      that actually compete with you — not random sites Google returns.
     </p>
   </div>
 
@@ -22,6 +22,7 @@
     novalidate
   >
     {% csrf_token %}
+
     <div class="form-group">
       <label for="id_website" class="form-label">Website URL</label>
       <input
@@ -30,11 +31,39 @@
         name="website"
         class="form-control"
         placeholder="https://yourwebsite.com"
+        value="{{ form_data.website|default:'' }}"
         autofocus
         required
       >
       <p class="form-hint">Include the full address — e.g. <code>https://example.com</code></p>
     </div>
+
+    <div class="form-grid-2">
+      <div class="form-group">
+        <label for="id_business_type" class="form-label">What kind of business?</label>
+        <select id="id_business_type" name="business_type" class="form-control" required>
+          {% for value, label in business_type_choices %}
+            <option value="{{ value }}" {% if form_data.business_type == value %}selected{% endif %}>{{ label }}</option>
+          {% endfor %}
+        </select>
+        <p class="form-hint">Tells us which competitors and SERP queries to use.</p>
+      </div>
+
+      <div class="form-group">
+        <label for="id_location" class="form-label">Where do you serve?</label>
+        <input
+          type="text"
+          id="id_location"
+          name="location"
+          class="form-control"
+          placeholder="Nairobi, Kenya — or 'Worldwide'"
+          value="{{ form_data.location|default:'' }}"
+          required
+        >
+        <p class="form-hint">City + country, region, or &ldquo;Worldwide&rdquo; for online-only.</p>
+      </div>
+    </div>
+
     <button type="submit" class="button button-primary button-block onboarding-cta">
       Continue <i class="fa-solid fa-arrow-right"></i>
     </button>

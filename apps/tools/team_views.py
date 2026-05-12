@@ -89,6 +89,7 @@ class WorkspaceTeamView(LoginRequiredMixin, View):
                 "seats_remaining": max(seat_limit - seats_used, 0),
                 "plan_seat_limits": PLAN_SEAT_LIMITS,
                 "client_share_url": client_share_url,
+                "workspace_nav_current": "team",
                 "page_title": f"{project.name} — Team & Sharing | VRT SPACE AGENCY",
                 "meta_description": "Manage workspace seats and client share links.",
                 "meta_robots": "noindex, nofollow",

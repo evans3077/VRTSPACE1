@@ -44,6 +44,7 @@ class WorkspaceCMSCredentialView(LoginRequiredMixin, View):
                 "project": project,
                 "credentials": credentials,
                 "platform_choices": CMSCredential.Platform.choices,
+                "workspace_nav_current": "publishing",
                 "page_title": "Connect your CMS | VRT SPACE AGENCY",
                 "meta_description": "Connect WordPress to push generated drafts straight into your CMS.",
                 "meta_robots": "noindex, nofollow",

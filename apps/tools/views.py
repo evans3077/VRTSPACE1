@@ -1530,12 +1530,16 @@ class WorkspaceOnboardingView(LoginRequiredMixin, View):
     template_name = "tools/onboarding.html"
 
     def get(self, request, *args, **kwargs):
+        from apps.leads.intake_options import BUSINESS_TYPE_CHOICES
+
         step, ctx = _resolve_onboarding_step(request.user)
         if step == 0:
             return redirect("tools:workspace-dashboard")
         return render(request, self.template_name, {
             **ctx,
             "current_step": step,
+            "business_type_choices": BUSINESS_TYPE_CHOICES,
+            "form_data": {},
             "page_title": "Set Up Your Workspace | VRT SPACE AGENCY",
             "meta_robots": "noindex, nofollow",
             "canonical_url": request.build_absolute_uri(request.path),
@@ -1544,14 +1548,34 @@ class WorkspaceOnboardingView(LoginRequiredMixin, View):
 
 
 class WorkspaceOnboardingStep1View(LoginRequiredMixin, View):
-    """Step 1 POST — create the project from the submitted URL."""
+    """Step 1 POST — create the project from the submitted URL + business
+    context.  Business type + location are required so the SERP discovery
+    that fires at step 3 actually returns relevant competitors instead of
+    Instagram / random aggregators.
+    """
 
     def post(self, request, *args, **kwargs):
+        from apps.leads.intake_options import BUSINESS_TYPE_CHOICES, BUSINESS_TYPE_LABELS
+
         website = (request.POST.get("website") or "").strip()
+        business_type = (request.POST.get("business_type") or "").strip()
+        location = (request.POST.get("location") or "").strip()
         is_htmx = bool(request.headers.get("HX-Request"))
 
+        form_data = {
+            "website": website,
+            "business_type": business_type,
+            "location": location,
+        }
+
         if not website:
-            return self._error(request, is_htmx, "Please enter your website URL.", step=1)
+            return self._error(request, is_htmx, "Please enter your website URL.", step=1, form_data=form_data)
+
+        if not business_type or business_type not in BUSINESS_TYPE_LABELS:
+            return self._error(request, is_htmx, "Pick the business type that best describes you.", step=1, form_data=form_data)
+
+        if not location:
+            return self._error(request, is_htmx, "Tell us where you operate — even 'Worldwide' is fine.", step=1, form_data=form_data)
 
         normalized_start_url = normalize_url(website)
         normalized_domain = extract_domain(normalized_start_url)
@@ -1561,17 +1585,24 @@ class WorkspaceOnboardingStep1View(LoginRequiredMixin, View):
                 request, is_htmx,
                 "That doesn't look like a valid website address — please include the domain, e.g. example.com",
                 step=1,
+                form_data=form_data,
             )
 
         allowed, capacity = can_create_workspace_project(request.user, normalized_domain=normalized_domain)
         if not allowed:
             msg = capacity.get("blocked_message") or "Unable to create project — you may have reached your plan limit."
-            return self._error(request, is_htmx, msg, step=1)
+            return self._error(request, is_htmx, msg, step=1, form_data=form_data)
+
+        # 'Worldwide' / 'global' triggers the worldwide mode used elsewhere.
+        location_mode = "worldwide" if location.strip().lower() in {"worldwide", "global", "everywhere", "international"} else "targeted"
 
         project, _ = create_workspace_project_for_user(
             request.user,
             name=normalized_domain,
             website=normalized_start_url,
+            business_type=business_type,
+            location=location,
+            location_mode=location_mode,
         )
         set_active_workspace_project(request, project)
 
@@ -1584,11 +1615,15 @@ class WorkspaceOnboardingStep1View(LoginRequiredMixin, View):
             })
         return redirect("tools:workspace-onboarding")
 
-    def _error(self, request, is_htmx, message, *, step):
+    def _error(self, request, is_htmx, message, *, step, form_data=None):
+        from apps.leads.intake_options import BUSINESS_TYPE_CHOICES
+
         if is_htmx:
             return render(request, "tools/onboarding/_step1_site.html", {
                 "error": message,
                 "current_step": 1,
+                "form_data": form_data or {},
+                "business_type_choices": BUSINESS_TYPE_CHOICES,
             }, status=422)
         messages.error(request, message)
         return redirect("tools:workspace-onboarding")
