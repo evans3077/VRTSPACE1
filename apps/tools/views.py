@@ -1514,7 +1514,11 @@ def _resolve_onboarding_step(user):
     if not completed_audit:
         return 2, {"project": project, "running_audit": running_audit, "completed_audit": None}
 
-    if not project.competitor_urls:
+    # Competitors live on the linked AuditRequest, not on the project itself.
+    existing_competitors = []
+    if project.audit_request_id:
+        existing_competitors = list(project.audit_request.competitor_urls or [])
+    if not existing_competitors:
         return 3, {"project": project, "running_audit": None, "completed_audit": completed_audit}
 
     return 0, {"project": project, "running_audit": None, "completed_audit": completed_audit}
@@ -1730,8 +1734,13 @@ class WorkspaceOnboardingStep3View(LoginRequiredMixin, View):
         ]
         competitor_urls = list(dict.fromkeys(competitor_urls))[:settings.SEO_COMPETITOR_LIMIT]
 
-        project.competitor_urls = competitor_urls
-        project.save(update_fields=["competitor_urls", "updated_at"])
+        # Competitors live on the project's linked AuditRequest.
+        if project.audit_request_id:
+            project.audit_request.competitor_urls = competitor_urls
+            project.audit_request.save(update_fields=["competitor_urls", "updated_at"])
+        else:
+            # No audit request yet (edge case) — silently skip; user can re-enter later.
+            pass
 
         messages.success(request, f"Workspace ready. {len(competitor_urls)} competitor{'s' if len(competitor_urls) != 1 else ''} saved.")
         return redirect("tools:workspace-dashboard")

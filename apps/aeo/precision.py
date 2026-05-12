@@ -330,7 +330,11 @@ def run_precision_audit(aeo_audit: AEOAudit, *, dry_run: bool = False) -> AEOAud
         domain = project.normalized_domain
 
     brand_name = (getattr(project, "name", "") or "").strip()
-    competitors = list((getattr(project, "competitor_urls", None) or []))[:6]
+    # Competitor URLs live on the project's linked AuditRequest.
+    competitors = []
+    audit_request = getattr(project, "audit_request", None) if project else None
+    if audit_request is not None:
+        competitors = list(getattr(audit_request, "competitor_urls", None) or [])[:6]
 
     queries = build_query_set(
         project=project,
