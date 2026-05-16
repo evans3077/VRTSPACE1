@@ -105,11 +105,10 @@
                 {{ diagnosis.summary|default:"This report is organized to show the biggest blockers first, then guide the next move without overwhelming the page." }}
             </p>
             <div class="public-chip-row">
-                <span class="premium-pill">Overall score: {{ audit_run.overall_score|default:"-" }}</span>
-                <span class="premium-pill">Pages scanned: {{ audit_run.pages_crawled|default:0 }}</span>
-                <span class="premium-pill">Report depth: {{ audit_profile.label }}</span>
+                <span class="premium-pill"><i class="fa-solid fa-file-lines"></i> {{ audit_run.pages_crawled|default:0 }} page{{ audit_run.pages_crawled|pluralize }} scanned</span>
+                <span class="premium-pill"><i class="fa-solid fa-layer-group"></i> {{ audit_profile.label }} depth</span>
                 {% if not audit_tier_enforcement %}
-                <span class="premium-pill">Developer preview: plan limits are off</span>
+                <span class="premium-pill"><i class="fa-solid fa-flask"></i> Developer preview</span>
                 {% endif %}
             </div>
             {% if request.GET.pdf_locked %}
@@ -139,9 +138,16 @@
             {% endif %}
         </div>
         <div class="public-hero-panel glass-panel audit-score-panel audit-hero-score-panel">
-            <div class="audit-score-summary">
+            <div class="audit-score-summary" style="--score: {{ audit_run.overall_score|default:0 }};">
                 <p class="eyebrow">Audit summary</p>
-                <div class="audit-score-number">{{ audit_run.overall_score|default:"-" }}</div>
+                <div class="audit-score-ring" aria-hidden="true">
+                    <div class="audit-score-ring-track"></div>
+                    <div class="audit-score-ring-fill"></div>
+                    <div class="audit-score-ring-inner">
+                        <span class="audit-score-number">{{ audit_run.overall_score|default:"-" }}</span>
+                        <span class="audit-score-suffix">/ 100</span>
+                    </div>
+                </div>
                 <p class="section-text">{{ audit_profile.summary }}</p>
             </div>
             <div class="audit-score-grid">

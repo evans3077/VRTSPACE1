@@ -1,6 +1,24 @@
 {% extends "base.html" %}
 {% load static %}
 
+{% block extra_head %}
+{# Structured data so Google can index this as a discrete review-style page.
+   Helps individual /aeo-index/<domain>/ pages rank for "is X cited in ChatGPT" queries. #}
+{% if entry.status == "completed" %}
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@type": "Dataset",
+  "name": "AEO Visibility — {{ entry.domain }}",
+  "description": "Whether {{ entry.domain }} is cited by ChatGPT, Gemini, and Perplexity. Score: {{ entry.overall_score }}/100. Engines citing: {{ entry.engines_cited_count }}/3.",
+  "url": "{{ canonical_url }}",
+  "dateModified": "{{ entry.last_checked_at|date:'c' }}",
+  "publisher": { "@type": "Organization", "name": "VRT SPACE AGENCY" }
+}
+</script>
+{% endif %}
+{% endblock %}
+
 {% block content %}
 <section class="section aeo-index-detail">
   <div class="container">
@@ -9,18 +27,27 @@
 
     {% if entry.status == "completed" %}
     <div class="aeo-index-result aeo-index-result--done">
-      <div class="aeo-index-scoreband">
-        <div class="aeo-index-scorebox">
-          <p class="eyebrow">Overall AEO score</p>
-          <p class="aeo-index-score-big">{{ entry.overall_score }}<span>/100</span></p>
+      <div class="aeo-index-hero" style="--score: {{ entry.overall_score }};">
+        <div class="aeo-index-score-ring" aria-hidden="true">
+          <div class="aeo-index-score-ring-fill"></div>
+          <div class="aeo-index-score-ring-inner">
+            <span class="aeo-index-score-value">{{ entry.overall_score }}</span>
+            <span class="aeo-index-score-suffix">/ 100</span>
+          </div>
         </div>
-        <div class="aeo-index-scorebox">
-          <p class="eyebrow">Engines citing</p>
-          <p class="aeo-index-score-big">{{ entry.engines_cited_count }}<span>/3</span></p>
-        </div>
-        <div class="aeo-index-scorebox">
-          <p class="eyebrow">Last checked</p>
-          <p class="aeo-index-meta">{{ entry.last_checked_at|date:"M j, Y" }}</p>
+        <div class="aeo-index-hero-meta">
+          <div>
+            <p class="eyebrow">Engines citing</p>
+            <p class="aeo-index-hero-meta-big">{{ entry.engines_cited_count }}<span>/ 3</span></p>
+          </div>
+          <div>
+            <p class="eyebrow">Last checked</p>
+            <p class="aeo-index-hero-meta-text">{{ entry.last_checked_at|date:"M j, Y" }}</p>
+          </div>
+          <div>
+            <p class="eyebrow">Lookups</p>
+            <p class="aeo-index-hero-meta-text">{{ entry.lookup_count }}</p>
+          </div>
         </div>
       </div>
 

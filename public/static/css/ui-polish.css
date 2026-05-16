@@ -2332,4 +2332,440 @@ body.shell-light .onboarding-slots-counter .premium-pill {
     .onboarding-card .onboarding-form-actions .button {
         width: 100%;
         min-height: 48px;
+    }
+}
+
+/* =============================================================================
+   Priority C — Audit result page polish
+   ─────────────────────────────────────────────────────────────────────────────
+   Centre-piece is the score ring: a conic-gradient pseudo-element that fills
+   to the audit's overall score. The score number sits in the centre using
+   the existing brand gradient text treatment. Reuses --brand-primary and
+   --brand-secondary so it inherits any future theme change.
+   ========================================================================== */
+
+body.shell-light .audit-score-ring {
+    position: relative;
+    width: clamp(160px, 32vw, 220px);
+    height: clamp(160px, 32vw, 220px);
+    margin: 0.5rem auto 0.75rem;
+    display: grid;
+    place-items: center;
+}
+
+body.shell-light .audit-score-ring-track {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(from -90deg,
+        rgba(15, 23, 42, 0.08) 0%,
+        rgba(15, 23, 42, 0.08) 100%);
+}
+
+body.shell-light .audit-score-ring-fill {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    /* The score (0-100) maps directly to a percentage of the conic gradient.
+       --score is set inline on .audit-score-summary. */
+    background: conic-gradient(from -90deg,
+        #38bdf8 0%,
+        #818cf8 calc(var(--score, 0) * 1%),
+        transparent calc(var(--score, 0) * 1%));
+    -webkit-mask: radial-gradient(circle, transparent 64%, #000 65%);
+            mask: radial-gradient(circle, transparent 64%, #000 65%);
+    animation: auditScoreRingReveal 1.2s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+@keyframes auditScoreRingReveal {
+    from { opacity: 0; transform: rotate(-12deg); }
+    to   { opacity: 1; transform: rotate(0); }
+}
+
+body.shell-light .audit-score-ring-inner {
+    position: relative;
+    z-index: 1;
+    width: 64%;
+    height: 64%;
+    border-radius: 50%;
+    background: #ffffff;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.06);
+}
+
+body.shell-light .audit-score-ring .audit-score-number {
+    font-size: clamp(2.4rem, 6vw, 3.2rem);
+    line-height: 1;
+    font-weight: 900;
+    background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+}
+
+body.shell-light .audit-score-ring .audit-score-suffix {
+    font-size: 0.72rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-weight: 700;
+    margin-top: 0.35rem;
+}
+
+/* Score-card tone polish: stronger contrast between strong / warning / critical
+   without changing the existing CSS tokens. Adds a left-edge colour-bar so
+   weak modules read at a glance. */
+body.shell-light .audit-score-card {
+    position: relative;
+    overflow: hidden;
+}
+body.shell-light .audit-score-card::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: rgba(15, 23, 42, 0.2);
+}
+body.shell-light .audit-score-card-strong::before  { background: #16a34a; }
+body.shell-light .audit-score-card-warning::before { background: #ea580c; }
+body.shell-light .audit-score-card-critical::before{ background: #dc2626; }
+
+/* =============================================================================
+   Priority D — AEO workspace polish
+   ─────────────────────────────────────────────────────────────────────────────
+   The three engine cards (.llm-engine-card) ship with inline styles that
+   prevent responsive collapse and consistent interaction states. Layer a
+   mobile-first ruleset that overrides the worst offenders without touching
+   the template — single column on mobile, 3-column on desktop, hover lift
+   that matches the dashboard module-rows.
+   ========================================================================== */
+
+/* Engine grid: single column on mobile, two on tablet, three on desktop. */
+.aeo-engine-grid {
+    grid-template-columns: 1fr !important;
+    gap: 1rem !important;
+}
+@media (min-width: 720px) {
+    .aeo-engine-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    }
+}
+@media (min-width: 1100px) {
+    .aeo-engine-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+    }
+}
+
+/* Engine card: unify base treatment, add lift on hover (capable pointers
+   only), press feedback on every device. */
+.llm-engine-card {
+    transition: transform 200ms ease, box-shadow 200ms ease, border-color 200ms ease;
+    will-change: transform;
+}
+@media (hover: hover) and (pointer: fine) {
+    .llm-engine-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 14px 32px rgba(15, 23, 42, 0.25);
+    }
+}
+.llm-engine-card:active {
+    transform: translateY(0);
+}
+
+/* Cited / Not-cited pills: bump their visual weight so status reads at a
+   glance, not just by colour. */
+.aeo-pill {
+    font-weight: 700;
+    letter-spacing: 0.02em;
+    padding: 0.3rem 0.6rem;
+    border-radius: 999px;
+    font-size: 0.7rem;
+    text-transform: uppercase;
+}
+.aeo-pill-green {
+    background: rgba(74, 222, 128, 0.18);
+    color: #4ade80;
+    border: 1px solid rgba(74, 222, 128, 0.4);
+}
+.aeo-pill-red {
+    background: rgba(248, 113, 113, 0.14);
+    color: #f87171;
+    border: 1px solid rgba(248, 113, 113, 0.34);
+}
+
+/* Reveal animation: cards fade-up one at a time so the panel doesn't pop
+   all at once on poll-refresh. Mirrors fade-in pattern from vrt-space-core. */
+.aeo-engine-grid .llm-engine-card {
+    animation: aeoCardReveal 480ms cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+.aeo-engine-grid .llm-engine-card:nth-child(1) { animation-delay: 0ms; }
+.aeo-engine-grid .llm-engine-card:nth-child(2) { animation-delay: 90ms; }
+.aeo-engine-grid .llm-engine-card:nth-child(3) { animation-delay: 180ms; }
+
+@keyframes aeoCardReveal {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+/* =============================================================================
+   Priority E — Public AEO Index detail page polish
+   ─────────────────────────────────────────────────────────────────────────────
+   Mobile-first hero with a score ring + 3 meta tiles. The ring uses the same
+   conic-gradient technique as the audit-result ring (Priority C) so the two
+   surfaces feel of-a-piece. SEO-targeted (per /aeo-index/<domain>/ page is
+   indexable + has JSON-LD Dataset markup in the head).
+   ========================================================================== */
+
+.aeo-index-hero {
+    display: grid;
+    gap: 1.5rem;
+    align-items: center;
+    margin: 1.5rem 0 2rem;
+}
+@media (min-width: 720px) {
+    .aeo-index-hero {
+        grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+        gap: 2rem;
+    }
+}
+
+.aeo-index-score-ring {
+    position: relative;
+    width: clamp(180px, 50vw, 220px);
+    height: clamp(180px, 50vw, 220px);
+    margin: 0 auto;
+    display: grid;
+    place-items: center;
+}
+@media (min-width: 720px) {
+    .aeo-index-score-ring { margin: 0; }
+}
+
+.aeo-index-score-ring-fill {
+    position: absolute;
+    inset: 0;
+    border-radius: 50%;
+    background: conic-gradient(from -90deg,
+        #38bdf8 0%,
+        #818cf8 calc(var(--score, 0) * 1%),
+        rgba(255, 255, 255, 0.08) calc(var(--score, 0) * 1%));
+    -webkit-mask: radial-gradient(circle, transparent 64%, #000 65%);
+            mask: radial-gradient(circle, transparent 64%, #000 65%);
+    animation: aeoIndexRingReveal 1.2s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+@keyframes aeoIndexRingReveal {
+    from { opacity: 0; transform: rotate(-12deg); }
+    to   { opacity: 1; transform: rotate(0); }
+}
+
+.aeo-index-score-ring-inner {
+    position: relative;
+    z-index: 1;
+    width: 64%;
+    height: 64%;
+    border-radius: 50%;
+    background: rgba(15, 23, 42, 0.94);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.aeo-index-score-value {
+    font-size: clamp(2.6rem, 7vw, 3.4rem);
+    line-height: 1;
+    font-weight: 900;
+    background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    letter-spacing: -0.04em;
+    font-variant-numeric: tabular-nums;
+}
+.aeo-index-score-suffix {
+    font-size: 0.7rem;
+    color: rgba(255, 255, 255, 0.55);
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-weight: 700;
+    margin-top: 0.45rem;
+}
+
+.aeo-index-hero-meta {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0.85rem;
+    text-align: center;
+}
+@media (min-width: 720px) {
+    .aeo-index-hero-meta { text-align: left; }
+}
+
+.aeo-index-hero-meta > div {
+    padding: 0.85rem 0.9rem;
+    border-radius: 14px;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.aeo-index-hero-meta-big {
+    font-size: clamp(1.8rem, 5vw, 2.4rem);
+    line-height: 1;
+    font-weight: 900;
+    margin: 0.35rem 0 0;
+    color: var(--text-primary);
+    letter-spacing: -0.03em;
+    font-variant-numeric: tabular-nums;
+}
+.aeo-index-hero-meta-big span {
+    font-size: 0.55em;
+    color: var(--text-muted);
+    font-weight: 600;
+    margin-left: 0.18em;
+}
+.aeo-index-hero-meta-text {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0.45rem 0 0;
+    color: var(--text-primary);
+}
+
+/* Engine grid for the detail page — single column on mobile, 3 on desktop. */
+.aeo-index-engine-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+    margin: 1.25rem 0;
+}
+@media (min-width: 720px) {
+    .aeo-index-engine-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 1rem;
+    }
+}
+
+.aeo-index-engine-card {
+    padding: 1.1rem 1.15rem;
+    border-radius: 16px;
+    border: 1px solid var(--border-glass);
+    background: rgba(255, 255, 255, 0.03);
+    transition: transform 200ms ease, border-color 200ms ease;
+    display: grid;
+    gap: 0.55rem;
+}
+@media (hover: hover) and (pointer: fine) {
+    .aeo-index-engine-card:hover {
+        transform: translateY(-2px);
+        border-color: rgba(56, 189, 248, 0.4);
+    }
+}
+.aeo-index-engine-card.is-cited {
+    background: rgba(74, 222, 128, 0.06);
+    border-color: rgba(74, 222, 128, 0.28);
+}
+.aeo-index-engine-card.is-missed {
+    background: rgba(248, 113, 113, 0.04);
+    border-color: rgba(248, 113, 113, 0.2);
+}
+.aeo-index-engine-card h3 {
+    margin: 0;
+    font-size: 1rem;
+    font-weight: 800;
+    color: var(--text-primary);
+}
+.aeo-index-engine-status {
+    margin: 0;
+    font-weight: 700;
+    font-size: 0.9rem;
+}
+.aeo-index-engine-freq {
+    margin: 0;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+}
+
+/* CTA block at the bottom — stack on mobile, side-by-side on desktop. */
+.aeo-index-cta {
+    margin-top: 2rem;
+    padding: 1.5rem;
+    border-radius: 18px;
+    border: 1px solid var(--border-glass);
+    background: rgba(15, 23, 42, 0.4);
+    text-align: center;
+}
+.aeo-index-cta h2 {
+    margin: 0 0 0.5rem;
+    color: var(--text-primary);
+}
+.aeo-index-cta .button {
+    margin: 0.4rem 0.3rem 0;
+    min-height: 48px;
+}
+@media (max-width: 640px) {
+    .aeo-index-cta .button {
+        display: block;
+        width: 100%;
+        margin: 0.5rem 0 0;
+    }
+}
+
+/* =============================================================================
+   Priority F — Top nav responsive density
+   ─────────────────────────────────────────────────────────────────────────────
+   At 860-1024px the desktop nav has to fit: brand · 4 links · auth/CTA pair.
+   This was hitting the CTA on smaller laptops. Drop the optional anchor
+   ("How It Works" → just a scroll target on the home page) at the
+   crowded breakpoint and tighten link padding so the AEO Index / Pricing /
+   Services trio stays readable, with the CTA pair still roomy.
+
+   At ≤860px the hamburger takes over (existing rule); these rules only fire
+   above that threshold.
+   ========================================================================== */
+
+@media (min-width: 861px) and (max-width: 1024px) {
+    /* Tighten gap so links breathe without overflowing the bar */
+    .site-header .nav-links {
+        gap: 0.2rem !important;
+    }
+    .site-header .nav-links a {
+        padding: 0.45rem 0.65rem;
+        font-size: 0.92rem;
+    }
+    /* "How It Works" is a same-page anchor on /; users can scroll. Hiding
+       it at this width buys 90-110px which is enough to keep the CTA pair
+       on one line. */
+    .site-header .nav-links a[href*="#journey"] {
+        display: none;
+    }
+    /* Tighten the auth + CTA buttons too */
+    .site-header .nav-actions .button {
+        padding: 0.5rem 0.95rem;
+        font-size: 0.92rem;
+    }
+}
+
+/* Always: ensure header CTA touch target is comfortable on every viewport */
+.site-header .nav-cta {
+    min-height: 40px;
+    display: inline-flex;
+    align-items: center;
+}
+
+/* Active nav-link highlight: a subtle pill so the current section is
+   discoverable. The view sets `nav_current` for the workspace already;
+   for the marketing nav we use [aria-current]. */
+.site-header .nav-links a[aria-current="page"] {
+    color: var(--brand-primary) !important;
+    background: rgba(56, 189, 248, 0.08);
 }
