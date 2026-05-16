@@ -2,8 +2,7 @@
 {% load static %}
 
 {% block extra_head %}
-{# Structured data so Google can index this as a discrete review-style page.
-   Helps individual /aeo-index/<domain>/ pages rank for "is X cited in ChatGPT" queries. #}
+{% comment %}Structured data so Google can index this as a discrete review-style page. Helps individual /aeo-index/<domain>/ pages rank for "is X cited in ChatGPT" queries.{% endcomment %}
 {% if entry.status == "completed" %}
 <script type="application/ld+json">
 {
