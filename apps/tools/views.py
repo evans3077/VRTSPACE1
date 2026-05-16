@@ -1847,11 +1847,16 @@ class WorkspaceOnboardingAuditPollView(LoginRequiredMixin, View):
             progress_step = 4
         else:
             progress_step = 5
+        # 6 scan phases (indices 0-5); each one accounts for ~16% of the bar.
+        # We hold at 90% while the final phase finishes so the bar never reads
+        # "100% but still working".
+        progress_percent = min(95, 10 + progress_step * 16)
         return render(request, "tools/onboarding/_step2_running.html", {
             "project": project,
             "running_audit": audit_run,
             "current_step": 2,
             "progress_step": progress_step,
+            "progress_percent": progress_percent,
             "progress_pages_crawled": pages,
         })
 

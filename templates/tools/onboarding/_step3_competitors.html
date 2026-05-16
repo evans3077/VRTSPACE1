@@ -9,6 +9,13 @@
       Confirm, swap, or add your own — up to {{ competitor_limit|default:4 }}.
       We'll benchmark your site against these every time you run an audit.
     </p>
+    <p class="onboarding-slots-counter" x-show="slots.length">
+      <span class="premium-pill">
+        <i class="fa-solid fa-check-double"></i>
+        <span x-text="slots.filter(s => s && s.trim()).length"></span>
+        of <span x-text="slots.length"></span> filled
+      </span>
+    </p>
   </div>
 
   {% if completed_audit %}

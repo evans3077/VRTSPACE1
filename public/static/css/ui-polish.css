@@ -2000,28 +2000,66 @@ body.shell-light .case-step .step-num {
     gap: 1.25rem;
 }
 
+.audit-progress-header {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 0.55rem;
+    gap: 1rem;
+}
+.audit-progress-label {
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--text-secondary);
+    font-weight: 700;
+}
+.audit-progress-percent {
+    font-size: 1.45rem;
+    font-weight: 900;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-variant-numeric: tabular-nums;
+}
+
 .audit-progress-bar {
-    height: 6px;
-    border-radius: 3px;
+    height: 8px;
+    border-radius: 4px;
     background: var(--border-glass);
     overflow: hidden;
 }
 
 .audit-progress-fill {
     height: 100%;
-    border-radius: 3px;
+    border-radius: 4px;
     background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));
+    width: 10%;                                 /* default; the inline style on
+                                                   the element wins when set */
+    transition: width 600ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* Subtle shimmer overlay so the bar still feels "alive" between polls, even
+   when the width hasn't moved. Pulses opacity only — width is now driven by
+   real audit progress (pages_crawled + status). */
 .audit-progress-animated {
-    animation: auditProgressPulse 2.5s ease-in-out infinite;
-    width: 60%;
+    position: relative;
+    overflow: hidden;
+}
+.audit-progress-animated::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.45), transparent);
+    animation: auditProgressShimmer 1.8s ease-in-out infinite;
 }
 
-@keyframes auditProgressPulse {
-    0%   { width: 15%; opacity: 0.7; }
-    50%  { width: 85%; opacity: 1; }
-    100% { width: 15%; opacity: 0.7; }
+@keyframes auditProgressShimmer {
+    0%   { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
 }
 
 .audit-scan-steps {
@@ -2132,4 +2170,166 @@ body.shell-light .case-step .step-num {
 
 body.shell-light .text-accent {
     color: var(--brand-primary-dark, #4f46e5);
+}
+
+/* =============================================================================
+   Priority A — Workspace dashboard polish
+   ─────────────────────────────────────────────────────────────────────────────
+   Mobile-first additive layer on top of the existing workspace-module-row
+   pattern.  Adds:
+     • A tone-coloured icon badge so each row is identifiable at a glance.
+     • A subtle lift / press transform on interaction (reuses the existing
+       transform + box-shadow pattern from feature-card-premium).
+     • Stronger score hierarchy in stat-tiles via gradient text — matches
+       the brand gradient used on the home page hero.
+   ========================================================================== */
+
+/* ── Module-row icon ─────────────────────────────────────────────────── */
+body.shell-light .workspace-module-row {
+    /* Existing rule lays out minmax(0, 1fr) auto. Widen to 3 columns so the
+       icon sits left, content centre, action right. */
+    grid-template-columns: 56px minmax(0, 1fr) auto;
+    transition: transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+    will-change: transform;
+}
+
+body.shell-light .workspace-module-row-icon {
+    width: 48px;
+    height: 48px;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2rem;
+    color: #fff;
+    background: linear-gradient(135deg, rgba(15, 23, 42, 0.92), rgba(15, 23, 42, 0.78));
+    flex-shrink: 0;
+}
+
+body.shell-light .workspace-module-row-audit .workspace-module-row-icon {
+    background: linear-gradient(135deg, #0d9488, #14b8a6);
+    box-shadow: 0 6px 18px rgba(20, 184, 166, 0.28);
+}
+body.shell-light .workspace-module-row-seo .workspace-module-row-icon {
+    background: linear-gradient(135deg, #1e293b, #334155);
+    box-shadow: 0 6px 18px rgba(15, 23, 42, 0.28);
+}
+body.shell-light .workspace-module-row-aeo .workspace-module-row-icon {
+    background: linear-gradient(135deg, #0284c7, #38bdf8);
+    box-shadow: 0 6px 18px rgba(56, 189, 248, 0.28);
+}
+body.shell-light .workspace-module-row-content .workspace-module-row-icon {
+    background: linear-gradient(135deg, #16a34a, #22c55e);
+    box-shadow: 0 6px 18px rgba(34, 197, 94, 0.28);
+}
+
+/* ── Hover lift / active press (hover only on capable devices) ───────── */
+@media (hover: hover) and (pointer: fine) {
+    body.shell-light .workspace-module-row:hover {
+        transform: translateY(-2px);
+        border-color: rgba(15, 23, 42, 0.16);
+        box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08);
+    }
+}
+body.shell-light .workspace-module-row:active {
+    transform: translateY(0);
+    box-shadow: 0 4px 10px rgba(15, 23, 42, 0.05);
+}
+
+/* ── Mobile collapse: icon column stays so visual identity survives ──── */
+@media (max-width: 820px) {
+    body.shell-light .workspace-module-row {
+        grid-template-columns: 48px minmax(0, 1fr);
+        row-gap: 0.85rem;
+    }
+    body.shell-light .workspace-module-row-actions {
+        grid-column: 1 / -1;
+    }
+    body.shell-light .workspace-module-row-actions .button {
+        width: 100%;
+        min-height: 44px;          /* touch-target floor */
+    }
+    body.shell-light .workspace-module-row-icon {
+        width: 42px;
+        height: 42px;
+        font-size: 1.05rem;
+        border-radius: 12px;
+    }
+}
+
+/* ── Stat-tile score hierarchy — gradient text on the headline value ── */
+body.shell-light .workspace-summary-grid .stat-tile h3 {
+    font-size: clamp(2.2rem, 5vw, 2.6rem);
+    line-height: 1;
+    background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-weight: 900;
+    letter-spacing: -0.03em;
+}
+body.shell-light .workspace-summary-grid .stat-tile p:last-child {
+    margin-top: 0.35rem;
+    font-size: 0.78rem;
+    color: var(--text-secondary);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+}
+
+/* ── Command-priority items: stronger ranking number on hover ────────── */
+body.shell-light .command-priority-num {
+    transition: transform 220ms ease;
+}
+body.shell-light .command-priority-item:hover .command-priority-num {
+    transform: scale(1.05);
+}
+
+/* =============================================================================
+   Priority B — Onboarding wizard polish
+   ─────────────────────────────────────────────────────────────────────────────
+   Mobile-first refinements on top of the existing onboarding-card pattern.
+   Adds:
+     • Tightening the chip row under step 1's intro (icons + value chips).
+     • A live "N of 4 filled" counter in step 3.
+     • Improved input-with-action spacing for touch targets ≥ 44px.
+   ========================================================================== */
+
+/* Step 3 — live progress counter under the intro */
+.onboarding-slots-counter {
+    margin: 0.75rem 0 0;
+}
+.onboarding-slots-counter .premium-pill {
+    background: rgba(56, 189, 248, 0.12);
+    border-color: rgba(56, 189, 248, 0.45);
+    color: var(--text-primary);
+    font-variant-numeric: tabular-nums;
+}
+body.shell-light .onboarding-slots-counter .premium-pill {
+    background: rgba(99, 102, 241, 0.1);
+    border-color: rgba(99, 102, 241, 0.35);
+    color: #312e81;
+}
+
+/* Step 3 — competitor input row touch target floor */
+.competitor-inputs-shell .input-with-action .form-control {
+    min-height: 48px;
+}
+.competitor-inputs-shell .input-with-action .button {
+    min-width: 44px;
+    min-height: 44px;
+}
+
+/* Mobile collapse: stack form-grid-2 in step 1 below 640px (existing rule
+   may already do this — this is a defensive override). */
+@media (max-width: 640px) {
+    .onboarding-card .form-grid-2 {
+        grid-template-columns: 1fr;
+    }
+    .onboarding-card .onboarding-form-actions {
+        flex-direction: column;
+    }
+    .onboarding-card .onboarding-form-actions .button {
+        width: 100%;
+        min-height: 48px;
 }

@@ -334,6 +334,13 @@
                     <div class="workspace-module-list">
                         {% for module in workspace_modules %}
                         <article class="workspace-module-row workspace-module-row-{{ module.tone }}">
+                            <div class="workspace-module-row-icon" aria-hidden="true">
+                                {% if module.tone == "audit" %}<i class="fa-solid fa-magnifying-glass"></i>
+                                {% elif module.tone == "seo" %}<i class="fa-solid fa-chart-line"></i>
+                                {% elif module.tone == "aeo" %}<i class="fa-solid fa-robot"></i>
+                                {% elif module.tone == "content" %}<i class="fa-solid fa-pen-nib"></i>
+                                {% else %}<i class="fa-solid fa-circle-dot"></i>{% endif %}
+                            </div>
                             <div class="workspace-module-row-main">
                                 <div class="workspace-module-row-head">
                                     <div>
