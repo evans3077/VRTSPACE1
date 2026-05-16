@@ -2769,3 +2769,191 @@ body.shell-light .audit-score-card-critical::before{ background: #dc2626; }
     color: var(--brand-primary) !important;
     background: rgba(56, 189, 248, 0.08);
 }
+
+
+/* =============================================================================
+   HOTFIX PATCH — Visual Bug Fixes
+   ─────────────────────────────────────────────────────────────────────────────
+   Fixes for: 1) auto-dismiss notifications, 2) sharp edges, 3) green progress
+   dots → brand colors, 4) stuck spinner, 5) crowded stacks
+   ========================================================================== */
+
+/* ── 0. Alpine.js hydration flash guard ────────────────────────────────────── */
+/* Hide Alpine-powered elements until Alpine initializes them.
+   Prevents raw template syntax or x-text placeholders from flashing. */
+[x-cloak] { display: none !important; }
+
+/* ── 1. Auto-dismiss flash notifications (CSS animation + JS below) ────────── */
+.flash[data-autodismiss] {
+    animation: flashFadeOut 0.4s ease forwards;
+    animation-delay: 3s;
+}
+
+@keyframes flashFadeOut {
+    0%   { opacity: 1; transform: translateY(0); max-height: 100px; margin-bottom: 0.65rem; padding: 1rem 1.25rem; }
+    70%  { opacity: 0; transform: translateY(-8px); }
+    100% { opacity: 0; transform: translateY(-8px); max-height: 0; margin-bottom: 0; padding: 0 1.25rem; overflow: hidden; }
+}
+
+/* ── 2. Border-radius consistency — catch sharp-edged boxes ────────────────── */
+/* Common workspace cards and panels that may lack border-radius */
+.workspace-project-row,
+.workspace-module-row,
+.workspace-create-panel,
+.workspace-action-panel,
+.workspace-dev-pill,
+.ws-status-tag,
+.result-alert-panel,
+.alert-panel,
+.form-flash,
+.form-flash > div,
+.onboarding-audit-badge,
+.premium-form .form-group input,
+.premium-form .form-group select,
+.premium-form .form-group textarea {
+    border-radius: var(--radius-md) !important;
+}
+
+/* Smaller elements: pills, tags, score badges */
+.score-pill,
+.seo-inline-tag,
+.workspace-project-stale-flag,
+.workspace-project-risk-pill,
+.premium-pill,
+.feature-tag,
+.ws-hub-eyebrow {
+    border-radius: var(--radius-sm) !important;
+}
+
+/* Ensure form controls across the board get radius */
+input:not([type="checkbox"]):not([type="radio"]):not([type="hidden"]),
+select,
+textarea {
+    border-radius: var(--radius-sm) !important;
+}
+
+/* Details/summary panels (accordion style) */
+details.system-card {
+    border-radius: var(--radius-lg) !important;
+    overflow: hidden;
+}
+
+/* ── 3. Progress step dots: replace green with brand colors ────────────────── */
+/* Onboarding steps 1-2-3 — completed dots use brand gradient not green */
+.onboarding-progress-step.is-done .onboarding-step-dot {
+    background: linear-gradient(135deg, var(--brand-primary, #38bdf8), var(--brand-secondary, #818cf8)) !important;
+    border-color: var(--brand-primary, #38bdf8) !important;
+    color: #fff;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.15);
+}
+
+/* Connector between done steps */
+.onboarding-progress-connector.is-done {
+    background: linear-gradient(90deg, var(--brand-primary, #38bdf8), var(--brand-secondary, #818cf8)) !important;
+}
+
+/* Audit scan steps: done state uses brand teal instead of green */
+.audit-scan-step.is-done {
+    color: var(--brand-primary, #38bdf8) !important;
+}
+
+.audit-scan-step.is-done .audit-scan-dot i {
+    color: var(--brand-primary, #38bdf8);
+}
+
+/* ── 4. Spinner keyframe (was missing!) ─────────────────────────────────────── */
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to   { transform: rotate(360deg); }
+}
+
+/* Reinforce the spinner animation in case it was not triggering */
+.audit-scan-spinner {
+    animation: spin 0.7s linear infinite !important;
+}
+
+/* The onboarding step-2 circle (fa-spin class fallback) */
+.onboarding-poll-note .fa-spin,
+.onboarding-audit-running .fa-spin {
+    animation: spin 1s linear infinite !important;
+}
+
+/* ── 5. Crowded stacks — consistent spacing between item blocks ──────────── */
+/* Dashboard page-level stack */
+.workspace-page-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1.75rem;
+}
+
+.workspace-page-stack > * + * {
+    margin-top: 0;  /* reset any old margin stacking */
+}
+
+/* Project list rows */
+.workspace-project-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.workspace-project-list .workspace-project-row {
+    margin-bottom: 0;  /* gap handles spacing now */
+}
+
+/* Module rows (audit, seo, aeo, content) in workspace */
+.workspace-primary-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.workspace-primary-stack > * {
+    margin-bottom: 0 !important;
+}
+
+/* Generic card stacks within system-card */
+.system-card > .section-heading + * {
+    margin-top: 1.25rem;
+}
+
+/* Dashboard summary grid spacing */
+.workspace-summary-grid {
+    gap: 1rem;
+}
+
+/* Onboarding form groups — prevent cramming */
+.onboarding-form .form-group + .form-group {
+    margin-top: 0.5rem;
+}
+
+/* Flash stack spacing */
+.flash-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.flash-stack .flash {
+    margin-bottom: 0;  /* gap handles it */
+}
+
+/* Audit result page sections */
+.audit-section + .audit-section {
+    margin-top: 2rem;
+}
+
+/* AEO engine grid spacing */
+.aeo-index-engine-grid {
+    gap: 1rem;
+}
+
+/* General workspace shell spacing */
+.workspace-shell-main {
+    padding-top: 1.5rem;
+    padding-bottom: 2rem;
+}
+
+.workspace-shell-header-wrap + .workspace-shell-main {
+    margin-top: 0;
+}

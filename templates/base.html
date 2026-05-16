@@ -98,11 +98,17 @@
     {% if messages %}
     <div class="container flash-stack" role="alert" aria-live="polite">
         {% for message in messages %}
-        <div class="flash flash-{{ message.tags|default:'info' }}" role="status">
+        <div class="flash flash-{{ message.tags|default:'info' }}" role="status" data-autodismiss>
             <span class="flash-text">{{ message }}</span>
         </div>
         {% endfor %}
     </div>
+    <script>
+    /* Auto-dismiss flash notifications after 3s — removes from DOM after animation */
+    document.querySelectorAll('.flash[data-autodismiss]').forEach(function(el) {
+        setTimeout(function() { el.remove(); }, 3500);
+    });
+    </script>
     {% endif %}
     <main>
         {% block content %}{% endblock %}
