@@ -3070,3 +3070,23 @@ body.shell-light .page-jump-link:hover {
     background: rgba(15, 23, 42, 0.04);
     color: #0f172a;
 }
+
+/* ── AEO workspace: consistent section spacing ────────────────────────── */
+.workspace-aeo-shell > .container-fluid > .page-stack {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* ── Dashboard: ensure stacks have gap even when grid overrides exist ─── */
+.workspace-dashboard-shell .workspace-primary-stack,
+.workspace-dashboard-shell .workspace-secondary-stack {
+    gap: 1.5rem !important;
+}
+
+/* ── Global: system-card siblings in any workspace shell ─────────────── */
+.workspace-seo-shell .system-card,
+.workspace-aeo-shell .system-card,
+.workspace-dashboard-shell .system-card {
+    margin-bottom: 0; /* gap on parent handles spacing */
+}

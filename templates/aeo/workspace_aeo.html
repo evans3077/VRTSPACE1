@@ -422,7 +422,7 @@
     {# ══════════════════════════════════════════════════════════════════════════ #}
     {# BUSINESS CONTEXT + AUDIT BASE                                            #}
     {# ══════════════════════════════════════════════════════════════════════════ #}
-    <div id="aeo-entity" style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.75rem; margin-bottom: 1.75rem;" class="aeo-entity-grid">
+    <div id="aeo-entity" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(340px, 1fr)); gap: 1.75rem; margin-bottom: 1.75rem;" class="aeo-entity-grid">
         <article class="system-card">
             <div class="aeo-section-head">
                 <span class="eyebrow">Business Context</span>
@@ -494,7 +494,7 @@
                         <strong style="color: #f1f5f9; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-robot" style="color: #38bdf8;"></i> AI Summary Snippets</strong>
                         <span class="aeo-pill aeo-pill-green">Ranking</span>
                     </div>
-                    <div style="display: grid; gap: 0.75rem; max-height: 240px; overflow-y: auto;">
+                    <div style="display: grid; gap: 0.75rem; max-height: none;">
                         {% for snippet in aeo_intelligence.aeo_overview.snippets %}
                         <div style="padding: 0.75rem; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);">
                             <p style="margin: 0; font-size: 0.85rem; color: #cbd5e1; line-height: 1.6;">{{ snippet }}</p>
@@ -509,7 +509,7 @@
                         <strong style="color: #f1f5f9; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-comments" style="color: #818cf8;"></i> People Also Ask</strong>
                         <span class="aeo-pill aeo-pill-purple">Intent Signals</span>
                     </div>
-                    <div style="display: grid; gap: 0.75rem; max-height: 240px; overflow-y: auto;">
+                    <div style="display: grid; gap: 0.75rem; max-height: none;">
                         {% for q in aeo_intelligence.related_questions %}
                         <div style="padding: 0.75rem; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06);">
                             <strong style="display: block; color: #f1f5f9; font-size: 0.88rem; margin-bottom: 0.35rem;">{{ q.question }}</strong>
@@ -526,7 +526,7 @@
                         <strong style="color: #f1f5f9; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-map-marker-alt" style="color: #4ade80;"></i> Local Pack</strong>
                         <span class="aeo-pill aeo-pill-green">Map Targeting</span>
                     </div>
-                    <div style="display: grid; gap: 0.75rem; max-height: 240px; overflow-y: auto;">
+                    <div style="display: grid; gap: 0.75rem; max-height: none;">
                         {% for place in aeo_intelligence.local_pack %}
                         <div style="padding: 0.75rem; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; gap: 1rem;">
                             <div>
@@ -906,7 +906,7 @@
     {# ══════════════════════════════════════════════════════════════════════════ #}
     {# CROSS-MODULE FOOTER                                                       #}
     {# ══════════════════════════════════════════════════════════════════════════ #}
-    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; margin-top: 0.5rem;">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.5rem; margin-top: 0.5rem;">
         <article class="system-card" style="border-top: 3px solid #38bdf8;">
             <p class="eyebrow" style="color: #38bdf8;">Apply to SEO</p>
             <h3 style="font-size: 1.2rem; margin-bottom: 0.5rem;">Entity gaps feed the keyword strategy</h3>
