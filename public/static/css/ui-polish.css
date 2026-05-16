@@ -2957,3 +2957,116 @@ details.system-card {
 .workspace-shell-header-wrap + .workspace-shell-main {
     margin-top: 0;
 }
+
+
+/* =============================================================================
+   SEO Workspace Layout — /workspace/seo/ spacing & structure
+   ─────────────────────────────────────────────────────────────────────────────
+   1. Consistent vertical spacing between all section-level cards
+   2. Inputs form more horizontal (form fields in 2-col grid)
+   3. Discovery sections (Market Surfaces / Citations / Backlinks) full-width vertical
+   4. Page Map full-width with responsive card grid
+   5. Backlink Prospects full-width
+   6. Site Structure + Keyword Clusters side-by-side
+   ========================================================================== */
+
+/* ── Master vertical rhythm: every direct child of the SEO shell gets gap ── */
+.workspace-seo-shell > .container-fluid {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+/* Ensure system-cards within the seo shell have breathing room */
+.workspace-seo-shell .system-card + .system-card,
+.workspace-seo-shell .layout-split-wide + .system-card,
+.workspace-seo-shell .system-card + .layout-split-wide,
+.workspace-seo-shell .layout-split + .system-card,
+.workspace-seo-shell .layout-split-wide + .layout-split-wide,
+.workspace-seo-shell .layout-split-wide + .layout-split,
+.workspace-seo-shell .workspace-report-grid + .workspace-report-card,
+.workspace-seo-shell .workspace-report-card + .system-card {
+    margin-top: 0; /* gap from flex parent handles this */
+}
+
+/* ── Inputs form: 2-col grid on desktop ──────────────────────────────────── */
+.workspace-seo-shell .premium-form {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem 1.5rem;
+}
+
+/* Full-width for the submit button row */
+.workspace-seo-shell .premium-form .button-mega,
+.workspace-seo-shell .premium-form button[type="submit"] {
+    grid-column: 1 / -1;
+}
+
+/* Stack to single column on narrow screens */
+@media (max-width: 640px) {
+    .workspace-seo-shell .premium-form {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── Clinical intelligence (GEO + Market Gap) equal split ─────────────── */
+.workspace-seo-shell #seo-clinical-intelligence {
+    grid-template-columns: 1fr 1fr;
+}
+@media (max-width: 980px) {
+    .workspace-seo-shell #seo-clinical-intelligence {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ── Data card grid: prevent cramped columns ──────────────────────────── */
+.workspace-seo-shell .data-card-grid {
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+}
+
+/* ── Discovery sections panel-scroll: remove max-height squeeze ────────── */
+.workspace-seo-shell .panel-scroll {
+    max-height: none;
+}
+
+/* ── Workspace report grid (Inputs + Benchmark State) ─────────────────── */
+.workspace-seo-shell .workspace-report-grid {
+    gap: 2rem;
+}
+
+/* ── Page jump nav: horizontal scroll on mobile ─────────────────────────── */
+.page-jump-links {
+    display: flex;
+    gap: 0.25rem;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+    padding-bottom: 0.25rem;
+}
+
+.page-jump-link {
+    white-space: nowrap;
+    padding: 0.5rem 0.85rem;
+    border-radius: var(--radius-sm);
+    font-size: 0.82rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    transition: background 0.15s ease, color 0.15s ease;
+    text-decoration: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+    .page-jump-link:hover {
+        background: rgba(56, 189, 248, 0.08);
+        color: var(--brand-primary);
+    }
+}
+
+body.shell-light .page-jump-link {
+    color: #475569;
+}
+body.shell-light .page-jump-link:hover {
+    background: rgba(15, 23, 42, 0.04);
+    color: #0f172a;
+}

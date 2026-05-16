@@ -465,14 +465,14 @@
             {% endif %}
 
             {% if seo_discovery_sections %}
-            <div class="compact-grid" style="margin-top: 1.5rem; gap: 1.5rem;">
+            <div style="margin-top: 1.5rem; display: flex; flex-direction: column; gap: 1.5rem;">
                 {% for section in seo_discovery_sections %}
                 {% if section.count %}
                 <article class="system-card" style="padding: 1.5rem;">
                     <p class="eyebrow" style="color: var(--signal);">{{ section.label }}</p>
                     <h3 style="font-size: 1.8rem; margin: 0.5rem 0; color: var(--text-primary);">{{ section.count }}</h3>
                     <p style="color: var(--text-secondary); font-size: 0.9rem;">{{ section.description }}</p>
-                    <div class="panel-scroll" style="margin-top: 1.25rem; max-height: 280px; display: grid; gap: 1rem;">
+                    <div style="margin-top: 1.25rem; display: grid; gap: 1rem;">
                         {% for item in section.items %}
                         <div style="padding: 1.25rem; border-radius: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
                             <div style="display: flex; justify-content: space-between; gap: 0.75rem; align-items: baseline; flex-wrap: wrap;">
@@ -865,11 +865,11 @@
                 </div>
             </article>
 
-            <div class="page-stack">
+            <div class="layout-split">
                 <article class="system-card">
                     <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                         <p class="eyebrow">Your Site Structure</p>
-                        <h2 style="font-size: 2rem;">What the current audit shows</h2>
+                        <h2 style="font-size: 1.5rem;">What the current audit shows</h2>
                     </div>
                     <div class="panel-scroll" style="display: grid; gap: 0.75rem;">
                         {% for page_type, count in seo_site_structure.summary.counts_by_type.items %}
@@ -884,7 +884,7 @@
                 <article class="system-card">
                     <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                         <p class="eyebrow">Keyword Clusters</p>
-                        <h2 style="font-size: 2rem;">Demand and language signals</h2>
+                        <h2 style="font-size: 1.5rem;">Demand and language signals</h2>
                     </div>
                     <div class="panel-scroll" style="display: grid; gap: 1rem;">
                         {% for label, keywords in seo_keyword_clusters.items %}
@@ -900,63 +900,61 @@
             </div>
         </div>
 
-        <div id="seo-opportunities" class="layout-split">
-            <article class="system-card">
-                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                    <p class="eyebrow">Keyword Opportunity Queue</p>
-                    <h2 style="font-size: 2rem;">Where search demand should go next</h2>
-                </div>
-                <div class="panel-scroll" style="display: grid; gap: 1.25rem;">
-                    {% for item in seo_keyword_opportunities %}
-                    <div style="padding: 1.5rem; border-radius: 18px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
-                        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
-                            <strong style="color: var(--text-primary); font-size: 1.15rem;">{{ item.keyword }}</strong>
-                            <span class="score-pill score-high" style="font-size: 0.7rem;">{{ item.intent }}</span>
-                        </div>
-                        <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6;">
-                            <strong style="display: block; color: var(--text-primary); margin-bottom: 0.4rem;">Market Rationale</strong>
-                            {{ item.reason }}
-                        </div>
-                        <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.82rem;">
-                            Status: <strong style="color: var(--text-primary); text-transform: capitalize;">{{ item.status|cut:"_" }}</strong>
-                        </div>
+        <article id="seo-opportunities" class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Keyword Opportunity Queue</p>
+                <h2 style="font-size: 2rem;">Where search demand should go next</h2>
+            </div>
+            <div class="panel-scroll" style="display: grid; gap: 1.25rem;">
+                {% for item in seo_keyword_opportunities %}
+                <div style="padding: 1.5rem; border-radius: 18px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
+                        <strong style="color: var(--text-primary); font-size: 1.15rem;">{{ item.keyword }}</strong>
+                        <span class="score-pill score-high" style="font-size: 0.7rem;">{{ item.intent }}</span>
                     </div>
-                    {% empty %}
-                    <div style="padding: 1.5rem; border-radius: 16px; background: rgba(255,255,255,0.01); color: var(--text-muted); border: 1px solid var(--border-glass);">
-                        Save SEO context to generate the keyword queue.
+                    <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6;">
+                        <strong style="display: block; color: var(--text-primary); margin-bottom: 0.4rem;">Market Rationale</strong>
+                        {{ item.reason }}
                     </div>
-                    {% endfor %}
+                    <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.82rem;">
+                        Status: <strong style="color: var(--text-primary); text-transform: capitalize;">{{ item.status|cut:"_" }}</strong>
+                    </div>
                 </div>
-            </article>
+                {% empty %}
+                <div style="padding: 1.5rem; border-radius: 16px; background: rgba(255,255,255,0.01); color: var(--text-muted); border: 1px solid var(--border-glass);">
+                    Save SEO context to generate the keyword queue.
+                </div>
+                {% endfor %}
+            </div>
+        </article>
 
-            <article class="system-card">
-                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                    <p class="eyebrow">Page Map</p>
-                    <h2 style="font-size: 2rem;">Which page types need work</h2>
-                </div>
-                <div class="panel-scroll" style="display: grid; gap: 1.25rem;">
-                    {% for item in seo_page_map %}
-                    <div style="padding: 1.5rem; border-radius: 18px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
-                        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
-                            <strong style="color: var(--text-primary); font-size: 1.15rem;">{{ item.page_type_label }}</strong>
-                            <span class="score-pill {% if item.status == 'missing' %}score-low{% elif item.status == 'expand' %}score-medium{% else %}score-high{% endif %}" style="font-size: 0.7rem; text-transform: capitalize;">{{ item.status }}</span>
-                        </div>
-                        <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6;">
-                            <strong style="display: block; color: var(--text-primary); margin-bottom: 0.4rem;">Mapping Strategy</strong>
-                            {{ item.action }}
-                        </div>
-                        <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.82rem;">
-                            <strong style="color: var(--text-primary);">Presence:</strong> {{ item.site_count }} page{{ item.site_count|pluralize }} | {{ item.competitor_presence }}/{{ item.competitor_count }} peers publish this
-                        </div>
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Page Map</p>
+                <h2 style="font-size: 2rem;">Which page types need work</h2>
+            </div>
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.25rem;">
+                {% for item in seo_page_map %}
+                <div style="padding: 1.5rem; border-radius: 18px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
+                        <strong style="color: var(--text-primary); font-size: 1.15rem;">{{ item.page_type_label }}</strong>
+                        <span class="score-pill {% if item.status == 'missing' %}score-low{% elif item.status == 'expand' %}score-medium{% else %}score-high{% endif %}" style="font-size: 0.7rem; text-transform: capitalize;">{{ item.status }}</span>
                     </div>
-                    {% empty %}
-                    <div style="padding: 1.5rem; border-radius: 16px; background: rgba(255,255,255,0.01); color: var(--text-muted); border: 1px solid var(--border-glass);">
-                        The page map appears after the first successful SEO benchmark refresh.
+                    <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6;">
+                        <strong style="display: block; color: var(--text-primary); margin-bottom: 0.4rem;">Mapping Strategy</strong>
+                        {{ item.action }}
                     </div>
-                    {% endfor %}
+                    <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.82rem;">
+                        <strong style="color: var(--text-primary);">Presence:</strong> {{ item.site_count }} page{{ item.site_count|pluralize }} | {{ item.competitor_presence }}/{{ item.competitor_count }} peers publish this
+                    </div>
                 </div>
-            </article>
-        </div>
+                {% empty %}
+                <div style="padding: 1.5rem; border-radius: 16px; background: rgba(255,255,255,0.01); color: var(--text-muted); border: 1px solid var(--border-glass);">
+                    The page map appears after the first successful SEO benchmark refresh.
+                </div>
+                {% endfor %}
+            </div>
+        </article>
 
         <article id="seo-backlinks" class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
@@ -1052,93 +1050,91 @@
         </article>
 
         {% if backlink_action.available %}
-        <div class="layout-split-wide">
-            <article class="system-card">
-                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                    <p class="eyebrow">Linkable Assets</p>
-                    <h2 style="font-size: 2rem;">Pages worth promoting for backlinks</h2>
-                </div>
-                {% if backlink_summary %}
-                <div class="system-grid" style="margin-bottom: 1.5rem; gap: 1.5rem;">
-                    <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Assets</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ backlink_summary.linkable_asset_count|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Pages or drafts worth promoting</p></article>
-                    <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Prospects</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ backlink_summary.prospect_count|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Targets scored from live discovery</p></article>
-                    <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Avg Score</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ backlink_summary.average_total_score|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Average fit across current prospects</p></article>
-                </div>
-                {% endif %}
-                <div class="panel-scroll" style="display: grid; gap: 1.25rem;">
-                    {% for asset in backlink_linkable_assets %}
-                    <div style="padding: 1.5rem; border-radius: 18px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
-                        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
-                            <strong style="color: var(--text-primary); font-size: 1.1rem;">{{ asset.asset_title }}</strong>
-                            <span class="score-pill score-high" style="font-size: 0.7rem;">Priority {{ asset.priority_score }}</span>
-                        </div>
-                        <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6;">
-                            <strong style="display: block; color: var(--text-primary); margin-bottom: 0.4rem;">Pitch Hook</strong>
-                            {{ asset.pitch_hook }}
-                        </div>
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Linkable Assets</p>
+                <h2 style="font-size: 2rem;">Pages worth promoting for backlinks</h2>
+            </div>
+            {% if backlink_summary %}
+            <div class="system-grid" style="margin-bottom: 1.5rem; gap: 1.5rem;">
+                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Assets</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ backlink_summary.linkable_asset_count|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Pages or drafts worth promoting</p></article>
+                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Prospects</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ backlink_summary.prospect_count|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Targets scored from live discovery</p></article>
+                <article class="system-card" style="padding: 1.5rem;"><p class="eyebrow" style="color: var(--signal);">Avg Score</p><h3 style="font-size: 1.8rem; margin-top: 0.5rem; color: var(--text-primary);">{{ backlink_summary.average_total_score|default:0 }}</h3><p style="color: var(--text-secondary); margin-top: 0.5rem;">Average fit across current prospects</p></article>
+            </div>
+            {% endif %}
+            <div class="panel-scroll" style="display: grid; gap: 1.25rem;">
+                {% for asset in backlink_linkable_assets %}
+                <div style="padding: 1.5rem; border-radius: 18px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
+                        <strong style="color: var(--text-primary); font-size: 1.1rem;">{{ asset.asset_title }}</strong>
+                        <span class="score-pill score-high" style="font-size: 0.7rem;">Priority {{ asset.priority_score }}</span>
                     </div>
-                    {% empty %}
-                    <div style="padding: 1.5rem; border-radius: 16px; background: rgba(255,255,255,0.01); border: 1px solid var(--border-glass); color: var(--text-muted);">
-                        Linkable asset recommendations will appear after the SEO refresh.
+                    <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6;">
+                        <strong style="display: block; color: var(--text-primary); margin-bottom: 0.4rem;">Pitch Hook</strong>
+                        {{ asset.pitch_hook }}
                     </div>
-                    {% endfor %}
                 </div>
-            </article>
+                {% empty %}
+                <div style="padding: 1.5rem; border-radius: 16px; background: rgba(255,255,255,0.01); border: 1px solid var(--border-glass); color: var(--text-muted);">
+                    Linkable asset recommendations will appear after the SEO refresh.
+                </div>
+                {% endfor %}
+            </div>
+        </article>
 
-            <article class="system-card">
-                <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                    <p class="eyebrow">Backlink Prospects</p>
-                    <h2 style="font-size: 2rem;">Who should link to what</h2>
-                </div>
-                {% if backlink_errors %}
-                <div style="margin-bottom: 1rem; padding: 1rem; border-radius: 16px; background: rgba(220, 38, 38, 0.08); color: #991b1b; line-height: 1.6;">
-                    <strong style="display: block; margin-bottom: 0.35rem;">Backlink discovery warnings</strong>
-                    {% for item in backlink_errors %}
-                    <div>{{ item.query }}{% if item.provider %} ({{ item.provider }}){% endif %}: {{ item.message }}</div>
-                    {% endfor %}
-                </div>
-                {% endif %}
-                <div class="panel-scroll panel-scroll-tall" style="display: grid; gap: 1.25rem;">
-                    {% for prospect in backlink_prospects %}
-                    <div style="padding: 1.5rem; border-radius: 18px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
-                        <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
-                            <strong style="color: var(--text-primary); font-size: 1.1rem;">{{ prospect.domain }}</strong>
-                            <span class="score-pill score-high" style="font-size: 0.7rem;">Score {{ prospect.total_score }}</span>
-                        </div>
-                        <div style="margin-top: 0.75rem; color: var(--text-secondary); font-size: 0.82rem;">
-                            {{ prospect.get_prospect_type_display }} &mdash; Target: <strong style="color: var(--text-primary);">{{ prospect.target_asset_title }}</strong>
-                        </div>
-                        <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6;">
-                            <strong style="display: block; color: var(--text-primary); margin-bottom: 0.4rem;">Pitch angle</strong>
-                            {{ prospect.outreach_packet.pitch_angle|default:"No pitch angle generated yet." }}
-                        </div>
-                        <form method="post" action="{% url 'seo:workspace-backlink-prospect-update' prospect.pk %}" style="margin-top: 1.25rem; display: grid; gap: 1rem;">
-                            {% csrf_token %}
-                            <div style="display: grid; grid-template-columns: 0.8fr 1fr; gap: 1rem;">
-                                <label style="display: grid; gap: 0.4rem;">
-                                    <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-primary);">Status</span>
-                                    <select name="status" style="background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-glass);">
-                                        {% for value, label in backlink_status_choices %}
-                                        <option value="{{ value }}"{% if prospect.status == value %} selected{% endif %}>{{ label }}</option>
-                                        {% endfor %}
-                                    </select>
-                                </label>
-                                <label style="display: grid; gap: 0.4rem;">
-                                    <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-primary);">Notes</span>
-                                    <input type="text" name="notes" value="{{ prospect.metadata.notes }}" placeholder="Add note..." style="background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-glass);">
-                                </label>
-                            </div>
-                            <button type="submit" class="button button-secondary">Update Prospect</button>
-                        </form>
+        <article class="system-card">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <p class="eyebrow">Backlink Prospects</p>
+                <h2 style="font-size: 2rem;">Who should link to what</h2>
+            </div>
+            {% if backlink_errors %}
+            <div style="margin-bottom: 1rem; padding: 1rem; border-radius: 16px; background: rgba(220, 38, 38, 0.08); color: #991b1b; line-height: 1.6;">
+                <strong style="display: block; margin-bottom: 0.35rem;">Backlink discovery warnings</strong>
+                {% for item in backlink_errors %}
+                <div>{{ item.query }}{% if item.provider %} ({{ item.provider }}){% endif %}: {{ item.message }}</div>
+                {% endfor %}
+            </div>
+            {% endif %}
+            <div style="display: grid; gap: 1.25rem;">
+                {% for prospect in backlink_prospects %}
+                <div style="padding: 1.5rem; border-radius: 18px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; align-items: baseline;">
+                        <strong style="color: var(--text-primary); font-size: 1.1rem;">{{ prospect.domain }}</strong>
+                        <span class="score-pill score-high" style="font-size: 0.7rem;">Score {{ prospect.total_score }}</span>
                     </div>
-                    {% empty %}
-                    <div style="padding: 1.5rem; border-radius: 16px; background: rgba(255,255,255,0.01); border: 1px solid var(--border-glass); color: var(--text-muted);">
-                        No prospects yet. Run SEO refresh to generate targets.
+                    <div style="margin-top: 0.75rem; color: var(--text-secondary); font-size: 0.82rem;">
+                        {{ prospect.get_prospect_type_display }} &mdash; Target: <strong style="color: var(--text-primary);">{{ prospect.target_asset_title }}</strong>
                     </div>
-                    {% endfor %}
+                    <div style="margin-top: 1rem; color: var(--text-secondary); font-size: 0.88rem; line-height: 1.6;">
+                        <strong style="display: block; color: var(--text-primary); margin-bottom: 0.4rem;">Pitch angle</strong>
+                        {{ prospect.outreach_packet.pitch_angle|default:"No pitch angle generated yet." }}
+                    </div>
+                    <form method="post" action="{% url 'seo:workspace-backlink-prospect-update' prospect.pk %}" style="margin-top: 1.25rem; display: grid; gap: 1rem;">
+                        {% csrf_token %}
+                        <div style="display: grid; grid-template-columns: 0.8fr 1fr; gap: 1rem;">
+                            <label style="display: grid; gap: 0.4rem;">
+                                <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-primary);">Status</span>
+                                <select name="status" style="background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-glass);">
+                                    {% for value, label in backlink_status_choices %}
+                                    <option value="{{ value }}"{% if prospect.status == value %} selected{% endif %}>{{ label }}</option>
+                                    {% endfor %}
+                                </select>
+                            </label>
+                            <label style="display: grid; gap: 0.4rem;">
+                                <span style="font-size: 0.78rem; font-weight: 700; color: var(--text-primary);">Notes</span>
+                                <input type="text" name="notes" value="{{ prospect.metadata.notes }}" placeholder="Add note..." style="background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-glass);">
+                            </label>
+                        </div>
+                        <button type="submit" class="button button-secondary">Update Prospect</button>
+                    </form>
                 </div>
-            </article>
-        </div>
+                {% empty %}
+                <div style="padding: 1.5rem; border-radius: 16px; background: rgba(255,255,255,0.01); border: 1px solid var(--border-glass); color: var(--text-muted);">
+                    No prospects yet. Run SEO refresh to generate targets.
+                </div>
+                {% endfor %}
+            </div>
+        </article>
         {% else %}
         <article class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
