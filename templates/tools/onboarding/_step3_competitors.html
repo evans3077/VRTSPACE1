@@ -1,30 +1,25 @@
 <div class="onboarding-card glass-panel" id="onboarding-step-content"
-  x-data="competitorWizard({{ competitor_suggestions|safe }})"
+  x-data="step3Wizard({{ competitor_suggestions|safe }}, {{ prompt_suggestions|default:'[]'|safe }})"
   x-cloak
+  style="padding: 2.25rem; border-radius: 18px;"
 >
-  <div class="onboarding-card-intro">
-    <p class="feature-tag">Step 3 of 3 — Almost done</p>
-    <h2>Topics, competitors, and you're done.</h2>
-    <p class="section-text">
-      Tell us the topics and keywords your site should rank and be cited for — we'll use these to focus your AI Visibility checks. Then confirm your competitors for benchmarking.
-    </p>
-    <p class="onboarding-slots-counter" x-show="slots.length">
-      <span class="premium-pill">
-        <i class="fa-solid fa-check-double"></i>
-        <span x-text="slots.filter(s => s && s.trim()).length"></span>
-        of <span x-text="slots.length"></span> filled
-      </span>
+  <div class="onboarding-card-intro" style="text-align: center; margin-bottom: 1.25rem;">
+    <p class="feature-tag" style="margin: 0 0 0.55rem;">Step 3 &middot; Almost there</p>
+    <h2 style="font-size: clamp(1.45rem, 2.6vw, 1.85rem); margin: 0 0 0.4rem; line-height: 1.25;">Pick what to track — we'll do the rest</h2>
+    <p class="text-muted" style="max-width: 560px; margin: 0 auto; font-size: 0.95rem; line-height: 1.6;">
+      Tap the AI prompts you want to be cited for, then confirm your competitors. Both are editable later.
     </p>
   </div>
 
   {% if completed_audit %}
-  <div class="onboarding-audit-badge">
-    <i class="fa-solid fa-circle-check text-success"></i>
-    Audit complete &mdash; overall score
-    <strong>{{ completed_audit.overall_score }}/100</strong>.
-    <a href="{% url 'tools:audit-result' pk=completed_audit.pk %}" class="link-inline" target="_blank">
-      View full report <i class="fa-solid fa-arrow-up-right-from-square"></i>
-    </a>
+  <div class="onboarding-audit-badge" style="margin-bottom: 1.5rem; padding: 0.85rem 1.1rem; background: rgba(16,185,129,0.08); border: 1px solid rgba(16,185,129,0.2); border-radius: 12px; display: flex; align-items: center; gap: 0.75rem;">
+    <i class="fa-solid fa-circle-check" style="color: #10b981; font-size: 1.2rem;"></i>
+    <div style="flex: 1;">
+      <strong>Audit complete &middot; overall score {{ completed_audit.overall_score }}/100</strong>
+      <a href="{% url 'tools:audit-result' pk=completed_audit.pk %}" target="_blank" style="margin-left: 0.5rem; color: var(--brand-primary); text-decoration: none; font-size: 0.85rem;">
+        View full report <i class="fa-solid fa-arrow-up-right-from-square" style="font-size: 0.75rem;"></i>
+      </a>
+    </div>
   </div>
   {% endif %}
 
@@ -36,23 +31,67 @@
   >
     {% csrf_token %}
 
-    <div class="form-group" style="margin-bottom: 1.5rem;">
-      <label for="id_key_topics" class="form-label">Key topics &amp; keywords <span style="color: var(--text-muted); font-weight: 400;">(optional)</span></label>
-      <textarea
-        id="id_key_topics"
-        name="key_topics"
-        class="form-control"
-        rows="3"
-        placeholder="e.g. AI SEO tools, answer engine optimization, AEO for agencies"
-      >{{ project.notes|default:'' }}</textarea>
-      <p class="form-hint">What should AI chatbots cite you for? We'll focus your AI Visibility checks on these.</p>
+    {# ── A. Smart prompt suggestions ─────────────────────────────────── #}
+    <div style="margin-bottom: 1.75rem;">
+      <label class="form-label" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; margin-bottom: 0.4rem;">
+        <i class="fa-solid fa-bullseye" style="color: var(--brand-primary);"></i>
+        AI prompts to track
+        <span style="font-weight: 400; color: var(--text-muted); font-size: 0.82rem;">(tap to select)</span>
+      </label>
+      <p class="form-hint" style="margin: 0 0 0.75rem;">We'll watch ChatGPT, Gemini, and Perplexity for these queries and tell you when you're cited.</p>
+
+      {% if prompt_suggestions %}
+      <div class="ws-prompt-chip-grid">
+        {% for sug in prompt_suggestions %}
+        <button type="button" class="ws-prompt-chip" :class="{ 'is-selected': selectedPrompts.includes('{{ sug|escapejs }}') }"
+                @click="togglePrompt('{{ sug|escapejs }}')">
+          <i class="fa-solid fa-plus" x-show="!selectedPrompts.includes('{{ sug|escapejs }}')"></i>
+          <i class="fa-solid fa-check" x-show="selectedPrompts.includes('{{ sug|escapejs }}')"></i>
+          <span>{{ sug }}</span>
+        </button>
+        {% endfor %}
+      </div>
+      {% endif %}
+
+      {# Add custom prompt #}
+      <div style="display: flex; gap: 0.5rem; margin-top: 0.75rem;">
+        <input type="text" placeholder="Or type your own prompt — e.g. 'best CRM for agencies'"
+               x-model="customPrompt"
+               @keydown.enter.prevent="addCustomPrompt()"
+               class="form-control" style="flex: 1;">
+        <button type="button" class="button button-secondary" @click="addCustomPrompt()" :disabled="!customPrompt.trim()">
+          <i class="fa-solid fa-plus"></i>&nbsp; Add
+        </button>
+      </div>
+
+      {# Hidden inputs — one per selected prompt — submitted to backend #}
+      <template x-for="prompt in selectedPrompts" :key="prompt">
+        <input type="hidden" name="selected_prompts" :value="prompt">
+      </template>
+
+      <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0.7rem 0 0; display: flex; gap: 0.4rem; align-items: center;">
+        <span class="premium-pill" style="background: rgba(56,189,248,0.1); border-color: rgba(56,189,248,0.25);">
+          <span x-text="selectedPrompts.length"></span> selected
+        </span>
+        <span x-show="selectedPrompts.length === 0">Pick 2–5 to start.</span>
+        <span x-show="selectedPrompts.length > 0">Great — you can edit these anytime from the Prompts tab.</span>
+      </p>
     </div>
 
-    <div class="competitor-inputs-shell">
-      <template x-for="(url, idx) in slots" :key="idx">
-        <div class="form-group competitor-input-row">
-          <label :for="'competitor_' + idx" class="form-label sr-only" x-text="'Competitor ' + (idx + 1)"></label>
-          <div class="input-with-action">
+    {# ── B. Competitors ──────────────────────────────────────────────── #}
+    <div style="margin-bottom: 1.5rem;">
+      <label class="form-label" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600; margin-bottom: 0.4rem;">
+        <i class="fa-solid fa-people-arrows" style="color: var(--brand-primary);"></i>
+        Competitors
+        <span style="font-weight: 400; color: var(--text-muted); font-size: 0.82rem;">(optional)</span>
+      </label>
+      <p class="form-hint" style="margin: 0 0 0.75rem;">
+        {% if competitor_suggestions %}We pre-filled what we found. Edit or remove anything that's wrong.{% else %}Add up to 4 competitor URLs to benchmark against.{% endif %}
+      </p>
+
+      <div class="competitor-inputs-shell" style="display: grid; gap: 0.45rem;">
+        <template x-for="(url, idx) in slots" :key="idx">
+          <div class="input-with-action" style="display: flex; gap: 0.4rem; align-items: center;">
             <input
               type="url"
               :id="'competitor_' + idx"
@@ -60,39 +99,86 @@
               class="form-control"
               :placeholder="'https://competitor' + (idx + 1) + '.com'"
               x-model="slots[idx]"
+              style="flex: 1;"
             >
-            <button
-              type="button"
-              class="button button-ghost button-sm"
-              @click="clear(idx)"
-              x-show="slots[idx]"
-              aria-label="Clear"
-            ><i class="fa-solid fa-xmark"></i></button>
+            <button type="button" class="button button-ghost" style="padding: 0.4rem 0.6rem;"
+                    @click="clear(idx)" x-show="slots[idx]" aria-label="Clear">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
           </div>
-        </div>
-      </template>
+        </template>
+      </div>
     </div>
 
-    <div class="onboarding-form-actions">
-      <button type="submit" class="button button-primary onboarding-cta">
-        Save &amp; open workspace <i class="fa-solid fa-arrow-right"></i>
+    <div class="onboarding-form-actions" style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
+      <button type="submit" class="button button-primary onboarding-cta" style="flex: 1; padding: 0.95rem; font-size: 1rem;">
+        Save &amp; open workspace&nbsp; <i class="fa-solid fa-arrow-right"></i>
       </button>
-      <a href="{% url 'tools:workspace-dashboard' %}" class="button button-ghost">
-        Skip competitors for now
+      <a href="{% url 'tools:workspace-onboarding-complete' %}" class="button button-ghost" style="font-size: 0.85rem;">
+        Skip for now
       </a>
     </div>
   </form>
 </div>
 
+<style>
+.ws-prompt-chip-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 0.5rem;
+}
+.ws-prompt-chip {
+    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.65rem 0.85rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-glass);
+    background: rgba(255,255,255,0.02);
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s;
+    line-height: 1.4;
+}
+.ws-prompt-chip i { color: var(--text-muted); font-size: 0.78rem; flex-shrink: 0; }
+.ws-prompt-chip:hover {
+    background: rgba(56,189,248,0.06);
+    border-color: rgba(56,189,248,0.25);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+.ws-prompt-chip:hover i { color: var(--brand-primary); }
+.ws-prompt-chip.is-selected {
+    background: rgba(56,189,248,0.12);
+    border-color: var(--brand-primary);
+    color: var(--text-primary);
+}
+.ws-prompt-chip.is-selected i { color: var(--brand-primary); }
+</style>
+
 <script>
-function competitorWizard(suggestions) {
-  // Pad suggestions to 4 slots with empty strings
+function step3Wizard(competitorSuggestions, promptSuggestions) {
   const limit = 4;
-  const initial = [...(suggestions || [])].slice(0, limit);
+  const initial = [...(competitorSuggestions || [])].slice(0, limit);
   while (initial.length < limit) initial.push('');
+  const initialPrompts = (promptSuggestions || []).slice(0, 3);  // first 3 pre-selected
   return {
     slots: initial,
+    selectedPrompts: [...initialPrompts],
+    customPrompt: '',
     clear(idx) { this.slots[idx] = ''; },
+    togglePrompt(p) {
+      const i = this.selectedPrompts.indexOf(p);
+      if (i === -1) this.selectedPrompts.push(p);
+      else this.selectedPrompts.splice(i, 1);
+    },
+    addCustomPrompt() {
+      const v = (this.customPrompt || '').trim();
+      if (v && !this.selectedPrompts.includes(v) && this.selectedPrompts.length < 10) {
+        this.selectedPrompts.push(v);
+        this.customPrompt = '';
+      }
+    },
   };
 }
 </script>

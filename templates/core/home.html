@@ -82,6 +82,32 @@
     </div>
 </section>
 
+<section style="padding: 2.5rem 0 0;">
+    <div class="container" style="text-align: center;">
+        <p style="font-size: 0.72rem; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--text-muted); margin: 0 0 1.25rem;">
+            Tracks visibility across the engines that matter most
+        </p>
+        <div style="display: flex; justify-content: center; flex-wrap: wrap; gap: 1.5rem 2.4rem; align-items: center; opacity: 0.75;">
+            <div class="vrt-brand-row-item"><i class="fa-solid fa-comments" style="color: #10a37f;"></i> ChatGPT</div>
+            <div class="vrt-brand-row-item"><i class="fa-solid fa-gem" style="color: #4285f4;"></i> Gemini</div>
+            <div class="vrt-brand-row-item"><i class="fa-solid fa-magnifying-glass" style="color: #a855f7;"></i> Perplexity</div>
+            <div class="vrt-brand-row-item"><i class="fa-brands fa-google" style="color: #ea4335;"></i> Google AI Overviews</div>
+            <div class="vrt-brand-row-item"><i class="fa-solid fa-robot" style="color: #f97316;"></i> Claude</div>
+            <div class="vrt-brand-row-item"><i class="fa-solid fa-microsoft" style="color: #0078d4;"></i> Bing Copilot</div>
+        </div>
+    </div>
+    <style>
+    .vrt-brand-row-item {
+        display: inline-flex; align-items: center; gap: 0.5rem;
+        font-size: 0.92rem; font-weight: 600; color: var(--text-secondary);
+        letter-spacing: 0.01em;
+    }
+    @media (max-width: 720px) {
+        .vrt-brand-row-item { font-size: 0.82rem; }
+    }
+    </style>
+</section>
+
 <section class="proof-section" style="padding: 4rem 0; background: rgba(15, 23, 42, 0.3);">
     <div class="container hero-proof-grid">
         {% for item in results %}
@@ -146,6 +172,127 @@
             </ul>
         </div>
     </div>
+</section>
+
+<section style="padding: 6rem 0; border-top: 1px solid var(--border-glass); background: radial-gradient(ellipse at 70% 30%, rgba(56,189,248,0.05), transparent 60%);">
+    <div class="container">
+        <div class="section-heading" style="text-align: center; max-width: 720px; margin: 0 auto 3rem;">
+            <p class="feature-tag">Your workspace</p>
+            <h2 style="font-size: clamp(2rem, 4vw, 2.75rem); margin: 0.5rem 0;">Track the prompts your customers actually ask AI.</h2>
+            <p class="text-secondary" style="font-size: 1.1rem; margin-top: 1rem;">
+                Add a query, see who AI cites. Refresh any time. Watch your share of voice climb as you ship fixes.
+            </p>
+        </div>
+
+        <div class="glass-panel" style="padding: 2rem; border-radius: 18px; max-width: 1080px; margin: 0 auto; box-shadow: 0 40px 100px -40px rgba(56,189,248,0.25);">
+            {# ── Mock prompt rows ────────────────────────────────────── #}
+            <div style="display: grid; gap: 0.75rem;">
+                {# Row 1 — cited #}
+                <div class="vrt-mock-row">
+                    <div style="flex: 1;">
+                        <strong style="font-size: 1rem;">best AEO agency for B2B SaaS</strong>
+                        <div style="display: flex; gap: 0.4rem; margin-top: 0.3rem; flex-wrap: wrap;">
+                            <span class="vrt-mock-pill" style="background: rgba(99,102,241,0.12); color: #818cf8;">Comparison</span>
+                            <span style="font-size: 0.78rem; color: var(--text-muted);">checked 2 hours ago</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right; min-width: 120px;">
+                        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;">Citation</div>
+                        <div style="color: #10b981; font-weight: 800; font-size: 0.95rem;"><i class="fa-solid fa-circle-check"></i> Cited</div>
+                    </div>
+                    <div style="text-align: right; min-width: 80px;">
+                        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;">Share</div>
+                        <div style="color: var(--brand-primary); font-weight: 800; font-size: 1.1rem;">68%</div>
+                    </div>
+                </div>
+
+                {# Row 2 — not cited #}
+                <div class="vrt-mock-row">
+                    <div style="flex: 1;">
+                        <strong style="font-size: 1rem;">AI SEO agency for fintech</strong>
+                        <div style="display: flex; gap: 0.4rem; margin-top: 0.3rem; flex-wrap: wrap;">
+                            <span class="vrt-mock-pill" style="background: rgba(245,158,11,0.12); color: #f59e0b;">Commercial</span>
+                            <span style="font-size: 0.78rem; color: var(--text-muted);">checked 2 hours ago</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right; min-width: 120px;">
+                        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;">Citation</div>
+                        <div style="color: #f59e0b; font-weight: 800; font-size: 0.95rem;"><i class="fa-solid fa-triangle-exclamation"></i> Not cited</div>
+                    </div>
+                    <div style="text-align: right; min-width: 80px;">
+                        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;">Share</div>
+                        <div style="color: var(--text-muted); font-weight: 800; font-size: 1.1rem;">12%</div>
+                    </div>
+                </div>
+
+                {# Row 3 — cited #}
+                <div class="vrt-mock-row">
+                    <div style="flex: 1;">
+                        <strong style="font-size: 1rem;">how to optimize content for Perplexity citations</strong>
+                        <div style="display: flex; gap: 0.4rem; margin-top: 0.3rem; flex-wrap: wrap;">
+                            <span class="vrt-mock-pill" style="background: rgba(16,185,129,0.12); color: #10b981;">Informational</span>
+                            <span style="font-size: 0.78rem; color: var(--text-muted);">checked 2 hours ago</span>
+                        </div>
+                    </div>
+                    <div style="text-align: right; min-width: 120px;">
+                        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;">Citation</div>
+                        <div style="color: #10b981; font-weight: 800; font-size: 0.95rem;"><i class="fa-solid fa-circle-check"></i> Cited</div>
+                    </div>
+                    <div style="text-align: right; min-width: 80px;">
+                        <div style="font-size: 0.7rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em;">Share</div>
+                        <div style="color: var(--brand-primary); font-weight: 800; font-size: 1.1rem;">54%</div>
+                    </div>
+                </div>
+            </div>
+
+            {# ── Tri-engine score strip ──────────────────────────────── #}
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--border-glass);">
+                <div class="vrt-mock-engine" style="border-color: rgba(16,163,127,0.3);">
+                    <span class="vrt-mock-engine-name" style="color: #10a37f;"><i class="fa-solid fa-comments"></i> ChatGPT</span>
+                    <span class="vrt-mock-engine-pct">73%</span>
+                </div>
+                <div class="vrt-mock-engine" style="border-color: rgba(66,133,244,0.3);">
+                    <span class="vrt-mock-engine-name" style="color: #4285f4;"><i class="fa-solid fa-gem"></i> Gemini</span>
+                    <span class="vrt-mock-engine-pct">58%</span>
+                </div>
+                <div class="vrt-mock-engine" style="border-color: rgba(168,85,247,0.3);">
+                    <span class="vrt-mock-engine-name" style="color: #a855f7;"><i class="fa-solid fa-magnifying-glass"></i> Perplexity</span>
+                    <span class="vrt-mock-engine-pct">41%</span>
+                </div>
+            </div>
+        </div>
+
+        <div style="text-align: center; margin-top: 2.5rem;">
+            <a href="{% url 'tools:workspace-demo' %}" class="button button-secondary" style="font-size: 0.92rem;">
+                <i class="fa-solid fa-eye"></i>&nbsp; See the live sample workspace
+            </a>
+        </div>
+    </div>
+    <style>
+    .vrt-mock-row {
+        display: flex; gap: 1.25rem; align-items: center;
+        padding: 1rem 1.25rem;
+        background: rgba(255,255,255,0.02);
+        border: 1px solid var(--border-glass);
+        border-radius: 12px;
+    }
+    .vrt-mock-pill {
+        font-size: 0.7rem; font-weight: 700; letter-spacing: 0.04em;
+        padding: 0.18rem 0.55rem; border-radius: 999px;
+    }
+    .vrt-mock-engine {
+        display: flex; justify-content: space-between; align-items: center;
+        padding: 0.85rem 1rem;
+        border: 1px solid var(--border-glass);
+        border-radius: 10px;
+        background: rgba(255,255,255,0.02);
+    }
+    .vrt-mock-engine-name { font-size: 0.85rem; font-weight: 700; display: flex; align-items: center; gap: 0.45rem; }
+    .vrt-mock-engine-pct { font-size: 1.5rem; font-weight: 800; color: var(--text-primary); }
+    @media (max-width: 720px) {
+        .vrt-mock-row { flex-wrap: wrap; }
+    }
+    </style>
 </section>
 
 <section class="aeo-index-teaser-section" style="padding: 6rem 0; background: rgba(15, 23, 42, 0.3); border-top: 1px solid var(--border-glass);">

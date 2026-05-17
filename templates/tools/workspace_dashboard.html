@@ -418,40 +418,62 @@
 
             <div class="workspace-secondary-stack">
                 {% if project.pk %}
-                <article class="system-card" style="padding: 1.5rem 1.75rem;">
-                    <div class="section-heading workspace-section-head" style="margin-bottom: 1.25rem;">
-                        <p class="eyebrow text-accent">Getting started</p>
-                        <h2 style="font-size: 1.2rem;">Activation checklist</h2>
+                <article class="system-card" style="padding: 1.5rem 1.75rem; border: 1px solid rgba(56,189,248,0.18); background: linear-gradient(180deg, rgba(56,189,248,0.03), transparent);">
+                    <div class="section-heading workspace-section-head" style="margin-bottom: 0.85rem;">
+                        <div style="display: flex; justify-content: space-between; align-items: baseline;">
+                            <div>
+                                <p class="eyebrow text-accent" style="margin: 0;">Getting started</p>
+                                <h2 style="font-size: 1.2rem; margin: 0.2rem 0 0;">Activation checklist</h2>
+                            </div>
+                            <span style="font-size: 0.85rem; font-weight: 700; color: var(--brand-primary);">
+                                {{ activation_done_count }}/{{ activation_total_count }}
+                            </span>
+                        </div>
                     </div>
-                    <ul style="list-style: none; padding: 0; margin: 0; display: grid; gap: 0.85rem;">
-                        <li style="display: flex; gap: 0.75rem; align-items: center; font-size: 0.9rem;">
+
+                    {# Progress bar — value computed in the view #}
+                    <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 999px; overflow: hidden; margin-bottom: 1.1rem;">
+                        <div style="height: 100%; width: {{ activation_progress_pct }}%; background: linear-gradient(90deg, var(--brand-primary), #10b981); border-radius: 999px; transition: width 0.4s;"></div>
+                    </div>
+
+                    <ul style="list-style: none; padding: 0; margin: 0; display: grid; gap: 0.7rem;">
+                        <li style="display: flex; gap: 0.6rem; align-items: center; font-size: 0.88rem;">
                             {% if latest_audit %}
                             <i class="fa-solid fa-circle-check" style="color: var(--success); flex-shrink: 0;"></i>
                             <span style="color: var(--text-muted); text-decoration: line-through;">Run first audit</span>
                             {% else %}
                             <i class="fa-regular fa-circle" style="color: var(--text-muted); flex-shrink: 0;"></i>
-                            <span><a href="#start-audit" style="color: var(--text-primary);">Run first audit</a></span>
+                            <a href="#start-audit" style="color: var(--text-primary); text-decoration: none;">Run first audit&nbsp;<i class="fa-solid fa-arrow-right" style="font-size: 0.7rem; opacity: 0.5;"></i></a>
                             {% endif %}
                         </li>
-                        <li style="display: flex; gap: 0.75rem; align-items: center; font-size: 0.9rem;">
+                        <li style="display: flex; gap: 0.6rem; align-items: center; font-size: 0.88rem;">
                             {% if latest_aeo_audit %}
                             <i class="fa-solid fa-circle-check" style="color: var(--success); flex-shrink: 0;"></i>
                             <span style="color: var(--text-muted); text-decoration: line-through;">Run AI Visibility audit</span>
                             {% else %}
                             <i class="fa-regular fa-circle" style="color: var(--text-muted); flex-shrink: 0;"></i>
-                            <span><a href="{% url 'aeo:workspace-aeo' %}" style="color: var(--brand-primary);">Run AI Visibility audit</a></span>
+                            <a href="{% url 'aeo:workspace-aeo' %}" style="color: var(--text-primary); text-decoration: none;">Run AI Visibility audit&nbsp;<i class="fa-solid fa-arrow-right" style="font-size: 0.7rem; opacity: 0.5;"></i></a>
                             {% endif %}
                         </li>
-                        <li style="display: flex; gap: 0.75rem; align-items: center; font-size: 0.9rem;">
+                        <li style="display: flex; gap: 0.6rem; align-items: center; font-size: 0.88rem;">
+                            {% if tracked_prompt_count %}
+                            <i class="fa-solid fa-circle-check" style="color: var(--success); flex-shrink: 0;"></i>
+                            <span style="color: var(--text-muted); text-decoration: line-through;">Track AI prompts ({{ tracked_prompt_count }})</span>
+                            {% else %}
+                            <i class="fa-regular fa-circle" style="color: var(--text-muted); flex-shrink: 0;"></i>
+                            <a href="{% url 'aeo:workspace-prompts' %}" style="color: var(--text-primary); text-decoration: none;">Track AI prompts&nbsp;<i class="fa-solid fa-arrow-right" style="font-size: 0.7rem; opacity: 0.5;"></i></a>
+                            {% endif %}
+                        </li>
+                        <li style="display: flex; gap: 0.6rem; align-items: center; font-size: 0.88rem;">
                             {% if latest_seo_snapshot %}
                             <i class="fa-solid fa-circle-check" style="color: var(--success); flex-shrink: 0;"></i>
                             <span style="color: var(--text-muted); text-decoration: line-through;">Run SEO analysis</span>
                             {% else %}
                             <i class="fa-regular fa-circle" style="color: var(--text-muted); flex-shrink: 0;"></i>
-                            <span><a href="{% url 'seo:workspace-seo' %}" style="color: var(--text-primary);">Run SEO analysis</a></span>
+                            <a href="{% url 'seo:workspace-seo' %}" style="color: var(--text-primary); text-decoration: none;">Run SEO analysis&nbsp;<i class="fa-solid fa-arrow-right" style="font-size: 0.7rem; opacity: 0.5;"></i></a>
                             {% endif %}
                         </li>
-                        <li style="display: flex; gap: 0.75rem; align-items: center; font-size: 0.9rem;">
+                        <li style="display: flex; gap: 0.6rem; align-items: center; font-size: 0.88rem;">
                             {% if audit_schedule %}
                             <i class="fa-solid fa-circle-check" style="color: var(--success); flex-shrink: 0;"></i>
                             <span style="color: var(--text-muted); text-decoration: line-through;">Schedule a rerun</span>
@@ -461,9 +483,9 @@
                             {% endif %}
                         </li>
                     </ul>
-                    {% if latest_audit and latest_aeo_audit and latest_seo_snapshot %}
-                    <div style="margin-top: 1.25rem; padding: 0.75rem 1rem; background: rgba(var(--success-rgb, 34,197,94), 0.08); border-radius: var(--radius-sm); border: 1px solid rgba(var(--success-rgb, 34,197,94), 0.2); font-size: 0.85rem; color: var(--success);">
-                        <i class="fa-solid fa-circle-check"></i> Workspace fully activated — you're tracking AI visibility.
+                    {% if activation_complete %}
+                    <div style="margin-top: 1.25rem; padding: 0.8rem 1rem; background: rgba(16,185,129,0.08); border-radius: 10px; border: 1px solid rgba(16,185,129,0.22); font-size: 0.85rem; color: #10b981; display: flex; align-items: center; gap: 0.5rem;">
+                        <i class="fa-solid fa-circle-check"></i> Fully activated — you're tracking AI visibility end-to-end.
                     </div>
                     {% endif %}
                 </article>

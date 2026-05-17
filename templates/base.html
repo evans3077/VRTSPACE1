@@ -35,6 +35,89 @@
     <link rel="stylesheet" href="{% static 'css/vrt-space-core.css' %}">
     <link rel="stylesheet" href="{% static 'css/ui-polish.css' %}">
     <style>
+    /* ─────────────────────────────────────────────────────────────────
+       Phase-C polish: small additive patches that improve perceived
+       quality without rewriting the existing CSS layers. Loaded last in
+       <head> so we always win the cascade.
+       ───────────────────────────────────────────────────────────────── */
+
+    /* Button system — consistent hover/focus/disabled across all buttons */
+    .button {
+        transition: transform 0.15s ease, box-shadow 0.2s ease, background 0.15s ease, border-color 0.15s ease, color 0.15s ease;
+        cursor: pointer;
+    }
+    .button:focus-visible {
+        outline: 2px solid var(--brand-primary, #38bdf8);
+        outline-offset: 2px;
+    }
+    .button:disabled, .button[disabled] {
+        opacity: 0.5; cursor: not-allowed; transform: none !important; box-shadow: none !important;
+    }
+    .button-primary:hover:not(:disabled), .button-mega:hover:not(:disabled) {
+        transform: translateY(-1px);
+        box-shadow: 0 12px 28px -10px rgba(56,189,248,0.45);
+    }
+    .button-secondary:hover:not(:disabled), .button-ghost:hover:not(:disabled) {
+        transform: translateY(-1px);
+    }
+
+    /* Dashboard / system-card hover lift — subtle, never garish */
+    .system-card, .glass-panel {
+        transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.2s ease;
+    }
+    .pricing-card:hover,
+    .feature-card-premium:hover,
+    .public-step-card:hover,
+    .ws-complete-next-card:hover {
+        transform: translateY(-3px);
+    }
+
+    /* Smoother section dividers */
+    section { scroll-margin-top: 80px; }
+
+    /* Form-control consistency on shell-light pages */
+    body.shell-light .form-control,
+    body.shell-light input[type="text"],
+    body.shell-light input[type="email"],
+    body.shell-light input[type="url"],
+    body.shell-light input[type="password"],
+    body.shell-light textarea,
+    body.shell-light select {
+        background: rgba(255,255,255,0.04) !important;
+        border: 1px solid rgba(255,255,255,0.12) !important;
+        color: var(--text-primary, #f8fafc) !important;
+    }
+    body.shell-light .form-control:focus,
+    body.shell-light input:focus,
+    body.shell-light textarea:focus,
+    body.shell-light select:focus {
+        border-color: var(--brand-primary, #38bdf8) !important;
+        box-shadow: 0 0 0 3px rgba(56,189,248,0.18) !important;
+        outline: none !important;
+    }
+
+    /* ── Nav polish — small, additive on top of vrt-space-core.css ── */
+    .site-header { transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
+    .site-header.is-scrolled { box-shadow: 0 4px 24px -8px rgba(0,0,0,0.35); }
+    .brand {
+        background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        text-decoration: none;
+        font-weight: 800;
+        letter-spacing: 0.08em;
+        transition: filter 0.2s ease;
+    }
+    .brand:hover { filter: brightness(1.15) drop-shadow(0 0 12px rgba(56,189,248,0.4)); }
+    .nav-links a {
+        position: relative;
+        padding: 0.5rem 0;
+        transition: color 0.2s ease;
+    }
+    .nav-cta { transition: transform 0.18s ease, box-shadow 0.2s ease; }
+    .nav-cta:hover { transform: translateY(-1px); box-shadow: 0 8px 24px -8px rgba(56,189,248,0.5); }
+
     /* ── VRT Footer ── loaded last in <head> so it wins the cascade ── */
     .vrt-footer {
         background: #020617 !important;
@@ -168,6 +251,23 @@
         background: none !important;
     }
     .vrt-footer-links a:hover i { color: #38bdf8 !important; -webkit-text-fill-color: #38bdf8 !important; }
+    .vrt-footer-social-link {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 36px; height: 36px;
+        border-radius: 999px;
+        background: rgba(255,255,255,0.05);
+        border: 1px solid rgba(255,255,255,0.08);
+        color: #94a3b8 !important;
+        text-decoration: none !important;
+        transition: all 0.18s ease;
+    }
+    .vrt-footer-social-link:hover {
+        background: rgba(56,189,248,0.12);
+        border-color: rgba(56,189,248,0.35);
+        color: #38bdf8 !important;
+        transform: translateY(-1px);
+    }
+    .vrt-footer-social-link i { font-size: 0.92rem; }
     .vrt-footer-bottom { border-top: 1px solid rgba(255,255,255,0.05); }
     .vrt-footer-bottom-inner {
         display: flex;
@@ -299,6 +399,12 @@
                     <span>Perplexity</span>
                     <span>Google AI Overviews</span>
                     <span>Bing Copilot</span>
+                </div>
+                <div class="vrt-footer-social" style="display: flex; gap: 0.7rem; margin-top: 1.25rem;">
+                    <a href="https://twitter.com/" target="_blank" rel="noopener" aria-label="X / Twitter" class="vrt-footer-social-link"><i class="fa-brands fa-x-twitter"></i></a>
+                    <a href="https://linkedin.com/" target="_blank" rel="noopener" aria-label="LinkedIn" class="vrt-footer-social-link"><i class="fa-brands fa-linkedin-in"></i></a>
+                    <a href="https://github.com/" target="_blank" rel="noopener" aria-label="GitHub" class="vrt-footer-social-link"><i class="fa-brands fa-github"></i></a>
+                    <a href="mailto:hello@vrtspace.dev" aria-label="Email" class="vrt-footer-social-link"><i class="fa-solid fa-envelope"></i></a>
                 </div>
             </div>
 

@@ -1,0 +1,202 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+<style>
+.ws-complete-shell {
+    min-height: calc(100vh - 120px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 3.5rem 1.5rem;
+}
+.ws-complete-card {
+    max-width: 780px; width: 100%;
+    background: linear-gradient(180deg, rgba(16,185,129,0.06) 0%, rgba(56,189,248,0.04) 100%);
+    border: 1px solid var(--border-glass);
+    border-radius: 22px;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 30px 80px -30px rgba(16,185,129,0.18);
+    position: relative;
+    overflow: hidden;
+}
+.ws-complete-card::before {
+    content: ""; position: absolute; top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 60%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(16,185,129,0.6), transparent);
+}
+.ws-complete-eyebrow-bar {
+    display: inline-flex; align-items: center; gap: 0.5rem;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(16,185,129,0.12);
+    color: #10b981;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+}
+.ws-complete-heading {
+    font-size: clamp(1.9rem, 4vw, 2.6rem);
+    margin: 0 0 0.7rem;
+    background: linear-gradient(135deg, #f8fafc 30%, #94a3b8 100%);
+    -webkit-background-clip: text; background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800; line-height: 1.15;
+}
+.ws-complete-lead {
+    color: var(--text-secondary);
+    font-size: 1.02rem; line-height: 1.6;
+    margin: 0 0 2rem;
+    max-width: 580px;
+}
+.ws-complete-scores {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.85rem;
+    margin: 0 0 2rem;
+}
+.ws-complete-score-tile {
+    padding: 1.1rem 1rem;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border-glass);
+    text-align: left;
+}
+.ws-complete-score-tile .ws-score-label {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    font-weight: 700;
+}
+.ws-complete-score-tile .ws-score-val {
+    font-size: 1.85rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    margin-top: 0.2rem;
+    line-height: 1;
+}
+.ws-complete-score-tile .ws-score-sub {
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    margin-top: 0.25rem;
+}
+.ws-complete-next {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.85rem;
+    margin: 0 0 2rem;
+}
+.ws-complete-next-card {
+    padding: 1.15rem;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid var(--border-glass);
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.18s;
+    display: block;
+}
+.ws-complete-next-card:hover {
+    transform: translateY(-2px);
+    border-color: rgba(56,189,248,0.4);
+    background: rgba(56,189,248,0.05);
+}
+.ws-complete-next-card .ws-next-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 36px; height: 36px;
+    border-radius: 10px;
+    background: rgba(56,189,248,0.12);
+    color: var(--brand-primary);
+    font-size: 1rem;
+    margin-bottom: 0.6rem;
+}
+.ws-complete-next-card h4 {
+    margin: 0 0 0.25rem;
+    font-size: 0.95rem;
+    color: var(--text-primary);
+}
+.ws-complete-next-card p {
+    margin: 0;
+    font-size: 0.78rem;
+    color: var(--text-muted);
+    line-height: 1.5;
+}
+.ws-complete-cta-row {
+    display: flex; gap: 0.65rem; align-items: center; flex-wrap: wrap;
+}
+.ws-complete-cta {
+    padding: 0.95rem 2rem !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+    flex: 1;
+    min-width: 220px;
+}
+@media (max-width: 620px) {
+    .ws-complete-card { padding: 2.25rem 1.5rem; }
+    .ws-complete-scores, .ws-complete-next { grid-template-columns: 1fr; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ws-complete-shell">
+    <div class="ws-complete-card">
+        <span class="ws-complete-eyebrow-bar">
+            <i class="fa-solid fa-circle-check"></i> Workspace ready
+        </span>
+        <h1 class="ws-complete-heading">You're set. Here's what we found.</h1>
+        <p class="ws-complete-lead">
+            We've audited <strong>{{ project.normalized_domain|default:project.website }}</strong>, scored your AI Visibility, and queued
+            {% if prompt_count %}{{ prompt_count }} prompt{{ prompt_count|pluralize }}{% else %}prompts{% endif %} to monitor.
+            Your workspace is ready whenever you are.
+        </p>
+
+        {# ── Score tiles ───────────────────────────────────────────── #}
+        <div class="ws-complete-scores">
+            <div class="ws-complete-score-tile">
+                <p class="ws-score-label">Audit score</p>
+                <div class="ws-score-val">{{ audit_score }}<span style="font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">/100</span></div>
+                <p class="ws-score-sub">Site health baseline</p>
+            </div>
+            <div class="ws-complete-score-tile">
+                <p class="ws-score-label">AI Visibility</p>
+                <div class="ws-score-val">{{ aeo_score }}<span style="font-size: 0.9rem; color: var(--text-muted); font-weight: 500;">/100</span></div>
+                <p class="ws-score-sub">Citation readiness</p>
+            </div>
+            <div class="ws-complete-score-tile">
+                <p class="ws-score-label">Prompts tracked</p>
+                <div class="ws-score-val">{{ prompt_count }}</div>
+                <p class="ws-score-sub">Across 3 AI engines</p>
+            </div>
+        </div>
+
+        {# ── Three best next steps ──────────────────────────────────── #}
+        <div class="ws-complete-next">
+            <a class="ws-complete-next-card" href="{% url 'aeo:workspace-aeo' %}">
+                <span class="ws-next-icon"><i class="fa-solid fa-robot"></i></span>
+                <h4>See your AI Visibility breakdown</h4>
+                <p>Per-engine scores and the fixes that move them.</p>
+            </a>
+            <a class="ws-complete-next-card" href="{% url 'aeo:workspace-prompts' %}">
+                <span class="ws-next-icon"><i class="fa-solid fa-bullseye"></i></span>
+                <h4>Review tracked prompts</h4>
+                <p>Edit, add, or reorder the queries we monitor.</p>
+            </a>
+            <a class="ws-complete-next-card" href="{% url 'aeo:workspace-share-of-voice' %}">
+                <span class="ws-next-icon"><i class="fa-solid fa-chart-pie"></i></span>
+                <h4>Compare share of voice</h4>
+                <p>See where competitors are winning AI answers.</p>
+            </a>
+        </div>
+
+        <div class="ws-complete-cta-row">
+            <a href="{% url 'tools:workspace-dashboard' %}" class="button button-primary ws-complete-cta">
+                Open my workspace&nbsp; <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <a href="{% url 'aeo:content-optimizer' %}" class="button button-secondary" style="font-size: 0.9rem;">
+                Try the AI Content Optimizer
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,20 +1,15 @@
-<div class="onboarding-card glass-panel" id="onboarding-step-content">
-  <div class="onboarding-card-intro">
-    <p class="feature-tag">Step 1 of 3 &mdash; About 30 seconds</p>
-    <h2>Let's set up your workspace</h2>
-    <p class="section-text">
-      We need three things to give you a relevant audit and surface competitors
-      that actually compete with you — not random sites Google returns.
+{% load static %}
+<div class="onboarding-card glass-panel" id="onboarding-step-content" style="padding: 2.25rem; border-radius: 18px;">
+  <div class="onboarding-card-intro" style="text-align: center; margin-bottom: 1.75rem;">
+    <p class="feature-tag" style="margin: 0 0 0.6rem;">Step 1 &middot; About 30 seconds</p>
+    <h2 style="font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 0.5rem;">Tell us about your business</h2>
+    <p class="text-muted" style="max-width: 520px; margin: 0 auto; font-size: 0.95rem; line-height: 1.6;">
+      Three quick fields. We use them to find the competitors that actually compete with you and the prompts your customers ask AI.
     </p>
-    <div class="public-chip-row" style="margin-top: 1rem;">
-      <span class="premium-pill"><i class="fa-solid fa-globe"></i> Your site</span>
-      <span class="premium-pill"><i class="fa-solid fa-briefcase"></i> Your industry</span>
-      <span class="premium-pill"><i class="fa-solid fa-location-dot"></i> Your market</span>
-    </div>
   </div>
 
   {% if error %}
-  <div class="flash flash-error" role="alert">{{ error }}</div>
+  <div class="flash flash-error" role="alert" style="margin-bottom: 1.25rem;">{{ error }}</div>
   {% endif %}
 
   <form
@@ -28,8 +23,11 @@
   >
     {% csrf_token %}
 
-    <div class="form-group">
-      <label for="id_website" class="form-label">Website URL</label>
+    {# ── URL field ───────────────────────────────────────────────────── #}
+    <div class="form-group" style="margin-bottom: 1.4rem;">
+      <label for="id_website" class="form-label" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600;">
+        <i class="fa-solid fa-globe" style="color: var(--brand-primary);"></i> Your website
+      </label>
       <input
         type="url"
         id="id_website"
@@ -40,37 +38,216 @@
         autofocus
         required
       >
-      <p class="form-hint">Include the full address — e.g. <code>https://example.com</code></p>
+      <p class="form-hint" style="display: flex; gap: 0.4rem; align-items: center;">
+        <i class="fa-solid fa-circle-info" style="opacity: 0.5;"></i>
+        Just paste it — we'll clean up extra spaces, trailing slashes, or <code>http</code> vs <code>https</code>.
+      </p>
     </div>
 
-    <div class="form-grid-2">
-      <div class="form-group">
-        <label for="id_business_type" class="form-label">What kind of business?</label>
-        <select id="id_business_type" name="business_type" class="form-control" required>
-          {% for value, label in business_type_choices %}
-            <option value="{{ value }}" {% if form_data.business_type == value %}selected{% endif %}>{{ label }}</option>
-          {% endfor %}
-        </select>
-        <p class="form-hint">Tells us which competitors and SERP queries to use.</p>
+    {# ── Business type — icon grid (visible) + hidden select for form submit ── #}
+    <div class="form-group" style="margin-bottom: 1.4rem;">
+      <label class="form-label" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600;">
+        <i class="fa-solid fa-briefcase" style="color: var(--brand-primary);"></i> What kind of business?
+      </label>
+      <p class="form-hint" style="margin: -0.1rem 0 0.7rem;">Pick the closest match — we'll tune competitor discovery accordingly.</p>
+
+      <div class="ws-industry-grid" id="ws-industry-grid"
+           data-default="{{ form_data.business_type|default:'' }}">
+        {# Curated 12 most common types with icons; full list still selectable via 'More…' #}
+        <button type="button" class="ws-industry-tile" data-value="agency"><i class="fa-solid fa-people-arrows"></i><span>Agency</span></button>
+        <button type="button" class="ws-industry-tile" data-value="saas"><i class="fa-solid fa-cube"></i><span>SaaS / Product</span></button>
+        <button type="button" class="ws-industry-tile" data-value="ecommerce"><i class="fa-solid fa-bag-shopping"></i><span>Ecommerce</span></button>
+        <button type="button" class="ws-industry-tile" data-value="healthcare"><i class="fa-solid fa-heart-pulse"></i><span>Healthcare</span></button>
+        <button type="button" class="ws-industry-tile" data-value="local_service"><i class="fa-solid fa-screwdriver-wrench"></i><span>Local Service</span></button>
+        <button type="button" class="ws-industry-tile" data-value="restaurant_food"><i class="fa-solid fa-utensils"></i><span>Restaurant / Food</span></button>
+        <button type="button" class="ws-industry-tile" data-value="hotel"><i class="fa-solid fa-bed"></i><span>Hotel / Hospitality</span></button>
+        <button type="button" class="ws-industry-tile" data-value="real_estate"><i class="fa-solid fa-house"></i><span>Real Estate</span></button>
+        <button type="button" class="ws-industry-tile" data-value="finance"><i class="fa-solid fa-chart-line"></i><span>Finance</span></button>
+        <button type="button" class="ws-industry-tile" data-value="legal"><i class="fa-solid fa-scale-balanced"></i><span>Legal</span></button>
+        <button type="button" class="ws-industry-tile" data-value="education"><i class="fa-solid fa-graduation-cap"></i><span>Education</span></button>
+        <button type="button" class="ws-industry-tile" data-value="other"><i class="fa-solid fa-ellipsis"></i><span>Other&hellip;</span></button>
       </div>
 
-      <div class="form-group">
-        <label for="id_location" class="form-label">Where do you serve?</label>
-        <input
-          type="text"
-          id="id_location"
-          name="location"
-          class="form-control"
-          placeholder="Nairobi, Kenya — or 'Worldwide'"
-          value="{{ form_data.location|default:'' }}"
-          required
-        >
-        <p class="form-hint">City + country, region, or &ldquo;Worldwide&rdquo; for online-only.</p>
+      <select id="id_business_type" name="business_type" required style="display: none;">
+        {% for value, label in business_type_choices %}
+          <option value="{{ value }}" {% if form_data.business_type == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+
+      <select id="ws-industry-fallback" class="form-control" style="display: none; margin-top: 0.6rem;">
+        {% for value, label in business_type_choices %}
+          {% if value %}<option value="{{ value }}">{{ label }}</option>{% endif %}
+        {% endfor %}
+      </select>
+    </div>
+
+    {# ── Location ───────────────────────────────────────────────────── #}
+    <div class="form-group" style="margin-bottom: 1.6rem;">
+      <label for="id_location" class="form-label" style="display: flex; align-items: center; gap: 0.5rem; font-weight: 600;">
+        <i class="fa-solid fa-location-dot" style="color: var(--brand-primary);"></i> Where do you serve?
+      </label>
+      <input
+        type="text"
+        id="id_location"
+        name="location"
+        class="form-control"
+        placeholder="e.g. London, UK — or 'Worldwide'"
+        value="{{ form_data.location|default:'' }}"
+        required
+      >
+      <div style="display: flex; gap: 0.4rem; margin-top: 0.55rem; flex-wrap: wrap;">
+        <button type="button" class="ws-loc-quick" data-value="Worldwide">Worldwide</button>
+        <button type="button" class="ws-loc-quick" data-value="United States">United States</button>
+        <button type="button" class="ws-loc-quick" data-value="United Kingdom">United Kingdom</button>
+        <button type="button" class="ws-loc-quick" data-value="Canada">Canada</button>
       </div>
     </div>
 
-    <button type="submit" class="button button-primary button-block onboarding-cta">
-      Continue <i class="fa-solid fa-arrow-right"></i>
+    <button type="submit" class="button button-primary button-block onboarding-cta" style="padding: 0.95rem; font-size: 1rem;">
+      Continue&nbsp; <i class="fa-solid fa-arrow-right"></i>
     </button>
+    <p style="text-align: center; font-size: 0.78rem; color: var(--text-muted); margin: 0.85rem 0 0;">
+      <i class="fa-solid fa-lock" style="opacity: 0.6;"></i>&nbsp; We never share your domain or contact info.
+    </p>
   </form>
 </div>
+
+<style>
+.ws-industry-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.55rem;
+}
+@media (max-width: 720px) {
+    .ws-industry-grid { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 480px) {
+    .ws-industry-grid { grid-template-columns: repeat(2, 1fr); }
+}
+.ws-industry-tile {
+    display: flex; flex-direction: column; align-items: center; gap: 0.4rem;
+    padding: 0.85rem 0.55rem;
+    border-radius: 12px;
+    border: 1px solid var(--border-glass);
+    background: rgba(255,255,255,0.02);
+    color: var(--text-secondary);
+    font-size: 0.78rem; font-weight: 500;
+    cursor: pointer;
+    transition: all 0.18s ease;
+    text-align: center;
+    line-height: 1.3;
+}
+.ws-industry-tile i {
+    font-size: 1.25rem;
+    color: var(--text-muted);
+    transition: color 0.18s ease;
+}
+.ws-industry-tile:hover {
+    background: rgba(56,189,248,0.06);
+    border-color: rgba(56,189,248,0.25);
+    color: var(--text-primary);
+    transform: translateY(-1px);
+}
+.ws-industry-tile:hover i { color: var(--brand-primary); }
+.ws-industry-tile.is-selected {
+    background: rgba(56,189,248,0.12);
+    border-color: var(--brand-primary);
+    color: var(--text-primary);
+    box-shadow: 0 0 0 2px rgba(56,189,248,0.15);
+}
+.ws-industry-tile.is-selected i { color: var(--brand-primary); }
+.ws-loc-quick {
+    padding: 0.32rem 0.65rem;
+    font-size: 0.72rem;
+    border-radius: 999px;
+    border: 1px solid var(--border-glass);
+    background: rgba(255,255,255,0.03);
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: all 0.15s;
+}
+.ws-loc-quick:hover {
+    background: rgba(56,189,248,0.08);
+    color: var(--brand-primary);
+    border-color: rgba(56,189,248,0.3);
+}
+</style>
+
+<script>
+(function() {
+    // ── URL auto-clean: trim, add https://, normalise on blur ──
+    var urlInput = document.getElementById('id_website');
+    if (urlInput) {
+        urlInput.addEventListener('blur', function() {
+            var v = (this.value || '').trim();
+            if (!v) return;
+            v = v.replace(/^\s+|\s+$/g, '');
+            if (!/^https?:\/\//i.test(v)) v = 'https://' + v;
+            v = v.replace(/\/+$/, '');
+            this.value = v;
+        });
+    }
+
+    // ── Industry tile grid ──
+    var grid = document.getElementById('ws-industry-grid');
+    var hiddenSelect = document.getElementById('id_business_type');
+    var fallbackSelect = document.getElementById('ws-industry-fallback');
+    var defaultValue = grid ? grid.getAttribute('data-default') : '';
+    var visibleValues = grid ? Array.from(grid.querySelectorAll('.ws-industry-tile')).map(function(t){ return t.getAttribute('data-value'); }) : [];
+
+    function selectTile(val) {
+        if (!grid) return;
+        grid.querySelectorAll('.ws-industry-tile').forEach(function(t) {
+            t.classList.toggle('is-selected', t.getAttribute('data-value') === val);
+        });
+        if (hiddenSelect) hiddenSelect.value = val;
+    }
+
+    if (grid) {
+        grid.querySelectorAll('.ws-industry-tile').forEach(function(tile) {
+            tile.addEventListener('click', function() {
+                var val = this.getAttribute('data-value');
+                if (val === 'other') {
+                    if (fallbackSelect) {
+                        fallbackSelect.style.display = 'block';
+                        fallbackSelect.focus();
+                    }
+                    selectTile('other');
+                    return;
+                }
+                selectTile(val);
+                if (fallbackSelect) fallbackSelect.style.display = 'none';
+            });
+        });
+
+        if (fallbackSelect) {
+            fallbackSelect.addEventListener('change', function() {
+                if (hiddenSelect) hiddenSelect.value = this.value;
+            });
+        }
+
+        // Preselect from form_data if it's one of the visible tiles, else open fallback
+        if (defaultValue) {
+            if (visibleValues.indexOf(defaultValue) !== -1) {
+                selectTile(defaultValue);
+            } else if (fallbackSelect) {
+                selectTile('other');
+                fallbackSelect.style.display = 'block';
+                fallbackSelect.value = defaultValue;
+                if (hiddenSelect) hiddenSelect.value = defaultValue;
+            }
+        }
+    }
+
+    // ── Quick-pick location chips ──
+    var locInput = document.getElementById('id_location');
+    document.querySelectorAll('.ws-loc-quick').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+            if (locInput) {
+                locInput.value = this.getAttribute('data-value');
+                locInput.focus();
+            }
+        });
+    });
+})();
+</script>

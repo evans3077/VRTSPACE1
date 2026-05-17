@@ -575,8 +575,9 @@ class WorkspaceSignupView(View):
             project.owner = user
             project.save(update_fields=["owner", "updated_at"])
 
-        # New users land on the onboarding wizard to complete setup
-        return redirect("tools:workspace-onboarding")
+        # New users land on the welcome screen first — a warm greeting
+        # before we ask for any information.
+        return redirect("tools:workspace-welcome")
 
     def _get_audit_run(self):
         audit_pk = self.request.GET.get("audit") or self.request.POST.get("audit")
@@ -1083,6 +1084,30 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
             latest_aeo_audit.visibility_snapshots.filter(answer_present=True).count()
             if latest_aeo_audit else 0
         )
+        # Tracked prompts count — used by the activation checklist.
+        if getattr(project, "pk", None):
+            from apps.aeo.models import TrackedPrompt
+            context["tracked_prompt_count"] = TrackedPrompt.objects.filter(
+                project=project, is_active=True
+            ).count()
+        else:
+            context["tracked_prompt_count"] = 0
+
+        # Pre-compute activation checklist progress so the template doesn't
+        # need to do arithmetic on conditional booleans.
+        _act_steps = [
+            bool(latest_audit),
+            bool(latest_aeo_audit),
+            bool(context["tracked_prompt_count"]),
+            bool(latest_seo_snapshot),
+            bool(schedule),
+        ]
+        _done = sum(1 for s in _act_steps if s)
+        _total = len(_act_steps)
+        context["activation_done_count"] = _done
+        context["activation_total_count"] = _total
+        context["activation_progress_pct"] = round(100 * _done / _total) if _total else 0
+        context["activation_complete"] = _done == _total
         context["audit_score_delta"] = (
             audit_history_with_delta[0]["delta"]
             if audit_history_with_delta and audit_history_with_delta[0]["delta"] is not None
@@ -1573,6 +1598,78 @@ def _resolve_onboarding_step(user):
     return 0, {"project": project, "running_audit": None, "completed_audit": completed_audit}
 
 
+class WorkspaceOnboardingCompleteView(LoginRequiredMixin, View):
+    """Tasteful 'you're set' celebration after onboarding finishes.
+
+    Shows the AI Visibility Score, three highest-value next steps, and a
+    direct CTA into the workspace. No confetti — just a strong moment of
+    arrival before they hit the busy dashboard.
+    """
+
+    template_name = "tools/workspace_onboarding_complete.html"
+
+    def get(self, request, *args, **kwargs):
+        project = (
+            ClientProject.objects.filter(owner=request.user)
+            .select_related("latest_audit_run")
+            .order_by("-created_at")
+            .first()
+        )
+        if not project:
+            return redirect("tools:workspace-onboarding")
+
+        from apps.aeo.models import AEOAudit, TrackedPrompt
+
+        aeo_audit = (
+            AEOAudit.objects.filter(project=project)
+            .order_by("-created_at").first()
+        )
+        prompt_count = TrackedPrompt.objects.filter(project=project, is_active=True).count()
+        audit_score = project.latest_audit_run.overall_score if project.latest_audit_run else 0
+        aeo_score = aeo_audit.overall_score if aeo_audit else 0
+
+        return render(
+            request,
+            self.template_name,
+            {
+                "project": project,
+                "audit_score": audit_score,
+                "aeo_score": aeo_score,
+                "prompt_count": prompt_count,
+                "page_title": "You're set — VRT SPACE AGENCY",
+                "meta_robots": "noindex, nofollow",
+                "shell_theme": "shell-light",
+            },
+        )
+
+
+class WorkspaceWelcomeView(LoginRequiredMixin, View):
+    """Warm 'you're in' page shown immediately after signup.
+
+    Single CTA into the onboarding wizard. Bypasses if the user already has
+    a project (no point welcoming them twice).
+    """
+
+    template_name = "tools/workspace_welcome.html"
+
+    def get(self, request, *args, **kwargs):
+        has_project = ClientProject.objects.filter(owner=request.user).exists()
+        if has_project:
+            return redirect("tools:workspace-onboarding")
+        first_name = (request.user.first_name or request.user.username or "").split("@")[0].strip().title()
+        return render(
+            request,
+            self.template_name,
+            {
+                "first_name": first_name or "there",
+                "page_title": "Welcome to VRT SPACE AGENCY",
+                "meta_description": "Set up your AI visibility workspace in 90 seconds.",
+                "meta_robots": "noindex, nofollow",
+                "shell_theme": "shell-light",
+            },
+        )
+
+
 class WorkspaceOnboardingView(LoginRequiredMixin, View):
     """Wizard shell — renders the full onboarding page at the correct step."""
 
@@ -1584,8 +1681,16 @@ class WorkspaceOnboardingView(LoginRequiredMixin, View):
         step, ctx = _resolve_onboarding_step(request.user)
         if step == 0:
             return redirect("tools:workspace-dashboard")
+
+        # Step 3 needs both competitor and prompt suggestions
+        extra_ctx = {}
+        if step == 3 and ctx.get("project"):
+            extra_ctx["competitor_suggestions"] = _get_competitor_suggestions(ctx["project"])
+            extra_ctx["prompt_suggestions"] = _get_prompt_suggestions(ctx["project"])
+
         return render(request, self.template_name, {
             **ctx,
+            **extra_ctx,
             "current_step": step,
             "business_type_choices": BUSINESS_TYPE_CHOICES,
             "form_data": {},
@@ -1663,10 +1768,12 @@ class WorkspaceOnboardingStep1View(LoginRequiredMixin, View):
             messages.info(request, "We found your previous audit — reusing it instead of running a duplicate.")
             if is_htmx:
                 suggestions = _get_competitor_suggestions(project)
+                prompt_suggestions = _get_prompt_suggestions(project)
                 return render(request, "tools/onboarding/_step3_competitors.html", {
                     "project": project,
                     "completed_audit": adopted,
                     "competitor_suggestions": suggestions,
+                    "prompt_suggestions": prompt_suggestions,
                     "current_step": 3,
                 })
             return redirect("tools:workspace-onboarding")
@@ -1769,11 +1876,13 @@ class WorkspaceOnboardingStep2View(LoginRequiredMixin, View):
         if adopted:
             messages.info(request, "We found your previous audit — reusing it instead of running a duplicate.")
             suggestions = _get_competitor_suggestions(project)
+            prompt_suggestions = _get_prompt_suggestions(project)
             if is_htmx:
                 return render(request, "tools/onboarding/_step3_competitors.html", {
                     "project": project,
                     "completed_audit": adopted,
                     "competitor_suggestions": suggestions,
+                    "prompt_suggestions": prompt_suggestions,
                     "current_step": 3,
                 })
             return redirect("tools:workspace-onboarding")
@@ -1868,10 +1977,12 @@ class WorkspaceOnboardingAuditPollView(LoginRequiredMixin, View):
         if audit_run.status == AuditRun.Status.COMPLETED:
             # Advance to step 3 — pull SERP competitor suggestions
             suggestions = _get_competitor_suggestions(project)
+            prompt_suggestions = _get_prompt_suggestions(project)
             return render(request, "tools/onboarding/_step3_competitors.html", {
                 "project": project,
                 "completed_audit": audit_run,
                 "competitor_suggestions": suggestions,
+                "prompt_suggestions": prompt_suggestions,
                 "current_step": 3,
             })
 
@@ -1940,8 +2051,136 @@ class WorkspaceOnboardingStep3View(LoginRequiredMixin, View):
             # No audit request yet (edge case) — silently skip; user can re-enter later.
             pass
 
-        messages.success(request, f"Workspace ready. {len(competitor_urls)} competitor{'s' if len(competitor_urls) != 1 else ''} saved.")
-        return redirect("tools:workspace-dashboard")
+        # Selected prompt suggestions become TrackedPrompts so the Prompts tab
+        # is pre-populated when the user lands on the dashboard.
+        selected_prompts = request.POST.getlist("selected_prompts")
+        clean_prompts = [p.strip() for p in selected_prompts if p.strip()]
+        prompts_created = 0
+        if clean_prompts:
+            from apps.aeo.models import TrackedPrompt
+            for prompt_text in clean_prompts[:10]:
+                _p, was_created = TrackedPrompt.objects.get_or_create(
+                    project=project,
+                    prompt=prompt_text[:300],
+                    defaults={"intent": TrackedPrompt.Intent.INFORMATIONAL, "is_active": True},
+                )
+                if was_created:
+                    prompts_created += 1
+
+        comp_msg = f"{len(competitor_urls)} competitor{'s' if len(competitor_urls) != 1 else ''} saved"
+        prompt_msg = f", {prompts_created} prompts tracked" if prompts_created else ""
+        messages.success(request, f"Workspace ready. {comp_msg}{prompt_msg}.")
+        # Send first-time finishers to the celebration screen
+        return redirect("tools:workspace-onboarding-complete")
+
+
+def _get_prompt_suggestions(project):
+    """Return 6-8 starter prompt suggestions tailored to the project.
+
+    Uses business_type + location + primary_service to generate the kinds of
+    AI queries the project's customers are likely to ask. Cheap, local, no
+    SERP call needed — these are starting points the user can keep or edit.
+    """
+    if not project:
+        return []
+
+    bt = (project.business_type or "").lower()
+    loc = (project.location or "").strip()
+    svc = (project.primary_service or "").strip()
+    brand = (project.name or "").strip()
+    domain = (project.normalized_domain or "").strip()
+    loc_phrase = f" in {loc}" if loc and loc.lower() not in ("worldwide", "global", "online") else ""
+
+    suggestions = []
+    # Type-specific seed templates
+    templates_by_type = {
+        "agency": [
+            f"best {svc or 'agency'}{loc_phrase}",
+            f"top digital marketing agencies{loc_phrase}",
+            f"how to choose an {svc or 'agency'}",
+            f"affordable {svc or 'agency'} for startups",
+            f"{svc or 'agency'} pricing 2026",
+        ],
+        "saas": [
+            f"best {svc or 'SaaS tool'} for small business",
+            f"{svc or 'SaaS'} vs competitors",
+            f"how to integrate {svc or 'this tool'} with existing systems",
+            f"{svc or 'SaaS tool'} pricing comparison",
+            f"alternatives to leading {svc or 'SaaS'} platforms",
+        ],
+        "ecommerce": [
+            f"best {svc or 'products'} to buy{loc_phrase}",
+            f"where to buy {svc or 'this product'} online",
+            f"{svc or 'product'} reviews 2026",
+            f"how to choose the right {svc or 'product'}",
+        ],
+        "healthcare": [
+            f"best {svc or 'healthcare provider'}{loc_phrase}",
+            f"how to choose a {svc or 'healthcare provider'}",
+            f"{svc or 'treatment'} cost{loc_phrase}",
+            f"affordable {svc or 'healthcare services'}{loc_phrase}",
+        ],
+        "real_estate": [
+            f"best real estate agents{loc_phrase}",
+            f"how to buy a home{loc_phrase}",
+            f"real estate market trends{loc_phrase}",
+            f"mortgage options{loc_phrase}",
+        ],
+        "local_service": [
+            f"best {svc or 'local service'}{loc_phrase}",
+            f"affordable {svc or 'service'}{loc_phrase}",
+            f"emergency {svc or 'service'}{loc_phrase}",
+            f"how to find a reliable {svc or 'service provider'}{loc_phrase}",
+        ],
+        "restaurant_food": [
+            f"best restaurants{loc_phrase}",
+            f"{svc or 'restaurant'} delivery{loc_phrase}",
+            f"top food spots{loc_phrase}",
+            f"where to eat{loc_phrase}",
+        ],
+        "hotel": [
+            f"best hotels{loc_phrase}",
+            f"affordable accommodation{loc_phrase}",
+            f"{svc or 'hotel'} reviews{loc_phrase}",
+            f"things to do{loc_phrase}",
+        ],
+        "finance": [
+            f"best {svc or 'financial advisor'}{loc_phrase}",
+            f"how to invest{loc_phrase}",
+            f"{svc or 'financial planning'} for small business",
+            f"{svc or 'fintech'} alternatives 2026",
+        ],
+        "legal": [
+            f"best {svc or 'lawyer'}{loc_phrase}",
+            f"how to find a {svc or 'lawyer'}{loc_phrase}",
+            f"{svc or 'legal service'} cost{loc_phrase}",
+        ],
+        "education": [
+            f"best {svc or 'courses'} for beginners",
+            f"how to learn {svc or 'this topic'}",
+            f"{svc or 'training'} certification programs",
+        ],
+    }
+    seeds = templates_by_type.get(bt, [
+        f"best {svc or 'solution'} for businesses{loc_phrase}",
+        f"how to choose a {svc or 'provider'}{loc_phrase}",
+        f"{svc or 'this service'} pricing 2026",
+        f"top {svc or 'companies'}{loc_phrase}",
+    ])
+
+    # Add brand-specific prompts (high-intent)
+    if brand:
+        seeds.append(f"is {brand} a good choice?")
+        seeds.append(f"{brand} reviews")
+
+    # Clean and dedupe
+    seen = set()
+    for s in seeds:
+        s = " ".join(s.split())  # collapse whitespace
+        if s.lower() not in seen and len(s) >= 6:
+            seen.add(s.lower())
+            suggestions.append(s)
+    return suggestions[:8]
 
 
 def _get_competitor_suggestions(project):

@@ -1,20 +1,26 @@
-<div class="onboarding-card glass-panel" id="onboarding-step-content">
-  <div class="onboarding-card-intro">
-    <p class="feature-tag">Step 2 of 3</p>
-    <h2>Audit <span class="text-accent">{{ project.normalized_domain|default:project.website }}</span> &amp; get your AI Visibility Score</h2>
-    <p class="section-text">
-      We'll crawl the site and produce an AI Visibility Score — showing where AI chatbots cite you, what's blocking citations, and what to fix first. Technical health, content depth, and AEO readiness all in one run.
-      This takes about 20–40 seconds.
+<div class="onboarding-card glass-panel" id="onboarding-step-content" style="padding: 2.25rem; border-radius: 18px;">
+  <div class="onboarding-card-intro" style="text-align: center; margin-bottom: 1.5rem;">
+    <p class="feature-tag" style="margin: 0 0 0.6rem;">Step 2 &middot; About 30 seconds</p>
+    <h2 style="font-size: clamp(1.45rem, 2.6vw, 1.85rem); margin: 0 0 0.55rem; line-height: 1.25;">
+      Ready to audit <span class="text-accent">{{ project.normalized_domain|default:project.website }}</span>
+    </h2>
+    <p class="text-muted" style="max-width: 540px; margin: 0 auto; font-size: 0.95rem; line-height: 1.6;">
+      We'll crawl your site, score the signals AI engines use, and produce your AI Visibility Score &mdash; all automatically.
     </p>
-    <div class="public-chip-row">
-      <span class="premium-pill"><i class="fa-solid fa-robot"></i> AI Visibility Score</span>
-      <span class="premium-pill"><i class="fa-solid fa-spider"></i> Deep crawl</span>
-      <span class="premium-pill"><i class="fa-solid fa-chart-bar"></i> Score every layer</span>
-    </div>
+  </div>
+
+  {# ── What we'll check (specific, reassuring) ─────────────────────── #}
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 0.65rem; margin-bottom: 1.5rem;">
+    <div class="ws-check-row"><i class="fa-solid fa-spider"></i> <span>Site structure &amp; meta tags</span></div>
+    <div class="ws-check-row"><i class="fa-solid fa-gauge-high"></i> <span>Page speed &amp; technical health</span></div>
+    <div class="ws-check-row"><i class="fa-solid fa-list-check"></i> <span>On-page SEO signals</span></div>
+    <div class="ws-check-row"><i class="fa-solid fa-robot"></i> <span>AEO &amp; AI citation readiness</span></div>
+    <div class="ws-check-row"><i class="fa-solid fa-diagram-project"></i> <span>Internal linking patterns</span></div>
+    <div class="ws-check-row"><i class="fa-solid fa-microscope"></i> <span>Schema &amp; structured data</span></div>
   </div>
 
   {% if error %}
-  <div class="flash flash-error" role="alert">{{ error }}</div>
+  <div class="flash flash-error" role="alert" style="margin-bottom: 1.25rem;">{{ error }}</div>
   {% endif %}
 
   <form
@@ -25,14 +31,35 @@
     hx-swap="outerHTML"
   >
     {% csrf_token %}
-    <button type="submit" class="button button-primary button-block onboarding-cta">
-      <i class="fa-solid fa-play"></i> Start the audit — uses 2 credits
+    <button type="submit" class="button button-primary button-block onboarding-cta" style="padding: 0.95rem; font-size: 1rem;">
+      <i class="fa-solid fa-play"></i>&nbsp; Run my first audit
     </button>
+    <p style="text-align: center; font-size: 0.78rem; color: var(--text-muted); margin: 0.7rem 0 0;">
+      Uses 2 workspace credits &middot; Free plan includes 5 to start &middot; No credit card required
+    </p>
   </form>
 
-  <p class="onboarding-skip-row">
-    <a href="{% url 'tools:workspace-dashboard' %}" class="onboarding-skip-link">
-      Skip — I'll run the audit later from the dashboard
+  <p class="onboarding-skip-row" style="margin-top: 1.4rem; text-align: center;">
+    <a href="{% url 'tools:workspace-dashboard' %}" class="onboarding-skip-link" style="font-size: 0.85rem; color: var(--text-muted);">
+      I'll run it later from the dashboard
     </a>
   </p>
 </div>
+
+<style>
+.ws-check-row {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 0.7rem 0.85rem;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.02);
+    border: 1px solid var(--border-glass);
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+.ws-check-row i {
+    color: var(--brand-primary);
+    width: 18px;
+    text-align: center;
+    flex-shrink: 0;
+}
+</style>

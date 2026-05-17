@@ -1,0 +1,143 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+<style>
+.ws-welcome-shell {
+    min-height: calc(100vh - 120px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 4rem 1.5rem;
+}
+.ws-welcome-card {
+    max-width: 720px; width: 100%;
+    background: linear-gradient(180deg, rgba(56,189,248,0.05) 0%, rgba(255,255,255,0.02) 100%);
+    border: 1px solid var(--border-glass);
+    border-radius: 22px;
+    padding: 3rem 2.5rem;
+    text-align: center;
+    box-shadow: 0 30px 80px -30px rgba(56,189,248,0.25);
+    position: relative;
+    overflow: hidden;
+}
+.ws-welcome-card::before {
+    content: ""; position: absolute; top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 60%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(56,189,248,0.6), transparent);
+}
+.ws-welcome-eyebrow {
+    display: inline-block;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    background: rgba(56,189,248,0.1);
+    color: var(--brand-primary);
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+}
+.ws-welcome-heading {
+    font-size: clamp(1.85rem, 4vw, 2.8rem);
+    margin: 0 0 0.85rem;
+    background: linear-gradient(135deg, #f8fafc 30%, #94a3b8 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-weight: 800;
+    line-height: 1.12;
+}
+.ws-welcome-lead {
+    max-width: 520px; margin: 0 auto 2rem;
+    color: var(--text-secondary);
+    font-size: 1.05rem; line-height: 1.65;
+}
+.ws-welcome-steps {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.85rem;
+    margin: 0 0 2.25rem;
+    text-align: left;
+}
+.ws-welcome-step {
+    padding: 1rem 1.1rem;
+    border-radius: 14px;
+    background: rgba(255,255,255,0.025);
+    border: 1px solid var(--border-glass);
+}
+.ws-welcome-step .ws-step-num {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 26px; height: 26px;
+    border-radius: 999px;
+    background: rgba(56,189,248,0.15);
+    color: var(--brand-primary);
+    font-size: 0.78rem; font-weight: 800;
+    margin-bottom: 0.55rem;
+}
+.ws-welcome-step h4 {
+    margin: 0 0 0.2rem; font-size: 0.95rem; color: var(--text-primary);
+}
+.ws-welcome-step p {
+    margin: 0; font-size: 0.8rem; color: var(--text-muted); line-height: 1.5;
+}
+.ws-welcome-cta-row {
+    display: flex; flex-direction: column; align-items: center; gap: 0.75rem;
+}
+.ws-welcome-cta {
+    padding: 0.95rem 2.5rem !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+}
+.ws-welcome-escape {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    text-decoration: none;
+}
+.ws-welcome-escape:hover {
+    color: var(--brand-primary);
+    text-decoration: underline;
+}
+@media (max-width: 620px) {
+    .ws-welcome-card { padding: 2.25rem 1.5rem; }
+    .ws-welcome-steps { grid-template-columns: 1fr; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="ws-welcome-shell">
+    <div class="ws-welcome-card">
+        <span class="ws-welcome-eyebrow">You're in</span>
+        <h1 class="ws-welcome-heading">Welcome to VRT SPACE,<br>{{ first_name }}.</h1>
+        <p class="ws-welcome-lead">
+            Let's set up your workspace. We need 90 seconds to learn about your business — then we'll audit your site,
+            check whether ChatGPT, Gemini, and Perplexity cite you, and show you what to fix.
+        </p>
+
+        <div class="ws-welcome-steps">
+            <div class="ws-welcome-step">
+                <span class="ws-step-num">1</span>
+                <h4>Tell us about your site</h4>
+                <p>URL, industry, and the market you serve. Takes about 30 seconds.</p>
+            </div>
+            <div class="ws-welcome-step">
+                <span class="ws-step-num">2</span>
+                <h4>We audit it for you</h4>
+                <p>SEO, content, schema, and AI citation readiness — automated.</p>
+            </div>
+            <div class="ws-welcome-step">
+                <span class="ws-step-num">3</span>
+                <h4>Pick what to track</h4>
+                <p>We suggest prompts based on your business — you choose which to watch.</p>
+            </div>
+        </div>
+
+        <div class="ws-welcome-cta-row">
+            <a href="{% url 'tools:workspace-onboarding' %}" class="button button-primary ws-welcome-cta">
+                Let's set this up&nbsp; <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <a href="{% url 'tools:workspace-demo' %}" class="ws-welcome-escape">
+                Or peek at a sample workspace first &rarr;
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}
