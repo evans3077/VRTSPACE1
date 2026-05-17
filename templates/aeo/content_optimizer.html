@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="public-shell-section">
+    <div class="container hero-split public-hero-split">
+        <div class="public-hero-copy">
+            <p class="feature-tag">Free AI Content Optimizer</p>
+            <h1>Will ChatGPT, Gemini, and Perplexity cite this content?</h1>
+            <p class="lead">
+                Paste any article, blog post, or landing page. Get an instant AI Citation Readiness Score across five
+                dimensions, plus the exact fixes that will move your content into AI answers.
+            </p>
+            <div class="trust-bar tag-row public-chip-row">
+                <span class="premium-pill">No signup required</span>
+                <span class="premium-pill">5 scoring dimensions</span>
+                <span class="premium-pill">Per-engine projections</span>
+            </div>
+        </div>
+        <div class="public-hero-panel glass-panel" style="padding: 1.5rem;">
+            <p class="eyebrow">What we measure</p>
+            <ul style="list-style: none; padding: 0; margin: 0.75rem 0 0; display: grid; gap: 0.55rem; font-size: 0.85rem;">
+                <li><i class="fa-solid fa-bullseye" style="color: var(--brand-primary); width: 18px;"></i> Answer-first structure</li>
+                <li><i class="fa-solid fa-list-check" style="color: var(--brand-primary); width: 18px;"></i> Structural clarity (headings, FAQ, schema)</li>
+                <li><i class="fa-solid fa-fingerprint" style="color: var(--brand-primary); width: 18px;"></i> Entity &amp; authority signals</li>
+                <li><i class="fa-solid fa-layer-group" style="color: var(--brand-primary); width: 18px;"></i> Content depth &amp; vocabulary</li>
+                <li><i class="fa-solid fa-quote-right" style="color: var(--brand-primary); width: 18px;"></i> Fact density &amp; citations</li>
+            </ul>
+        </div>
+    </div>
+</section>
+
+<section class="public-shell-section" style="padding-top: 0;">
+    <div class="container">
+        <form method="post" action="{% url 'aeo:content-optimizer' %}" class="glass-panel" style="padding: 1.75rem; border-radius: var(--radius);">
+            {% csrf_token %}
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-bottom: 1rem;">
+                <div>
+                    <label class="eyebrow" for="target_query">Target query (optional)</label>
+                    <input type="text" id="target_query" name="target_query" value="{{ target_query|default:'' }}"
+                           placeholder="e.g. best AEO tool for agencies" maxlength="200"
+                           style="width: 100%; padding: 0.7rem 0.9rem; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid var(--border-glass); color: var(--text-primary); margin-top: 0.4rem;">
+                </div>
+                <div>
+                    <label class="eyebrow" for="url">Source URL (optional)</label>
+                    <input type="url" id="url" name="url" value="{{ url|default:'' }}"
+                           placeholder="https://example.com/article"
+                           style="width: 100%; padding: 0.7rem 0.9rem; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid var(--border-glass); color: var(--text-primary); margin-top: 0.4rem;">
+                </div>
+            </div>
+            <div>
+                <label class="eyebrow" for="content">Paste your content (HTML or plain text)</label>
+                <textarea id="content" name="content" rows="14" required
+                          placeholder="Paste an article, blog post, landing page HTML, or product description here…"
+                          style="width: 100%; padding: 0.9rem; border-radius: 10px; background: rgba(255,255,255,0.04); border: 1px solid var(--border-glass); color: var(--text-primary); font-family: ui-monospace, Menlo, monospace; font-size: 0.86rem; line-height: 1.55; margin-top: 0.4rem;">{{ submitted_content|default:'' }}</textarea>
+            </div>
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; flex-wrap: wrap; gap: 0.75rem;">
+                <p class="text-muted" style="margin: 0; font-size: 0.8rem;">Up to 200,000 characters · runs locally, no data leaves this server.</p>
+                <button type="submit" class="button button-primary">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>&nbsp; Score this content
+                </button>
+            </div>
+        </form>
+    </div>
+</section>
+
+{% if report and report.ok %}
+<section class="public-shell-section" style="padding-top: 0.5rem;">
+    <div class="container">
+
+        {# ── Result hero card ────────────────────────────────────────── #}
+        <div class="glass-panel" style="padding: 2rem; border-radius: var(--radius); display: grid; grid-template-columns: auto 1fr; gap: 2rem; align-items: center;">
+            <div style="text-align: center;">
+                <div style="font-size: 4.5rem; font-weight: 900; line-height: 1; color: {% if report.composite_score >= 65 %}#10b981{% elif report.composite_score >= 45 %}#f59e0b{% else %}#ef4444{% endif %};">
+                    {{ report.composite_score }}
+                </div>
+                <div class="text-muted" style="font-size: 0.85rem; margin-top: 0.25rem;">out of 100</div>
+                <div style="margin-top: 0.6rem;">
+                    <span class="premium-pill" style="font-size: 0.85rem; padding: 0.35rem 0.85rem;">Grade {{ report.grade }}</span>
+                </div>
+            </div>
+            <div>
+                <p class="eyebrow text-accent">AI Citation Readiness</p>
+                <h2 style="margin: 0.4rem 0 0.6rem; font-size: 1.6rem;">{{ report.verdict }}</h2>
+                <p class="text-muted" style="margin: 0;">
+                    {{ report.word_count }} words analysed
+                    {% if report.target_query %} · target query <strong style="color: var(--text-primary);">"{{ report.target_query }}"</strong>{% endif %}
+                </p>
+            </div>
+        </div>
+
+        {# ── Engine projections ──────────────────────────────────────── #}
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem; margin-top: 1.5rem;">
+            {% for engine in report.engine_projections %}
+            <article class="glass-panel" style="padding: 1.35rem; border-top: 3px solid {{ engine.color }};">
+                <p class="eyebrow" style="color: {{ engine.color }}; margin: 0;">{{ engine.engine }}</p>
+                <p style="margin: 0.4rem 0 0.2rem; font-size: 1.95rem; font-weight: 800;">{{ engine.score }}</p>
+                <p class="text-muted" style="font-size: 0.78rem; margin: 0;">Threshold: {{ engine.threshold }}</p>
+                <div style="margin-top: 0.6rem; padding: 0.45rem 0.6rem; border-radius: 6px; font-size: 0.82rem; font-weight: 600; background: {% if engine.would_cite %}rgba(16,185,129,0.08); color: #10b981;{% else %}rgba(245,158,11,0.08); color: #f59e0b;{% endif %}">
+                    {% if engine.would_cite %}
+                        <i class="fa-solid fa-circle-check"></i>&nbsp; Would likely cite
+                    {% else %}
+                        <i class="fa-solid fa-triangle-exclamation"></i>&nbsp; {{ engine.gap }} pts short
+                    {% endif %}
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+
+        {# ── Dimension breakdown ─────────────────────────────────────── #}
+        <div style="margin-top: 2rem;">
+            <h2 style="margin: 0 0 1rem; font-size: 1.4rem;">Where you scored — and what to fix</h2>
+            <div style="display: grid; gap: 1rem;">
+                {% for dim in report.dimensions %}
+                <article class="glass-panel" style="padding: 1.4rem 1.6rem;">
+                    <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.6rem;">
+                        <div>
+                            <h3 style="margin: 0; font-size: 1.05rem;">{{ dim.label }}</h3>
+                            <p class="text-muted" style="margin: 0.15rem 0 0; font-size: 0.78rem;">Weight: {{ dim.weight_pct }}% of total</p>
+                        </div>
+                        <span style="font-size: 1.6rem; font-weight: 800; color: {% if dim.score >= 70 %}#10b981{% elif dim.score >= 45 %}#f59e0b{% else %}#ef4444{% endif %};">{{ dim.score }}</span>
+                    </div>
+                    <div style="height: 8px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden; margin-bottom: 1rem;">
+                        <div style="height: 100%; width: {{ dim.score }}%; background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary));"></div>
+                    </div>
+                    {% if dim.findings %}
+                    <div style="margin-bottom: 0.6rem;">
+                        {% for finding in dim.findings %}
+                        <p style="margin: 0 0 0.25rem; font-size: 0.88rem;"><i class="fa-solid fa-circle-check" style="color: #10b981; margin-right: 0.4rem;"></i>{{ finding }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if dim.fixes %}
+                    <div>
+                        {% for fix in dim.fixes %}
+                        <p style="margin: 0 0 0.3rem; font-size: 0.88rem;"><i class="fa-solid fa-arrow-right" style="color: var(--brand-primary); margin-right: 0.4rem;"></i>{{ fix }}</p>
+                        {% endfor %}
+                    </div>
+                    {% endif %}
+                </article>
+                {% endfor %}
+            </div>
+        </div>
+
+        {# ── CTA ─────────────────────────────────────────────────────── #}
+        <div class="glass-panel" style="padding: 2rem; margin-top: 2rem; text-align: center; background: radial-gradient(ellipse at center, rgba(56,189,248,0.08), transparent 70%);">
+            <p class="eyebrow text-accent">Track this over time</p>
+            <h3 style="margin: 0.5rem 0 1rem; font-size: 1.4rem;">Ship the fixes — then track whether AI engines actually cite you.</h3>
+            <p class="text-muted" style="max-width: 600px; margin: 0 auto 1.5rem;">Create a workspace to monitor your AI Visibility Score, run audits on a schedule, and benchmark against competitors.</p>
+            <a class="button button-primary" href="{% url 'tools:workspace-signup' %}">Create free workspace</a>
+        </div>
+    </div>
+</section>
+{% elif report and not report.ok %}
+<section class="public-shell-section" style="padding-top: 0;">
+    <div class="container">
+        <div class="glass-panel" style="padding: 2rem; text-align: center;">
+            <p style="margin: 0; color: #ef4444;"><i class="fa-solid fa-triangle-exclamation"></i> {{ report.error }}</p>
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

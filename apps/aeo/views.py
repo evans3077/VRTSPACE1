@@ -12,7 +12,14 @@ from apps.leads.models import UsageRecord
 
 from .forms import AEOAuditRequestForm
 from .index_service import lookup_or_queue, normalise_domain
-from .models import AEOAudit, AEOIndexEntry
+from .models import AEOAudit, AEOIndexEntry, PromptCheckRun, TrackedCompetitor, TrackedPrompt
+from .prompt_service import (
+    compute_share_of_voice,
+    get_competitor_summary,
+    get_prompt_trend,
+    run_all_active,
+    run_prompt_check,
+)
 from .services import build_aeo_payload, build_aeo_competitor_benchmarks, create_aeo_audit, get_latest_aeo_audit
 from apps.seo.models import SEOProjectProfile
 
@@ -338,6 +345,230 @@ class AEOIndexDetailView(View):
                 "page_title": page_title,
                 "meta_description": meta,
                 "canonical_url": request.build_absolute_uri(request.path),
+                "shell_theme": "shell-light",
+            },
+        )
+
+
+# ─── Prompt Tracker ────────────────────────────────────────────────────────
+
+
+class WorkspacePromptsView(LoginRequiredMixin, View):
+    """List + create tracked prompts and competitors. The killer AEO feature."""
+
+    template_name = "aeo/workspace_prompts.html"
+
+    def _build_context(self, request, project):
+        prompts = list(
+            TrackedPrompt.objects.filter(project=project).order_by("-is_active", "-last_checked_at", "prompt")
+        )
+        competitors = get_competitor_summary(project)
+        sov = compute_share_of_voice(project, days=30)
+        intent_choices = TrackedPrompt.Intent.choices
+        return {
+            "project": project,
+            "workspace_projects": get_workspace_projects(request.user),
+            "prompts": prompts,
+            "competitors": competitors,
+            "share_of_voice": sov,
+            "intent_choices": intent_choices,
+            "page_title": f"AI Prompt Tracker — {project.name if project else 'Workspace'} | VRT SPACE AGENCY",
+            "meta_description": "Track exactly which AI prompts cite you, who you're competing against, and where you're losing share of voice.",
+            "canonical_url": request.build_absolute_uri(request.path),
+            "meta_robots": "noindex, nofollow",
+            "shell_theme": "shell-light",
+        }
+
+    def get(self, request, *args, **kwargs):
+        project = get_workspace_content_project(user=request.user, request=request)
+        if not project:
+            messages.info(request, "Create a workspace project first to start tracking prompts.")
+            return redirect("tools:workspace-dashboard")
+        return render(request, self.template_name, self._build_context(request, project))
+
+    def post(self, request, *args, **kwargs):
+        project = get_workspace_content_project(user=request.user, request=request)
+        if not project:
+            return redirect("tools:workspace-dashboard")
+
+        action = (request.POST.get("action") or "").strip()
+
+        if action == "add_prompt":
+            prompt_text = (request.POST.get("prompt") or "").strip()
+            intent = (request.POST.get("intent") or TrackedPrompt.Intent.INFORMATIONAL).strip()
+            if not prompt_text:
+                messages.error(request, "Prompt text is required.")
+            elif len(prompt_text) > 300:
+                messages.error(request, "Prompts must be 300 characters or fewer.")
+            else:
+                prompt, created = TrackedPrompt.objects.get_or_create(
+                    project=project,
+                    prompt=prompt_text,
+                    defaults={"intent": intent},
+                )
+                if created:
+                    try:
+                        run_prompt_check(prompt)
+                        messages.success(request, f"Tracking '{prompt_text[:60]}' across ChatGPT, Gemini and Perplexity.")
+                    except Exception as exc:  # pragma: no cover
+                        messages.warning(request, f"Prompt saved but initial check failed: {exc}")
+                else:
+                    messages.info(request, "Prompt already tracked.")
+
+        elif action == "add_competitor":
+            brand_name = (request.POST.get("brand_name") or "").strip()
+            domain = (request.POST.get("domain") or "").strip().lower().replace("https://", "").replace("http://", "").strip("/")
+            color = (request.POST.get("color") or "#818cf8").strip()
+            if not brand_name:
+                messages.error(request, "Brand name is required.")
+            else:
+                comp, created = TrackedCompetitor.objects.get_or_create(
+                    project=project,
+                    brand_name=brand_name,
+                    defaults={"domain": domain, "color": color},
+                )
+                if not created and (comp.domain != domain or comp.color != color):
+                    comp.domain = domain or comp.domain
+                    comp.color = color or comp.color
+                    comp.is_active = True
+                    comp.save(update_fields=("domain", "color", "is_active", "updated_at"))
+                messages.success(request, f"{'Added' if created else 'Updated'} competitor {brand_name}.")
+
+        elif action == "delete_prompt":
+            prompt_id = request.POST.get("prompt_id")
+            TrackedPrompt.objects.filter(pk=prompt_id, project=project).delete()
+            messages.info(request, "Prompt removed.")
+
+        elif action == "delete_competitor":
+            comp_id = request.POST.get("competitor_id")
+            TrackedCompetitor.objects.filter(pk=comp_id, project=project).delete()
+            messages.info(request, "Competitor removed.")
+
+        elif action == "rerun_all":
+            summary = run_all_active(project)
+            messages.success(
+                request,
+                f"Refreshed {summary['prompts']} prompts — {summary['citations']} citations across {summary['runs_created']} engine checks.",
+            )
+
+        elif action == "rerun_prompt":
+            prompt_id = request.POST.get("prompt_id")
+            prompt = TrackedPrompt.objects.filter(pk=prompt_id, project=project).first()
+            if prompt:
+                run_prompt_check(prompt)
+                messages.success(request, f"Refreshed '{prompt.prompt[:60]}'.")
+
+        return redirect("aeo:workspace-prompts")
+
+
+class WorkspacePromptDetailView(LoginRequiredMixin, View):
+    """Time-series detail page for a single tracked prompt."""
+
+    template_name = "aeo/prompt_detail.html"
+
+    def get(self, request, pk, *args, **kwargs):
+        project = get_workspace_content_project(user=request.user, request=request)
+        if not project:
+            return redirect("tools:workspace-dashboard")
+        prompt = get_object_or_404(TrackedPrompt, pk=pk, project=project)
+        trend = get_prompt_trend(prompt, days=90)
+        recent_runs = list(
+            PromptCheckRun.objects.filter(prompt=prompt).order_by("-created_at")[:15]
+        )
+        return render(
+            request,
+            self.template_name,
+            {
+                "project": project,
+                "workspace_projects": get_workspace_projects(request.user),
+                "prompt": prompt,
+                "trend": trend,
+                "recent_runs": recent_runs,
+                "page_title": f"Prompt trend — {prompt.prompt[:60]} | VRT SPACE AGENCY",
+                "meta_description": "Track AI citations for this prompt across ChatGPT, Gemini and Perplexity.",
+                "meta_robots": "noindex, nofollow",
+                "shell_theme": "shell-light",
+            },
+        )
+
+
+class ContentOptimizerView(View):
+    """Free public tool: paste content, get AI Citation Readiness score + fixes."""
+
+    template_name = "aeo/content_optimizer.html"
+
+    def get(self, request, *args, **kwargs):
+        return render(
+            request,
+            self.template_name,
+            {
+                "report": None,
+                "submitted_content": "",
+                "target_query": "",
+                "url": "",
+                "page_title": "AI Content Optimizer — Free Citation Readiness Score | VRT SPACE AGENCY",
+                "meta_description": "Free tool: paste any content and get an instant AI Citation Readiness Score with actionable fixes for ChatGPT, Gemini, and Perplexity.",
+                "canonical_url": request.build_absolute_uri(request.path),
+                "shell_theme": "shell-light",
+            },
+        )
+
+    def post(self, request, *args, **kwargs):
+        from .content_optimizer import optimize_content
+
+        content = (request.POST.get("content") or "").strip()
+        target_query = (request.POST.get("target_query") or "").strip()
+        url = (request.POST.get("url") or "").strip()
+
+        if not content:
+            messages.error(request, "Paste some content to analyse.")
+            return redirect("aeo:content-optimizer")
+
+        if len(content) > 200_000:
+            content = content[:200_000]
+            messages.info(request, "Content was truncated to 200,000 characters for analysis.")
+
+        report = optimize_content(content=content, target_query=target_query, url=url)
+        return render(
+            request,
+            self.template_name,
+            {
+                "report": report,
+                "submitted_content": content[:6000],
+                "target_query": target_query,
+                "url": url,
+                "page_title": f"AI Citation Readiness: {report.get('composite_score', 0)}/100 | VRT SPACE AGENCY",
+                "meta_description": "Your content's AI Citation Readiness Score with prioritized fixes for ChatGPT, Gemini, and Perplexity.",
+                "canonical_url": request.build_absolute_uri(request.path),
+                "shell_theme": "shell-light",
+            },
+        )
+
+
+class WorkspaceShareOfVoiceView(LoginRequiredMixin, View):
+    """Cross-prompt competitor share-of-voice dashboard."""
+
+    template_name = "aeo/share_of_voice.html"
+
+    def get(self, request, *args, **kwargs):
+        project = get_workspace_content_project(user=request.user, request=request)
+        if not project:
+            return redirect("tools:workspace-dashboard")
+        days = int(request.GET.get("days") or 30)
+        days = max(7, min(days, 180))
+        sov = compute_share_of_voice(project, days=days)
+        return render(
+            request,
+            self.template_name,
+            {
+                "project": project,
+                "workspace_projects": get_workspace_projects(request.user),
+                "share_of_voice": sov,
+                "window_options": [7, 30, 60, 90],
+                "selected_window": days,
+                "page_title": f"AI Share of Voice — {project.name} | VRT SPACE AGENCY",
+                "meta_description": "See where your brand wins or loses against competitors in AI-driven answers.",
+                "meta_robots": "noindex, nofollow",
                 "shell_theme": "shell-light",
             },
         )

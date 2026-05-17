@@ -1,0 +1,124 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% include "includes/workspace_nav.html" with workspace_nav_current="prompts" %}
+
+<section class="public-shell-section" style="padding-top: 2rem;">
+    <div class="container">
+        <a href="{% url 'aeo:workspace-prompts' %}" style="color: var(--text-muted); text-decoration: none; font-size: 0.85rem;">
+            <i class="fa-solid fa-arrow-left"></i>&nbsp; Back to all prompts
+        </a>
+        <div style="margin-top: 0.75rem; display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <p class="feature-tag">{{ trend.intent }} prompt</p>
+                <h1 style="margin: 0.25rem 0 0.5rem; font-size: clamp(1.6rem, 3vw, 2.4rem); line-height: 1.2;">
+                    "{{ prompt.prompt }}"
+                </h1>
+                <p class="text-muted" style="margin: 0; font-size: 0.9rem;">
+                    {% if prompt.last_checked_at %}Last checked {{ prompt.last_checked_at|timesince }} ago{% else %}Awaiting first check{% endif %} ·
+                    {{ recent_runs|length }} run{{ recent_runs|length|pluralize }} stored
+                </p>
+            </div>
+            <form method="post" action="{% url 'aeo:workspace-prompts' %}">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="rerun_prompt">
+                <input type="hidden" name="prompt_id" value="{{ prompt.pk }}">
+                <button type="submit" class="button button-primary">
+                    <i class="fa-solid fa-arrows-rotate"></i>&nbsp; Rerun this prompt now
+                </button>
+            </form>
+        </div>
+    </div>
+</section>
+
+{# ── Engine cards (latest result per engine) ───────────────────────── #}
+<section class="public-shell-section" style="padding-top: 1rem;">
+    <div class="container">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 1.25rem;">
+            {% for engine in trend.series %}
+            <article class="glass-panel" style="padding: 1.5rem; border-top: 3px solid {{ engine.color }};">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.9rem;">
+                    <div>
+                        <p class="eyebrow" style="color: {{ engine.color }}; margin: 0;">{{ engine.label }}</p>
+                        <h3 style="margin: 0.25rem 0 0; font-size: 1.1rem;">{{ engine.checks }} check{{ engine.checks|pluralize }}</h3>
+                    </div>
+                    <div style="text-align: right;">
+                        <p class="eyebrow" style="margin: 0;">Latest score</p>
+                        <p style="margin: 0; font-size: 1.6rem; font-weight: 900; color: {{ engine.color }};">{{ engine.latest_score }}</p>
+                    </div>
+                </div>
+                <div style="padding: 0.6rem 0.75rem; border-radius: 8px; background: {% if engine.latest_cited %}rgba(16, 185, 129, 0.08); color: #10b981;{% else %}rgba(245, 158, 11, 0.08); color: #f59e0b;{% endif %} font-size: 0.85rem; font-weight: 600;">
+                    {% if engine.latest_cited %}
+                        <i class="fa-solid fa-circle-check"></i>&nbsp; Cited at position {{ engine.latest_position|default:"—" }}
+                    {% else %}
+                        <i class="fa-solid fa-triangle-exclamation"></i>&nbsp; Not cited
+                    {% endif %}
+                </div>
+
+                {# Sparkline-ish history bar #}
+                <div style="display: flex; gap: 2px; margin-top: 1rem; height: 36px; align-items: flex-end;">
+                    {% for point in engine.points %}
+                    <div title="{{ point.at }} · score {{ point.score }} · {% if point.cited %}cited{% else %}not cited{% endif %}"
+                         style="flex: 1; min-width: 4px; max-width: 22px; height: {{ point.score }}%; min-height: 4px; border-radius: 3px 3px 0 0;
+                                background: {% if point.cited %}{{ engine.color }}{% else %}rgba(255,255,255,0.18){% endif %};"></div>
+                    {% endfor %}
+                </div>
+                <p class="text-muted" style="font-size: 0.7rem; margin: 0.4rem 0 0; text-align: right;">{{ engine.checks }} runs · last 90 days</p>
+            </article>
+            {% empty %}
+            <article class="glass-panel" style="padding: 2rem; text-align: center;">
+                <i class="fa-solid fa-clock" style="font-size: 1.6rem; color: var(--brand-primary);"></i>
+                <h3 style="margin: 0.5rem 0;">No checks yet</h3>
+                <p class="text-muted">Click "Rerun this prompt now" to capture your first data point.</p>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{# ── Recent runs feed ──────────────────────────────────────────────── #}
+<section class="public-shell-section" style="padding-top: 1.25rem;">
+    <div class="container">
+        <div class="section-heading" style="margin-bottom: 1.25rem;">
+            <p class="eyebrow text-accent">Recent runs</p>
+            <h2 style="font-size: 1.45rem;">What AI actually answered</h2>
+        </div>
+
+        {% if recent_runs %}
+        <div style="display: grid; gap: 0.85rem;">
+            {% for run in recent_runs %}
+            <article class="glass-panel" style="padding: 1.1rem 1.3rem; border-left: 3px solid {{ run.raw_signals.engine_color|default:'#818cf8' }};">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.55rem;">
+                    <div>
+                        <strong style="color: {{ run.raw_signals.engine_color|default:'#818cf8' }};">{{ run.raw_signals.engine_label|default:run.engine|title }}</strong>
+                        <span class="text-muted" style="font-size: 0.78rem;">· {{ run.created_at|date:"M j, Y · g:i A" }}</span>
+                    </div>
+                    <div style="font-size: 0.82rem;">
+                        {% if run.target_cited %}
+                            <span style="color: #10b981; font-weight: 700;"><i class="fa-solid fa-circle-check"></i> Cited #{{ run.target_position|default:"—" }}</span>
+                        {% else %}
+                            <span style="color: #f59e0b; font-weight: 700;"><i class="fa-solid fa-triangle-exclamation"></i> Not cited</span>
+                        {% endif %}
+                        <span class="text-muted">· score {{ run.citation_score }}</span>
+                    </div>
+                </div>
+                <p style="margin: 0 0 0.6rem; font-size: 0.92rem; line-height: 1.55;">{{ run.answer_snippet }}</p>
+                {% if run.cited_brands %}
+                <div style="display: flex; flex-wrap: wrap; gap: 0.35rem;">
+                    {% for brand in run.cited_brands %}
+                    <span class="premium-pill" style="{% if brand.is_target %}background: rgba(56,189,248,0.16); color: var(--brand-primary); border-color: rgba(56,189,248,0.3);{% endif %}">
+                        {% if brand.is_target %}<i class="fa-solid fa-star"></i>&nbsp;{% endif %}{{ brand.label }} <span style="opacity: 0.6;">{{ brand.score }}</span>
+                    </span>
+                    {% endfor %}
+                </div>
+                {% endif %}
+            </article>
+            {% endfor %}
+        </div>
+        {% else %}
+        <p class="text-muted" style="text-align: center; padding: 2rem 0;">No runs yet. Trigger a check above.</p>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

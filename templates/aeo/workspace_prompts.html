@@ -1,0 +1,263 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% include "includes/workspace_nav.html" with workspace_nav_current="prompts" %}
+
+<section class="public-shell-section" style="padding-top: 2rem;">
+    <div class="container">
+        <div class="hero-split public-hero-split" style="align-items: flex-end;">
+            <div class="public-hero-copy">
+                <p class="feature-tag">AI Prompt Tracker</p>
+                <h1 style="font-size: clamp(1.8rem, 3.4vw, 2.8rem); margin-bottom: 0.6rem;">
+                    The exact prompts you need to win — and who's winning them today.
+                </h1>
+                <p class="lead" style="max-width: 640px;">
+                    Add the queries your customers ask AI. We check ChatGPT, Gemini, and Perplexity, then show you who got cited.
+                    Rerun any time to see whether your fixes are moving the needle.
+                </p>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 0.65rem; align-items: flex-end;">
+                <form method="post" action="{% url 'aeo:workspace-prompts' %}">
+                    {% csrf_token %}
+                    <input type="hidden" name="action" value="rerun_all">
+                    <button class="button button-secondary" type="submit"
+                            {% if not prompts %}disabled{% endif %}>
+                        <i class="fa-solid fa-arrows-rotate"></i>&nbsp; Rerun all prompts
+                    </button>
+                </form>
+                <a class="button button-secondary" href="{% url 'aeo:workspace-share-of-voice' %}">
+                    <i class="fa-solid fa-chart-pie"></i>&nbsp; Open Share of Voice
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ── Share of Voice summary strip ────────────────────────────────────── #}
+<section class="public-shell-section" style="padding-top: 1.25rem; padding-bottom: 1.25rem;">
+    <div class="container">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
+            <article class="glass-panel" style="padding: 1.25rem 1.4rem;">
+                <p class="eyebrow text-accent" style="margin-bottom: 0.4rem;">Tracked prompts</p>
+                <p style="font-size: 1.95rem; font-weight: 800; margin: 0;">{{ prompts|length }}</p>
+                <p class="text-muted" style="font-size: 0.78rem; margin: 0.25rem 0 0;">Across {{ share_of_voice.engines|length|default:3 }} engines.</p>
+            </article>
+            <article class="glass-panel" style="padding: 1.25rem 1.4rem;">
+                <p class="eyebrow text-accent" style="margin-bottom: 0.4rem;">Checks in last 30d</p>
+                <p style="font-size: 1.95rem; font-weight: 800; margin: 0;">{{ share_of_voice.total_checks|default:0 }}</p>
+                <p class="text-muted" style="font-size: 0.78rem; margin: 0.25rem 0 0;">Citation events captured.</p>
+            </article>
+            <article class="glass-panel" style="padding: 1.25rem 1.4rem;">
+                <p class="eyebrow text-accent" style="margin-bottom: 0.4rem;">Your share of voice</p>
+                {% with leader=share_of_voice.leaderboard|first %}
+                {% if share_of_voice.has_data %}
+                    {% for entry in share_of_voice.leaderboard %}
+                        {% if entry.is_target %}
+                        <p style="font-size: 1.95rem; font-weight: 800; margin: 0; color: var(--brand-primary);">{{ entry.share_pct }}%</p>
+                        <p class="text-muted" style="font-size: 0.78rem; margin: 0.25rem 0 0;">Citations attributed to {{ share_of_voice.target_label }}.</p>
+                        {% endif %}
+                    {% empty %}
+                    <p style="font-size: 1.95rem; font-weight: 800; margin: 0;">—</p>
+                    {% endfor %}
+                {% else %}
+                <p style="font-size: 1.95rem; font-weight: 800; margin: 0;">—</p>
+                <p class="text-muted" style="font-size: 0.78rem; margin: 0.25rem 0 0;">Add a prompt below to start tracking.</p>
+                {% endif %}
+                {% endwith %}
+            </article>
+            <article class="glass-panel" style="padding: 1.25rem 1.4rem;">
+                <p class="eyebrow text-accent" style="margin-bottom: 0.4rem;">Competitors monitored</p>
+                <p style="font-size: 1.95rem; font-weight: 800; margin: 0;">{{ competitors|length }}</p>
+                <p class="text-muted" style="font-size: 0.78rem; margin: 0.25rem 0 0;">Add the brands you're benchmarking.</p>
+            </article>
+        </div>
+    </div>
+</section>
+
+<section class="public-shell-section" style="padding-top: 1.25rem;">
+    <div class="container" style="display: grid; grid-template-columns: 2fr 1fr; gap: 1.5rem;">
+
+        {# ── Left: Tracked prompts list ───────────────────────────────────── #}
+        <div class="glass-panel" style="padding: 1.75rem; border-radius: var(--radius);">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.25rem;">
+                <div>
+                    <h2 style="margin: 0; font-size: 1.3rem;">Tracked prompts</h2>
+                    <p class="text-muted" style="font-size: 0.85rem; margin: 0.25rem 0 0;">Prompts you want to be cited for, scored across all three engines.</p>
+                </div>
+            </div>
+
+            <form method="post" action="{% url 'aeo:workspace-prompts' %}" style="margin-bottom: 1.5rem;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_prompt">
+                <div style="display: grid; grid-template-columns: 2fr 1fr auto; gap: 0.6rem; align-items: stretch;">
+                    <input type="text" name="prompt" placeholder="e.g. best AEO platform for agencies" required maxlength="300"
+                           style="padding: 0.65rem 0.85rem; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid var(--border-glass); color: var(--text-primary);">
+                    <select name="intent" style="padding: 0.65rem 0.85rem; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid var(--border-glass); color: var(--text-primary);">
+                        {% for key, label in intent_choices %}
+                        <option value="{{ key }}">{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="button button-primary">
+                        <i class="fa-solid fa-plus"></i>&nbsp; Add &amp; check
+                    </button>
+                </div>
+            </form>
+
+            {% if prompts %}
+            <div style="display: grid; gap: 0.85rem;">
+                {% for prompt in prompts %}
+                <article style="border: 1px solid var(--border-glass); border-radius: 12px; padding: 1rem 1.15rem; background: rgba(255,255,255,0.02);">
+                    <div style="display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; align-items: flex-start;">
+                        <div style="flex: 1; min-width: 240px;">
+                            <a href="{% url 'aeo:workspace-prompt-detail' prompt.pk %}" style="color: var(--text-primary); text-decoration: none; font-weight: 700; font-size: 1.02rem;">
+                                {{ prompt.prompt }}
+                            </a>
+                            <div style="display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 0.4rem;">
+                                <span class="premium-pill">{{ prompt.get_intent_display }}</span>
+                                {% if prompt.last_checked_at %}
+                                <span class="text-muted" style="font-size: 0.78rem;">Last checked {{ prompt.last_checked_at|timesince }} ago</span>
+                                {% else %}
+                                <span class="text-muted" style="font-size: 0.78rem;">Not checked yet</span>
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div style="display: flex; gap: 0.75rem; align-items: center;">
+                            <div style="text-align: right;">
+                                <p class="eyebrow" style="margin: 0; font-size: 0.66rem;">Citation</p>
+                                {% if prompt.last_target_cited %}
+                                <span style="font-weight: 800; color: #10b981;"><i class="fa-solid fa-circle-check"></i> Cited</span>
+                                {% else %}
+                                <span style="font-weight: 800; color: #f59e0b;"><i class="fa-solid fa-triangle-exclamation"></i> Not cited</span>
+                                {% endif %}
+                            </div>
+                            <div style="text-align: right; min-width: 70px;">
+                                <p class="eyebrow" style="margin: 0; font-size: 0.66rem;">Share</p>
+                                <span style="font-weight: 800; font-size: 1.1rem; color: var(--brand-primary);">{{ prompt.last_share_of_voice }}%</span>
+                            </div>
+                            <form method="post" action="{% url 'aeo:workspace-prompts' %}" style="margin: 0;">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="rerun_prompt">
+                                <input type="hidden" name="prompt_id" value="{{ prompt.pk }}">
+                                <button type="submit" class="button button-secondary" style="padding: 0.45rem 0.7rem; font-size: 0.82rem;" title="Rerun this prompt">
+                                    <i class="fa-solid fa-arrows-rotate"></i>
+                                </button>
+                            </form>
+                            <form method="post" action="{% url 'aeo:workspace-prompts' %}" style="margin: 0;" onsubmit="return confirm('Remove this prompt?');">
+                                {% csrf_token %}
+                                <input type="hidden" name="action" value="delete_prompt">
+                                <input type="hidden" name="prompt_id" value="{{ prompt.pk }}">
+                                <button type="submit" class="button button-ghost" style="padding: 0.45rem 0.7rem; font-size: 0.82rem; color: #ef4444;" title="Remove">
+                                    <i class="fa-solid fa-trash"></i>
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div style="padding: 2.5rem 1rem; text-align: center; border: 1px dashed var(--border-glass); border-radius: 12px;">
+                <i class="fa-solid fa-bullseye" style="font-size: 1.8rem; color: var(--brand-primary); margin-bottom: 0.6rem;"></i>
+                <h3 style="margin: 0 0 0.35rem;">No prompts tracked yet</h3>
+                <p class="text-muted" style="margin: 0;">Add the queries your customers ask AI — e.g. "best AI SEO tool", "how to improve AI citations".</p>
+            </div>
+            {% endif %}
+        </div>
+
+        {# ── Right: Competitors panel ──────────────────────────────────────── #}
+        <div class="glass-panel" style="padding: 1.75rem; border-radius: var(--radius);">
+            <h2 style="margin: 0; font-size: 1.15rem;">Tracked competitors</h2>
+            <p class="text-muted" style="font-size: 0.85rem; margin: 0.25rem 0 1.1rem;">Brands you want to benchmark against in AI answers.</p>
+
+            <form method="post" action="{% url 'aeo:workspace-prompts' %}" style="margin-bottom: 1.4rem;">
+                {% csrf_token %}
+                <input type="hidden" name="action" value="add_competitor">
+                <div style="display: grid; gap: 0.5rem;">
+                    <input type="text" name="brand_name" placeholder="Competitor brand name" required maxlength="120"
+                           style="padding: 0.6rem 0.8rem; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid var(--border-glass); color: var(--text-primary);">
+                    <input type="text" name="domain" placeholder="competitor.com (optional)" maxlength="255"
+                           style="padding: 0.6rem 0.8rem; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid var(--border-glass); color: var(--text-primary);">
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <input type="color" name="color" value="#818cf8"
+                               style="height: 38px; width: 50px; border-radius: 8px; border: 1px solid var(--border-glass); background: transparent;">
+                        <button type="submit" class="button button-primary" style="flex: 1;">
+                            <i class="fa-solid fa-plus"></i>&nbsp; Add competitor
+                        </button>
+                    </div>
+                </div>
+            </form>
+
+            {% if competitors %}
+            <ul style="list-style: none; padding: 0; margin: 0; display: grid; gap: 0.55rem;">
+                {% for comp in competitors %}
+                <li style="display: flex; justify-content: space-between; align-items: center; padding: 0.65rem 0.85rem; border: 1px solid var(--border-glass); border-radius: 10px; background: rgba(255,255,255,0.02);">
+                    <div style="display: flex; align-items: center; gap: 0.65rem;">
+                        <span style="display: inline-block; width: 12px; height: 12px; border-radius: 3px; background: {{ comp.color }};"></span>
+                        <div>
+                            <strong style="font-size: 0.92rem;">{{ comp.brand_name }}</strong>
+                            {% if comp.domain %}<br><span class="text-muted" style="font-size: 0.75rem;">{{ comp.domain }}</span>{% endif %}
+                        </div>
+                    </div>
+                    <div style="display: flex; gap: 0.5rem; align-items: center;">
+                        <span class="text-muted" style="font-size: 0.78rem;">{{ comp.appearances_30d }}× / 30d</span>
+                        <form method="post" action="{% url 'aeo:workspace-prompts' %}" style="margin: 0;" onsubmit="return confirm('Remove this competitor?');">
+                            {% csrf_token %}
+                            <input type="hidden" name="action" value="delete_competitor">
+                            <input type="hidden" name="competitor_id" value="{{ comp.id }}">
+                            <button type="submit" class="button button-ghost" style="padding: 0.35rem 0.55rem; font-size: 0.78rem; color: #ef4444;">
+                                <i class="fa-solid fa-xmark"></i>
+                            </button>
+                        </form>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            {% else %}
+            <p class="text-muted" style="text-align: center; font-size: 0.85rem; padding: 1.5rem 0;">No competitors added yet.</p>
+            {% endif %}
+        </div>
+    </div>
+</section>
+
+{# ── Engine breakdown ───────────────────────────────────────────────── #}
+{% if share_of_voice.has_data %}
+<section class="public-shell-section" style="padding-top: 1.25rem;">
+    <div class="container">
+        <div class="section-heading" style="margin-bottom: 1.25rem;">
+            <p class="eyebrow text-accent">Last 30 days</p>
+            <h2 style="font-size: 1.6rem;">Citations by engine</h2>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+            {% for engine in share_of_voice.engines %}
+            <article class="glass-panel" style="padding: 1.5rem; border-top: 3px solid {{ engine.color }};">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem;">
+                    <div>
+                        <p class="eyebrow" style="color: {{ engine.color }}; margin: 0;">{{ engine.label }}</p>
+                        <h3 style="margin: 0.2rem 0 0; font-size: 1.15rem;">{{ engine.total_checks }} checks</h3>
+                    </div>
+                    <div style="text-align: right;">
+                        <p class="eyebrow" style="margin: 0;">You cited</p>
+                        <p style="margin: 0; font-size: 1.6rem; font-weight: 900; color: {% if engine.target_cited_pct >= 50 %}#10b981{% else %}#f59e0b{% endif %};">{{ engine.target_cited_pct }}%</p>
+                    </div>
+                </div>
+                <div style="display: grid; gap: 0.45rem;">
+                    {% for entry in engine.leaderboard %}
+                    <div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 0.18rem;">
+                            <span style="font-weight: 600;">{% if entry.is_target %}<i class="fa-solid fa-star" style="color: var(--brand-primary);"></i> {% endif %}{{ entry.label }}</span>
+                            <span class="text-muted">{{ entry.share_pct }}%</span>
+                        </div>
+                        <div style="height: 6px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden;">
+                            <div style="height: 100%; width: {{ entry.share_pct }}%; background: {{ entry.color }};"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+{% endblock %}

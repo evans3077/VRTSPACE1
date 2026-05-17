@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+{% include "includes/workspace_nav.html" with workspace_nav_current="sov" %}
+
+<section class="public-shell-section" style="padding-top: 2rem;">
+    <div class="container">
+        <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <p class="feature-tag">Share of Voice</p>
+                <h1 style="font-size: clamp(1.8rem, 3.4vw, 2.8rem); margin: 0.3rem 0 0.5rem;">
+                    Where you win — and lose — in AI answers.
+                </h1>
+                <p class="lead" style="max-width: 640px;">
+                    Aggregated across every tracked prompt and engine. Compare your share against the competitors you're benchmarking.
+                </p>
+            </div>
+            <form method="get" action="{% url 'aeo:workspace-share-of-voice' %}">
+                <label class="eyebrow" for="window-select" style="display: block; margin-bottom: 0.35rem;">Window</label>
+                <select id="window-select" name="days" onchange="this.form.submit()"
+                        style="padding: 0.55rem 0.85rem; border-radius: 8px; background: rgba(255,255,255,0.04); border: 1px solid var(--border-glass); color: var(--text-primary);">
+                    {% for opt in window_options %}
+                    <option value="{{ opt }}" {% if opt == selected_window %}selected{% endif %}>Last {{ opt }} days</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+    </div>
+</section>
+
+{% if not share_of_voice.has_data %}
+<section class="public-shell-section">
+    <div class="container">
+        <div class="glass-panel" style="padding: 3rem 2rem; text-align: center;">
+            <i class="fa-solid fa-chart-pie" style="font-size: 2.4rem; color: var(--brand-primary);"></i>
+            <h2 style="margin: 1rem 0 0.5rem;">No share-of-voice data yet</h2>
+            <p class="text-muted" style="max-width: 540px; margin: 0 auto;">Add prompts on the <a href="{% url 'aeo:workspace-prompts' %}" style="color: var(--brand-primary);">Prompts tab</a> and run them. Once you have a few checks logged, this dashboard lights up with citation share, engine breakdowns, and trends.</p>
+        </div>
+    </div>
+</section>
+{% else %}
+
+{# ── KPI strip ─────────────────────────────────────────────────────── #}
+<section class="public-shell-section" style="padding-top: 1.25rem; padding-bottom: 1.25rem;">
+    <div class="container">
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
+            <article class="glass-panel" style="padding: 1.4rem;">
+                <p class="eyebrow text-accent">Total checks</p>
+                <p style="font-size: 2.2rem; font-weight: 800; margin: 0.25rem 0 0;">{{ share_of_voice.total_checks }}</p>
+                <p class="text-muted" style="font-size: 0.78rem; margin: 0.25rem 0 0;">Across {{ share_of_voice.engines|length }} engines.</p>
+            </article>
+            {% for entry in share_of_voice.leaderboard|slice:":3" %}
+            <article class="glass-panel" style="padding: 1.4rem; {% if entry.is_target %}border-top: 3px solid var(--brand-primary);{% endif %}">
+                <p class="eyebrow text-accent">{% if entry.is_target %}You ({{ entry.label }}){% else %}{{ entry.label }}{% endif %}</p>
+                <p style="font-size: 2.2rem; font-weight: 800; margin: 0.25rem 0 0; color: {{ entry.color }};">{{ entry.share_pct }}%</p>
+                <p class="text-muted" style="font-size: 0.78rem; margin: 0.25rem 0 0;">{{ entry.appearances }} citation{{ entry.appearances|pluralize }}.</p>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{# ── Global leaderboard bar chart ────────────────────────────────── #}
+<section class="public-shell-section" style="padding-top: 0.75rem;">
+    <div class="container">
+        <div class="glass-panel" style="padding: 1.75rem;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.25rem;">
+                <h2 style="margin: 0; font-size: 1.3rem;">Citation leaderboard</h2>
+                <span class="text-muted" style="font-size: 0.8rem;">Across every prompt, all engines</span>
+            </div>
+            <div style="display: grid; gap: 0.9rem;">
+                {% for entry in share_of_voice.leaderboard %}
+                <div>
+                    <div style="display: flex; justify-content: space-between; font-size: 0.92rem; margin-bottom: 0.3rem;">
+                        <span style="font-weight: 700;">{% if entry.is_target %}<i class="fa-solid fa-star" style="color: var(--brand-primary);"></i> {% endif %}{{ entry.label }}</span>
+                        <span class="text-muted">{{ entry.appearances }}× &middot; <strong style="color: {{ entry.color }};">{{ entry.share_pct }}%</strong></span>
+                    </div>
+                    <div style="height: 10px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden;">
+                        <div style="height: 100%; width: {{ entry.share_pct }}%; background: {{ entry.color }}; border-radius: 999px;"></div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</section>
+
+{# ── Per-engine breakdown ─────────────────────────────────────────── #}
+<section class="public-shell-section" style="padding-top: 1.25rem;">
+    <div class="container">
+        <div class="section-heading" style="margin-bottom: 1.25rem;">
+            <p class="eyebrow text-accent">Engine breakdown</p>
+            <h2 style="font-size: 1.6rem;">Who wins on which engine</h2>
+        </div>
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.25rem;">
+            {% for engine in share_of_voice.engines %}
+            <article class="glass-panel" style="padding: 1.5rem; border-top: 3px solid {{ engine.color }};">
+                <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1rem;">
+                    <div>
+                        <p class="eyebrow" style="color: {{ engine.color }}; margin: 0;">{{ engine.label }}</p>
+                        <h3 style="margin: 0.2rem 0 0; font-size: 1.1rem;">{{ engine.total_checks }} checks</h3>
+                    </div>
+                    <div style="text-align: right;">
+                        <p class="eyebrow" style="margin: 0;">You cited</p>
+                        <p style="margin: 0; font-size: 1.5rem; font-weight: 900; color: {% if engine.target_cited_pct >= 50 %}#10b981{% else %}#f59e0b{% endif %};">{{ engine.target_cited_pct }}%</p>
+                    </div>
+                </div>
+                <div style="display: grid; gap: 0.45rem;">
+                    {% for entry in engine.leaderboard %}
+                    <div>
+                        <div style="display: flex; justify-content: space-between; font-size: 0.82rem; margin-bottom: 0.18rem;">
+                            <span style="font-weight: 600;">{% if entry.is_target %}<i class="fa-solid fa-star" style="color: var(--brand-primary);"></i> {% endif %}{{ entry.label }}</span>
+                            <span class="text-muted">{{ entry.share_pct }}%</span>
+                        </div>
+                        <div style="height: 6px; background: rgba(255,255,255,0.06); border-radius: 999px; overflow: hidden;">
+                            <div style="height: 100%; width: {{ entry.share_pct }}%; background: {{ entry.color }};"></div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{# ── Weekly trend ─────────────────────────────────────────────────── #}
+{% if share_of_voice.weekly_trend %}
+<section class="public-shell-section" style="padding-top: 1.25rem;">
+    <div class="container">
+        <div class="glass-panel" style="padding: 1.75rem;">
+            <div style="display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 1.25rem;">
+                <h2 style="margin: 0; font-size: 1.3rem;">Weekly citation trend</h2>
+                <span class="text-muted" style="font-size: 0.8rem;">Your share vs all competitors combined</span>
+            </div>
+            <div style="display: flex; gap: 8px; height: 180px; align-items: flex-end; padding: 0.5rem 0;">
+                {% for week in share_of_voice.weekly_trend %}
+                <div style="flex: 1; min-width: 22px; display: flex; flex-direction: column; align-items: center;">
+                    <div style="width: 100%; display: flex; flex-direction: column; height: 100%; justify-content: flex-end; border-radius: 6px 6px 0 0; overflow: hidden;">
+                        <div style="background: #475569; height: {{ week.competitor_pct }}%;" title="Competitors {{ week.competitor_pct }}%"></div>
+                        <div style="background: var(--brand-primary); height: {{ week.target_pct }}%;" title="You {{ week.target_pct }}%"></div>
+                    </div>
+                    <span class="text-muted" style="font-size: 0.66rem; margin-top: 0.35rem;">{{ week.week|slice:"5:" }}</span>
+                </div>
+                {% endfor %}
+            </div>
+            <div style="display: flex; gap: 1rem; margin-top: 0.75rem; font-size: 0.8rem; color: var(--text-muted);">
+                <span><span style="display: inline-block; width: 10px; height: 10px; background: var(--brand-primary); border-radius: 2px; margin-right: 0.4rem;"></span>You</span>
+                <span><span style="display: inline-block; width: 10px; height: 10px; background: #475569; border-radius: 2px; margin-right: 0.4rem;"></span>Competitors</span>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+{% endif %}
+{% endblock %}

@@ -172,6 +172,100 @@ class AEOIndexEntry(TimestampedModel):
         )
 
 
+class TrackedPrompt(TimestampedModel):
+    """A persistent query the user wants to monitor for AI citations over time."""
+
+    class Intent(models.TextChoices):
+        INFORMATIONAL = "informational", "Informational"
+        COMMERCIAL = "commercial", "Commercial"
+        COMPARISON = "comparison", "Comparison"
+        LOCAL = "local", "Local"
+        BRAND = "brand", "Brand"
+
+    project = models.ForeignKey(
+        "leads.ClientProject",
+        on_delete=models.CASCADE,
+        related_name="tracked_prompts",
+    )
+    prompt = models.CharField(max_length=300)
+    intent = models.CharField(
+        max_length=24,
+        choices=Intent.choices,
+        default=Intent.INFORMATIONAL,
+    )
+    is_active = models.BooleanField(default=True)
+    last_checked_at = models.DateTimeField(null=True, blank=True)
+    last_target_cited = models.BooleanField(default=False)
+    last_share_of_voice = models.PositiveSmallIntegerField(default=0)
+    notes = models.CharField(max_length=255, blank=True)
+
+    class Meta:
+        ordering = ("-is_active", "-last_checked_at", "prompt")
+        constraints = [
+            models.UniqueConstraint(
+                fields=("project", "prompt"),
+                name="unique_prompt_per_project",
+            ),
+        ]
+
+    def __str__(self):
+        return self.prompt
+
+
+class TrackedCompetitor(TimestampedModel):
+    """A named competitor the user wants to benchmark share-of-voice against."""
+
+    project = models.ForeignKey(
+        "leads.ClientProject",
+        on_delete=models.CASCADE,
+        related_name="tracked_competitors",
+    )
+    brand_name = models.CharField(max_length=120)
+    domain = models.CharField(max_length=255, blank=True)
+    color = models.CharField(max_length=16, default="#818cf8")
+    is_active = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ("-is_active", "brand_name")
+        constraints = [
+            models.UniqueConstraint(
+                fields=("project", "brand_name"),
+                name="unique_competitor_per_project",
+            ),
+        ]
+
+    def __str__(self):
+        return self.brand_name
+
+
+class PromptCheckRun(TimestampedModel):
+    """A single execution of a tracked prompt across one or more engines."""
+
+    prompt = models.ForeignKey(
+        TrackedPrompt,
+        on_delete=models.CASCADE,
+        related_name="check_runs",
+    )
+    engine = models.CharField(max_length=24, choices=VisibilitySnapshot.Engine.choices)
+    target_cited = models.BooleanField(default=False)
+    target_position = models.PositiveSmallIntegerField(null=True, blank=True)
+    answer_snippet = models.TextField(blank=True)
+    cited_brands = models.JSONField(default=list, blank=True)
+    competitor_brands = models.JSONField(default=list, blank=True)
+    citation_score = models.PositiveSmallIntegerField(default=0)
+    sentiment = models.CharField(max_length=16, default="neutral")
+    raw_signals = models.JSONField(default=dict, blank=True)
+
+    class Meta:
+        ordering = ("-created_at",)
+        indexes = [
+            models.Index(fields=("prompt", "engine", "-created_at")),
+        ]
+
+    def __str__(self):
+        return f"{self.prompt} / {self.engine} @ {self.created_at:%Y-%m-%d}"
+
+
 class AIRecommendation(TimestampedModel):
     aeo_audit = models.ForeignKey(
         AEOAudit,
