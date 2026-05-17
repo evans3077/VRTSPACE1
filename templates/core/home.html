@@ -4,15 +4,21 @@
 {% block content %}
 <section class="hero-split container" style="padding-top: 1.5rem !important; padding-bottom: 4.5rem !important;">
     <div class="hero-content">
-        <p class="feature-tag">Website Visibility Analysis</p>
-        <h1 class="gradient-text">Understand Your Website, Fix What Matters, Improve Over Time.</h1>
+        <p class="feature-tag">AI-First SEO &amp; Answer Engine Optimization</p>
+        <h1 class="gradient-text">Be the source behind the answer.</h1>
         <p class="lead">
-            Run a live audit, uncover SEO gaps, improve AI visibility, and keep progress visible in one workspace.
+            VRT SPACE AGENCY audits your site, tracks where AI chatbots and AI Overviews cite you, and shows exactly what to fix so you win more AI-driven traffic.
         </p>
+        <ul style="list-style: none; padding: 0; margin: 1.5rem 0 0 0; display: grid; gap: 0.75rem;">
+            <li style="display: flex; gap: 0.75rem; align-items: flex-start; color: var(--text-primary); font-size: 0.95rem;"><i class="fas fa-check-circle" style="color: var(--brand-primary); margin-top: 0.2rem; flex-shrink: 0;"></i> See when AI answers mention you vs your competitors.</li>
+            <li style="display: flex; gap: 0.75rem; align-items: flex-start; color: var(--text-primary); font-size: 0.95rem;"><i class="fas fa-check-circle" style="color: var(--brand-primary); margin-top: 0.2rem; flex-shrink: 0;"></i> Fix technical, speed, and content gaps that block AI citations.</li>
+            <li style="display: flex; gap: 0.75rem; align-items: flex-start; color: var(--text-primary); font-size: 0.95rem;"><i class="fas fa-check-circle" style="color: var(--brand-primary); margin-top: 0.2rem; flex-shrink: 0;"></i> Track AI visibility scores and improvements over time.</li>
+        </ul>
         <div class="hero-actions" style="justify-content: flex-start; margin-top: 2rem;">
-            <a class="button button-mega" href="{% url 'tools:workspace-signup' %}">Start Free Audit</a>
+            <a class="button button-mega" href="{% url 'tools:workspace-signup' %}">Run Free AI Visibility Audit</a>
             <a class="button button-secondary" href="#journey">See How It Works</a>
         </div>
+        <p style="margin-top: 1.25rem; font-size: 0.8rem; color: var(--text-muted);">Optimized for ChatGPT, Perplexity, Gemini, Claude, Bing Copilot, and Google AI Overviews.</p>
     </div>
     <div class="workbench-visual">
         <div class="workbench-frame">
@@ -29,7 +35,7 @@
                     <div
                         style="padding: 1rem; background: rgba(255,255,255,0.03); border-radius: 8px; border-left: 3px solid var(--brand-primary);">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                            <span style="font-size: 0.75rem; color: var(--text-muted);">WEBSITE AUDIT</span>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">AI VISIBILITY SCORE</span>
                             <span
                                 style="font-size: 0.75rem; color: var(--brand-primary); font-weight: 800;">84/100</span>
                         </div>
@@ -42,7 +48,7 @@
                     <div
                         style="padding: 1rem; background: rgba(255,255,255,0.03); border-radius: 8px; border-left: 3px solid var(--brand-secondary);">
                         <div style="display: flex; justify-content: space-between; margin-bottom: 0.5rem;">
-                            <span style="font-size: 0.75rem; color: var(--text-muted);">SEO &amp; AEO GAPS</span>
+                            <span style="font-size: 0.75rem; color: var(--text-muted);">AI CITATION GAPS</span>
                             <span
                                 style="font-size: 0.75rem; color: var(--brand-secondary); font-weight: 800;">6 priority fixes</span>
                         </div>
@@ -93,20 +99,19 @@
 <section class="feature-showcase-section container" id="services" style="padding: 8rem 0;">
     <div class="section-heading" style="text-align: center; max-width: 800px; margin: 0 auto 4rem auto;">
         <p class="feature-tag">Three Connected Layers</p>
-        <h2 style="font-size: 3.5rem;">Audit first. Then SEO. Then AI visibility.</h2>
+        <h2 style="font-size: 3.5rem;">AI visibility. Backed by SEO. Built on audit.</h2>
         <p class="text-secondary" style="font-size: 1.25rem; margin-top: 1.5rem;">
-            Start with a diagnosis, understand what competitors are doing better, and improve how your site shows up
-            in both search engines and AI answers.
+            Know where AI systems cite your competitors but ignore you. Fix the technical, content, and speed signals that block AI citations. Track progress over time.
         </p>
     </div>
 
     <div class="feature-showcase-grid">
         <article class="feature-card-premium">
-            <div class="icon-box"><i class="fas fa-search"></i></div>
+            <div class="icon-box"><i class="fas fa-robot"></i></div>
             <div class="feature-content">
-                <p class="feature-tag">Audit</p>
-                <h3>Website Audit</h3>
-                <p>See the technical issues, performance blockers, and quick wins that are holding your site back.</p>
+                <p class="feature-tag">AEO</p>
+                <h3>AI Visibility</h3>
+                <p>See which AI engines cite your competitors, track your AI Visibility Score, and fix the gaps that keep you out of AI answers.</p>
             </div>
         </article>
         <article class="feature-card-premium">
@@ -118,13 +123,28 @@
             </div>
         </article>
         <article class="feature-card-premium">
-            <div class="icon-box"><i class="fas fa-robot"></i></div>
+            <div class="icon-box"><i class="fas fa-search"></i></div>
             <div class="feature-content">
-                <p class="feature-tag">AEO</p>
-                <h3>AI Visibility</h3>
-                <p>Improve answer-readiness, entity clarity, and the signals that help AI systems trust your site.</p>
+                <p class="feature-tag">Audit</p>
+                <h3>Website Audit</h3>
+                <p>See the technical issues, performance blockers, and quick wins that are holding your site back.</p>
             </div>
         </article>
+    </div>
+</section>
+
+<section style="padding: 6rem 0; background: rgba(15, 23, 42, 0.3); border-top: 1px solid var(--border-glass);">
+    <div class="container" style="max-width: 800px; text-align: center;">
+        <p class="feature-tag">Why it matters</p>
+        <h2 style="font-size: 2.75rem; margin-top: 1rem;">Search is moving from links to answers.</h2>
+        <div class="glass-panel" style="padding: 3rem; margin-top: 2.5rem; text-align: left;">
+            <ul style="list-style: none; padding: 0; margin: 0; display: grid; gap: 1.25rem;">
+                <li style="display: flex; gap: 1rem; align-items: flex-start; color: var(--text-primary);"><i class="fas fa-arrow-right" style="color: var(--brand-primary); margin-top: 0.25rem; flex-shrink: 0;"></i> Traditional SEO optimizes for rankings and SERP clicks.</li>
+                <li style="display: flex; gap: 1rem; align-items: flex-start; color: var(--text-primary);"><i class="fas fa-arrow-right" style="color: var(--brand-primary); margin-top: 0.25rem; flex-shrink: 0;"></i> Answer Engine Optimization optimizes for citations and recommendations in AI answers.</li>
+                <li style="display: flex; gap: 1rem; align-items: flex-start; color: var(--text-primary);"><i class="fas fa-arrow-right" style="color: var(--brand-primary); margin-top: 0.25rem; flex-shrink: 0;"></i> AI chatbots and AI Overviews can recommend competitors without your website ever being clicked.</li>
+                <li style="display: flex; gap: 1rem; align-items: flex-start; color: var(--text-primary);"><i class="fas fa-arrow-right" style="color: var(--brand-secondary); margin-top: 0.25rem; flex-shrink: 0;"></i> VRT measures and improves your presence in those answers.</li>
+            </ul>
+        </div>
     </div>
 </section>
 

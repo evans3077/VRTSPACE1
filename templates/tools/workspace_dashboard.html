@@ -49,6 +49,59 @@
     </div>
 </div>
 
+{% if project.pk and latest_audit %}
+<section style="padding: 1.5rem 0 0; background: rgba(15,23,42,0.2); border-bottom: 1px solid var(--border-glass);">
+    <div class="container-fluid">
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding-bottom: 1.5rem;">
+
+            <div class="system-card" style="padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                <p class="eyebrow" style="font-size: 0.7rem; color: var(--brand-primary);">AI Visibility Score</p>
+                <h3 style="font-size: 2rem; font-weight: 900; margin: 0; color: var(--text-primary);">
+                    {% if latest_aeo_audit and latest_aeo_audit.overall_score %}{{ latest_aeo_audit.overall_score }}<span style="font-size: 1rem; font-weight: 400; color: var(--text-muted);">/100</span>{% else %}&mdash;{% endif %}
+                </h3>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">
+                    {% if latest_aeo_audit %}{{ latest_aeo_audit.created_at|date:"M j, Y" }}{% else %}Not run yet &mdash; <a href="{% url 'aeo:workspace-aeo' %}" style="color: var(--brand-primary);">run AEO</a>{% endif %}
+                </p>
+            </div>
+
+            <div class="system-card" style="padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                <p class="eyebrow" style="font-size: 0.7rem; color: var(--brand-primary);">AI Citations Found</p>
+                <h3 style="font-size: 2rem; font-weight: 900; margin: 0; color: var(--text-primary);">
+                    {{ aeo_citation_count }}
+                </h3>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">
+                    {% if latest_aeo_audit %}
+                        {% with ec=latest_aeo_audit.engines_used|length %}
+                            {{ ec }} engine{% if ec != 1 %}s{% endif %} checked
+                        {% endwith %}
+                    {% else %}Across ChatGPT, Gemini, Perplexity{% endif %}
+                </p>
+            </div>
+
+            <div class="system-card" style="padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                <p class="eyebrow" style="font-size: 0.7rem; color: var(--text-muted);">Audit Health</p>
+                <h3 style="font-size: 2rem; font-weight: 900; margin: 0; color: var(--text-primary);">
+                    {{ latest_audit.overall_score }}<span style="font-size: 1rem; font-weight: 400; color: var(--text-muted);">/100</span>
+                    {% if audit_score_delta is not None %}
+                        {% if audit_score_delta > 0 %}<span class="workspace-delta workspace-delta-up" style="font-size: 0.85rem;">+{{ audit_score_delta }}</span>
+                        {% elif audit_score_delta < 0 %}<span class="workspace-delta workspace-delta-down" style="font-size: 0.85rem;">{{ audit_score_delta }}</span>
+                        {% else %}<span class="workspace-delta workspace-delta-flat" style="font-size: 0.85rem;">0</span>{% endif %}
+                    {% endif %}
+                </h3>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">{{ latest_audit.created_at|date:"M j, Y" }}</p>
+            </div>
+
+            <div class="system-card" style="padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                <p class="eyebrow" style="font-size: 0.7rem; color: var(--text-muted);">Pages Crawled</p>
+                <h3 style="font-size: 2rem; font-weight: 900; margin: 0; color: var(--text-primary);">{{ latest_audit.pages_crawled }}</h3>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">{{ latest_audit.status|title }} &mdash; <a href="{% url 'tools:audit-result' latest_audit.pk %}" style="color: var(--brand-primary);">open report</a></p>
+            </div>
+
+        </div>
+    </div>
+</section>
+{% endif %}
+
 <section class="dashboard-stack workspace-dashboard-shell workspace-shell-main">
     <div class="container-fluid page-stack workspace-page-stack">
         <div class="workspace-top-layout">
@@ -378,6 +431,11 @@
                             <p class="eyebrow">Overall score</p>
                             <h3>{% if latest_audit %}{{ latest_audit.overall_score }}{% else %}&mdash;{% endif %}</h3>
                             <p>{% if latest_audit %}Latest audit{% else %}No audit yet{% endif %}</p>
+                        </div>
+                        <div class="stat-tile">
+                            <p class="eyebrow">AI Visibility</p>
+                            <h3>{% if latest_aeo_audit and latest_aeo_audit.overall_score %}{{ latest_aeo_audit.overall_score }}{% else %}&mdash;{% endif %}</h3>
+                            <p>{% if latest_aeo_audit %}AEO score{% else %}Not run yet{% endif %}</p>
                         </div>
                         <div class="stat-tile">
                             <p class="eyebrow">Pages crawled</p>

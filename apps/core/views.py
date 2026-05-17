@@ -39,14 +39,14 @@ def build_home_context(request, **extra):
         }
 
     context = {
-        "page_title": "Website Audit, SEO Analysis, and AI Visibility | VRT SPACE AGENCY",
+        "page_title": "AI Visibility, SEO Audits & Answer Engine Optimization | VRT SPACE AGENCY",
         "meta_description": (
-            "Run a website audit, uncover SEO gaps, improve AI visibility, and track progress in one VRT SPACE workspace."
+            "Track where AI chatbots cite you, audit your site, and fix the SEO and content gaps that block AI visibility. One workspace for AI-first search."
         ),
         "canonical_url": request.build_absolute_uri(request.path),
-        "og_title": "Website Audit, SEO Analysis, and AI Visibility | VRT SPACE AGENCY",
+        "og_title": "AI Visibility, SEO Audits & Answer Engine Optimization | VRT SPACE AGENCY",
         "og_description": (
-            "Understand what is holding your website back, what to fix next, and how to improve over time."
+            "See when AI answers mention your competitors but not you. VRT SPACE AGENCY shows what to fix so you become the source behind the answer."
         ),
         "meta_robots": "index,follow",
         "schema_json": json.dumps(
@@ -55,7 +55,7 @@ def build_home_context(request, **extra):
                     "@context": "https://schema.org",
                     "@type": "Organization",
                     "name": "VRT SPACE AGENCY",
-                    "description": "Website audit, SEO analysis, AI visibility, and workspace progress platform.",
+                    "description": "AI-first SEO and Answer Engine Optimization platform. Track AI citations, audit technical health, and improve AI visibility across ChatGPT, Perplexity, Gemini, and Google AI Overviews.",
                     "url": request.build_absolute_uri("/"),
                     "areaServed": ["Global"],
                     "sameAs": [],
@@ -87,9 +87,9 @@ def build_home_context(request, **extra):
         "engagement_steps": ENGAGEMENT_STEPS,
         "faqs": FAQS,
         "results": [
-            {"value": "3", "label": "Connected layers across audit, SEO, and AI visibility"},
-            {"value": "1", "label": "Workspace that keeps every run and next step together"},
-            {"value": "Repeat", "label": "Rerun after fixes and measure what improved"},
+            {"value": "3", "label": "AI engines tracked: ChatGPT, Gemini, Perplexity"},
+            {"value": "1", "label": "Workspace to track audits, fixes, and AI visibility over time"},
+            {"value": "Repeat", "label": "Rerun after fixes and watch your AI visibility score improve"},
         ],
         "method_steps": [
             "Run a live audit to surface the biggest issues affecting speed, search visibility, and AI readiness.",

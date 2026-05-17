@@ -17,13 +17,13 @@
                    href="{% url 'tools:workspace-dashboard' %}">
                     <i class="fas fa-th-large"></i>Overview
                 </a>
+                <a class="workspace-tab-pill {% if workspace_nav_current == 'aeo' %}is-active{% endif %}"
+                   href="{% url 'aeo:workspace-aeo' %}">
+                    <i class="fas fa-robot"></i>AI Visibility
+                </a>
                 <a class="workspace-tab-pill {% if workspace_nav_current == 'seo' %}is-active{% endif %}"
                    href="{% url 'seo:workspace-seo' %}">
                     <i class="fas fa-search"></i>SEO
-                </a>
-                <a class="workspace-tab-pill {% if workspace_nav_current == 'aeo' %}is-active{% endif %}"
-                   href="{% url 'aeo:workspace-aeo' %}">
-                    <i class="fas fa-robot"></i>AEO
                 </a>
                 <a class="workspace-tab-pill {% if workspace_nav_current == 'content' %}is-active{% endif %}"
                    href="{% url 'content:workspace-content' %}">

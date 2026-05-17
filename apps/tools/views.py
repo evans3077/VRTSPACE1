@@ -939,20 +939,20 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
                 "tone": "seo",
             },
             {
-                "label": "AEO",
+                "label": "AI Visibility",
                 "value": (
                     f"{latest_aeo_audit.overall_score}/100"
                     if latest_aeo_audit and latest_aeo_audit.overall_score is not None
                     else ("Ready to run" if latest_audit else "Waiting on audit")
                 ),
                 "summary": (
-                    "Use the audit findings to check answer readiness, entity clarity, and AI visibility."
+                    "Track where AI chatbots cite you, check answer readiness, and fix the gaps that block AI citations."
                     if latest_audit
-                    else "Audit must finish before AEO can open."
+                    else "Audit must finish before AI Visibility can open."
                 ),
                 "meta": latest_aeo_audit.created_at.strftime("%b %d, %Y") if latest_aeo_audit else "",
                 "href": reverse("aeo:workspace-aeo") if latest_audit else "#start-audit",
-                "cta_label": "Open AEO" if latest_audit else "Start with audit",
+                "cta_label": "Open AI Visibility" if latest_audit else "Start with audit",
                 "tone": "aeo",
             },
         ]
@@ -1045,6 +1045,15 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["generated_content_count"] = generated_content_count
         context["latest_seo_snapshot"] = latest_seo_snapshot
         context["latest_aeo_audit"] = latest_aeo_audit
+        context["aeo_citation_count"] = (
+            latest_aeo_audit.visibility_snapshots.filter(answer_present=True).count()
+            if latest_aeo_audit else 0
+        )
+        context["audit_score_delta"] = (
+            audit_history_with_delta[0]["delta"]
+            if audit_history_with_delta and audit_history_with_delta[0]["delta"] is not None
+            else None
+        )
         context["latest_share_link"] = latest_share_link
         context["latest_share_url"] = build_absolute_app_url(f"/share/audits/{latest_share_link.token}/") if latest_share_link else ""
         context["share_reports_allowed"] = share_allowed
