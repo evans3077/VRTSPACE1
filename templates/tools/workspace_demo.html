@@ -1,0 +1,196 @@
+{% extends "base.html" %}
+
+{% block content %}
+
+{# ── Demo banner ── #}
+<div style="background: linear-gradient(90deg, var(--brand-primary), var(--brand-secondary)); padding: 0.6rem 1rem; text-align: center; font-size: 0.85rem; font-weight: 600; color: #fff; letter-spacing: 0.03em;">
+    <i class="fa-solid fa-flask" style="margin-right: 0.4rem;"></i>
+    Sample workspace — this is demo data for <strong>{{ demo_domain }}</strong>.
+    <a href="{% url 'tools:workspace-signup' %}" style="color: #fff; text-decoration: underline; margin-left: 1rem;">Run it on your own site &rarr;</a>
+</div>
+
+{# ── Workspace header ── #}
+<div class="container-fluid workspace-dashboard-shell workspace-shell-header-wrap">
+    <div class="ws-hub-header workspace-shell-header">
+        <div class="ws-hub-header-left">
+            <div class="ws-hub-eyebrow"><i class="fas fa-robot"></i> Sample Workspace</div>
+            <h1 class="ws-hub-title">{{ demo_domain }}</h1>
+            <p class="ws-hub-description">AI Visibility + SEO audit workspace. This is what your workspace looks like after your first run.</p>
+        </div>
+        <div class="ws-hub-header-right workspace-header-actions">
+            <div class="ws-status-tag">
+                <span class="ws-status-dot dot-green"></span>
+                Score {{ demo_audit_score }} &middot; Sample data
+            </div>
+            <a href="{% url 'tools:workspace-signup' %}" class="button button-primary workspace-audit-button">
+                <i class="fas fa-play"></i><span>Run on my site</span>
+            </a>
+        </div>
+    </div>
+</div>
+
+{# ── Mission Control KPI row ── #}
+<section style="padding: 1.5rem 0 0; background: rgba(15,23,42,0.2); border-bottom: 1px solid var(--border-glass);">
+    <div class="container-fluid">
+        <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; padding-bottom: 1.5rem;">
+
+            <div class="system-card" style="padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                <p class="eyebrow" style="font-size: 0.7rem; color: var(--brand-primary);">AI Visibility Score</p>
+                <h3 style="font-size: 2rem; font-weight: 900; margin: 0; color: var(--text-primary);">
+                    {{ demo_aeo_score }}<span style="font-size: 1rem; font-weight: 400; color: var(--text-muted);">/100</span>
+                </h3>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Latest AEO run &mdash; sample</p>
+            </div>
+
+            <div class="system-card" style="padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                <p class="eyebrow" style="font-size: 0.7rem; color: var(--brand-primary);">AI Citations Found</p>
+                <h3 style="font-size: 2rem; font-weight: 900; margin: 0; color: var(--text-primary);">{{ demo_citation_count }}</h3>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">{{ demo_engines|length }} engines checked</p>
+            </div>
+
+            <div class="system-card" style="padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                <p class="eyebrow" style="font-size: 0.7rem; color: var(--text-muted);">Audit Health</p>
+                <h3 style="font-size: 2rem; font-weight: 900; margin: 0; color: var(--text-primary);">
+                    {{ demo_audit_score }}<span style="font-size: 1rem; font-weight: 400; color: var(--text-muted);">/100</span>
+                    <span class="workspace-delta workspace-delta-up" style="font-size: 0.85rem;">+{{ demo_score_delta }}</span>
+                </h3>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">vs previous run</p>
+            </div>
+
+            <div class="system-card" style="padding: 1.25rem 1.5rem; display: flex; flex-direction: column; gap: 0.35rem;">
+                <p class="eyebrow" style="font-size: 0.7rem; color: var(--text-muted);">Pages Crawled</p>
+                <h3 style="font-size: 2rem; font-weight: 900; margin: 0; color: var(--text-primary);">{{ demo_pages_crawled }}</h3>
+                <p style="font-size: 0.78rem; color: var(--text-muted); margin: 0;">Completed &mdash; sample report</p>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+{# ── Main content ── #}
+<section class="dashboard-stack workspace-dashboard-shell workspace-shell-main">
+    <div class="container-fluid page-stack workspace-page-stack">
+        <div class="workspace-top-layout">
+
+            <div class="workspace-primary-stack">
+
+                {# AI Visibility module #}
+                <article class="system-card" style="padding: 2rem 2rem 1.5rem;">
+                    <div class="section-heading workspace-section-head">
+                        <p class="eyebrow text-accent">AI Visibility</p>
+                        <h2>AI Visibility Score breakdown</h2>
+                        <p class="section-text">How {{ demo_domain }} scores across the four AEO dimensions that determine AI citation readiness.</p>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 1rem; margin: 1.5rem 0;">
+                        {% for key, score in demo_aeo_scores.items %}
+                        <div class="system-card" style="padding: 1rem; text-align: center;">
+                            <p class="eyebrow" style="font-size: 0.7rem; margin-bottom: 0.5rem;">{{ key|title }}</p>
+                            <strong style="font-size: 1.75rem; font-weight: 900; color: {% if score >= 70 %}var(--success){% elif score >= 50 %}var(--brand-secondary){% else %}var(--error){% endif %};">{{ score }}</strong>
+                            <div style="height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; margin-top: 0.5rem;">
+                                <div style="width: {{ score }}%; height: 100%; background: {% if score >= 70 %}var(--success){% elif score >= 50 %}var(--brand-secondary){% else %}var(--error){% endif %}; border-radius: 2px;"></div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+
+                    <div style="margin-top: 1.5rem;">
+                        <p class="eyebrow" style="margin-bottom: 0.75rem;">Competitor AI visibility</p>
+                        <div style="display: grid; gap: 0.5rem;">
+                            <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; background: rgba(var(--brand-primary-rgb,56,189,248),0.08); border-radius: var(--radius-sm); border: 1px solid rgba(var(--brand-primary-rgb,56,189,248),0.2);">
+                                <span style="font-size: 0.85rem; font-weight: 700; flex: 1;">{{ demo_domain }}</span>
+                                <div style="flex: 2; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px;">
+                                    <div style="width: {{ demo_aeo_score }}%; height: 100%; background: var(--brand-primary); border-radius: 3px;"></div>
+                                </div>
+                                <span style="font-size: 0.85rem; font-weight: 700; color: var(--brand-primary); min-width: 2.5rem; text-align: right;">{{ demo_aeo_score }}</span>
+                            </div>
+                            {% for comp in demo_competitors %}
+                            <div style="display: flex; align-items: center; gap: 1rem; padding: 0.75rem 1rem; background: rgba(255,255,255,0.02); border-radius: var(--radius-sm); border: 1px solid var(--border-glass);">
+                                <span style="font-size: 0.85rem; color: var(--text-muted); flex: 1;">{{ comp.domain }}</span>
+                                <div style="flex: 2; height: 6px; background: rgba(255,255,255,0.05); border-radius: 3px;">
+                                    <div style="width: {{ comp.aeo_score }}%; height: 100%; background: var(--text-muted); border-radius: 3px;"></div>
+                                </div>
+                                <span style="font-size: 0.85rem; color: var(--text-muted); min-width: 2.5rem; text-align: right;">{{ comp.aeo_score }}</span>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </article>
+
+                {# Opportunities #}
+                <article class="system-card" id="command-center" style="padding: 2rem 2rem 1.5rem;">
+                    <div class="section-heading workspace-section-head">
+                        <p class="eyebrow text-accent">Top opportunities</p>
+                        <h2>Where you rank but aren't cited by AI</h2>
+                        <p class="section-text">These are the highest-value gaps between your search rankings and AI citations.</p>
+                    </div>
+                    <div class="workspace-priority-list" style="margin-top: 1.25rem;">
+                        {% for opp in demo_opportunities %}
+                        <div class="command-priority-item">
+                            <div class="command-priority-num">{{ forloop.counter }}</div>
+                            <div class="command-priority-text">{{ opp }}</div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </article>
+
+            </div>
+
+            <div class="workspace-secondary-stack">
+
+                {# Activation CTA #}
+                <article class="system-card" style="padding: 1.5rem 1.75rem; border: 1px solid rgba(var(--brand-primary-rgb,56,189,248),0.3);">
+                    <p class="eyebrow text-accent">Ready to see your real data?</p>
+                    <h2 style="font-size: 1.2rem; margin: 0.5rem 0 1rem;">Run this on your own site in 30 seconds.</h2>
+                    <a href="{% url 'tools:workspace-signup' %}" class="button button-primary button-block" style="width: 100%; text-align: center; display: block;">
+                        Run Free AI Visibility Audit <i class="fa-solid fa-arrow-right"></i>
+                    </a>
+                    <p style="font-size: 0.78rem; color: var(--text-muted); margin-top: 0.75rem; text-align: center;">No credit card. 2 free audits on signup.</p>
+                </article>
+
+                {# Engines checked #}
+                <article class="system-card" style="padding: 1.5rem 1.75rem;">
+                    <p class="eyebrow" style="margin-bottom: 1rem;">AI engines checked</p>
+                    <div style="display: grid; gap: 0.6rem;">
+                        {% for engine in demo_engines %}
+                        <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.88rem; padding: 0.5rem 0; border-bottom: 1px solid var(--border-glass);">
+                            <span style="color: var(--text-primary); font-weight: 600;">{{ engine }}</span>
+                            <span class="score-pill score-medium">Checked</span>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </article>
+
+                {# Sample summary stats #}
+                <article class="system-card workspace-summary-card" style="padding: 1.5rem 1.75rem;">
+                    <p class="eyebrow" style="margin-bottom: 1rem;">Workspace summary</p>
+                    <div class="workspace-summary-grid">
+                        <div class="stat-tile">
+                            <p class="eyebrow">Overall score</p>
+                            <h3>{{ demo_audit_score }}</h3>
+                            <p>Latest audit</p>
+                        </div>
+                        <div class="stat-tile">
+                            <p class="eyebrow">AI Visibility</p>
+                            <h3>{{ demo_aeo_score }}</h3>
+                            <p>AEO score</p>
+                        </div>
+                        <div class="stat-tile">
+                            <p class="eyebrow">Pages crawled</p>
+                            <h3>{{ demo_pages_crawled }}</h3>
+                            <p>Current depth</p>
+                        </div>
+                        <div class="stat-tile">
+                            <p class="eyebrow">Citations</p>
+                            <h3>{{ demo_citation_count }}</h3>
+                            <p>AI mentions</p>
+                        </div>
+                    </div>
+                </article>
+
+            </div>
+        </div>
+    </div>
+</section>
+
+{% endblock %}

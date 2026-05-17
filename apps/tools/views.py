@@ -10,7 +10,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from django.views import View
-from django.views.generic import DetailView
+from django.views.generic import DetailView, TemplateView
 
 from apps.core.site_content import PACKAGES
 from apps.leads.billing import (
@@ -808,6 +808,40 @@ class AccountPasswordUpdateView(LoginRequiredMixin, View):
         update_session_auth_hash(request, user)
         messages.success(request, "Password updated.")
         return redirect("tools:account-dashboard")
+
+
+class WorkspaceDemoView(TemplateView):
+    """Public sample workspace — no login required. Shows hardcoded demo data."""
+    template_name = "tools/workspace_demo.html"
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx["page_title"] = "Sample Workspace | VRT SPACE AGENCY"
+        ctx["meta_robots"] = "noindex, nofollow"
+        ctx["demo_domain"] = "example-agency.com"
+        ctx["demo_aeo_score"] = 67
+        ctx["demo_audit_score"] = 84
+        ctx["demo_score_delta"] = 8
+        ctx["demo_citation_count"] = 4
+        ctx["demo_engines"] = ["ChatGPT", "Gemini", "Perplexity"]
+        ctx["demo_pages_crawled"] = 48
+        ctx["demo_aeo_scores"] = {
+            "visibility": 72,
+            "entity": 65,
+            "structure": 58,
+            "completeness": 73,
+        }
+        ctx["demo_competitors"] = [
+            {"domain": "competitor-a.com", "aeo_score": 81},
+            {"domain": "competitor-b.com", "aeo_score": 74},
+            {"domain": "competitor-c.com", "aeo_score": 52},
+        ]
+        ctx["demo_opportunities"] = [
+            "Ranks #3 in search for 'AI SEO tools' but not cited by ChatGPT or Gemini.",
+            "Homepage missing FAQ schema — reduces eligibility for AI Overviews.",
+            "Core topic cluster 'answer engine optimization' has no dedicated page.",
+        ]
+        return ctx
 
 
 class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
@@ -1892,6 +1926,11 @@ class WorkspaceOnboardingStep3View(LoginRequiredMixin, View):
             and "." in url.strip()
         ]
         competitor_urls = list(dict.fromkeys(competitor_urls))[:settings.SEO_COMPETITOR_LIMIT]
+
+        key_topics = request.POST.get("key_topics", "").strip()
+        if key_topics:
+            project.notes = key_topics
+            project.save(update_fields=["notes"])
 
         # Competitors live on the project's linked AuditRequest.
         if project.audit_request_id:

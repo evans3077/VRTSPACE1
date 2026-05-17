@@ -418,6 +418,56 @@
 
             <div class="workspace-secondary-stack">
                 {% if project.pk %}
+                <article class="system-card" style="padding: 1.5rem 1.75rem;">
+                    <div class="section-heading workspace-section-head" style="margin-bottom: 1.25rem;">
+                        <p class="eyebrow text-accent">Getting started</p>
+                        <h2 style="font-size: 1.2rem;">Activation checklist</h2>
+                    </div>
+                    <ul style="list-style: none; padding: 0; margin: 0; display: grid; gap: 0.85rem;">
+                        <li style="display: flex; gap: 0.75rem; align-items: center; font-size: 0.9rem;">
+                            {% if latest_audit %}
+                            <i class="fa-solid fa-circle-check" style="color: var(--success); flex-shrink: 0;"></i>
+                            <span style="color: var(--text-muted); text-decoration: line-through;">Run first audit</span>
+                            {% else %}
+                            <i class="fa-regular fa-circle" style="color: var(--text-muted); flex-shrink: 0;"></i>
+                            <span><a href="#start-audit" style="color: var(--text-primary);">Run first audit</a></span>
+                            {% endif %}
+                        </li>
+                        <li style="display: flex; gap: 0.75rem; align-items: center; font-size: 0.9rem;">
+                            {% if latest_aeo_audit %}
+                            <i class="fa-solid fa-circle-check" style="color: var(--success); flex-shrink: 0;"></i>
+                            <span style="color: var(--text-muted); text-decoration: line-through;">Run AI Visibility audit</span>
+                            {% else %}
+                            <i class="fa-regular fa-circle" style="color: var(--text-muted); flex-shrink: 0;"></i>
+                            <span><a href="{% url 'aeo:workspace-aeo' %}" style="color: var(--brand-primary);">Run AI Visibility audit</a></span>
+                            {% endif %}
+                        </li>
+                        <li style="display: flex; gap: 0.75rem; align-items: center; font-size: 0.9rem;">
+                            {% if latest_seo_snapshot %}
+                            <i class="fa-solid fa-circle-check" style="color: var(--success); flex-shrink: 0;"></i>
+                            <span style="color: var(--text-muted); text-decoration: line-through;">Run SEO analysis</span>
+                            {% else %}
+                            <i class="fa-regular fa-circle" style="color: var(--text-muted); flex-shrink: 0;"></i>
+                            <span><a href="{% url 'seo:workspace-seo' %}" style="color: var(--text-primary);">Run SEO analysis</a></span>
+                            {% endif %}
+                        </li>
+                        <li style="display: flex; gap: 0.75rem; align-items: center; font-size: 0.9rem;">
+                            {% if audit_schedule %}
+                            <i class="fa-solid fa-circle-check" style="color: var(--success); flex-shrink: 0;"></i>
+                            <span style="color: var(--text-muted); text-decoration: line-through;">Schedule a rerun</span>
+                            {% else %}
+                            <i class="fa-regular fa-circle" style="color: var(--text-muted); flex-shrink: 0;"></i>
+                            <span style="color: var(--text-primary);">Schedule a rerun</span>
+                            {% endif %}
+                        </li>
+                    </ul>
+                    {% if latest_audit and latest_aeo_audit and latest_seo_snapshot %}
+                    <div style="margin-top: 1.25rem; padding: 0.75rem 1rem; background: rgba(var(--success-rgb, 34,197,94), 0.08); border-radius: var(--radius-sm); border: 1px solid rgba(var(--success-rgb, 34,197,94), 0.2); font-size: 0.85rem; color: var(--success);">
+                        <i class="fa-solid fa-circle-check"></i> Workspace fully activated — you're tracking AI visibility.
+                    </div>
+                    {% endif %}
+                </article>
+
                 <article class="system-card workspace-summary-card">
                     <div class="section-heading workspace-section-head">
                         <p class="eyebrow">Current workspace</p>

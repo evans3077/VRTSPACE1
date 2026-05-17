@@ -12,6 +12,7 @@ from .billing_views import (
 )
 from .views import (
     AgencyAuditDetailView,
+    WorkspaceDemoView,
     AccountDashboardView,
     AccountPasswordUpdateView,
     AccountProfileUpdateView,
@@ -78,6 +79,7 @@ urlpatterns = [
     re_path(r"^billing/stripe/webhook/?$", StripeWebhookView.as_view(), name="stripe-webhook"),
     path("share/audits/<slug:token>/", SharedAuditReportView.as_view(), name="shared-audit-report"),
     path("share/audits/<slug:token>/report.pdf", SharedAuditReportPdfView.as_view(), name="shared-audit-report-pdf"),
+    path("workspace/demo/", WorkspaceDemoView.as_view(), name="workspace-demo"),
     path("workspace/", WorkspaceDashboardView.as_view(), name="workspace-dashboard"),
     path("workspace/onboarding/", WorkspaceOnboardingView.as_view(), name="workspace-onboarding"),
     path("workspace/onboarding/step/1/", WorkspaceOnboardingStep1View.as_view(), name="workspace-onboarding-step1"),

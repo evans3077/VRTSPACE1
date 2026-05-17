@@ -4,11 +4,9 @@
 >
   <div class="onboarding-card-intro">
     <p class="feature-tag">Step 3 of 3 — Almost done</p>
-    <h2>Who are you competing against?</h2>
+    <h2>Topics, competitors, and you're done.</h2>
     <p class="section-text">
-      We've suggested a few competitors based on your industry and keywords.
-      Confirm, swap, or add your own — up to {{ competitor_limit|default:4 }}.
-      We'll benchmark your site against these every time you run an audit.
+      Tell us the topics and keywords your site should rank and be cited for — we'll use these to focus your AI Visibility checks. Then confirm your competitors for benchmarking.
     </p>
     <p class="onboarding-slots-counter" x-show="slots.length">
       <span class="premium-pill">
@@ -37,6 +35,18 @@
     novalidate
   >
     {% csrf_token %}
+
+    <div class="form-group" style="margin-bottom: 1.5rem;">
+      <label for="id_key_topics" class="form-label">Key topics &amp; keywords <span style="color: var(--text-muted); font-weight: 400;">(optional)</span></label>
+      <textarea
+        id="id_key_topics"
+        name="key_topics"
+        class="form-control"
+        rows="3"
+        placeholder="e.g. AI SEO tools, answer engine optimization, AEO for agencies"
+      >{{ project.notes|default:'' }}</textarea>
+      <p class="form-hint">What should AI chatbots cite you for? We'll focus your AI Visibility checks on these.</p>
+    </div>
 
     <div class="competitor-inputs-shell">
       <template x-for="(url, idx) in slots" :key="idx">
