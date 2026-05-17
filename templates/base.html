@@ -75,25 +75,187 @@
     /* Smoother section dividers */
     section { scroll-margin-top: 80px; }
 
-    /* Form-control consistency on shell-light pages */
+    /* ─────────────────────────────────────────────────────────────────
+       Light-mode component overrides — shell-light is forced on every
+       marketing + onboarding page, so all the components built in Phase
+       B+C need light-mode-safe colors. These overrides do NOT affect
+       dark-mode surfaces (which lack the body.shell-light class).
+       ───────────────────────────────────────────────────────────────── */
+
+    /* Form controls — light surface, dark text, soft focus ring */
     body.shell-light .form-control,
     body.shell-light input[type="text"],
     body.shell-light input[type="email"],
     body.shell-light input[type="url"],
     body.shell-light input[type="password"],
+    body.shell-light input[type="search"],
     body.shell-light textarea,
     body.shell-light select {
-        background: rgba(255,255,255,0.04) !important;
-        border: 1px solid rgba(255,255,255,0.12) !important;
-        color: var(--text-primary, #f8fafc) !important;
+        background: #ffffff !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #0f172a !important;
     }
+    body.shell-light .form-control::placeholder,
+    body.shell-light input::placeholder,
+    body.shell-light textarea::placeholder { color: #94a3b8 !important; }
     body.shell-light .form-control:focus,
     body.shell-light input:focus,
     body.shell-light textarea:focus,
     body.shell-light select:focus {
-        border-color: var(--brand-primary, #38bdf8) !important;
+        border-color: #38bdf8 !important;
         box-shadow: 0 0 0 3px rgba(56,189,248,0.18) !important;
         outline: none !important;
+    }
+    body.shell-light .form-hint,
+    body.shell-light .form-label {
+        color: #475569;
+    }
+    body.shell-light .form-label { color: #0f172a; font-weight: 600; }
+
+    /* ── Tile / chip components built in Phase B (onboarding) ─────── */
+    body.shell-light .ws-industry-tile,
+    body.shell-light .ws-check-row,
+    body.shell-light .ws-prompt-chip,
+    body.shell-light .ws-welcome-step,
+    body.shell-light .ws-complete-score-tile,
+    body.shell-light .ws-complete-next-card,
+    body.shell-light .vrt-mock-row,
+    body.shell-light .vrt-mock-engine {
+        background: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #0f172a !important;
+        box-shadow: 0 1px 2px rgba(15, 23, 42, 0.02);
+    }
+    body.shell-light .ws-industry-tile { color: #475569 !important; }
+    body.shell-light .ws-industry-tile i,
+    body.shell-light .ws-check-row i,
+    body.shell-light .ws-prompt-chip i { color: #64748b !important; }
+    body.shell-light .ws-industry-tile:hover,
+    body.shell-light .ws-prompt-chip:hover,
+    body.shell-light .ws-check-row:hover {
+        background: #f0f9ff !important;
+        border-color: #7dd3fc !important;
+        color: #0f172a !important;
+        transform: translateY(-1px);
+    }
+    body.shell-light .ws-industry-tile:hover i,
+    body.shell-light .ws-prompt-chip:hover i { color: #0284c7 !important; }
+    body.shell-light .ws-industry-tile.is-selected,
+    body.shell-light .ws-prompt-chip.is-selected {
+        background: #e0f2fe !important;
+        border-color: #0284c7 !important;
+        color: #0c4a6e !important;
+        box-shadow: 0 0 0 2px rgba(56,189,248,0.18);
+    }
+    body.shell-light .ws-industry-tile.is-selected i,
+    body.shell-light .ws-prompt-chip.is-selected i { color: #0284c7 !important; }
+
+    /* Quick-pick location chips */
+    body.shell-light .ws-loc-quick {
+        background: #f1f5f9 !important;
+        border: 1px solid #cbd5e1 !important;
+        color: #475569 !important;
+    }
+    body.shell-light .ws-loc-quick:hover {
+        background: #e0f2fe !important;
+        border-color: #38bdf8 !important;
+        color: #0c4a6e !important;
+    }
+
+    /* ── Welcome card (light-mode polish) ─────────────────────────── */
+    body.shell-light .ws-welcome-card {
+        background: linear-gradient(180deg, #ffffff 0%, #f8fafc 100%) !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 30px 80px -30px rgba(15, 23, 42, 0.18) !important;
+    }
+    body.shell-light .ws-welcome-eyebrow {
+        background: #e0f2fe !important;
+        color: #0369a1 !important;
+    }
+    body.shell-light .ws-welcome-heading {
+        background: linear-gradient(135deg, #0f172a 0%, #475569 100%) !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+    }
+    body.shell-light .ws-welcome-lead { color: #475569 !important; }
+    body.shell-light .ws-welcome-step h4 { color: #0f172a !important; }
+    body.shell-light .ws-welcome-step p { color: #64748b !important; }
+    body.shell-light .ws-welcome-step .ws-step-num {
+        background: #e0f2fe !important;
+        color: #0369a1 !important;
+    }
+    body.shell-light .ws-welcome-escape { color: #475569 !important; }
+    body.shell-light .ws-welcome-escape:hover { color: #0284c7 !important; }
+
+    /* ── Completion card (light-mode polish) ──────────────────────── */
+    body.shell-light .ws-complete-card {
+        background: linear-gradient(180deg, #ffffff 0%, #f0fdf4 100%) !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 30px 80px -30px rgba(16, 185, 129, 0.15) !important;
+    }
+    body.shell-light .ws-complete-eyebrow-bar {
+        background: #dcfce7 !important;
+        color: #047857 !important;
+    }
+    body.shell-light .ws-complete-heading {
+        background: linear-gradient(135deg, #0f172a 0%, #475569 100%) !important;
+        -webkit-background-clip: text !important;
+        background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+    }
+    body.shell-light .ws-complete-lead { color: #475569 !important; }
+    body.shell-light .ws-complete-score-tile .ws-score-label { color: #64748b !important; }
+    body.shell-light .ws-complete-score-tile .ws-score-val { color: #0f172a !important; }
+    body.shell-light .ws-complete-score-tile .ws-score-sub { color: #64748b !important; }
+    body.shell-light .ws-complete-next-card h4 { color: #0f172a !important; }
+    body.shell-light .ws-complete-next-card p { color: #64748b !important; }
+    body.shell-light .ws-complete-next-card .ws-next-icon {
+        background: #e0f2fe !important; color: #0284c7 !important;
+    }
+    body.shell-light .ws-complete-next-card:hover {
+        background: #f0f9ff !important; border-color: #7dd3fc !important;
+    }
+
+    /* ── Homepage workspace-mockup section ────────────────────────── */
+    body.shell-light .vrt-mock-row strong { color: #0f172a !important; }
+    body.shell-light .vrt-mock-pill { /* keeps its bg/color from inline style */ }
+    body.shell-light .vrt-mock-engine-pct { color: #0f172a !important; }
+    body.shell-light .vrt-brand-row-item {
+        color: #334155 !important;
+        font-weight: 600 !important;
+    }
+
+    /* ── Eyebrow / muted text safety on shell-light ───────────────── */
+    body.shell-light .feature-tag,
+    body.shell-light .eyebrow {
+        color: #0369a1 !important;
+    }
+    body.shell-light .text-muted { color: #64748b !important; }
+    body.shell-light .text-secondary { color: #334155 !important; }
+    body.shell-light .text-accent { color: #0284c7 !important; }
+
+    /* ── Glass-panel polish for shell-light ───────────────────────── */
+    body.shell-light .glass-panel {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 4px 16px rgba(15, 23, 42, 0.04) !important;
+    }
+    body.shell-light .glass-panel.public-hero-panel {
+        background: linear-gradient(180deg, #f8fafc 0%, #ffffff 100%) !important;
+    }
+
+    /* ── Premium pills on shell-light ────────────────────────────── */
+    body.shell-light .premium-pill {
+        background: #f1f5f9 !important;
+        color: #334155 !important;
+        border: 1px solid #cbd5e1 !important;
+    }
+
+    /* ── Activation checklist card on shell-light ────────────────── */
+    body.shell-light .workspace-secondary-stack .system-card {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
     }
 
     /* ── Nav polish — small, additive on top of vrt-space-core.css ── */
