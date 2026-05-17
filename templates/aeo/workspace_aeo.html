@@ -153,10 +153,10 @@
 <div class="container-fluid">
     <div class="ws-hub-header">
         <div class="ws-hub-header-left">
-            <div class="ws-hub-eyebrow"><i class="fas fa-robot"></i> AEO Strategy Hub</div>
-            <h1 class="ws-hub-title">{% if project %}{{ project.name }}{% else %}Answer Engine Optimization{% endif %}</h1>
+            <div class="ws-hub-eyebrow"><i class="fas fa-robot"></i> AI Visibility</div>
+            <h1 class="ws-hub-title">{% if project %}{{ project.name }}{% else %}AI Visibility & Answer Engine Optimization{% endif %}</h1>
             <p class="ws-hub-description">
-                AI visibility and answer-readiness analysis. Scores your site on how ChatGPT, Gemini, and Perplexity extract, cite, and surface your content — then tells you exactly what to fix.
+                See where ChatGPT, Gemini, and Perplexity cite you — and where they cite your competitors instead. Fix the gaps that keep you out of AI answers.
             </p>
         </div>
         <div class="ws-hub-header-right">
@@ -171,7 +171,7 @@
             {% else %}
             <div class="ws-status-tag">
                 <span class="ws-status-dot dot-muted"></span>
-                No AEO snapshot yet
+                No AI Visibility score yet
             </div>
             {% endif %}
         </div>
@@ -232,8 +232,8 @@
     {% elif not project.latest_audit_run %}
     <article class="workspace-state-panel is-audit">
         <p class="workspace-report-kicker">Audit Required</p>
-        <h2>Run the first audit to unlock AEO</h2>
-        <p>AEO scoring is built from your site's crawl data, page structure, and content signals. It needs at least one completed audit before the workspace can measure AI visibility well.</p>
+        <h2>Run the first audit to unlock AI Visibility</h2>
+        <p>Your AI Visibility Score is built from crawl data, page structure, and content signals. Complete one audit first — then the workspace can show where AI engines cite you and what's blocking them.</p>
         <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
             {% csrf_token %}
             <button type="submit" class="button button-primary">Run first audit</button>
@@ -251,8 +251,8 @@
         <article id="aeo-run" class="workspace-report-card">
             <div class="workspace-report-intro">
                 <p class="workspace-report-kicker">{% if latest_aeo_audit %}Refresh Analysis{% else %}Run Analysis{% endif %}</p>
-                <h2>Generate AEO snapshot</h2>
-                <p>Run a fresh answer-engine analysis from the latest audit so users can see what AI systems are likely to cite, ignore, or misunderstand.</p>
+                <h2>Run AI Visibility analysis</h2>
+                <p>Run a fresh analysis to see where ChatGPT, Gemini, and Perplexity cite you, what they ignore, and what to fix to improve your AI Visibility Score.</p>
             </div>
             {% if workspace_credit_actions %}{% for item in workspace_credit_actions %}{% if item.slug == "aeo" %}
             <div class="workspace-credit-callout">
@@ -271,7 +271,7 @@
                 </div>
                 {% endfor %}
                 <button type="submit" class="button-mega" style="width: 100%; margin-top: 1rem;">
-                    <i class="fas fa-bolt"></i> &nbsp;Run Intelligence Scan
+                    <i class="fas fa-bolt"></i> &nbsp;Run AI Visibility Scan
                 </button>
             </form>
             <p class="text-muted">This run reuses the existing site crawl, so no extra crawl is needed. Each refresh generates new AI citability predictions from the same baseline audit.</p>
@@ -283,8 +283,8 @@
             <div class="workspace-score-head">
                 <div class="workspace-report-intro">
                     <p class="workspace-report-kicker">Latest Snapshot</p>
-                    <h2>AEO dimension scores</h2>
-                    <p>These four layers show where the site is most likely to be under-explained, under-structured, or under-cited by answer engines.</p>
+                    <h2>AI Visibility Score breakdown</h2>
+                    <p>Four dimensions that determine whether AI engines cite, trust, and surface your content — and where to focus to move the score.</p>
                 </div>
                 {% if aeo_payload.context.target_keyword %}
                 <span class="workspace-chip"><i class="fas fa-crosshairs"></i> {{ aeo_payload.context.target_keyword }}</span>

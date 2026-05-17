@@ -34,6 +34,165 @@
     <link rel="stylesheet" href="{% static 'css/site.css' %}">
     <link rel="stylesheet" href="{% static 'css/vrt-space-core.css' %}">
     <link rel="stylesheet" href="{% static 'css/ui-polish.css' %}">
+    <style>
+    /* ── VRT Footer ── loaded last in <head> so it wins the cascade ── */
+    .vrt-footer {
+        background: #020617 !important;
+        border-top: 1px solid rgba(255,255,255,0.08) !important;
+        margin-top: 5rem;
+        font-family: inherit;
+    }
+    .vrt-footer * { box-sizing: border-box; }
+    .vrt-footer-cta {
+        border-bottom: 1px solid rgba(255,255,255,0.07);
+        padding: 3rem 0;
+        background: radial-gradient(ellipse at 65% 50%, rgba(56,189,248,0.07) 0%, transparent 65%);
+    }
+    .vrt-footer-cta-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 2rem;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 0 1.5rem;
+    }
+    .vrt-footer-cta-label {
+        font-size: 0.7rem !important;
+        font-weight: 700 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: #38bdf8 !important;
+        -webkit-text-fill-color: #38bdf8 !important;
+        background: none !important;
+        margin: 0 0 0.45rem;
+    }
+    .vrt-footer-cta-heading {
+        font-size: clamp(1.4rem, 3vw, 1.9rem) !important;
+        font-weight: 800 !important;
+        color: #f8fafc !important;
+        -webkit-text-fill-color: #f8fafc !important;
+        background: none !important;
+        margin: 0;
+        line-height: 1.15;
+    }
+    .vrt-footer-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr 1fr;
+        gap: 4rem;
+        padding: 3.5rem 1.5rem 3rem;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    .vrt-footer-logo {
+        display: inline-block !important;
+        font-size: 0.95rem !important;
+        font-weight: 900 !important;
+        letter-spacing: 0.07em;
+        text-transform: uppercase;
+        text-decoration: none !important;
+        margin-bottom: 1rem;
+        background: linear-gradient(135deg, #38bdf8, #818cf8) !important;
+        -webkit-background-clip: text !important;
+        -webkit-text-fill-color: transparent !important;
+        background-clip: text !important;
+    }
+    .vrt-footer-tagline {
+        font-size: 0.875rem !important;
+        color: #94a3b8 !important;
+        -webkit-text-fill-color: #94a3b8 !important;
+        background: none !important;
+        line-height: 1.7;
+        max-width: 310px;
+        margin: 0 0 1.5rem;
+    }
+    .vrt-footer-pills {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.4rem;
+    }
+    .vrt-footer-pills span {
+        font-size: 0.67rem !important;
+        font-weight: 600 !important;
+        color: rgba(148,163,184,0.85) !important;
+        -webkit-text-fill-color: rgba(148,163,184,0.85) !important;
+        background: rgba(255,255,255,0.05) !important;
+        border: 1px solid rgba(255,255,255,0.12) !important;
+        border-radius: 999px;
+        padding: 0.18rem 0.6rem;
+        letter-spacing: 0.02em;
+    }
+    .vrt-footer-col-label {
+        font-size: 0.67rem !important;
+        font-weight: 800 !important;
+        text-transform: uppercase;
+        letter-spacing: 0.14em;
+        color: #64748b !important;
+        -webkit-text-fill-color: #64748b !important;
+        background: none !important;
+        margin: 0 0 1.1rem;
+    }
+    .vrt-footer-links {
+        list-style: none !important;
+        padding: 0 !important;
+        margin: 0 !important;
+        display: grid;
+        gap: 0.7rem;
+    }
+    .vrt-footer-links li { list-style: none !important; }
+    .vrt-footer-links a {
+        display: flex !important;
+        align-items: center !important;
+        gap: 0.5rem;
+        font-size: 0.875rem !important;
+        color: #94a3b8 !important;
+        -webkit-text-fill-color: #94a3b8 !important;
+        background: none !important;
+        text-decoration: none !important;
+        transition: color 0.15s, -webkit-text-fill-color 0.15s;
+    }
+    .vrt-footer-links a i {
+        font-size: 0.72rem !important;
+        width: 14px;
+        text-align: center;
+        flex-shrink: 0;
+        color: #64748b !important;
+        -webkit-text-fill-color: #64748b !important;
+        transition: color 0.15s, -webkit-text-fill-color 0.15s;
+    }
+    .vrt-footer-links a:hover,
+    .vrt-footer-links a:hover * {
+        color: #f8fafc !important;
+        -webkit-text-fill-color: #f8fafc !important;
+        background: none !important;
+    }
+    .vrt-footer-links a:hover i { color: #38bdf8 !important; -webkit-text-fill-color: #38bdf8 !important; }
+    .vrt-footer-bottom { border-top: 1px solid rgba(255,255,255,0.05); }
+    .vrt-footer-bottom-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 1.1rem 1.5rem;
+        max-width: 1200px;
+        margin: 0 auto;
+        font-size: 0.75rem !important;
+        color: rgba(148,163,184,0.55) !important;
+        -webkit-text-fill-color: rgba(148,163,184,0.55) !important;
+        background: none !important;
+        flex-wrap: wrap;
+    }
+    @media (max-width: 860px) {
+        .vrt-footer-grid { grid-template-columns: 1fr 1fr; gap: 2rem; }
+        .vrt-footer-brand { grid-column: 1 / -1; }
+    }
+    @media (max-width: 540px) {
+        .vrt-footer-grid { grid-template-columns: 1fr; }
+        .vrt-footer-cta-inner { flex-direction: column; align-items: flex-start; }
+        .vrt-footer-bottom-inner { flex-direction: column; align-items: flex-start; gap: 0.25rem; }
+    }
+    </style>
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     {% if schema_json %}
@@ -113,20 +272,64 @@
     <main>
         {% block content %}{% endblock %}
     </main>
-    <footer class="site-footer">
-        <div class="container footer-shell">
-            <div>
-                <strong>VRT SPACE AGENCY</strong>
-                <p>Website audits, SEO analysis, AI visibility, and workspace progress tracking in one focused system.</p>
-            </div>
-            <div class="footer-links">
-                <a href="{% url 'core:services' %}">Services</a>
-                <a href="{% url 'core:packages' %}">Pricing</a>
-                <a href="{% url 'core:home' %}#audit">Free Audit</a>
-                <a href="{% url 'aeo:aeo-index' %}">AEO Visibility Index</a>
-                <a href="{% url 'core:home' %}#contact">Contact</a>
+
+    <footer class="vrt-footer">
+
+        <div class="vrt-footer-cta">
+            <div class="vrt-footer-cta-inner">
+                <div>
+                    <p class="vrt-footer-cta-label">Start today &mdash; it&rsquo;s free</p>
+                    <h2 class="vrt-footer-cta-heading">Be the source behind the answer.</h2>
+                </div>
+                <a href="{% url 'tools:workspace-signup' %}" class="button button-primary" style="white-space:nowrap;flex-shrink:0;font-size:0.92rem;padding:0.8rem 1.6rem;">
+                    Run Free AI Visibility Audit &nbsp;<i class="fa-solid fa-arrow-right"></i>
+                </a>
             </div>
         </div>
+
+        <div class="vrt-footer-grid">
+
+            <div class="vrt-footer-brand">
+                <a href="{% url 'core:home' %}" class="vrt-footer-logo">VRT SPACE AGENCY</a>
+                <p class="vrt-footer-tagline">Track where AI chatbots cite you, audit your site, and fix the gaps that keep you out of AI answers — all in one workspace.</p>
+                <div class="vrt-footer-pills">
+                    <span>ChatGPT</span>
+                    <span>Gemini</span>
+                    <span>Perplexity</span>
+                    <span>Google AI Overviews</span>
+                    <span>Bing Copilot</span>
+                </div>
+            </div>
+
+            <div>
+                <p class="vrt-footer-col-label">Platform</p>
+                <ul class="vrt-footer-links">
+                    <li><a href="{% url 'aeo:workspace-aeo' %}"><i class="fa-solid fa-robot"></i>AI Visibility</a></li>
+                    <li><a href="{% url 'core:services' %}"><i class="fa-solid fa-chart-line"></i>Services</a></li>
+                    <li><a href="{% url 'core:packages' %}"><i class="fa-solid fa-layer-group"></i>Pricing</a></li>
+                    <li><a href="{% url 'core:for-agencies' %}"><i class="fa-solid fa-building"></i>For Agencies</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <p class="vrt-footer-col-label">Free Tools</p>
+                <ul class="vrt-footer-links">
+                    <li><a href="{% url 'core:home' %}#audit"><i class="fa-solid fa-bolt"></i>Free Audit</a></li>
+                    <li><a href="{% url 'aeo:aeo-index' %}"><i class="fa-solid fa-magnifying-glass"></i>AEO Visibility Index</a></li>
+                    <li><a href="{% url 'tools:workspace-demo' %}"><i class="fa-solid fa-eye"></i>Sample Workspace</a></li>
+                    <li><a href="{% url 'tools:workspace-signup' %}"><i class="fa-solid fa-plus"></i>Create Workspace</a></li>
+                </ul>
+            </div>
+
+        </div>
+
+        <div class="vrt-footer-bottom">
+            <div class="vrt-footer-bottom-inner">
+                <span>&copy; {% now "Y" %} VRT SPACE AGENCY &mdash; AI-first SEO &amp; Answer Engine Optimization.</span>
+                <span>Built for agencies and brands winning AI-driven search.</span>
+            </div>
+        </div>
+
     </footer>
 
     <!-- Premium Mobile Navigation Overlay -->

@@ -1040,23 +1040,179 @@ textarea:focus {
     color: rgba(255, 255, 255, 0.65);
 }
 
+/* ═══════════════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════════════ */
 .site-footer {
-    padding: 2rem 0 3rem;
-    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: linear-gradient(180deg, var(--bg-main) 0%, #010b18 100%);
+    border-top: 1px solid rgba(255,255,255,0.07);
+    margin-top: 6rem;
 }
 
-.footer-shell {
+/* ── CTA Strip ── */
+.footer-cta-strip {
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    padding: 3rem 0;
+    background: radial-gradient(ellipse at 60% 50%, rgba(56,189,248,0.06) 0%, transparent 70%);
+}
+.footer-cta-inner {
     display: flex;
-    align-items: flex-start;
+    align-items: center;
     justify-content: space-between;
-    gap: 1rem;
-}
-
-.footer-links {
-    display: flex;
-    gap: 1rem;
+    gap: 2rem;
     flex-wrap: wrap;
 }
+.footer-cta-eyebrow {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--brand-primary);
+    margin: 0 0 0.5rem;
+}
+.footer-cta-heading {
+    font-size: clamp(1.5rem, 3vw, 2rem);
+    font-weight: 800;
+    color: var(--text-primary);
+    margin: 0;
+    line-height: 1.15;
+}
+.footer-cta-btn {
+    white-space: nowrap;
+    flex-shrink: 0;
+    font-size: 0.95rem;
+    padding: 0.85rem 1.75rem;
+}
+
+/* ── Main grid ── */
+.footer-grid {
+    display: grid;
+    grid-template-columns: 2.2fr 1fr 1fr;
+    gap: 4rem;
+    padding: 3.5rem 0 3rem;
+}
+
+/* ── Brand column ── */
+.footer-logo {
+    display: inline-block;
+    font-size: 1.05rem;
+    font-weight: 900;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    text-decoration: none;
+    margin-bottom: 1rem;
+}
+.footer-brand-tagline {
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    max-width: 320px;
+    margin: 0 0 1.5rem;
+}
+.footer-engine-pills {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+}
+.footer-engine-pills span {
+    font-size: 0.68rem;
+    font-weight: 600;
+    color: rgba(148,163,184,0.5);
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 999px;
+    padding: 0.2rem 0.65rem;
+    letter-spacing: 0.03em;
+}
+
+/* ── Link columns ── */
+.footer-col-heading {
+    font-size: 0.68rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--text-muted);
+    margin: 0 0 1.25rem;
+}
+.footer-col-links {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: 0.75rem;
+}
+.footer-col-links a {
+    display: flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-size: 0.875rem;
+    color: var(--text-secondary);
+    text-decoration: none;
+    transition: color 0.15s, gap 0.15s;
+}
+.footer-col-links a i {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    width: 14px;
+    text-align: center;
+    transition: color 0.15s;
+    flex-shrink: 0;
+}
+.footer-col-links a:hover {
+    color: var(--text-primary);
+    gap: 0.7rem;
+}
+.footer-col-links a:hover i {
+    color: var(--brand-primary);
+}
+
+/* ── Bottom bar ── */
+.footer-bottom {
+    border-top: 1px solid rgba(255,255,255,0.06);
+}
+.footer-bottom-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    padding: 1.25rem 0;
+    font-size: 0.78rem;
+    color: rgba(148,163,184,0.35);
+    flex-wrap: wrap;
+}
+.footer-bottom-tagline {
+    font-style: italic;
+}
+
+/* ── Responsive ── */
+@media (max-width: 860px) {
+    .footer-grid {
+        grid-template-columns: 1fr 1fr;
+        gap: 2.5rem;
+    }
+    .footer-brand {
+        grid-column: 1 / -1;
+    }
+}
+@media (max-width: 560px) {
+    .footer-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+    .footer-cta-inner {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    .footer-bottom-inner {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 0.35rem;
+    }
+}
+
+/* keep old classes working if referenced elsewhere */
+.footer-shell { display: flex; align-items: flex-start; justify-content: space-between; gap: 1rem; }
+.footer-links  { display: flex; gap: 1rem; flex-wrap: wrap; }
 
 @media (max-width: 980px) {
     .hero-grid,
@@ -1088,10 +1244,6 @@ textarea:focus {
     .service-band-head h2,
     .case-study-card h2 {
         max-width: none;
-    }
-
-    .footer-shell {
-        flex-direction: column;
     }
 
     .workspace-menu-panel {
