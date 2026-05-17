@@ -403,6 +403,98 @@ def build_plan_cards(user=None):
     return cards
 
 
+def build_plan_comparison_matrix(plans):
+    """Reshape the plan cards into a row-oriented comparison table.
+
+    Returns:
+        {
+          "header_plans": [<plan dicts>],  # excludes enterprise/custom
+          "enterprise_plan": <plan dict or None>,
+          "groups": [
+            {"label": "Limits", "rows": [...]},
+            {"label": "Features", "rows": [...]},
+          ],
+        }
+
+    Each row is:
+        {"label": "Audit runs / month",
+         "values": [str|None per plan],
+         "is_check": bool,         # True → render as ✓/—; False → display string
+         "highlight": bool}        # if the row should be visually emphasised
+    """
+    # Pull plan definitions for limits + feature_flags (since plan cards
+    # already flatten these, but we need raw values to compute the matrix).
+    definitions = {item["slug"]: item for item in get_plan_definitions(include_free=True)}
+
+    # Filter to "comparable" plans (exclude enterprise / fully custom).
+    comparable_slugs = ["free", "starter", "growth", "authority"]
+    header_plans = [next((p for p in plans if p["slug"] == slug), None) for slug in comparable_slugs]
+    header_plans = [p for p in header_plans if p is not None]
+
+    enterprise_plan = next((p for p in plans if p["slug"] == "enterprise" or p.get("is_custom")), None)
+
+    def _limit_value(plan, key):
+        d = definitions.get(plan["slug"], {})
+        limits = d.get("limits", {}) or {}
+        if key not in limits:
+            return None
+        v = limits[key]
+        if v is None:
+            return "Unlimited"
+        if v == 0:
+            return "—"
+        return str(v)
+
+    def _feature_value(plan, key):
+        d = definitions.get(plan["slug"], {})
+        flags = d.get("feature_flags", {}) or {}
+        return bool(flags.get(key))
+
+    LIMIT_ROWS = [
+        ("audit_runs", "Audit runs per month"),
+        ("aeo_analyses", "AEO analyses"),
+        ("seo_refreshes", "SEO refreshes"),
+        ("content_drafts", "Content drafts"),
+        ("tracked_sites", "Tracked websites"),
+        ("tracked_competitors", "Tracked competitors"),
+        ("saved_history", "Saved audit history"),
+        ("premium_recommendations", "Detailed recommendations"),
+        ("exports", "Exports"),
+        ("share_links", "Share links"),
+    ]
+
+    FEATURE_ROWS = [
+        ("recurring_audits_enabled", "Recurring audits"),
+        ("email_reports_enabled", "Email reports"),
+        ("export_reports_enabled", "Export reports"),
+        ("competitor_tracking_enabled", "Competitor tracking"),
+        ("stakeholder_sharing_enabled", "Stakeholder sharing"),
+        ("priority_support_enabled", "Priority support"),
+    ]
+
+    limit_rows = []
+    for key, label in LIMIT_ROWS:
+        values = [_limit_value(p, key) for p in header_plans]
+        # Hide rows where every plan has no data
+        if all(v is None for v in values):
+            continue
+        limit_rows.append({"label": label, "values": values, "is_check": False, "highlight": False})
+
+    feature_rows = []
+    for key, label in FEATURE_ROWS:
+        values = [_feature_value(p, key) for p in header_plans]
+        feature_rows.append({"label": label, "values": values, "is_check": True, "highlight": False})
+
+    return {
+        "header_plans": header_plans,
+        "enterprise_plan": enterprise_plan,
+        "groups": [
+            {"label": "Limits & quotas", "rows": limit_rows},
+            {"label": "Features", "rows": feature_rows},
+        ],
+    }
+
+
 def get_month_period_window(now=None):
     now = now or timezone.now()
     start = date(year=now.year, month=now.month, day=1)

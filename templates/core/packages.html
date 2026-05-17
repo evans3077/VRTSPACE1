@@ -48,73 +48,256 @@
         <h2>Every plan includes AI Visibility tracking.</h2>
         <p class="section-text">AI Visibility Score, SEO analysis, technical audit, and workspace — on every tier. Higher plans unlock more audits, more clients, and deeper AEO tracking.</p>
     </div>
-    <div class="container pricing-grid">
-        {% for plan in plans %}
-        <article class="pricing-card glass-panel{% if plan.is_current %} is-current{% endif %}">
-            <div class="pricing-card-top">
-                <div class="pricing-card-head">
-                    <div class="pricing-label-row">
-                        <p class="eyebrow">{{ plan.name }}</p>
-                        {% if plan.is_current %}
-                        <span class="pill-accent">Current plan</span>
-                        {% elif plan.is_custom %}
-                        <span class="pill-accent">Custom</span>
-                        {% elif plan.is_free %}
-                        <span class="pill-accent">Start here</span>
-                        {% endif %}
-                    </div>
-                    <h3 class="pricing-price">{{ plan.price }}</h3>
-                    <p class="pricing-description">{{ plan.description }}</p>
-                </div>
-                <div class="public-chip-row pricing-chip-row">
+    <div class="container">
+        <div class="vrt-pricing-table-wrap">
+            <table class="vrt-pricing-table" role="table">
+                <thead>
+                    <tr class="vrt-pricing-head-row">
+                        <th scope="col" class="vrt-pricing-head-feature"></th>
+                        {% for plan in comparison_matrix.header_plans %}
+                        <th scope="col" class="vrt-pricing-head-plan{% if plan.slug == 'growth' %} is-featured{% endif %}{% if plan.is_current %} is-current{% endif %}">
+                            <div class="vrt-pricing-head-inner">
+                                {% if plan.slug == 'growth' %}<span class="vrt-pricing-badge">Most popular</span>{% endif %}
+                                {% if plan.is_current %}<span class="vrt-pricing-badge is-current">Current plan</span>{% endif %}
+                                <p class="vrt-pricing-plan-name">{{ plan.name }}</p>
+                                <p class="vrt-pricing-price">{{ plan.price }}</p>
+                                {% if plan.audience %}<p class="vrt-pricing-audience">{{ plan.audience }}</p>{% endif %}
+                                <div class="vrt-pricing-cta-wrap">
+                                    {% if plan.is_current %}
+                                    <button class="button button-secondary vrt-pricing-cta" disabled>Current plan</button>
+                                    {% elif plan.is_free %}
+                                    <a href="{% url 'core:home' %}#audit" class="button button-secondary vrt-pricing-cta">Run free audit</a>
+                                    {% else %}
+                                    <form method="post" action="{% url 'tools:workspace-billing-checkout' %}" class="vrt-pricing-cta-form">
+                                        {% csrf_token %}
+                                        <input type="hidden" name="plan" value="{{ plan.slug }}">
+                                        <input type="hidden" name="return_to" value="{% url 'tools:workspace-dashboard' %}">
+                                        <button type="submit" class="button {% if plan.slug == 'growth' or plan.action_direction == 'upgrade' %}button-primary{% else %}button-secondary{% endif %} vrt-pricing-cta">
+                                            {{ plan.action_label }}
+                                        </button>
+                                    </form>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        </th>
+                        {% endfor %}
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for group in comparison_matrix.groups %}
+                    <tr class="vrt-pricing-group-row">
+                        <th colspan="{{ comparison_matrix.header_plans|length|add:1 }}" scope="rowgroup">{{ group.label }}</th>
+                    </tr>
+                    {% for row in group.rows %}
+                    <tr class="vrt-pricing-row">
+                        <th scope="row" class="vrt-pricing-cell-label">{{ row.label }}</th>
+                        {% for value in row.values %}
+                        <td class="vrt-pricing-cell{% if forloop.counter0 == 2 %} is-featured-col{% endif %}">
+                            {% if row.is_check %}
+                                {% if value %}<i class="fa-solid fa-circle-check" style="color: #10b981;" aria-label="Included"></i>
+                                {% else %}<span class="vrt-pricing-dash" aria-label="Not included">&mdash;</span>{% endif %}
+                            {% else %}
+                                {% if value %}<span class="vrt-pricing-cell-val">{{ value }}</span>
+                                {% else %}<span class="vrt-pricing-dash">&mdash;</span>{% endif %}
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                    {% endfor %}
+                    {% endfor %}
+
+                    {# Repeat CTAs at the bottom for long scrolls #}
+                    <tr class="vrt-pricing-cta-row">
+                        <th scope="row" class="vrt-pricing-cell-label">Get started</th>
+                        {% for plan in comparison_matrix.header_plans %}
+                        <td class="vrt-pricing-cell{% if forloop.counter0 == 2 %} is-featured-col{% endif %}">
+                            {% if plan.is_current %}
+                            <button class="button button-secondary" disabled style="font-size: 0.78rem; padding: 0.45rem 0.9rem;">Current plan</button>
+                            {% elif plan.is_free %}
+                            <a href="{% url 'core:home' %}#audit" class="button button-secondary" style="font-size: 0.78rem; padding: 0.45rem 0.9rem;">Start free</a>
+                            {% else %}
+                            <form method="post" action="{% url 'tools:workspace-billing-checkout' %}">
+                                {% csrf_token %}
+                                <input type="hidden" name="plan" value="{{ plan.slug }}">
+                                <input type="hidden" name="return_to" value="{% url 'tools:workspace-dashboard' %}">
+                                <button type="submit" class="button {% if plan.slug == 'growth' or plan.action_direction == 'upgrade' %}button-primary{% else %}button-secondary{% endif %}" style="font-size: 0.78rem; padding: 0.45rem 0.9rem;">
+                                    Choose
+                                </button>
+                            </form>
+                            {% endif %}
+                        </td>
+                        {% endfor %}
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        {# ── Enterprise card (doesn't fit the comparison grid) ───── #}
+        {% if comparison_matrix.enterprise_plan %}
+        {% with plan=comparison_matrix.enterprise_plan %}
+        <article class="vrt-enterprise-card glass-panel">
+            <div class="vrt-enterprise-copy">
+                <p class="eyebrow text-accent">For larger teams</p>
+                <h3>{{ plan.name }} — custom scope</h3>
+                <p>{{ plan.description|default:"Multi-domain workspaces, white-label reporting, bespoke AEO implementation, and a dedicated success manager." }}</p>
+                <div class="public-chip-row" style="margin-top: 0.85rem;">
                     {% if plan.label %}<span class="premium-pill">{{ plan.label }}</span>{% endif %}
                     {% if plan.audience %}<span class="premium-pill">{{ plan.audience }}</span>{% endif %}
+                    <span class="premium-pill">Dedicated CSM</span>
+                    <span class="premium-pill">Multi-domain</span>
                 </div>
             </div>
-
-            <div class="pricing-feature-block">
-                <h4>Included</h4>
-                <ul class="pricing-list">
-                    {% for limit in plan.limits_summary %}
-                    <li>
-                        <span class="pricing-list-label">{{ limit.label }}</span>
-                        <strong>{{ limit.display }}</strong>
-                    </li>
-                    {% endfor %}
-                    {% for feature in plan.features %}
-                    <li class="is-feature">
-                        <span>{{ feature }}</span>
-                    </li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            {% if plan.upgrade_message %}
-            <p class="pricing-note">{{ plan.upgrade_message }}</p>
-            {% endif %}
-
-            <div class="pricing-action-row">
-                {% if plan.is_current %}
-                <button class="button button-secondary button-block" disabled>Current Plan</button>
-                {% elif plan.is_custom %}
-                <a href="{% url 'core:home' %}#contact" class="button button-primary button-block">Request custom scope</a>
-                {% elif plan.is_free %}
-                <a href="{% url 'core:home' %}#audit" class="button button-secondary button-block">Run Free Audit</a>
-                {% else %}
-                <form method="post" action="{% url 'tools:workspace-billing-checkout' %}" class="pricing-action-form">
-                    {% csrf_token %}
-                    <input type="hidden" name="plan" value="{{ plan.slug }}">
-                    <input type="hidden" name="return_to" value="{% url 'tools:workspace-dashboard' %}">
-                    <button type="submit" class="button {% if plan.action_direction == 'upgrade' %}button-primary{% else %}button-secondary{% endif %} button-block">
-                        {{ plan.action_label }}
-                    </button>
-                </form>
-                {% endif %}
+            <div class="vrt-enterprise-cta">
+                <p class="vrt-enterprise-price">{{ plan.price|default:"Custom" }}</p>
+                <a href="{% url 'core:home' %}#contact" class="button button-primary">Request custom scope</a>
             </div>
         </article>
-        {% endfor %}
+        {% endwith %}
+        {% endif %}
     </div>
 </section>
+
+<style>
+/* ── Pricing comparison table ─────────────────────────────────── */
+.vrt-pricing-table-wrap {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    border-radius: 16px;
+    border: 1px solid #e2e8f0;
+    background: #ffffff;
+    box-shadow: 0 10px 40px -20px rgba(15, 23, 42, 0.12);
+}
+.vrt-pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 760px;
+    font-size: 0.92rem;
+    color: #334155;
+}
+.vrt-pricing-head-row { background: #f8fafc; }
+.vrt-pricing-head-feature {
+    width: 28%;
+    padding: 1.5rem 1.25rem;
+    background: #f8fafc;
+    border-bottom: 1px solid #e2e8f0;
+    position: sticky; left: 0; z-index: 2;
+}
+.vrt-pricing-head-plan {
+    width: 18%;
+    padding: 1.5rem 1.1rem 1.6rem;
+    border-bottom: 1px solid #e2e8f0;
+    border-left: 1px solid #e2e8f0;
+    background: #f8fafc;
+    text-align: center;
+    vertical-align: top;
+    position: relative;
+}
+.vrt-pricing-head-plan.is-featured {
+    background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%);
+    box-shadow: inset 0 3px 0 0 #0284c7;
+}
+.vrt-pricing-head-inner { display: flex; flex-direction: column; align-items: center; gap: 0.45rem; }
+.vrt-pricing-badge {
+    display: inline-block;
+    padding: 0.22rem 0.65rem;
+    border-radius: 999px;
+    background: #0284c7;
+    color: #ffffff;
+    font-size: 0.66rem; font-weight: 800;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin-bottom: 0.15rem;
+}
+.vrt-pricing-badge.is-current { background: #047857; }
+.vrt-pricing-plan-name {
+    margin: 0; font-size: 0.78rem; font-weight: 700;
+    color: #475569; letter-spacing: 0.06em; text-transform: uppercase;
+}
+.vrt-pricing-price {
+    margin: 0; font-size: 1.65rem; font-weight: 800; color: #0f172a;
+    line-height: 1.1;
+}
+.vrt-pricing-audience {
+    margin: 0; font-size: 0.75rem; color: #64748b; line-height: 1.4;
+    min-height: 2.2em;
+}
+.vrt-pricing-cta-wrap { width: 100%; margin-top: 0.6rem; }
+.vrt-pricing-cta { width: 100%; font-size: 0.82rem !important; padding: 0.55rem 0.75rem !important; }
+.vrt-pricing-cta-form { margin: 0; }
+
+.vrt-pricing-group-row th {
+    text-align: left;
+    padding: 0.85rem 1.25rem 0.4rem;
+    font-size: 0.7rem; font-weight: 800;
+    color: #64748b; letter-spacing: 0.1em; text-transform: uppercase;
+    background: #ffffff;
+    border-top: 1px solid #e2e8f0;
+}
+.vrt-pricing-row { transition: background 0.12s; }
+.vrt-pricing-row:hover { background: #f8fafc; }
+.vrt-pricing-cell-label {
+    text-align: left;
+    padding: 0.85rem 1.25rem;
+    font-weight: 500;
+    color: #334155;
+    background: #ffffff;
+    border-top: 1px solid #f1f5f9;
+    position: sticky; left: 0; z-index: 1;
+}
+.vrt-pricing-row:hover .vrt-pricing-cell-label { background: #f8fafc; }
+.vrt-pricing-cell {
+    text-align: center;
+    padding: 0.85rem 0.6rem;
+    border-top: 1px solid #f1f5f9;
+    border-left: 1px solid #f1f5f9;
+}
+.vrt-pricing-cell.is-featured-col {
+    background: rgba(240, 249, 255, 0.5);
+}
+.vrt-pricing-cell-val { font-weight: 600; color: #0f172a; }
+.vrt-pricing-dash { color: #cbd5e1; }
+.vrt-pricing-cta-row td, .vrt-pricing-cta-row th {
+    padding-top: 1.2rem; padding-bottom: 1.4rem;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+}
+
+@media (max-width: 760px) {
+    .vrt-pricing-table { font-size: 0.84rem; }
+    .vrt-pricing-head-feature, .vrt-pricing-cell-label { padding: 0.7rem 0.85rem; }
+    .vrt-pricing-head-plan { padding: 1rem 0.65rem 1.2rem; min-width: 150px; }
+    .vrt-pricing-price { font-size: 1.3rem; }
+    .vrt-pricing-cta { font-size: 0.74rem !important; padding: 0.45rem 0.55rem !important; }
+}
+
+/* ── Enterprise card ──────────────────────────────────────────── */
+.vrt-enterprise-card {
+    display: flex; gap: 2rem; align-items: center; justify-content: space-between;
+    padding: 2rem 2.25rem;
+    margin-top: 1.75rem;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
+    border: 1px solid #334155 !important;
+    color: #f8fafc;
+    flex-wrap: wrap;
+}
+.vrt-enterprise-card h3 {
+    color: #f8fafc; margin: 0.25rem 0 0.5rem; font-size: 1.45rem;
+}
+.vrt-enterprise-card p { color: #cbd5e1; margin: 0; line-height: 1.55; max-width: 560px; }
+.vrt-enterprise-card .eyebrow { color: #7dd3fc !important; }
+.vrt-enterprise-card .premium-pill {
+    background: rgba(255,255,255,0.08) !important;
+    border-color: rgba(255,255,255,0.18) !important;
+    color: #e2e8f0 !important;
+}
+.vrt-enterprise-copy { flex: 1; min-width: 280px; }
+.vrt-enterprise-cta { display: flex; flex-direction: column; align-items: flex-end; gap: 0.75rem; }
+.vrt-enterprise-price { font-size: 1.45rem; font-weight: 800; margin: 0; color: #f8fafc; }
+@media (max-width: 620px) {
+    .vrt-enterprise-card { flex-direction: column; align-items: flex-start; }
+    .vrt-enterprise-cta { align-items: flex-start; width: 100%; }
+}
+</style>
 
 <section class="public-shell-section">
     <div class="container public-card-grid">

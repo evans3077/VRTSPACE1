@@ -177,6 +177,8 @@ class PackagesView(TemplateView):
     template_name = "core/packages.html"
 
     def get_context_data(self, **kwargs):
+        from apps.leads.billing import build_plan_comparison_matrix
+        plans = build_plan_cards(self.request.user)
         return {
             "page_title": "Plans & Pricing | VRT SPACE AGENCY",
             "meta_description": "Compare VRT SPACE plans for audits, SEO analysis, AI visibility, and workspace progress tracking.",
@@ -192,7 +194,8 @@ class PackagesView(TemplateView):
                     "url": self.request.build_absolute_uri(self.request.path),
                 }
             ),
-            "plans": build_plan_cards(self.request.user),
+            "plans": plans,
+            "comparison_matrix": build_plan_comparison_matrix(plans),
         }
 
 class ForAgenciesView(TemplateView):
