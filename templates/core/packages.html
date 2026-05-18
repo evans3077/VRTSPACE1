@@ -201,13 +201,14 @@
     display: inline-block;
     padding: 0.22rem 0.65rem;
     border-radius: 999px;
-    background: #0284c7;
-    color: #ffffff;
+    background: #0284c7 !important;
+    color: #ffffff !important;
+    -webkit-text-fill-color: #ffffff !important;
     font-size: 0.66rem; font-weight: 800;
     letter-spacing: 0.1em; text-transform: uppercase;
     margin-bottom: 0.15rem;
 }
-.vrt-pricing-badge.is-current { background: #047857; }
+.vrt-pricing-badge.is-current { background: #047857 !important; }
 .vrt-pricing-plan-name {
     margin: 0; font-size: 0.78rem; font-weight: 700;
     color: #475569; letter-spacing: 0.06em; text-transform: uppercase;
@@ -270,6 +271,9 @@
 }
 
 /* ── Enterprise card ──────────────────────────────────────────── */
+/* Targeted selectors with body.shell-light prefix beat the generic
+   body.shell-light .glass-panel override that sets bg to white. */
+body.shell-light .vrt-enterprise-card,
 .vrt-enterprise-card {
     display: flex; gap: 2rem; align-items: center; justify-content: space-between;
     padding: 2rem 2.25rem;
@@ -277,19 +281,26 @@
     border-radius: 16px;
     background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%) !important;
     border: 1px solid #334155 !important;
-    color: #f8fafc;
+    color: #f8fafc !important;
     flex-wrap: wrap;
+    box-shadow: 0 10px 40px -20px rgba(15,23,42,0.5) !important;
 }
+body.shell-light .vrt-enterprise-card h3,
 .vrt-enterprise-card h3 {
-    color: #f8fafc; margin: 0.25rem 0 0.5rem; font-size: 1.45rem;
+    color: #f8fafc !important; margin: 0.25rem 0 0.5rem; font-size: 1.45rem;
 }
-.vrt-enterprise-card p { color: #cbd5e1; margin: 0; line-height: 1.55; max-width: 560px; }
+body.shell-light .vrt-enterprise-card p,
+.vrt-enterprise-card p { color: #cbd5e1 !important; margin: 0; line-height: 1.55; max-width: 560px; }
+body.shell-light .vrt-enterprise-card .eyebrow,
 .vrt-enterprise-card .eyebrow { color: #7dd3fc !important; }
+body.shell-light .vrt-enterprise-card .premium-pill,
 .vrt-enterprise-card .premium-pill {
     background: rgba(255,255,255,0.08) !important;
     border-color: rgba(255,255,255,0.18) !important;
     color: #e2e8f0 !important;
 }
+body.shell-light .vrt-enterprise-card .vrt-enterprise-price,
+.vrt-enterprise-card .vrt-enterprise-price { color: #f8fafc !important; }
 .vrt-enterprise-copy { flex: 1; min-width: 280px; }
 .vrt-enterprise-cta { display: flex; flex-direction: column; align-items: flex-end; gap: 0.75rem; }
 .vrt-enterprise-price { font-size: 1.45rem; font-weight: 800; margin: 0; color: #f8fafc; }

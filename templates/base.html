@@ -258,6 +258,252 @@
         border: 1px solid #e2e8f0 !important;
     }
 
+    /* ── Dashboard KPI strip — purpose-built, no system-card baggage ── */
+    .ws-kpi-section {
+        padding: 1.5rem 0 0;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    body.shell-light .ws-kpi-section {
+        background: #f8fafc;
+        border-bottom-color: #e2e8f0;
+    }
+    .ws-kpi-strip {
+        display: grid;
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 1rem;
+        padding-bottom: 1.5rem;
+    }
+    .ws-kpi-tile {
+        padding: 1.15rem 1.35rem;
+        background: #ffffff;
+        border: 1px solid #e2e8f0;
+        border-radius: 12px;
+        display: flex; flex-direction: column; gap: 0.35rem;
+        min-width: 0;
+        transition: transform 0.15s ease, box-shadow 0.18s ease, border-color 0.15s ease;
+    }
+    body.shell-light .ws-kpi-tile {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 1px 3px rgba(15,23,42,0.04);
+    }
+    body.shell-light .ws-kpi-tile:hover {
+        transform: translateY(-1px);
+        border-color: #cbd5e1 !important;
+        box-shadow: 0 6px 16px -4px rgba(15,23,42,0.08);
+    }
+    .ws-kpi-tile--primary {
+        border-color: rgba(56,189,248,0.4) !important;
+        background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%) !important;
+    }
+    body.shell-light .ws-kpi-tile--primary {
+        border-color: rgba(56,189,248,0.4) !important;
+        background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%) !important;
+    }
+    .ws-kpi-label {
+        font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
+        text-transform: uppercase;
+        color: #64748b;
+        margin: 0;
+    }
+    .ws-kpi-tile--primary .ws-kpi-label { color: #0284c7; }
+    .ws-kpi-value {
+        font-size: 1.95rem; font-weight: 800; line-height: 1.1;
+        color: #0f172a;
+        margin: 0;
+        display: flex; align-items: baseline; gap: 0.45rem; flex-wrap: wrap;
+    }
+    body.shell-light .ws-kpi-value { color: #0f172a !important; }
+    .ws-kpi-unit { font-size: 0.95rem; font-weight: 500; color: #94a3b8; }
+    .ws-kpi-meta {
+        font-size: 0.78rem; color: #64748b; margin: 0;
+    }
+    body.shell-light .ws-kpi-meta { color: #64748b !important; }
+    .ws-kpi-meta a { color: #0284c7 !important; text-decoration: none; }
+    .ws-kpi-meta a:hover { text-decoration: underline; }
+    .ws-kpi-delta {
+        font-size: 0.78rem; font-weight: 700;
+        padding: 0.15rem 0.45rem;
+        border-radius: 999px;
+    }
+    .ws-kpi-delta--up { background: #dcfce7; color: #047857; }
+    .ws-kpi-delta--down { background: #fee2e2; color: #b91c1c; }
+    .ws-kpi-delta--flat { background: #f1f5f9; color: #64748b; }
+    @media (max-width: 960px) {
+        .ws-kpi-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    }
+    @media (max-width: 520px) {
+        .ws-kpi-strip { grid-template-columns: 1fr; }
+    }
+
+    /* ── Audit result page — light-mode polish ──────────────────── */
+    body.shell-light .audit-score-card {
+        background: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+        color: #0f172a !important;
+        padding: 0.85rem 1rem;
+        border-radius: 10px;
+    }
+    /* Tone-specific accent borders for score cards */
+    body.shell-light .audit-score-card-critical { border-color: #fecaca !important; background: #fef2f2 !important; }
+    body.shell-light .audit-score-card-warning  { border-color: #fde68a !important; background: #fffbeb !important; }
+    body.shell-light .audit-score-card-good     { border-color: #bbf7d0 !important; background: #f0fdf4 !important; }
+    body.shell-light .audit-score-card-neutral  { border-color: #e2e8f0 !important; background: #f8fafc !important; }
+    body.shell-light .audit-score-card strong   { color: #0f172a !important; }
+    body.shell-light .audit-score-card .journey-phase {
+        color: #475569 !important;
+        font-size: 0.66rem;
+        letter-spacing: 0.08em;
+    }
+
+    body.shell-light .audit-next-step-card {
+        background: linear-gradient(135deg, #f0f9ff 0%, #ffffff 100%) !important;
+        border: 1px solid #bae6fd !important;
+        color: #0c4a6e !important;
+    }
+    body.shell-light .audit-next-step-card strong { color: #0f172a !important; }
+    body.shell-light .audit-next-step-card p { color: #475569 !important; }
+    body.shell-light .audit-next-step-card .journey-phase { color: #0369a1 !important; }
+    body.shell-light .audit-next-step-card .pill-accent {
+        background: #e0f2fe !important;
+        color: #0369a1 !important;
+        border: 1px solid #7dd3fc !important;
+    }
+
+    body.shell-light .audit-hero-score-panel {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 12px 36px -16px rgba(15,23,42,0.12) !important;
+    }
+    body.shell-light .audit-score-ring-track { background: #e2e8f0 !important; }
+    body.shell-light .audit-score-suffix { color: #64748b !important; }
+
+    /* Diagnosis section cards */
+    body.shell-light .public-capability-card,
+    body.shell-light .audit-diagnosis-card {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+    body.shell-light .report-list-card,
+    body.shell-light .audit-action-card {
+        background: #f8fafc !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+    body.shell-light .report-list-head strong { color: #0f172a !important; }
+    body.shell-light .audit-action-head strong { color: #0f172a !important; }
+    body.shell-light .audit-scope-pill {
+        background: #e0f2fe !important;
+        color: #0369a1 !important;
+        border: 1px solid rgba(56,189,248,0.25) !important;
+        padding: 0.18rem 0.6rem;
+        border-radius: 999px;
+        font-size: 0.66rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+    }
+
+    /* Audit processing state */
+    body.shell-light .result-state-panel {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+    }
+    body.shell-light .audit-processing-step strong { color: #0f172a !important; }
+    body.shell-light .audit-processing-step p { color: #64748b !important; }
+    body.shell-light .audit-pdf-lock-notice {
+        background: #fef3c7 !important;
+        border: 1px solid #fcd34d !important;
+        color: #92400e !important;
+    }
+    body.shell-light .audit-pdf-lock-notice a { color: #b45309 !important; font-weight: 600; }
+
+    /* ── SEO workspace + workspace dashboard mobile fixes ─────── */
+    @media (max-width: 720px) {
+        /* Hub header — stack on mobile */
+        .ws-hub-header {
+            flex-direction: column !important;
+            gap: 0.85rem !important;
+            align-items: flex-start !important;
+        }
+        .ws-hub-header-right {
+            width: 100%;
+            justify-content: flex-start !important;
+        }
+        .ws-hub-title { font-size: clamp(1.45rem, 6vw, 1.85rem) !important; }
+        .ws-hub-description { font-size: 0.9rem !important; }
+
+        /* Page-jump nav — make it scroll horizontally without bleeding */
+        .page-jump-nav { overflow: hidden !important; }
+        .page-jump-links {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch;
+            flex-wrap: nowrap !important;
+            white-space: nowrap !important;
+            padding-bottom: 0.4rem;
+        }
+        .page-jump-link { flex-shrink: 0; }
+
+        /* Layout-split-wide collapses to single column */
+        .layout-split-wide,
+        .workspace-top-layout,
+        .workspace-report-grid {
+            grid-template-columns: 1fr !important;
+            display: grid !important;
+            gap: 1rem !important;
+        }
+
+        /* Data card grids */
+        .data-card-grid {
+            grid-template-columns: 1fr !important;
+            gap: 0.85rem !important;
+        }
+
+        /* Workspace command bar */
+        .workspace-command-bar-inner {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+            gap: 0.6rem !important;
+        }
+        .workspace-tab-rail {
+            width: 100%;
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch;
+            white-space: nowrap !important;
+            padding-bottom: 0.4rem;
+        }
+        .workspace-tab-pill { flex-shrink: 0; }
+
+        /* SEO callout collapses gracefully (already has its own breakpoint at 760px; double-tighten here) */
+        .seo-aeo-callout { padding: 0.85rem 1rem !important; gap: 0.85rem !important; }
+        .seo-aeo-callout-stats { gap: 1rem !important; }
+        .seo-aeo-callout-value { font-size: 1.2rem !important; }
+    }
+    @media (max-width: 520px) {
+        /* Extra-tight phones */
+        .ws-hub-title { font-size: 1.4rem !important; }
+        .container-fluid { padding-left: 1rem !important; padding-right: 1rem !important; }
+        .system-card { padding: 1.1rem !important; }
+        /* Audit-page hero stacks too */
+        .public-hero-split { grid-template-columns: 1fr !important; gap: 1.25rem !important; }
+        .audit-hero-score-panel { padding: 1.25rem !important; }
+        .audit-score-ring { width: 160px !important; height: 160px !important; }
+        .audit-score-grid { grid-template-columns: repeat(2, 1fr) !important; }
+    }
+
+    /* ── Dev-mode pill (less visual noise) ──────────────────────── */
+    .workspace-dev-pill {
+        display: inline-block;
+        padding: 0.22rem 0.65rem;
+        margin-top: 0.4rem;
+        background: rgba(245,158,11,0.1) !important;
+        border: 1px solid rgba(245,158,11,0.28) !important;
+        color: #b45309 !important;
+        font-size: 0.7rem !important;
+        font-weight: 600;
+        border-radius: 999px;
+        letter-spacing: 0.02em;
+    }
+
     /* ── Nav polish — small, additive on top of vrt-space-core.css ── */
     .site-header { transition: background 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease; }
     .site-header.is-scrolled { box-shadow: 0 4px 24px -8px rgba(0,0,0,0.35); }

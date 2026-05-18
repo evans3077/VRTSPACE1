@@ -339,7 +339,34 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
                 brand_name=project.name,
                 service_query=keywords[0],
                 competitors=competitor_urls
+            ) or {}
+            # Expose the query so the template can offer "promote to prompt tracker"
+            geo_shootout["query"] = keywords[0]
+
+        # ── AEO mini-summary for the SEO hub callout ────────────────────────
+        aeo_summary = None
+        if project and getattr(project, "pk", None):
+            from apps.aeo.models import AEOAudit, TrackedPrompt, PromptCheckRun
+            from django.utils import timezone as _tz
+            from datetime import timedelta as _td
+
+            latest_aeo = AEOAudit.objects.filter(project=project).order_by("-created_at").first()
+            prompt_count = TrackedPrompt.objects.filter(project=project, is_active=True).count()
+            recent_runs = PromptCheckRun.objects.filter(
+                prompt__project=project,
+                created_at__gte=_tz.now() - _td(days=30),
             )
+            recent_total = recent_runs.count()
+            recent_cited = recent_runs.filter(target_cited=True).count()
+            cited_pct = round(100 * recent_cited / recent_total) if recent_total else 0
+
+            aeo_summary = {
+                "has_data": prompt_count > 0,
+                "score": latest_aeo.overall_score if latest_aeo else 0,
+                "prompt_count": prompt_count,
+                "cited_pct": cited_pct,
+                "recent_checks": recent_total,
+            }
 
         return {
             "project": project,
@@ -418,6 +445,7 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             "clinical_search_volume": clinical_search_volume,
             "clinical_backlinks": clinical_backlinks,
             "geo_shootout": geo_shootout,
+            "aeo_summary": aeo_summary,
             "page_title": f"{project.name if project else 'Workspace'} SEO Workspace | VRT SPACE AGENCY",
             "meta_description": "Private SEO workspace for competitor-backed benchmark decisions, campaign execution, and stakeholder reporting.",
             "canonical_url": self.request.build_absolute_uri(self.request.path),
@@ -754,3 +782,51 @@ class SharedSEOReportPdfView(DetailView):
         response = HttpResponse(pdf_bytes, content_type="application/pdf")
         response["Content-Disposition"] = f'{disposition}; filename="shared-seo-report-{share_link.project.pk}.pdf"'
         return response
+
+
+
+class WorkspaceSEOPromoteToPromptView(LoginRequiredMixin, View):
+    """Promote an SEO/GEO query into a TrackedPrompt with one click.
+
+    Bridges the gap between one-off SEO/GEO analysis and continuous AEO
+    monitoring. Used by the GEO Shootout card on the SEO hub.
+    """
+
+    def post(self, request, *args, **kwargs):
+        from apps.aeo.models import TrackedPrompt
+        from apps.aeo.prompt_service import run_prompt_check
+
+        project = resolve_workspace_project(request, request.user)
+        if not project or not getattr(project, "pk", None):
+            messages.error(request, "Create a workspace project first.")
+            return redirect("seo:workspace-seo")
+
+        query = (request.POST.get("query") or "").strip()
+        if not query:
+            messages.error(request, "No query provided.")
+            return redirect("seo:workspace-seo")
+
+        if len(query) > 300:
+            query = query[:300]
+
+        prompt, created = TrackedPrompt.objects.get_or_create(
+            project=project,
+            prompt=query,
+            defaults={
+                "intent": TrackedPrompt.Intent.INFORMATIONAL,
+                "is_active": True,
+            },
+        )
+        if created:
+            try:
+                run_prompt_check(prompt)
+            except Exception:  # pragma: no cover - simulator is offline-safe
+                pass
+            messages.success(
+                request,
+                f"Tracking '{query[:60]}' across ChatGPT, Gemini and Perplexity.",
+            )
+        else:
+            messages.info(request, "Already tracking this prompt.")
+
+        return redirect("aeo:workspace-prompts")

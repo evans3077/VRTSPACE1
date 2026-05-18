@@ -5,6 +5,7 @@ from .views import (
     SharedSEOReportView,
     WorkspaceBacklinkProspectUpdateView,
     WorkspaceSEOExportJsonView,
+    WorkspaceSEOPromoteToPromptView,
     WorkspaceSEOReportPdfView,
     WorkspaceSEOCampaignUpdateView,
     WorkspaceSEOCompetitorReviewView,
@@ -19,6 +20,7 @@ urlpatterns = [
     path("workspace/seo/report.pdf", WorkspaceSEOReportPdfView.as_view(), name="workspace-seo-report-pdf"),
     path("workspace/seo/export.json", WorkspaceSEOExportJsonView.as_view(), name="workspace-seo-export-json"),
     path("workspace/seo/share/", WorkspaceSEOShareCreateView.as_view(), name="workspace-seo-share-create"),
+    path("workspace/seo/promote-to-prompt/", WorkspaceSEOPromoteToPromptView.as_view(), name="workspace-seo-promote-to-prompt"),
     path(
         "workspace/seo/competitors/<int:pk>/review/",
         WorkspaceSEOCompetitorReviewView.as_view(),

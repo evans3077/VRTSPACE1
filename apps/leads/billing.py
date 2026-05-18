@@ -431,7 +431,17 @@ def build_plan_comparison_matrix(plans):
     header_plans = [next((p for p in plans if p["slug"] == slug), None) for slug in comparable_slugs]
     header_plans = [p for p in header_plans if p is not None]
 
-    enterprise_plan = next((p for p in plans if p["slug"] == "enterprise" or p.get("is_custom")), None)
+    # Enterprise plan is not public so it isn't in `plans`. Pull directly
+    # from PLAN_DEFINITIONS so the marketing page can still surface it.
+    enterprise_def = definitions.get("enterprise")
+    enterprise_plan = {
+        "slug": "enterprise",
+        "name": enterprise_def["name"],
+        "price": enterprise_def.get("price_label") or "Custom",
+        "description": enterprise_def.get("description", ""),
+        "label": enterprise_def.get("label", ""),
+        "audience": enterprise_def.get("audience", ""),
+    } if enterprise_def else None
 
     def _limit_value(plan, key):
         d = definitions.get(plan["slug"], {})

@@ -8,13 +8,13 @@
 <div class="container-fluid">
     <div class="ws-hub-header">
         <div class="ws-hub-header-left">
-            <div class="ws-hub-eyebrow"><i class="fas fa-search"></i> SEO Intelligence Hub</div>
+            <div class="ws-hub-eyebrow"><i class="fas fa-search"></i> SEO that feeds AI Visibility</div>
             <h1 class="ws-hub-title">{% if project %}{{ project.name }}{% else %}Workspace SEO{% endif %}</h1>
             <p class="ws-hub-description">
-                Competitor-backed SEO intelligence. Fetches real competitor websites, profiles what they publish, and turns those gaps into a concrete SEO roadmap.
+                Fix the technical, content, and entity signals that block AI citations. Live competitor benchmarking surfaces the gaps between you and the sites AI engines actually cite.
             </p>
         </div>
-        <div class="ws-hub-header-right">
+        <div class="ws-hub-header-right" style="display: flex; gap: 0.6rem; align-items: center; flex-wrap: wrap;">
             {% if snapshot %}
             <div class="ws-status-tag">
                 <span class="ws-status-dot dot-green"></span>
@@ -31,6 +31,9 @@
                 No snapshot yet
             </div>
             {% endif %}
+            <a href="{% url 'aeo:workspace-prompts' %}" class="button button-secondary" style="font-size: 0.8rem; padding: 0.5rem 0.95rem;" title="See which AI prompts cite this site">
+                <i class="fa-solid fa-robot"></i>&nbsp;AI Citations
+            </a>
             {% if project and can_generate_snapshot %}
             <form method="post" action="{% url 'seo:workspace-seo' %}" style="margin:0;">
                 {% csrf_token %}
@@ -41,6 +44,91 @@
         </div>
     </div>
 </div>
+
+{# ── AEO mini-summary callout ─────────────────────────────────────── #}
+{% if project and aeo_summary %}
+<div class="container-fluid" style="margin-bottom: 1.25rem;">
+    {% if aeo_summary.has_data %}
+    <a href="{% url 'aeo:workspace-prompts' %}" class="seo-aeo-callout">
+        <div class="seo-aeo-callout-icon"><i class="fa-solid fa-robot"></i></div>
+        <div class="seo-aeo-callout-stats">
+            <div class="seo-aeo-callout-stat">
+                <span class="seo-aeo-callout-label">AI Visibility</span>
+                <span class="seo-aeo-callout-value">{{ aeo_summary.score }}<small>/100</small></span>
+            </div>
+            <div class="seo-aeo-callout-stat">
+                <span class="seo-aeo-callout-label">Tracked prompts</span>
+                <span class="seo-aeo-callout-value">{{ aeo_summary.prompt_count }}</span>
+            </div>
+            <div class="seo-aeo-callout-stat">
+                <span class="seo-aeo-callout-label">Cited (last 30d)</span>
+                <span class="seo-aeo-callout-value" style="color: {% if aeo_summary.cited_pct >= 50 %}#10b981{% else %}#f59e0b{% endif %};">{{ aeo_summary.cited_pct }}%</span>
+            </div>
+        </div>
+        <span class="seo-aeo-callout-cta">
+            See AI citations&nbsp; <i class="fa-solid fa-arrow-right"></i>
+        </span>
+    </a>
+    {% else %}
+    <a href="{% url 'aeo:workspace-prompts' %}" class="seo-aeo-callout is-empty">
+        <div class="seo-aeo-callout-icon"><i class="fa-solid fa-bullseye"></i></div>
+        <div style="flex: 1;">
+            <strong style="display: block; font-size: 1rem;">SEO fixes are step one. Tracking AI citations is step two.</strong>
+            <span style="font-size: 0.85rem; color: var(--text-muted);">Add a few queries your customers ask AI &mdash; we'll monitor ChatGPT, Gemini and Perplexity for you.</span>
+        </div>
+        <span class="seo-aeo-callout-cta">
+            Start tracking prompts&nbsp; <i class="fa-solid fa-arrow-right"></i>
+        </span>
+    </a>
+    {% endif %}
+</div>
+<style>
+.seo-aeo-callout {
+    display: flex; align-items: center; gap: 1.25rem;
+    padding: 1rem 1.4rem;
+    border-radius: 14px;
+    background: linear-gradient(135deg, rgba(56,189,248,0.06) 0%, rgba(99,102,241,0.04) 100%);
+    border: 1px solid rgba(56,189,248,0.2);
+    text-decoration: none !important;
+    color: inherit !important;
+    transition: transform 0.15s ease, border-color 0.15s ease, background 0.15s ease;
+}
+.seo-aeo-callout:hover {
+    transform: translateY(-1px);
+    border-color: rgba(56,189,248,0.4);
+    background: linear-gradient(135deg, rgba(56,189,248,0.1) 0%, rgba(99,102,241,0.06) 100%);
+}
+.seo-aeo-callout-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 42px; height: 42px;
+    border-radius: 12px;
+    background: rgba(56,189,248,0.14);
+    color: #0284c7;
+    font-size: 1.05rem;
+    flex-shrink: 0;
+}
+.seo-aeo-callout-stats {
+    display: flex; gap: 1.75rem; flex: 1; flex-wrap: wrap;
+}
+.seo-aeo-callout-stat { display: flex; flex-direction: column; gap: 0.15rem; }
+.seo-aeo-callout-label {
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.06em;
+    text-transform: uppercase; color: var(--text-muted);
+}
+.seo-aeo-callout-value {
+    font-size: 1.4rem; font-weight: 800; color: var(--text-primary); line-height: 1;
+}
+.seo-aeo-callout-value small { font-size: 0.7rem; color: var(--text-muted); font-weight: 500; }
+.seo-aeo-callout-cta {
+    font-size: 0.85rem; font-weight: 700; color: #0284c7;
+    white-space: nowrap;
+}
+@media (max-width: 760px) {
+    .seo-aeo-callout { flex-direction: column; align-items: flex-start; }
+    .seo-aeo-callout-stats { gap: 1rem; }
+}
+</style>
+{% endif %}
 
 {% if project and snapshot %}
 <nav class="page-jump-nav glass-panel" aria-label="Page sections" style="margin: 0 0 1.5rem;">
@@ -60,6 +148,150 @@
     </div>
 </nav>
 {% endif %}
+
+{# ── Empty state: no project yet — replaces the whole complex dashboard ── #}
+{% if not project %}
+<section class="ws-seo-empty-shell">
+    <div class="container-fluid">
+        <div class="ws-seo-empty-card">
+            <div class="ws-seo-empty-icon"><i class="fa-solid fa-search"></i></div>
+            <p class="ws-seo-empty-eyebrow">SEO Workspace</p>
+            <h2 class="ws-seo-empty-heading">Create your first workspace to unlock SEO intelligence</h2>
+            <p class="ws-seo-empty-lead">
+                The SEO module needs a project so it can reuse your audit, profile, and competitor list. Setup takes 90 seconds — then you'll have competitor benchmarking, gap analysis, and a roadmap that feeds your AI Visibility score.
+            </p>
+
+            <div class="ws-seo-empty-features">
+                <div class="ws-seo-empty-feature">
+                    <i class="fa-solid fa-people-arrows"></i>
+                    <div>
+                        <strong>Live competitor benchmarking</strong>
+                        <p>We fetch real competitor sites, profile what they publish, and surface the gaps.</p>
+                    </div>
+                </div>
+                <div class="ws-seo-empty-feature">
+                    <i class="fa-solid fa-puzzle-piece"></i>
+                    <div>
+                        <strong>Pattern detection &amp; roadmap</strong>
+                        <p>Identifies the on-page patterns winning pages share — and what your pages are missing.</p>
+                    </div>
+                </div>
+                <div class="ws-seo-empty-feature">
+                    <i class="fa-solid fa-robot"></i>
+                    <div>
+                        <strong>Feeds your AI Visibility</strong>
+                        <p>Every SEO fix improves the signals AI engines use to decide whether to cite you.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="ws-seo-empty-cta-row">
+                <a href="{% url 'tools:workspace-onboarding' %}" class="button button-primary ws-seo-empty-cta-primary">
+                    <i class="fa-solid fa-play"></i>&nbsp; Set up my workspace
+                </a>
+                <a href="{% url 'tools:workspace-demo' %}" class="button button-secondary">
+                    Peek at a sample workspace
+                </a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<style>
+.ws-seo-empty-shell {
+    padding: 3.5rem 0 5rem;
+    background: linear-gradient(180deg, rgba(56,189,248,0.04) 0%, transparent 60%);
+}
+.ws-seo-empty-card {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 3rem 2.5rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 22px;
+    box-shadow: 0 30px 80px -30px rgba(56,189,248,0.18);
+    text-align: center;
+}
+.ws-seo-empty-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 56px; height: 56px;
+    margin-bottom: 1.25rem;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #0284c7 0%, #6366f1 100%);
+    color: #ffffff;
+    font-size: 1.4rem;
+    box-shadow: 0 10px 24px -8px rgba(56,189,248,0.5);
+}
+.ws-seo-empty-eyebrow {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 999px;
+    background: #e0f2fe;
+    color: #0369a1 !important;
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+    margin: 0 0 1rem;
+}
+.ws-seo-empty-heading {
+    font-size: clamp(1.55rem, 3vw, 2.1rem);
+    margin: 0 0 0.85rem;
+    color: #0f172a !important;
+    line-height: 1.2;
+    font-weight: 800;
+}
+.ws-seo-empty-lead {
+    color: #475569 !important;
+    font-size: 1rem;
+    line-height: 1.65;
+    margin: 0 auto 2.25rem;
+    max-width: 580px;
+}
+.ws-seo-empty-features {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.85rem;
+    text-align: left;
+    margin-bottom: 2.25rem;
+}
+.ws-seo-empty-feature {
+    display: flex; gap: 0.9rem; align-items: flex-start;
+    padding: 1rem 1.15rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+}
+.ws-seo-empty-feature i {
+    color: #0284c7;
+    font-size: 1rem;
+    flex-shrink: 0;
+    margin-top: 0.15rem;
+    width: 24px; text-align: center;
+}
+.ws-seo-empty-feature strong {
+    display: block;
+    color: #0f172a;
+    font-size: 0.95rem;
+    margin-bottom: 0.15rem;
+}
+.ws-seo-empty-feature p {
+    margin: 0;
+    color: #64748b !important;
+    font-size: 0.82rem;
+    line-height: 1.5;
+}
+.ws-seo-empty-cta-row {
+    display: flex; gap: 0.65rem; justify-content: center; align-items: center; flex-wrap: wrap;
+}
+.ws-seo-empty-cta-primary {
+    padding: 0.85rem 2rem !important;
+    font-size: 0.95rem !important;
+}
+@media (max-width: 620px) {
+    .ws-seo-empty-card { padding: 2.25rem 1.5rem; }
+}
+</style>
+
+{# Skip the rest of the dashboard — nothing to show without a project. #}
+{% else %}
 
 <section class="dashboard-stack workspace-seo-shell">
     <div class="container-fluid">
@@ -99,7 +331,22 @@
                         <span class="data-card-value">{{ geo_shootout.confidence_score }}/100</span>
                     </div>
                 </div>
-                
+
+                {# ── Promote this query to the continuous Prompt Tracker ── #}
+                {% if geo_shootout.query %}
+                <form method="post" action="{% url 'seo:workspace-seo-promote-to-prompt' %}" style="margin-top: 1rem; padding: 1rem 1.1rem; background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.22); border-radius: 10px; display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+                    {% csrf_token %}
+                    <input type="hidden" name="query" value="{{ geo_shootout.query }}">
+                    <div style="flex: 1; min-width: 220px;">
+                        <strong style="display: block; font-size: 0.9rem;">Track this query continuously</strong>
+                        <span style="font-size: 0.8rem; color: var(--text-muted);">We'll re-check ChatGPT, Gemini and Perplexity any time you ask.</span>
+                    </div>
+                    <button type="submit" class="button button-secondary" style="font-size: 0.82rem; padding: 0.55rem 0.95rem;">
+                        <i class="fa-solid fa-bullseye"></i>&nbsp;Add to Prompt Tracker
+                    </button>
+                </form>
+                {% endif %}
+
                 {% if geo_shootout.is_mock %}
                 <div style="margin-top: 1rem; padding: 0.8rem; background: rgba(59, 130, 246, 0.1); border-left: 3px solid var(--accent-blue); font-size: 0.8rem; color: var(--text-secondary);">
                     <strong>API Integration Notice:</strong> {{ geo_shootout.mock_notice }} Activate your Perplexity API billing to fetch real-time shootout data.
@@ -1207,6 +1454,7 @@
 
     </div>
 </section>
+{% endif %}{# end: project required gate #}
 
 <section class="faq-section" style="margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--border-glass);">
     <div class="container section-heading" style="text-align: center; margin-bottom: 2rem;">

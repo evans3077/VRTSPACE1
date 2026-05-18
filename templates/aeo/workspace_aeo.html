@@ -233,11 +233,20 @@
     <article class="workspace-state-panel is-audit">
         <p class="workspace-report-kicker">Audit Required</p>
         <h2>Run the first audit to unlock AI Visibility</h2>
-        <p>Your AI Visibility Score is built from crawl data, page structure, and content signals. Complete one audit first — then the workspace can show where AI engines cite you and what's blocking them.</p>
-        <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
-            {% csrf_token %}
-            <button type="submit" class="button button-primary">Run first audit</button>
-        </form>
+        <p>Your AI Visibility Score is built from crawl data, page structure, and content signals. Complete one audit first &mdash; then the workspace can show where AI engines cite you and what's blocking them.</p>
+        <div class="workspace-card-actions" style="display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center;">
+            <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin: 0;">
+                {% csrf_token %}
+                <button type="submit" class="button button-primary">Run first audit</button>
+            </form>
+            <a class="button button-secondary" href="{% url 'seo:workspace-seo' %}" style="font-size: 0.85rem;">
+                <i class="fa-solid fa-search"></i>&nbsp;Or open SEO workspace
+            </a>
+        </div>
+        <p style="margin-top: 0.85rem; font-size: 0.82rem; color: var(--text-muted);">
+            <i class="fa-solid fa-circle-info" style="opacity: 0.5;"></i>&nbsp;
+            The SEO workspace gives you competitor benchmarking and a full intelligence brief that feeds straight back into your AI Visibility score.
+        </p>
     </article>
 
     {% else %}
