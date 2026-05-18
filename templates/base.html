@@ -578,6 +578,236 @@
     }
     .vrt-discovery-notice-detail li strong { color: #78350f !important; }
 
+    /* ─────────────────────────────────────────────────────────────────
+       Mobile top bar + drawer — tighter, more useful, animated.
+       Targets ≤860px (the existing site mobile breakpoint).
+       ───────────────────────────────────────────────────────────────── */
+
+    /* Keep the primary CTA visible on the top bar so users always have a
+       1-click conversion path. Override site.css which hides it. */
+    @media (max-width: 860px) {
+        /* Force the top bar to stay on ONE row */
+        .nav-shell {
+            flex-direction: row !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 0.7rem 0 !important;
+            gap: 0.5rem !important;
+            flex-wrap: nowrap !important;
+        }
+        .brand {
+            order: 1;
+            font-size: 0.82rem !important;
+            letter-spacing: 0.06em !important;
+            flex-shrink: 0;
+            margin-right: auto;  /* push everything else to the right */
+        }
+        .site-header .nav-actions {
+            order: 2;
+            display: flex !important;
+            align-items: center !important;
+            gap: 0.5rem !important;
+            justify-content: flex-end !important;
+            flex-direction: row !important;
+            flex-shrink: 0;
+            margin: 0 !important;
+        }
+        .site-header .nav-cta {
+            display: inline-flex !important;
+            padding: 0.5rem 0.85rem !important;
+            font-size: 0.76rem !important;
+            white-space: nowrap;
+        }
+        /* Authenticated user dropdown: hide the visible chip on mobile,
+           keep the Open Workspace CTA */
+        .site-header .nav-user-shell {
+            display: none !important;
+        }
+        .nav-hamburger {
+            order: 3;
+            flex-shrink: 0;
+        }
+    }
+    @media (max-width: 420px) {
+        /* Very tight phones — drop the brand to a compact lockup */
+        .brand { font-size: 0.75rem !important; }
+        .site-header .nav-cta {
+            padding: 0.45rem 0.7rem !important;
+            font-size: 0.72rem !important;
+        }
+    }
+
+    /* ── Mobile drawer — tighter, faster, friendlier ──────────────── */
+    .nav-mobile-drawer {
+        transition: opacity 0.22s ease, visibility 0s linear 0.22s, backdrop-filter 0.22s ease !important;
+    }
+    .nav-mobile-drawer.is-open {
+        transition-delay: 0s !important;
+    }
+    .mobile-drawer-content {
+        padding: 4.25rem 1.4rem 1.5rem !important;
+        max-width: 360px !important;
+        gap: 0.5rem;
+        transition: transform 0.28s cubic-bezier(0.32, 0.72, 0, 1) !important;
+    }
+    .nav-mobile-drawer.is-open .mobile-drawer-content { transform: translateX(0) !important; }
+
+    /* Close button — visible, tappable, animated */
+    .nav-mobile-close {
+        position: absolute !important;
+        top: 1rem !important;
+        right: 1rem !important;
+        width: 38px !important;
+        height: 38px !important;
+        display: inline-flex !important;
+        align-items: center;
+        justify-content: center;
+        background: rgba(255,255,255,0.08) !important;
+        border: 1px solid rgba(255,255,255,0.15) !important;
+        border-radius: 999px !important;
+        color: #f8fafc !important;
+        font-size: 1.5rem !important;
+        line-height: 1 !important;
+        cursor: pointer;
+        transition: transform 0.18s ease, background 0.18s ease, border-color 0.18s ease !important;
+        padding: 0 !important;
+    }
+    .nav-mobile-close:hover, .nav-mobile-close:focus {
+        background: rgba(56,189,248,0.18) !important;
+        border-color: rgba(56,189,248,0.4) !important;
+        transform: rotate(90deg);
+        outline: none;
+    }
+    body.shell-light .nav-mobile-close {
+        background: rgba(15,23,42,0.06) !important;
+        border-color: rgba(15,23,42,0.12) !important;
+        color: #0f172a !important;
+    }
+    body.shell-light .nav-mobile-close:hover,
+    body.shell-light .nav-mobile-close:focus {
+        background: rgba(56,189,248,0.14) !important;
+        border-color: rgba(56,189,248,0.35) !important;
+        color: #0284c7 !important;
+    }
+
+    /* Brand title inside drawer — readable in both themes */
+    .nav-mobile-brand {
+        font-size: 0.78rem !important;
+        font-weight: 800 !important;
+        letter-spacing: 0.12em !important;
+        text-transform: uppercase;
+        margin-bottom: 1.25rem !important;
+        background: linear-gradient(135deg, #38bdf8 0%, #818cf8 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    /* Category eyebrow + tighter spacing */
+    .mobile-drawer-content .nav-category-head {
+        font-size: 0.66rem !important;
+        font-weight: 700 !important;
+        letter-spacing: 0.14em !important;
+        text-transform: uppercase;
+        color: var(--text-muted) !important;
+        margin: 0 0 0.65rem !important;
+        display: block;
+    }
+    body.shell-light .mobile-drawer-content .nav-category-head { color: #64748b !important; }
+
+    .mobile-nav-group { margin-bottom: 1.25rem !important; }
+    .nav-mobile-links { gap: 0 !important; }
+    .nav-mobile-links a {
+        position: relative;
+        display: flex !important;
+        align-items: center;
+        justify-content: space-between;
+        padding: 0.75rem 0.5rem !important;
+        margin: 0 -0.5rem !important;
+        font-size: 0.95rem !important;
+        font-weight: 500 !important;
+        color: var(--text-primary) !important;
+        text-decoration: none !important;
+        border-radius: 10px;
+        transition: background 0.15s ease, padding-left 0.15s ease, color 0.15s ease !important;
+    }
+    .nav-mobile-links a::after {
+        content: "›";
+        font-size: 1.25rem;
+        color: var(--text-muted);
+        opacity: 0;
+        transform: translateX(-4px);
+        transition: opacity 0.18s ease, transform 0.18s ease;
+    }
+    .nav-mobile-links a:hover,
+    .nav-mobile-links a:focus {
+        background: rgba(56,189,248,0.08);
+        padding-left: 0.85rem !important;
+        color: #0284c7 !important;
+        outline: none;
+    }
+    .nav-mobile-links a:hover::after,
+    .nav-mobile-links a:focus::after {
+        opacity: 1;
+        transform: translateX(0);
+    }
+    body.shell-light .nav-mobile-links a { color: #0f172a !important; }
+    body.shell-light .nav-mobile-links a:hover,
+    body.shell-light .nav-mobile-links a:focus {
+        background: #f0f9ff !important;
+        color: #0284c7 !important;
+    }
+
+    /* Mobile actions — tight stack, no big gap */
+    .nav-mobile-actions {
+        margin-top: 1rem !important;
+        padding-top: 1rem !important;
+        border-top: 1px solid rgba(255,255,255,0.08);
+        display: flex !important;
+        flex-direction: column;
+        gap: 0.5rem !important;
+    }
+    body.shell-light .nav-mobile-actions { border-top-color: #e2e8f0; }
+    .nav-mobile-actions .button {
+        padding: 0.72rem 1rem !important;
+        font-size: 0.88rem !important;
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Staggered slide-in for menu items */
+    .nav-mobile-drawer.is-open .nav-mobile-links a {
+        animation: vrtDrawerSlide 0.28s ease both;
+        animation-delay: calc(0.04s * var(--i, 0));
+    }
+    .nav-mobile-drawer.is-open .nav-mobile-actions {
+        animation: vrtDrawerSlide 0.28s ease 0.18s both;
+    }
+    @keyframes vrtDrawerSlide {
+        from { opacity: 0; transform: translateX(12px); }
+        to { opacity: 1; transform: translateX(0); }
+    }
+
+    /* Hamburger button — better touch target on mobile */
+    @media (max-width: 860px) {
+        .nav-hamburger {
+            width: 38px;
+            height: 38px;
+            padding: 0 !important;
+            display: flex !important;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(15,23,42,0.12);
+            background: rgba(15,23,42,0.04);
+            border-radius: 999px;
+            transition: background 0.18s ease, border-color 0.18s ease !important;
+        }
+        .nav-hamburger:hover {
+            background: rgba(56,189,248,0.12);
+            border-color: rgba(56,189,248,0.4);
+        }
+    }
+
     /* ── Dev-mode pill (less visual noise) ──────────────────────── */
     .workspace-dev-pill {
         display: inline-block;
