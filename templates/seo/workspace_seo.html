@@ -675,14 +675,22 @@
                         {% endfor %}
                     </div>
                     {% if seo_discovery.errors %}
-                    <div class="workspace-status-card is-danger">
-                        <p class="workspace-report-kicker">Warnings</p>
-                        <h3>Some discovery sources returned issues</h3>
-                        <ul>
-                            {% for item in seo_discovery.errors %}
-                            <li><strong>{{ item.query }}</strong>: {{ item.message }}</li>
-                            {% endfor %}
-                        </ul>
+                    <div class="vrt-discovery-notice">
+                        <div class="vrt-discovery-notice-head">
+                            <i class="fa-solid fa-clock-rotate-left"></i>
+                            <div>
+                                <strong>Discovery is taking a short breather</strong>
+                                <p>We're rate-limited by one or more SERP providers. Cached evidence still works while we wait.</p>
+                            </div>
+                        </div>
+                        <details class="vrt-discovery-notice-detail">
+                            <summary>Details ({{ seo_discovery.errors|length }} note{{ seo_discovery.errors|length|pluralize }})</summary>
+                            <ul>
+                                {% for item in seo_discovery.errors %}
+                                <li><strong>{{ item.query }}</strong> — {{ item.message }}</li>
+                                {% endfor %}
+                            </ul>
+                        </details>
                     </div>
                     {% endif %}
                 </div>
