@@ -36,6 +36,21 @@
     <link rel="stylesheet" href="{% static 'css/ui-polish.css' %}">
     <style>
     /* ─────────────────────────────────────────────────────────────────
+       Mobile horizontal-overflow safety net.
+       Some off-canvas elements (mobile nav drawer using translateX(100%),
+       wide tables, etc.) can push the document wider than the viewport
+       on mobile. Clipping at root prevents the page from sliding left to
+       reveal a white gap. Vertical scrolling is unaffected.
+       ───────────────────────────────────────────────────────────────── */
+    html, body {
+        overflow-x: hidden !important;
+        max-width: 100% !important;
+    }
+    img, video, iframe, svg { max-width: 100%; height: auto; }
+    table { max-width: 100%; }
+    pre, code { max-width: 100%; overflow-x: auto; }
+
+    /* ─────────────────────────────────────────────────────────────────
        Phase-C polish: small additive patches that improve perceived
        quality without rewriting the existing CSS layers. Loaded last in
        <head> so we always win the cascade.
