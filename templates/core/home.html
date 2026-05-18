@@ -905,13 +905,14 @@
         --jt-glow-veil: rgba(59, 130, 246, 0.06);
     }
 
-    /* Grid container — modest left padding; circles sit on the card edge
-       and the vertical line passes through the circle centres + card edges. */
+    /* Grid container — line at horizontal CENTER of cards.
+       Left padding (24px) reserves room for the half-overlapping
+       circles so they don't clip against the viewport edge. */
     body.shell-light .journey-grid,
     .journey-grid {
         grid-template-columns: 1fr !important;
-        gap: 1.1rem !important;
-        padding: 0.5rem 0 0.5rem 18px !important;  /* 18px = room for half-circle to hang */
+        gap: 1.25rem !important;
+        padding: 0.5rem 0.5rem 0.5rem 24px !important;
         margin-top: 0.5rem !important;
         position: relative;
         counter-reset: journey-step;
@@ -920,16 +921,17 @@
     body.shell-light .journey-grid::before,
     .journey-grid::before { display: none !important; }
 
-    /* Vertical glow line — sits at the cards' left edge, passing through
-       circle centres. Visible in the gaps between cards. */
+    /* Vertical glow line — runs down the HORIZONTAL CENTRE of the cards.
+       Visible in the gaps between cards (hidden behind card backgrounds). */
     body.shell-light .journey-grid::after,
     .journey-grid::after {
         content: "";
         position: absolute;
-        left: 18px;                /* same x as card left edge & circle centre */
-        top: 24px;
-        bottom: 24px;
+        left: 50% !important;
+        top: 0;
+        bottom: 0;
         width: 2px;
+        margin-left: -1px;
         background: linear-gradient(180deg,
             rgba(245, 158, 11, 0.55)  0%,
             rgba(16, 185, 129, 0.55)  33%,
@@ -938,14 +940,11 @@
         opacity: 1 !important;
         border-radius: 1px;
         z-index: 0;
-        transform: translateX(-1px);
-        box-shadow: 0 0 12px rgba(99, 102, 241, 0.4);
+        box-shadow: 0 0 12px rgba(99, 102, 241, 0.45);
     }
 
-    /* Card — relative, tone-bordered, padding so text doesn't touch edges.
-       Bump specificity with #journey + body.shell-light to beat the legacy
-       Container Matrix Engine border-color override (same specificity but
-       later source). */
+    /* Card — block, text-aligned left, with circle hanging on the left edge.
+       (Reverted from the centered flex-column experiment.) */
     #journey body.shell-light .journey-card,
     body.shell-light #journey .journey-card,
     body.shell-light .journey-card:nth-child(1),
@@ -1017,12 +1016,12 @@
         font-variant-numeric: tabular-nums !important;
         letter-spacing: 0.02em !important;
         z-index: 2 !important;
-        /* Sequential glow pulse — each step staggered so 1→2→3→4 lights up */
-        animation: vrt-step-glow 8s cubic-bezier(0.4, 0, 0.6, 1) infinite !important;
+        /* Default (dim) state — JS toggles .is-active class for the lit state */
+        animation: none !important;
         box-shadow:
             0 0 0 2px var(--jt-glow-soft),
             0 0 0 4px var(--jt-glow-veil),
-            0 0 6px var(--jt-glow-soft) !important;
+            0 0 4px var(--jt-glow-soft) !important;
     }
 
     /* Give text room on the left so it doesn't sit under the circle */
@@ -1033,30 +1032,31 @@
         padding-left: 18px !important;  /* clear of the half-circle that overlaps */
     }
 
-    /* Stagger the pulse so each step lights up in sequence */
-    body.shell-light .journey-card:nth-child(1)::before,
-    .journey-card:nth-child(1)::before { animation-delay: 0s !important; }
-    body.shell-light .journey-card:nth-child(2)::before,
-    .journey-card:nth-child(2)::before { animation-delay: 2s !important; }
-    body.shell-light .journey-card:nth-child(3)::before,
-    .journey-card:nth-child(3)::before { animation-delay: 4s !important; }
-    body.shell-light .journey-card:nth-child(4)::before,
-    .journey-card:nth-child(4)::before { animation-delay: 6s !important; }
-
-    /* The sequential pulse keyframes — uses CSS variables so each step glows its own tone */
-    @keyframes vrt-step-glow {
-        0%, 75%, 100% {
-            box-shadow:
-                0 0 0 2px var(--jt-glow-soft),
-                0 0 0 4px var(--jt-glow-veil),
-                0 0 6px var(--jt-glow-soft);
-        }
-        12%, 18% {
-            box-shadow:
-                0 0 0 4px var(--jt-glow-soft),
-                0 0 0 9px var(--jt-glow-veil),
-                0 0 26px var(--jt-glow);
-        }
+    /* JS-driven sequencer — one card .is-active at a time. The active circle
+       gets the intense tone-coloured glow + slight scale. Hand-off is clean
+       because only one card has the class at any moment. */
+    body.shell-light .journey-card.is-active::before,
+    .journey-card.is-active::before {
+        transform: translateY(-50%) scale(1.12) !important;
+        background: #ffffff !important;
+        color: var(--jt-color) !important;
+        border-color: var(--jt-color) !important;
+        box-shadow:
+            0 0 0 4px var(--jt-glow-soft),
+            0 0 0 10px var(--jt-glow-veil),
+            0 0 28px var(--jt-glow) !important;
+        transition:
+            transform 0.45s cubic-bezier(0.34, 1.56, 0.64, 1),
+            box-shadow 0.5s ease,
+            border-color 0.3s ease !important;
+    }
+    /* Inactive cards transition out gently */
+    body.shell-light .journey-card::before,
+    .journey-card::before {
+        transition:
+            transform 0.6s ease,
+            box-shadow 0.6s ease,
+            border-color 0.3s ease !important;
     }
 
     /* Card hover — border + glow in the card's own tone */
@@ -1131,4 +1131,39 @@
     .hero-proof-card strong { font-size: 1.7rem !important; min-width: 48px; }
 }
 </style>
+
+<script>
+/* Journey timeline — one-at-a-time glow sequencer.
+   Cycles .is-active across cards every 1.5s. Each active card lights its
+   tone-coloured circle (via CSS .is-active::before rules); others stay dim.
+   Pauses while the page is hidden (saves battery on mobile).
+   Respects prefers-reduced-motion. */
+(function() {
+    if (window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+    var cards = document.querySelectorAll('.journey-grid .journey-card');
+    if (cards.length === 0) return;
+    var active = 0;
+    var timer = null;
+    function tick() {
+        cards.forEach(function(card, i) {
+            card.classList.toggle('is-active', i === active);
+        });
+        active = (active + 1) % cards.length;
+    }
+    function start() {
+        if (timer) return;
+        tick();
+        timer = window.setInterval(tick, 3000);  /* slow, calm cadence — doesn't pull focus */
+    }
+    function stop() {
+        if (!timer) return;
+        window.clearInterval(timer);
+        timer = null;
+    }
+    start();
+    document.addEventListener('visibilitychange', function() {
+        if (document.hidden) stop(); else start();
+    });
+})();
+</script>
 {% endblock %}
