@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<style>
+.bd-shell { padding: 3.5rem 0 5rem; }
+.bd-back { display: inline-flex; align-items: center; gap: 0.4rem; color: #64748b !important; text-decoration: none !important; font-size: 0.85rem; margin-bottom: 1.5rem; }
+.bd-back:hover { color: #0284c7 !important; }
+.bd-meta { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #0284c7; margin-bottom: 0.85rem; }
+.bd-shell h1 { font-size: clamp(2rem, 5vw, 3rem); margin: 0 0 1rem; color: #0f172a; line-height: 1.15; letter-spacing: -0.01em; }
+.bd-excerpt { font-size: 1.15rem; line-height: 1.6; color: #475569; margin: 0 0 2.25rem; padding-bottom: 1.75rem; border-bottom: 1px solid #e2e8f0; }
+.bd-body { font-size: 1.05rem; line-height: 1.75; color: #1e293b; }
+.bd-body h2 { font-size: 1.5rem; margin: 2.25rem 0 0.85rem; color: #0f172a; }
+.bd-body h3 { font-size: 1.2rem; margin: 1.75rem 0 0.65rem; color: #0f172a; }
+.bd-body p { margin: 0 0 1.1rem; }
+.bd-body ul, .bd-body ol { margin: 0 0 1.25rem 1.25rem; }
+.bd-body li { margin-bottom: 0.45rem; }
+.bd-body a { color: #0284c7; }
+.bd-body code { background: #f1f5f9; padding: 0.1rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+.bd-body pre { background: #0f172a; color: #f8fafc; padding: 1rem 1.25rem; border-radius: 10px; overflow-x: auto; font-size: 0.85rem; }
+.bd-body blockquote { border-left: 3px solid #0284c7; padding: 0.25rem 0 0.25rem 1rem; color: #475569; font-style: italic; margin: 1.25rem 0; }
+
+.bd-cta { margin: 3rem 0 0; padding: 2rem 2.25rem; background: linear-gradient(135deg, #e0f2fe 0%, #ffffff 100%); border: 1px solid #bae6fd; border-radius: 16px; text-align: center; }
+.bd-cta h3 { margin: 0 0 0.5rem; font-size: 1.35rem; color: #0f172a; }
+.bd-cta p { margin: 0 0 1.25rem; color: #475569; }
+
+.bd-related { margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid #e2e8f0; }
+.bd-related h3 { margin: 0 0 1.25rem; font-size: 1.1rem; color: #0f172a; }
+.bd-related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.85rem; }
+.bd-related-card { padding: 1.1rem 1.2rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; color: inherit !important; text-decoration: none !important; transition: transform 0.15s ease, border-color 0.15s ease; }
+.bd-related-card:hover { transform: translateY(-1px); border-color: #38bdf8; }
+.bd-related-card strong { display: block; color: #0f172a; font-size: 0.95rem; margin-bottom: 0.35rem; line-height: 1.35; }
+.bd-related-card span { font-size: 0.78rem; color: #64748b; }
+</style>
+{% endblock %}
+
+{% block content %}
+<article class="bd-shell">
+    <div class="container" style="max-width: 760px;">
+        <a href="{% url 'content:blog-index' %}" class="bd-back">
+            <i class="fa-solid fa-arrow-left"></i> All articles
+        </a>
+        <p class="bd-meta">
+            {% if article.is_pillar %}Pillar guide &middot; {% endif %}
+            {% if article.published_at %}{{ article.published_at|date:"F j, Y" }}{% else %}{{ article.created_at|date:"F j, Y" }}{% endif %}
+        </p>
+        <h1>{{ article.title }}</h1>
+        {% if article.excerpt %}<p class="bd-excerpt">{{ article.excerpt }}</p>{% endif %}
+
+        <div class="bd-body">
+            {{ article.content|linebreaks }}
+        </div>
+
+        <div class="bd-cta">
+            <h3>Want to be cited by ChatGPT, Gemini & Perplexity?</h3>
+            <p>Run a free AI Visibility audit and see where you stand today.</p>
+            <a href="{% url 'tools:workspace-signup' %}" class="button button-primary">Run free audit &rarr;</a>
+        </div>
+
+        {% if related_articles %}
+        <div class="bd-related">
+            <h3>Keep reading</h3>
+            <div class="bd-related-grid">
+                {% for r in related_articles %}
+                <a href="{% url 'content:blog-detail' r.slug %}" class="bd-related-card">
+                    <strong>{{ r.title }}</strong>
+                    <span>{% if r.published_at %}{{ r.published_at|date:"M j, Y" }}{% else %}{{ r.created_at|date:"M j, Y" }}{% endif %}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</article>
+{% endblock %}

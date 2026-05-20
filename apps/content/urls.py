@@ -1,6 +1,8 @@
 from django.urls import path
 
 from .views import (
+    BlogDetailView,
+    BlogIndexView,
     WorkspaceGeneratedContentApplyView,
     WorkspaceGeneratedContentCreateView,
     WorkspaceGeneratedContentDetailView,
@@ -18,6 +20,10 @@ from .cms_views import (
 app_name = "content"
 
 urlpatterns = [
+    # ── Public blog (Article) routes ──────────────────────────────
+    path("blog/", BlogIndexView.as_view(), name="blog-index"),
+    path("blog/<slug:slug>/", BlogDetailView.as_view(), name="blog-detail"),
+
     path("workspace/content/", WorkspaceGeneratedContentListView.as_view(), name="workspace-content"),
     path("workspace/content/generate/", WorkspaceGeneratedContentCreateView.as_view(), name="workspace-content-generate"),
     path("workspace/content/generate-from-seo/", WorkspaceGeneratedContentFromSEOView.as_view(), name="workspace-content-generate-from-seo"),

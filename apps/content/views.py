@@ -285,3 +285,67 @@ class WorkspaceGeneratedContentJsonView(WorkspaceGeneratedContentAccessMixin, Vi
     def get(self, request, *args, **kwargs):
         draft = self.get_generated_content(kwargs["pk"])
         return JsonResponse(draft.output_json or {}, status=200)
+
+
+
+# ─── Public Blog (Article) views ──────────────────────────────────────────
+
+from django.views.generic import ListView as _ListView, DetailView as _DetailView
+from .models import Article as _Article
+
+
+class BlogIndexView(_ListView):
+    """Public blog index — lists published articles."""
+
+    model = _Article
+    template_name = "content/blog_index.html"
+    context_object_name = "articles"
+    paginate_by = 12
+
+    def get_queryset(self):
+        return _Article.objects.filter(
+            status=_Article.Status.PUBLISHED,
+        ).order_by("-published_at", "-created_at")
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        ctx.update({
+            "page_title": "VRT SPACE Blog — Insights on AI Visibility & AEO",
+            "meta_description": "Practical insights on AI visibility, Answer Engine Optimization, and how to be cited by ChatGPT, Gemini, and Perplexity.",
+            "canonical_url": self.request.build_absolute_uri(self.request.path),
+            "meta_robots": "index,follow",
+            "shell_theme": "shell-light",
+        })
+        return ctx
+
+
+class BlogDetailView(_DetailView):
+    """Public blog post detail."""
+
+    model = _Article
+    template_name = "content/blog_detail.html"
+    context_object_name = "article"
+    slug_field = "slug"
+    slug_url_kwarg = "slug"
+
+    def get_queryset(self):
+        return _Article.objects.filter(status=_Article.Status.PUBLISHED)
+
+    def get_context_data(self, **kwargs):
+        ctx = super().get_context_data(**kwargs)
+        article = self.object
+        # Related: 3 other recently-published articles
+        related = (
+            _Article.objects.filter(status=_Article.Status.PUBLISHED)
+            .exclude(pk=article.pk)
+            .order_by("-published_at", "-created_at")[:3]
+        )
+        ctx.update({
+            "related_articles": related,
+            "page_title": f"{article.title} | VRT SPACE Blog",
+            "meta_description": article.excerpt or article.content[:160],
+            "canonical_url": self.request.build_absolute_uri(self.request.path),
+            "meta_robots": "index,follow",
+            "shell_theme": "shell-light",
+        })
+        return ctx

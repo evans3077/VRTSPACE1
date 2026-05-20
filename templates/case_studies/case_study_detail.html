@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<style>
+.csd-shell { padding: 3.5rem 0 5rem; }
+.csd-back { display: inline-flex; align-items: center; gap: 0.4rem; color: #64748b !important; text-decoration: none !important; font-size: 0.85rem; margin-bottom: 1.5rem; }
+.csd-back:hover { color: #047857 !important; }
+.csd-meta { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; color: #047857; margin-bottom: 0.85rem; }
+.csd-shell h1 { font-size: clamp(1.85rem, 4.5vw, 2.6rem); margin: 0 0 1rem; color: #0f172a; line-height: 1.15; letter-spacing: -0.01em; }
+.csd-key-metric {
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    background: linear-gradient(135deg, #10b981, #059669);
+    color: #ffffff;
+    border-radius: 999px;
+    font-size: 1rem;
+    font-weight: 800;
+    box-shadow: 0 8px 24px -8px rgba(16,185,129,0.5);
+    margin: 0.5rem 0 2rem;
+}
+.csd-section { margin: 2.5rem 0; }
+.csd-section .csd-section-label { font-size: 0.72rem; font-weight: 800; letter-spacing: 0.12em; text-transform: uppercase; color: #047857; margin: 0 0 0.6rem; }
+.csd-section h2 { margin: 0 0 0.85rem; font-size: 1.4rem; color: #0f172a; }
+.csd-section .csd-section-body { font-size: 1rem; line-height: 1.7; color: #334155; }
+.csd-section .csd-section-body p { margin: 0 0 1rem; }
+.csd-section.csd-results {
+    padding: 2rem 2.25rem;
+    background: linear-gradient(135deg, #f0fdf4 0%, #ffffff 100%);
+    border: 1px solid #bbf7d0;
+    border-radius: 14px;
+}
+
+.csd-cta { margin: 3rem 0 0; padding: 2.25rem 2.25rem; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); border-radius: 16px; text-align: center; color: #f8fafc; }
+.csd-cta h3 { margin: 0 0 0.5rem; font-size: 1.45rem; color: #f8fafc; }
+.csd-cta p { margin: 0 0 1.5rem; color: #cbd5e1; font-size: 0.95rem; }
+
+.csd-related { margin-top: 3.5rem; padding-top: 2.5rem; border-top: 1px solid #e2e8f0; }
+.csd-related h3 { margin: 0 0 1.25rem; font-size: 1.1rem; color: #0f172a; }
+.csd-related-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 0.85rem; }
+.csd-related-card { padding: 1.1rem 1.2rem; background: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; color: inherit !important; text-decoration: none !important; transition: transform 0.15s ease, border-color 0.15s ease; }
+.csd-related-card:hover { transform: translateY(-1px); border-color: #10b981; }
+.csd-related-card strong { display: block; color: #0f172a; font-size: 0.95rem; margin-bottom: 0.35rem; line-height: 1.35; }
+.csd-related-card span { font-size: 0.78rem; color: #64748b; }
+</style>
+{% endblock %}
+
+{% block content %}
+<article class="csd-shell">
+    <div class="container" style="max-width: 760px;">
+        <a href="{% url 'case_studies:case-study-index' %}" class="csd-back">
+            <i class="fa-solid fa-arrow-left"></i> All case studies
+        </a>
+        <p class="csd-meta">{{ case_study.industry }} &middot; {{ case_study.client_name }}</p>
+        <h1>{{ case_study.title }}</h1>
+        {% if case_study.key_metric %}
+        <div class="csd-key-metric">{{ case_study.key_metric }}</div>
+        {% endif %}
+
+        <section class="csd-section">
+            <p class="csd-section-label">The challenge</p>
+            <div class="csd-section-body">{{ case_study.challenge|linebreaks }}</div>
+        </section>
+
+        <section class="csd-section">
+            <p class="csd-section-label">What we did</p>
+            <div class="csd-section-body">{{ case_study.solution|linebreaks }}</div>
+        </section>
+
+        <section class="csd-section csd-results">
+            <p class="csd-section-label">The results</p>
+            <div class="csd-section-body">{{ case_study.results|linebreaks }}</div>
+        </section>
+
+        <div class="csd-cta">
+            <h3>Get a result like this for your brand</h3>
+            <p>Run a free AI Visibility audit — find out where you're cited today and what's blocking the rest.</p>
+            <a href="{% url 'tools:workspace-signup' %}" class="button button-primary">Run free audit &rarr;</a>
+        </div>
+
+        {% if related_case_studies %}
+        <div class="csd-related">
+            <h3>More case studies</h3>
+            <div class="csd-related-grid">
+                {% for r in related_case_studies %}
+                <a href="{% url 'case_studies:case-study-detail' r.slug %}" class="csd-related-card">
+                    <strong>{{ r.title }}</strong>
+                    <span>{{ r.industry }} &middot; {{ r.client_name }}</span>
+                </a>
+                {% endfor %}
+            </div>
+        </div>
+        {% endif %}
+    </div>
+</article>
+{% endblock %}
