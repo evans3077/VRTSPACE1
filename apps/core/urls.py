@@ -1,6 +1,14 @@
 from django.urls import path
 
-from .views import HomePageView, ServiceDetailView, ServicesIndexView, PackagesView, ForAgenciesView, location_autocomplete
+from .views import (
+    HomePageView,
+    IndustryLandingView,
+    ServiceDetailView,
+    ServicesIndexView,
+    PackagesView,
+    ForAgenciesView,
+    location_autocomplete,
+)
 
 app_name = "core"
 
@@ -11,4 +19,5 @@ urlpatterns = [
     path("services/", ServicesIndexView.as_view(), name="services"),
     path("services/<slug:slug>/", ServiceDetailView.as_view(), name="service-detail"),
     path("packages/", PackagesView.as_view(), name="packages"),
+    path("ai-visibility-for/<slug:slug>/", IndustryLandingView.as_view(), name="industry-landing"),
 ]

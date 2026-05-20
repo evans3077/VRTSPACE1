@@ -6,6 +6,8 @@ from .views import (
     AEOIndexHomeView,
     AEOShareView,
     ContentOptimizerView,
+    WeeklyDigestPreviewIndexView,
+    WeeklyDigestPreviewView,
     WorkspaceAEOView,
     WorkspacePromptDetailView,
     WorkspacePromptsView,
@@ -31,6 +33,16 @@ urlpatterns = [
         "workspace/share-of-voice/",
         WorkspaceShareOfVoiceView.as_view(),
         name="workspace-share-of-voice",
+    ),
+    path(
+        "workspace/preview/weekly-digest/",
+        WeeklyDigestPreviewIndexView.as_view(),
+        name="weekly-digest-preview-index",
+    ),
+    path(
+        "workspace/preview/weekly-digest/<int:pk>/",
+        WeeklyDigestPreviewView.as_view(),
+        name="weekly-digest-preview",
     ),
     path(
         "aeo/share/<str:token>/",

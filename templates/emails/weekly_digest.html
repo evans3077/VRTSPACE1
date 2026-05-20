@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Your AI Visibility this week — {{ brand_name }}</title>
+</head>
+<body style="margin:0;padding:0;background:#f8fafc;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;color:#0f172a;line-height:1.55;">
+<div style="max-width:600px;margin:0 auto;padding:24px 16px;">
+
+  {# Brand header #}
+  <div style="padding:12px 0 24px;text-align:center;">
+    <span style="font-size:0.78rem;letter-spacing:0.18em;font-weight:800;color:#0284c7;">VRT SPACE AGENCY</span>
+  </div>
+
+  {# Hero card #}
+  <div style="background:#ffffff;border:1px solid #e2e8f0;border-radius:18px;padding:28px 24px;box-shadow:0 1px 3px rgba(15,23,42,0.04);">
+    <p style="margin:0;font-size:0.7rem;font-weight:700;letter-spacing:0.14em;text-transform:uppercase;color:#0369a1;">
+      Weekly digest &middot; {{ period_start|date:"M j" }} &ndash; {{ period_end|date:"M j" }}
+    </p>
+    <h1 style="margin:8px 0 12px;font-size:1.65rem;line-height:1.2;color:#0f172a;font-weight:800;">
+      Your AI Visibility this week
+    </h1>
+    <p style="margin:0;font-size:0.95rem;color:#475569;">
+      Here's how <strong style="color:#0f172a;">{{ brand_name }}</strong> ({{ domain }}) showed up in AI answers between {{ period_start|date:"M j" }} and {{ period_end|date:"M j" }}.
+    </p>
+
+    {# KPI row #}
+    <div style="margin-top:24px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:8px 0;">
+        <tr>
+          {# AI Visibility Score #}
+          <td style="width:33%;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px 12px;text-align:left;vertical-align:top;">
+            <div style="font-size:0.66rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#64748b;">AI Visibility</div>
+            <div style="font-size:1.7rem;font-weight:800;color:#0f172a;margin-top:4px;line-height:1;">{{ aeo_score }}</div>
+            <div style="font-size:0.78rem;margin-top:4px;
+                {% if aeo_score_arrow == 'up' %}color:#047857;
+                {% elif aeo_score_arrow == 'down' %}color:#b91c1c;
+                {% else %}color:#64748b;{% endif %}">
+              {% if aeo_score_arrow == 'up' %}&#9650; +{{ aeo_score_delta }} vs last week
+              {% elif aeo_score_arrow == 'down' %}&#9660; {{ aeo_score_delta }} vs last week
+              {% else %}&mdash; no change{% endif %}
+            </div>
+          </td>
+          {# Citations #}
+          <td style="width:33%;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px 12px;text-align:left;vertical-align:top;">
+            <div style="font-size:0.66rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#64748b;">Citations</div>
+            <div style="font-size:1.7rem;font-weight:800;color:#0f172a;margin-top:4px;line-height:1;">{{ citations_this_week }}</div>
+            <div style="font-size:0.78rem;margin-top:4px;
+                {% if citation_delta > 0 %}color:#047857;
+                {% elif citation_delta < 0 %}color:#b91c1c;
+                {% else %}color:#64748b;{% endif %}">
+              {% if citation_delta > 0 %}&#9650; +{{ citation_delta }} from last week
+              {% elif citation_delta < 0 %}&#9660; {{ citation_delta }} from last week
+              {% else %}same as last week{% endif %}
+            </div>
+          </td>
+          {# Share of voice #}
+          <td style="width:34%;background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;padding:14px 12px;text-align:left;vertical-align:top;">
+            <div style="font-size:0.66rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#64748b;">Share of voice</div>
+            <div style="font-size:1.7rem;font-weight:800;color:#0f172a;margin-top:4px;line-height:1;">{{ share_pct_this_week }}%</div>
+            <div style="font-size:0.78rem;margin-top:4px;
+                {% if share_pct_delta > 0 %}color:#047857;
+                {% elif share_pct_delta < 0 %}color:#b91c1c;
+                {% else %}color:#64748b;{% endif %}">
+              {% if share_pct_delta > 0 %}&#9650; +{{ share_pct_delta }} pts
+              {% elif share_pct_delta < 0 %}&#9660; {{ share_pct_delta }} pts
+              {% else %}no change{% endif %}
+            </div>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
+
+  {% if has_data %}
+
+  {# Wins #}
+  {% if new_wins %}
+  <div style="margin-top:18px;background:#ffffff;border:1px solid #e2e8f0;border-radius:14px;padding:20px 22px;">
+    <p style="margin:0 0 4px;font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#047857;">
+      &#9650; You started getting cited for
+    </p>
+    <h3 style="margin:0 0 10px;font-size:1.05rem;color:#0f172a;">{{ new_wins|length }} new prompt{{ new_wins|length|pluralize }}</h3>
+    <ul style="margin:0;padding:0;list-style:none;">
+      {% for prompt in new_wins %}
+      <li style="padding:8px 10px;background:#f0fdf4;border:1px solid #bbf7d0;border-radius:8px;margin-bottom:6px;font-size:0.88rem;color:#065f46;">
+        <span style="color:#10b981;font-weight:700;">&#10003;</span>&nbsp; {{ prompt }}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {# Losses #}
+  {% if new_losses %}
+  <div style="margin-top:14px;background:#ffffff;border:1px solid #e2e8f0;border-radius:14px;padding:20px 22px;">
+    <p style="margin:0 0 4px;font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#b45309;">
+      &#9660; You stopped being cited for
+    </p>
+    <h3 style="margin:0 0 10px;font-size:1.05rem;color:#0f172a;">{{ new_losses|length }} prompt{{ new_losses|length|pluralize }} you used to win</h3>
+    <ul style="margin:0;padding:0;list-style:none;">
+      {% for prompt in new_losses %}
+      <li style="padding:8px 10px;background:#fffbeb;border:1px solid #fde68a;border-radius:8px;margin-bottom:6px;font-size:0.88rem;color:#78350f;">
+        <span style="color:#f59e0b;font-weight:700;">!</span>&nbsp; {{ prompt }}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+  {% endif %}
+
+  {# Top prompts #}
+  {% if top_prompts %}
+  <div style="margin-top:14px;background:#ffffff;border:1px solid #e2e8f0;border-radius:14px;padding:20px 22px;">
+    <p style="margin:0 0 4px;font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#0369a1;">Top prompts</p>
+    <h3 style="margin:0 0 12px;font-size:1.05rem;color:#0f172a;">Where you're winning most</h3>
+    {% for tp in top_prompts %}
+    <div style="padding:10px 0;{% if not forloop.last %}border-bottom:1px solid #f1f5f9;{% endif %}">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;font-size:0.9rem;">
+        <strong style="color:#0f172a;font-weight:600;">{{ tp.prompt }}</strong>
+        <span style="color:#0284c7;font-weight:800;font-size:0.95rem;white-space:nowrap;margin-left:8px;">{{ tp.share_pct }}%</span>
+      </div>
+      <div style="font-size:0.78rem;color:#64748b;margin-top:2px;">Cited on: {{ tp.engines|join:", " }}</div>
+    </div>
+    {% endfor %}
+  </div>
+  {% endif %}
+
+  {# Opportunity #}
+  {% if biggest_opportunity %}
+  <div style="margin-top:14px;background:linear-gradient(135deg,#f0f9ff,#ffffff);border:1px solid #bae6fd;border-radius:14px;padding:20px 22px;">
+    <p style="margin:0 0 4px;font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#0369a1;">Biggest opportunity</p>
+    <h3 style="margin:0 0 8px;font-size:1.05rem;color:#0f172a;">You're {{ biggest_opportunity.gap }} pts from winning a citation</h3>
+    <p style="margin:0 0 8px;font-size:0.92rem;color:#475569;">
+      Prompt: <strong style="color:#0f172a;">"{{ biggest_opportunity.prompt }}"</strong>
+    </p>
+    <p style="margin:0;font-size:0.85rem;color:#475569;">
+      Your current score on {{ biggest_opportunity.engine }}: {{ biggest_opportunity.score }}/100. Close the gap and this becomes a citation win.
+    </p>
+  </div>
+  {% endif %}
+
+  {# Engine breakdown #}
+  {% if engine_breakdown %}
+  <div style="margin-top:14px;background:#ffffff;border:1px solid #e2e8f0;border-radius:14px;padding:20px 22px;">
+    <p style="margin:0 0 4px;font-size:0.7rem;font-weight:700;letter-spacing:0.1em;text-transform:uppercase;color:#0369a1;">By engine</p>
+    <h3 style="margin:0 0 12px;font-size:1.05rem;color:#0f172a;">Where you got cited this week</h3>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:separate;border-spacing:6px 0;">
+      <tr>
+        {% for engine in engine_breakdown %}
+        <td style="width:33%;background:#f8fafc;border:1px solid #e2e8f0;border-radius:10px;padding:10px 8px;text-align:center;vertical-align:top;">
+          <div style="font-size:0.7rem;font-weight:700;color:{{ engine.color }};">{{ engine.label }}</div>
+          <div style="font-size:1.25rem;font-weight:800;color:#0f172a;margin-top:4px;">{{ engine.cited_pct }}%</div>
+          <div style="font-size:0.66rem;color:#64748b;margin-top:2px;">{{ engine.checks }} check{{ engine.checks|pluralize }}</div>
+        </td>
+        {% endfor %}
+      </tr>
+    </table>
+  </div>
+  {% endif %}
+
+  {% else %}
+  {# Empty state — no data this week #}
+  <div style="margin-top:18px;background:#ffffff;border:1px solid #e2e8f0;border-radius:14px;padding:24px 22px;text-align:center;">
+    <p style="margin:0;font-size:0.95rem;color:#475569;">
+      No prompt checks ran this week. Open your workspace to add or rerun the queries you want to be cited for.
+    </p>
+  </div>
+  {% endif %}
+
+  {# CTA #}
+  <div style="margin-top:24px;text-align:center;">
+    <a href="{{ dashboard_url }}" style="display:inline-block;padding:12px 28px;background:linear-gradient(135deg,#38bdf8,#818cf8);color:#ffffff !important;text-decoration:none;border-radius:999px;font-weight:700;font-size:0.95rem;">
+      Open your workspace &rarr;
+    </a>
+  </div>
+
+  {# Footer #}
+  <div style="margin-top:32px;padding-top:18px;border-top:1px solid #e2e8f0;text-align:center;">
+    <p style="margin:0 0 6px;font-size:0.78rem;color:#64748b;">
+      VRT SPACE AGENCY &middot; AI-first SEO &amp; Answer Engine Optimization
+    </p>
+    <p style="margin:0;font-size:0.72rem;color:#94a3b8;">
+      You're receiving this because email reports are enabled for {{ brand_name }}.
+      {% if unsubscribe_url %}<a href="{{ unsubscribe_url }}" style="color:#0284c7;">Manage preferences</a>{% endif %}
+    </p>
+  </div>
+
+</div>
+</body>
+</html>

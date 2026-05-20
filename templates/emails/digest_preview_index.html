@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="public-shell-section" style="padding-top: 2.5rem;">
+    <div class="container" style="max-width: 720px;">
+        <p class="feature-tag">Internal preview</p>
+        <h1 style="font-size: clamp(1.65rem, 3.5vw, 2.2rem); margin: 0.4rem 0 0.5rem;">
+            Weekly digest preview
+        </h1>
+        <p class="text-muted" style="margin: 0 0 2rem; font-size: 0.95rem;">
+            See how the weekly AI Visibility digest email will render for each project.
+            What you see here is the same HTML that goes out via the
+            <code style="background: #f1f5f9; padding: 0.1rem 0.4rem; border-radius: 4px;">process_weekly_digests</code> command.
+        </p>
+
+        {% if projects %}
+        <div style="display: grid; gap: 0.65rem;">
+            {% for project in projects %}
+            <a href="{% url 'aeo:weekly-digest-preview' project.pk %}"
+               style="display: flex; justify-content: space-between; align-items: center;
+                      padding: 0.95rem 1.15rem;
+                      background: #ffffff;
+                      border: 1px solid #e2e8f0;
+                      border-radius: 12px;
+                      color: inherit !important;
+                      text-decoration: none !important;
+                      transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;"
+               onmouseover="this.style.borderColor='#7dd3fc';this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 16px -6px rgba(15,23,42,0.08)';"
+               onmouseout="this.style.borderColor='#e2e8f0';this.style.transform='';this.style.boxShadow='';">
+                <div>
+                    <strong style="display: block; color: #0f172a; font-size: 1rem;">{{ project.name }}</strong>
+                    <span style="font-size: 0.8rem; color: #64748b;">
+                        {{ project.normalized_domain|default:project.website }}
+                        {% if project.owner %} &middot; {{ project.owner.email }}{% endif %}
+                    </span>
+                </div>
+                <span style="font-size: 0.82rem; font-weight: 700; color: #0284c7; white-space: nowrap;">
+                    Preview &rarr;
+                </span>
+            </a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div style="padding: 2.5rem 1rem; text-align: center; border: 1px dashed #cbd5e1; border-radius: 12px;">
+            <p class="text-muted">No projects to preview. Create a workspace first.</p>
+        </div>
+        {% endif %}
+
+        <p style="margin: 1.5rem 0 0; font-size: 0.82rem; color: #64748b;">
+            <i class="fa-solid fa-circle-info"></i>&nbsp;
+            Each preview pulls live data — the email reflects the actual citation activity for the project over the last 7 days.
+        </p>
+    </div>
+</section>
+{% endblock %}

@@ -888,8 +888,8 @@
     }
     .vrt-footer-grid {
         display: grid;
-        grid-template-columns: 2fr 1fr 1fr;
-        gap: 4rem;
+        grid-template-columns: 2fr 1fr 1fr 1fr;
+        gap: 2.5rem;
         padding: 3.5rem 1.5rem 3rem;
         max-width: 1200px;
         margin: 0 auto;
@@ -977,6 +977,16 @@
         background: none !important;
     }
     .vrt-footer-links a:hover i { color: #38bdf8 !important; -webkit-text-fill-color: #38bdf8 !important; }
+    /* "By industry" footer icons — cycle through brand palette
+       (cyan / indigo / emerald) so they read as on-brand variety
+       rather than the rainbow of per-industry accent tones. */
+    .vrt-footer-industry-links li:nth-child(3n+1) a i { color: #38bdf8 !important; }  /* brand cyan */
+    .vrt-footer-industry-links li:nth-child(3n+2) a i { color: #818cf8 !important; }  /* brand indigo */
+    .vrt-footer-industry-links li:nth-child(3n+3) a i { color: #10b981 !important; }  /* brand emerald */
+    .vrt-footer-industry-links li:nth-child(3n+1) a:hover i { color: #7dd3fc !important; }
+    .vrt-footer-industry-links li:nth-child(3n+2) a:hover i { color: #a5b4fc !important; }
+    .vrt-footer-industry-links li:nth-child(3n+3) a:hover i { color: #34d399 !important; }
+
     .vrt-footer-social-link {
         display: inline-flex; align-items: center; justify-content: center;
         width: 36px; height: 36px;
@@ -1152,6 +1162,18 @@
                     <li><a href="{% url 'aeo:aeo-index' %}"><i class="fa-solid fa-magnifying-glass"></i>AEO Visibility Index</a></li>
                     <li><a href="{% url 'tools:workspace-demo' %}"><i class="fa-solid fa-eye"></i>Sample Workspace</a></li>
                     <li><a href="{% url 'tools:workspace-signup' %}"><i class="fa-solid fa-plus"></i>Create Workspace</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <p class="vrt-footer-col-label">By industry</p>
+                <ul class="vrt-footer-links vrt-footer-industry-links">
+                    <li><a href="{% url 'core:industry-landing' 'agencies' %}"><i class="fa-solid fa-people-arrows"></i>Agencies</a></li>
+                    <li><a href="{% url 'core:industry-landing' 'saas' %}"><i class="fa-solid fa-cube"></i>B2B SaaS</a></li>
+                    <li><a href="{% url 'core:industry-landing' 'fintech' %}"><i class="fa-solid fa-chart-line"></i>Fintech</a></li>
+                    <li><a href="{% url 'core:industry-landing' 'ecommerce' %}"><i class="fa-solid fa-bag-shopping"></i>Ecommerce</a></li>
+                    <li><a href="{% url 'core:industry-landing' 'healthcare' %}"><i class="fa-solid fa-heart-pulse"></i>Healthcare</a></li>
+                    <li><a href="{% url 'core:industry-landing' 'local-service' %}"><i class="fa-solid fa-screwdriver-wrench"></i>Local Services</a></li>
                 </ul>
             </div>
 

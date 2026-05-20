@@ -1,0 +1,377 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+<style>
+.ind-hero {
+    padding: 4.5rem 0 3rem;
+    background: linear-gradient(180deg, rgba(255,255,255,0.6) 0%, transparent 100%);
+}
+.ind-hero-icon {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 56px; height: 56px;
+    margin-bottom: 1.25rem;
+    border-radius: 16px;
+    color: #ffffff;
+    font-size: 1.5rem;
+    box-shadow: 0 12px 28px -8px var(--ind-color, #0284c7);
+}
+.ind-hero-eyebrow {
+    display: inline-block;
+    padding: 0.35rem 0.85rem;
+    border-radius: 999px;
+    background: var(--ind-color-bg, #e0f2fe);
+    color: var(--ind-color, #0284c7);
+    font-size: 0.7rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1rem;
+}
+.ind-hero h1 {
+    font-size: clamp(2rem, 5vw, 3.2rem);
+    line-height: 1.12;
+    color: #0f172a;
+    margin: 0 0 1.25rem;
+    font-weight: 800;
+    letter-spacing: -0.01em;
+}
+.ind-hero-lead {
+    font-size: 1.1rem;
+    line-height: 1.65;
+    color: #475569;
+    max-width: 640px;
+    margin: 0 0 2rem;
+}
+.ind-hero-cta-row {
+    display: flex; gap: 0.65rem; flex-wrap: wrap; align-items: center;
+}
+.ind-hero-cta {
+    padding: 0.95rem 2rem !important;
+    font-size: 0.98rem !important;
+    font-weight: 700 !important;
+}
+
+/* Outcomes strip */
+.ind-outcomes {
+    padding: 0 0 4rem;
+}
+.ind-outcomes-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.85rem;
+}
+.ind-outcome-card {
+    padding: 1.4rem 1.25rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    box-shadow: 0 1px 3px rgba(15,23,42,0.04);
+    transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+.ind-outcome-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--ind-color, #0284c7);
+    box-shadow: 0 12px 28px -10px rgba(15,23,42,0.10);
+}
+.ind-outcome-value {
+    font-size: 1.95rem;
+    font-weight: 800;
+    color: var(--ind-color, #0284c7);
+    line-height: 1;
+    margin: 0;
+}
+.ind-outcome-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #475569;
+    margin: 0.4rem 0 0;
+}
+.ind-outcome-note {
+    font-size: 0.78rem;
+    color: #64748b;
+    margin: 0.4rem 0 0;
+    line-height: 1.5;
+}
+
+/* Pain points */
+.ind-pains {
+    padding: 4rem 0;
+    background: #f8fafc;
+    border-top: 1px solid #e2e8f0;
+    border-bottom: 1px solid #e2e8f0;
+}
+.ind-pains-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 2.25rem;
+}
+.ind-pain-card {
+    padding: 1.5rem 1.4rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-left: 3px solid var(--ind-color, #0284c7);
+    border-radius: 12px;
+}
+.ind-pain-card strong {
+    display: block;
+    color: #0f172a;
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+}
+.ind-pain-card p {
+    margin: 0;
+    color: #475569;
+    font-size: 0.88rem;
+    line-height: 1.6;
+}
+
+/* Prompts section */
+.ind-prompts {
+    padding: 4rem 0;
+}
+.ind-prompts-shell {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 18px;
+    padding: 2rem 2.25rem;
+    box-shadow: 0 30px 80px -40px rgba(15,23,42,0.15);
+}
+.ind-prompt-list {
+    list-style: none;
+    padding: 0;
+    margin: 1.25rem 0 0;
+    display: grid;
+    gap: 0.55rem;
+}
+.ind-prompt-list li {
+    display: flex; align-items: center; gap: 0.85rem;
+    padding: 0.85rem 1.1rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: #0f172a;
+    transition: border-color 0.18s ease, background 0.18s ease;
+}
+.ind-prompt-list li:hover {
+    background: #f0f9ff;
+    border-color: var(--ind-color, #0284c7);
+}
+.ind-prompt-list li i {
+    color: var(--ind-color, #0284c7);
+    font-size: 0.85rem;
+    flex-shrink: 0;
+}
+
+/* Section heading */
+.ind-section-heading {
+    text-align: center;
+    max-width: 680px;
+    margin: 0 auto 1rem;
+}
+.ind-section-heading h2 {
+    font-size: clamp(1.6rem, 3.5vw, 2.2rem);
+    color: #0f172a;
+    margin: 0.4rem 0 0.65rem;
+    line-height: 1.2;
+}
+.ind-section-heading p {
+    color: #475569;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+}
+
+/* Closing CTA */
+.ind-cta {
+    padding: 4.5rem 0 5rem;
+    background: linear-gradient(135deg, var(--ind-color-bg, #e0f2fe) 0%, #ffffff 100%);
+    border-top: 1px solid #e2e8f0;
+}
+.ind-cta-card {
+    max-width: 760px;
+    margin: 0 auto;
+    text-align: center;
+}
+.ind-cta-card h2 {
+    font-size: clamp(1.7rem, 4vw, 2.4rem);
+    margin: 0 0 0.85rem;
+    color: #0f172a;
+}
+.ind-cta-card p {
+    color: #475569;
+    margin: 0 0 1.75rem;
+    font-size: 1.05rem;
+    line-height: 1.6;
+}
+
+/* Cross-link to other industries */
+.ind-cross-links {
+    padding: 3rem 0 5rem;
+    border-top: 1px solid #e2e8f0;
+}
+.ind-cross-link-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.65rem;
+    margin-top: 1.5rem;
+}
+.ind-cross-link {
+    display: flex; align-items: center; gap: 0.65rem;
+    padding: 0.85rem 1rem;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    color: #0f172a !important;
+    text-decoration: none !important;
+    font-size: 0.92rem;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.ind-cross-link:hover {
+    transform: translateY(-1px);
+    border-color: #38bdf8;
+    box-shadow: 0 6px 16px -8px rgba(56,189,248,0.18);
+}
+.ind-cross-link i {
+    width: 18px;
+    text-align: center;
+}
+/* Brand-palette rotation across the cross-link grid — cyan/indigo/emerald.
+   Keeps the section on-brand and visually varied instead of using each
+   industry's own accent color. */
+.ind-cross-link-grid > a:nth-child(3n+1) i { color: #38bdf8; }
+.ind-cross-link-grid > a:nth-child(3n+2) i { color: #818cf8; }
+.ind-cross-link-grid > a:nth-child(3n+3) i { color: #10b981; }
+.ind-cross-link-grid > a:nth-child(3n+1):hover { border-color: #38bdf8; }
+.ind-cross-link-grid > a:nth-child(3n+2):hover { border-color: #818cf8; }
+.ind-cross-link-grid > a:nth-child(3n+3):hover { border-color: #10b981; }
+
+@media (max-width: 760px) {
+    .ind-outcomes-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .ind-pains-grid { grid-template-columns: 1fr; }
+    .ind-hero { padding: 3rem 0 2rem; }
+    .ind-outcomes, .ind-pains, .ind-prompts, .ind-cta { padding-top: 2.75rem; padding-bottom: 2.75rem; }
+}
+@media (max-width: 480px) {
+    .ind-outcomes-grid { grid-template-columns: 1fr; }
+    .ind-prompts-shell { padding: 1.5rem 1.25rem; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div style="--ind-color: {{ industry.accent_color }};
+            --ind-color-bg: {{ industry.accent_color }}1A;">
+
+  {# ── Hero ────────────────────────────────────────────────── #}
+  <section class="ind-hero">
+    <div class="container" style="max-width: 980px;">
+      <div class="ind-hero-icon" style="background: {{ industry.accent_color }};">
+        <i class="{{ industry.icon }}"></i>
+      </div>
+      <span class="ind-hero-eyebrow">{{ industry.hero_eyebrow }}</span>
+      <h1>{{ industry.hero_title }}</h1>
+      <p class="ind-hero-lead">{{ industry.hero_lead }}</p>
+      <div class="ind-hero-cta-row">
+        <a href="{% url 'tools:workspace-signup' %}" class="button button-primary ind-hero-cta">
+          Start free audit&nbsp; <i class="fa-solid fa-arrow-right"></i>
+        </a>
+        <a href="{% url 'tools:workspace-demo' %}" class="button button-secondary">
+          See a sample workspace
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {# ── Outcomes strip ──────────────────────────────────────── #}
+  <section class="ind-outcomes">
+    <div class="container" style="max-width: 980px;">
+      <div class="ind-outcomes-grid">
+        {% for outcome in industry.outcomes %}
+        <article class="ind-outcome-card">
+          <p class="ind-outcome-value">{{ outcome.value }}</p>
+          <p class="ind-outcome-label">{{ outcome.label }}</p>
+          <p class="ind-outcome-note">{{ outcome.note }}</p>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  {# ── Pain points ─────────────────────────────────────────── #}
+  <section class="ind-pains">
+    <div class="container" style="max-width: 980px;">
+      <div class="ind-section-heading">
+        <span class="ind-hero-eyebrow">Why it matters</span>
+        <h2>What's blocking your {{ industry.name|lower }} business in AI search</h2>
+      </div>
+      <div class="ind-pains-grid">
+        {% for pain in industry.pain_points %}
+        <article class="ind-pain-card">
+          <strong>{{ pain.title }}</strong>
+          <p>{{ pain.body }}</p>
+        </article>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  {# ── Example prompts ─────────────────────────────────────── #}
+  <section class="ind-prompts">
+    <div class="container" style="max-width: 880px;">
+      <div class="ind-section-heading">
+        <span class="ind-hero-eyebrow">What we track</span>
+        <h2>Real {{ industry.name|lower }} queries your customers ask AI</h2>
+        <p>These are the kinds of prompts VRT SPACE monitors for you across ChatGPT, Gemini, and Perplexity.</p>
+      </div>
+      <div class="ind-prompts-shell">
+        <ul class="ind-prompt-list">
+          {% for prompt in industry.example_prompts %}
+          <li>
+            <i class="fa-solid fa-bullseye"></i>
+            <span>"{{ prompt }}"</span>
+          </li>
+          {% endfor %}
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  {# ── Closing CTA ─────────────────────────────────────────── #}
+  <section class="ind-cta">
+    <div class="container">
+      <div class="ind-cta-card">
+        <h2>Ready to see where AI cites you?</h2>
+        <p>Run a free AI Visibility audit. We'll show you which {{ industry.name|lower }} queries you're winning, which ones competitors own, and what to fix.</p>
+        <a href="{% url 'tools:workspace-signup' %}" class="button button-primary ind-hero-cta">
+          Run my free audit&nbsp; <i class="fa-solid fa-arrow-right"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  {# ── Cross-links to other industries ─────────────────────── #}
+  {% if all_industries %}
+  <section class="ind-cross-links">
+    <div class="container" style="max-width: 980px;">
+      <div class="ind-section-heading">
+        <span class="ind-hero-eyebrow">More industries</span>
+        <h2 style="font-size: 1.4rem;">VRT SPACE works across verticals</h2>
+      </div>
+      <div class="ind-cross-link-grid">
+        {% for other in all_industries %}
+        <a href="{% url 'core:industry-landing' other.slug %}" class="ind-cross-link">
+          <i class="{{ other.icon }}"></i>
+          <span>{{ other.name }}</span>
+        </a>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
+
+</div>
+{% endblock %}

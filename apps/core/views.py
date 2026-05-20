@@ -315,5 +315,48 @@ def location_autocomplete(request):
                 return JsonResponse({"results": results})
     except Exception:
         pass
-    
+
     return JsonResponse({"results": []})
+
+
+class IndustryLandingView(TemplateView):
+    """Programmatic landing pages keyed by industry slug.
+
+    URL: /ai-visibility-for/<slug>/
+    Data: apps/core/industry_pages.py
+    """
+
+    template_name = "core/industry_landing.html"
+
+    def get_context_data(self, **kwargs):
+        from django.http import Http404
+        from apps.core.industry_pages import get_industry_page, list_industry_pages
+
+        slug = kwargs.get("slug", "")
+        industry = get_industry_page(slug)
+        if not industry:
+            raise Http404("Industry landing page not found")
+
+        # Build canonical URL + schema for SEO
+        canonical = self.request.build_absolute_uri(self.request.path)
+        schema_json = json.dumps({
+            "@context": "https://schema.org",
+            "@type": "WebPage",
+            "name": industry["headline"],
+            "description": industry["meta_description"],
+            "url": canonical,
+            "provider": {"@type": "Organization", "name": "VRT SPACE AGENCY"},
+        })
+
+        return {
+            "industry": industry,
+            "all_industries": [i for i in list_industry_pages() if i["slug"] != slug],
+            "page_title": f"{industry['headline']} | VRT SPACE AGENCY",
+            "meta_description": industry["meta_description"],
+            "og_title": industry["headline"],
+            "og_description": industry["meta_description"],
+            "canonical_url": canonical,
+            "meta_robots": "index,follow",
+            "schema_json": schema_json,
+            "shell_theme": "shell-light",
+        }

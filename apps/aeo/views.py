@@ -572,3 +572,59 @@ class WorkspaceShareOfVoiceView(LoginRequiredMixin, View):
                 "shell_theme": "shell-light",
             },
         )
+
+
+class WeeklyDigestPreviewView(LoginRequiredMixin, View):
+    """Render the weekly digest email in the browser for previewing.
+
+    Access rules:
+    - Staff users: can preview any project by pk.
+    - Regular users: only their own projects.
+
+    URL: /workspace/preview/weekly-digest/<pk>/
+    """
+
+    template_name = "emails/weekly_digest.html"
+
+    def get(self, request, pk, *args, **kwargs):
+        from apps.aeo.digest_service import build_weekly_digest
+        from apps.leads.models import ClientProject as _ClientProject
+
+        if request.user.is_staff:
+            project = get_object_or_404(_ClientProject, pk=pk)
+        else:
+            project = get_object_or_404(_ClientProject, pk=pk, owner=request.user)
+
+        payload = build_weekly_digest(project)
+        # Add the URLs the email template normally gets from the management command
+        try:
+            dashboard_path = reverse("tools:workspace-dashboard")
+        except Exception:
+            dashboard_path = "/workspace/"
+        payload["dashboard_url"] = request.build_absolute_uri(dashboard_path)
+        payload["unsubscribe_url"] = ""
+        return render(request, self.template_name, payload)
+
+
+class WeeklyDigestPreviewIndexView(LoginRequiredMixin, View):
+    """List all projects the current user can preview a digest for."""
+
+    template_name = "emails/digest_preview_index.html"
+
+    def get(self, request, *args, **kwargs):
+        from apps.leads.models import ClientProject as _ClientProject
+
+        if request.user.is_staff:
+            projects = _ClientProject.objects.all().select_related("owner")
+        else:
+            projects = _ClientProject.objects.filter(owner=request.user)
+        return render(
+            request,
+            self.template_name,
+            {
+                "projects": projects,
+                "page_title": "Weekly Digest Preview — VRT SPACE AGENCY",
+                "meta_robots": "noindex, nofollow",
+                "shell_theme": "shell-light",
+            },
+        )

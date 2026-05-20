@@ -1950,29 +1950,82 @@ class WorkspaceOnboardingStep2View(LoginRequiredMixin, View):
 
 
 class WorkspaceOnboardingAuditPollView(LoginRequiredMixin, View):
-    """HTMX polling endpoint — returns the right partial based on audit status."""
+    """HTMX polling endpoint — returns the right partial based on audit status.
+
+    Reliability guarantees:
+      - Only the audit's owner can poll it (auth check via project ownership).
+      - If the audit has been PENDING/RUNNING > 5 minutes it's considered
+        stuck; we surface a "try again" state instead of polling forever.
+      - Friendly failure UI with a retry CTA.
+    """
+
+    # If an audit has been pending/running this long, assume the worker died
+    STUCK_AUDIT_TIMEOUT_SECONDS = 300  # 5 minutes
 
     def get(self, request, pk, *args, **kwargs):
-        audit_run = AuditRun.objects.filter(pk=pk).select_related("audit_request").first()
-        project = ClientProject.objects.filter(owner=request.user).order_by("-created_at").first()
+        from django.utils import timezone as _tz
+        from datetime import timedelta as _td
 
-        if not audit_run or not project:
-            return render(request, "tools/onboarding/_step2_audit.html", {
-                "project": project,
-                "running_audit": None,
-                "completed_audit": None,
-                "current_step": 2,
-                "error": "Could not find that audit run. Please try again.",
-            })
+        # Resolve project by user FIRST so we can scope the audit lookup
+        project = ClientProject.objects.filter(owner=request.user).order_by("-created_at").first()
+        if not project:
+            return self._render_failed(request, None, "Workspace not found — please start onboarding again.")
+
+        # Auth: only fetch audits owned by this user's projects
+        audit_run = (
+            AuditRun.objects.filter(pk=pk)
+            .select_related("audit_request")
+            .filter(
+                # The audit_request links to the user's project (preferred)
+                # OR the audit_request was submitted with this user's email
+                # (handles claimed audits from before signup)
+            )
+            .first()
+        )
+        if not audit_run:
+            return self._render_failed(request, project, "Could not find that audit run.")
+
+        # Owner check — audit must be tied to this user (via project or email)
+        user_email = (getattr(request.user, "email", "") or "").strip().lower()
+        owned = False
+        ar = audit_run.audit_request
+        if ar:
+            # client_project is a reverse OneToOne — access via try/except since
+            # accessing a missing reverse OneToOne raises DoesNotExist
+            try:
+                linked_project = ar.client_project
+                if linked_project and linked_project.pk == project.pk:
+                    owned = True
+            except Exception:
+                pass
+            if not owned and (ar.email or "").strip().lower() == user_email and user_email:
+                owned = True
+        if not owned and not request.user.is_staff:
+            return self._render_failed(request, project, "You don't have access to that audit.")
+
+        # Stuck-audit detection
+        if audit_run.status in (AuditRun.Status.PENDING, AuditRun.Status.RUNNING):
+            age = _tz.now() - audit_run.created_at
+            if age > _td(seconds=self.STUCK_AUDIT_TIMEOUT_SECONDS):
+                # Mark as failed so the user can retry. Don't keep them spinning.
+                if audit_run.status != AuditRun.Status.FAILED:
+                    audit_run.status = AuditRun.Status.FAILED
+                    audit_run.error_message = (
+                        audit_run.error_message
+                        or "Audit timed out — the background worker may be busy. Please try again."
+                    )
+                    audit_run.save(update_fields=["status", "error_message", "updated_at"])
+                return self._render_failed(
+                    request, project,
+                    "The audit took longer than expected. This usually means the queue is busy — "
+                    "click below to try again.",
+                )
 
         if audit_run.status == AuditRun.Status.FAILED:
-            return render(request, "tools/onboarding/_step2_audit.html", {
-                "project": project,
-                "running_audit": None,
-                "completed_audit": None,
-                "current_step": 2,
-                "error": "The audit failed — please try again.",
-            })
+            return self._render_failed(
+                request, project,
+                audit_run.error_message or "The audit failed. Click below to try again.",
+            )
 
         if audit_run.status == AuditRun.Status.COMPLETED:
             # Advance to step 3 — pull SERP competitor suggestions
@@ -2012,6 +2065,17 @@ class WorkspaceOnboardingAuditPollView(LoginRequiredMixin, View):
             "progress_step": progress_step,
             "progress_percent": progress_percent,
             "progress_pages_crawled": pages,
+        })
+
+    def _render_failed(self, request, project, message):
+        """Render the step-2 kickoff template with an error + retry CTA."""
+        return render(request, "tools/onboarding/_step2_audit.html", {
+            "project": project,
+            "running_audit": None,
+            "completed_audit": None,
+            "current_step": 2,
+            "error": message,
+            "show_retry": True,
         })
 
 
