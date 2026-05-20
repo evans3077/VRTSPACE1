@@ -320,7 +320,7 @@ class BlogIndexView(_ListView):
 
 
 class BlogDetailView(_DetailView):
-    """Public blog post detail."""
+    """Public blog post detail with reading-time + table of contents."""
 
     model = _Article
     template_name = "content/blog_detail.html"
@@ -332,18 +332,52 @@ class BlogDetailView(_DetailView):
         return _Article.objects.filter(status=_Article.Status.PUBLISHED)
 
     def get_context_data(self, **kwargs):
+        import re as _re
+
         ctx = super().get_context_data(**kwargs)
         article = self.object
+
+        # Plain-text word count → reading time at 220 wpm
+        plain = _re.sub(r"<[^>]+>", " ", article.content or "")
+        plain = _re.sub(r"\s+", " ", plain).strip()
+        word_count = len(plain.split()) if plain else 0
+        reading_minutes = max(1, round(word_count / 220))
+
+        # Inject id="..." on every <h2> so the ToC can anchor-link
+        def _slugify(text: str) -> str:
+            s = _re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+            return s[:60] or "section"
+
+        toc = []
+        def _h2_with_id(match):
+            inner = match.group(1)
+            text = _re.sub(r"<[^>]+>", "", inner).strip()
+            slug = _slugify(text)
+            toc.append({"text": text, "slug": slug})
+            return f'<h2 id="{slug}">{inner}</h2>'
+
+        content_with_anchors = _re.sub(
+            r"<h2>(.*?)</h2>",
+            _h2_with_id,
+            article.content or "",
+            flags=_re.IGNORECASE | _re.DOTALL,
+        )
+
         # Related: 3 other recently-published articles
         related = (
             _Article.objects.filter(status=_Article.Status.PUBLISHED)
             .exclude(pk=article.pk)
             .order_by("-published_at", "-created_at")[:3]
         )
+
         ctx.update({
+            "article_content_with_anchors": content_with_anchors,
+            "reading_minutes": reading_minutes,
+            "word_count": word_count,
+            "toc": toc,
             "related_articles": related,
             "page_title": f"{article.title} | VRT SPACE Blog",
-            "meta_description": article.excerpt or article.content[:160],
+            "meta_description": (article.excerpt or plain[:160]).strip(),
             "canonical_url": self.request.build_absolute_uri(self.request.path),
             "meta_robots": "index,follow",
             "shell_theme": "shell-light",
