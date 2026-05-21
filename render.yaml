@@ -12,13 +12,18 @@ services:
         value: "0"
       - key: DJANGO_SECRET_KEY
         generateValue: true
+      # DATABASE_URL is set manually in the Render dashboard (point at Neon
+      # or Supabase). Do NOT auto-provision Render's free Postgres here —
+      # it expires after 90 days, which wipes content on every renewal.
       - key: DATABASE_URL
-        fromDatabase:
-          name: vrt-space-db
-          property: connectionString
-
-databases:
-  - name: vrt-space-db
-    databaseName: vrt_space_agency
-    user: vrt_space_user
-    plan: free
+        sync: false   # value is filled in via the dashboard, not committed
+      # Set SEED_DEMO=1 in the dashboard if you want demo users
+      # (alex.solo, morgan.lee, sam.rivera) seeded on next deploy.
+      - key: SEED_DEMO
+        value: "0"
+      # Forwarded to the simulator if/when you wire real LLM calls.
+      # Leave unset to use the offline simulator.
+      - key: PERPLEXITY_API_KEY
+        sync: false
+      - key: OPENAI_API_KEY
+        sync: false
