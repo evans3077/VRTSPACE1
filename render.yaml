@@ -27,3 +27,15 @@ services:
         sync: false
       - key: OPENAI_API_KEY
         sync: false
+      # ─── Sentry error tracking ────────────────────────────────────────
+      # Paste the DSN from sentry.io (project: Django) into the Render
+      # dashboard. Leave unset to disable Sentry entirely (settings.py is
+      # a no-op when DSN is missing).
+      - key: SENTRY_DSN
+        sync: false
+      # 0.0–1.0 fraction of transactions sent for performance traces.
+      # 0.1 = 10% sampling, plenty for visibility without burning quota.
+      - key: SENTRY_TRACES_SAMPLE_RATE
+        value: "0.1"
+      - key: DJANGO_ENV
+        value: "production"
