@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<title>Page not found — VRT SPACE AGENCY</title>
+<meta name="robots" content="noindex, nofollow">
+<style>
+.err-shell {
+    min-height: calc(100vh - 220px);
+    display: flex; align-items: center; justify-content: center;
+    padding: 4rem 1.5rem;
+}
+.err-card {
+    max-width: 620px;
+    text-align: center;
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 22px;
+    padding: 3rem 2.5rem;
+    box-shadow: 0 30px 80px -30px rgba(15, 23, 42, 0.18);
+}
+.err-eyebrow {
+    display: inline-block;
+    padding: 0.32rem 0.85rem;
+    border-radius: 999px;
+    background: #fef3c7;
+    color: #92400e;
+    font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase;
+    margin-bottom: 1.25rem;
+}
+.err-code {
+    font-size: 4.5rem;
+    line-height: 1;
+    font-weight: 900;
+    margin: 0 0 0.5rem;
+    background: linear-gradient(135deg, #0f172a 0%, #475569 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    letter-spacing: -0.04em;
+}
+.err-headline {
+    font-size: clamp(1.45rem, 3vw, 1.85rem);
+    margin: 0 0 0.85rem;
+    color: #0f172a;
+    font-weight: 800;
+    line-height: 1.25;
+}
+.err-lede {
+    color: #475569;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0 0 2rem;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+}
+.err-actions {
+    display: flex; gap: 0.6rem;
+    justify-content: center;
+    flex-wrap: wrap;
+    margin-bottom: 1.75rem;
+}
+.err-quick-links {
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 0.65rem;
+    margin-top: 0.5rem;
+}
+.err-quick-link {
+    display: flex; align-items: center; gap: 0.55rem;
+    padding: 0.65rem 0.85rem;
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
+    border-radius: 10px;
+    color: #0f172a !important;
+    text-decoration: none !important;
+    font-size: 0.85rem;
+    font-weight: 500;
+    transition: border-color 0.15s ease, transform 0.15s ease;
+    text-align: left;
+}
+.err-quick-link:hover {
+    border-color: #38bdf8;
+    transform: translateY(-1px);
+}
+.err-quick-link i { color: #0284c7; font-size: 0.78rem; }
+@media (max-width: 520px) {
+    .err-card { padding: 2.25rem 1.5rem; }
+    .err-code { font-size: 3.5rem; }
+}
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="err-shell">
+    <div class="err-card">
+        <span class="err-eyebrow">404 &middot; Page not found</span>
+        <p class="err-code">404</p>
+        <h1 class="err-headline">We couldn't find that page.</h1>
+        <p class="err-lede">
+            The link may be out of date, or the page may have moved. If you arrived here from elsewhere on the site, we'd love to know &mdash; reply to any of our emails and let us know what you were looking for.
+        </p>
+        <div class="err-actions">
+            <a href="{% url 'core:home' %}" class="button button-primary">
+                <i class="fa-solid fa-house"></i>&nbsp; Take me home
+            </a>
+            <a href="{% url 'core:home' %}#audit" class="button button-secondary">
+                Run a free audit
+            </a>
+        </div>
+
+        <div class="err-quick-links">
+            <a href="{% url 'core:packages' %}" class="err-quick-link">
+                <i class="fa-solid fa-layer-group"></i> Pricing
+            </a>
+            <a href="{% url 'content:blog-index' %}" class="err-quick-link">
+                <i class="fa-solid fa-book-open"></i> Blog
+            </a>
+            <a href="{% url 'case_studies:case-study-index' %}" class="err-quick-link">
+                <i class="fa-solid fa-trophy"></i> Case studies
+            </a>
+            <a href="{% url 'aeo:content-optimizer' %}" class="err-quick-link">
+                <i class="fa-solid fa-wand-magic-sparkles"></i> Free tool
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

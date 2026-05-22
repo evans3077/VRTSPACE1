@@ -32,7 +32,22 @@ def load_environment():
 load_environment()
 
 DJANGO_ENV = os.environ.get("DJANGO_ENV", "dev")
-DEBUG = os.environ.get("DJANGO_DEBUG", "1") == "1"
+
+# Detect host platform BEFORE computing DEBUG so we can pick a safe default.
+IS_VERCEL = bool(os.environ.get("VERCEL") or os.environ.get("VERCEL_ENV"))
+IS_RENDER = bool(
+    os.environ.get("RENDER")
+    or os.environ.get("RENDER_SERVICE_ID")
+    or os.environ.get("RENDER_INSTANCE_ID")
+)
+_IS_HOSTED = IS_VERCEL or IS_RENDER or DJANGO_ENV in {"production", "staging"}
+
+# DEBUG default depends on environment:
+#   - Hosted (Render / Vercel / staging / production) → False (safe default)
+#   - Local dev → True (developer convenience)
+# Override either side with DJANGO_DEBUG=0 or =1 explicitly in env.
+_DEFAULT_DEBUG = "0" if _IS_HOSTED else "1"
+DEBUG = os.environ.get("DJANGO_DEBUG", _DEFAULT_DEBUG) == "1"
 
 # ─── Sentry error tracking ──────────────────────────────────────────────────
 # Initialised only when SENTRY_DSN is present in the environment so local dev
@@ -54,12 +69,6 @@ if _SENTRY_DSN:
     except ImportError:
         # sentry-sdk not installed (e.g. very old image) — silently skip.
         pass
-IS_VERCEL = bool(os.environ.get("VERCEL") or os.environ.get("VERCEL_ENV"))
-IS_RENDER = bool(
-    os.environ.get("RENDER")
-    or os.environ.get("RENDER_SERVICE_ID")
-    or os.environ.get("RENDER_INSTANCE_ID")
-)
 
 
 def csv_env(name, default=""):

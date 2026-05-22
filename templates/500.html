@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Something went wrong — VRT SPACE AGENCY</title>
+    <meta name="robots" content="noindex, nofollow">
+    {# Standalone — does NOT extend base.html. A 500 means something
+       in the request pipeline already broke; we don't want template
+       rendering to fail too. All styles + content inline. #}
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html, body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif;
+            background: linear-gradient(180deg, #fafbfc 0%, #ffffff 220px);
+            color: #0f172a;
+            min-height: 100vh;
+            line-height: 1.55;
+        }
+        .err-shell {
+            min-height: 100vh;
+            display: flex; align-items: center; justify-content: center;
+            padding: 3rem 1.5rem;
+        }
+        .err-card {
+            max-width: 620px; width: 100%;
+            text-align: center;
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 22px;
+            padding: 3rem 2.5rem;
+            box-shadow: 0 30px 80px -30px rgba(15, 23, 42, 0.18);
+        }
+        .err-eyebrow {
+            display: inline-block;
+            padding: 0.32rem 0.85rem;
+            border-radius: 999px;
+            background: #fee2e2;
+            color: #b91c1c;
+            font-size: 0.72rem; font-weight: 700; letter-spacing: 0.1em;
+            text-transform: uppercase;
+            margin-bottom: 1.25rem;
+        }
+        .err-code {
+            font-size: 4.5rem;
+            line-height: 1;
+            font-weight: 900;
+            margin: 0 0 0.5rem;
+            background: linear-gradient(135deg, #0f172a 0%, #475569 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -0.04em;
+        }
+        .err-headline {
+            font-size: clamp(1.45rem, 3vw, 1.85rem);
+            margin: 0 0 0.85rem;
+            color: #0f172a;
+            font-weight: 800;
+            line-height: 1.25;
+        }
+        .err-lede {
+            color: #475569;
+            font-size: 1rem;
+            line-height: 1.6;
+            margin: 0 auto 2rem;
+            max-width: 480px;
+        }
+        .err-actions {
+            display: flex; gap: 0.65rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        .err-btn {
+            display: inline-flex; align-items: center; gap: 0.45rem;
+            padding: 0.78rem 1.4rem;
+            border-radius: 999px;
+            font-size: 0.92rem; font-weight: 700;
+            text-decoration: none;
+            transition: transform 0.15s ease, box-shadow 0.18s ease, background 0.15s ease;
+            cursor: pointer; border: 0;
+        }
+        .err-btn-primary {
+            background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+            color: #ffffff;
+            box-shadow: 0 8px 22px -8px rgba(2, 132, 199, 0.55);
+        }
+        .err-btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 12px 28px -10px rgba(2, 132, 199, 0.6);
+        }
+        .err-btn-secondary {
+            background: #f1f5f9;
+            color: #0f172a;
+            border: 1px solid #e2e8f0;
+        }
+        .err-btn-secondary:hover {
+            transform: translateY(-1px);
+            background: #e2e8f0;
+        }
+        .err-meta {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #e2e8f0;
+            font-size: 0.82rem;
+            color: #64748b;
+            line-height: 1.55;
+        }
+        .err-meta a { color: #0284c7; text-decoration: none; }
+        .err-meta a:hover { text-decoration: underline; }
+        @media (max-width: 520px) {
+            .err-card { padding: 2.25rem 1.5rem; }
+            .err-code { font-size: 3.5rem; }
+        }
+    </style>
+</head>
+<body>
+    <div class="err-shell">
+        <div class="err-card">
+            <span class="err-eyebrow">500 &middot; Something broke</span>
+            <p class="err-code">500</p>
+            <h1 class="err-headline">We hit an unexpected error.</h1>
+            <p class="err-lede">
+                Our team has been automatically notified and we're already looking into it. The fastest path forward is usually to refresh the page &mdash; many transient issues resolve on retry.
+            </p>
+            <div class="err-actions">
+                <a href="/" class="err-btn err-btn-primary">Take me home</a>
+                <button type="button" onclick="window.location.reload()" class="err-btn err-btn-secondary">
+                    Retry this page
+                </button>
+            </div>
+            <p class="err-meta">
+                If this keeps happening, drop us a note at
+                <a href="mailto:support@vrtspaceagency.com">support@vrtspaceagency.com</a>
+                with what you were doing &mdash; we'll get back fast.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
