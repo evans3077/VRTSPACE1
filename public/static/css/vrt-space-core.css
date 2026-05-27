@@ -6749,3 +6749,21 @@ body.shell-light .ws-outcome-meta  { color: #94a3b8; }
   cursor: pointer;
 }
 .ws-schedule-select:focus { outline: 2px solid var(--brand-primary); outline-offset: 2px; }
+
+/* Schedule toggle checkboxes */
+.ws-schedule-toggle {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+  font-size: .8rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+}
+.ws-schedule-toggle input[type="checkbox"] {
+  accent-color: var(--brand-primary);
+  width: .9rem;
+  height: .9rem;
+  cursor: pointer;
+}
+.ws-schedule-toggle:hover { color: var(--text-primary); }

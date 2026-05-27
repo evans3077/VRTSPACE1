@@ -182,13 +182,13 @@
 <nav class="page-jump-nav" aria-label="AEO sections">
     <div class="container-fluid">
         <div class="page-jump-links">
-            <a class="page-jump-link" href="#aeo-readiness"><i class="fas fa-bullseye" aria-hidden="true"></i> Readiness</a>
-            <a class="page-jump-link" href="#aeo-scores"><i class="fas fa-chart-pie" aria-hidden="true"></i> Scores</a>
-            <a class="page-jump-link" href="#aeo-llm-visibility"><i class="fas fa-robot" aria-hidden="true"></i> AI Engines</a>
-            <a class="page-jump-link" href="#aeo-recommendations"><i class="fas fa-lightbulb" aria-hidden="true"></i> Fixes</a>
-            <a class="page-jump-link" href="#aeo-benchmark"><i class="fas fa-chart-bar" aria-hidden="true"></i> Benchmark</a>
-            <a class="page-jump-link" href="#aeo-history"><i class="fas fa-history" aria-hidden="true"></i> History</a>
-            <a class="page-jump-link" href="#aeo-run"><i class="fas fa-redo" aria-hidden="true"></i> Run Again</a>
+            <a class="page-jump-link" href="#aeo-readiness"><i class="fa-solid fa-bullseye" aria-hidden="true"></i> Readiness</a>
+            <a class="page-jump-link" href="#aeo-scores"><i class="fa-solid fa-chart-pie" aria-hidden="true"></i> Scores</a>
+            <a class="page-jump-link" href="#aeo-llm-visibility"><i class="fa-solid fa-robot" aria-hidden="true"></i> AI Engines</a>
+            <a class="page-jump-link" href="#aeo-recommendations"><i class="fa-solid fa-lightbulb" aria-hidden="true"></i> Fixes</a>
+            <a class="page-jump-link" href="#aeo-benchmark"><i class="fa-solid fa-chart-bar" aria-hidden="true"></i> Benchmark</a>
+            <a class="page-jump-link" href="#aeo-history"><i class="fa-solid fa-history" aria-hidden="true"></i> History</a>
+            <a class="page-jump-link" href="#aeo-run"><i class="fa-solid fa-redo" aria-hidden="true"></i> Run Again</a>
         </div>
     </div>
 </nav>
@@ -280,7 +280,7 @@
                 </div>
                 {% endfor %}
                 <button type="submit" class="button-mega" style="width: 100%; margin-top: 1rem;">
-                    <i class="fas fa-bolt"></i> &nbsp;Run AI Visibility Scan
+                    <i class="fa-solid fa-bolt"></i> &nbsp;Run AI Visibility Scan
                 </button>
             </form>
             <p class="text-muted">This run reuses the existing site crawl, so no extra crawl is needed. Each refresh generates new AI citability predictions from the same baseline audit.</p>
@@ -296,7 +296,7 @@
                     <p>Four dimensions that determine whether AI engines cite, trust, and surface your content — and where to focus to move the score.</p>
                 </div>
                 {% if aeo_payload.context.target_keyword %}
-                <span class="workspace-chip"><i class="fas fa-crosshairs"></i> {{ aeo_payload.context.target_keyword }}</span>
+                <span class="workspace-chip"><i class="fa-solid fa-crosshairs"></i> {{ aeo_payload.context.target_keyword }}</span>
                 {% endif %}
             </div>
             <p class="text-muted">Snapshot date: {{ latest_aeo_audit.created_at|date:"M j, Y" }}</p>
@@ -581,7 +581,7 @@
                 {% if aeo_intelligence.aeo_overview and aeo_intelligence.aeo_overview.snippets %}
                 <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 1.25rem;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                        <strong style="color: #f1f5f9; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-robot" style="color: #38bdf8;"></i> AI Summary Snippets</strong>
+                        <strong style="color: #f1f5f9; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-robot" style="color: #38bdf8;"></i> AI Summary Snippets</strong>
                         <span class="aeo-pill aeo-pill-green">Ranking</span>
                     </div>
                     <div style="display: grid; gap: 0.75rem; max-height: none;">
@@ -596,7 +596,7 @@
                 {% if aeo_intelligence.related_questions %}
                 <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 1.25rem;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                        <strong style="color: #f1f5f9; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-comments" style="color: #818cf8;"></i> People Also Ask</strong>
+                        <strong style="color: #f1f5f9; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-comments" style="color: #818cf8;"></i> People Also Ask</strong>
                         <span class="aeo-pill aeo-pill-purple">Intent Signals</span>
                     </div>
                     <div style="display: grid; gap: 0.75rem; max-height: none;">
@@ -613,7 +613,7 @@
                 {% if aeo_intelligence.local_pack %}
                 <div style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 16px; padding: 1.25rem;">
                     <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-                        <strong style="color: #f1f5f9; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fas fa-map-marker-alt" style="color: #4ade80;"></i> Local Pack</strong>
+                        <strong style="color: #f1f5f9; font-size: 0.95rem; display: flex; align-items: center; gap: 0.5rem;"><i class="fa-solid fa-map-marker-alt" style="color: #4ade80;"></i> Local Pack</strong>
                         <span class="aeo-pill aeo-pill-green">Map Targeting</span>
                     </div>
                     <div style="display: grid; gap: 0.75rem; max-height: none;">
@@ -622,7 +622,7 @@
                             <div>
                                 <strong style="display: block; color: #f1f5f9; font-size: 0.88rem;">{{ place.position }}. {{ place.title }}</strong>
                                 <div style="margin-top: 0.25rem; font-size: 0.78rem; color: #94a3b8;">
-                                    {% if place.rating %}<span style="color: #fbbf24;"><i class="fas fa-star"></i> {{ place.rating }}</span> {% if place.reviews %}({{ place.reviews }}){% endif %} &middot; {% endif %}
+                                    {% if place.rating %}<span style="color: #fbbf24;"><i class="fa-solid fa-star"></i> {{ place.rating }}</span> {% if place.reviews %}({{ place.reviews }}){% endif %} &middot; {% endif %}
                                     {{ place.type|default:"Business" }}
                                 </div>
                             </div>
@@ -661,7 +661,7 @@
             </div>
             {% if aeo_payload.context.target_keyword %}
             <div style="display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.45rem 1rem; border-radius: 999px; background: rgba(56,189,248,0.08); border: 1px solid rgba(56,189,248,0.2); color: #38bdf8; font-size: 0.8rem; font-weight: 700; margin-bottom: 1.5rem;">
-                <i class="fas fa-crosshairs" style="font-size: 0.72rem;"></i> {{ aeo_payload.context.target_keyword }}
+                <i class="fa-solid fa-crosshairs" style="font-size: 0.72rem;"></i> {{ aeo_payload.context.target_keyword }}
             </div>
             {% endif %}
             <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.25rem;" class="aeo-engine-grid">
@@ -841,7 +841,7 @@
                 </div>
                 {% empty %}
                 <div style="padding: 2rem; border-radius: 16px; background: rgba(74,222,128,0.04); border: 1px solid rgba(74,222,128,0.15); text-align: center;">
-                    <i class="fas fa-check-circle" style="font-size: 1.75rem; color: #4ade80; display: block; margin-bottom: 0.75rem;"></i>
+                    <i class="fa-solid fa-check-circle" style="font-size: 1.75rem; color: #4ade80; display: block; margin-bottom: 0.75rem;"></i>
                     <p style="font-size: 0.95rem; color: #f1f5f9; font-weight: 700; margin: 0 0 0.35rem;">All dimensions above threshold</p>
                     <p style="font-size: 0.85rem; color: #94a3b8; margin: 0;">Try a more specific target keyword to surface detailed signals.</p>
                 </div>
@@ -864,7 +864,7 @@
             {% if not competitor_benchmark.has_data %}
             <div style="padding: 2.5rem 2rem; border-radius: 16px; background: rgba(255,255,255,0.02); border: 1px dashed rgba(255,255,255,0.1); text-align: center;">
                 <div style="width: 56px; height: 56px; border-radius: 16px; background: rgba(56,189,248,0.1); display: flex; align-items: center; justify-content: center; margin: 0 auto 1rem;">
-                    <i class="fas fa-search" style="color: #38bdf8; font-size: 1.25rem;"></i>
+                    <i class="fa-solid fa-search" style="color: #38bdf8; font-size: 1.25rem;"></i>
                 </div>
                 <p style="font-size: 1rem; font-weight: 700; color: #f1f5f9; margin: 0 0 0.5rem;">No competitors discovered yet</p>
                 <p style="font-size: 0.88rem; color: #94a3b8; line-height: 1.65; margin: 0 auto 1.5rem; max-width: 460px;">Run an SEO discovery audit to extract competitors from the SERP. Once discovered, they appear here for AEO comparison. You can also add competitors manually.</p>
@@ -926,7 +926,7 @@
                 </table>
             </div>
             <div style="margin-top: 1rem; padding: 0.85rem 1.1rem; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 0.65rem;">
-                <i class="fas fa-info-circle" style="color: #94a3b8; flex-shrink: 0;"></i>
+                <i class="fa-solid fa-info-circle" style="color: #94a3b8; flex-shrink: 0;"></i>
                 <p style="font-size: 0.8rem; color: #94a3b8; margin: 0; line-height: 1.5;">Scores above 68 are in the citation zone for most LLM engines. Add competitors via the SEO workspace for full scored benchmarks.</p>
             </div>
             {% endif %}

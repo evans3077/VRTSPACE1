@@ -37,7 +37,7 @@
             {% if project and can_generate_snapshot %}
             <form method="post" action="{% url 'seo:workspace-seo' %}" style="margin:0;">
                 {% csrf_token %}
-                <button type="submit" class="button button-primary" style="font-size:0.82rem; padding: 0.55rem 1.25rem;"><i class="fas fa-sync-alt"></i> Run Refresh</button>
+                <button type="submit" class="button button-primary" style="font-size:0.82rem; padding: 0.55rem 1.25rem;"><i class="fa-solid fa-sync-alt"></i> Run Refresh</button>
             </form>
             {% endif %}
 
@@ -134,17 +134,17 @@
 <nav class="page-jump-nav glass-panel" aria-label="Page sections" style="margin: 0 0 1.5rem;">
     <div class="container-fluid">
         <div class="page-jump-links">
-            <a class="page-jump-link" href="#seo-overview"><i class="fas fa-chart-bar"></i> Overview</a>
-            <a class="page-jump-link" href="#seo-benchmark"><i class="fas fa-users"></i> Benchmark</a>
-            <a class="page-jump-link" href="#seo-history"><i class="fas fa-history"></i> History</a>
-            <a class="page-jump-link" href="#seo-competitors"><i class="fas fa-eye"></i> Competitors</a>
-            <a class="page-jump-link" href="#seo-patterns"><i class="fas fa-puzzle-piece"></i> Patterns</a>
-            <a class="page-jump-link" href="#seo-campaigns"><i class="fas fa-tasks"></i> Campaigns</a>
-            <a class="page-jump-link" href="#seo-roadmap"><i class="fas fa-map"></i> Roadmap</a>
+            <a class="page-jump-link" href="#seo-overview"><i class="fa-solid fa-chart-bar"></i> Overview</a>
+            <a class="page-jump-link" href="#seo-benchmark"><i class="fa-solid fa-users"></i> Benchmark</a>
+            <a class="page-jump-link" href="#seo-history"><i class="fa-solid fa-history"></i> History</a>
+            <a class="page-jump-link" href="#seo-competitors"><i class="fa-solid fa-eye"></i> Competitors</a>
+            <a class="page-jump-link" href="#seo-patterns"><i class="fa-solid fa-puzzle-piece"></i> Patterns</a>
+            <a class="page-jump-link" href="#seo-campaigns"><i class="fa-solid fa-tasks"></i> Campaigns</a>
+            <a class="page-jump-link" href="#seo-roadmap"><i class="fa-solid fa-map"></i> Roadmap</a>
             <a class="page-jump-link" href="#seo-gsc"><i class="fa-brands fa-google"></i> Search Console</a>
-            <a class="page-jump-link" href="#seo-backlinks"><i class="fas fa-link"></i> Backlinks</a>
-            <a class="page-jump-link" href="#seo-opportunities"><i class="fas fa-lightbulb"></i> Ideas</a>
-            <a class="page-jump-link" href="#seo-clinical-intelligence" style="color: var(--accent-blue);"><i class="fas fa-brain"></i> Intelligence Engine</a>
+            <a class="page-jump-link" href="#seo-backlinks"><i class="fa-solid fa-link"></i> Backlinks</a>
+            <a class="page-jump-link" href="#seo-opportunities"><i class="fa-solid fa-lightbulb"></i> Ideas</a>
+            <a class="page-jump-link" href="#seo-clinical-intelligence" style="color: var(--accent-blue);"><i class="fa-solid fa-brain"></i> Intelligence Engine</a>
         </div>
     </div>
 </nav>
@@ -304,7 +304,7 @@
             <article class="system-card" style="border: 1px solid var(--accent-blue); box-shadow: 0 4px 20px rgba(0, 153, 255, 0.1);">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                     <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                        <p class="eyebrow" style="color: var(--accent-blue);"><i class="fas fa-robot"></i> Generative Engine Optimization</p>
+                        <p class="eyebrow" style="color: var(--accent-blue);"><i class="fa-solid fa-robot"></i> Generative Engine Optimization</p>
                         {% if geo_shootout.is_mock %}
                         <span class="score-pill score-medium" style="font-size: 0.65rem;">Structural Preview</span>
                         {% endif %}
@@ -355,7 +355,7 @@
                 {% endif %}
                 {% else %}
                 <div class="workspace-credit-callout">
-                    <p class="workspace-report-kicker" style="color: var(--accent-blue);"><i class="fas fa-lock"></i> Locked Potential</p>
+                    <p class="workspace-report-kicker" style="color: var(--accent-blue);"><i class="fa-solid fa-lock"></i> Locked Potential</p>
                     <h3 style="margin: 0.5rem 0;">Ready to test Perplexity Sonar Pro?</h3>
                     <p>Run a live Generative Engine Optimization shootout to see if AI cites your brand over competitors. This test uses <strong>{{ geo_action.credits }} workspace credits</strong>.</p>
                     
@@ -380,7 +380,7 @@
             <!-- DataForSEO Market Gap -->
             <article class="system-card" style="border: 1px solid var(--border-glass);">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                    <p class="eyebrow" style="color: var(--text-muted);"><i class="fas fa-database"></i> Clinical Market Data</p>
+                    <p class="eyebrow" style="color: var(--text-muted);"><i class="fa-solid fa-database"></i> Clinical Market Data</p>
                     <h2 style="font-size: 1.8rem;">True Market Gap</h2>
                     <p class="text-muted" style="margin-top:0.2rem;">Search volume and authority metrics verified via Enterprise APIs.</p>
                 </div>
@@ -423,7 +423,7 @@
                 {% endif %}
                 {% else %}
                 <div class="workspace-credit-callout">
-                    <p class="workspace-report-kicker"><i class="fas fa-lock"></i> Locked Potential</p>
+                    <p class="workspace-report-kicker"><i class="fa-solid fa-lock"></i> Locked Potential</p>
                     <h3 style="margin: 0.5rem 0;">Fetch exact search volume and backlink gaps</h3>
                     <p>Stop guessing with inferred audit data. Ping the DataForSEO enterprise endpoints to get true clinical metrics for your targets. Uses <strong>{{ clinical_action.credits }} workspace credits</strong>.</p>
                     
@@ -1116,7 +1116,7 @@
                         </div>
                     </form>
                     <a href="{% url 'seo:campaign-action-pack' campaign.pk %}" class="button button-secondary" style="margin-top: 0.75rem; display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem;">
-                        <i class="fas fa-list-check"></i> View Action Pack
+                        <i class="fa-solid fa-list-check"></i> View Action Pack
                     </a>
                 </div>
                 {% endwith %}
@@ -1124,7 +1124,7 @@
             </div>
             {% else %}
             <div class="ws-empty-state">
-                <div class="ws-empty-icon"><i class="fas fa-tasks"></i></div>
+                <div class="ws-empty-icon"><i class="fa-solid fa-tasks"></i></div>
                 <p class="ws-empty-title">No campaigns yet</p>
                 <p class="ws-empty-desc">Campaign objects appear once the execution queue is built for this project. Run an SEO refresh to generate the first set.</p>
             </div>

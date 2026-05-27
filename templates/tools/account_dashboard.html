@@ -56,23 +56,23 @@
             </div>
             <div class="account-nav-pills">
                 <a class="account-nav-pill" href="#profile">
-                    <i class="fas fa-user" aria-hidden="true"></i>
+                    <i class="fa-solid fa-user" aria-hidden="true"></i>
                     <span>Profile</span>
                 </a>
                 <a class="account-nav-pill" href="#security">
-                    <i class="fas fa-lock" aria-hidden="true"></i>
+                    <i class="fa-solid fa-lock" aria-hidden="true"></i>
                     <span>Security</span>
                 </a>
                 <a class="account-nav-pill" href="#billing">
-                    <i class="fas fa-credit-card" aria-hidden="true"></i>
+                    <i class="fa-solid fa-credit-card" aria-hidden="true"></i>
                     <span>Billing</span>
                 </a>
                 <a class="account-nav-pill" href="#plans">
-                    <i class="fas fa-layer-group" aria-hidden="true"></i>
+                    <i class="fa-solid fa-layer-group" aria-hidden="true"></i>
                     <span>Plans</span>
                 </a>
                 <a class="account-nav-pill" href="#credits">
-                    <i class="fas fa-coins" aria-hidden="true"></i>
+                    <i class="fa-solid fa-coins" aria-hidden="true"></i>
                     <span>Credits</span>
                 </a>
             </div>
@@ -198,12 +198,12 @@
                                         <ul class="billing-limit-list">
                                             {% for limit in plan.limits_summary %}
                                             <li>
-                                                <i class="fas fa-check" aria-hidden="true"></i>
+                                                <i class="fa-solid fa-check" aria-hidden="true"></i>
                                                 <span><strong>{{ limit.label }}:</strong> {{ limit.display }}</span>
                                             </li>
                                             {% endfor %}
                                             <li>
-                                                <i class="fas fa-coins" aria-hidden="true"></i>
+                                                <i class="fa-solid fa-coins" aria-hidden="true"></i>
                                                 <span>
                                                     <strong>Workspace credits:</strong>
                                                     {% if plan.credits.workspace is None %}
@@ -220,7 +220,7 @@
                                         <ul class="billing-limit-list billing-feature-list">
                                             {% for feature in plan.features %}
                                             <li>
-                                                <i class="fas fa-arrow-right" aria-hidden="true"></i>
+                                                <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
                                                 <span>{{ feature }}</span>
                                             </li>
                                             {% endfor %}

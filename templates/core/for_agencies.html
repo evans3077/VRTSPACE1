@@ -148,9 +148,9 @@
                 <h3 style="font-size: 1.4rem; margin-bottom: 0.5rem;">{{ plan.name }}</h3>
                 <p class="gradient-text" style="font-size: 2rem; font-weight: 900; margin-bottom: 1rem;">{{ plan.price }}</p>
                 <ul style="list-style: none; padding: 0; display: grid; gap: 0.5rem; margin-bottom: 1.5rem;">
-                    <li style="font-size: 0.88rem; color: var(--text-muted);"><i class="fas fa-building" style="margin-right: 0.4rem; color: var(--brand-primary);"></i>{{ plan.clients }}</li>
-                    <li style="font-size: 0.88rem; color: var(--text-muted);"><i class="fas fa-bolt" style="margin-right: 0.4rem; color: var(--brand-primary);"></i>{{ plan.audits }}</li>
-                    <li style="font-size: 0.88rem; color: var(--text-muted);"><i class="fas fa-robot" style="margin-right: 0.4rem; color: var(--brand-primary);"></i>SEO + AEO + Content</li>
+                    <li style="font-size: 0.88rem; color: var(--text-muted);"><i class="fa-solid fa-building" style="margin-right: 0.4rem; color: var(--brand-primary);"></i>{{ plan.clients }}</li>
+                    <li style="font-size: 0.88rem; color: var(--text-muted);"><i class="fa-solid fa-bolt" style="margin-right: 0.4rem; color: var(--brand-primary);"></i>{{ plan.audits }}</li>
+                    <li style="font-size: 0.88rem; color: var(--text-muted);"><i class="fa-solid fa-robot" style="margin-right: 0.4rem; color: var(--brand-primary);"></i>SEO + AEO + Content</li>
                 </ul>
                 <a href="{% url 'tools:workspace-signup' %}{% if ref %}?ref={{ ref }}{% endif %}" class="button {% if plan.highlight %}button-primary{% else %}button-secondary{% endif %}" style="width: 100%;">
                     Get Started

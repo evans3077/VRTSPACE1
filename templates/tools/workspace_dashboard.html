@@ -21,7 +21,7 @@
             <div class="workspace-header-button-row">
                 <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin: 0;">
                     {% csrf_token %}
-                    <button type="submit" class="button button-primary workspace-audit-button"><i class="fas fa-redo"></i><span>Run Audit</span></button>
+                    <button type="submit" class="button button-primary workspace-audit-button"><i class="fa-solid fa-redo"></i><span>Run Audit</span></button>
                 </form>
                 <a class="button button-secondary" href="{% url 'tools:audit-result' latest_audit.pk %}">Open Report</a>
             </div>
@@ -32,7 +32,7 @@
             </div>
             <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin: 0;">
                 {% csrf_token %}
-                <button type="submit" class="button button-primary workspace-audit-button"><i class="fas fa-play"></i><span>Run First Audit</span></button>
+                <button type="submit" class="button button-primary workspace-audit-button"><i class="fa-solid fa-play"></i><span>Run First Audit</span></button>
             </form>
             {% else %}
             <div class="ws-status-tag">
@@ -660,7 +660,33 @@
                             <span>Next run: {{ audit_schedule.next_run_at|date:"N j, Y" }}</span>
                         </div>
                         {% endif %}
-                        <form method="post" action="{% url 'tools:workspace-audit-schedule' %}" style="margin-top:.75rem;">
+
+                        {# Alert toggles #}
+                        <form method="post" action="{% url 'tools:workspace-audit-schedule' %}" style="margin-top:.9rem;display:flex;flex-direction:column;gap:.5rem;">
+                            {% csrf_token %}
+                            <input type="hidden" name="cadence" value="{{ audit_schedule.cadence }}">
+                            <input type="hidden" name="is_active" value="1">
+                            <label class="ws-schedule-toggle">
+                                <input type="checkbox" name="email_reports_enabled" value="1"
+                                    {% if audit_schedule.email_reports_enabled %}checked{% endif %}
+                                    onchange="this.form.submit()">
+                                <span>Email audit reports</span>
+                            </label>
+                            <label class="ws-schedule-toggle">
+                                <input type="checkbox" name="alert_on_score_drop" value="1"
+                                    {% if audit_schedule.alert_on_score_drop %}checked{% endif %}
+                                    onchange="this.form.submit()">
+                                <span>Alert on score drop</span>
+                            </label>
+                            <label class="ws-schedule-toggle">
+                                <input type="checkbox" name="alert_on_new_issues" value="1"
+                                    {% if audit_schedule.alert_on_new_issues %}checked{% endif %}
+                                    onchange="this.form.submit()">
+                                <span>Alert on new issues</span>
+                            </label>
+                        </form>
+
+                        <form method="post" action="{% url 'tools:workspace-audit-schedule' %}" style="margin-top:.5rem;">
                             {% csrf_token %}
                             <input type="hidden" name="cadence" value="{{ audit_schedule.cadence }}">
                             <input type="hidden" name="is_active" value="0">
@@ -1048,7 +1074,7 @@
                     <div class="workspace-progress-date">{{ item.audit.created_at|date:"M j" }}</div>
                     {% if item.audit.status == "completed" %}
                     <a class="workspace-progress-link" href="{% url 'tools:audit-result' item.audit.pk %}" title="Open report">
-                        <i class="fas fa-external-link-alt"></i>
+                        <i class="fa-solid fa-external-link-alt"></i>
                     </a>
                     {% endif %}
                 </div>
@@ -1059,18 +1085,18 @@
             {% if oldest and newest and oldest.audit.overall_score and newest.audit.overall_score %}
             {% if newest.audit.overall_score > oldest.audit.overall_score %}
             <div class="workspace-progress-narrative workspace-progress-narrative-positive">
-                <i class="fas fa-arrow-trend-up"></i>
+                <i class="fa-solid fa-arrow-trend-up"></i>
                 <span>Score improved by <strong>+{{ newest.audit.overall_score|add:"-"|add:oldest.audit.overall_score|stringformat:"i"|cut:"-" }}</strong> points since the first run.
                 That's measurable progress you can show to clients.</span>
             </div>
             {% elif newest.audit.overall_score < oldest.audit.overall_score %}
             <div class="workspace-progress-narrative workspace-progress-narrative-negative">
-                <i class="fas fa-arrow-trend-down"></i>
+                <i class="fa-solid fa-arrow-trend-down"></i>
                 <span>Score dropped since the first run. Review the fix queue and rerun to rebuild the baseline.</span>
             </div>
             {% else %}
             <div class="workspace-progress-narrative">
-                <i class="fas fa-minus"></i>
+                <i class="fa-solid fa-minus"></i>
                 <span>Score is holding steady. Push fixes through and rerun to move the needle.</span>
             </div>
             {% endif %}
