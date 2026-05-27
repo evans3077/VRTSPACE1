@@ -67,7 +67,7 @@ from .jobs import enqueue_public_site_audit
 from .models import AuditRun, AuditShareLink
 from .pdf_reports import build_audit_report_pdf
 from .recommendations import build_audit_summary
-from .services import extract_domain, normalize_url
+from .services import build_cross_module_decision_summary, extract_domain, normalize_url
 
 
 def _attribute_affiliate_signup(request, user):
@@ -1011,6 +1011,17 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         share_allowed, _ = can_access_audit_feature(self.request.user, "stakeholder_sharing_enabled")
         export_allowed, _ = can_access_audit_feature(self.request.user, "export_reports_enabled")
         email_allowed, _ = can_access_audit_feature(self.request.user, "email_reports_enabled")
+        decision_summary = build_cross_module_decision_summary(
+            project,
+            latest_audit=latest_audit,
+            latest_seo_snapshot=latest_seo_snapshot,
+            latest_aeo_audit=latest_aeo_audit,
+            seo_active_campaign_count=seo_active_campaign_count,
+            seo_execution_item_count=seo_execution_item_count,
+            content_draft_count=content_draft_count,
+            audit_summary=latest_summary,
+            change_report=latest_change_report,
+        )
         context["latest_audit"] = latest_audit
         context["audit_history"] = audit_history
         context["audit_history_with_delta"] = audit_history_with_delta
@@ -1023,6 +1034,7 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["seo_execution_item_count"] = seo_execution_item_count
         context["audit_issue_total"] = audit_issue_total
         context["workspace_modules"] = workspace_modules
+        context["decision_summary"] = decision_summary
         context["product_modules"] = _decorate_product_modules(
             latest_summary.get("product_modules", []),
             billing_state["plans"],

@@ -1,6 +1,7 @@
 from django.urls import path
 
 from .views import (
+    SEOCampaignActionPackView,
     SharedSEOReportPdfView,
     SharedSEOReportView,
     WorkspaceBacklinkProspectUpdateView,
@@ -30,6 +31,11 @@ urlpatterns = [
         "workspace/seo/campaigns/<int:pk>/update/",
         WorkspaceSEOCampaignUpdateView.as_view(),
         name="workspace-seo-campaign-update",
+    ),
+    path(
+        "workspace/seo/campaigns/<int:pk>/action-pack/",
+        SEOCampaignActionPackView.as_view(),
+        name="campaign-action-pack",
     ),
     path(
         "workspace/seo/backlinks/<int:pk>/update/",

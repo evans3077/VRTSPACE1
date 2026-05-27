@@ -1066,6 +1066,9 @@
                             <button type="submit" class="button button-secondary">Update campaign</button>
                         </div>
                     </form>
+                    <a href="{% url 'seo:campaign-action-pack' campaign.pk %}" class="button button-secondary" style="margin-top: 0.75rem; display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem;">
+                        <i class="fas fa-list-check"></i> View Action Pack
+                    </a>
                 </div>
                 {% endwith %}
                 {% endfor %}
@@ -1248,6 +1251,25 @@
                         {% for step in item.action_steps %}
                         <div style="margin-top: 0.15rem;">{{ forloop.counter }}. {{ step }}</div>
                         {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if item.competitor_evidence %}
+                    <div style="margin-top: 1rem;">
+                        <strong style="display: block; color: var(--text-primary); font-size: 0.8rem; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.04em;">Competitor Evidence</strong>
+                        <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                            {% for comp in item.competitor_evidence|slice:":3" %}
+                            <div style="display: flex; gap: 0.5rem; align-items: baseline; font-size: 0.78rem; color: var(--text-muted);">
+                                <span style="text-transform: capitalize; flex-shrink: 0;">{{ comp.page_type|cut:"_"|default:"page" }}</span>
+                                <a href="{{ comp.url }}" target="_blank" rel="noopener" style="color: var(--signal); text-decoration: none; word-break: break-all;">{{ comp.title|default:comp.url|truncatechars:55 }}</a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if item.edit_targets %}
+                    {# Find matching campaign pk via seo_campaigns for deep-link — best effort #}
+                    <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border-glass);">
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">{{ item.edit_targets|length }} page target{{ item.edit_targets|length|pluralize }} in this pack</span>
                     </div>
                     {% endif %}
                 </div>

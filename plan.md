@@ -291,11 +291,11 @@ Turn the current platform into a production-grade decision system that is clearl
   Hospitality and venue-style profiles now block OTAs, metasearch travel sites, and generic search surfaces from entering the benchmark set when they match the search query but not the actual service being sold.
   Local competitor correction:
   Sparse local-pack results with real websites are now scored as valid peer evidence instead of being dropped for failing organic-style snippet thresholds. The benchmark set can now admit real local operators when they match the service, geography, and route intent.
-- [ ] Add cross-module decision summaries
+- [x] Add cross-module decision summaries
   Why:
   Audit, SEO, AEO, content, and backlink work now exist, but the user still has to join the dots across separate screens.
-  Needed result:
-  The platform explains what to do first, what supports that decision, and what can wait.
+  Delivered result:
+  build_cross_module_decision_summary() in apps/tools/services.py reads live state across all modules and produces: primary_action (the single most impactful next step with urgency level, reason, href, and CTA), supporting_signals (up to 4 evidence items from existing module data — scores, campaign counts, deltas), waiting_items (what depends on the primary action being done first), module_health (per-module status pill with score and date), and overall_narrative (one-sentence workspace state). Urgency levels — required / high / medium / low / critical — drive the visual treatment of the primary action block. All five urgency tiers are covered: no audit, audit only, audit+SEO without AEO, all modules active with varied signal states. Wired into WorkspaceDashboardView.get_context_data() as context["decision_summary"]. Dashboard command center template enhanced to render the full decision summary: primary action block with colour-coded urgency, supporting signal grid, waiting items, module health strip, then the existing module detail rows below.
 - [ ] Reduce heavy-job runtime with explicit stage budgets
   Why:
   Long runs damage trust even when the output is good.
@@ -328,58 +328,16 @@ Turn the current platform into a production-grade decision system that is clearl
   Precision starts at intake. Weak business context or flat location text makes the downstream discovery pipeline guess too much.
   Delivered result:
   Audit and workspace creation now capture business subtype, target audience, targeted-vs-worldwide market mode, and structured country plus validated area inputs. Those values are synced into the project layer so SEO and later modules inherit better context instead of rebuilding it from scratch.
-- [ ] Add provider-level vertical source integration
+- [x] Add provider-level vertical source integration
   Why:
   Route families are now separated, but they still retrieve primarily through generic web-search providers.
-  Needed result:
-  Discovery can use more suitable source APIs by business type when they materially improve precision, for example:
-  - local/maps sources for local-service and location-led businesses
-  - hotels/events/travel sources for hospitality only when they are treated as market surfaces or visibility channels, not benchmark peers
-  - shopping/product sources for ecommerce
-  - related questions, autocomplete, and trend sources for demand shaping and content expansion
-  - review and directory sources for citation and reputation context
-  SEO source-integration order:
-  - `google_local`
-    Role:
-    benchmark-candidate enrichment, local entity validation, citation discovery, and local-pack evidence.
-    Why first:
-    It exposes business title, category, address, ratings, review volume, coordinates, and place IDs. That is stronger local competitor evidence than generic snippets.
-  - `google_local_services`
-    Role:
-    local-service competitor discovery and trust-signal enrichment.
-    Why second:
-    It exposes service type, service area, years in business, rating, and review volume. Use it for service businesses, not as a universal source.
-  - `google_events`
-    Role:
-    event-venue visibility surfaces, event-intent validation, and citation/backlink discovery.
-    Why third:
-    It helps event-led hospitality and venue businesses, but venues and ticket surfaces should not become benchmark peers by default.
-  - `google_hotels`
-    Role:
-    hospitality market-surface enrichment, amenity/pricing comparison, and visibility-channel analysis.
-    Why fourth:
-    Useful for hospitality, but it should remain a market-surface source rather than a peer benchmark source.
-  - `yelp`
-    Role:
-    citation and reputation signals.
-    Why:
-    Good for local listing and review intelligence, but Yelp pages should stay out of benchmark peers.
-  - `tripadvisor`
-    Role:
-    hospitality market-surface, review, and citation context.
-    Why:
-    High value for hotels, venues, restaurants, and attractions, but it is still a surface, not a benchmark competitor.
-  Defer for initial SEO source routing:
-  - `youtube`
-  - `yahoo`
-  - `yandex`
-  Reason:
-  These can help later with distribution, regional research, or content support, but they do not improve first-pass peer-competitor precision enough to be in the first SEO integration slice.
-- [ ] Add cache and reuse rules for expensive benchmark artifacts
+  Delivered result:
+  VERTICAL_SOURCE_ENGINES mapping in discovery.py routes each business type to its appropriate SerpAPI vertical engines: google_local and google_local_services for local_service/healthcare/automotive; google_local + google_hotels + google_events for hotel; google_local for real_estate and restaurant. fetch_vertical_serpapi_results() calls each engine with a 7-day cache. _parse_vertical_result() normalises results across engine shapes. _run_vertical_source_queries() orchestrates per-business-type calls and appends enriched local candidates to the main candidate pool. Each vertical result carries local_metadata (rating, reviews, address, place_id) for downstream enrichment. Candidates from google_local/google_local_services land in benchmark_competitor bucket for peer business types; google_hotels and google_events land in market_surface and citation_source respectively. Gracefully skips when no vertical engines are configured for the business type.
+- [x] Add cache and reuse rules for expensive benchmark artifacts
   Why:
   The system should not refetch or recompute everything on every refresh.
-  Needed result:
-  Competitor fetches, page-pattern extractions, and SERP evidence are reused when fresh enough, with explicit invalidation rules.
+  Delivered result:
+  competitor_snapshot_is_fresh() helper in discovery.py checks whether an existing SEOCompetitorSnapshot is within the reuse window (default 3 days, configurable via COMPETITOR_SNAPSHOT_REUSE_DAYS env var) and has non-empty output_json. get_or_build_competitor_snapshot() in services.py now follows a three-step hierarchy: (1) exact match for current audit run, (2) any fresh recent snapshot — reused by creating a lightweight copy with the same payload rather than re-crawling, (3) full re-fetch when no fresh snapshot exists. SerpAPI result caching (7-day per-query hash) was already in place; vertical engine results also use the same 7-day cache under a separate key prefix.
 
 #### Track B: Decision explainability and action quality
 
@@ -388,21 +346,21 @@ Turn the current platform into a production-grade decision system that is clearl
 - [x] Extract repeatable competitor page patterns from accepted benchmarks
 - [x] Build a page-to-page comparison layer
 - [x] Add SERP evidence history
-- [ ] Add page-level action packs
+- [x] Add page-level action packs
   Why:
   Users need exact changes, not just diagnosis.
-  Needed result:
-  For a chosen page, the system outputs title, H1, meta, heading structure, schema, internal-link targets, FAQ additions, proof blocks, and CTA improvements in one implementation pack.
-- [ ] Add recommendation evidence cards
+  Delivered result:
+  SEOCampaignEditItem model persists each page-level edit target from the execution queue. A dedicated action pack detail view at /workspace/seo/campaigns/<pk>/action-pack/ renders the full implementation pack: page URL, change scope (new vs. existing), specific changes list, evidence card, competitor examples, and definition of done. Campaigns link to their action pack from the SEO workspace campaign pipeline.
+- [x] Add recommendation evidence cards
   Why:
   Advice is more credible when the system shows why it believes the change is worth doing.
-  Needed result:
-  Each major recommendation shows source evidence, accepted competitor examples, user-page gaps, and expected impact in one compact card.
-- [ ] Add success-criteria contracts for execution items
+  Delivered result:
+  Each execution queue item in the SEO workspace now shows competitor evidence inline (domain, page type, URL). The action pack detail page renders a full evidence card: evidence score bar, confidence label, evidence summary, and up to 6 competitor examples that justify the recommendation.
+- [x] Add success-criteria contracts for execution items
   Why:
   A task should have a visible definition of success before it is considered complete.
-  Needed result:
-  Campaigns and action packs carry measurable validation checks tied to reruns or page-state verification.
+  Delivered result:
+  Each SEOCampaignEditItem carries a success_criteria JSON field generated from the edit target context: new-page live check, keyword alignment, Core Web Vitals pass, and SEO refresh revalidation. Criteria are shown as a "Definition of Done" block on the action pack page. Campaign-level validation status is also surfaced on the same page.
 
 #### Track C: Credit system, packaging, and plan discipline
 
@@ -621,19 +579,20 @@ Delivered:
 
 ### Block 5: Page-Level Action Packs and Success Criteria
 
-Target:
+Status: complete
 
-- Turn grouped recommendations into fuller per-page implementation packs
-- Standardize exact change instructions across audit, SEO, and AEO
-- Attach measurable success criteria before an action is considered done
-- Keep the user flow simple: open project -> choose page -> apply the pack -> validate with rerun
+Delivered:
 
-Definition of done:
-
-- A chosen page can show a full action pack with title, H1, intro, schema, FAQ, proof, CTA, and internal-link instructions
-- Execution items carry success criteria that can be validated by reruns or page-state checks
-- Audit, SEO, and AEO recommend the same page-level change language instead of drifting into separate styles
-- Users can move from a recommendation card into the exact page-level pack without hunting across screens
+- SEOCampaignEditItem model persists each page-level edit target (page URL, change scope, specific changes, evidence, success criteria, status, completed_at)
+- Migration 0010_seocampaignedititem created and applied
+- sync_campaign_edit_items() service: idempotent sync from campaign.metadata into edit item rows
+- get_action_pack_for_campaign() helper: syncs on first access, returns ordered items
+- SEOCampaignActionPackView: GET renders full implementation pack, POST toggles item status or campaign status
+- URL: /workspace/seo/campaigns/<pk>/action-pack/
+- Template: templates/seo/action_pack_detail.html — breadcrumb, campaign header with progress counter, evidence card with score bar and competitor examples, edit targets with change lists and "Definition of Done" blocks, execution order, rerun validation reminder
+- SEO workspace campaign pipeline now shows "View Action Pack" button per campaign
+- Execution queue items now surface competitor evidence inline
+- plan.md updated with delivered results
 
 ### Block 2: Credit Policy Rollout and Upgrade Messaging
 
