@@ -49,6 +49,12 @@
                    href="{% url 'content:workspace-cms-credentials' %}">
                     <i class="fa-solid fa-paper-plane"></i>Publishing
                 </a>
+                {% with affiliate=user.affiliate_profile %}{% if affiliate and affiliate.status == "active" %}
+                <a class="workspace-tab-pill {% if workspace_nav_current == 'affiliate' %}is-active{% endif %}"
+                   href="{% url 'affiliates:dashboard' %}">
+                    <i class="fa-solid fa-handshake"></i>Affiliate
+                </a>
+                {% endif %}{% endwith %}
             </nav>
 
             {# ── Right: Credit Chip ── #}

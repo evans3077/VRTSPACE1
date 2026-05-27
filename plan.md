@@ -224,6 +224,36 @@ That is the bridge between the original build plan and the current strategy plan
 
 ## Active Phase
 
+### Phase 13: Agency Dashboard, UI Consistency, and Crawler Discoverability
+
+Status: complete
+
+Goal:
+
+Surface the full multi-client agency view, fix the most critical UI inconsistencies identified in the Antigravity audit, and make the platform discoverable by both search and LLM crawlers.
+
+#### Delivered
+
+- **Agency dashboard** at `/workspace/agency/`
+  Bird's-eye health overview of all client projects. Responsive 3-col card grid (2-col tablet, 1-col mobile). Per-card: client name, domain, overall score + delta badge, health colour accent border, at-risk category pill, last audit age with stale warning, "Open" + "Run Audit" actions. Summary stat bar at top: total / healthy / needs-attention / stale counts. JS filter chips for All / Critical / Warning / Healthy / Stale. Empty state for new users. "All Clients" nav tab added to workspace_nav.html. All data from existing `get_workspace_project_summaries()` — pure template build.
+
+- **llms.txt** at `/llms.txt`
+  New LLM-crawler discovery standard (llmstxt.org). Structured markdown: product summary, capabilities list, pricing table, key public URLs, note on authenticated routes not indexed.
+
+- **robots.txt** improvements
+  Added `/account/` and `/billing/` disallow rules. References llms.txt in comment for LLM crawlers.
+
+- **sitemap.xml** improvements
+  Added `ServicePageSitemap` covering all `/services/<slug>/` pages from `SERVICE_PAGE_LIST`.
+
+- **CSS-1 fix** (critical)
+  Removed duplicate score-pill definitions from `site.css` that conflicted with canonical definitions in `vrt-space-core.css`. Replaced with comment pointing to the authoritative source.
+
+- **Agency dashboard CSS** in `vrt-space-core.css`
+  Summary bar, filter chips, card grid, health dot variants (green/amber/red/muted), score badges, delta colouring, at-risk pill, stale warning badge, empty state.
+
+---
+
 ### Phase 12: Clinical Precision & Advanced API Intelligence
 
 Status: complete

@@ -631,6 +631,62 @@
                     {% endif %}
                 </article>
 
+                {# ── Audit Schedule Card ─────────────────────────────────────── #}
+                <article class="system-card ws-schedule-card">
+                    <div class="ws-schedule-header">
+                        <div>
+                            <p class="eyebrow text-accent">Automation</p>
+                            <h2 style="font-size: 1.1rem; margin: .15rem 0 0;">Audit schedule</h2>
+                        </div>
+                        {% if audit_schedule and audit_schedule.is_active %}
+                        <span class="ws-schedule-status-pill ws-schedule-status-pill--on">
+                            <span class="dot-green" style="width:.5rem;height:.5rem;display:inline-block;border-radius:50%;"></span>
+                            Active
+                        </span>
+                        {% else %}
+                        <span class="ws-schedule-status-pill ws-schedule-status-pill--off">Off</span>
+                        {% endif %}
+                    </div>
+
+                    {% if audit_schedule and audit_schedule.is_active %}
+                    <div class="ws-schedule-active-state">
+                        <div class="ws-schedule-detail-row">
+                            <i class="fa-solid fa-repeat" style="color:var(--brand-primary);font-size:.8rem;"></i>
+                            <span>{{ audit_schedule.cadence|capfirst }} audit</span>
+                        </div>
+                        {% if audit_schedule.next_run_at %}
+                        <div class="ws-schedule-detail-row">
+                            <i class="fa-solid fa-clock" style="color:var(--text-muted);font-size:.8rem;"></i>
+                            <span>Next run: {{ audit_schedule.next_run_at|date:"N j, Y" }}</span>
+                        </div>
+                        {% endif %}
+                        <form method="post" action="{% url 'tools:workspace-audit-schedule' %}" style="margin-top:.75rem;">
+                            {% csrf_token %}
+                            <input type="hidden" name="cadence" value="{{ audit_schedule.cadence }}">
+                            <input type="hidden" name="is_active" value="0">
+                            <button type="submit" class="button-ghost button-xs" style="font-size:.72rem;">
+                                <i class="fa-solid fa-pause"></i> Pause schedule
+                            </button>
+                        </form>
+                    </div>
+                    {% else %}
+                    <p style="font-size:.83rem;color:var(--text-muted);margin:.5rem 0 1rem;line-height:1.55;">
+                        Keep scores current automatically. Set a weekly or monthly cadence and VRT Space runs the audit and emails the report.
+                    </p>
+                    <form method="post" action="{% url 'tools:workspace-audit-schedule' %}" style="display:flex;gap:.5rem;flex-wrap:wrap;align-items:center;">
+                        {% csrf_token %}
+                        <input type="hidden" name="is_active" value="1">
+                        <select name="cadence" class="ws-schedule-select" aria-label="Schedule cadence">
+                            <option value="weekly">Weekly</option>
+                            <option value="monthly">Monthly</option>
+                        </select>
+                        <button type="submit" class="button-primary button-sm">
+                            <i class="fa-solid fa-bolt"></i> Enable
+                        </button>
+                    </form>
+                    {% endif %}
+                </article>
+
                 <article class="system-card workspace-summary-card">
                     <div class="section-heading workspace-section-head">
                         <p class="eyebrow">Current workspace</p>

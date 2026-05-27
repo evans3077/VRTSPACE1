@@ -6694,3 +6694,58 @@ body.shell-light .ws-outcome-meta  { color: #94a3b8; }
   margin-bottom: 1.5rem;
   line-height: 1.6;
 }
+
+/* ============================================================
+   AUDIT SCHEDULE CARD  (Phase 13)
+   ============================================================ */
+
+.ws-schedule-card { padding: 1.25rem 1.5rem; }
+
+.ws-schedule-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  margin-bottom: .85rem;
+}
+
+.ws-schedule-status-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  font-size: .7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+  padding: .2rem .55rem;
+  border-radius: 9999px;
+}
+.ws-schedule-status-pill--on {
+  background: rgba(74,222,128,.1);
+  color: #4ade80;
+  border: 1px solid rgba(74,222,128,.25);
+}
+.ws-schedule-status-pill--off {
+  background: rgba(255,255,255,.05);
+  color: var(--text-muted);
+  border: 1px solid rgba(255,255,255,.1);
+}
+
+.ws-schedule-active-state { display: flex; flex-direction: column; gap: .4rem; }
+.ws-schedule-detail-row {
+  display: flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .83rem;
+  color: var(--text-primary);
+}
+
+.ws-schedule-select {
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.12);
+  border-radius: .45rem;
+  color: var(--text-primary);
+  font-size: .83rem;
+  padding: .35rem .6rem;
+  cursor: pointer;
+}
+.ws-schedule-select:focus { outline: 2px solid var(--brand-primary); outline-offset: 2px; }
