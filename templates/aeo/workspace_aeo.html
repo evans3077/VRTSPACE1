@@ -237,7 +237,7 @@
         <div class="workspace-card-actions" style="display: flex; gap: 0.6rem; flex-wrap: wrap; align-items: center;">
             <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin: 0;">
                 {% csrf_token %}
-                <button type="submit" class="button button-primary">Run first audit</button>
+                <button type="submit" class="button button-primary">Run your first audit</button>
             </form>
             <a class="button button-secondary" href="{% url 'seo:workspace-seo' %}" style="font-size: 0.85rem;">
                 <i class="fa-solid fa-search"></i>&nbsp;Or open SEO workspace

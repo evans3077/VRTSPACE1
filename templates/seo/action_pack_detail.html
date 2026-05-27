@@ -19,13 +19,13 @@
         <p class="eyebrow" style="margin-bottom: 0.5rem;">{{ campaign.page_type|cut:"_"|title|default:"SEO" }} Campaign</p>
         <h1 style="font-size: 1.8rem; color: var(--text-primary); margin: 0 0 0.75rem;">{{ campaign.title }}</h1>
         <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem;">
-          <span class="score-pill {% if campaign.status == 'completed' %}score-high{% elif campaign.status == 'in_progress' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.75rem;">{{ campaign.get_status_display }}</span>
+          <span class="score-pill {% if campaign.status == 'completed' %}score-high{% elif campaign.status == 'in_progress' %}score-medium{% else %}score-low{% endif %}" style="font-size: 0.75rem;">{{ campaign.get_status_display }}</span>
           <span class="score-pill score-high" style="font-size: 0.75rem;">Priority {{ campaign.priority_score }}</span>
           {% if campaign.target_keyword %}
-          <span class="score-pill score-med" style="font-size: 0.75rem;">{{ campaign.target_keyword }}</span>
+          <span class="score-pill score-medium" style="font-size: 0.75rem;">{{ campaign.target_keyword }}</span>
           {% endif %}
           {% if evidence.confidence_label %}
-          <span class="score-pill {% if evidence.status == 'strong' %}score-high{% elif evidence.status == 'stable' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.75rem;">{{ evidence.confidence_label }}</span>
+          <span class="score-pill {% if evidence.status == 'strong' %}score-high{% elif evidence.status == 'stable' %}score-medium{% else %}score-low{% endif %}" style="font-size: 0.75rem;">{{ evidence.confidence_label }}</span>
           {% endif %}
         </div>
       </div>
@@ -106,7 +106,7 @@
         <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
           <div style="flex: 1;">
             {% if item.is_new_page %}
-            <span class="score-pill score-med" style="font-size: 0.7rem; margin-bottom: 0.5rem; display: inline-block;">New page</span>
+            <span class="score-pill score-medium" style="font-size: 0.7rem; margin-bottom: 0.5rem; display: inline-block;">New page</span>
             {% else %}
             <span class="score-pill score-low" style="font-size: 0.7rem; margin-bottom: 0.5rem; display: inline-block;">Existing page</span>
             {% endif %}

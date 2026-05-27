@@ -2045,6 +2045,7 @@ input::placeholder, textarea::placeholder {
 }
 .dot-green  { background: #22c55e; box-shadow: 0 0 6px rgba(34,197,94,0.6); }
 .dot-amber  { background: #f59e0b; box-shadow: 0 0 6px rgba(245,158,11,0.6); }
+.dot-red    { background: #ef4444; box-shadow: 0 0 6px rgba(239,68,68,0.6); }
 .dot-muted  { background: #475569; }
 
 /* ── Page stack spacing ───────────────────────────────────────────────────── */
@@ -6767,3 +6768,24 @@ body.shell-light .ws-outcome-meta  { color: #94a3b8; }
   cursor: pointer;
 }
 .ws-schedule-toggle:hover { color: var(--text-primary); }
+
+/* ============================================================
+   USAGE PILL  (PILL-1 fix — Phase 13)
+   Semantically distinct from score-pill. Used for credit usage
+   display only — not for audit/score values.
+   ============================================================ */
+.usage-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: .25rem;
+  font-size: .7rem;
+  font-weight: 700;
+  padding: .2rem .6rem;
+  border-radius: 9999px;
+  text-transform: uppercase;
+  letter-spacing: .04em;
+}
+.usage-pill--ok       { background: rgba(74,222,128,.1);  color: #4ade80; border: 1px solid rgba(74,222,128,.2); }
+.usage-pill--notice   { background: rgba(251,191,36,.1);  color: #fbbf24; border: 1px solid rgba(251,191,36,.2); }
+.usage-pill--warning  { background: rgba(251,146,60,.12); color: #fb923c; border: 1px solid rgba(251,146,60,.25); }
+.usage-pill--critical { background: rgba(248,113,113,.1); color: #f87171; border: 1px solid rgba(248,113,113,.2); }

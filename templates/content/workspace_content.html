@@ -182,7 +182,7 @@
                     <p class="ws-empty-desc">Run the first audit before generating content. The engine uses the audit as the base context for page decisions, internal links, and score gaps.</p>
                     <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin-top: 1.5rem;">
                         {% csrf_token %}
-                        <button type="submit" class="button button-primary"><i class="fa-solid fa-play"></i> Run first audit</button>
+                        <button type="submit" class="button button-primary"><i class="fa-solid fa-play"></i> Run your first audit</button>
                     </form>
                 </div>
                 {% else %}

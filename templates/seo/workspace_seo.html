@@ -505,7 +505,7 @@
                     <p>A completed audit is required before the platform can benchmark competitors, detect gaps, and recommend the next SEO actions.</p>
                     <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
                         {% csrf_token %}
-                        <button type="submit" class="button button-primary">Run First Audit</button>
+                        <button type="submit" class="button button-primary">Run your first audit</button>
                     </form>
                 </div>
                 {% elif seo_refresh_state.refresh_status == "queued" or seo_refresh_state.refresh_status == "running" %}
@@ -1145,7 +1145,7 @@
                             <div style="display: flex; gap: 0.45rem; flex-wrap: wrap; justify-content: flex-end;">
                                 <span class="score-pill score-high" style="font-size: 0.7rem;">Priority {{ item.priority_score }}</span>
                                 {% if item.confidence_label %}
-                                <span class="score-pill {% if item.evidence_status == 'strong' %}score-high{% elif item.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.7rem;">{{ item.confidence_label }}</span>
+                                <span class="score-pill {% if item.evidence_status == 'strong' %}score-high{% elif item.evidence_status == 'stable' %}score-medium{% else %}score-low{% endif %}" style="font-size: 0.7rem;">{{ item.confidence_label }}</span>
                                 {% endif %}
                             </div>
                         </div>
@@ -1385,7 +1385,7 @@
                         <div style="display: flex; gap: 0.45rem; flex-wrap: wrap; justify-content: flex-end;">
                             <span class="score-pill score-high" style="font-size: 0.7rem;">{{ item.phase }}</span>
                             {% if item.confidence_label %}
-                            <span class="score-pill {% if item.evidence_status == 'strong' %}score-high{% elif item.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.7rem;">{{ item.confidence_label }}</span>
+                            <span class="score-pill {% if item.evidence_status == 'strong' %}score-high{% elif item.evidence_status == 'stable' %}score-medium{% else %}score-low{% endif %}" style="font-size: 0.7rem;">{{ item.confidence_label }}</span>
                             {% endif %}
                         </div>
                     </div>

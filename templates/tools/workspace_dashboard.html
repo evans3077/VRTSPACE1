@@ -32,7 +32,7 @@
             </div>
             <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin: 0;">
                 {% csrf_token %}
-                <button type="submit" class="button button-primary workspace-audit-button"><i class="fa-solid fa-play"></i><span>Run First Audit</span></button>
+                <button type="submit" class="button button-primary workspace-audit-button"><i class="fa-solid fa-play"></i><span>Run your first audit</span></button>
             </form>
             {% else %}
             <div class="ws-status-tag">
@@ -780,9 +780,9 @@
                                 <h3>{% if credit_overview.unlimited %}Unlimited{% else %}{{ credit_overview.remaining|default:0 }}{% endif %}</h3>
                             </div>
                             {% if credit_usage_pct is not None %}
-                            <span class="score-pill {% if credit_alert_band == 100 %}score-low{% elif credit_alert_band == 90 %}score-low{% elif credit_alert_band == 75 %}score-med{% else %}score-high{% endif %}">{{ credit_usage_pct }}% used</span>
+                            <span class="usage-pill {% if credit_alert_band == 100 %}usage-pill--critical{% elif credit_alert_band == 90 %}usage-pill--warning{% elif credit_alert_band == 75 %}usage-pill--notice{% else %}usage-pill--ok{% endif %}">{{ credit_usage_pct }}% used</span>
                             {% else %}
-                            <span class="score-pill score-high">Workspace usage</span>
+                            <span class="usage-pill usage-pill--ok">Workspace usage</span>
                             {% endif %}
                         </div>
                         <div class="workspace-credit-balance-meta">
@@ -990,7 +990,7 @@
                             <span class="score-pill score-high">{{ recommendation.root_cause_label }}</span>
                             {% endif %}
                             {% if recommendation.confidence_label %}
-                            <span class="score-pill {% if recommendation.evidence_status == 'strong' %}score-high{% elif recommendation.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}">{{ recommendation.confidence_label }}</span>
+                            <span class="score-pill {% if recommendation.evidence_status == 'strong' %}score-high{% elif recommendation.evidence_status == 'stable' %}score-medium{% else %}score-low{% endif %}">{{ recommendation.confidence_label }}</span>
                             {% endif %}
                         </div>
                         <strong class="workspace-fix-title">{{ recommendation.title }}</strong>
