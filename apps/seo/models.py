@@ -272,6 +272,48 @@ class SEOCampaign(TimestampedModel):
         return f"{self.project} - {self.title}"
 
 
+class SEOCampaignEditItem(TimestampedModel):
+    """
+    A single page-level change target within an SEO campaign.
+    Persists the edit_targets array so execution can be tracked item-by-item.
+    """
+
+    class Status(models.TextChoices):
+        QUEUED = "queued", "Queued"
+        IN_PROGRESS = "in_progress", "In Progress"
+        COMPLETED = "completed", "Completed"
+        SKIPPED = "skipped", "Skipped"
+
+    campaign = models.ForeignKey(
+        SEOCampaign,
+        on_delete=models.CASCADE,
+        related_name="edit_items",
+    )
+    page_url = models.CharField(max_length=2000, blank=True)
+    page_title = models.CharField(max_length=255, blank=True)
+    page_type = models.CharField(max_length=80, blank=True)
+    change_scope = models.CharField(max_length=40, blank=True)  # new_page | existing_page
+    # Specific changes as a list of strings (title, H1, meta, schema, FAQ, etc.)
+    changes = models.JSONField(default=list)
+    # What "done" looks like for this particular edit target
+    success_criteria = models.JSONField(default=list)
+    # Competitor examples that justify this change
+    evidence = models.JSONField(default=dict)
+    ordering_index = models.PositiveSmallIntegerField(default=0)
+    status = models.CharField(max_length=20, choices=Status.choices, default=Status.QUEUED)
+    completed_at = models.DateTimeField(null=True, blank=True)
+
+    class Meta:
+        ordering = ("ordering_index", "status")
+
+    def __str__(self):
+        return f"{self.campaign.title} — {self.page_url or 'new page'}"
+
+    @property
+    def is_new_page(self):
+        return self.change_scope == "new_page"
+
+
 class BacklinkSnapshot(TimestampedModel):
     project = models.ForeignKey(
         "leads.ClientProject",

@@ -27,7 +27,7 @@ from apps.tools.audit_exports import build_absolute_app_url
 
 from .backlinks import refresh_project_backlink_intelligence
 from .forms import SEOProjectProfileForm
-from .models import BacklinkProspect, SEOCampaign, SEOCompetitor, SEOProjectProfile, SEOShareLink
+from .models import BacklinkProspect, SEOCampaign, SEOCampaignEditItem, SEOCompetitor, SEOProjectProfile, SEOShareLink
 from .jobs import enqueue_project_seo_refresh
 from .pdf_reports import build_seo_report_pdf
 from .reporting import build_seo_export_payload, build_seo_share_urls, get_or_create_seo_share_link, get_seo_reporting_bundle
@@ -39,7 +39,9 @@ from .services import (
     build_discovery_workspace_sections,
     build_serp_evidence_history,
     can_generate_seo_snapshot,
+    get_action_pack_for_campaign,
     refresh_project_seo_intelligence,
+    sync_campaign_edit_items,
     sync_project_campaign_chain,
     sync_project_seo_campaigns,
     sync_project_competitors,
@@ -784,7 +786,6 @@ class SharedSEOReportPdfView(DetailView):
         return response
 
 
-
 class WorkspaceSEOPromoteToPromptView(LoginRequiredMixin, View):
     """Promote an SEO/GEO query into a TrackedPrompt with one click.
 
@@ -830,3 +831,73 @@ class WorkspaceSEOPromoteToPromptView(LoginRequiredMixin, View):
             messages.info(request, "Already tracking this prompt.")
 
         return redirect("aeo:workspace-prompts")
+
+
+class SEOCampaignActionPackView(LoginRequiredMixin, View):
+    """
+    Action pack detail view for a single SEO campaign.
+    GET  → renders the full implementation pack (edit targets, evidence cards, success criteria).
+    POST → toggles the status of one SEOCampaignEditItem.
+    """
+
+    template_name = "seo/action_pack_detail.html"
+
+    def _get_campaign(self, request, pk):
+        project = resolve_workspace_project(request, request.user)
+        if not project:
+            raise Http404
+        campaign = project.seo_campaigns.select_related("project", "source_opportunity_snapshot").filter(pk=pk).first()
+        if not campaign:
+            raise Http404
+        return project, campaign
+
+    def get(self, request, *args, **kwargs):
+        project, campaign = self._get_campaign(request, kwargs["pk"])
+        edit_items = get_action_pack_for_campaign(campaign)
+        metadata = campaign.metadata or {}
+        return render(request, self.template_name, {
+            "project": project,
+            "campaign": campaign,
+            "edit_items": edit_items,
+            "total_items": len(edit_items),
+            "completed_items": sum(1 for i in edit_items if i.status == SEOCampaignEditItem.Status.COMPLETED),
+            "action_steps": metadata.get("action_steps", []),
+            "why_now": metadata.get("why_now", ""),
+            "deliverable": metadata.get("deliverable", ""),
+            "competitor_evidence": metadata.get("competitor_evidence", [])[:6],
+            "evidence": metadata.get("evidence", {}),
+            "edit_item_status_choices": SEOCampaignEditItem.Status.choices,
+            "campaign_status_choices": SEOCampaign.Status.choices,
+            "page_title": f"Action Pack — {campaign.title} | VRT SPACE",
+            "meta_robots": "noindex, nofollow",
+        })
+
+    def post(self, request, *args, **kwargs):
+        project, campaign = self._get_campaign(request, kwargs["pk"])
+
+        # Toggle an individual edit item status
+        item_pk = request.POST.get("item_pk")
+        new_status = request.POST.get("item_status", "").strip()
+        if item_pk and new_status in SEOCampaignEditItem.Status.values:
+            item = campaign.edit_items.filter(pk=item_pk).first()
+            if item:
+                item.status = new_status
+                if new_status == SEOCampaignEditItem.Status.COMPLETED:
+                    item.completed_at = timezone.now()
+                elif item.completed_at:
+                    item.completed_at = None
+                item.save(update_fields=["status", "completed_at", "updated_at"])
+                messages.success(request, "Edit item updated.")
+            return redirect("seo:campaign-action-pack", pk=campaign.pk)
+
+        # Update campaign-level status from the action pack page
+        campaign_status = request.POST.get("campaign_status", "").strip()
+        if campaign_status in SEOCampaign.Status.values:
+            campaign.status = campaign_status
+            if campaign_status == SEOCampaign.Status.COMPLETED:
+                meta = dict(campaign.metadata or {})
+                meta["completed_at"] = timezone.now().isoformat()
+                campaign.metadata = meta
+            campaign.save(update_fields=["status", "metadata", "updated_at"])
+            messages.success(request, "Campaign status updated.")
+        return redirect("seo:campaign-action-pack", pk=campaign.pk)

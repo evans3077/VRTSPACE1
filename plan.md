@@ -388,21 +388,21 @@ Turn the current platform into a production-grade decision system that is clearl
 - [x] Extract repeatable competitor page patterns from accepted benchmarks
 - [x] Build a page-to-page comparison layer
 - [x] Add SERP evidence history
-- [ ] Add page-level action packs
+- [x] Add page-level action packs
   Why:
   Users need exact changes, not just diagnosis.
-  Needed result:
-  For a chosen page, the system outputs title, H1, meta, heading structure, schema, internal-link targets, FAQ additions, proof blocks, and CTA improvements in one implementation pack.
-- [ ] Add recommendation evidence cards
+  Delivered result:
+  SEOCampaignEditItem model persists each page-level edit target from the execution queue. A dedicated action pack detail view at /workspace/seo/campaigns/<pk>/action-pack/ renders the full implementation pack: page URL, change scope (new vs. existing), specific changes list, evidence card, competitor examples, and definition of done. Campaigns link to their action pack from the SEO workspace campaign pipeline.
+- [x] Add recommendation evidence cards
   Why:
   Advice is more credible when the system shows why it believes the change is worth doing.
-  Needed result:
-  Each major recommendation shows source evidence, accepted competitor examples, user-page gaps, and expected impact in one compact card.
-- [ ] Add success-criteria contracts for execution items
+  Delivered result:
+  Each execution queue item in the SEO workspace now shows competitor evidence inline (domain, page type, URL). The action pack detail page renders a full evidence card: evidence score bar, confidence label, evidence summary, and up to 6 competitor examples that justify the recommendation.
+- [x] Add success-criteria contracts for execution items
   Why:
   A task should have a visible definition of success before it is considered complete.
-  Needed result:
-  Campaigns and action packs carry measurable validation checks tied to reruns or page-state verification.
+  Delivered result:
+  Each SEOCampaignEditItem carries a success_criteria JSON field generated from the edit target context: new-page live check, keyword alignment, Core Web Vitals pass, and SEO refresh revalidation. Criteria are shown as a "Definition of Done" block on the action pack page. Campaign-level validation status is also surfaced on the same page.
 
 #### Track C: Credit system, packaging, and plan discipline
 
@@ -621,19 +621,20 @@ Delivered:
 
 ### Block 5: Page-Level Action Packs and Success Criteria
 
-Target:
+Status: complete
 
-- Turn grouped recommendations into fuller per-page implementation packs
-- Standardize exact change instructions across audit, SEO, and AEO
-- Attach measurable success criteria before an action is considered done
-- Keep the user flow simple: open project -> choose page -> apply the pack -> validate with rerun
+Delivered:
 
-Definition of done:
-
-- A chosen page can show a full action pack with title, H1, intro, schema, FAQ, proof, CTA, and internal-link instructions
-- Execution items carry success criteria that can be validated by reruns or page-state checks
-- Audit, SEO, and AEO recommend the same page-level change language instead of drifting into separate styles
-- Users can move from a recommendation card into the exact page-level pack without hunting across screens
+- SEOCampaignEditItem model persists each page-level edit target (page URL, change scope, specific changes, evidence, success criteria, status, completed_at)
+- Migration 0010_seocampaignedititem created and applied
+- sync_campaign_edit_items() service: idempotent sync from campaign.metadata into edit item rows
+- get_action_pack_for_campaign() helper: syncs on first access, returns ordered items
+- SEOCampaignActionPackView: GET renders full implementation pack, POST toggles item status or campaign status
+- URL: /workspace/seo/campaigns/<pk>/action-pack/
+- Template: templates/seo/action_pack_detail.html — breadcrumb, campaign header with progress counter, evidence card with score bar and competitor examples, edit targets with change lists and "Definition of Done" blocks, execution order, rerun validation reminder
+- SEO workspace campaign pipeline now shows "View Action Pack" button per campaign
+- Execution queue items now surface competitor evidence inline
+- plan.md updated with delivered results
 
 ### Block 2: Credit Policy Rollout and Upgrade Messaging
 

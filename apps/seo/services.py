@@ -2427,3 +2427,84 @@ def refresh_project_seo_intelligence(project):
 
 def can_generate_seo_snapshot(project):
     return bool(project and getattr(project, "latest_audit_run", None) and project.latest_audit_run.status == "completed")
+
+
+# ---------------------------------------------------------------------------
+# Block 5 — Page-Level Action Packs
+# ---------------------------------------------------------------------------
+
+def _build_edit_item_success_criteria(edit_target, campaign):
+    """Generate measurable success criteria for a single edit target."""
+    criteria = []
+    change_scope = edit_target.get("change_scope", "")
+    page_type = edit_target.get("page_type", "")
+    if change_scope == "new_page":
+        criteria.append(f"New {page_type or 'page'} is live and indexed at the target URL.")
+    else:
+        criteria.append("All listed changes have been applied to the live page.")
+    if campaign.target_keyword:
+        criteria.append(f"Page is aligned to the primary keyword: '{campaign.target_keyword}'.")
+    criteria.append("Page renders without errors and passes Core Web Vitals on a fresh audit run.")
+    criteria.append("Re-run SEO workspace refresh and confirm the page no longer appears in the action queue.")
+    return criteria[:4]
+
+
+def sync_campaign_edit_items(campaign):
+    """
+    Persist the edit_targets stored in campaign.metadata into SEOCampaignEditItem rows.
+    Idempotent — rows are get-or-created by (campaign, ordering_index).
+    Returns a list of SEOCampaignEditItem instances.
+    """
+    from .models import SEOCampaignEditItem
+
+    metadata = campaign.metadata or {}
+    edit_targets = metadata.get("edit_targets") or []
+    competitor_evidence = metadata.get("competitor_evidence") or []
+
+    items = []
+    for idx, target in enumerate(edit_targets):
+        if not isinstance(target, dict):
+            continue
+        obj, created = SEOCampaignEditItem.objects.get_or_create(
+            campaign=campaign,
+            ordering_index=idx,
+            defaults={
+                "page_url": target.get("url", ""),
+                "page_title": target.get("page_title", ""),
+                "page_type": target.get("page_type", campaign.page_type),
+                "change_scope": target.get("change_scope", "existing_page"),
+                "changes": target.get("changes", []),
+                "success_criteria": _build_edit_item_success_criteria(target, campaign),
+                "evidence": {
+                    "competitor_examples": competitor_evidence[:3],
+                    "confidence_label": (metadata.get("evidence") or {}).get("confidence_label", ""),
+                    "evidence_score": (metadata.get("evidence") or {}).get("score", 0),
+                    "summary": (metadata.get("evidence") or {}).get("summary", ""),
+                },
+            },
+        )
+        if not created:
+            # Refresh mutable fields but preserve status / completed_at
+            changed = False
+            if obj.changes != target.get("changes", []):
+                obj.changes = target.get("changes", [])
+                changed = True
+            if not obj.success_criteria:
+                obj.success_criteria = _build_edit_item_success_criteria(target, campaign)
+                changed = True
+            if changed:
+                obj.save(update_fields=["changes", "success_criteria", "updated_at"])
+        items.append(obj)
+    return items
+
+
+def get_action_pack_for_campaign(campaign):
+    """
+    Return all SEOCampaignEditItem rows for a campaign, syncing first if empty.
+    """
+    from .models import SEOCampaignEditItem
+
+    items = list(SEOCampaignEditItem.objects.filter(campaign=campaign).order_by("ordering_index"))
+    if not items:
+        items = sync_campaign_edit_items(campaign)
+    return items
