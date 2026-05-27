@@ -291,11 +291,11 @@ Turn the current platform into a production-grade decision system that is clearl
   Hospitality and venue-style profiles now block OTAs, metasearch travel sites, and generic search surfaces from entering the benchmark set when they match the search query but not the actual service being sold.
   Local competitor correction:
   Sparse local-pack results with real websites are now scored as valid peer evidence instead of being dropped for failing organic-style snippet thresholds. The benchmark set can now admit real local operators when they match the service, geography, and route intent.
-- [ ] Add cross-module decision summaries
+- [x] Add cross-module decision summaries
   Why:
   Audit, SEO, AEO, content, and backlink work now exist, but the user still has to join the dots across separate screens.
-  Needed result:
-  The platform explains what to do first, what supports that decision, and what can wait.
+  Delivered result:
+  build_cross_module_decision_summary() in apps/tools/services.py reads live state across all modules and produces: primary_action (the single most impactful next step with urgency level, reason, href, and CTA), supporting_signals (up to 4 evidence items from existing module data — scores, campaign counts, deltas), waiting_items (what depends on the primary action being done first), module_health (per-module status pill with score and date), and overall_narrative (one-sentence workspace state). Urgency levels — required / high / medium / low / critical — drive the visual treatment of the primary action block. All five urgency tiers are covered: no audit, audit only, audit+SEO without AEO, all modules active with varied signal states. Wired into WorkspaceDashboardView.get_context_data() as context["decision_summary"]. Dashboard command center template enhanced to render the full decision summary: primary action block with colour-coded urgency, supporting signal grid, waiting items, module health strip, then the existing module detail rows below.
 - [ ] Reduce heavy-job runtime with explicit stage budgets
   Why:
   Long runs damage trust even when the output is good.
