@@ -67,7 +67,7 @@ from .jobs import enqueue_public_site_audit
 from .models import AuditRun, AuditShareLink
 from .pdf_reports import build_audit_report_pdf
 from .recommendations import build_audit_summary
-from .services import build_cross_module_decision_summary, extract_domain, normalize_url
+from .services import build_cross_module_decision_summary, build_executive_outcome_summary, extract_domain, normalize_url
 
 
 def _attribute_affiliate_signup(request, user):
@@ -1059,6 +1059,32 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         credit_usage_pct = get_credit_usage_percentage(billing_state["credit_overview"])
         context["credit_usage_pct"] = credit_usage_pct
         context["credit_alert_band"] = get_alert_band(credit_usage_pct)
+
+        # Executive outcome summary — plain-language workspace-state overview
+        _seo_campaigns_qs = (
+            project.seo_campaigns.prefetch_related("edit_items")
+            if getattr(project, "pk", None)
+            else []
+        )
+        _backlink_prospect_count = (
+            project.backlink_prospects.count()
+            if getattr(project, "pk", None)
+            else 0
+        )
+        context["executive_summary"] = build_executive_outcome_summary(
+            project,
+            latest_audit=latest_audit,
+            previous_audit=(
+                audit_history_with_delta[1]["audit"]
+                if audit_history_with_delta and len(audit_history_with_delta) > 1
+                else None
+            ),
+            change_report=latest_change_report,
+            seo_campaigns=_seo_campaigns_qs,
+            content_draft_count=content_draft_count,
+            backlink_prospect_count=_backlink_prospect_count,
+            credit_usage_pct=credit_usage_pct,
+        )
         context["credit_action_guide"] = (
             build_credit_action_guide(project, self.request.user)
             if getattr(project, "pk", None)

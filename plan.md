@@ -296,11 +296,13 @@ Turn the current platform into a production-grade decision system that is clearl
   Audit, SEO, AEO, content, and backlink work now exist, but the user still has to join the dots across separate screens.
   Delivered result:
   build_cross_module_decision_summary() in apps/tools/services.py reads live state across all modules and produces: primary_action (the single most impactful next step with urgency level, reason, href, and CTA), supporting_signals (up to 4 evidence items from existing module data — scores, campaign counts, deltas), waiting_items (what depends on the primary action being done first), module_health (per-module status pill with score and date), and overall_narrative (one-sentence workspace state). Urgency levels — required / high / medium / low / critical — drive the visual treatment of the primary action block. All five urgency tiers are covered: no audit, audit only, audit+SEO without AEO, all modules active with varied signal states. Wired into WorkspaceDashboardView.get_context_data() as context["decision_summary"]. Dashboard command center template enhanced to render the full decision summary: primary action block with colour-coded urgency, supporting signal grid, waiting items, module health strip, then the existing module detail rows below.
-- [ ] Reduce heavy-job runtime with explicit stage budgets
+- [x] Reduce heavy-job runtime with explicit stage budgets
   Why:
   Long runs damage trust even when the output is good.
   Needed result:
   Discovery, crawl, pattern extraction, backlink prospecting, and report generation each run with bounded scope, visible stage state, and safe fallback behavior.
+  Delivered result:
+  _StageTracker class in apps/seo/jobs.py records per-stage start/end times and flushes them to SEOProjectProfile.metadata["refresh_stages"] after each stage. Five stages tracked: site_snapshot, discovery, competitor_crawl, analysis, opportunity. budget constants (STAGE_BUDGET_*_SECONDS) added to settings.py with env-var overrides. Budget overruns log at WARNING level and reduce scope: if total job ceiling is exceeded, campaign sync and editorial sync are skipped for the run; backlink phase is skipped with status "skipped_budget". Backlink job separately tracks its own budget against STAGE_BUDGET_BACKLINK_SECONDS. build_seo_context_payload() and refresh_project_seo_intelligence() accept optional _stage_reporter and stage_tracker parameters so stage hooks flow from jobs.py without invasive changes. SEO workspace running-refresh state panel now renders a live stage list showing done/running/pending per stage with elapsed times surfaced from the metadata.
 - [x] Add the first source-routing and business-class discovery-policy slice
   Why:
   The platform serves many business types, so discovery cannot treat every query as a generic web-search problem.
@@ -466,18 +468,20 @@ Turn the current platform into a production-grade decision system that is clearl
 - [x] Tie SEO execution, generated content, and backlink prospects together
 - [x] Add clearer value reporting
 - [x] Add SEO-specific stakeholder reporting
-- [ ] Add operational safeguards for production
+- [x] Add operational safeguards for production
   Why:
   Heavy SEO work must stay durable under real usage.
   Needed result:
   Queue heavy jobs correctly, rate-limit discovery and crawl depth, and make fallback behavior explicit when providers return partial or weak data.
-  Progress:
-  SERP discovery now uses provider cooldowns, shorter fallback timeouts, and per-refresh provider shutdown so one SerpApi 429 or DuckDuckGo timeout does not cascade into a long sequence of duplicate failures.
-- [ ] Add executive-level outcome summaries
+  Delivered result:
+  Stage budget system (see above) adds total job ceiling with graceful scope reduction. Provider cooldowns, shorter fallback timeouts, and per-refresh shutdown already in place from Phase 11 Track A. Campaign sync and editorial sync are conditionally skipped when total budget is exceeded, preventing cascading slowness into secondary jobs. Backlink phase skips with "skipped_budget" status instead of running over. All overruns log at WARNING level with elapsed time and budget for monitoring.
+- [x] Add executive-level outcome summaries
   Why:
   Stakeholders should not have to read the entire workspace to understand value.
   Needed result:
   Reports and dashboards summarize work completed, evidence gathered, pages improved, assets created, links pursued, and validation status in plain business terms.
+  Delivered result:
+  build_executive_outcome_summary() in apps/tools/services.py reads AuditRun, AuditChangeReport, SEOCampaign.edit_items, content drafts, and backlink prospects to produce: headline (one-sentence workspace state), what_was_done (pages scanned, issues found, audit date), score_progress (to/from score, delta, resolved/new issues), assets_created (campaigns, edit items completed, content drafts), links_pursued (backlink prospects), validation (campaign completion %). Wired into WorkspaceDashboardView as context["executive_summary"]. Dashboard shows a responsive tile grid below the command center with numeric outcome metrics and plain-language labels. Score delta shown with colour-coded +/- badge. All tiles conditionally hidden when zero to avoid empty clutter. Shell-light overrides included.
 
 #### Track E: UI shell, conversion flow, and module presentation
 

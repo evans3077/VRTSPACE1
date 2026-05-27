@@ -447,6 +447,114 @@
                     </div>
                 </article>
                 {% endif %}
+
+                {# ── Executive outcome summary ──────────────────────────────── #}
+                {% if executive_summary.has_data %}
+                {% with es=executive_summary %}
+                <article id="outcome-summary" class="system-card ws-outcome-card">
+                    <div class="section-heading workspace-section-head">
+                        <p class="eyebrow text-accent">Outcome summary</p>
+                        <h2>{{ es.headline }}</h2>
+                    </div>
+
+                    <div class="ws-outcome-grid">
+
+                        {# Score progress #}
+                        {% with sp=es.score_progress %}
+                        <div class="ws-outcome-tile">
+                            <p class="ws-outcome-label">Overall score</p>
+                            {% if sp.to_score %}
+                            <p class="ws-outcome-value">
+                                {{ sp.to_score }}<span class="ws-outcome-unit">/100</span>
+                                {% if sp.overall_delta is not None %}
+                                    {% if sp.overall_delta > 0 %}
+                                    <span class="ws-outcome-delta ws-outcome-delta--up">+{{ sp.overall_delta }}</span>
+                                    {% elif sp.overall_delta < 0 %}
+                                    <span class="ws-outcome-delta ws-outcome-delta--down">{{ sp.overall_delta }}</span>
+                                    {% else %}
+                                    <span class="ws-outcome-delta ws-outcome-delta--flat">±0</span>
+                                    {% endif %}
+                                {% endif %}
+                            </p>
+                            {% if sp.from_score %}<p class="ws-outcome-meta">Was {{ sp.from_score }} last run</p>{% endif %}
+                            {% else %}
+                            <p class="ws-outcome-value">&mdash;</p>
+                            {% endif %}
+                        </div>
+                        {% endwith %}
+
+                        {# Audit scope #}
+                        {% with wd=es.what_was_done %}
+                        <div class="ws-outcome-tile">
+                            <p class="ws-outcome-label">Pages scanned</p>
+                            <p class="ws-outcome-value">{{ wd.pages_scanned }}</p>
+                            <p class="ws-outcome-meta">{{ wd.issues_found }} issue{{ wd.issues_found|pluralize }} found &middot; {{ wd.audit_date|date:"M j" }}</p>
+                        </div>
+                        {% endwith %}
+
+                        {# Issues resolved #}
+                        {% with sp=es.score_progress %}
+                        {% if sp.resolved_issues or sp.new_issues %}
+                        <div class="ws-outcome-tile">
+                            <p class="ws-outcome-label">Issues resolved</p>
+                            <p class="ws-outcome-value">{{ sp.resolved_issues }}</p>
+                            {% if sp.new_issues %}<p class="ws-outcome-meta">{{ sp.new_issues }} new since last run</p>{% endif %}
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+
+                        {# SEO execution #}
+                        {% with ac=es.assets_created %}
+                        {% if ac.seo_campaigns %}
+                        <div class="ws-outcome-tile">
+                            <p class="ws-outcome-label">SEO execution</p>
+                            <p class="ws-outcome-value">{{ ac.seo_edit_items_completed }}<span class="ws-outcome-unit"> / {{ ac.seo_edit_items }}</span></p>
+                            <p class="ws-outcome-meta">
+                                page fix{{ ac.seo_edit_items|pluralize:"es" }} done
+                                &middot; {{ ac.seo_campaigns }} campaign{{ ac.seo_campaigns|pluralize }}
+                            </p>
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+
+                        {# Content drafts #}
+                        {% with ac=es.assets_created %}
+                        {% if ac.content_drafts %}
+                        <div class="ws-outcome-tile">
+                            <p class="ws-outcome-label">Content drafts</p>
+                            <p class="ws-outcome-value">{{ ac.content_drafts }}</p>
+                            <p class="ws-outcome-meta">ready to review</p>
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+
+                        {# Backlink prospects #}
+                        {% with lp=es.links_pursued %}
+                        {% if lp.prospects_found %}
+                        <div class="ws-outcome-tile">
+                            <p class="ws-outcome-label">Link prospects</p>
+                            <p class="ws-outcome-value">{{ lp.prospects_found }}</p>
+                            <p class="ws-outcome-meta">identified</p>
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+
+                        {# Campaign completion #}
+                        {% with v=es.validation %}
+                        {% if v.campaigns_total %}
+                        <div class="ws-outcome-tile">
+                            <p class="ws-outcome-label">Campaign completion</p>
+                            <p class="ws-outcome-value">{{ v.completion_pct }}<span class="ws-outcome-unit">%</span></p>
+                            <p class="ws-outcome-meta">{{ v.campaigns_completed }} of {{ v.campaigns_total }} done</p>
+                        </div>
+                        {% endif %}
+                        {% endwith %}
+
+                    </div>
+                </article>
+                {% endwith %}
+                {% endif %}
+
             </div>
 
             <div class="workspace-secondary-stack">

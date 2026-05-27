@@ -1245,3 +1245,146 @@ def build_cross_module_decision_summary(
         "overall_narrative": narrative,
         "has_data": has_audit,
     }
+
+
+# ---------------------------------------------------------------------------
+# Executive outcome summary — Phase 11 Track D
+# ---------------------------------------------------------------------------
+
+def build_executive_outcome_summary(
+    project,
+    *,
+    latest_audit=None,
+    previous_audit=None,
+    change_report=None,
+    seo_campaigns=None,
+    content_draft_count=0,
+    backlink_prospect_count=0,
+    credit_usage_pct=0,
+):
+    """
+    Build a plain-language outcome summary suitable for a stakeholder overview panel.
+
+    Returns a dict with:
+      has_data          – bool; False when there is no audit to summarise
+      headline          – one-sentence summary of the workspace state
+      what_was_done     – audit scope metrics
+      score_progress    – score delta and issue resolution stats
+      assets_created    – SEO campaigns, edit items, content drafts
+      links_pursued     – backlink prospect count
+      validation        – campaign completion percentage
+      credit_used_pct   – credit usage band (0-100 int)
+    """
+    has_data = bool(latest_audit and latest_audit.pk)
+    if not has_data:
+        return {"has_data": False}
+
+    # --- What was done --------------------------------------------------
+    pages_scanned = getattr(latest_audit, "pages_crawled", 0) or 0
+    audit_summary_json = getattr(latest_audit, "summary", None) or {}
+    issue_summary = audit_summary_json.get("issue_summary", {}) if isinstance(audit_summary_json, dict) else {}
+    issues_found = issue_summary.get("total", 0)
+
+    what_was_done = {
+        "pages_scanned": pages_scanned,
+        "issues_found": issues_found,
+        "audit_date": latest_audit.created_at,
+    }
+
+    # --- Score progress -------------------------------------------------
+    overall_delta = None
+    from_score = None
+    to_score = getattr(latest_audit, "overall_score", None)
+    resolved_issues = 0
+    new_issues = 0
+
+    if change_report:
+        overall_delta = getattr(change_report, "overall_score_delta", None)
+        resolved_issues = getattr(change_report, "resolved_issue_count", 0) or 0
+        new_issues = getattr(change_report, "new_issue_count", 0) or 0
+        if overall_delta is not None and to_score is not None:
+            from_score = to_score - overall_delta
+    elif previous_audit:
+        prev_score = getattr(previous_audit, "overall_score", None)
+        if prev_score is not None and to_score is not None:
+            overall_delta = to_score - prev_score
+            from_score = prev_score
+
+    score_progress = {
+        "to_score": to_score,
+        "from_score": from_score,
+        "overall_delta": overall_delta,
+        "resolved_issues": resolved_issues,
+        "new_issues": new_issues,
+        "improved": overall_delta > 0 if overall_delta is not None else None,
+    }
+
+    # --- Assets created -------------------------------------------------
+    campaign_list = list(seo_campaigns) if seo_campaigns else []
+    total_campaigns = len(campaign_list)
+    completed_campaigns = sum(
+        1 for c in campaign_list if getattr(c, "status", "") == "completed"
+    )
+
+    total_edit_items = 0
+    completed_edit_items = 0
+    for campaign in campaign_list:
+        items = list(getattr(campaign, "edit_items", None) and campaign.edit_items.all() or [])
+        total_edit_items += len(items)
+        completed_edit_items += sum(1 for item in items if getattr(item, "status", "") == "completed")
+
+    assets_created = {
+        "seo_campaigns": total_campaigns,
+        "seo_edit_items": total_edit_items,
+        "seo_edit_items_completed": completed_edit_items,
+        "content_drafts": content_draft_count,
+    }
+
+    # --- Links pursued --------------------------------------------------
+    links_pursued = {"prospects_found": backlink_prospect_count}
+
+    # --- Validation / completion ----------------------------------------
+    completion_pct = 0
+    if total_edit_items > 0:
+        completion_pct = round(100 * completed_edit_items / total_edit_items)
+    elif total_campaigns > 0:
+        completion_pct = round(100 * completed_campaigns / total_campaigns)
+
+    validation = {
+        "campaigns_completed": completed_campaigns,
+        "campaigns_total": total_campaigns,
+        "completion_pct": completion_pct,
+    }
+
+    # --- Plain-language headline ----------------------------------------
+    if overall_delta is not None and overall_delta > 0:
+        score_note = f"Score up {overall_delta} points."
+    elif overall_delta is not None and overall_delta < 0:
+        score_note = f"Score down {abs(overall_delta)} points since last run."
+    elif to_score is not None:
+        score_note = f"Score holding at {to_score}."
+    else:
+        score_note = ""
+
+    if total_edit_items > 0 and completed_edit_items > 0:
+        action_note = f"{completed_edit_items} of {total_edit_items} page fixes done."
+    elif total_campaigns > 0:
+        action_note = f"{total_campaigns} campaign{'s' if total_campaigns != 1 else ''} queued."
+    elif content_draft_count > 0:
+        action_note = f"{content_draft_count} content draft{'s' if content_draft_count != 1 else ''} ready."
+    else:
+        action_note = f"{pages_scanned} pages scanned, {issues_found} issues found."
+
+    headline_parts = [p for p in [score_note, action_note] if p]
+    headline = " ".join(headline_parts) or f"Workspace active. {pages_scanned} pages scanned."
+
+    return {
+        "has_data": True,
+        "headline": headline,
+        "what_was_done": what_was_done,
+        "score_progress": score_progress,
+        "assets_created": assets_created,
+        "links_pursued": links_pursued,
+        "validation": validation,
+        "credit_used_pct": int(credit_usage_pct or 0),
+    }

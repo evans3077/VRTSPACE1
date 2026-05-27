@@ -1965,19 +1965,39 @@ def build_value_summary(competitor_snapshots, keyword_opportunities, page_map, e
     }
 
 
-def build_seo_context_payload(project, profile, audit_run):
+def build_seo_context_payload(project, profile, audit_run, *, _stage_reporter=None):
+    """
+    Build the full SEO context payload.
+
+    *_stage_reporter* is an optional ``(stage_name, action)`` callable injected
+    by the job layer to record per-stage timing. Stages reported:
+      site_snapshot | discovery | competitor_crawl | analysis
+    """
+    _notify = _stage_reporter if callable(_stage_reporter) else (lambda *a: None)
+
     effective_business_type = profile.business_type or infer_business_type_for_project(
         project,
         audit_run=audit_run,
         primary_service=profile.primary_service,
     )
+
+    # Stage 1: own-site structure snapshot
+    _notify("site_snapshot", "start")
     site_structure_snapshot = get_or_build_site_structure_snapshot(
         project=project,
         audit_run=audit_run,
         profile=profile,
     )
+    _notify("site_snapshot", "done")
+
+    # Stage 2: SERP discovery
+    _notify("discovery", "start")
     sync_project_competitors(project)
     discovery = sync_discovered_competitors(project, profile)
+    _notify("discovery", "done")
+
+    # Stage 3: competitor crawl — respect competitor limit
+    _notify("competitor_crawl", "start")
     competitors = sorted(
         SEOCompetitor.objects.filter(project=project, is_active=True),
         key=_competitor_priority,
@@ -1990,6 +2010,10 @@ def build_seo_context_payload(project, profile, audit_run):
         )
         for competitor in competitors
     ]
+    _notify("competitor_crawl", "done")
+
+    # Stage 4: analysis — benchmarks, patterns, recommendations
+    _notify("analysis", "start")
     competitor_trace = [_build_competitor_trace(snapshot, profile) for snapshot in competitor_snapshots]
     accepted_competitor_snapshots = _accepted_competitor_snapshots(competitor_snapshots, profile)
     site_structure = site_structure_snapshot.output_json
@@ -2011,7 +2035,7 @@ def build_seo_context_payload(project, profile, audit_run):
             target_audience=profile.target_audience,
         )
     )
-    return {
+    _context_payload = {
         "context": {
             "project": project.name,
             "domain": project.normalized_domain,
@@ -2052,6 +2076,8 @@ def build_seo_context_payload(project, profile, audit_run):
             for snapshot in accepted_competitor_snapshots
         ],
     }
+    _notify("analysis", "done")
+    return _context_payload
 
 
 def build_seo_opportunity_payload(project, profile, audit_run, context_snapshot=None):
@@ -2420,18 +2446,33 @@ def get_or_build_seo_opportunity_snapshot(*, project, profile, audit_run, contex
     )
 
 
-def refresh_project_seo_intelligence(project):
+def refresh_project_seo_intelligence(project, *, stage_tracker=None):
+    """
+    Orchestrate a full SEO context + opportunity refresh for *project*.
+
+    *stage_tracker* is an optional ``_StageTracker`` instance (from jobs.py).
+    When provided it records timing for each stage and writes it to the profile
+    metadata so the UI can show live stage state during a running refresh.
+    """
     profile = getattr(project, "seo_profile", None)
     if not profile or not can_generate_seo_snapshot(project):
         return None, None
 
+    _notify = stage_tracker.reporter if stage_tracker else (lambda *a: None)
+
     latest_audit = project.latest_audit_run
+
+    # Stages site_snapshot / discovery / competitor_crawl / analysis are
+    # reported from inside build_seo_context_payload via _stage_reporter.
+    context_payload = build_seo_context_payload(project, profile, latest_audit, _stage_reporter=_notify)
     context_snapshot = SEOContextSnapshot.objects.create(
         project=project,
         profile=profile,
         source_audit_run=latest_audit,
-        output_json=build_seo_context_payload(project, profile, latest_audit),
+        output_json=context_payload,
     )
+
+    _notify("opportunity", "start")
     opportunity_snapshot = SEOOpportunitySnapshot.objects.create(
         project=project,
         profile=profile,
@@ -2444,6 +2485,7 @@ def refresh_project_seo_intelligence(project):
             context_snapshot=context_snapshot,
         ),
     )
+    _notify("opportunity", "done")
     return context_snapshot, opportunity_snapshot
 
 
