@@ -1,0 +1,635 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block extra_head %}
+<style>
+/* ── Hero ──────────────────────────────────────────────────────────── */
+.fa-shell {
+    padding: 4rem 0 5rem;
+    background:
+        radial-gradient(ellipse at 70% 0%, rgba(56,189,248,0.08), transparent 55%),
+        radial-gradient(ellipse at 20% 30%, rgba(99,102,241,0.06), transparent 50%),
+        linear-gradient(180deg, #fafbfc 0%, #ffffff 280px);
+}
+.fa-hero {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 460px);
+    gap: 3.5rem;
+    align-items: start;
+}
+@media (max-width: 920px) {
+    .fa-hero { grid-template-columns: 1fr; gap: 2.25rem; }
+    .fa-shell { padding: 2.5rem 0 3.5rem; }
+}
+
+.fa-eyebrow {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.32rem 0.85rem;
+    background: #e0f2fe;
+    color: #0369a1;
+    border-radius: 999px;
+    font-size: 0.72rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    margin: 0 0 1.25rem;
+}
+.fa-eyebrow .fa-dot {
+    width: 6px; height: 6px;
+    background: #10b981;
+    border-radius: 999px;
+    animation: fa-pulse 2.4s ease-in-out infinite;
+}
+@keyframes fa-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.45; transform: scale(0.85); }
+}
+
+.fa-headline {
+    font-size: clamp(2rem, 4.5vw, 2.9rem);
+    line-height: 1.12;
+    margin: 0 0 1rem;
+    color: #0f172a;
+    font-weight: 800;
+    letter-spacing: -0.018em;
+}
+.fa-headline em {
+    font-style: normal;
+    background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.fa-lede {
+    font-size: 1.08rem;
+    color: #475569;
+    line-height: 1.6;
+    max-width: 540px;
+    margin: 0 0 1.75rem;
+}
+
+.fa-hero-bullets {
+    list-style: none;
+    padding: 0;
+    margin: 0 0 2rem;
+    display: grid; gap: 0.6rem;
+}
+.fa-hero-bullets li {
+    display: flex; align-items: flex-start; gap: 0.65rem;
+    font-size: 0.95rem;
+    color: #334155;
+    line-height: 1.5;
+}
+.fa-hero-bullets i {
+    color: #0284c7;
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+    flex-shrink: 0;
+}
+
+.fa-trust-row {
+    display: flex; align-items: center;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    padding-top: 1.5rem;
+    border-top: 1px solid #e2e8f0;
+    font-size: 0.82rem;
+    color: #64748b;
+}
+.fa-trust-row strong { color: #0f172a; font-weight: 700; }
+.fa-trust-engines {
+    display: flex; gap: 0.85rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+.fa-trust-engines span {
+    display: inline-flex; align-items: center; gap: 0.35rem;
+    font-weight: 600;
+}
+
+/* ── Hero form card ────────────────────────────────────────────────── */
+.fa-form-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 22px;
+    padding: 2rem 1.85rem;
+    box-shadow: 0 30px 80px -30px rgba(2, 132, 199, 0.25);
+    position: relative;
+}
+.fa-form-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 60%; height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(56,189,248,0.6), transparent);
+}
+.fa-form-card h2 {
+    font-size: 1.15rem;
+    margin: 0 0 0.5rem;
+    color: #0f172a;
+    font-weight: 800;
+}
+.fa-form-card p.fa-form-sub {
+    margin: 0 0 1.25rem;
+    color: #475569;
+    font-size: 0.88rem;
+    line-height: 1.5;
+}
+.fa-field {
+    display: grid; gap: 0.35rem;
+    margin-bottom: 0.85rem;
+}
+.fa-field label {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #334155;
+}
+.fa-field input[type=text],
+.fa-field input[type=url],
+.fa-field input[type=email] {
+    width: 100%;
+    padding: 0.78rem 0.95rem;
+    border: 1px solid #cbd5e1;
+    border-radius: 10px;
+    font-size: 0.95rem;
+    color: #0f172a;
+    background: #ffffff;
+    transition: border-color 0.15s ease, box-shadow 0.15s ease;
+}
+.fa-field input:focus {
+    outline: none;
+    border-color: #0284c7;
+    box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.18);
+}
+.fa-field-error {
+    margin-top: 0.2rem;
+    font-size: 0.78rem;
+    color: #b91c1c;
+}
+.fa-submit {
+    width: 100%;
+    margin-top: 0.5rem;
+    padding: 0.95rem 1.4rem !important;
+    font-size: 1rem !important;
+    font-weight: 700 !important;
+}
+.fa-form-fineprint {
+    margin: 0.95rem 0 0;
+    font-size: 0.75rem;
+    color: #64748b;
+    text-align: center;
+    line-height: 1.5;
+}
+.fa-form-fineprint a { color: #0284c7; }
+
+/* ── 3 cards: What you'll get ──────────────────────────────────────── */
+.fa-benefits {
+    max-width: 1100px;
+    margin: 4.5rem auto 0;
+    padding: 0 1.5rem;
+}
+.fa-section-head {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto 2rem;
+}
+.fa-section-eyebrow {
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    color: #0284c7;
+    text-transform: uppercase;
+    margin: 0 0 0.6rem;
+}
+.fa-section-head h2 {
+    font-size: clamp(1.6rem, 3.5vw, 2.1rem);
+    color: #0f172a;
+    margin: 0 0 0.65rem;
+    font-weight: 800;
+    line-height: 1.2;
+    letter-spacing: -0.01em;
+}
+.fa-section-head p {
+    color: #475569;
+    font-size: 1rem;
+    line-height: 1.6;
+    margin: 0;
+}
+.fa-benefits-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+}
+.fa-benefit-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 1.5rem 1.5rem 1.65rem;
+    display: flex; flex-direction: column; gap: 0.5rem;
+    transition: transform 0.15s ease, border-color 0.15s ease, box-shadow 0.18s ease;
+}
+.fa-benefit-card:hover {
+    transform: translateY(-2px);
+    border-color: #7dd3fc;
+    box-shadow: 0 12px 28px -12px rgba(15, 23, 42, 0.1);
+}
+.fa-benefit-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    background: #e0f2fe;
+    color: #0284c7;
+    display: inline-flex; align-items: center; justify-content: center;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+}
+.fa-benefit-card h3 {
+    font-size: 1.02rem; margin: 0;
+    color: #0f172a;
+    font-weight: 800;
+    line-height: 1.3;
+}
+.fa-benefit-card p {
+    font-size: 0.88rem;
+    color: #475569;
+    line-height: 1.55;
+    margin: 0;
+}
+
+/* ── How it works (3 numbered steps) ───────────────────────────────── */
+.fa-how {
+    max-width: 1100px;
+    margin: 4.5rem auto 0;
+    padding: 0 1.5rem;
+}
+.fa-how-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 1rem;
+    position: relative;
+}
+.fa-how-card {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 14px;
+    padding: 1.4rem 1.4rem 1.55rem;
+    display: flex; flex-direction: column; gap: 0.5rem;
+    position: relative;
+}
+.fa-how-num {
+    width: 36px; height: 36px;
+    background: linear-gradient(135deg, #0ea5e9 0%, #6366f1 100%);
+    color: #ffffff;
+    font-size: 0.95rem; font-weight: 800;
+    border-radius: 999px;
+    display: inline-flex; align-items: center; justify-content: center;
+    margin-bottom: 0.4rem;
+    box-shadow: 0 8px 20px -8px rgba(2, 132, 199, 0.5);
+}
+.fa-how-card h3 {
+    font-size: 1rem; margin: 0;
+    color: #0f172a; font-weight: 800;
+    line-height: 1.3;
+}
+.fa-how-card p {
+    font-size: 0.88rem;
+    color: #475569;
+    line-height: 1.55;
+    margin: 0;
+}
+
+/* ── Social proof strip ────────────────────────────────────────────── */
+.fa-proof {
+    max-width: 1100px;
+    margin: 4.5rem auto 0;
+    padding: 0 1.5rem;
+}
+.fa-proof-card {
+    background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+    border-radius: 18px;
+    padding: 2.5rem 2.25rem;
+    color: #f8fafc;
+    text-align: center;
+}
+.fa-proof-quote {
+    font-size: clamp(1.15rem, 2.5vw, 1.45rem);
+    line-height: 1.5;
+    margin: 0 0 1.25rem;
+    max-width: 720px;
+    margin-left: auto; margin-right: auto;
+    font-style: italic;
+    color: #f1f5f9;
+}
+.fa-proof-attrib {
+    font-size: 0.85rem;
+    color: #94a3b8;
+    font-weight: 500;
+}
+.fa-proof-attrib strong { color: #f8fafc; font-weight: 700; }
+
+/* ── FAQ ───────────────────────────────────────────────────────────── */
+.fa-faq {
+    max-width: 760px;
+    margin: 4.5rem auto 0;
+    padding: 0 1.5rem;
+}
+.fa-faq-item {
+    background: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 12px;
+    margin-bottom: 0.65rem;
+    overflow: hidden;
+    transition: border-color 0.15s ease;
+}
+.fa-faq-item[open] { border-color: #7dd3fc; }
+.fa-faq-item summary {
+    list-style: none;
+    cursor: pointer;
+    padding: 1rem 1.2rem;
+    font-weight: 700;
+    color: #0f172a;
+    display: flex; justify-content: space-between; align-items: center;
+    font-size: 0.96rem;
+}
+.fa-faq-item summary::-webkit-details-marker { display: none; }
+.fa-faq-item summary::after {
+    content: "+";
+    font-size: 1.2rem;
+    color: #0284c7;
+    font-weight: 800;
+    transition: transform 0.18s ease;
+}
+.fa-faq-item[open] summary::after { content: "−"; transform: rotate(0); }
+.fa-faq-body {
+    padding: 0 1.2rem 1.1rem;
+    color: #475569;
+    font-size: 0.92rem;
+    line-height: 1.65;
+}
+.fa-faq-body p { margin: 0 0 0.6rem; }
+.fa-faq-body p:last-child { margin: 0; }
+
+/* ── Final CTA ─────────────────────────────────────────────────────── */
+.fa-final {
+    max-width: 760px;
+    margin: 4rem auto 0;
+    padding: 0 1.5rem;
+    text-align: center;
+}
+.fa-final-card {
+    padding: 2.5rem 2rem;
+    border-radius: 18px;
+    background: linear-gradient(135deg, #e0f2fe 0%, #ede9fe 100%);
+    border: 1px solid #bae6fd;
+}
+.fa-final-card h2 {
+    font-size: clamp(1.4rem, 3vw, 1.85rem);
+    color: #0f172a;
+    margin: 0 0 0.5rem;
+    font-weight: 800;
+}
+.fa-final-card p {
+    color: #334155;
+    margin: 0 0 1.4rem;
+    max-width: 520px;
+    margin-left: auto; margin-right: auto;
+    font-size: 0.96rem;
+    line-height: 1.55;
+}
+</style>
+{% endblock %}
+
+{% block content %}
+
+{# ─────────────────────────────────────────────────────────────────────
+   HERO with the form sitting next to it. This is the conversion area
+   — everything above the fold should drive toward the submit button.
+   ───────────────────────────────────────────────────────────────────── #}
+<section class="fa-shell">
+    <div class="fa-hero">
+
+        <div class="fa-hero-copy">
+            <p class="fa-eyebrow"><span class="fa-dot"></span> Free · 90 seconds · No credit card</p>
+            <h1 class="fa-headline">
+                Find out if ChatGPT, Gemini &amp; Perplexity <em>cite your brand</em>.
+            </h1>
+            <p class="fa-lede">
+                Paste your URL. We'll crawl your site, score your AI Visibility across 5 dimensions, and show you exactly what's blocking the citations. Free forever.
+            </p>
+            <ul class="fa-hero-bullets">
+                <li><i class="fa-solid fa-check-circle"></i> AI Visibility Score (0–100) graded against the signals real AI engines use</li>
+                <li><i class="fa-solid fa-check-circle"></i> Per-engine breakdown: ChatGPT, Gemini, Perplexity, Bing Copilot, Google AI Overviews</li>
+                <li><i class="fa-solid fa-check-circle"></i> Top 5 prioritized fixes ranked by expected lift, with example rewrites</li>
+                <li><i class="fa-solid fa-check-circle"></i> Shareable report you can send to clients or your CMO</li>
+            </ul>
+            <div class="fa-trust-row">
+                <span><strong>Trusted by 800+</strong> brands &amp; agencies</span>
+                <div class="fa-trust-engines">
+                    <span><i class="fa-solid fa-comments" style="color: #10a37f;"></i> ChatGPT</span>
+                    <span><i class="fa-solid fa-gem" style="color: #4285f4;"></i> Gemini</span>
+                    <span><i class="fa-solid fa-magnifying-glass" style="color: #a855f7;"></i> Perplexity</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="fa-form-card">
+            <h2>Run your free AI Visibility audit</h2>
+            <p class="fa-form-sub">No credit card. Results in under 60 seconds.</p>
+
+            <form method="post" action="{% url 'tools:free-seo-audit' %}" novalidate>
+                {% csrf_token %}
+                <input type="hidden" name="_source" value="landing">
+                {% if audit_form.non_field_errors %}
+                <div class="fa-field-error" style="margin-bottom: 0.85rem; padding: 0.7rem 0.85rem; background: #fef2f2; border: 1px solid #fecaca; border-radius: 8px;">
+                    {{ audit_form.non_field_errors }}
+                </div>
+                {% endif %}
+
+                <div class="fa-field">
+                    <label for="id_website">Your website</label>
+                    <input
+                        type="text"
+                        id="id_website"
+                        name="website"
+                        placeholder="example.com"
+                        value="{{ audit_form.website.value|default:'' }}"
+                        required
+                        autofocus
+                    >
+                    {% if audit_form.website.errors %}<div class="fa-field-error">{{ audit_form.website.errors|first }}</div>{% endif %}
+                </div>
+
+                <div class="fa-field">
+                    <label for="id_email">Business email</label>
+                    <input
+                        type="email"
+                        id="id_email"
+                        name="email"
+                        placeholder="you@company.com"
+                        value="{{ audit_form.email.value|default:'' }}"
+                        required
+                    >
+                    {% if audit_form.email.errors %}<div class="fa-field-error">{{ audit_form.email.errors|first }}</div>{% endif %}
+                </div>
+
+                {# Honeypot — hidden input bots will fill, real users won't see #}
+                <input type="text" name="company" style="position: absolute; left: -9999px;" tabindex="-1" autocomplete="off">
+
+                <button type="submit" class="button button-primary fa-submit">
+                    <i class="fa-solid fa-bolt"></i>&nbsp; Run my free audit
+                </button>
+
+                <p class="fa-form-fineprint">
+                    By running an audit you agree to our <a href="/privacy/">privacy policy</a>.<br>
+                    We never sell your data. Ever.
+                </p>
+            </form>
+        </div>
+
+    </div>
+</section>
+
+{# ─────────────────────────────────────────────────────────────────────
+   What you'll get — 3-card grid
+   ───────────────────────────────────────────────────────────────────── #}
+<section class="fa-benefits">
+    <div class="fa-section-head">
+        <p class="fa-section-eyebrow">What you'll get</p>
+        <h2>The same report our $99/mo customers get — free</h2>
+        <p>No throttled trial. No locked sections. The full audit, including the per-engine citation matrix and the prioritized fix list. The only difference: paid plans let you re-run it on a schedule.</p>
+    </div>
+
+    <div class="fa-benefits-grid">
+        <article class="fa-benefit-card">
+            <span class="fa-benefit-icon"><i class="fa-solid fa-gauge-high"></i></span>
+            <h3>AI Visibility Score</h3>
+            <p>0–100 composite graded against the signals AI engines actually weight: entity clarity, answer structure, authority, freshness, and fact density.</p>
+        </article>
+        <article class="fa-benefit-card">
+            <span class="fa-benefit-icon"><i class="fa-solid fa-robot"></i></span>
+            <h3>Per-engine breakdown</h3>
+            <p>See whether you're cited on ChatGPT, Gemini, Perplexity, Claude, Bing Copilot, and Google AI Overviews — with a per-engine score and the specific gaps.</p>
+        </article>
+        <article class="fa-benefit-card">
+            <span class="fa-benefit-icon"><i class="fa-solid fa-list-check"></i></span>
+            <h3>Prioritized fix list</h3>
+            <p>Top 5 fixes ranked by expected lift, with example rewrites you can copy straight onto the page. No generic "improve your SEO" filler.</p>
+        </article>
+    </div>
+</section>
+
+{# ─────────────────────────────────────────────────────────────────────
+   How it works — 3 numbered steps
+   ───────────────────────────────────────────────────────────────────── #}
+<section class="fa-how">
+    <div class="fa-section-head">
+        <p class="fa-section-eyebrow">How it works</p>
+        <h2>From URL to actionable report in under 60 seconds</h2>
+    </div>
+
+    <div class="fa-how-grid">
+        <article class="fa-how-card">
+            <span class="fa-how-num">1</span>
+            <h3>Paste your URL</h3>
+            <p>Just your homepage is enough. We crawl 10–15 of your most-trafficked pages automatically.</p>
+        </article>
+        <article class="fa-how-card">
+            <span class="fa-how-num">2</span>
+            <h3>We probe + score</h3>
+            <p>We check schema, FAQ markup, entity signals, content depth, and the on-page patterns AI engines reward.</p>
+        </article>
+        <article class="fa-how-card">
+            <span class="fa-how-num">3</span>
+            <h3>Get the report</h3>
+            <p>Score, per-engine breakdown, and the top 5 fixes — delivered to your inbox and viewable in the workspace.</p>
+        </article>
+    </div>
+</section>
+
+{# ─────────────────────────────────────────────────────────────────────
+   Social proof
+   ───────────────────────────────────────────────────────────────────── #}
+<section class="fa-proof">
+    <div class="fa-proof-card">
+        <p class="fa-proof-quote">
+            "The audit surfaced 3 specific fixes that moved our ChatGPT citations from 0 to 2 of 3 engines in 6 weeks. The 'Lumen Health vs Klara' query went from 0% citation rate to 100%."
+        </p>
+        <p class="fa-proof-attrib">
+            <strong>Morgan L.</strong> · Lumen Health · Healthcare SaaS &nbsp;·&nbsp; <a href="{% url 'case_studies:case-study-detail' 'lumen-health-citations-jump' %}" style="color: #7dd3fc;">Read the case study →</a>
+        </p>
+    </div>
+</section>
+
+{# ─────────────────────────────────────────────────────────────────────
+   FAQ — addresses the most common conversion objections
+   ───────────────────────────────────────────────────────────────────── #}
+<section class="fa-faq">
+    <div class="fa-section-head">
+        <p class="fa-section-eyebrow">FAQ</p>
+        <h2>Quick answers</h2>
+    </div>
+
+    <details class="fa-faq-item" open>
+        <summary>Is it really free?</summary>
+        <div class="fa-faq-body">
+            <p>Yes. The full audit — score, per-engine breakdown, top 5 fixes — is free forever. No card required.</p>
+            <p>We make money when teams who like the audit upgrade to track citations over time. If you just want the audit and nothing else, that's fine too.</p>
+        </div>
+    </details>
+    <details class="fa-faq-item">
+        <summary>How long does it take?</summary>
+        <div class="fa-faq-body">
+            <p>Usually 30–60 seconds depending on how many pages your site has and how fast they respond.</p>
+            <p>The result lands in your inbox and is also viewable in the workspace as soon as it finishes.</p>
+        </div>
+    </details>
+    <details class="fa-faq-item">
+        <summary>What if I'm not sure my site is ready to be audited?</summary>
+        <div class="fa-faq-body">
+            <p>Run it anyway. The audit is designed to surface fixes — if your site is in rough shape, the report will tell you exactly what to fix first. Teams with scores in the 30s and 40s are common starting points.</p>
+        </div>
+    </details>
+    <details class="fa-faq-item">
+        <summary>Do I need to create an account?</summary>
+        <div class="fa-faq-body">
+            <p>No. You can see your report without signing up. If you want to track changes over time, re-run on a schedule, or share dashboards with teammates, that's when an account is useful — but it's optional.</p>
+        </div>
+    </details>
+    <details class="fa-faq-item">
+        <summary>Do you sell or share my data?</summary>
+        <div class="fa-faq-body">
+            <p>Never. We use your URL to run the audit, and your email to send you the report. That's it. We don't sell to data brokers, lead resellers, or ad networks. Read our <a href="/privacy/">full privacy policy</a>.</p>
+        </div>
+    </details>
+    <details class="fa-faq-item">
+        <summary>I'm an agency — can I run it on every client?</summary>
+        <div class="fa-faq-body">
+            <p>Yes. Agencies routinely use the free audit as the first slide of every pitch deck — it shows the client where they're invisible in AI search. <a href="{% url 'core:for-agencies' %}">See our agency page</a> for the workflow.</p>
+        </div>
+    </details>
+    <details class="fa-faq-item">
+        <summary>What's the difference between this and the paid plans?</summary>
+        <div class="fa-faq-body">
+            <p>The free audit gives you a point-in-time snapshot. Paid plans give you:</p>
+            <p>• Continuous tracking — re-runs on a schedule so you see whether your fixes are working<br>• Prompt Tracker — monitor specific queries across all 3 engines<br>• Share-of-voice — benchmark against competitors<br>• Weekly email digest, team access, white-label reports</p>
+            <p>See the full comparison on the <a href="{% url 'core:packages' %}">pricing page</a>.</p>
+        </div>
+    </details>
+</section>
+
+{# ─────────────────────────────────────────────────────────────────────
+   Final CTA — for anyone who scrolled past the form
+   ───────────────────────────────────────────────────────────────────── #}
+<section class="fa-final">
+    <div class="fa-final-card">
+        <h2>Ready to see your AI Visibility Score?</h2>
+        <p>One URL, one email, 60 seconds. No credit card, no commitment. See exactly where you stand on ChatGPT, Gemini, and Perplexity — and what to fix first.</p>
+        <a href="#top" class="button button-primary" onclick="document.querySelector('#id_website')?.focus();return false;">
+            Run my free audit&nbsp; <i class="fa-solid fa-arrow-up"></i>
+        </a>
+    </div>
+</section>
+
+{% endblock %}

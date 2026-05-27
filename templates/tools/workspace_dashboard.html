@@ -3,950 +3,525 @@
 {% block content %}
 {% include "includes/workspace_nav.html" %}
 
-<div class="container-fluid workspace-dashboard-shell workspace-shell-header-wrap">
-    <div class="ws-hub-header workspace-shell-header">
-        <div class="ws-hub-header-left">
-            <div class="ws-hub-eyebrow"><i class="fas fa-th-large"></i> Workspace</div>
-            <h1 class="ws-hub-title">{% if project.pk %}{{ project.name }}{% else %}Workspace Overview{% endif %}</h1>
-            <p class="ws-hub-description">
-                Keep one working flow: run the audit, act on the clearest fixes, then move into SEO and AEO from the same project base.
-            </p>
-        </div>
-        <div class="ws-hub-header-right workspace-header-actions">
+<div class="ws-main-content">
+
+{# ─── Mission Control header ──────────────────────────────────────────── #}
+<div class="mc-header">
+    <p class="mc-meta">
+        {% if project.pk %}
+        <strong>{{ active_workspace_project.normalized_domain|default:project.name }}</strong>
+        {% if latest_audit %}&nbsp;&middot;&nbsp;last audit {{ latest_audit.created_at|timesince }} ago{% endif %}
+        {% if current_subscription %}&nbsp;&middot;&nbsp;{{ current_subscription.plan_name|default:"Free" }}{% endif %}
+        {% else %}
+        <strong>No workspace yet</strong>
+        {% endif %}
+    </p>
+    <div class="mc-title-row">
+        <h1 class="mc-title">Mission Control</h1>
+        <div class="mc-actions">
             {% if project.pk and latest_audit %}
-            <div class="ws-status-tag">
-                <span class="ws-status-dot dot-green"></span>
-                Score {{ latest_audit.overall_score }} &middot; {{ latest_audit.created_at|date:"M j, Y" }}
-            </div>
-            <div class="workspace-header-button-row">
-                <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin: 0;">
-                    {% csrf_token %}
-                    <button type="submit" class="button button-primary workspace-audit-button"><i class="fas fa-redo"></i><span>Run Audit</span></button>
-                </form>
-                <a class="button button-secondary" href="{% url 'tools:audit-result' latest_audit.pk %}">Open Report</a>
-            </div>
-            {% elif project.pk %}
-            <div class="ws-status-tag">
-                <span class="ws-status-dot dot-amber"></span>
-                Audit required
-            </div>
-            <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin: 0;">
+            <a class="button button-secondary mc-btn" href="{% url 'tools:audit-result' latest_audit.pk %}">
+                <i class="fas fa-file-chart-line"></i> View report
+            </a>
+            <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin:0;">
                 {% csrf_token %}
-                <button type="submit" class="button button-primary workspace-audit-button"><i class="fas fa-play"></i><span>Run First Audit</span></button>
+                <button type="submit" class="button button-primary mc-btn">
+                    <i class="fas fa-redo"></i> Re-run
+                </button>
+            </form>
+            {% elif project.pk %}
+            <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin:0;">
+                {% csrf_token %}
+                <button type="submit" class="button button-primary mc-btn">
+                    <i class="fas fa-play"></i> Run First Audit
+                </button>
             </form>
             {% else %}
-            <div class="ws-status-tag">
-                <span class="ws-status-dot dot-muted"></span>
-                No workspace yet
-            </div>
-            <a class="button button-primary" href="#new-project">Create Workspace</a>
+            <a class="button button-primary mc-btn" href="#new-project">Create Workspace</a>
             {% endif %}
-
             {% if not audit_tier_enforcement %}
-            <div class="workspace-dev-pill">Developer mode: plan limits are disabled for testing.</div>
+            <span class="workspace-dev-pill" style="font-size:0.7rem;">Dev mode</span>
             {% endif %}
         </div>
     </div>
 </div>
 
-{% if project.pk and latest_audit %}
-<section class="ws-kpi-section">
-    <div class="container-fluid">
-        <div class="ws-kpi-strip">
+{# ─── 4-tile KPI strip ────────────────────────────────────────────────── #}
+<div class="mc-kpi-strip">
 
-            <article class="ws-kpi-tile ws-kpi-tile--primary">
-                <p class="ws-kpi-label">AI Visibility Score</p>
-                <p class="ws-kpi-value">
-                    {% if latest_aeo_audit and latest_aeo_audit.overall_score %}{{ latest_aeo_audit.overall_score }}<span class="ws-kpi-unit">/100</span>{% else %}&mdash;{% endif %}
-                </p>
-                <p class="ws-kpi-meta">
-                    {% if latest_aeo_audit %}{{ latest_aeo_audit.created_at|date:"M j, Y" }}{% else %}Not run yet &mdash; <a href="{% url 'aeo:workspace-aeo' %}">run AEO</a>{% endif %}
-                </p>
-            </article>
-
-            <article class="ws-kpi-tile ws-kpi-tile--primary">
-                <p class="ws-kpi-label">AI Citations Found</p>
-                <p class="ws-kpi-value">{{ aeo_citation_count }}</p>
-                <p class="ws-kpi-meta">
-                    {% if latest_aeo_audit %}
-                        {% with ec=latest_aeo_audit.engines_used|length %}{{ ec }} engine{% if ec != 1 %}s{% endif %} checked{% endwith %}
-                    {% else %}Across ChatGPT, Gemini, Perplexity{% endif %}
-                </p>
-            </article>
-
-            <article class="ws-kpi-tile">
-                <p class="ws-kpi-label">Audit Health</p>
-                <p class="ws-kpi-value">
-                    {{ latest_audit.overall_score }}<span class="ws-kpi-unit">/100</span>
-                    {% if audit_score_delta is not None %}
-                        {% if audit_score_delta > 0 %}<span class="ws-kpi-delta ws-kpi-delta--up">+{{ audit_score_delta }}</span>
-                        {% elif audit_score_delta < 0 %}<span class="ws-kpi-delta ws-kpi-delta--down">{{ audit_score_delta }}</span>
-                        {% else %}<span class="ws-kpi-delta ws-kpi-delta--flat">0</span>{% endif %}
-                    {% endif %}
-                </p>
-                <p class="ws-kpi-meta">{{ latest_audit.created_at|date:"M j, Y" }}</p>
-            </article>
-
-            <article class="ws-kpi-tile">
-                <p class="ws-kpi-label">Pages Crawled</p>
-                <p class="ws-kpi-value">{{ latest_audit.pages_crawled }}</p>
-                <p class="ws-kpi-meta">{{ latest_audit.status|title }} &mdash; <a href="{% url 'tools:audit-result' latest_audit.pk %}">open report</a></p>
-            </article>
-
+    <article class="mc-kpi-tile mc-kpi-tile--primary">
+        <p class="mc-kpi-label">AVS</p>
+        <p class="mc-kpi-val">
+            {% if latest_aeo_audit and latest_aeo_audit.overall_score %}
+                {{ latest_aeo_audit.overall_score }}<span class="kpi-unit">/100</span>
+            {% else %}&mdash;{% endif %}
+        </p>
+        <p class="mc-kpi-delta mc-kpi-delta--flat">
+            {% if latest_aeo_audit %}AI Visibility Score{% else %}Not run yet{% endif %}
+        </p>
+        <div class="mc-kpi-sparkline" aria-hidden="true">
+            <span style="height:40%"></span><span style="height:55%"></span><span style="height:45%"></span>
+            <span style="height:60%"></span><span style="height:50%"></span><span style="height:70%"></span>
+            <span class="active" style="height:85%"></span>
         </div>
-    </div>
-</section>
-{% endif %}
+    </article>
 
-<section class="dashboard-stack workspace-dashboard-shell workspace-shell-main">
-    <div class="container-fluid page-stack workspace-page-stack">
-        <div class="workspace-top-layout">
-            <div class="workspace-primary-stack">
-                {% if workspace_project_summaries %}
-                <article id="project-portfolio" class="system-card workspace-projects-card">
-                    <div class="section-heading workspace-section-head">
-                        <p class="eyebrow">Workspaces</p>
-                        <h2>Projects</h2>
-                        <p class="section-text">
-                            Keep each website or brand separate, then reopen the one you need without losing its audit trail.
-                        </p>
-                    </div>
-                    <div class="workspace-project-list">
-                        {% for item in workspace_project_summaries %}
-                        <article class="workspace-project-row workspace-project-health-{{ item.health_status }}{% if project.pk == item.pk %} is-active{% endif %}">
-                            <div class="workspace-project-main">
-                                <div class="workspace-project-title-row">
-                                    <span class="workspace-health-dot health-{{ item.health_status }}" title="{{ item.health_label }}" aria-label="{{ item.health_label }}"></span>
-                                    <strong>{{ item.name }}</strong>
-                                    {% if project.pk == item.pk %}
-                                    <span class="score-pill score-high">Current workspace</span>
-                                    {% endif %}
-                                    {% if item.at_risk_category_label %}
-                                    <span class="score-pill score-low workspace-project-risk-pill">{{ item.at_risk_category_label }} at risk</span>
-                                    {% endif %}
-                                </div>
-                                <div class="workspace-project-subtitle">{{ item.project_type_label }}</div>
-                                <div class="workspace-project-domain">{{ item.normalized_domain }}</div>
-                                {% if item.business_type or item.location %}
-                                <div class="workspace-project-meta-line">{{ item.business_type_label|default:"Unclassified" }}{% if item.location %} &middot; {{ item.location }}{% endif %}</div>
-                                {% endif %}
-                                {% if item.primary_service %}
-                                <div class="workspace-project-meta-line">{{ item.primary_service }}</div>
-                                {% endif %}
-                                <div class="workspace-project-meta-line workspace-project-audit-age">
-                                    {% if item.latest_audit_completed_at %}
-                                    Last audit {{ item.latest_audit_completed_at|timesince }} ago
-                                    {% if item.audit_is_stale %}
-                                    <span class="workspace-project-stale-flag">Stale &mdash; rerun recommended</span>
-                                    {% endif %}
-                                    {% else %}
-                                    No audit yet
-                                    {% endif %}
-                                </div>
-                            </div>
-                            <div class="workspace-project-stats">
-                                <div>
-                                    <span>Score</span>
-                                    <strong>{% if item.latest_audit_overall_score is not None %}{{ item.latest_audit_overall_score }}{% else %}&mdash;{% endif %}</strong>
-                                    {% if item.score_delta is not None %}
-                                        {% if item.score_delta > 0 %}
-                                        <span class="workspace-delta workspace-delta-up">+{{ item.score_delta }}</span>
-                                        {% elif item.score_delta < 0 %}
-                                        <span class="workspace-delta workspace-delta-down">{{ item.score_delta }}</span>
-                                        {% else %}
-                                        <span class="workspace-delta workspace-delta-flat">0</span>
-                                        {% endif %}
-                                    {% endif %}
-                                </div>
-                                <div><span>SEO</span><strong>{{ item.seo_snapshot_count }}</strong></div>
-                                <div><span>AEO</span><strong>{{ item.aeo_audit_count }}</strong></div>
-                                <div><span>Drafts</span><strong>{{ item.generated_content_count }}</strong></div>
-                            </div>
-                            <div class="workspace-project-actions">
-                                {% if item.focus_tags %}
-                                <div class="seo-inline-tags workspace-project-tags">
-                                    {% for tag in item.focus_tags %}
-                                    <span class="seo-inline-tag">{{ tag }}</span>
-                                    {% endfor %}
-                                </div>
-                                {% endif %}
-                                {% if project.pk != item.pk %}
-                                <form method="post" action="{% url 'tools:workspace-project-select' %}">
-                                    {% csrf_token %}
-                                    <input type="hidden" name="project_id" value="{{ item.pk }}">
-                                    <input type="hidden" name="next" value="{% url 'tools:workspace-dashboard' %}">
-                                    <button type="submit" class="button button-secondary">Open workspace</button>
-                                </form>
-                                {% endif %}
-                            </div>
-                        </article>
-                        {% endfor %}
-                    </div>
-                </article>
-                {% endif %}
+    <article class="mc-kpi-tile">
+        <p class="mc-kpi-label">Citations (7d)</p>
+        <p class="mc-kpi-val">{{ aeo_citation_count }}</p>
+        <p class="mc-kpi-delta {% if aeo_citation_count > 0 %}mc-kpi-delta--up{% else %}mc-kpi-delta--flat{% endif %}">
+            {% if latest_aeo_audit %}
+                {% with ec=latest_aeo_audit.engines_used|length %}
+                    {{ ec }} engine{% if ec != 1 %}s{% endif %} checked
+                {% endwith %}
+            {% else %}Across all engines{% endif %}
+        </p>
+        <div class="mc-kpi-sparkline" aria-hidden="true">
+            <span style="height:20%"></span><span style="height:35%"></span><span style="height:30%"></span>
+            <span style="height:50%"></span><span style="height:45%"></span><span style="height:60%"></span>
+            <span class="active" style="height:75%"></span>
+        </div>
+    </article>
 
-                <details id="start-audit" class="system-card workspace-create-panel workspace-action-panel"{% if audit_start_form.errors or not project.pk %} open{% endif %}>
-                <summary class="workspace-create-summary">
-                    <div>
-                        <p class="eyebrow">Start with audit</p>
-                        <h2>Audit and attach a workspace</h2>
-                    </div>
-                    <span class="button button-primary">Start</span>
-                </summary>
-                <div class="workspace-create-body">
-                    <div class="workspace-panel-intro">
-                        Use this when the user begins from audit, SEO, or AEO. The audit becomes the base and the workspace stays attached to the same project.
-                    </div>
-                    <form method="post" action="{% url 'tools:workspace-audit-start' %}" class="workspace-form-grid">
-                        {% csrf_token %}
-                        {% if audit_start_form.non_field_errors %}
-                        <div class="credit-notice">{{ audit_start_form.non_field_errors|join:" " }}</div>
-                        {% endif %}
-                        <label class="workspace-form-field">
-                            <span>Company</span>
-                            {{ audit_start_form.company_name }}
-                            {% if audit_start_form.company_name.errors %}<span class="workspace-form-error">{{ audit_start_form.company_name.errors|join:", " }}</span>{% endif %}
-                        </label>
-                        {{ audit_start_form.email }}
-                        <label class="workspace-form-field">
-                            <span>Website</span>
-                            {{ audit_start_form.website }}
-                            {% if audit_start_form.website.errors %}<span class="workspace-form-error">{{ audit_start_form.website.errors|join:", " }}</span>{% endif %}
-                        </label>
-                        <label class="workspace-form-field">
-                            <span>Business type</span>
-                            {{ audit_start_form.business_type }}
-                            {% if audit_start_form.business_type.errors %}<span class="workspace-form-error">{{ audit_start_form.business_type.errors|join:", " }}</span>{% endif %}
-                        </label>
-                        <label class="workspace-form-field">
-                            <span>Specific niche</span>
-                            {{ audit_start_form.business_subtype }}
-                            {% if audit_start_form.business_subtype.errors %}<span class="workspace-form-error">{{ audit_start_form.business_subtype.errors|join:", " }}</span>{% endif %}
-                        </label>
-                        <label class="workspace-form-field">
-                            <span>Target audience</span>
-                            {{ audit_start_form.target_audience }}
-                            {% if audit_start_form.target_audience.errors %}<span class="workspace-form-error">{{ audit_start_form.target_audience.errors|join:", " }}</span>{% endif %}
-                        </label>
-                        {{ audit_start_form.location }}
-                        <div class="workspace-form-field"
-                             x-data="{
-                                isOpen: false,
-                                searchQuery: '',
-                                results: [],
-                                init() {
-                                    const hiddenInput = this.$root.previousElementSibling;
-                                    if (hiddenInput && hiddenInput.value) {
-                                        this.searchQuery = hiddenInput.value;
-                                        if (hiddenInput.value === 'Worldwide') this.searchQuery = 'Worldwide';
-                                    }
+    <article class="mc-kpi-tile">
+        <p class="mc-kpi-label">Audit Health</p>
+        <p class="mc-kpi-val">
+            {% if latest_audit %}{{ latest_audit.overall_score }}<span class="kpi-unit">/100</span>
+            {% else %}&mdash;{% endif %}
+        </p>
+        <p class="mc-kpi-delta
+            {% if audit_score_delta is not None and audit_score_delta > 0 %}mc-kpi-delta--up
+            {% elif audit_score_delta is not None and audit_score_delta < 0 %}mc-kpi-delta--down
+            {% else %}mc-kpi-delta--flat{% endif %}">
+            {% if audit_score_delta is not None and audit_score_delta > 0 %}
+                <i class="fas fa-arrow-up" style="font-size:0.6rem;"></i> +{{ audit_score_delta }} vs prev
+            {% elif audit_score_delta is not None and audit_score_delta < 0 %}
+                <i class="fas fa-arrow-down" style="font-size:0.6rem;"></i> {{ audit_score_delta }} vs prev
+            {% elif latest_audit %}
+                {{ latest_audit.created_at|date:"M j, Y" }}
+            {% else %}No audit yet{% endif %}
+        </p>
+        <div class="mc-kpi-sparkline" aria-hidden="true">
+            <span style="height:50%"></span><span style="height:45%"></span><span style="height:55%"></span>
+            <span style="height:60%"></span><span style="height:65%"></span><span style="height:70%"></span>
+            <span class="active" style="height:80%"></span>
+        </div>
+    </article>
 
-                                    this.$watch('searchQuery', value => {
-                                        if (value.length < 2) {
-                                            this.results = [];
-                                            return;
-                                        }
-                                        if (value.toLowerCase().includes('world')) {
-                                            this.results = [{ id: 'ww', name: 'Worldwide', canonical_name: 'Worldwide', country_code: 'GLOBAL', target_type: 'Worldwide' }];
-                                            this.isOpen = true;
-                                            return;
-                                        }
-                                    });
-                                },
-                                fetchLocations() {
-                                    if (this.searchQuery.length < 2) return;
-                                    if (this.searchQuery.toLowerCase().includes('world')) return;
+    <article class="mc-kpi-tile">
+        <p class="mc-kpi-label">Pages Crawled</p>
+        <p class="mc-kpi-val">{% if latest_audit %}{{ latest_audit.pages_crawled }}{% else %}&mdash;{% endif %}</p>
+        <p class="mc-kpi-delta mc-kpi-delta--flat">
+            {% if latest_audit %}{{ latest_audit.status|title }}{% else %}Pending first run{% endif %}
+        </p>
+        <div class="mc-kpi-sparkline" aria-hidden="true">
+            <span style="height:60%"></span><span style="height:55%"></span><span style="height:65%"></span>
+            <span style="height:50%"></span><span style="height:70%"></span><span style="height:65%"></span>
+            <span class="active" style="height:80%"></span>
+        </div>
+    </article>
 
-                                    fetch('https://photon.komoot.io/api/?q=' + encodeURIComponent(this.searchQuery) + '&limit=20')
-                                        .then(res => res.json())
-                                        .then(data => {
-                                            if (data && data.features) {
-                                                const validTypes = new Set(['city', 'town', 'village', 'state', 'county', 'country', 'administrative', 'region', 'municipality', 'borough', 'hamlet', 'district', 'suburb']);
-                                                const geographicalFeatures = data.features.filter(f => validTypes.has(f.properties.osm_value) || validTypes.has(f.properties.type) || validTypes.has(f.properties.osm_key));
+</div>
 
-                                                this.results = geographicalFeatures.slice(0, 10).map(f => {
-                                                    const p = f.properties;
-                                                    const stateObj = p.state ? p.state + ', ' : '';
-                                                    const countryObj = p.country || '';
-                                                    return {
-                                                        id: p.osm_id || Math.random(),
-                                                        name: p.name,
-                                                        canonical_name: p.name + ', ' + stateObj + countryObj,
-                                                        country_code: p.countrycode || '',
-                                                        target_type: (p.osm_value || p.type || 'Location').charAt(0).toUpperCase() + (p.osm_value || p.type || 'location').slice(1)
-                                                    };
-                                                });
-                                            } else {
-                                                this.results = [];
-                                            }
-                                            this.isOpen = true;
-                                        })
-                                        .catch(() => {
-                                            this.results = [];
-                                        });
-                                },
-                                selectLocation(res) {
-                                    const hiddenInput = this.$root.previousElementSibling;
-                                    if (hiddenInput) {
-                                        hiddenInput.value = res.canonical_name;
-                                    }
-                                    this.searchQuery = res.canonical_name;
-                                    this.isOpen = false;
-                                }
-                             }">
-                            <span>Search location</span>
-                            <div style="position: relative;">
-                                <input
-                                    type="text"
-                                    x-model="searchQuery"
-                                    @input.debounce.300ms="fetchLocations()"
-                                    @focus="isOpen = true; if(searchQuery.length >= 2 && results.length === 0) fetchLocations()"
-                                    @click.away="isOpen = false"
-                                    class="form-control"
-                                    placeholder="Type a city, region, or 'Worldwide'..."
-                                    name="location_display"
-                                    autocomplete="off"
-                                    style="width: 100%;">
+{# ─── Main scrollable body ─────────────────────────────────────────────── #}
+<div class="mc-body">
 
-                                <div x-show="isOpen && results.length > 0"
-                                     style="display: none; position: absolute; bottom: 100%; left: 0; right: 0; z-index: 50; background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: var(--radius-sm); margin-bottom: 0.25rem; max-height: 250px; overflow-y: auto; box-shadow: 0 -4px 12px rgba(0,0,0,0.5);">
-                                    <template x-for="res in results" :key="res.id">
-                                        <div @click="selectLocation(res)"
-                                             style="padding: 0.75rem 1rem; cursor: pointer; border-bottom: 1px solid var(--border-glass); font-size: 0.9rem;"
-                                             onmouseover="this.style.background='rgba(56, 189, 248, 0.1)'"
-                                             onmouseout="this.style.background='transparent'">
-                                            <strong x-text="res.name" style="display: block; color: var(--text-primary);"></strong>
-                                            <span x-text="res.target_type + ' - ' + res.country_code" style="color: var(--text-muted); font-size: 0.8rem;"></span>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
-                        </div>
-                        <label class="workspace-form-field">
-                            <span>Target goal</span>
-                            {{ audit_start_form.target_goal }}
-                            {% if audit_start_form.target_goal.errors %}<span class="workspace-form-error">{{ audit_start_form.target_goal.errors|join:", " }}</span>{% endif %}
-                        </label>
-                        <label class="workspace-form-field">
-                            <span>Primary offer</span>
-                            {{ audit_start_form.primary_service }}
-                            {% if audit_start_form.primary_service.errors %}<span class="workspace-form-error">{{ audit_start_form.primary_service.errors|join:", " }}</span>{% endif %}
-                        </label>
-                        <label class="workspace-form-field">
-                            <span>Audit focus</span>
-                            {{ audit_start_form.notes }}
-                            {% if audit_start_form.notes.errors %}<span class="workspace-form-error">{{ audit_start_form.notes.errors|join:", " }}</span>{% endif %}
-                        </label>
-                        <button type="submit" class="button button-primary">Start audit</button>
-                    </form>
+    {# ── AEO Engine breakdown ── #}
+    {% if latest_aeo_audit %}
+    <div class="mc-card">
+        <div class="mc-section-head">
+            <h2 class="mc-section-title">AI Visibility &mdash; engine breakdown</h2>
+            <span class="mc-section-meta">
+                Last sync {{ latest_aeo_audit.created_at|timesince }} ago
+                {% with pc=tracked_prompt_count %}{% if pc %}&nbsp;&middot;&nbsp;{{ pc }} prompt{% if pc != 1 %}s{% endif %}{% endif %}{% endwith %}
+            </span>
+        </div>
+        <div class="mc-engine-panel">
+            {# Donut SVG — circumference of r=40 circle ≈ 251 px #}
+            <div class="mc-engine-donut-wrap">
+                {% with score=latest_aeo_audit.overall_score|default:0 %}
+                <svg width="100" height="100" viewBox="0 0 100 100" style="transform:rotate(-90deg)">
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#e2e8f0" stroke-width="10"/>
+                    <circle cx="50" cy="50" r="40" fill="none" stroke="#0284c7" stroke-width="10"
+                        stroke-dasharray="{% widthratio score 100 251 %} 251"
+                        stroke-linecap="round"/>
+                </svg>
+                <div class="mc-engine-donut-inner">
+                    <span class="mc-engine-donut-score">{{ score }}</span>
+                    <span class="mc-engine-donut-label">AI VISIBILITY</span>
                 </div>
-                </details>
-
-                {% if project.pk %}
-                <article id="command-center" class="system-card workspace-command-card">
-                    <div class="section-heading workspace-section-head">
-                        <p class="eyebrow text-accent">Command center</p>
-                        <h2>{{ project.name }} &mdash; what to do next</h2>
-                        <p class="section-text">
-                            Start with the next highest-value move. The workspace should always tell you what to do now, what can wait, and what depends on the audit base.
-                        </p>
-                    </div>
-
-                    <div class="workspace-priority-list">
-                        {% if not latest_audit %}
-                        <div class="command-priority-item">
-                            <div class="command-priority-num">1</div>
-                            <div class="command-priority-text"><strong>Run your first audit</strong> so the workspace has a baseline score, issue queue, and next-step path.</div>
-                        </div>
-                        {% else %}
-                            {% if not latest_seo_snapshot %}
-                            <div class="command-priority-item">
-                                <div class="command-priority-num">1</div>
-                                <div class="command-priority-text"><strong>Run SEO intelligence</strong> to map competitors and search gaps from the current audit base. <a href="{% url 'seo:workspace-seo' %}">Open SEO</a></div>
-                            </div>
-                            {% endif %}
-                            {% if not latest_aeo_audit %}
-                            <div class="command-priority-item">
-                                <div class="command-priority-num">{% if not latest_seo_snapshot %}2{% else %}1{% endif %}</div>
-                                <div class="command-priority-text"><strong>Run AEO analysis</strong> to check answer readiness and AI visibility against the same project. <a href="{% url 'aeo:workspace-aeo' %}">Open AEO</a></div>
-                            </div>
-                            {% endif %}
-                            {% if fix_queue_recommendations %}
-                            <div class="command-priority-item">
-                                <div class="command-priority-num">{% if not latest_seo_snapshot and not latest_aeo_audit %}3{% elif not latest_seo_snapshot or not latest_aeo_audit %}2{% else %}1{% endif %}</div>
-                                <div class="command-priority-text"><strong>{{ fix_queue_recommendations.0.title }}</strong> &mdash; {{ fix_queue_recommendations.0.recommended_fix|truncatechars:130 }}</div>
-                            </div>
-                            {% endif %}
-                        {% endif %}
-                    </div>
-
-                    <div class="workspace-module-list">
-                        {% for module in workspace_modules %}
-                        <article class="workspace-module-row workspace-module-row-{{ module.tone }}">
-                            <div class="workspace-module-row-icon" aria-hidden="true">
-                                {% if module.tone == "audit" %}<i class="fa-solid fa-magnifying-glass"></i>
-                                {% elif module.tone == "seo" %}<i class="fa-solid fa-chart-line"></i>
-                                {% elif module.tone == "aeo" %}<i class="fa-solid fa-robot"></i>
-                                {% elif module.tone == "content" %}<i class="fa-solid fa-pen-nib"></i>
-                                {% else %}<i class="fa-solid fa-circle-dot"></i>{% endif %}
-                            </div>
-                            <div class="workspace-module-row-main">
-                                <div class="workspace-module-row-head">
-                                    <div>
-                                        <p class="eyebrow">{{ module.label }}</p>
-                                        <h3>{{ module.value }}</h3>
-                                    </div>
-                                    {% if module.meta %}
-                                    <span class="score-pill score-medium">{{ module.meta }}</span>
-                                    {% endif %}
-                                </div>
-                                <p>{{ module.summary }}</p>
-                            </div>
-                            <div class="workspace-module-row-actions">
-                                <a class="button button-secondary" href="{{ module.href }}">{{ module.cta_label }}</a>
-                            </div>
-                        </article>
-                        {% endfor %}
-                    </div>
-                </article>
-                {% endif %}
+                {% endwith %}
             </div>
 
-            <div class="workspace-secondary-stack">
-                {% if project.pk %}
-                <article class="system-card" style="padding: 1.5rem 1.75rem; border: 1px solid rgba(56,189,248,0.18); background: linear-gradient(180deg, rgba(56,189,248,0.03), transparent);">
-                    <div class="section-heading workspace-section-head" style="margin-bottom: 0.85rem;">
-                        <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                            <div>
-                                <p class="eyebrow text-accent" style="margin: 0;">Getting started</p>
-                                <h2 style="font-size: 1.2rem; margin: 0.2rem 0 0;">Activation checklist</h2>
-                            </div>
-                            <span style="font-size: 0.85rem; font-weight: 700; color: var(--brand-primary);">
-                                {{ activation_done_count }}/{{ activation_total_count }}
-                            </span>
+            {# Engine bars #}
+            <div class="mc-engine-bars">
+                {% if engine_breakdown %}
+                    {% for item in engine_breakdown %}
+                    <div class="mc-engine-row">
+                        <span class="mc-engine-name">{{ item.label }}</span>
+                        <div class="mc-engine-bar-track">
+                            <div class="mc-engine-bar-fill" style="width:{{ item.pct }}%"></div>
                         </div>
-                    </div>
-
-                    {# Progress bar — value computed in the view #}
-                    <div style="height: 6px; background: rgba(255,255,255,0.05); border-radius: 999px; overflow: hidden; margin-bottom: 1.1rem;">
-                        <div style="height: 100%; width: {{ activation_progress_pct }}%; background: linear-gradient(90deg, var(--brand-primary), #10b981); border-radius: 999px; transition: width 0.4s;"></div>
-                    </div>
-
-                    <ul style="list-style: none; padding: 0; margin: 0; display: grid; gap: 0.7rem;">
-                        <li style="display: flex; gap: 0.6rem; align-items: center; font-size: 0.88rem;">
-                            {% if latest_audit %}
-                            <i class="fa-solid fa-circle-check" style="color: var(--success); flex-shrink: 0;"></i>
-                            <span style="color: var(--text-muted); text-decoration: line-through;">Run first audit</span>
-                            {% else %}
-                            <i class="fa-regular fa-circle" style="color: var(--text-muted); flex-shrink: 0;"></i>
-                            <a href="#start-audit" style="color: var(--text-primary); text-decoration: none;">Run first audit&nbsp;<i class="fa-solid fa-arrow-right" style="font-size: 0.7rem; opacity: 0.5;"></i></a>
-                            {% endif %}
-                        </li>
-                        <li style="display: flex; gap: 0.6rem; align-items: center; font-size: 0.88rem;">
-                            {% if latest_aeo_audit %}
-                            <i class="fa-solid fa-circle-check" style="color: var(--success); flex-shrink: 0;"></i>
-                            <span style="color: var(--text-muted); text-decoration: line-through;">Run AI Visibility audit</span>
-                            {% else %}
-                            <i class="fa-regular fa-circle" style="color: var(--text-muted); flex-shrink: 0;"></i>
-                            <a href="{% url 'aeo:workspace-aeo' %}" style="color: var(--text-primary); text-decoration: none;">Run AI Visibility audit&nbsp;<i class="fa-solid fa-arrow-right" style="font-size: 0.7rem; opacity: 0.5;"></i></a>
-                            {% endif %}
-                        </li>
-                        <li style="display: flex; gap: 0.6rem; align-items: center; font-size: 0.88rem;">
-                            {% if tracked_prompt_count %}
-                            <i class="fa-solid fa-circle-check" style="color: var(--success); flex-shrink: 0;"></i>
-                            <span style="color: var(--text-muted); text-decoration: line-through;">Track AI prompts ({{ tracked_prompt_count }})</span>
-                            {% else %}
-                            <i class="fa-regular fa-circle" style="color: var(--text-muted); flex-shrink: 0;"></i>
-                            <a href="{% url 'aeo:workspace-prompts' %}" style="color: var(--text-primary); text-decoration: none;">Track AI prompts&nbsp;<i class="fa-solid fa-arrow-right" style="font-size: 0.7rem; opacity: 0.5;"></i></a>
-                            {% endif %}
-                        </li>
-                        <li style="display: flex; gap: 0.6rem; align-items: center; font-size: 0.88rem;">
-                            {% if latest_seo_snapshot %}
-                            <i class="fa-solid fa-circle-check" style="color: var(--success); flex-shrink: 0;"></i>
-                            <span style="color: var(--text-muted); text-decoration: line-through;">Run SEO analysis</span>
-                            {% else %}
-                            <i class="fa-regular fa-circle" style="color: var(--text-muted); flex-shrink: 0;"></i>
-                            <a href="{% url 'seo:workspace-seo' %}" style="color: var(--text-primary); text-decoration: none;">Run SEO analysis&nbsp;<i class="fa-solid fa-arrow-right" style="font-size: 0.7rem; opacity: 0.5;"></i></a>
-                            {% endif %}
-                        </li>
-                        <li style="display: flex; gap: 0.6rem; align-items: center; font-size: 0.88rem;">
-                            {% if audit_schedule %}
-                            <i class="fa-solid fa-circle-check" style="color: var(--success); flex-shrink: 0;"></i>
-                            <span style="color: var(--text-muted); text-decoration: line-through;">Schedule a rerun</span>
-                            {% else %}
-                            <i class="fa-regular fa-circle" style="color: var(--text-muted); flex-shrink: 0;"></i>
-                            <span style="color: var(--text-primary);">Schedule a rerun</span>
-                            {% endif %}
-                        </li>
-                    </ul>
-                    {% if activation_complete %}
-                    <div style="margin-top: 1.25rem; padding: 0.8rem 1rem; background: rgba(16,185,129,0.08); border-radius: 10px; border: 1px solid rgba(16,185,129,0.22); font-size: 0.85rem; color: #10b981; display: flex; align-items: center; gap: 0.5rem;">
-                        <i class="fa-solid fa-circle-check"></i> Fully activated — you're tracking AI visibility end-to-end.
-                    </div>
-                    {% endif %}
-                </article>
-
-                <article class="system-card workspace-summary-card">
-                    <div class="section-heading workspace-section-head">
-                        <p class="eyebrow">Current workspace</p>
-                        <h2>{{ project.name }}</h2>
-                    </div>
-                    <div class="workspace-current-domain">
-                        {% if latest_audit %}{{ latest_audit.normalized_domain }}{% elif project.normalized_domain %}{{ project.normalized_domain }}{% else %}&mdash;{% endif %}
-                    </div>
-                    <div class="workspace-summary-grid">
-                        <div class="stat-tile">
-                            <p class="eyebrow">Overall score</p>
-                            <h3>{% if latest_audit %}{{ latest_audit.overall_score }}{% else %}&mdash;{% endif %}</h3>
-                            <p>{% if latest_audit %}Latest audit{% else %}No audit yet{% endif %}</p>
-                        </div>
-                        <div class="stat-tile">
-                            <p class="eyebrow">AI Visibility</p>
-                            <h3>{% if latest_aeo_audit and latest_aeo_audit.overall_score %}{{ latest_aeo_audit.overall_score }}{% else %}&mdash;{% endif %}</h3>
-                            <p>{% if latest_aeo_audit %}AEO score{% else %}Not run yet{% endif %}</p>
-                        </div>
-                        <div class="stat-tile">
-                            <p class="eyebrow">Pages crawled</p>
-                            <h3>{% if latest_audit %}{{ latest_audit.pages_crawled }}{% else %}&mdash;{% endif %}</h3>
-                            <p>Current crawl depth</p>
-                        </div>
-                        <div class="stat-tile">
-                            <p class="eyebrow">Last audit</p>
-                            <h3>{% if latest_audit %}{{ latest_audit.created_at|date:"M j" }}{% else %}&mdash;{% endif %}</h3>
-                            <p>{% if latest_audit %}{{ latest_audit.status|title }}{% else %}Pending{% endif %}</p>
-                        </div>
-                        <div class="stat-tile">
-                            <p class="eyebrow">Saved runs</p>
-                            <h3>{{ audit_history_with_delta|length }}</h3>
-                            <p>Visible in this plan</p>
-                        </div>
-                    </div>
-                </article>
-
-                <article class="system-card workspace-credits-card">
-                    <div class="section-heading workspace-section-head">
-                        <p class="eyebrow">Credits</p>
-                        <h2>Balance</h2>
-                    </div>
-                    {% if credit_alert_band == 100 %}
-                    <div class="workspace-credit-banner workspace-credit-banner-critical">
-                        <strong>You've used all of this month's credits.</strong>
-                        <span>Top up to keep audits and refreshes running, or wait for next cycle to refresh automatically.</span>
-                        <a href="{% url 'tools:account-dashboard' %}#billing">Top up &rarr;</a>
-                    </div>
-                    {% elif credit_alert_band == 90 %}
-                    <div class="workspace-credit-banner workspace-credit-banner-warning">
-                        <strong>You're at 90% of this month's credits.</strong>
-                        <span>Top up to avoid a mid-cycle pause, or pace the rest of the month.</span>
-                        <a href="{% url 'tools:account-dashboard' %}#billing">Top up &rarr;</a>
-                    </div>
-                    {% elif credit_alert_band == 75 %}
-                    <div class="workspace-credit-banner workspace-credit-banner-info">
-                        <strong>75% of this month's credits used.</strong>
-                        <span>Worth a glance to plan the rest of the month.</span>
-                    </div>
-                    {% endif %}
-                    <div class="workspace-credit-balance-card">
-                        <div class="workspace-credit-balance-top">
-                            <div>
-                                <p class="eyebrow">Remaining</p>
-                                <h3>{% if credit_overview.unlimited %}Unlimited{% else %}{{ credit_overview.remaining|default:0 }}{% endif %}</h3>
-                            </div>
-                            {% if credit_usage_pct is not None %}
-                            <span class="score-pill {% if credit_alert_band == 100 %}score-low{% elif credit_alert_band == 90 %}score-low{% elif credit_alert_band == 75 %}score-med{% else %}score-high{% endif %}">{{ credit_usage_pct }}% used</span>
-                            {% else %}
-                            <span class="score-pill score-high">Workspace usage</span>
-                            {% endif %}
-                        </div>
-                        <div class="workspace-credit-balance-meta">
-                            <div><span>Used this cycle</span><strong>{{ credit_overview.used|default:0 }}</strong></div>
-                            {% if credit_overview.granted %}
-                            <div><span>Granted this cycle</span><strong>{{ credit_overview.granted }}</strong></div>
-                            {% endif %}
-                            <div><span>Audits left this cycle</span><strong>{% if usage_summary.audit_runs_remaining is None %}Unlimited{% else %}{{ usage_summary.audit_runs_remaining|default:0 }}{% endif %}</strong></div>
-                            <div><span>Tracked websites</span><strong>{{ usage_summary.tracked_sites_used|default:0 }}</strong>{% if usage_summary.tracked_sites_limit is not None %}<strong> / {{ usage_summary.tracked_sites_limit }}</strong>{% endif %}</div>
-                        </div>
-                    </div>
-                    <p class="workspace-support-note">Billing, top-ups, and personal settings stay in your account area so the workspace can stay focused on execution.</p>
-                    <div><a class="button button-secondary" href="{% url 'tools:account-dashboard' %}#billing">Open account</a></div>
-                </article>
-                {% else %}
-                <article class="system-card workspace-empty-launch">
-                    <p class="eyebrow text-accent">Getting started</p>
-                    <h2>Launch your first workspace</h2>
-                    <p>Start with the baseline audit. That creates the project context you will keep using for SEO, AEO, reruns, and progress tracking.</p>
-                    <div class="workspace-empty-steps">
-                        <div class="stat-tile">
-                            <p class="eyebrow">Step 1</p>
-                            <h3>Run audit</h3>
-                            <p>Get the first diagnosis and score baseline.</p>
-                        </div>
-                        <div class="stat-tile">
-                            <p class="eyebrow">Step 2</p>
-                            <h3>Open SEO</h3>
-                            <p>Map gaps and competitor pressure from the audit base.</p>
-                        </div>
-                        <div class="stat-tile">
-                            <p class="eyebrow">Step 3</p>
-                            <h3>Run AEO</h3>
-                            <p>Check answer readiness and AI visibility next.</p>
-                        </div>
-                    </div>
-                </article>
-                {% endif %}
-
-                <details id="new-project" class="system-card workspace-create-panel workspace-action-panel workspace-action-panel-compact"{% if project_form.errors %} open{% endif %}>
-                <summary class="workspace-create-summary">
-                    <div>
-                        <p class="eyebrow">Create workspace</p>
-                        <h2>Add another independent project</h2>
-                    </div>
-                    <span class="button button-primary">Create</span>
-                </summary>
-                <div class="workspace-create-body">
-                    <div class="workspace-panel-intro">
-                        Create a separate workspace for another website or brand. Each one keeps its own audit, SEO, and AEO history.
-                    </div>
-                    <form method="post" action="{% url 'tools:workspace-project-create' %}" class="workspace-form-grid">
-                        {% csrf_token %}
-                        {% if project_form.non_field_errors %}
-                        <div class="credit-notice">{{ project_form.non_field_errors|join:" " }}</div>
-                        {% endif %}
-                        <label class="workspace-form-field">
-                            <span>Project name</span>
-                            {{ project_form.name }}
-                            {% if project_form.name.errors %}<span class="workspace-form-error">{{ project_form.name.errors|join:", " }}</span>{% endif %}
-                        </label>
-                        <label class="workspace-form-field">
-                            <span>Website</span>
-                            {{ project_form.website }}
-                            {% if project_form.website.errors %}<span class="workspace-form-error">{{ project_form.website.errors|join:", " }}</span>{% endif %}
-                        </label>
-                        <label class="workspace-form-field">
-                            <span>Business type</span>
-                            {{ project_form.business_type }}
-                            {% if project_form.business_type.errors %}<span class="workspace-form-error">{{ project_form.business_type.errors|join:", " }}</span>{% endif %}
-                        </label>
-                        <label class="workspace-form-field">
-                            <span>Specific niche</span>
-                            {{ project_form.business_subtype }}
-                            {% if project_form.business_subtype.errors %}<span class="workspace-form-error">{{ project_form.business_subtype.errors|join:", " }}</span>{% endif %}
-                        </label>
-                        <label class="workspace-form-field">
-                            <span>Target audience</span>
-                            {{ project_form.target_audience }}
-                            {% if project_form.target_audience.errors %}<span class="workspace-form-error">{{ project_form.target_audience.errors|join:", " }}</span>{% endif %}
-                        </label>
-                        {{ project_form.location }}
-                        <div class="workspace-form-field"
-                             x-data="{
-                                isOpen: false,
-                                searchQuery: '',
-                                results: [],
-                                init() {
-                                    const hiddenInput = this.$root.previousElementSibling;
-                                    if (hiddenInput && hiddenInput.value) {
-                                        this.searchQuery = hiddenInput.value;
-                                        if (hiddenInput.value === 'Worldwide') this.searchQuery = 'Worldwide';
-                                    }
-
-                                    this.$watch('searchQuery', value => {
-                                        if (value.length < 2) {
-                                            this.results = [];
-                                            return;
-                                        }
-                                        if (value.toLowerCase().includes('world')) {
-                                            this.results = [{ id: 'ww', name: 'Worldwide', canonical_name: 'Worldwide', country_code: 'GLOBAL', target_type: 'Worldwide' }];
-                                            this.isOpen = true;
-                                            return;
-                                        }
-                                    });
-                                },
-                                fetchLocations() {
-                                    if (this.searchQuery.length < 2) return;
-                                    if (this.searchQuery.toLowerCase().includes('world')) return;
-
-                                    fetch('https://photon.komoot.io/api/?q=' + encodeURIComponent(this.searchQuery) + '&limit=20')
-                                        .then(res => res.json())
-                                        .then(data => {
-                                            if (data && data.features) {
-                                                const validTypes = new Set(['city', 'town', 'village', 'state', 'county', 'country', 'administrative', 'region', 'municipality', 'borough', 'hamlet', 'district', 'suburb']);
-                                                const geographicalFeatures = data.features.filter(f => validTypes.has(f.properties.osm_value) || validTypes.has(f.properties.type) || validTypes.has(f.properties.osm_key));
-
-                                                this.results = geographicalFeatures.slice(0, 10).map(f => {
-                                                    const p = f.properties;
-                                                    const stateObj = p.state ? p.state + ', ' : '';
-                                                    const countryObj = p.country || '';
-                                                    return {
-                                                        id: p.osm_id || Math.random(),
-                                                        name: p.name,
-                                                        canonical_name: p.name + ', ' + stateObj + countryObj,
-                                                        country_code: p.countrycode || '',
-                                                        target_type: (p.osm_value || p.type || 'Location').charAt(0).toUpperCase() + (p.osm_value || p.type || 'location').slice(1)
-                                                    };
-                                                });
-                                            } else {
-                                                this.results = [];
-                                            }
-                                            this.isOpen = true;
-                                        })
-                                        .catch(() => {
-                                            this.results = [];
-                                        });
-                                },
-                                selectLocation(res) {
-                                    const hiddenInput = this.$root.previousElementSibling;
-                                    if (hiddenInput) {
-                                        hiddenInput.value = res.canonical_name;
-                                    }
-                                    this.searchQuery = res.canonical_name;
-                                    this.isOpen = false;
-                                }
-                             }">
-                            <span>Search location</span>
-                            <div style="position: relative;">
-                                <input
-                                    type="text"
-                                    x-model="searchQuery"
-                                    @input.debounce.300ms="fetchLocations()"
-                                    @focus="isOpen = true; if(searchQuery.length >= 2 && results.length === 0) fetchLocations()"
-                                    @click.away="isOpen = false"
-                                    class="form-control"
-                                    placeholder="Type a city, region, or 'Worldwide'..."
-                                    name="location_display"
-                                    autocomplete="off"
-                                    style="width: 100%;">
-
-                                <div x-show="isOpen && results.length > 0"
-                                     style="display: none; position: absolute; bottom: 100%; left: 0; right: 0; z-index: 50; background: var(--bg-surface); border: 1px solid var(--border-glass); border-radius: var(--radius-sm); margin-bottom: 0.25rem; max-height: 250px; overflow-y: auto; box-shadow: 0 -4px 12px rgba(0,0,0,0.5);">
-                                    <template x-for="res in results" :key="res.id">
-                                        <div @click="selectLocation(res)"
-                                             style="padding: 0.75rem 1rem; cursor: pointer; border-bottom: 1px solid var(--border-glass); font-size: 0.9rem;"
-                                             onmouseover="this.style.background='rgba(56, 189, 248, 0.1)'"
-                                             onmouseout="this.style.background='transparent'">
-                                            <strong x-text="res.name" style="display: block; color: var(--text-primary);"></strong>
-                                            <span x-text="res.target_type + ' - ' + res.country_code" style="color: var(--text-muted); font-size: 0.8rem;"></span>
-                                        </div>
-                                    </template>
-                                </div>
-                            </div>
-                        </div>
-                        <label class="workspace-form-field">
-                            <span>Target goal</span>
-                            {{ project_form.target_goal }}
-                            {% if project_form.target_goal.errors %}<span class="workspace-form-error">{{ project_form.target_goal.errors|join:", " }}</span>{% endif %}
-                        </label>
-                        <label class="workspace-form-field">
-                            <span>Primary offer</span>
-                            {{ project_form.primary_service }}
-                            {% if project_form.primary_service.errors %}<span class="workspace-form-error">{{ project_form.primary_service.errors|join:", " }}</span>{% endif %}
-                        </label>
-                        <button type="submit" class="button button-primary">Create workspace</button>
-                    </form>
-                </div>
-                </details>
-            </div>
-        </div>
-
-        {% if project.pk %}
-            <aside class="system-card workspace-fix-queue-card">
-                <div class="section-heading workspace-section-head">
-                    <p class="eyebrow text-accent">Fix queue</p>
-                    <h2>What needs attention first</h2>
-                    <p class="section-text">These are the clearest actions from the latest audit, grouped so the work feels specific instead of overwhelming.</p>
-                </div>
-                <div class="workspace-fix-queue-list">
-                    {% for recommendation in fix_queue_recommendations %}
-                    <article class="workspace-fix-card">
-                        <div class="workspace-fix-chip-row">
-                            {% if recommendation.root_cause_label %}
-                            <span class="score-pill score-high">{{ recommendation.root_cause_label }}</span>
-                            {% endif %}
-                            {% if recommendation.confidence_label %}
-                            <span class="score-pill {% if recommendation.evidence_status == 'strong' %}score-high{% elif recommendation.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}">{{ recommendation.confidence_label }}</span>
-                            {% endif %}
-                        </div>
-                        <strong class="workspace-fix-title">{{ recommendation.title }}</strong>
-                        {% if recommendation.description %}
-                        <p class="workspace-fix-copy">{{ recommendation.description }}</p>
-                        {% endif %}
-                        <div class="workspace-fix-block">
-                            <strong>What to fix</strong>
-                            <p>{{ recommendation.recommended_fix }}</p>
-                        </div>
-                        {% if recommendation.display_steps %}
-                        <div class="workspace-fix-step-list">
-                            {% for step in recommendation.display_steps %}
-                            <div class="workspace-fix-step">{{ step }}</div>
-                            {% endfor %}
-                        </div>
-                        {% endif %}
-                        {% if recommendation.display_urls %}
-                        <div class="workspace-fix-block">
-                            <strong>Where this appears</strong>
-                            <p>{{ recommendation.display_page_count }} page{{ recommendation.display_page_count|pluralize }} including:</p>
-                            <div class="workspace-fix-url-list">
-                                {% for url in recommendation.display_urls %}
-                                <span class="report-url-chip">{{ url }}</span>
-                                {% endfor %}
-                            </div>
-                        </div>
-                        {% endif %}
-                        {% if recommendation.evidence_summary %}
-                        <div class="workspace-fix-evidence"><strong>Evidence:</strong> {{ recommendation.evidence_summary }}</div>
-                        {% endif %}
-                    </article>
-                    {% empty %}
-                    <div class="empty-state-panel">
-                        <p>No saved recommendations yet.</p>
+                        <span class="mc-engine-pct">{{ item.pct }}%</span>
                     </div>
                     {% endfor %}
-                    {% if locked_recommendation_count %}
-                    <div class="credit-notice">
-                        {{ locked_recommendation_count }} more recommendation{{ locked_recommendation_count|pluralize }} unlock on a higher plan.
-                    </div>
-                    {% endif %}
+                {% else %}
+                    <p style="color:#94a3b8;font-size:0.85rem;margin:0;">
+                        Run AI Visibility to see per-engine citation rates.
+                        <a href="{% url 'aeo:workspace-aeo' %}" style="color:#0284c7;">Open AI Visibility &rarr;</a>
+                    </p>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {# ── Workspace module cards ── #}
+    {% if project.pk and workspace_modules %}
+    <div class="mc-card">
+        <div class="mc-section-head">
+            <h2 class="mc-section-title">Workspace modules</h2>
+            {% if project.pk and latest_audit %}
+            <span class="mc-section-meta">{{ latest_audit.created_at|date:"M j, Y" }}</span>
+            {% endif %}
+        </div>
+        <div class="mc-modules-grid">
+            {% for module in workspace_modules %}
+            <article class="mc-module-card mc-module-card--{{ module.tone }}">
+                <div class="mc-module-icon mc-module-icon--{{ module.tone }}">
+                    {% if module.tone == "audit" %}<i class="fas fa-magnifying-glass"></i>
+                    {% elif module.tone == "seo" %}<i class="fas fa-chart-line"></i>
+                    {% elif module.tone == "aeo" %}<i class="fas fa-robot"></i>
+                    {% elif module.tone == "content" %}<i class="fas fa-pen-nib"></i>
+                    {% else %}<i class="fas fa-circle-dot"></i>{% endif %}
                 </div>
-            </aside>
-
-        {# ── Score progress timeline ── #}
-        {% if audit_history_with_delta|length > 1 %}
-        <article class="system-card workspace-progress-card">
-            <div class="section-heading workspace-section-head">
-                <p class="eyebrow">Progress</p>
-                <h2>Score over time</h2>
-                <p class="section-text">
-                    {% with first=audit_history_with_delta|last last=audit_history_with_delta|first %}
-                    {% if first and last and first.audit.overall_score is not None and last.audit.overall_score is not None %}
-                    {% with gain=last.audit.overall_score|add:"-"|add:first.audit.overall_score|stringformat:"i" %}
-                    Overall score moved from <strong>{{ first.audit.overall_score }}</strong> to <strong>{{ last.audit.overall_score }}</strong>
-                    across {{ audit_history_with_delta|length }} audit runs.
-                    {% endwith %}
-                    {% endif %}
-                    {% endwith %}
-                </p>
-            </div>
-
-            <div class="workspace-progress-timeline">
-                {% for item in audit_history_with_delta reversed %}
-                <div class="workspace-progress-node">
-                    <div class="workspace-progress-bar-wrap" title="Score: {{ item.audit.overall_score }}">
-                        <div class="workspace-progress-bar"
-                             style="height: {{ item.audit.overall_score|default:0 }}%;
-                                    background: {% if item.audit.overall_score >= 80 %}var(--success){% elif item.audit.overall_score >= 60 %}var(--brand-secondary){% else %}var(--error, #ef4444){% endif %};">
-                        </div>
-                    </div>
-                    <div class="workspace-progress-score">
-                        <strong>{{ item.audit.overall_score }}</strong>
-                        {% if item.delta is not None and item.delta != 0 %}
-                        <span class="workspace-delta {% if item.delta > 0 %}workspace-delta-up{% else %}workspace-delta-down{% endif %}">
-                            {% if item.delta > 0 %}+{% endif %}{{ item.delta }}
-                        </span>
-                        {% endif %}
-                    </div>
-                    <div class="workspace-progress-date">{{ item.audit.created_at|date:"M j" }}</div>
-                    {% if item.audit.status == "completed" %}
-                    <a class="workspace-progress-link" href="{% url 'tools:audit-result' item.audit.pk %}" title="Open report">
-                        <i class="fas fa-external-link-alt"></i>
-                    </a>
-                    {% endif %}
+                <p class="mc-module-eyebrow">{{ module.label }}</p>
+                <p class="mc-module-val">{{ module.value }}</p>
+                <p class="mc-module-summary">{{ module.summary }}</p>
+                <div class="mc-module-cta">
+                    <a class="button button-secondary" href="{{ module.href }}" style="font-size:0.82rem;padding:0.45rem 0.9rem;">{{ module.cta_label }}</a>
+                    {% if module.meta %}<span style="font-size:0.72rem;color:#64748b;margin-left:0.5rem;">{{ module.meta }}</span>{% endif %}
                 </div>
-                {% endfor %}
-            </div>
+            </article>
+            {% endfor %}
+        </div>
+    </div>
+    {% endif %}
 
-            {% with oldest=audit_history_with_delta|last newest=audit_history_with_delta|first %}
-            {% if oldest and newest and oldest.audit.overall_score and newest.audit.overall_score %}
-            {% if newest.audit.overall_score > oldest.audit.overall_score %}
-            <div class="workspace-progress-narrative workspace-progress-narrative-positive">
-                <i class="fas fa-arrow-trend-up"></i>
-                <span>Score improved by <strong>+{{ newest.audit.overall_score|add:"-"|add:oldest.audit.overall_score|stringformat:"i"|cut:"-" }}</strong> points since the first run.
-                That's measurable progress you can show to clients.</span>
-            </div>
-            {% elif newest.audit.overall_score < oldest.audit.overall_score %}
-            <div class="workspace-progress-narrative workspace-progress-narrative-negative">
-                <i class="fas fa-arrow-trend-down"></i>
-                <span>Score dropped since the first run. Review the fix queue and rerun to rebuild the baseline.</span>
-            </div>
-            {% else %}
-            <div class="workspace-progress-narrative">
-                <i class="fas fa-minus"></i>
-                <span>Score is holding steady. Push fixes through and rerun to move the needle.</span>
-            </div>
-            {% endif %}
-            {% endif %}
-            {% endwith %}
-        </article>
-        {% endif %}
-
-        <article id="audit-history" class="system-card workspace-history-card">
-            <div class="section-heading workspace-section-head">
-                <p class="eyebrow">Audit history</p>
-                <h2>Saved runs and validation</h2>
-                <p class="section-text">Every rerun should make progress visible, not just add another row to a table.</p>
-            </div>
-            <div class="workspace-history-table-shell">
-                <table class="workspace-history-table">
-                    <thead>
-                        <tr>
-                            <th>Created</th>
-                            <th>Overall</th>
-                            <th>Delta</th>
-                            <th>Pages</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {% for item in audit_history_with_delta %}
-                        <tr>
-                            <td>{{ item.audit.created_at|date:"M j, Y g:i a" }}</td>
-                            <td><strong>{{ item.audit.overall_score }}</strong></td>
-                            <td>
-                                {% if item.delta is None %}
-                                &mdash;
-                                {% elif item.delta > 0 %}
-                                <span class="workspace-delta workspace-delta-up">+{{ item.delta }}</span>
-                                {% elif item.delta < 0 %}
-                                <span class="workspace-delta workspace-delta-down">{{ item.delta }}</span>
-                                {% else %}
-                                <span class="workspace-delta workspace-delta-flat">0</span>
-                                {% endif %}
-                            </td>
-                            <td>{{ item.audit.pages_crawled }}</td>
-                            <td>
-                                <div>{{ item.audit.status|title }}</div>
-                                {% if item.audit.status == "completed" %}
-                                <div class="workspace-history-links">
-                                    <a href="{% url 'tools:audit-result' item.audit.pk %}">Open report</a>
-                                    <a href="{% url 'tools:audit-report-pdf' item.audit.pk %}">PDF</a>
-                                </div>
-                                {% endif %}
-                            </td>
-                        </tr>
-                        {% if item.change_report %}
-                        <tr class="workspace-history-note-row">
-                            <td colspan="5">
-                                {{ item.change_report.summary.headline }}
-                                New: {{ item.change_report.new_issue_count }} |
-                                Resolved: {{ item.change_report.resolved_issue_count }}
-                            </td>
-                        </tr>
-                        {% endif %}
-                        {% empty %}
-                        <tr>
-                            <td colspan="5">No saved reruns yet.</td>
-                        </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
-            </div>
-            {% if locked_history_count %}
-            <div class="credit-notice workspace-history-lock">
-                {{ locked_history_count }} older audit run{{ locked_history_count|pluralize }} are hidden by the current plan.
-            </div>
-            {% endif %}
-        </article>
+    {# ── Activation checklist ── #}
+    {% if project.pk %}
+    <div class="mc-card">
+        <div class="mc-section-head">
+            <h2 class="mc-section-title">Activation checklist</h2>
+            <span class="mc-section-meta" style="font-weight:700;color:#0284c7;">{{ activation_done_count }}/{{ activation_total_count }}</span>
+        </div>
+        <div style="height:5px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-bottom:1rem;">
+            <div style="height:100%;width:{{ activation_progress_pct }}%;background:linear-gradient(90deg,#0284c7,#10b981);border-radius:999px;transition:width 0.4s;"></div>
+        </div>
+        <ul class="mc-checklist">
+            <li class="mc-check-item {% if latest_audit %}is-done{% endif %}">
+                {% if latest_audit %}<i class="fas fa-circle-check"></i><span class="is-done-text">Run first audit</span>
+                {% else %}<i class="far fa-circle"></i><a href="#start-audit">Run first audit</a>{% endif %}
+            </li>
+            <li class="mc-check-item {% if latest_aeo_audit %}is-done{% endif %}">
+                {% if latest_aeo_audit %}<i class="fas fa-circle-check"></i><span class="is-done-text">Run AI Visibility audit</span>
+                {% else %}<i class="far fa-circle"></i><a href="{% url 'aeo:workspace-aeo' %}">Run AI Visibility audit</a>{% endif %}
+            </li>
+            <li class="mc-check-item {% if tracked_prompt_count %}is-done{% endif %}">
+                {% if tracked_prompt_count %}<i class="fas fa-circle-check"></i><span class="is-done-text">Track AI prompts ({{ tracked_prompt_count }})</span>
+                {% else %}<i class="far fa-circle"></i><a href="{% url 'aeo:workspace-prompts' %}">Track AI prompts</a>{% endif %}
+            </li>
+            <li class="mc-check-item {% if latest_seo_snapshot %}is-done{% endif %}">
+                {% if latest_seo_snapshot %}<i class="fas fa-circle-check"></i><span class="is-done-text">Run SEO analysis</span>
+                {% else %}<i class="far fa-circle"></i><a href="{% url 'seo:workspace-seo' %}">Run SEO analysis</a>{% endif %}
+            </li>
+            <li class="mc-check-item {% if audit_schedule %}is-done{% endif %}">
+                {% if audit_schedule %}<i class="fas fa-circle-check"></i><span class="is-done-text">Schedule a rerun</span>
+                {% else %}<i class="far fa-circle"></i><span>Schedule a rerun</span>{% endif %}
+            </li>
+        </ul>
+        {% if activation_complete %}
+        <div class="mc-success-banner">
+            <i class="fas fa-circle-check"></i> Fully activated — you're tracking AI visibility end-to-end.
+        </div>
         {% endif %}
     </div>
-</section>
+    {% endif %}
+
+    {# ── Fix queue ── #}
+    {% if project.pk and fix_queue_recommendations %}
+    <div class="mc-card">
+        <div class="mc-section-head">
+            <h2 class="mc-section-title">Fix queue</h2>
+            <span class="mc-section-meta">{{ audit_issue_total }} grouped issue{{ audit_issue_total|pluralize }}</span>
+        </div>
+        <div class="mc-fix-list">
+            {% for recommendation in fix_queue_recommendations %}
+            <article class="mc-fix-card">
+                <div class="mc-fix-chip-row">
+                    {% if recommendation.root_cause_label %}
+                    <span class="score-pill score-high">{{ recommendation.root_cause_label }}</span>
+                    {% endif %}
+                    {% if recommendation.confidence_label %}
+                    <span class="score-pill {% if recommendation.evidence_status == 'strong' %}score-high{% elif recommendation.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}">{{ recommendation.confidence_label }}</span>
+                    {% endif %}
+                </div>
+                <strong class="mc-fix-title">{{ recommendation.title }}</strong>
+                {% if recommendation.recommended_fix %}
+                <p class="mc-fix-copy">{{ recommendation.recommended_fix|truncatechars:180 }}</p>
+                {% endif %}
+                {% if recommendation.display_steps %}
+                <div class="mc-fix-steps">
+                    {% for step in recommendation.display_steps %}
+                    <div class="mc-fix-step">{{ step }}</div>
+                    {% endfor %}
+                </div>
+                {% endif %}
+                {% if recommendation.display_urls %}
+                <div class="mc-fix-urls">
+                    {% for url in recommendation.display_urls %}
+                    <span class="report-url-chip">{{ url }}</span>
+                    {% endfor %}
+                    {% if recommendation.display_page_count > recommendation.display_urls|length %}
+                    <span style="font-size:0.75rem;color:#64748b;">+{{ recommendation.display_page_count|add:"-3" }} more</span>
+                    {% endif %}
+                </div>
+                {% endif %}
+            </article>
+            {% endfor %}
+            {% if locked_recommendation_count %}
+            <div class="credit-notice">{{ locked_recommendation_count }} more recommendation{{ locked_recommendation_count|pluralize }} unlock on a higher plan.</div>
+            {% endif %}
+        </div>
+    </div>
+    {% endif %}
+
+    {# ── Projects portfolio ── #}
+    {% if workspace_project_summaries %}
+    <details class="mc-card mc-card-details">
+        <summary class="mc-card-summary">
+            <h2 class="mc-section-title">All projects</h2>
+            <span class="mc-section-meta">{{ workspace_project_summaries|length }} workspace{% if workspace_project_summaries|length != 1 %}s{% endif %}</span>
+        </summary>
+        <div class="workspace-project-list" style="margin-top:1rem;">
+            {% for item in workspace_project_summaries %}
+            <article class="workspace-project-row workspace-project-health-{{ item.health_status }}{% if project.pk == item.pk %} is-active{% endif %}">
+                <div class="workspace-project-main">
+                    <div class="workspace-project-title-row">
+                        <span class="workspace-health-dot health-{{ item.health_status }}"></span>
+                        <strong>{{ item.name }}</strong>
+                        {% if project.pk == item.pk %}<span class="score-pill score-high">Current</span>{% endif %}
+                        {% if item.at_risk_category_label %}<span class="score-pill score-low">{{ item.at_risk_category_label }} at risk</span>{% endif %}
+                    </div>
+                    <div class="workspace-project-domain">{{ item.normalized_domain }}</div>
+                    <div class="workspace-project-meta-line">
+                        {% if item.latest_audit_completed_at %}Last audit {{ item.latest_audit_completed_at|timesince }} ago{% else %}No audit yet{% endif %}
+                    </div>
+                </div>
+                <div class="workspace-project-stats">
+                    <div><span>Score</span><strong>{% if item.latest_audit_overall_score is not None %}{{ item.latest_audit_overall_score }}{% else %}&mdash;{% endif %}</strong></div>
+                    <div><span>SEO</span><strong>{{ item.seo_snapshot_count }}</strong></div>
+                    <div><span>AEO</span><strong>{{ item.aeo_audit_count }}</strong></div>
+                </div>
+                <div class="workspace-project-actions">
+                    {% if project.pk != item.pk %}
+                    <form method="post" action="{% url 'tools:workspace-project-select' %}">
+                        {% csrf_token %}
+                        <input type="hidden" name="project_id" value="{{ item.pk }}">
+                        <input type="hidden" name="next" value="{% url 'tools:workspace-dashboard' %}">
+                        <button type="submit" class="button button-secondary" style="font-size:0.8rem;padding:0.4rem 0.8rem;">Open</button>
+                    </form>
+                    {% endif %}
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </details>
+    {% endif %}
+
+    {# ── Score progress timeline ── #}
+    {% if audit_history_with_delta|length > 1 %}
+    <details class="mc-card mc-card-details">
+        <summary class="mc-card-summary">
+            <h2 class="mc-section-title">Score over time</h2>
+            <span class="mc-section-meta">{{ audit_history_with_delta|length }} runs</span>
+        </summary>
+        <div class="workspace-progress-timeline" style="margin-top:1rem;">
+            {% for item in audit_history_with_delta reversed %}
+            <div class="workspace-progress-node">
+                <div class="workspace-progress-bar-wrap" title="Score: {{ item.audit.overall_score }}">
+                    <div class="workspace-progress-bar"
+                         style="height:{{ item.audit.overall_score|default:0 }}%;
+                                background:{% if item.audit.overall_score >= 80 %}var(--success){% elif item.audit.overall_score >= 60 %}var(--brand-secondary){% else %}#ef4444{% endif %};">
+                    </div>
+                </div>
+                <div class="workspace-progress-score">
+                    <strong>{{ item.audit.overall_score }}</strong>
+                    {% if item.delta is not None and item.delta != 0 %}
+                    <span class="workspace-delta {% if item.delta > 0 %}workspace-delta-up{% else %}workspace-delta-down{% endif %}">
+                        {% if item.delta > 0 %}+{% endif %}{{ item.delta }}
+                    </span>
+                    {% endif %}
+                </div>
+                <div class="workspace-progress-date">{{ item.audit.created_at|date:"M j" }}</div>
+                {% if item.audit.status == "completed" %}
+                <a class="workspace-progress-link" href="{% url 'tools:audit-result' item.audit.pk %}"><i class="fas fa-external-link-alt"></i></a>
+                {% endif %}
+            </div>
+            {% endfor %}
+        </div>
+    </details>
+    {% endif %}
+
+    {# ── Audit history table ── #}
+    {% if project.pk %}
+    <details class="mc-card mc-card-details">
+        <summary class="mc-card-summary">
+            <h2 class="mc-section-title">Audit history</h2>
+            <span class="mc-section-meta">Saved runs</span>
+        </summary>
+        <div class="workspace-history-table-shell" style="margin-top:1rem;">
+            <table class="workspace-history-table">
+                <thead>
+                    <tr><th>Created</th><th>Overall</th><th>Delta</th><th>Pages</th><th>Status</th></tr>
+                </thead>
+                <tbody>
+                    {% for item in audit_history_with_delta %}
+                    <tr>
+                        <td>{{ item.audit.created_at|date:"M j, Y g:i a" }}</td>
+                        <td><strong>{{ item.audit.overall_score }}</strong></td>
+                        <td>
+                            {% if item.delta is None %}&mdash;
+                            {% elif item.delta > 0 %}<span class="workspace-delta workspace-delta-up">+{{ item.delta }}</span>
+                            {% elif item.delta < 0 %}<span class="workspace-delta workspace-delta-down">{{ item.delta }}</span>
+                            {% else %}<span class="workspace-delta workspace-delta-flat">0</span>{% endif %}
+                        </td>
+                        <td>{{ item.audit.pages_crawled }}</td>
+                        <td>
+                            {{ item.audit.status|title }}
+                            {% if item.audit.status == "completed" %}
+                            &nbsp;<a href="{% url 'tools:audit-result' item.audit.pk %}" style="font-size:0.78rem;">Report</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5">No saved reruns yet.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% if locked_history_count %}
+        <div class="credit-notice">{{ locked_history_count }} older run{{ locked_history_count|pluralize }} hidden by current plan.</div>
+        {% endif %}
+    </details>
+    {% endif %}
+
+    {# ── Start audit panel ── #}
+    <details id="start-audit" class="mc-card mc-card-details"{% if audit_start_form.errors or not project.pk %} open{% endif %}>
+        <summary class="mc-card-summary">
+            <h2 class="mc-section-title">{% if project.pk %}Run a new audit{% else %}Start with an audit{% endif %}</h2>
+            <span class="button button-primary" style="font-size:0.8rem;padding:0.4rem 0.9rem;pointer-events:none;">Start</span>
+        </summary>
+        <form method="post" action="{% url 'tools:workspace-audit-start' %}" class="workspace-form-grid" style="margin-top:1rem;">
+            {% csrf_token %}
+            {% if audit_start_form.non_field_errors %}
+            <div class="credit-notice">{{ audit_start_form.non_field_errors|join:" " }}</div>
+            {% endif %}
+            <label class="workspace-form-field"><span>Company</span>{{ audit_start_form.company_name }}</label>
+            {{ audit_start_form.email }}
+            <label class="workspace-form-field"><span>Website</span>{{ audit_start_form.website }}</label>
+            <label class="workspace-form-field"><span>Business type</span>{{ audit_start_form.business_type }}</label>
+            <label class="workspace-form-field"><span>Specific niche</span>{{ audit_start_form.business_subtype }}</label>
+            <label class="workspace-form-field"><span>Target audience</span>{{ audit_start_form.target_audience }}</label>
+            {{ audit_start_form.location }}
+            <div class="workspace-form-field" x-data="{isOpen:false,searchQuery:'',results:[],init(){const h=this.$root.previousElementSibling;if(h&&h.value){this.searchQuery=h.value;}this.$watch('searchQuery',v=>{if(v.length<2){this.results=[];return;}if(v.toLowerCase().includes('world')){this.results=[{id:'ww',name:'Worldwide',canonical_name:'Worldwide',country_code:'GLOBAL',target_type:'Worldwide'}];this.isOpen=true;return;}});},fetchLocations(){if(this.searchQuery.length<2)return;if(this.searchQuery.toLowerCase().includes('world'))return;fetch('https://photon.komoot.io/api/?q='+encodeURIComponent(this.searchQuery)+'&limit=20').then(r=>r.json()).then(d=>{if(d&&d.features){const v=new Set(['city','town','village','state','county','country','administrative','region','municipality','borough','hamlet','district','suburb']);this.results=d.features.filter(f=>v.has(f.properties.osm_value)||v.has(f.properties.type)||v.has(f.properties.osm_key)).slice(0,10).map(f=>{const p=f.properties;return{id:p.osm_id||Math.random(),name:p.name,canonical_name:p.name+', '+(p.state?p.state+', ':'')+( p.country||''),country_code:p.countrycode||'',target_type:(p.osm_value||p.type||'Location').charAt(0).toUpperCase()+(p.osm_value||p.type||'location').slice(1)}});}else{this.results=[];}this.isOpen=true;}).catch(()=>{this.results=[];});},selectLocation(r){const h=this.$root.previousElementSibling;if(h)h.value=r.canonical_name;this.searchQuery=r.canonical_name;this.isOpen=false;}}">
+                <span>Search location</span>
+                <div style="position:relative;">
+                    <input type="text" x-model="searchQuery" @input.debounce.300ms="fetchLocations()" @focus="isOpen=true;if(searchQuery.length>=2&&results.length===0)fetchLocations()" @click.away="isOpen=false" class="form-control" placeholder="Type a city, region, or 'Worldwide'..." name="location_display" autocomplete="off" style="width:100%;">
+                    <div x-show="isOpen&&results.length>0" style="display:none;position:absolute;bottom:100%;left:0;right:0;z-index:50;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:var(--radius-sm);margin-bottom:0.25rem;max-height:250px;overflow-y:auto;box-shadow:0 -4px 12px rgba(0,0,0,0.5);">
+                        <template x-for="res in results" :key="res.id">
+                            <div @click="selectLocation(res)" style="padding:0.75rem 1rem;cursor:pointer;border-bottom:1px solid var(--border-glass);font-size:0.9rem;" onmouseover="this.style.background='rgba(56,189,248,0.1)'" onmouseout="this.style.background='transparent'">
+                                <strong x-text="res.name" style="display:block;color:var(--text-primary);"></strong>
+                                <span x-text="res.target_type+' - '+res.country_code" style="color:var(--text-muted);font-size:0.8rem;"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <label class="workspace-form-field"><span>Target goal</span>{{ audit_start_form.target_goal }}</label>
+            <label class="workspace-form-field"><span>Primary offer</span>{{ audit_start_form.primary_service }}</label>
+            <label class="workspace-form-field"><span>Audit focus</span>{{ audit_start_form.notes }}</label>
+            <button type="submit" class="button button-primary">Start audit</button>
+        </form>
+    </details>
+
+    {# ── Create new project panel ── #}
+    <details id="new-project" class="mc-card mc-card-details"{% if project_form.errors %} open{% endif %}>
+        <summary class="mc-card-summary">
+            <h2 class="mc-section-title">Add another project</h2>
+            <span class="button button-primary" style="font-size:0.8rem;padding:0.4rem 0.9rem;pointer-events:none;">Create</span>
+        </summary>
+        <form method="post" action="{% url 'tools:workspace-project-create' %}" class="workspace-form-grid" style="margin-top:1rem;">
+            {% csrf_token %}
+            {% if project_form.non_field_errors %}
+            <div class="credit-notice">{{ project_form.non_field_errors|join:" " }}</div>
+            {% endif %}
+            <label class="workspace-form-field"><span>Project name</span>{{ project_form.name }}</label>
+            <label class="workspace-form-field"><span>Website</span>{{ project_form.website }}</label>
+            <label class="workspace-form-field"><span>Business type</span>{{ project_form.business_type }}</label>
+            <label class="workspace-form-field"><span>Specific niche</span>{{ project_form.business_subtype }}</label>
+            <label class="workspace-form-field"><span>Target audience</span>{{ project_form.target_audience }}</label>
+            {{ project_form.location }}
+            <div class="workspace-form-field" x-data="{isOpen:false,searchQuery:'',results:[],init(){const h=this.$root.previousElementSibling;if(h&&h.value){this.searchQuery=h.value;}this.$watch('searchQuery',v=>{if(v.length<2){this.results=[];return;}if(v.toLowerCase().includes('world')){this.results=[{id:'ww',name:'Worldwide',canonical_name:'Worldwide',country_code:'GLOBAL',target_type:'Worldwide'}];this.isOpen=true;return;}});},fetchLocations(){if(this.searchQuery.length<2)return;if(this.searchQuery.toLowerCase().includes('world'))return;fetch('https://photon.komoot.io/api/?q='+encodeURIComponent(this.searchQuery)+'&limit=20').then(r=>r.json()).then(d=>{if(d&&d.features){const v=new Set(['city','town','village','state','county','country','administrative','region','municipality','borough','hamlet','district','suburb']);this.results=d.features.filter(f=>v.has(f.properties.osm_value)||v.has(f.properties.type)||v.has(f.properties.osm_key)).slice(0,10).map(f=>{const p=f.properties;return{id:p.osm_id||Math.random(),name:p.name,canonical_name:p.name+', '+(p.state?p.state+', ':'')+( p.country||''),country_code:p.countrycode||'',target_type:(p.osm_value||p.type||'Location').charAt(0).toUpperCase()+(p.osm_value||p.type||'location').slice(1)}});}else{this.results=[];}this.isOpen=true;}).catch(()=>{this.results=[];});},selectLocation(r){const h=this.$root.previousElementSibling;if(h)h.value=r.canonical_name;this.searchQuery=r.canonical_name;this.isOpen=false;}}">
+                <span>Search location</span>
+                <div style="position:relative;">
+                    <input type="text" x-model="searchQuery" @input.debounce.300ms="fetchLocations()" @focus="isOpen=true;if(searchQuery.length>=2&&results.length===0)fetchLocations()" @click.away="isOpen=false" class="form-control" placeholder="Type a city, region, or 'Worldwide'..." name="location_display" autocomplete="off" style="width:100%;">
+                    <div x-show="isOpen&&results.length>0" style="display:none;position:absolute;bottom:100%;left:0;right:0;z-index:50;background:var(--bg-surface);border:1px solid var(--border-glass);border-radius:var(--radius-sm);margin-bottom:0.25rem;max-height:250px;overflow-y:auto;box-shadow:0 -4px 12px rgba(0,0,0,0.5);">
+                        <template x-for="res in results" :key="res.id">
+                            <div @click="selectLocation(res)" style="padding:0.75rem 1rem;cursor:pointer;border-bottom:1px solid var(--border-glass);font-size:0.9rem;" onmouseover="this.style.background='rgba(56,189,248,0.1)'" onmouseout="this.style.background='transparent'">
+                                <strong x-text="res.name" style="display:block;color:var(--text-primary);"></strong>
+                                <span x-text="res.target_type+' - '+res.country_code" style="color:var(--text-muted);font-size:0.8rem;"></span>
+                            </div>
+                        </template>
+                    </div>
+                </div>
+            </div>
+            <label class="workspace-form-field"><span>Target goal</span>{{ project_form.target_goal }}</label>
+            <label class="workspace-form-field"><span>Primary offer</span>{{ project_form.primary_service }}</label>
+            <button type="submit" class="button button-primary">Create workspace</button>
+        </form>
+    </details>
+
+    {# ── Credits & billing summary ── #}
+    {% if project.pk %}
+    <div class="mc-card mc-credits-card">
+        <div class="mc-section-head">
+            <h2 class="mc-section-title">Credits &amp; balance</h2>
+            {% if credit_usage_pct is not None %}
+            <span class="score-pill {% if credit_alert_band == 100 %}score-low{% elif credit_alert_band >= 90 %}score-low{% elif credit_alert_band >= 75 %}score-med{% else %}score-high{% endif %}">{{ credit_usage_pct }}% used</span>
+            {% endif %}
+        </div>
+        {% if credit_alert_band == 100 %}
+        <div class="workspace-credit-banner workspace-credit-banner-critical"><strong>All credits used.</strong> <a href="{% url 'tools:account-dashboard' %}#billing">Top up &rarr;</a></div>
+        {% elif credit_alert_band == 90 %}
+        <div class="workspace-credit-banner workspace-credit-banner-warning"><strong>90% of credits used.</strong> <a href="{% url 'tools:account-dashboard' %}#billing">Top up &rarr;</a></div>
+        {% endif %}
+        <div class="mc-credits-row">
+            <div>
+                <p style="font-size:0.72rem;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#64748b;margin:0 0 0.2rem;">Remaining</p>
+                <p style="font-size:1.6rem;font-weight:800;color:#0f172a;margin:0;">{% if credit_overview.unlimited %}Unlimited{% else %}{{ credit_overview.remaining|default:0 }}{% endif %}</p>
+            </div>
+            <div class="mc-credits-meta">
+                <div><span>Used this cycle</span><strong>{{ credit_overview.used|default:0 }}</strong></div>
+                <div><span>Audits left</span><strong>{% if usage_summary.audit_runs_remaining is None %}Unlimited{% else %}{{ usage_summary.audit_runs_remaining|default:0 }}{% endif %}</strong></div>
+                <div><span>Tracked sites</span><strong>{{ usage_summary.tracked_sites_used|default:0 }}{% if usage_summary.tracked_sites_limit is not None %} / {{ usage_summary.tracked_sites_limit }}{% endif %}</strong></div>
+            </div>
+        </div>
+        <a class="button button-secondary" href="{% url 'tools:account-dashboard' %}#billing" style="margin-top:1rem;font-size:0.82rem;">Open billing</a>
+    </div>
+    {% endif %}
+
+</div>{# end mc-body #}
+</div>{# end ws-main-content #}
 
 {% endblock %}

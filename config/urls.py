@@ -1,6 +1,8 @@
+from django.conf import settings
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
 from django.http import HttpResponse
+from django.shortcuts import render
 from django.urls import include, path
 from django.views.decorators.cache import cache_page
 
@@ -46,3 +48,29 @@ urlpatterns = [
     path("", include("apps.affiliates.urls")),
     path("", include("apps.case_studies.urls")),
 ]
+
+
+# ── Local-only preview routes for the branded 404 / 500 templates ────────────
+# Django shows its yellow-page debug 404 when DEBUG=True, so the branded
+# templates never fire in normal local dev. These preview URLs always render
+# the templates with the right status code so you can iterate on them locally
+# without flipping DEBUG. They're only registered when DEBUG=True, so they
+# don't exist in production.
+if settings.DEBUG:
+    def _preview_404(request):
+        return render(request, "404.html", status=404)
+
+    def _preview_500(request):
+        return render(request, "500.html", status=500)
+
+    urlpatterns += [
+        path("__preview/404/", _preview_404, name="preview-404"),
+        path("__preview/500/", _preview_500, name="preview-500"),
+    ]
+
+
+# Django uses these module-level handler names when DEBUG=False to render the
+# branded templates. They're already the default behavior, but pinning them
+# here documents the contract.
+handler404 = "django.views.defaults.page_not_found"
+handler500 = "django.views.defaults.server_error"

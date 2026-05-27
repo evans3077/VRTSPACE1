@@ -193,30 +193,39 @@ def _slice_for_limit(items, limit):
     return items[:limit], max(len(items) - limit, 0)
 
 
+def _render_landing_with_audit_form(request, form, *, status=400):
+    return render(
+        request,
+        "tools/free_audit_landing.html",
+        {"audit_form": form},
+        status=status,
+    )
+
+
 class PublicAuditCreateView(View):
     rate_limit = 3
     rate_window = 900
 
     def get(self, request, *args, **kwargs):
-        # The audit form lives on the home page (#audit anchor). If anyone
-        # GETs this endpoint directly (old bookmark, error page CTA, share
-        # link), redirect them to the form instead of returning 405.
-        return redirect("/#audit")
+        return _render_landing_with_audit_form(request, AuditRequestForm(), status=200)
 
     def post(self, request, *args, **kwargs):
+        from_landing = request.POST.get("_source") == "landing"
         ip_address = request.META.get("REMOTE_ADDR", "unknown")
         cache_key = f"rate-limit:{self.__class__.__name__}:{ip_address}"
         attempts = cache.get(cache_key, 0)
-        
+
         # Bypass rate limit for staff users
         if not request.user.is_staff and attempts >= self.rate_limit:
             messages.error(request, "Too many audit requests. Try again in a few minutes.")
-            return redirect("/#audit")
-            
+            return redirect("tools:free-seo-audit") if from_landing else redirect("/#audit")
+
         cache.set(cache_key, attempts + 1, timeout=self.rate_window)
 
         form = AuditRequestForm(request.POST)
         if not form.is_valid():
+            if from_landing:
+                return _render_landing_with_audit_form(request, form, status=400)
             return _render_home_with_audit_form(request, form, status=400)
 
         normalized_start_url = normalize_url(form.cleaned_data["website"])
@@ -1084,6 +1093,28 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
             latest_aeo_audit.visibility_snapshots.filter(answer_present=True).count()
             if latest_aeo_audit else 0
         )
+        if latest_aeo_audit:
+            from collections import defaultdict
+            _engine_labels = {
+                "chatgpt": "ChatGPT", "gemini": "Gemini", "perplexity": "Perplexity",
+                "google_aio": "Google AI Overviews", "claude": "Claude", "copilot": "Bing Copilot",
+            }
+            _eng_data = defaultdict(lambda: {"total": 0, "cited": 0})
+            for _snap in latest_aeo_audit.visibility_snapshots.all():
+                _eng_data[_snap.engine]["total"] += 1
+                if _snap.answer_present:
+                    _eng_data[_snap.engine]["cited"] += 1
+            _breakdown = []
+            for _eng, _d in _eng_data.items():
+                _pct = round(100 * _d["cited"] / _d["total"]) if _d["total"] else 0
+                _breakdown.append({
+                    "engine": _eng,
+                    "label": _engine_labels.get(_eng, _eng.replace("_", " ").title()),
+                    "pct": _pct, "cited": _d["cited"], "total": _d["total"],
+                })
+            context["engine_breakdown"] = sorted(_breakdown, key=lambda x: -x["pct"])
+        else:
+            context["engine_breakdown"] = []
         # Tracked prompts count — used by the activation checklist.
         if getattr(project, "pk", None):
             from apps.aeo.models import TrackedPrompt

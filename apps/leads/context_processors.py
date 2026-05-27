@@ -17,10 +17,16 @@ def workspace_projects(request):
     nav_current = ""
     if path.startswith("/workspace/seo/"):
         nav_current = "seo"
+    elif path.startswith("/workspace/prompts/"):
+        nav_current = "prompts"
+    elif path.startswith("/workspace/share-of-voice/"):
+        nav_current = "sov"
     elif path.startswith("/workspace/aeo/"):
         nav_current = "aeo"
-    elif path.startswith("/workspace/content/"):
+    elif path.startswith("/workspace/content/") or path.startswith("/workspace/cms/"):
         nav_current = "content"
+    elif path.startswith("/workspace/team/"):
+        nav_current = "team"
     elif path.startswith("/workspace/"):
         nav_current = "workspace"
     elif path.startswith("/tools/audits/"):
