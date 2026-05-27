@@ -1276,6 +1276,10 @@ input::placeholder, textarea::placeholder {
     margin: 0;
 }
 
+/* Section label above headings.
+   PUBLIC pages → use .feature-tag (brand-primary blue, bold)
+   WORKSPACE pages → use .eyebrow (muted, defined in site.css)
+   Both serve the same semantic role — choose by context. */
 .feature-tag {
     font-size: 0.75rem;
     color: var(--brand-primary);
@@ -2228,10 +2232,20 @@ input::placeholder, textarea::placeholder {
     font-weight: 700;
     white-space: nowrap;
 }
-.score-high { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
-.score-medium { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
-.score-low { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
-.score-med { background: rgba(14,165,233,0.12); color: #38bdf8; border: 1px solid rgba(14,165,233,0.25); }
+/* ── Score-pill colour system ────────────────────────────────────────────────
+   Canonical names: score-high | score-medium | score-low
+   Aliases kept for template backwards-compat: score-strong, score-med, score-stable, score-weak, score-critical
+   ──────────────────────────────────────────────────────────────────────────── */
+.score-high,
+.score-strong { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
+
+.score-medium,
+.score-med,
+.score-stable { background: rgba(245,158,11,0.12); color: #fbbf24; border: 1px solid rgba(245,158,11,0.25); }
+
+.score-low,
+.score-weak,
+.score-critical { background: rgba(239,68,68,0.12); color: #f87171; border: 1px solid rgba(239,68,68,0.25); }
 
 /* ── Packages page: 4-column premium grid layout ─────────────────────────── */
 .packages-grid-premium {
@@ -2516,6 +2530,16 @@ input::placeholder, textarea::placeholder {
 }
 .text-muted  { color: var(--text-muted) !important; }
 .text-error  { color: #f87171; font-size: 0.8rem; }
+
+/* ── Form utilities — canonical field-level messaging ─────────────────────
+   .form-hint   → helper text below a field (muted, informational)
+   .form-error  → field validation error (red)
+   .text-error  → alias for .form-error, kept for backwards-compat
+   .workspace-form-error → deprecated alias for .form-error
+   ──────────────────────────────────────────────────────────────────────── */
+.form-hint { color: var(--text-muted); font-size: 0.82rem; line-height: 1.5; margin-top: 0.3rem; }
+.form-error,
+.workspace-form-error { color: #f87171; font-size: 0.82rem; margin-top: 0.25rem; }
 
 /* ── Panel scroll (editorial queue) ─────────────────────────────────────── */
 .panel-scroll { overflow-y: auto; }
@@ -4765,9 +4789,15 @@ body.shell-light .workspace-form-field span:first-child {
     color: var(--text-primary);
 }
 
-body.shell-light .workspace-form-error {
+body.shell-light .workspace-form-error,
+body.shell-light .form-error,
+body.shell-light .text-error {
     color: #991b1b;
     font-size: 0.82rem;
+}
+
+body.shell-light .form-hint {
+    color: #475569;
 }
 
 body.shell-light .workspace-command-grid {

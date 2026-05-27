@@ -82,7 +82,7 @@ ACTION_FEATURE_LABELS = {
 }
 AUDIT_RESULT_PROFILES = {
     "free": {
-        "label": "Starter diagnosis",
+        "label": "Free tier audit",
         "summary": "Clear enough to confirm the main blockers, but intentionally shaped to push the next decision instead of dumping everything.",
         "top_issue_limit": 2,
         "quick_win_limit": 3,

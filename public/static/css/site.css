@@ -1,8 +1,11 @@
 :root {
     --ink: #0f172a;
     --sand: rgba(255, 255, 255, 0.02);
-    --signal: #8b5cf6;
+    --signal: #8b5cf6; /* purple accent — use var(--brand-primary) for brand-blue active states */
     --mist: #f1f5f9;
+    /* --bg-surface is the authoritative dark surface token defined in vrt-space-core.css.
+       Redefined here as a safety fallback so site.css is self-contained. */
+    --bg-surface: #0f172a;
     --panel: var(--bg-surface);
     --deep: #e2e8f0;
 }
@@ -17,7 +20,7 @@ html {
 
 body {
     margin: 0;
-    font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     color: #f8fafc !important;
     background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.05), transparent 35%),
         #020617;

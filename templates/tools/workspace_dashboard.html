@@ -6,7 +6,7 @@
 <div class="container-fluid workspace-dashboard-shell workspace-shell-header-wrap">
     <div class="ws-hub-header workspace-shell-header">
         <div class="ws-hub-header-left">
-            <div class="ws-hub-eyebrow"><i class="fas fa-th-large"></i> Workspace</div>
+            <div class="ws-hub-eyebrow"><i class="fa-solid fa-table-cells-large"></i> Workspace</div>
             <h1 class="ws-hub-title">{% if project.pk %}{{ project.name }}{% else %}Workspace Overview{% endif %}</h1>
             <p class="ws-hub-description">
                 Keep one working flow: run the audit, act on the clearest fixes, then move into SEO and AEO from the same project base.
@@ -205,28 +205,28 @@
                         <label class="workspace-form-field">
                             <span>Company</span>
                             {{ audit_start_form.company_name }}
-                            {% if audit_start_form.company_name.errors %}<span class="workspace-form-error">{{ audit_start_form.company_name.errors|join:", " }}</span>{% endif %}
+                            {% if audit_start_form.company_name.errors %}<span class="form-error">{{ audit_start_form.company_name.errors|join:", " }}</span>{% endif %}
                         </label>
                         {{ audit_start_form.email }}
                         <label class="workspace-form-field">
                             <span>Website</span>
                             {{ audit_start_form.website }}
-                            {% if audit_start_form.website.errors %}<span class="workspace-form-error">{{ audit_start_form.website.errors|join:", " }}</span>{% endif %}
+                            {% if audit_start_form.website.errors %}<span class="form-error">{{ audit_start_form.website.errors|join:", " }}</span>{% endif %}
                         </label>
                         <label class="workspace-form-field">
                             <span>Business type</span>
                             {{ audit_start_form.business_type }}
-                            {% if audit_start_form.business_type.errors %}<span class="workspace-form-error">{{ audit_start_form.business_type.errors|join:", " }}</span>{% endif %}
+                            {% if audit_start_form.business_type.errors %}<span class="form-error">{{ audit_start_form.business_type.errors|join:", " }}</span>{% endif %}
                         </label>
                         <label class="workspace-form-field">
                             <span>Specific niche</span>
                             {{ audit_start_form.business_subtype }}
-                            {% if audit_start_form.business_subtype.errors %}<span class="workspace-form-error">{{ audit_start_form.business_subtype.errors|join:", " }}</span>{% endif %}
+                            {% if audit_start_form.business_subtype.errors %}<span class="form-error">{{ audit_start_form.business_subtype.errors|join:", " }}</span>{% endif %}
                         </label>
                         <label class="workspace-form-field">
                             <span>Target audience</span>
                             {{ audit_start_form.target_audience }}
-                            {% if audit_start_form.target_audience.errors %}<span class="workspace-form-error">{{ audit_start_form.target_audience.errors|join:", " }}</span>{% endif %}
+                            {% if audit_start_form.target_audience.errors %}<span class="form-error">{{ audit_start_form.target_audience.errors|join:", " }}</span>{% endif %}
                         </label>
                         {{ audit_start_form.location }}
                         <div class="workspace-form-field"
@@ -325,17 +325,17 @@
                         <label class="workspace-form-field">
                             <span>Target goal</span>
                             {{ audit_start_form.target_goal }}
-                            {% if audit_start_form.target_goal.errors %}<span class="workspace-form-error">{{ audit_start_form.target_goal.errors|join:", " }}</span>{% endif %}
+                            {% if audit_start_form.target_goal.errors %}<span class="form-error">{{ audit_start_form.target_goal.errors|join:", " }}</span>{% endif %}
                         </label>
                         <label class="workspace-form-field">
                             <span>Primary offer</span>
                             {{ audit_start_form.primary_service }}
-                            {% if audit_start_form.primary_service.errors %}<span class="workspace-form-error">{{ audit_start_form.primary_service.errors|join:", " }}</span>{% endif %}
+                            {% if audit_start_form.primary_service.errors %}<span class="form-error">{{ audit_start_form.primary_service.errors|join:", " }}</span>{% endif %}
                         </label>
                         <label class="workspace-form-field">
                             <span>Audit focus</span>
                             {{ audit_start_form.notes }}
-                            {% if audit_start_form.notes.errors %}<span class="workspace-form-error">{{ audit_start_form.notes.errors|join:", " }}</span>{% endif %}
+                            {% if audit_start_form.notes.errors %}<span class="form-error">{{ audit_start_form.notes.errors|join:", " }}</span>{% endif %}
                         </label>
                         <button type="submit" class="button button-primary">Start audit</button>
                     </form>
@@ -652,27 +652,27 @@
                         <label class="workspace-form-field">
                             <span>Project name</span>
                             {{ project_form.name }}
-                            {% if project_form.name.errors %}<span class="workspace-form-error">{{ project_form.name.errors|join:", " }}</span>{% endif %}
+                            {% if project_form.name.errors %}<span class="form-error">{{ project_form.name.errors|join:", " }}</span>{% endif %}
                         </label>
                         <label class="workspace-form-field">
                             <span>Website</span>
                             {{ project_form.website }}
-                            {% if project_form.website.errors %}<span class="workspace-form-error">{{ project_form.website.errors|join:", " }}</span>{% endif %}
+                            {% if project_form.website.errors %}<span class="form-error">{{ project_form.website.errors|join:", " }}</span>{% endif %}
                         </label>
                         <label class="workspace-form-field">
                             <span>Business type</span>
                             {{ project_form.business_type }}
-                            {% if project_form.business_type.errors %}<span class="workspace-form-error">{{ project_form.business_type.errors|join:", " }}</span>{% endif %}
+                            {% if project_form.business_type.errors %}<span class="form-error">{{ project_form.business_type.errors|join:", " }}</span>{% endif %}
                         </label>
                         <label class="workspace-form-field">
                             <span>Specific niche</span>
                             {{ project_form.business_subtype }}
-                            {% if project_form.business_subtype.errors %}<span class="workspace-form-error">{{ project_form.business_subtype.errors|join:", " }}</span>{% endif %}
+                            {% if project_form.business_subtype.errors %}<span class="form-error">{{ project_form.business_subtype.errors|join:", " }}</span>{% endif %}
                         </label>
                         <label class="workspace-form-field">
                             <span>Target audience</span>
                             {{ project_form.target_audience }}
-                            {% if project_form.target_audience.errors %}<span class="workspace-form-error">{{ project_form.target_audience.errors|join:", " }}</span>{% endif %}
+                            {% if project_form.target_audience.errors %}<span class="form-error">{{ project_form.target_audience.errors|join:", " }}</span>{% endif %}
                         </label>
                         {{ project_form.location }}
                         <div class="workspace-form-field"
@@ -771,12 +771,12 @@
                         <label class="workspace-form-field">
                             <span>Target goal</span>
                             {{ project_form.target_goal }}
-                            {% if project_form.target_goal.errors %}<span class="workspace-form-error">{{ project_form.target_goal.errors|join:", " }}</span>{% endif %}
+                            {% if project_form.target_goal.errors %}<span class="form-error">{{ project_form.target_goal.errors|join:", " }}</span>{% endif %}
                         </label>
                         <label class="workspace-form-field">
                             <span>Primary offer</span>
                             {{ project_form.primary_service }}
-                            {% if project_form.primary_service.errors %}<span class="workspace-form-error">{{ project_form.primary_service.errors|join:", " }}</span>{% endif %}
+                            {% if project_form.primary_service.errors %}<span class="form-error">{{ project_form.primary_service.errors|join:", " }}</span>{% endif %}
                         </label>
                         <button type="submit" class="button button-primary">Create workspace</button>
                     </form>
