@@ -6503,3 +6503,194 @@ body.shell-light .ws-outcome-tile {
 body.shell-light .ws-outcome-value { color: #0f172a; }
 body.shell-light .ws-outcome-label { color: #64748b; }
 body.shell-light .ws-outcome-meta  { color: #94a3b8; }
+
+/* ============================================================
+   AGENCY DASHBOARD  (Phase 13)
+   ============================================================ */
+
+/* ── Summary bar ── */
+.agency-summary-bar {
+  display: flex;
+  gap: 2rem;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid rgba(255,255,255,.06);
+  flex-wrap: wrap;
+}
+.agency-stat { display: flex; flex-direction: column; gap: .15rem; }
+.agency-stat-value { font-size: 1.5rem; font-weight: 700; color: var(--text-primary); line-height: 1; }
+.agency-stat-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .06em; color: var(--text-muted); }
+.agency-stat--green .agency-stat-value { color: var(--score-high-fg, #4ade80); }
+.agency-stat--amber .agency-stat-value  { color: var(--score-med-fg,  #fbbf24); }
+
+/* ── Filter chips ── */
+.agency-filter-row {
+  display: flex;
+  gap: .5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1.25rem;
+}
+.agency-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .3rem .75rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: transparent;
+  color: var(--text-muted);
+  font-size: .78rem;
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.agency-chip:hover,
+.agency-chip--active {
+  background: rgba(255,255,255,.07);
+  color: var(--text-primary);
+  border-color: rgba(255,255,255,.2);
+}
+.agency-chip-count {
+  font-weight: 700;
+  font-size: .72rem;
+  color: inherit;
+}
+.agency-chip-count--red { color: #f87171; }
+
+/* ── Grid ── */
+.agency-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+}
+@media (max-width: 1100px) { .agency-grid { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px)  { .agency-grid { grid-template-columns: 1fr; } }
+
+/* ── Card base ── */
+.agency-card {
+  background: var(--bg-card, rgba(255,255,255,.04));
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: .75rem;
+  padding: 1.1rem 1.1rem .9rem;
+  display: flex;
+  flex-direction: column;
+  gap: .65rem;
+  transition: border-color .18s, background .18s;
+}
+.agency-card:hover { border-color: rgba(255,255,255,.18); background: rgba(255,255,255,.06); }
+
+/* Health accent left-border */
+.agency-card--green  { border-left: 3px solid #4ade80; }
+.agency-card--amber  { border-left: 3px solid #fbbf24; }
+.agency-card--red    { border-left: 3px solid #f87171; }
+.agency-card--muted  { border-left: 3px solid rgba(255,255,255,.2); }
+
+/* ── Card header ── */
+.agency-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: .75rem;
+}
+.agency-card-identity { display: flex; align-items: center; gap: .65rem; min-width: 0; }
+.agency-card-name {
+  font-size: .92rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.agency-card-domain { font-size: .72rem; color: var(--text-muted); display: block; }
+
+/* Health dot */
+.agency-card-health-dot {
+  width: .65rem;
+  height: .65rem;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.dot-green  { background: #4ade80; box-shadow: 0 0 6px #4ade8088; }
+.dot-amber  { background: #fbbf24; box-shadow: 0 0 6px #fbbf2488; }
+.dot-red    { background: #f87171; box-shadow: 0 0 6px #f8717188; }
+.dot-muted  { background: rgba(255,255,255,.25); }
+
+/* Score badge */
+.agency-card-score-wrap { display: flex; align-items: center; gap: .4rem; flex-shrink: 0; }
+.agency-score-badge {
+  font-size: 1.1rem;
+  font-weight: 700;
+  line-height: 1;
+  padding: .25rem .5rem;
+  border-radius: .35rem;
+}
+.agency-score-badge--green  { color: #4ade80; background: rgba(74,222,128,.1); }
+.agency-score-badge--amber  { color: #fbbf24; background: rgba(251,191,36,.1); }
+.agency-score-badge--red    { color: #f87171; background: rgba(248,113,113,.1); }
+.agency-score-badge--muted  { color: var(--text-muted); background: rgba(255,255,255,.05); }
+
+.agency-delta { font-size: .75rem; font-weight: 600; }
+.agency-delta--up   { color: #4ade80; }
+.agency-delta--down { color: #f87171; }
+
+/* ── At-risk category ── */
+.agency-card-risk {
+  display: flex;
+  align-items: center;
+  gap: .4rem;
+  font-size: .75rem;
+  color: #fbbf24;
+  background: rgba(251,191,36,.08);
+  border-radius: .35rem;
+  padding: .3rem .6rem;
+}
+.agency-risk-label { font-weight: 500; }
+.agency-risk-score { margin-left: auto; font-weight: 700; }
+
+/* ── Meta row ── */
+.agency-card-meta { display: flex; align-items: center; flex-wrap: wrap; gap: .5rem; }
+.agency-meta-item { display: flex; align-items: center; gap: .3rem; font-size: .72rem; color: var(--text-muted); }
+.agency-meta-item--warn  { color: #fbbf24; }
+.agency-meta-item--muted { opacity: .6; }
+.agency-stale-pill {
+  font-size: .65rem;
+  font-weight: 600;
+  padding: .1rem .4rem;
+  border-radius: 9999px;
+  background: rgba(251,191,36,.15);
+  color: #fbbf24;
+  border: 1px solid rgba(251,191,36,.3);
+}
+
+.agency-health-label { font-size: .72rem; font-weight: 500; }
+.agency-health-label--green { color: #4ade80; }
+.agency-health-label--amber { color: #fbbf24; }
+.agency-health-label--red   { color: #f87171; }
+.agency-health-label--muted { color: var(--text-muted); }
+
+/* ── Card actions ── */
+.agency-card-actions { display: flex; gap: .5rem; margin-top: auto; padding-top: .35rem; }
+
+/* ── Empty state ── */
+.agency-empty-state {
+  text-align: center;
+  padding: 4rem 1.5rem;
+  max-width: 28rem;
+  margin: 0 auto;
+}
+.agency-empty-icon {
+  font-size: 2.5rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+.agency-empty-title {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: .5rem;
+}
+.agency-empty-body {
+  font-size: .88rem;
+  color: var(--text-muted);
+  margin-bottom: 1.5rem;
+  line-height: 1.6;
+}

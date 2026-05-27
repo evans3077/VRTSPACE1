@@ -17,6 +17,10 @@
                    href="{% url 'tools:workspace-dashboard' %}">
                     <i class="fa-solid fa-th-large"></i>Overview
                 </a>
+                <a class="workspace-tab-pill {% if workspace_nav_current == 'agency' %}is-active{% endif %}"
+                   href="{% url 'tools:workspace-agency-dashboard' %}">
+                    <i class="fa-solid fa-grid-2"></i>All Clients
+                </a>
                 <a class="workspace-tab-pill {% if workspace_nav_current == 'aeo' %}is-active{% endif %}"
                    href="{% url 'aeo:workspace-aeo' %}">
                     <i class="fa-solid fa-robot"></i>AI Visibility

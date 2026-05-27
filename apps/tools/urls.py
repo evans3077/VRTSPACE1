@@ -41,6 +41,7 @@ from .views import (
     WorkspaceWelcomeView,
     SharedAuditReportPdfView,
     SharedAuditReportView,
+    WorkspaceAgencyDashboardView,
 )
 from .team_views import (
     AcceptInviteView,
@@ -82,6 +83,7 @@ urlpatterns = [
     path("share/audits/<slug:token>/", SharedAuditReportView.as_view(), name="shared-audit-report"),
     path("share/audits/<slug:token>/report.pdf", SharedAuditReportPdfView.as_view(), name="shared-audit-report-pdf"),
     path("workspace/demo/", WorkspaceDemoView.as_view(), name="workspace-demo"),
+    path("workspace/agency/", WorkspaceAgencyDashboardView.as_view(), name="workspace-agency-dashboard"),
     path("workspace/", WorkspaceDashboardView.as_view(), name="workspace-dashboard"),
     path("workspace/welcome/", WorkspaceWelcomeView.as_view(), name="workspace-welcome"),
     path("workspace/onboarding/", WorkspaceOnboardingView.as_view(), name="workspace-onboarding"),

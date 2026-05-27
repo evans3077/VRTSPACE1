@@ -2365,3 +2365,36 @@ class SharedAuditReportPdfView(DetailView):
         response = HttpResponse(pdf_bytes, content_type="application/pdf")
         response["Content-Disposition"] = f'inline; filename="shared-audit-report-{share_link.audit_run.pk}.pdf"'
         return response
+
+
+# ── Phase 13: Agency Dashboard ─────────────────────────────────────────────
+
+class WorkspaceAgencyDashboardView(LoginRequiredMixin, TemplateView):
+    """
+    Bird's-eye health overview of all client projects for the authenticated user.
+    Pure read-only view — all data comes from get_workspace_project_summaries().
+    """
+
+    template_name = "tools/workspace_agency_dashboard.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        summaries = get_workspace_project_summaries(self.request.user)
+
+        # Compute summary stats for the header row
+        total = len(summaries)
+        healthy = sum(1 for s in summaries if s.get("health_status") == "green")
+        stale = sum(1 for s in summaries if s.get("audit_is_stale"))
+        needs_attention = sum(1 for s in summaries if s.get("health_status") in ("red", "amber"))
+
+        context.update(
+            {
+                "projects": summaries,
+                "total_count": total,
+                "healthy_count": healthy,
+                "stale_count": stale,
+                "needs_attention_count": needs_attention,
+                "healthy_pct": round(healthy / total * 100) if total else 0,
+            }
+        )
+        return context
