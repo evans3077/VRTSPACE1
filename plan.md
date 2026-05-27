@@ -328,58 +328,16 @@ Turn the current platform into a production-grade decision system that is clearl
   Precision starts at intake. Weak business context or flat location text makes the downstream discovery pipeline guess too much.
   Delivered result:
   Audit and workspace creation now capture business subtype, target audience, targeted-vs-worldwide market mode, and structured country plus validated area inputs. Those values are synced into the project layer so SEO and later modules inherit better context instead of rebuilding it from scratch.
-- [ ] Add provider-level vertical source integration
+- [x] Add provider-level vertical source integration
   Why:
   Route families are now separated, but they still retrieve primarily through generic web-search providers.
-  Needed result:
-  Discovery can use more suitable source APIs by business type when they materially improve precision, for example:
-  - local/maps sources for local-service and location-led businesses
-  - hotels/events/travel sources for hospitality only when they are treated as market surfaces or visibility channels, not benchmark peers
-  - shopping/product sources for ecommerce
-  - related questions, autocomplete, and trend sources for demand shaping and content expansion
-  - review and directory sources for citation and reputation context
-  SEO source-integration order:
-  - `google_local`
-    Role:
-    benchmark-candidate enrichment, local entity validation, citation discovery, and local-pack evidence.
-    Why first:
-    It exposes business title, category, address, ratings, review volume, coordinates, and place IDs. That is stronger local competitor evidence than generic snippets.
-  - `google_local_services`
-    Role:
-    local-service competitor discovery and trust-signal enrichment.
-    Why second:
-    It exposes service type, service area, years in business, rating, and review volume. Use it for service businesses, not as a universal source.
-  - `google_events`
-    Role:
-    event-venue visibility surfaces, event-intent validation, and citation/backlink discovery.
-    Why third:
-    It helps event-led hospitality and venue businesses, but venues and ticket surfaces should not become benchmark peers by default.
-  - `google_hotels`
-    Role:
-    hospitality market-surface enrichment, amenity/pricing comparison, and visibility-channel analysis.
-    Why fourth:
-    Useful for hospitality, but it should remain a market-surface source rather than a peer benchmark source.
-  - `yelp`
-    Role:
-    citation and reputation signals.
-    Why:
-    Good for local listing and review intelligence, but Yelp pages should stay out of benchmark peers.
-  - `tripadvisor`
-    Role:
-    hospitality market-surface, review, and citation context.
-    Why:
-    High value for hotels, venues, restaurants, and attractions, but it is still a surface, not a benchmark competitor.
-  Defer for initial SEO source routing:
-  - `youtube`
-  - `yahoo`
-  - `yandex`
-  Reason:
-  These can help later with distribution, regional research, or content support, but they do not improve first-pass peer-competitor precision enough to be in the first SEO integration slice.
-- [ ] Add cache and reuse rules for expensive benchmark artifacts
+  Delivered result:
+  VERTICAL_SOURCE_ENGINES mapping in discovery.py routes each business type to its appropriate SerpAPI vertical engines: google_local and google_local_services for local_service/healthcare/automotive; google_local + google_hotels + google_events for hotel; google_local for real_estate and restaurant. fetch_vertical_serpapi_results() calls each engine with a 7-day cache. _parse_vertical_result() normalises results across engine shapes. _run_vertical_source_queries() orchestrates per-business-type calls and appends enriched local candidates to the main candidate pool. Each vertical result carries local_metadata (rating, reviews, address, place_id) for downstream enrichment. Candidates from google_local/google_local_services land in benchmark_competitor bucket for peer business types; google_hotels and google_events land in market_surface and citation_source respectively. Gracefully skips when no vertical engines are configured for the business type.
+- [x] Add cache and reuse rules for expensive benchmark artifacts
   Why:
   The system should not refetch or recompute everything on every refresh.
-  Needed result:
-  Competitor fetches, page-pattern extractions, and SERP evidence are reused when fresh enough, with explicit invalidation rules.
+  Delivered result:
+  competitor_snapshot_is_fresh() helper in discovery.py checks whether an existing SEOCompetitorSnapshot is within the reuse window (default 3 days, configurable via COMPETITOR_SNAPSHOT_REUSE_DAYS env var) and has non-empty output_json. get_or_build_competitor_snapshot() in services.py now follows a three-step hierarchy: (1) exact match for current audit run, (2) any fresh recent snapshot — reused by creating a lightweight copy with the same payload rather than re-crawling, (3) full re-fetch when no fresh snapshot exists. SerpAPI result caching (7-day per-query hash) was already in place; vertical engine results also use the same 7-day cache under a separate key prefix.
 
 #### Track B: Decision explainability and action quality
 

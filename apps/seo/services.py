@@ -813,13 +813,35 @@ def _fetch_competitor_pages(competitor_url, *, business_type="", location=""):
 
 
 def get_or_build_competitor_snapshot(*, competitor, audit_run, profile):
-    latest = (
+    from .discovery import competitor_snapshot_is_fresh
+
+    # 1. Prefer an exact match for this audit run (fastest path, no re-fetch needed)
+    exact = (
         SEOCompetitorSnapshot.objects.filter(competitor=competitor, source_audit_run=audit_run)
         .order_by("-created_at")
         .first()
     )
-    if latest:
-        return latest
+    if exact:
+        return exact
+
+    # 2. Reuse any fresh snapshot for this competitor from a recent audit run.
+    #    Avoids re-crawling competitor pages that were already fetched within the
+    #    reuse window (default 3 days, controlled by COMPETITOR_SNAPSHOT_REUSE_DAYS).
+    recent = (
+        SEOCompetitorSnapshot.objects.filter(competitor=competitor)
+        .order_by("-created_at")
+        .first()
+    )
+    if competitor_snapshot_is_fresh(recent):
+        # Return the recent snapshot without re-fetching; attach it to this audit run
+        # by creating a lightweight copy that shares the same output_json payload.
+        return SEOCompetitorSnapshot.objects.create(
+            competitor=competitor,
+            source_audit_run=audit_run,
+            output_json=recent.output_json,
+        )
+
+    # 3. No fresh snapshot — fetch competitor pages and build a new snapshot.
     payload = _fetch_competitor_pages(
         competitor.homepage_url,
         business_type=profile.business_type,
