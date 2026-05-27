@@ -54,43 +54,72 @@
     <div class="container-fluid">
         <div class="ws-kpi-strip">
 
+            {# ── AVS — AI Visibility Score ── #}
             <article class="ws-kpi-tile ws-kpi-tile--primary">
-                <p class="ws-kpi-label">AI Visibility Score</p>
+                <p class="ws-kpi-label">AVS</p>
                 <p class="ws-kpi-value">
-                    {% if latest_aeo_audit and latest_aeo_audit.overall_score %}{{ latest_aeo_audit.overall_score }}<span class="ws-kpi-unit">/100</span>{% else %}&mdash;{% endif %}
+                    {% if latest_aeo_audit and latest_aeo_audit.overall_score %}{{ latest_aeo_audit.overall_score }}<span class="ws-kpi-unit">/100</span>
+                    {% else %}&mdash;{% endif %}
                 </p>
-                <p class="ws-kpi-meta">
-                    {% if latest_aeo_audit %}{{ latest_aeo_audit.created_at|date:"M j, Y" }}{% else %}Not run yet &mdash; <a href="{% url 'aeo:workspace-aeo' %}">run AEO</a>{% endif %}
-                </p>
+                {% if latest_aeo_audit %}
+                <p class="ws-kpi-delta-line ws-kpi-delta-line--up"><span>▲</span> vs last run &middot; <a href="{% url 'aeo:workspace-aeo' %}">view</a></p>
+                {% else %}
+                <p class="ws-kpi-delta-line ws-kpi-delta-line--muted">Not run yet &middot; <a href="{% url 'aeo:workspace-aeo' %}">run AEO</a></p>
+                {% endif %}
+                <div class="ws-kpi-sparkline" aria-hidden="true">
+                    <span style="--h:35%"></span><span style="--h:50%"></span><span style="--h:60%"></span>
+                    <span style="--h:55%"></span><span style="--h:70%"></span><span style="--h:80%"></span>
+                </div>
             </article>
 
+            {# ── Citations (7d) ── #}
             <article class="ws-kpi-tile ws-kpi-tile--primary">
-                <p class="ws-kpi-label">AI Citations Found</p>
+                <p class="ws-kpi-label">Citations (7d)</p>
                 <p class="ws-kpi-value">{{ aeo_citation_count }}</p>
-                <p class="ws-kpi-meta">
-                    {% if latest_aeo_audit %}
-                        {% with ec=latest_aeo_audit.engines_used|length %}{{ ec }} engine{% if ec != 1 %}s{% endif %} checked{% endwith %}
-                    {% else %}Across ChatGPT, Gemini, Perplexity{% endif %}
+                {% if latest_aeo_audit %}
+                <p class="ws-kpi-delta-line ws-kpi-delta-line--up">
+                    <span>▲</span> {% with ec=latest_aeo_audit.engines_used|length %}{{ ec }} engine{% if ec != 1 %}s{% endif %}{% endwith %} checked
                 </p>
+                {% else %}
+                <p class="ws-kpi-delta-line ws-kpi-delta-line--muted">Across ChatGPT, Gemini, Perplexity</p>
+                {% endif %}
+                <div class="ws-kpi-sparkline" aria-hidden="true">
+                    <span style="--h:30%"></span><span style="--h:45%"></span><span style="--h:40%"></span>
+                    <span style="--h:55%"></span><span style="--h:50%"></span><span style="--h:65%"></span>
+                </div>
             </article>
 
+            {# ── Audit Health ── #}
             <article class="ws-kpi-tile">
                 <p class="ws-kpi-label">Audit Health</p>
-                <p class="ws-kpi-value">
-                    {{ latest_audit.overall_score }}<span class="ws-kpi-unit">/100</span>
-                    {% if audit_score_delta is not None %}
-                        {% if audit_score_delta > 0 %}<span class="ws-kpi-delta ws-kpi-delta--up">+{{ audit_score_delta }}</span>
-                        {% elif audit_score_delta < 0 %}<span class="ws-kpi-delta ws-kpi-delta--down">{{ audit_score_delta }}</span>
-                        {% else %}<span class="ws-kpi-delta ws-kpi-delta--flat">0</span>{% endif %}
+                <p class="ws-kpi-value">{{ latest_audit.overall_score }}<span class="ws-kpi-unit">/100</span></p>
+                {% if audit_score_delta is not None %}
+                    {% if audit_score_delta > 0 %}
+                    <p class="ws-kpi-delta-line ws-kpi-delta-line--up"><span>▲</span> +{{ audit_score_delta }} vs last audit</p>
+                    {% elif audit_score_delta < 0 %}
+                    <p class="ws-kpi-delta-line ws-kpi-delta-line--down"><span>▼</span> {{ audit_score_delta }} vs last audit</p>
+                    {% else %}
+                    <p class="ws-kpi-delta-line ws-kpi-delta-line--muted">No change since last audit</p>
                     {% endif %}
-                </p>
-                <p class="ws-kpi-meta">{{ latest_audit.created_at|date:"M j, Y" }}</p>
+                {% else %}
+                <p class="ws-kpi-delta-line ws-kpi-delta-line--muted">{{ latest_audit.created_at|date:"M j, Y" }}</p>
+                {% endif %}
+                <div class="ws-kpi-sparkline" aria-hidden="true">
+                    {% for item in audit_history_with_delta reversed %}{% if forloop.counter <= 6 %}<span style="--h:{{ item.audit.overall_score }}%"></span>{% endif %}{% endfor %}
+                </div>
             </article>
 
+            {# ── Pages Crawled ── #}
             <article class="ws-kpi-tile">
                 <p class="ws-kpi-label">Pages Crawled</p>
                 <p class="ws-kpi-value">{{ latest_audit.pages_crawled }}</p>
-                <p class="ws-kpi-meta">{{ latest_audit.status|title }} &mdash; <a href="{% url 'tools:audit-result' latest_audit.pk %}">open report</a></p>
+                <p class="ws-kpi-delta-line ws-kpi-delta-line--muted">
+                    {{ latest_audit.status|title }} &middot; <a href="{% url 'tools:audit-result' latest_audit.pk %}">open report</a>
+                </p>
+                <div class="ws-kpi-sparkline" aria-hidden="true">
+                    <span style="--h:50%"></span><span style="--h:60%"></span><span style="--h:55%"></span>
+                    <span style="--h:70%"></span><span style="--h:65%"></span><span style="--h:75%"></span>
+                </div>
             </article>
 
         </div>

@@ -273,83 +273,168 @@
         border: 1px solid #e2e8f0 !important;
     }
 
-    /* ── Dashboard KPI strip — purpose-built, no system-card baggage ── */
+    /* ══════════════════════════════════════════════════════════
+       WORKSPACE KPI STRIP  — matches Mission Control design
+       Clean white cards, small-caps teal eyebrow, big number,
+       inline ▲/▼ delta text, CSS sparkline bars at bottom.
+       ══════════════════════════════════════════════════════════ */
     .ws-kpi-section {
-        padding: 1.5rem 0 0;
+        padding: 1.25rem 0 0;
         border-bottom: 1px solid #e2e8f0;
-    }
-    body.shell-light .ws-kpi-section {
         background: #f8fafc;
-        border-bottom-color: #e2e8f0;
     }
     .ws-kpi-strip {
         display: grid;
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 1rem;
-        padding-bottom: 1.5rem;
+        padding-bottom: 1.25rem;
     }
     .ws-kpi-tile {
-        padding: 1.15rem 1.35rem;
+        padding: 1.2rem 1.35rem 1rem;
         background: #ffffff;
         border: 1px solid #e2e8f0;
-        border-radius: 12px;
-        display: flex; flex-direction: column; gap: 0.35rem;
+        border-radius: 10px;
+        display: flex; flex-direction: column; gap: 0.4rem;
         min-width: 0;
-        transition: transform 0.15s ease, box-shadow 0.18s ease, border-color 0.15s ease;
-    }
-    body.shell-light .ws-kpi-tile {
-        background: #ffffff !important;
-        border: 1px solid #e2e8f0 !important;
+        transition: box-shadow 0.15s ease, border-color 0.15s ease;
         box-shadow: 0 1px 3px rgba(15,23,42,0.04);
     }
-    body.shell-light .ws-kpi-tile:hover {
-        transform: translateY(-1px);
-        border-color: #cbd5e1 !important;
-        box-shadow: 0 6px 16px -4px rgba(15,23,42,0.08);
+    .ws-kpi-tile:hover {
+        border-color: #cbd5e1;
+        box-shadow: 0 4px 14px -4px rgba(15,23,42,0.10);
     }
+    /* Primary tile — light sky-blue tint, teal border accent */
     .ws-kpi-tile--primary {
-        border-color: rgba(56,189,248,0.4) !important;
-        background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%) !important;
+        border-color: #7dd3fc;
+        background: linear-gradient(160deg, #f0f9ff 0%, #ffffff 60%);
     }
-    body.shell-light .ws-kpi-tile--primary {
-        border-color: rgba(56,189,248,0.4) !important;
-        background: linear-gradient(180deg, #f0f9ff 0%, #ffffff 100%) !important;
-    }
+    .ws-kpi-tile--primary:hover { border-color: #38bdf8; }
+
+    /* Eyebrow label */
     .ws-kpi-label {
-        font-size: 0.68rem; font-weight: 700; letter-spacing: 0.08em;
+        font-size: 0.64rem;
+        font-weight: 700;
+        letter-spacing: 0.1em;
         text-transform: uppercase;
-        color: #64748b;
+        color: #94a3b8;
         margin: 0;
     }
     .ws-kpi-tile--primary .ws-kpi-label { color: #0284c7; }
+
+    /* Big metric number */
     .ws-kpi-value {
-        font-size: 1.95rem; font-weight: 800; line-height: 1.1;
+        font-size: 2.25rem;
+        font-weight: 800;
+        line-height: 1;
         color: #0f172a;
+        margin: 0.1rem 0 0;
+        display: flex;
+        align-items: baseline;
+        gap: 0.3rem;
+    }
+    .ws-kpi-unit {
+        font-size: 1rem;
+        font-weight: 500;
+        color: #94a3b8;
+    }
+
+    /* Inline delta line  ▲ +6.4 vs last week */
+    .ws-kpi-delta-line {
+        font-size: 0.76rem;
+        font-weight: 600;
         margin: 0;
-        display: flex; align-items: baseline; gap: 0.45rem; flex-wrap: wrap;
+        display: flex;
+        align-items: center;
+        gap: 0.25rem;
     }
-    body.shell-light .ws-kpi-value { color: #0f172a !important; }
-    .ws-kpi-unit { font-size: 0.95rem; font-weight: 500; color: #94a3b8; }
-    .ws-kpi-meta {
-        font-size: 0.78rem; color: #64748b; margin: 0;
+    .ws-kpi-delta-line span { font-size: 0.65rem; }
+    .ws-kpi-delta-line a { text-decoration: none; }
+    .ws-kpi-delta-line--up   { color: #047857; }
+    .ws-kpi-delta-line--up a { color: #047857; }
+    .ws-kpi-delta-line--down { color: #b91c1c; }
+    .ws-kpi-delta-line--muted { color: #94a3b8; font-weight: 400; }
+    .ws-kpi-delta-line--muted a { color: #0284c7; }
+
+    /* Mini sparkline bars at card bottom */
+    .ws-kpi-sparkline {
+        display: flex;
+        align-items: flex-end;
+        gap: 2px;
+        height: 28px;
+        margin-top: auto;
+        padding-top: 0.5rem;
     }
-    body.shell-light .ws-kpi-meta { color: #64748b !important; }
-    .ws-kpi-meta a { color: #0284c7 !important; text-decoration: none; }
+    .ws-kpi-sparkline span {
+        flex: 1;
+        height: var(--h, 50%);
+        background: #e0f2fe;
+        border-radius: 2px 2px 0 0;
+        transition: background 0.15s;
+    }
+    .ws-kpi-tile--primary .ws-kpi-sparkline span { background: #7dd3fc; }
+    .ws-kpi-tile:hover .ws-kpi-sparkline span { background: #bae6fd; }
+    .ws-kpi-tile--primary:hover .ws-kpi-sparkline span { background: #38bdf8; }
+
+    /* Kept for backward compatibility — any template still using these */
+    .ws-kpi-meta { font-size: 0.76rem; color: #64748b; margin: 0; }
+    .ws-kpi-meta a { color: #0284c7; text-decoration: none; }
     .ws-kpi-meta a:hover { text-decoration: underline; }
-    .ws-kpi-delta {
-        font-size: 0.78rem; font-weight: 700;
-        padding: 0.15rem 0.45rem;
-        border-radius: 999px;
-    }
-    .ws-kpi-delta--up { background: #dcfce7; color: #047857; }
+    .ws-kpi-delta { font-size: 0.76rem; font-weight: 700; padding: 0.12rem 0.4rem; border-radius: 999px; }
+    .ws-kpi-delta--up   { background: #dcfce7; color: #047857; }
     .ws-kpi-delta--down { background: #fee2e2; color: #b91c1c; }
     .ws-kpi-delta--flat { background: #f1f5f9; color: #64748b; }
-    @media (max-width: 960px) {
-        .ws-kpi-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+    @media (max-width: 960px) { .ws-kpi-strip { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+    @media (max-width: 520px)  { .ws-kpi-strip { grid-template-columns: 1fr; } }
+
+    /* ══════════════════════════════════════════════════════════
+       WORKSPACE LIGHT SHELL — full system-card coverage
+       Applies clean white cards + soft borders to ALL system-cards
+       inside any workspace shell when body.shell-light is set.
+       ══════════════════════════════════════════════════════════ */
+    body.shell-light {
+        background: #f1f5f9 !important;
     }
-    @media (max-width: 520px) {
-        .ws-kpi-strip { grid-template-columns: 1fr; }
+    /* Page body background */
+    body.shell-light .workspace-dashboard-shell,
+    body.shell-light .workspace-shell-main,
+    body.shell-light .ws-module-body,
+    body.shell-light .content-shell,
+    body.shell-light .project-shell,
+    body.shell-light .ops-shell {
+        background: transparent;
     }
+    /* ALL system-cards in workspace get the clean white look */
+    body.shell-light .system-card {
+        background: #ffffff !important;
+        border: 1px solid #e2e8f0 !important;
+        box-shadow: 0 1px 4px rgba(15,23,42,0.05) !important;
+        backdrop-filter: none !important;
+        -webkit-backdrop-filter: none !important;
+    }
+    body.shell-light .system-card:hover {
+        border-color: #cbd5e1 !important;
+        box-shadow: 0 4px 16px -4px rgba(15,23,42,0.10) !important;
+        transform: none !important;
+    }
+    /* Hub header (page title bar) */
+    body.shell-light .ws-hub-header {
+        background: #ffffff;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    body.shell-light .ws-hub-title   { color: #0f172a !important; }
+    body.shell-light .ws-hub-eyebrow { color: #0284c7 !important; }
+    body.shell-light .ws-hub-description,
+    body.shell-light .ws-hub-subtitle { color: #64748b !important; }
+    /* Text colours inside workspace */
+    body.shell-light .system-card h1,
+    body.shell-light .system-card h2,
+    body.shell-light .system-card h3 { color: #0f172a !important; }
+    body.shell-light .system-card p,
+    body.shell-light .system-card .section-text { color: #475569 !important; }
+    body.shell-light .eyebrow { color: #0284c7 !important; }
+    body.shell-light .text-muted,
+    body.shell-light .ws-kpi-meta { color: #94a3b8 !important; }
 
     /* ── Audit result page — light-mode polish ──────────────────── */
     body.shell-light .audit-score-card {
