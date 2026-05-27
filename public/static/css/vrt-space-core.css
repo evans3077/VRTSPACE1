@@ -6789,3 +6789,22 @@ body.shell-light .ws-outcome-meta  { color: #94a3b8; }
 .usage-pill--notice   { background: rgba(251,191,36,.1);  color: #fbbf24; border: 1px solid rgba(251,191,36,.2); }
 .usage-pill--warning  { background: rgba(251,146,60,.12); color: #fb923c; border: 1px solid rgba(251,146,60,.25); }
 .usage-pill--critical { background: rgba(248,113,113,.1); color: #f87171; border: 1px solid rgba(248,113,113,.2); }
+
+/* ============================================================
+   HEADING SCALE TOKENS  (HEADING-1 fix — Phase 13)
+   Replaces scattered inline clamp() values across templates.
+   Use these variables instead of writing clamp() inline.
+
+   --heading-hero  : page-level hero headings (h1 on landing pages)
+   --heading-xl    : major section headings (h1 on workspace/module pages)
+   --heading-lg    : sub-section headings (h2 on marketing sections)
+   --heading-md    : card/panel headings (h2 inside components)
+   --heading-sm    : card sub-headings, list headings (h3)
+   ============================================================ */
+:root {
+  --heading-hero : clamp(2.4rem, 5vw, 4rem);
+  --heading-xl   : clamp(1.85rem, 4vw, 2.8rem);
+  --heading-lg   : clamp(1.7rem, 3.5vw, 2.4rem);
+  --heading-md   : clamp(1.45rem, 3vw, 1.9rem);
+  --heading-sm   : clamp(1.1rem, 2vw, 1.3rem);
+}

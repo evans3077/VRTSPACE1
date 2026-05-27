@@ -1,7 +1,8 @@
 :root {
     --ink: #0f172a;
     --sand: rgba(255, 255, 255, 0.02);
-    --signal: #8b5cf6; /* purple accent — use var(--brand-primary) for brand-blue active states */
+    --signal: #8b5cf6; /* purple — priority/progress/notification indicators ONLY.
+       For brand CTAs, nav active states, and link colours use var(--brand-primary). */
     --mist: #f1f5f9;
     /* --bg-surface is the authoritative dark surface token defined in vrt-space-core.css.
        Redefined here as a safety fallback so site.css is self-contained. */
@@ -212,11 +213,7 @@ a {
     font-size: 0.9em;
 }
 
-.workspace-subnav-link.is-active {
-    background: var(--signal);
-    color: white;
-    box-shadow: 0 14px 35px rgba(249, 115, 22, 0.22);
-}
+/* .workspace-subnav-link.is-active removed — class unused, was conflating --signal with active-state */
 
 .workspace-credit-strip {
     display: flex;
