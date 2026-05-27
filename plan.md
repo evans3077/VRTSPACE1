@@ -511,11 +511,11 @@ Turn the current platform into a production-grade decision system that is clearl
   The payment page was showing raw plan-limit objects, the visual treatment was too heavy, and long plan cards forced unnecessary scrolling.
   Delivered result:
   The account billing page now renders structured limit labels correctly, uses a lighter local surface, and collapses plan cards into a direct checkout accordion so users can compare plans without reading through one long static wall.
-- [ ] Improve public homepage conversion flow
+- [x] Improve public homepage conversion flow
   Why:
   The audit form and mobile navigation still carry conversion risk when the page gets long.
-  Needed result:
-  Add progressive disclosure, cleaner mobile navigation behavior, and stronger CTA continuity without making the homepage heavier.
+  Delivered result:
+  Three targeted improvements without adding page weight: (1) Mobile drawer now auto-closes when any link inside it is tapped. (2) Audit form progressive disclosure uses CSS max-height transition — JS removes the inline style override on init so the expand/collapse animates smoothly. (3) Sticky mobile CTA bar slides up once the hero leaves the viewport on mobile, showing a full-width audit CTA that returns to hidden when user scrolls back to the top.
 
 ---
 

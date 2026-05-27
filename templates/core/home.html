@@ -1166,4 +1166,34 @@
     });
 })();
 </script>
+
+{# ── Sticky mobile CTA — appears after hero scrolls out of viewport ── #}
+<div class="mobile-sticky-cta" id="mobile-sticky-cta" aria-hidden="true">
+    <a href="{% url 'tools:workspace-signup' %}" class="button button-primary" style="width: 100%; max-width: 340px; font-size: 0.95rem; padding: 0.7rem 1.25rem;">
+        Run Free AI Visibility Audit →
+    </a>
+</div>
+
+<script>
+/* Sticky mobile CTA — slides up once the hero is off-screen, hides when near top */
+(function() {
+    var cta = document.getElementById('mobile-sticky-cta');
+    if (!cta) return;
+    var hero = document.querySelector('.hero-split');
+    if (!hero) return;
+    function update() {
+        var bottom = hero.getBoundingClientRect().bottom;
+        var visible = bottom < 0;
+        if (visible) {
+            cta.classList.add('is-visible');
+            cta.setAttribute('aria-hidden', 'false');
+        } else {
+            cta.classList.remove('is-visible');
+            cta.setAttribute('aria-hidden', 'true');
+        }
+    }
+    window.addEventListener('scroll', update, { passive: true });
+    update();
+})();
+</script>
 {% endblock %}

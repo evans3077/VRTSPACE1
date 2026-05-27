@@ -788,6 +788,51 @@
         to { opacity: 1; transform: translateX(0); }
     }
 
+    /* ── Audit form progressive disclosure — smooth expand ─────────── */
+    .audit-form-advanced {
+        overflow: hidden;
+        max-height: 0;
+        opacity: 0;
+        transition: max-height 0.38s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.28s ease;
+        display: flex !important;
+        flex-direction: column;
+        gap: 1.25rem;
+        margin-top: 0;
+    }
+    .audit-form-advanced.is-open {
+        max-height: 1200px;
+        opacity: 1;
+        margin-top: 1.25rem;
+    }
+
+    /* ── Sticky mobile CTA — appears after hero leaves viewport ─────── */
+    .mobile-sticky-cta {
+        display: none;
+        position: fixed;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 200;
+        padding: 0.75rem 1rem;
+        background: rgba(10, 14, 26, 0.97);
+        border-top: 1px solid rgba(56,189,248,0.2);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        text-align: center;
+        transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
+        transform: translateY(100%);
+        opacity: 0;
+    }
+    .mobile-sticky-cta.is-visible {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    @media (max-width: 860px) {
+        .mobile-sticky-cta {
+            display: block;
+        }
+    }
+
     /* Hamburger button — better touch target on mobile */
     @media (max-width: 860px) {
         .nav-hamburger {
@@ -1300,25 +1345,28 @@
         document.addEventListener('keydown', function(e) {
             if (e.key === 'Escape') closeDrawer();
         });
+        // Auto-close the mobile drawer when any link inside it is tapped
+        drawer.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', closeDrawer);
+        });
 
         var auditExpandBtn = document.getElementById('audit-form-expand');
         var auditAdvancedSection = document.getElementById('audit-form-advanced');
         if (auditExpandBtn && auditAdvancedSection) {
+            // Remove any inline display:none so the CSS max-height transition drives visibility
+            auditAdvancedSection.style.removeProperty('display');
             auditExpandBtn.addEventListener('click', function() {
                 var isExpanded = auditExpandBtn.getAttribute('aria-expanded') === 'true';
                 if (!isExpanded) {
                     auditExpandBtn.setAttribute('aria-expanded', 'true');
                     auditAdvancedSection.classList.add('is-open');
                     auditAdvancedSection.setAttribute('aria-hidden', 'false');
-                    auditAdvancedSection.style.display = 'flex';
-                    auditAdvancedSection.style.flexDirection = 'column';
                     var label = document.getElementById('audit-expand-label');
                     if (label) label.textContent = 'Hide advanced context';
                 } else {
                     auditExpandBtn.setAttribute('aria-expanded', 'false');
                     auditAdvancedSection.classList.remove('is-open');
                     auditAdvancedSection.setAttribute('aria-hidden', 'true');
-                    auditAdvancedSection.style.display = 'none';
                     var label = document.getElementById('audit-expand-label');
                     if (label) label.textContent = 'Add context for a richer report';
                 }
