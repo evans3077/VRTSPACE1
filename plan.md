@@ -252,6 +252,42 @@ Surface the full multi-client agency view, fix the most critical UI inconsistenc
 - **Agency dashboard CSS** in `vrt-space-core.css`
   Summary bar, filter chips, card grid, health dot variants (green/amber/red/muted), score badges, delta colouring, at-risk pill, stale warning badge, empty state.
 
+- **Prominent audit schedule card** in workspace dashboard secondary stack
+  Shows active state (cadence + next run + pause button) or inactive state (enable form with cadence selector). Alert toggles for email_reports_enabled / alert_on_score_drop / alert_on_new_issues — auto-submit on toggle change. Score-drop and new-issue email notifications now surfaced without navigating elsewhere.
+
+- **Affiliate nav tab** in workspace nav rail
+  Conditionally rendered "Affiliate" tab for users with active affiliate profiles. Resolves AFF-1 (affiliate dashboard unreachable from nav).
+
+- **ICON-1 fix** (high)
+  Bulk replaced all 86 `fas fa-*` usages with `fa-solid fa-*` across all templates (FA6 syntax standardisation).
+
+- **SCORE-1 fix** (critical)
+  Bulk replaced all `score-med` → `score-medium` across all templates. Single canonical intermediate-score class.
+
+- **PILL-1 fix** (high)
+  Replaced `score-pill` with new `usage-pill` (4 semantic variants: ok/notice/warning/critical) for credit utilisation display in workspace dashboard. Score and credit concepts now visually separated.
+
+- **CTA-1 / CTA-2 fixes** (critical/medium)
+  Standardised audit button text across all templates:
+  - Primary public CTA: "Run Free AI Visibility Audit" (service pages updated)
+  - Empty-state workspace CTA: "Run your first audit"
+  - Post-result CTA: "Run another audit"
+
+- **BADGE-1 fix** (low)
+  Added `.dot-red` to status dot system (the set at line ~2046 was missing it).
+
+- **CSS-2 fix** (critical)
+  Clarified `--signal` (purple) semantic role: "priority/progress/notification indicators ONLY". Removed dead `workspace-subnav-link.is-active` rule (class unused in templates) that was the source of active-state confusion.
+
+- **HEADING-1 fix** (medium)
+  Added `--heading-hero/xl/lg/md/sm` CSS token variables to `vrt-space-core.css`. Replaced 25 scattered inline `clamp()` values across 19 templates with token references.
+
+- **AEO-1 fix** (medium)
+  Converted `workspace_prompts.html` and `share_of_voice.html` from public shell patterns (`public-shell-section`, `public-hero-split`) to canonical `ws-hub-header workspace-shell-header` pattern used by all other workspace module pages.
+
+- **agency_audit.html** inline score-pill override removed
+  Conflicting inline `.score-high/.score-medium/.score-low` colour definitions removed; defers to `vrt-space-core.css` canonical source.
+
 ---
 
 ### Phase 12: Clinical Precision & Advanced API Intelligence
