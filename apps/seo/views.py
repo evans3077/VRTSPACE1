@@ -318,32 +318,25 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             else []
         )
         
-        # Clinical Precision API Data Fetch (Fallback/Mock structure used if billing inactive)
-        dfs_client = DataForSeoClient()
-        geo_client = GeoApiClient()
-        
-        clinical_search_volume = {}
-        clinical_backlinks = {}
-        geo_shootout = {}
-        
-        if project:
-            # We use the primary service as the keyword for market gap analysis
+        # Clinical Precision: read persisted results from profile metadata
+        # (populated by WorkspaceGEOShootoutView and WorkspaceClinicalDataView).
+        # Fall back to lightweight mock structure so the template never crashes.
+        profile_meta = (getattr(profile, "metadata", None) or {}) if profile else {}
+
+        geo_shootout = profile_meta.get("geo_shootout") or {}
+        clinical_stored = profile_meta.get("clinical_data") or {}
+        clinical_search_volume = clinical_stored.get("search_volume") or {}
+        clinical_backlinks = clinical_stored.get("backlinks") or {}
+        entity_confidence = profile_meta.get("entity_confidence") or {}
+
+        # If no stored results yet, show a minimal placeholder so the template
+        # section still renders (enabling the "Run Shootout" CTA to appear).
+        if not geo_shootout and project:
             keywords = [getattr(project, "primary_service", "SEO") or "SEO Services"]
-            clinical_search_volume = dfs_client.get_search_volume(keywords)
-            clinical_backlinks = dfs_client.get_backlink_profile(project.normalized_domain or "example.com")
-            
-            # Use top competitors for GEO Shootout
-            competitor_urls = [c.homepage_url for c in project.seo_competitors.filter(is_active=True)[:2]]
-            if not competitor_urls:
-                competitor_urls = ["competitor1.com", "competitor2.com"]
-                
-            geo_shootout = geo_client.run_geo_shootout(
-                brand_name=project.name,
-                service_query=keywords[0],
-                competitors=competitor_urls
-            ) or {}
-            # Expose the query so the template can offer "promote to prompt tracker"
-            geo_shootout["query"] = keywords[0]
+            geo_shootout = {"query": keywords[0], "is_placeholder": True}
+
+        if not clinical_search_volume and project:
+            clinical_search_volume = {}
 
         # ── AEO mini-summary for the SEO hub callout ────────────────────────
         aeo_summary = None
@@ -448,6 +441,7 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             "clinical_backlinks": clinical_backlinks,
             "geo_shootout": geo_shootout,
             "aeo_summary": aeo_summary,
+            "entity_confidence": entity_confidence,
             "page_title": f"{project.name if project else 'Workspace'} SEO Workspace | VRT SPACE AGENCY",
             "meta_description": "Private SEO workspace for competitor-backed benchmark decisions, campaign execution, and stakeholder reporting.",
             "canonical_url": self.request.build_absolute_uri(self.request.path),
@@ -901,3 +895,511 @@ class SEOCampaignActionPackView(LoginRequiredMixin, View):
             campaign.save(update_fields=["status", "metadata", "updated_at"])
             messages.success(request, "Campaign status updated.")
         return redirect("seo:campaign-action-pack", pk=campaign.pk)
+
+
+# ---------------------------------------------------------------------------
+# Phase 12: Clinical Intelligence Action Views
+# ---------------------------------------------------------------------------
+
+class WorkspaceGEOShootoutView(LoginRequiredMixin, View):
+    """
+    POST — Triggers a live GEO Shootout against Perplexity Sonar Pro.
+
+    Checks clinical_intelligence_enabled, spends 5 credits, calls GeoApiClient,
+    persists the result to SEOProjectProfile.metadata["geo_shootout"], then
+    redirects back to the SEO workspace so the result renders inline.
+    """
+
+    def post(self, request, *args, **kwargs):
+        project = resolve_workspace_project(request.user)
+        if not project:
+            messages.error(request, "No active workspace project.")
+            return redirect("seo:workspace-seo")
+
+        profile = getattr(project, "seo_profile", None)
+        if not profile:
+            messages.error(request, "Complete your SEO profile before running a GEO Shootout.")
+            return redirect("seo:workspace-seo")
+
+        # Feature gate
+        allowed, reason = can_access_workspace_feature(request.user, "clinical_intelligence_enabled")
+        if not allowed:
+            messages.error(request, f"GEO Shootout requires a plan with Clinical Intelligence enabled. {reason or ''}")
+            return redirect("seo:workspace-seo")
+
+        # Credit spend — idempotent within same day via reuse_reference
+        reference_key = f"geo_shootout:{project.pk}:{timezone.now().date()}"
+        try:
+            spend_action_credits(
+                request.user,
+                "geo_shootout",
+                project=project,
+                note=f"GEO Shootout for {project.name}",
+                reference_key=reference_key,
+                reuse_reference=True,
+            )
+        except BillingError as exc:
+            messages.error(request, str(exc))
+            return redirect("seo:workspace-seo")
+
+        # Run the shootout
+        keywords = [getattr(project, "primary_service", "") or "digital marketing services"]
+        competitor_urls = [c.homepage_url for c in project.seo_competitors.filter(is_active=True)[:3]]
+        competitor_names = [c.normalized_domain for c in project.seo_competitors.filter(is_active=True)[:3]]
+        if not competitor_names:
+            competitor_names = ["competitor1.com", "competitor2.com"]
+
+        geo_client = GeoApiClient()
+        result = geo_client.run_geo_shootout(
+            brand_name=project.name,
+            service_query=keywords[0],
+            competitors=competitor_names,
+        )
+        result["query"] = keywords[0]
+        result["run_at"] = timezone.now().isoformat()
+
+        # Persist to profile metadata
+        metadata = dict(profile.metadata or {})
+        metadata["geo_shootout"] = result
+        profile.metadata = metadata
+        profile.save(update_fields=["metadata", "updated_at"])
+
+        if result.get("brand_cited"):
+            messages.success(request, f"GEO Shootout complete — {project.name} was cited by the AI engine.")
+        else:
+            messages.warning(request, f"GEO Shootout complete — {project.name} was not cited. Check the Authority Gap plan.")
+        return redirect(f"{reverse('seo:workspace-seo')}#seo-clinical-intelligence")
+
+
+class WorkspaceClinicalDataView(LoginRequiredMixin, View):
+    """
+    POST — Fetches live search volume and backlink data from DataForSEO.
+
+    Checks clinical_intelligence_enabled, spends 4 credits, calls DataForSeoClient,
+    persists to SEOProjectProfile.metadata["clinical_data"], redirects back.
+    """
+
+    def post(self, request, *args, **kwargs):
+        project = resolve_workspace_project(request.user)
+        if not project:
+            messages.error(request, "No active workspace project.")
+            return redirect("seo:workspace-seo")
+
+        profile = getattr(project, "seo_profile", None)
+        if not profile:
+            messages.error(request, "Complete your SEO profile before fetching market data.")
+            return redirect("seo:workspace-seo")
+
+        # Feature gate
+        allowed, reason = can_access_workspace_feature(request.user, "clinical_intelligence_enabled")
+        if not allowed:
+            messages.error(request, f"Clinical Market Data requires a plan with Clinical Intelligence enabled. {reason or ''}")
+            return redirect("seo:workspace-seo")
+
+        # Credit spend
+        reference_key = f"clinical_data:{project.pk}:{timezone.now().date()}"
+        try:
+            spend_action_credits(
+                request.user,
+                "clinical_data",
+                project=project,
+                note=f"Clinical market data for {project.name}",
+                reference_key=reference_key,
+                reuse_reference=True,
+            )
+        except BillingError as exc:
+            messages.error(request, str(exc))
+            return redirect("seo:workspace-seo")
+
+        # Fetch data
+        keywords = [getattr(project, "primary_service", "") or "digital marketing"]
+        dfs_client = DataForSeoClient()
+        search_volume = dfs_client.get_search_volume(keywords)
+        backlinks = dfs_client.get_backlink_profile(project.normalized_domain or "")
+
+        result = {
+            "search_volume": search_volume,
+            "backlinks": backlinks,
+            "run_at": timezone.now().isoformat(),
+        }
+
+        # Persist to profile metadata
+        metadata = dict(profile.metadata or {})
+        metadata["clinical_data"] = result
+        profile.metadata = metadata
+        profile.save(update_fields=["metadata", "updated_at"])
+
+        messages.success(request, "Clinical market data refreshed.")
+        return redirect(f"{reverse('seo:workspace-seo')}#seo-clinical-intelligence")
+
+
+class WorkspaceEntityConfidenceView(LoginRequiredMixin, View):
+    """
+    POST — Runs the brand homepage through Google Cloud NLP to score entity recognition.
+
+    Spends from the clinical_data credit category, persists to profile metadata,
+    and redirects to the AEO workspace so the result renders inline.
+    """
+
+    def post(self, request, *args, **kwargs):
+        project = resolve_workspace_project(request.user)
+        if not project:
+            messages.error(request, "No active workspace project.")
+            return redirect("aeo:workspace-aeo")
+
+        profile = getattr(project, "seo_profile", None)
+
+        # Feature gate
+        allowed, reason = can_access_workspace_feature(request.user, "clinical_intelligence_enabled")
+        if not allowed:
+            messages.error(request, f"Entity Confidence Scan requires Clinical Intelligence. {reason or ''}")
+            return redirect("aeo:workspace-aeo")
+
+        # Credit spend
+        reference_key = f"entity_confidence:{project.pk}:{timezone.now().date()}"
+        try:
+            spend_action_credits(
+                request.user,
+                "clinical_data",
+                project=project,
+                note=f"Entity confidence scan for {project.name}",
+                reference_key=reference_key,
+                reuse_reference=True,
+            )
+        except BillingError as exc:
+            messages.error(request, str(exc))
+            return redirect("aeo:workspace-aeo")
+
+        # Fetch homepage content for analysis
+        import requests as _req
+        page_content = ""
+        homepage_url = getattr(project, "website", "") or ""
+        if homepage_url:
+            try:
+                resp = _req.get(homepage_url, timeout=10, headers={"User-Agent": "VRTSPACEBot/1.0"})
+                if resp.ok:
+                    from apps.tools.services import parse_page
+                    parsed = parse_page(homepage_url, resp)
+                    page_content = parsed.get("body_text", "")[:10000]
+            except Exception:
+                pass
+
+        if not page_content:
+            page_content = f"{project.name} is a {getattr(project, 'primary_service', 'business')} based in {getattr(project, 'location', 'the region')}."
+
+        geo_client = GeoApiClient()
+        result = geo_client.get_entity_confidence_score(page_content)
+        result["run_at"] = timezone.now().isoformat()
+
+        # Persist to SEO profile metadata (accessible from both SEO and AEO views)
+        if profile:
+            metadata = dict(profile.metadata or {})
+            metadata["entity_confidence"] = result
+            profile.metadata = metadata
+            profile.save(update_fields=["metadata", "updated_at"])
+
+        score = result.get("highest_salience", 0)
+        if score >= 70:
+            messages.success(request, f"Entity scan complete — entity confidence at {score:.0f}%. Google recognises the brand clearly.")
+        elif score >= 40:
+            messages.warning(request, f"Entity scan complete — entity confidence at {score:.0f}%. Schema and content improvements recommended.")
+        else:
+            messages.error(request, f"Entity scan complete — entity confidence at {score:.0f}%. Brand entities are weakly recognised. Action pack generated.")
+        return redirect(f"{reverse('aeo:workspace-aeo')}#aeo-entity-confidence")
+
+
+class WorkspaceIndexingPingView(LoginRequiredMixin, View):
+    """
+    POST — Pings the Google Indexing API for a specific URL after publish.
+
+    Expects POST param: url (the published page URL).
+    Requires GOOGLE_INDEXING_API_KEY in settings / env.
+    """
+
+    def post(self, request, *args, **kwargs):
+        project = resolve_workspace_project(request.user)
+        page_url = request.POST.get("url", "").strip()
+
+        if not page_url:
+            messages.error(request, "No URL provided for indexing ping.")
+            return redirect("content:workspace-content")
+
+        api_key = getattr(settings, "GOOGLE_INDEXING_API_KEY", "") or ""
+        if not api_key:
+            messages.warning(
+                request,
+                "Google Indexing API key not configured. Set GOOGLE_INDEXING_API_KEY in environment variables.",
+            )
+            return redirect("content:workspace-content")
+
+        import requests as _req
+        try:
+            resp = _req.post(
+                f"https://indexing.googleapis.com/v3/urlNotifications:publish?key={api_key}",
+                json={"url": page_url, "type": "URL_UPDATED"},
+                timeout=15,
+            )
+            if resp.ok:
+                messages.success(request, f"Google Indexing API pinged for {page_url}. Indexing usually completes within minutes.")
+            else:
+                messages.warning(
+                    request,
+                    f"Indexing ping returned {resp.status_code}. Check that the API key has Indexing API access enabled.",
+                )
+        except Exception as exc:
+            messages.error(request, f"Indexing ping failed: {exc}")
+
+        return redirect("content:workspace-content")
+
+
+# ---------------------------------------------------------------------------
+# Phase 12: Google Search Console OAuth Connection
+# ---------------------------------------------------------------------------
+
+class WorkspaceGSCConnectView(LoginRequiredMixin, View):
+    """
+    GET — Starts the Google Search Console OAuth 2.0 flow.
+
+    Requires GOOGLE_GSC_CLIENT_ID, GOOGLE_GSC_CLIENT_SECRET, and
+    GOOGLE_GSC_REDIRECT_URI in settings / env.
+    """
+
+    SCOPES = [
+        "https://www.googleapis.com/auth/webmasters.readonly",
+        "openid",
+        "email",
+    ]
+    AUTH_URL = "https://accounts.google.com/o/oauth2/v2/auth"
+
+    def get(self, request, *args, **kwargs):
+        if not settings.GOOGLE_GSC_ENABLED:
+            messages.error(
+                request,
+                "Google Search Console integration is not configured. "
+                "Set GOOGLE_GSC_CLIENT_ID and GOOGLE_GSC_CLIENT_SECRET in environment variables.",
+            )
+            return redirect("seo:workspace-seo")
+
+        import urllib.parse
+        import secrets as _secrets
+
+        state = _secrets.token_urlsafe(24)
+        request.session["gsc_oauth_state"] = state
+
+        params = {
+            "client_id": settings.GOOGLE_GSC_CLIENT_ID,
+            "redirect_uri": settings.GOOGLE_GSC_REDIRECT_URI,
+            "response_type": "code",
+            "scope": " ".join(self.SCOPES),
+            "access_type": "offline",
+            "prompt": "consent",
+            "state": state,
+        }
+        auth_url = f"{self.AUTH_URL}?{urllib.parse.urlencode(params)}"
+        return redirect(auth_url)
+
+
+class WorkspaceGSCCallbackView(LoginRequiredMixin, View):
+    """
+    GET — Google redirects here after the user approves GSC access.
+
+    Exchanges the authorisation code for access + refresh tokens and stores
+    them in a GSCConnection record linked to the user's active project.
+    """
+
+    TOKEN_URL = "https://oauth2.googleapis.com/token"
+    USERINFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo"
+
+    def get(self, request, *args, **kwargs):
+        code = request.GET.get("code", "")
+        state = request.GET.get("state", "")
+        error = request.GET.get("error", "")
+
+        if error:
+            messages.error(request, f"Google authorisation was denied: {error}")
+            return redirect("seo:workspace-seo")
+
+        if not code or state != request.session.pop("gsc_oauth_state", None):
+            messages.error(request, "Invalid OAuth state. Please try connecting again.")
+            return redirect("seo:workspace-seo")
+
+        import requests as _req
+        # Exchange code for tokens
+        try:
+            token_resp = _req.post(
+                self.TOKEN_URL,
+                data={
+                    "code": code,
+                    "client_id": settings.GOOGLE_GSC_CLIENT_ID,
+                    "client_secret": settings.GOOGLE_GSC_CLIENT_SECRET,
+                    "redirect_uri": settings.GOOGLE_GSC_REDIRECT_URI,
+                    "grant_type": "authorization_code",
+                },
+                timeout=20,
+            )
+            token_resp.raise_for_status()
+            token_data = token_resp.json()
+        except Exception as exc:
+            messages.error(request, f"Failed to exchange authorisation code: {exc}")
+            return redirect("seo:workspace-seo")
+
+        access_token = token_data.get("access_token", "")
+        refresh_token = token_data.get("refresh_token", "")
+        expires_in = token_data.get("expires_in", 3600)
+
+        from django.utils import timezone as _tz
+        from datetime import timedelta as _td
+
+        expiry = _tz.now() + _td(seconds=expires_in)
+
+        # Fetch user info (email)
+        google_email = ""
+        try:
+            info_resp = _req.get(
+                self.USERINFO_URL,
+                headers={"Authorization": f"Bearer {access_token}"},
+                timeout=10,
+            )
+            if info_resp.ok:
+                google_email = info_resp.json().get("email", "")
+        except Exception:
+            pass
+
+        # Try to detect the SC property for this project's domain
+        project = resolve_workspace_project(request.user)
+        sc_property = ""
+        if project and project.normalized_domain:
+            sc_property = f"sc-domain:{project.normalized_domain}"
+
+        if project:
+            from apps.leads.models import GSCConnection
+            conn, _ = GSCConnection.objects.update_or_create(
+                project=project,
+                defaults={
+                    "google_email": google_email,
+                    "sc_property": sc_property,
+                    "access_token": access_token,
+                    "refresh_token": refresh_token,
+                    "token_expiry": expiry,
+                    "is_active": True,
+                    "error_message": "",
+                },
+            )
+            messages.success(
+                request,
+                f"Google Search Console connected for {google_email}. "
+                f"Real search data is now available for {project.name}.",
+            )
+        else:
+            messages.warning(
+                request,
+                "GSC connected but no active workspace project found. "
+                "Create or open a project first, then reconnect.",
+            )
+        return redirect("seo:workspace-seo")
+
+
+class WorkspaceGSCDisconnectView(LoginRequiredMixin, View):
+    """POST — Removes the GSC connection for the active workspace project."""
+
+    def post(self, request, *args, **kwargs):
+        project = resolve_workspace_project(request.user)
+        if project:
+            from apps.leads.models import GSCConnection
+            GSCConnection.objects.filter(project=project).delete()
+            messages.success(request, "Google Search Console disconnected.")
+        return redirect("seo:workspace-seo")
+
+
+class WorkspaceGSCDataView(LoginRequiredMixin, View):
+    """
+    GET — Returns top Search Console queries for the project's SC property.
+
+    Uses the stored access token (refreshing if expired) to query the
+    Search Analytics API for clicks, impressions, CTR, and average position.
+    Results are returned as JSON for the workspace to consume.
+    """
+
+    SC_API = "https://searchconsole.googleapis.com/webmasters/v3/sites/{property}/searchAnalytics/query"
+
+    def get(self, request, *args, **kwargs):
+        from apps.leads.models import GSCConnection
+        import requests as _req
+
+        project = resolve_workspace_project(request.user)
+        if not project:
+            return JsonResponse({"error": "No active project."}, status=400)
+
+        conn = GSCConnection.objects.filter(project=project, is_active=True).first()
+        if not conn:
+            return JsonResponse({"error": "No GSC connection for this project."}, status=400)
+
+        # Refresh token if expired
+        access_token = conn.access_token
+        if not conn.is_token_fresh and conn.refresh_token:
+            try:
+                refresh_resp = _req.post(
+                    "https://oauth2.googleapis.com/token",
+                    data={
+                        "client_id": settings.GOOGLE_GSC_CLIENT_ID,
+                        "client_secret": settings.GOOGLE_GSC_CLIENT_SECRET,
+                        "refresh_token": conn.refresh_token,
+                        "grant_type": "refresh_token",
+                    },
+                    timeout=15,
+                )
+                refresh_resp.raise_for_status()
+                new_tokens = refresh_resp.json()
+                access_token = new_tokens.get("access_token", access_token)
+                from django.utils import timezone as _tz
+                from datetime import timedelta as _td
+                conn.access_token = access_token
+                conn.token_expiry = _tz.now() + _td(seconds=new_tokens.get("expires_in", 3600))
+                conn.save(update_fields=["access_token", "token_expiry", "updated_at"])
+            except Exception as exc:
+                return JsonResponse({"error": f"Token refresh failed: {exc}"}, status=502)
+
+        # Query last 28 days
+        from datetime import date, timedelta
+        end_date = date.today()
+        start_date = end_date - timedelta(days=28)
+        sc_property = conn.sc_property
+
+        payload = {
+            "startDate": start_date.isoformat(),
+            "endDate": end_date.isoformat(),
+            "dimensions": ["query"],
+            "rowLimit": 50,
+            "startRow": 0,
+        }
+        try:
+            resp = _req.post(
+                self.SC_API.format(property=sc_property),
+                headers={"Authorization": f"Bearer {access_token}"},
+                json=payload,
+                timeout=20,
+            )
+            resp.raise_for_status()
+            data = resp.json()
+        except Exception as exc:
+            conn.error_message = str(exc)[:400]
+            conn.save(update_fields=["error_message", "updated_at"])
+            return JsonResponse({"error": f"GSC API error: {exc}"}, status=502)
+
+        from django.utils import timezone as _tz
+        conn.last_synced_at = _tz.now()
+        conn.error_message = ""
+        conn.save(update_fields=["last_synced_at", "error_message", "updated_at"])
+
+        rows = data.get("rows", [])
+        queries = [
+            {
+                "query": row.get("keys", [""])[0],
+                "clicks": row.get("clicks", 0),
+                "impressions": row.get("impressions", 0),
+                "ctr": round(row.get("ctr", 0) * 100, 2),
+                "position": round(row.get("position", 0), 1),
+            }
+            for row in rows
+        ]
+        return JsonResponse({"queries": queries, "property": sc_property, "rows": len(queries)})

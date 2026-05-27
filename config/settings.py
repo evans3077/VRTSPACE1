@@ -428,6 +428,32 @@ STAGE_BUDGET_TOTAL_JOB_SECONDS = int(os.environ.get("STAGE_BUDGET_TOTAL_JOB_SECO
 
 AUDIT_TIER_ENFORCEMENT = os.environ.get("AUDIT_TIER_ENFORCEMENT", "0") == "1"
 
+# ── Phase 12: Clinical Intelligence & Advanced API settings ───────────────
+# DataForSEO (search volume, backlinks)
+#   DATAFORSEO_LOGIN=<your-login>
+#   DATAFORSEO_PASSWORD=<your-password>
+# These are read directly in apps/seo/dataforseo_api.py.
+
+# Perplexity (GEO Shootout / Sonar Pro)
+#   PERPLEXITY_API_KEY=<your-key>
+# Read directly in apps/aeo/geo_api.py.
+
+# Google Cloud Natural Language (entity confidence)
+#   GOOGLE_CLOUD_API_KEY=<your-key>
+# Read directly in apps/aeo/geo_api.py.
+
+# Google Indexing API (ping after content publish)
+GOOGLE_INDEXING_API_KEY = os.environ.get("GOOGLE_INDEXING_API_KEY", "")
+
+# Google Search Console (GSC) OAuth 2.0
+# Create a Web Application credential in GCP → APIs & Services → Credentials.
+# Scopes required: https://www.googleapis.com/auth/webmasters.readonly
+# Redirect URI must be registered: <APP_URL>/workspace/seo/gsc/callback/
+GOOGLE_GSC_CLIENT_ID = os.environ.get("GOOGLE_GSC_CLIENT_ID", "")
+GOOGLE_GSC_CLIENT_SECRET = os.environ.get("GOOGLE_GSC_CLIENT_SECRET", "")
+GOOGLE_GSC_REDIRECT_URI = os.environ.get("GOOGLE_GSC_REDIRECT_URI", "")
+GOOGLE_GSC_ENABLED = bool(GOOGLE_GSC_CLIENT_ID and GOOGLE_GSC_CLIENT_SECRET)
+
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = not DEBUG
 CSRF_COOKIE_SECURE = not DEBUG

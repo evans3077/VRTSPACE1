@@ -141,6 +141,7 @@
             <a class="page-jump-link" href="#seo-patterns"><i class="fas fa-puzzle-piece"></i> Patterns</a>
             <a class="page-jump-link" href="#seo-campaigns"><i class="fas fa-tasks"></i> Campaigns</a>
             <a class="page-jump-link" href="#seo-roadmap"><i class="fas fa-map"></i> Roadmap</a>
+            <a class="page-jump-link" href="#seo-gsc"><i class="fa-brands fa-google"></i> Search Console</a>
             <a class="page-jump-link" href="#seo-backlinks"><i class="fas fa-link"></i> Backlinks</a>
             <a class="page-jump-link" href="#seo-opportunities"><i class="fas fa-lightbulb"></i> Ideas</a>
             <a class="page-jump-link" href="#seo-clinical-intelligence" style="color: var(--accent-blue);"><i class="fas fa-brain"></i> Intelligence Engine</a>
@@ -296,7 +297,7 @@
 <section class="dashboard-stack workspace-seo-shell">
     <div class="container-fluid">
         <!-- CLINICAL INTELLIGENCE MODULE -->
-        {% if geo_shootout or clinical_search_volume %}
+        {% if geo_action or clinical_action %}
         <div id="seo-clinical-intelligence" class="layout-split-wide" style="margin-bottom: 2rem;">
             
             <!-- GEO Shootout Card -->
@@ -313,7 +314,7 @@
                 </div>
                 
                 
-                {% if geo_action.available %}
+                {% if geo_action.available and not geo_shootout.is_placeholder and geo_shootout.engine_response %}
                 <div style="padding: 1.25rem; border-radius: 14px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-glass); margin-bottom: 1rem;">
                     <strong style="color: var(--text-primary); display:block; margin-bottom:0.5rem;">Perplexity Sonar Pro Output:</strong>
                     <p style="font-family: monospace; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">"{{ geo_shootout.engine_response }}"</p>
@@ -364,10 +365,12 @@
                         <a href="{% url 'tools:account-dashboard' %}#plans" class="button button-primary">Upgrade Plan</a>
                     </div>
                     {% else %}
-                    <form method="post" action="{% url 'seo:workspace-seo' %}" style="margin-top: 1rem;">
+                    <form method="post" action="{% url 'seo:workspace-geo-shootout' %}" style="margin-top: 1rem;">
                         {% csrf_token %}
-                        <!-- We would hook this to a specific GEO action view, but post to workspace for mock -->
-                        <button type="button" class="button button-primary" onclick="alert('Credit burn triggered for GEO Shootout!');">Run Shootout (-{{ geo_action.credits }} Credits)</button>
+                        <button type="submit" class="button button-primary">
+                            <i class="fa-solid fa-rocket"></i>&nbsp;Run Shootout
+                            <span style="opacity: 0.7; font-size: 0.8em;">&nbsp;({{ geo_action.credits }} credits)</span>
+                        </button>
                     </form>
                     {% endif %}
                 </div>
@@ -430,10 +433,12 @@
                         <a href="{% url 'tools:account-dashboard' %}#plans" class="button button-primary">Upgrade Plan</a>
                     </div>
                     {% else %}
-                    <form method="post" action="{% url 'seo:workspace-seo' %}" style="margin-top: 1rem;">
+                    <form method="post" action="{% url 'seo:workspace-clinical-data' %}" style="margin-top: 1rem;">
                         {% csrf_token %}
-                        <!-- We would hook this to a specific Market Gap action view, but post to workspace for mock -->
-                        <button type="button" class="button button-primary" onclick="alert('Credit burn triggered for Market Data!');">Fetch Market Data (-{{ clinical_action.credits }} Credits)</button>
+                        <button type="submit" class="button button-primary">
+                            <i class="fa-solid fa-database"></i>&nbsp;Fetch Market Data
+                            <span style="opacity: 0.7; font-size: 0.8em;">&nbsp;({{ clinical_action.credits }} credits)</span>
+                        </button>
                     </form>
                     {% endif %}
                 </div>
@@ -1257,6 +1262,115 @@
                 {% endfor %}
             </div>
         </article>
+
+        {# ── Google Search Console Connection ──────────────────────────────── #}
+        {% with gsc=project.gsc_connection %}
+        <article id="seo-gsc" class="system-card" style="margin-bottom: 1.5rem;">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                    <div>
+                        <p class="eyebrow text-accent"><i class="fa-brands fa-google"></i>&nbsp;Search Console</p>
+                        <h2 style="font-size: 1.6rem;">Real traffic data</h2>
+                    </div>
+                    {% if gsc and gsc.is_active %}
+                    <span class="score-pill score-high">Connected</span>
+                    {% else %}
+                    <span class="score-pill score-low">Not connected</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if gsc and gsc.is_active %}
+            {# ── Connected state ─────────────────────────────── #}
+            <div class="data-card-grid" style="margin-bottom: 1rem;">
+                <div class="data-card">
+                    <span class="data-card-label">Google Account</span>
+                    <span class="data-card-value" style="font-size: 0.95rem;">{{ gsc.google_email }}</span>
+                </div>
+                <div class="data-card">
+                    <span class="data-card-label">SC Property</span>
+                    <span class="data-card-value" style="font-size: 0.9rem; word-break: break-all;">{{ gsc.sc_property }}</span>
+                </div>
+                {% if gsc.last_synced_at %}
+                <div class="data-card">
+                    <span class="data-card-label">Last synced</span>
+                    <span class="data-card-value" style="font-size: 0.9rem;">{{ gsc.last_synced_at|date:"M j, Y H:i" }}</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <div id="gsc-data-panel" style="background: rgba(255,255,255,0.025); border: 1px solid var(--border-glass); border-radius: 12px; padding: 1rem; min-height: 60px;">
+                <p style="font-size: 0.85rem; color: var(--text-muted);" id="gsc-loading-msg">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i>&nbsp;Loading top queries from Search Console…
+                </p>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap;">
+                <form method="post" action="{% url 'seo:workspace-gsc-disconnect' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button button-secondary" style="font-size: 0.8rem;">
+                        <i class="fa-solid fa-plug-circle-minus"></i>&nbsp;Disconnect
+                    </button>
+                </form>
+            </div>
+
+            <script>
+            (function() {
+                fetch("{% url 'seo:workspace-gsc-data' %}")
+                    .then(r => r.json())
+                    .then(data => {
+                        const panel = document.getElementById("gsc-data-panel");
+                        if (data.error) {
+                            panel.innerHTML = '<p style="font-size:0.85rem; color:#f87171;">' + data.error + '</p>';
+                            return;
+                        }
+                        if (!data.queries || !data.queries.length) {
+                            panel.innerHTML = '<p style="font-size:0.85rem; color:var(--text-muted);">No query data found for this property in the last 28 days.</p>';
+                            return;
+                        }
+                        let html = '<table style="width:100%; font-size:0.82rem; border-collapse:collapse;">';
+                        html += '<tr style="color:var(--text-muted); text-align:left;"><th style="padding:0.35rem 0.5rem;">Query</th><th style="padding:0.35rem;">Clicks</th><th style="padding:0.35rem;">Impressions</th><th style="padding:0.35rem;">CTR</th><th style="padding:0.35rem;">Pos.</th></tr>';
+                        data.queries.forEach(q => {
+                            html += '<tr style="border-top:1px solid rgba(255,255,255,0.05);">';
+                            html += '<td style="padding:0.4rem 0.5rem; color:var(--text-primary);">' + q.query + '</td>';
+                            html += '<td style="padding:0.4rem 0.5rem; text-align:right;">' + q.clicks + '</td>';
+                            html += '<td style="padding:0.4rem 0.5rem; text-align:right;">' + q.impressions + '</td>';
+                            html += '<td style="padding:0.4rem 0.5rem; text-align:right;">' + q.ctr + '%</td>';
+                            html += '<td style="padding:0.4rem 0.5rem; text-align:right;">' + q.position + '</td>';
+                            html += '</tr>';
+                        });
+                        html += '</table>';
+                        panel.innerHTML = html;
+                    })
+                    .catch(() => {
+                        document.getElementById("gsc-data-panel").innerHTML = '<p style="font-size:0.85rem; color:var(--text-muted);">Could not load GSC data. Try refreshing the page.</p>';
+                    });
+            })();
+            </script>
+
+            {% else %}
+            {# ── Not connected state / Locked Potential ─────── #}
+            <div class="workspace-credit-callout">
+                <p class="workspace-report-kicker" style="color: var(--brand-primary);"><i class="fa-solid fa-magnifying-glass-chart"></i> Locked Potential</p>
+                <h3 style="margin: 0.5rem 0;">Connect real search data</h3>
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    Replace estimated traffic with exact clicks, impressions, CTR, and average position from Google Search Console.
+                    The system will generate an <strong>Opportunity Finder</strong> action pack targeting high-impression Page 2 URLs for conversion to Page 1.
+                </p>
+                {% if settings.GOOGLE_GSC_ENABLED %}
+                <a href="{% url 'seo:workspace-gsc-connect' %}" class="button button-primary">
+                    <i class="fa-brands fa-google"></i>&nbsp;Connect Google Search Console
+                </a>
+                {% else %}
+                <p style="font-size: 0.8rem; color: var(--text-muted); padding: 0.75rem; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid var(--border-glass);">
+                    <i class="fa-solid fa-circle-info"></i>&nbsp;
+                    Google Search Console integration requires <code>GOOGLE_GSC_CLIENT_ID</code> and <code>GOOGLE_GSC_CLIENT_SECRET</code> to be set in the environment.
+                </p>
+                {% endif %}
+            </div>
+            {% endif %}
+        </article>
+        {% endwith %}
 
         <article id="seo-backlinks" class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">

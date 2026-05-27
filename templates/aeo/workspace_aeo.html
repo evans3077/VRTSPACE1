@@ -483,6 +483,90 @@
     </div>
 
     {# ══════════════════════════════════════════════════════════════════════════ #}
+    {# ENTITY CONFIDENCE (Google Cloud NLP)                                      #}
+    {# ══════════════════════════════════════════════════════════════════════════ #}
+    <div id="aeo-entity-confidence" class="aeo-module">
+        <article class="system-card">
+            <div class="aeo-section-head">
+                <span class="eyebrow" style="color: var(--brand-primary);">Clinical Intelligence &mdash; Entity Recognition</span>
+                <h2>Entity Confidence Score</h2>
+                <p>Google Cloud Natural Language API checks whether Google's AI recognises your brand and primary entities. Low confidence triggers targeted Schema and content action packs.</p>
+            </div>
+
+            {% if entity_confidence.entities %}
+            {# ── Results from a previous scan ── #}
+            <div style="display: flex; align-items: center; gap: 1.5rem; margin-bottom: 1.25rem; flex-wrap: wrap;">
+                <div style="text-align: center;">
+                    <p style="font-size: 2.4rem; font-weight: 900; letter-spacing: -0.03em; color: {% if entity_confidence.highest_salience >= 70 %}#4ade80{% elif entity_confidence.highest_salience >= 40 %}#fbbf24{% else %}#f87171{% endif %}; line-height: 1; margin: 0;">
+                        {{ entity_confidence.highest_salience|floatformat:0 }}%
+                    </p>
+                    <p style="font-size: 0.75rem; color: var(--text-muted); margin: 0.25rem 0 0;">Top entity salience</p>
+                </div>
+                <div style="flex: 1; min-width: 200px;">
+                    {% if entity_confidence.highest_salience >= 70 %}
+                    <p style="color: #4ade80; font-weight: 700; margin: 0 0 0.25rem;">Strong entity recognition</p>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">Google clearly identifies your brand. Maintain Schema markup and keep entity signals consistent.</p>
+                    {% elif entity_confidence.highest_salience >= 40 %}
+                    <p style="color: #fbbf24; font-weight: 700; margin: 0 0 0.25rem;">Moderate entity recognition</p>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">Entity signals are present but could be stronger. Add Organisation Schema and improve name/address/service consistency.</p>
+                    {% else %}
+                    <p style="color: #f87171; font-weight: 700; margin: 0 0 0.25rem;">Weak entity recognition</p>
+                    <p style="font-size: 0.85rem; color: var(--text-secondary); margin: 0;">Brand entities are not clearly recognised. A Schema rebuild and entity-dense About page are recommended immediately.</p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <div style="display: grid; gap: 0.5rem; margin-bottom: 1rem;">
+                {% for entity in entity_confidence.entities %}
+                <div class="ctx-row">
+                    <span class="ctx-label">{{ entity.name }} <span style="opacity: 0.6; font-size: 0.75em;">({{ entity.type }})</span></span>
+                    <span class="ctx-val">
+                        <span style="display: inline-block; width: 90px; height: 6px; background: var(--border-glass); border-radius: 99px; vertical-align: middle; margin-right: 0.4rem; overflow: hidden;">
+                            <span style="display: block; height: 100%; border-radius: 99px; width: {{ entity.salience }}%; background: {% if entity.salience >= 70 %}#4ade80{% elif entity.salience >= 40 %}#fbbf24{% else %}#f87171{% endif %};"></span>
+                        </span>
+                        {{ entity.salience|floatformat:1 }}%
+                    </span>
+                </div>
+                {% endfor %}
+            </div>
+
+            {% if entity_confidence.is_mock %}
+            <div style="padding: 0.75rem; border-radius: 10px; background: rgba(59,130,246,0.08); border-left: 3px solid var(--brand-primary); font-size: 0.8rem; color: var(--text-secondary);">
+                <strong>Preview data:</strong> {{ entity_confidence.mock_notice|default:"Activate your Google Cloud API key to run a real entity scan." }}
+            </div>
+            {% endif %}
+            {% if entity_confidence.run_at %}
+            <p style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.5rem;">Last scan: {{ entity_confidence.run_at|date:"M j, Y" }}</p>
+            {% endif %}
+
+            {% else %}
+            {# ── No scan yet ── #}
+            <div class="workspace-credit-callout">
+                <p style="font-size: 0.85rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    Run a clinical entity scan to see how well Google's AI recognises your brand compared to competitors. Uses <strong>4 workspace credits</strong>.
+                </p>
+                <form method="post" action="{% url 'seo:workspace-entity-confidence' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button button-primary">
+                        <i class="fa-solid fa-brain"></i>&nbsp;Run Entity Confidence Scan
+                    </button>
+                </form>
+            </div>
+            {% endif %}
+
+            {# ── Always show the rescan option if we have results ── #}
+            {% if entity_confidence.entities %}
+            <form method="post" action="{% url 'seo:workspace-entity-confidence' %}" style="margin-top: 0.75rem;">
+                {% csrf_token %}
+                <button type="submit" class="button button-secondary" style="font-size: 0.8rem;">
+                    <i class="fa-solid fa-rotate"></i>&nbsp;Rescan (4 credits)
+                </button>
+            </form>
+            {% endif %}
+        </article>
+    </div>
+
+    {# ══════════════════════════════════════════════════════════════════════════ #}
     {# INTELLIGENCE MODULE                                                       #}
     {# ══════════════════════════════════════════════════════════════════════════ #}
     {% if aeo_intelligence %}

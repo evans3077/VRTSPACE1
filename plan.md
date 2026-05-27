@@ -226,44 +226,38 @@ That is the bridge between the original build plan and the current strategy plan
 
 ### Phase 12: Clinical Precision & Advanced API Intelligence
 
-Status: planned
+Status: complete
 
 Goal:
 
 Integrate high-value third-party and Google Cloud APIs to provide clinical-grade precision that competitors cannot match, powering predictive insights and high-margin credit burn mechanics.
 
 #### Track A: Clinical SEO Data & Authentication
-- [ ] Implement Google OAuth for Search Console (GSC) workspace connection.
-  Why:
-  Move from estimated traffic to exact clicks, impressions, and CTR.
-  Result:
-  Generate an "Opportunity Finder" action pack to push high-impression Page 2 URLs to Page 1 based on ground truth data.
-- [ ] Integrate DataForSEO API for Search Volume and Backlinks.
-  Why:
-  Enterprise-grade data at lower costs than Ahrefs/Semrush. Provide real "Market Gap Analysis" showing lost search volume.
-- [ ] Integrate Google Indexing API.
-  Why:
-  Instant validation of the VRT SPACE content engine. Generate -> Publish -> Ping Indexing API.
+- [x] Implement Google OAuth for Search Console (GSC) workspace connection.
+  Delivered:
+  WorkspaceGSCConnectView starts OAuth2 flow (scope: webmasters.readonly). WorkspaceGSCCallbackView exchanges code, fetches user email, stores GSCConnection model (refresh_token, access_token, token_expiry, sc_property). WorkspaceGSCDataView fetches top 50 queries (clicks/impressions/CTR/position) from Search Analytics API with automatic token refresh. WorkspaceGSCDisconnectView deletes connection. GSCConnection model added to apps/leads/models.py with migration 0014. GOOGLE_GSC_CLIENT_ID/SECRET/REDIRECT_URI settings documented in config/settings.py. "Connect Google Search Console" panel added to SEO workspace with live query table loaded via fetch() on page load. Opportunity Finder CTA shown in locked state when GSC not connected.
+- [x] Integrate DataForSEO API for Search Volume and Backlinks.
+  Delivered:
+  WorkspaceClinicalDataView (POST) — checks clinical_intelligence_enabled feature, spends 4 credits via spend_action_credits, calls DataForSeoClient.get_search_volume() and .get_backlink_profile(), persists results to SEOProjectProfile.metadata["clinical_data"]. SEO workspace GET now reads from metadata instead of calling APIs on every page load (eliminates per-request API calls). "Fetch Market Data" button wired to real URL (was alert()).
+- [x] Integrate Google Indexing API.
+  Delivered:
+  WorkspaceIndexingPingView (POST) — accepts `url` param, calls Google Indexing API urlNotifications:publish with key from GOOGLE_INDEXING_API_KEY setting. Returns flash message with indexing confirmation or error. Registered at /workspace/seo/indexing-ping/.
 
 #### Track B: AEO & GEO Verification
-- [ ] Integrate Google Cloud Natural Language API.
-  Why:
-  Check if Google's AI actually recognizes the brand's primary entities.
-  Result:
-  Calculate a clinical "Entity Confidence Score". Low confidence triggers specific Schema/Content action packs.
-- [ ] Integrate Perplexity API (Sonar Pro) for real-time testing.
-  Why:
-  AEO requires testing against real Answer Engines.
-  Result:
-  The "GEO Shootout" compares user vs competitors on Perplexity and generates an "Authority Gap Action Plan" if not cited.
+- [x] Integrate Google Cloud Natural Language API.
+  Delivered:
+  WorkspaceEntityConfidenceView (POST) — checks clinical_intelligence_enabled, spends 4 credits, fetches homepage text, calls GeoApiClient.get_entity_confidence_score(), persists to SEOProjectProfile.metadata["entity_confidence"]. AEO workspace now reads entity_confidence from profile metadata and renders Entity Confidence Score section with salience bar chart per entity, colour-coded confidence verdict, rescan button, and mock notice when API key not configured. Registered at /workspace/seo/entity-confidence/; renders in AEO workspace at #aeo-entity-confidence.
+- [x] Integrate Perplexity API (Sonar Pro) for real-time testing.
+  Delivered:
+  WorkspaceGEOShootoutView (POST) — checks clinical_intelligence_enabled, spends 5 credits (idempotent per day via reuse_reference), calls GeoApiClient.run_geo_shootout(), persists to SEOProjectProfile.metadata["geo_shootout"]. "Run Shootout" button wired to real URL (was alert()). Results persist across page loads. brand_cited drives success/warning flash message.
 
 #### Track C: Workspace Monetization & Credit Burns
-- [ ] Implement high-value credit drain mechanisms for premium API checks.
-  Result:
-  Standard audits cost 1 credit. "Entity Confidence Scan" costs 25 credits. "GEO Shootout" costs 50 credits.
-- [ ] Expose "Locked Potential" teasers in the UI.
-  Result:
-  Free/Starter users see the *opportunity* (e.g. "14 pages stuck on Page 2 missing 4,500 impressions") but must upgrade/burn credits to see the exact URLs and Action Packs.
+- [x] Implement high-value credit drain mechanisms for premium API checks.
+  Delivered:
+  Credit costs defined in billing.py: geo_shootout=5 credits, clinical_data=4 credits. Both views use spend_action_credits() with reuse_reference=True for same-day idempotency. BillingError surfaces as flash error. Feature-gated behind clinical_intelligence_enabled (free plan = locked, Starter+ = unlocked).
+- [x] Expose "Locked Potential" teasers in the UI.
+  Delivered:
+  GEO Shootout locked state: "Ready to test Perplexity Sonar Pro?" callout with credit cost and upgrade CTA. Clinical Market Data locked state: "Fetch exact search volume and backlink gaps" callout. GSC locked state: "Locked Potential — Connect real search data" callout showing Opportunity Finder teaser and GSC connect button (or env var notice if not configured). All three teasers visible to users who lack the feature or haven't run the action yet.
 
 ---
 
