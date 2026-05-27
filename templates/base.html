@@ -42,9 +42,19 @@
        on mobile. Clipping at root prevents the page from sliding left to
        reveal a white gap. Vertical scrolling is unaffected.
        ───────────────────────────────────────────────────────────────── */
-    html, body {
+    html {
         overflow-x: hidden !important;
         max-width: 100% !important;
+    }
+    /*
+      'overflow-x: clip' on body clips overflowing content exactly like
+      'hidden' does visually, but does NOT create a new containing block.
+      Using 'hidden' on body would make position:fixed children anchor
+      to body instead of the viewport — breaking the sidebar layout.
+    */
+    body {
+        max-width: 100% !important;
+        overflow-x: clip !important;
     }
     img, video, iframe, svg { max-width: 100%; height: auto; }
     table { max-width: 100%; }
@@ -392,6 +402,14 @@
        Applies clean white cards + soft borders to ALL system-cards
        inside any workspace shell when body.shell-light is set.
        ══════════════════════════════════════════════════════════ */
+    /* ── Sidebar layout: hide public nav/footer, offset content ─── */
+    body.shell-light .site-header { display: none !important; }
+    body.shell-light .vrt-footer  { display: none !important; }
+    body.shell-light main          { padding-left: 240px; min-height: 100vh; }
+    @media (max-width: 768px) {
+        body.shell-light main { padding-left: 0 !important; padding-bottom: 60px !important; }
+    }
+
     body.shell-light {
         background: #f1f5f9 !important;
     }
