@@ -6808,3 +6808,285 @@ body.shell-light .ws-outcome-meta  { color: #94a3b8; }
   --heading-md   : clamp(1.45rem, 3vw, 1.9rem);
   --heading-sm   : clamp(1.1rem, 2vw, 1.3rem);
 }
+
+/* ══════════════════════════════════════════════════════════════════════════
+   WORKSPACE LEFT SIDEBAR  —  Phase 14
+   Replaces the horizontal tab rail (workspace-command-bar).
+   Fixed 240 px column; workspace <main> offset with padding-left.
+   ══════════════════════════════════════════════════════════════════════════ */
+
+/* ── Hide public header & footer on workspace pages ─────────────────────── */
+body.shell-light .site-header  { display: none !important; }
+body.shell-light .vrt-footer   { display: none !important; }
+body.shell-light main          { padding-left: 240px; min-height: 100vh; }
+
+/* ── Sidebar shell ───────────────────────────────────────────────────────── */
+.ws-sidebar {
+    position: fixed;
+    top: 0; left: 0;
+    width: 240px;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #0f172a;
+    border-right: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    flex-direction: column;
+    z-index: 200;
+    padding-bottom: 1rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.08) transparent;
+}
+
+/* ── Brand area ──────────────────────────────────────────────────────────── */
+.ws-sidebar-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    padding: 1.25rem 1.2rem 1.1rem;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    margin-bottom: 0.5rem;
+    flex-shrink: 0;
+}
+.ws-sidebar-brand-mark {
+    width: 28px; height: 28px;
+    border-radius: 7px;
+    background: var(--brand-primary, #38bdf8);
+    color: #0f172a;
+    font-size: 0.85rem;
+    font-weight: 900;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    letter-spacing: 0;
+}
+.ws-sidebar-brand-text {
+    font-size: 0.82rem;
+    font-weight: 800;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--text-primary, #f1f5f9);
+    white-space: nowrap;
+}
+
+/* ── Active project pill ─────────────────────────────────────────────────── */
+.ws-sidebar-project {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1.2rem 0.65rem;
+    flex-shrink: 0;
+}
+.ws-sidebar-project-dot {
+    width: 6px; height: 6px;
+    border-radius: 50%;
+    background: #4ade80;
+    flex-shrink: 0;
+}
+.ws-sidebar-project-name {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--text-muted, #64748b);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* ── Nav section wrapper ─────────────────────────────────────────────────── */
+.ws-sidebar-section {
+    padding: 0 0.7rem 0.35rem;
+    flex-shrink: 0;
+}
+.ws-sidebar-section + .ws-sidebar-section {
+    margin-top: 0.5rem;
+    padding-top: 0.75rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+.ws-sidebar-section-label {
+    display: block;
+    font-size: 0.59rem;
+    font-weight: 800;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--text-muted, #64748b);
+    padding: 0 0.55rem 0.45rem;
+}
+
+/* ── Individual nav links ────────────────────────────────────────────────── */
+.ws-sidebar-link {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.52rem 0.7rem;
+    border-radius: 8px;
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--text-muted, #64748b);
+    text-decoration: none;
+    position: relative;
+    transition: color 0.15s ease, background 0.15s ease;
+    margin-bottom: 0.04rem;
+    white-space: nowrap;
+}
+.ws-sidebar-link i {
+    font-size: 0.78rem;
+    width: 15px;
+    text-align: center;
+    flex-shrink: 0;
+    opacity: 0.85;
+}
+.ws-sidebar-link span { overflow: hidden; text-overflow: ellipsis; }
+
+.ws-sidebar-link:hover {
+    color: var(--text-primary, #f1f5f9);
+    background: rgba(255, 255, 255, 0.06);
+}
+.ws-sidebar-link.is-active {
+    color: var(--brand-primary, #38bdf8);
+    background: rgba(56, 189, 248, 0.1);
+    font-weight: 700;
+}
+.ws-sidebar-link.is-active i { opacity: 1; }
+.ws-sidebar-link.is-active::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 20%; bottom: 20%;
+    width: 3px;
+    border-radius: 0 3px 3px 0;
+    background: var(--brand-primary, #38bdf8);
+}
+
+/* ── "NEW" badge ─────────────────────────────────────────────────────────── */
+.ws-sidebar-badge {
+    margin-left: auto;
+    font-size: 0.54rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    padding: 0.1rem 0.32rem;
+    border-radius: 4px;
+    text-transform: uppercase;
+    flex-shrink: 0;
+}
+.ws-sidebar-badge--new {
+    background: rgba(56, 189, 248, 0.15);
+    color: var(--brand-primary, #38bdf8);
+    border: 1px solid rgba(56, 189, 248, 0.25);
+}
+
+/* ── Footer: credits + logout ────────────────────────────────────────────── */
+.ws-sidebar-footer {
+    margin-top: auto;
+    padding: 0.75rem 0.7rem 0.5rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+    flex-shrink: 0;
+}
+.ws-sidebar-credit {
+    display: flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.45rem 0.7rem;
+    border-radius: 8px;
+    font-size: 0.73rem;
+    color: var(--text-muted, #64748b);
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+}
+.ws-sidebar-credit i  { color: var(--brand-primary, #38bdf8); font-size: 0.68rem; flex-shrink: 0; }
+.ws-sidebar-credit strong { color: var(--brand-primary, #38bdf8); }
+.ws-sidebar-logout {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    padding: 0.45rem 0.7rem;
+    border-radius: 8px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--text-muted, #64748b);
+    text-decoration: none;
+    transition: color 0.15s ease, background 0.15s ease;
+}
+.ws-sidebar-logout i { font-size: 0.74rem; flex-shrink: 0; }
+.ws-sidebar-logout:hover { color: #f87171; background: rgba(248, 113, 113, 0.07); }
+
+/* ── Light-theme overrides ───────────────────────────────────────────────── */
+body.shell-light .ws-sidebar {
+    background: #ffffff;
+    border-right: 1px solid #e2e8f0;
+    box-shadow: 2px 0 12px rgba(15, 23, 42, 0.04);
+    scrollbar-color: #e2e8f0 transparent;
+}
+body.shell-light .ws-sidebar-brand     { border-bottom-color: #f1f5f9; }
+body.shell-light .ws-sidebar-brand-text { color: #0f172a; }
+body.shell-light .ws-sidebar-project-name { color: #475569; }
+body.shell-light .ws-sidebar-section + .ws-sidebar-section { border-top-color: #f1f5f9; }
+body.shell-light .ws-sidebar-section-label { color: #94a3b8; }
+body.shell-light .ws-sidebar-link      { color: #64748b; }
+body.shell-light .ws-sidebar-link:hover { color: #0f172a; background: #f8fafc; }
+body.shell-light .ws-sidebar-link.is-active {
+    color: #0284c7;
+    background: #eff6ff;
+    font-weight: 700;
+}
+body.shell-light .ws-sidebar-link.is-active::before { background: #0284c7; }
+body.shell-light .ws-sidebar-footer    { border-top-color: #e2e8f0; }
+body.shell-light .ws-sidebar-credit    { background: #f8fafc; border-color: #e2e8f0; color: #475569; }
+body.shell-light .ws-sidebar-logout    { color: #64748b; }
+body.shell-light .ws-sidebar-logout:hover { color: #dc2626; background: #fef2f2; }
+
+/* ── Mobile: collapse to bottom icon bar (≤ 768 px) ─────────────────────── */
+@media (max-width: 768px) {
+    body.shell-light main { padding-left: 0; padding-bottom: 60px; }
+
+    .ws-sidebar {
+        top: auto; bottom: 0; left: 0;
+        width: 100%; height: auto;
+        flex-direction: row;
+        border-right: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.08);
+        padding: 0;
+        overflow-x: auto; overflow-y: hidden;
+    }
+    body.shell-light .ws-sidebar { border-top-color: #e2e8f0; box-shadow: 0 -2px 8px rgba(15,23,42,0.05); }
+
+    /* Hide text-only elements */
+    .ws-sidebar-brand,
+    .ws-sidebar-project,
+    .ws-sidebar-section-label,
+    .ws-sidebar-footer,
+    .ws-sidebar-badge { display: none !important; }
+
+    /* Lay sections out horizontally */
+    .ws-sidebar-section {
+        padding: 0;
+        margin: 0;
+        border: none !important;
+        display: flex;
+        flex-shrink: 0;
+    }
+    .ws-sidebar-link {
+        flex-direction: column;
+        gap: 0.2rem;
+        padding: 0.7rem 0.8rem;
+        border-radius: 0;
+        font-size: 0.6rem;
+        font-weight: 600;
+        white-space: nowrap;
+        min-width: 56px;
+        text-align: center;
+        justify-content: center;
+        align-items: center;
+    }
+    .ws-sidebar-link i  { font-size: 1rem; width: auto; }
+    .ws-sidebar-link.is-active::before { display: none; }
+    .ws-sidebar-link.is-active {
+        border-top: 2px solid var(--brand-primary, #38bdf8);
+        background: rgba(56,189,248,0.07);
+    }
+    body.shell-light .ws-sidebar-link.is-active { border-top-color: #0284c7; background: #eff6ff; }
+}
