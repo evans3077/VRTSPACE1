@@ -4,18 +4,13 @@
 {% block content %}
 {% include "includes/workspace_nav.html" with workspace_nav_current="sov" %}
 
-<section class="public-shell-section" style="padding-top: 2rem;">
-    <div class="container">
-        <div style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
-            <div>
-                <p class="feature-tag">Share of Voice</p>
-                <h1 style="font-size: var(--heading-xl); margin: 0.3rem 0 0.5rem;">
-                    Where you win — and lose — in AI answers.
-                </h1>
-                <p class="lead" style="max-width: 640px;">
-                    Aggregated across every tracked prompt and engine. Compare your share against the competitors you're benchmarking.
-                </p>
-            </div>
+<div class="ws-hub-header workspace-shell-header">
+    <div class="ws-hub-header-left">
+        <div class="ws-hub-eyebrow"><i class="fa-solid fa-chart-pie"></i> Share of Voice</div>
+        <h1 class="ws-hub-title">Where you win — and lose — in AI answers.</h1>
+        <p class="ws-hub-description">Aggregated across every tracked prompt and engine. Compare your share against the competitors you're benchmarking.</p>
+    </div>
+    <div class="ws-hub-header-right">
             <form method="get" action="{% url 'aeo:workspace-share-of-voice' %}">
                 <label class="eyebrow" for="window-select" style="display: block; margin-bottom: 0.35rem;">Window</label>
                 <select id="window-select" name="days" onchange="this.form.submit()"
@@ -82,9 +77,7 @@
                 </div>
                 {% endfor %}
             </div>
-        </div>
-    </div>
-</section>
+</div>
 
 {# ── Per-engine breakdown ─────────────────────────────────────────── #}
 <section class="public-shell-section" style="padding-top: 1.25rem;">

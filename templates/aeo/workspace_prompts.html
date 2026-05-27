@@ -4,35 +4,26 @@
 {% block content %}
 {% include "includes/workspace_nav.html" with workspace_nav_current="prompts" %}
 
-<section class="public-shell-section" style="padding-top: 2rem;">
-    <div class="container">
-        <div class="hero-split public-hero-split" style="align-items: flex-end;">
-            <div class="public-hero-copy">
-                <p class="feature-tag">AI Prompt Tracker</p>
-                <h1 style="font-size: var(--heading-xl); margin-bottom: 0.6rem;">
-                    The exact prompts you need to win — and who's winning them today.
-                </h1>
-                <p class="lead" style="max-width: 640px;">
-                    Add the queries your customers ask AI. We check ChatGPT, Gemini, and Perplexity, then show you who got cited.
-                    Rerun any time to see whether your fixes are moving the needle.
-                </p>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 0.65rem; align-items: flex-end;">
-                <form method="post" action="{% url 'aeo:workspace-prompts' %}">
-                    {% csrf_token %}
-                    <input type="hidden" name="action" value="rerun_all">
-                    <button class="button button-secondary" type="submit"
-                            {% if not prompts %}disabled{% endif %}>
-                        <i class="fa-solid fa-arrows-rotate"></i>&nbsp; Rerun all prompts
-                    </button>
-                </form>
-                <a class="button button-secondary" href="{% url 'aeo:workspace-share-of-voice' %}">
-                    <i class="fa-solid fa-chart-pie"></i>&nbsp; Open Share of Voice
-                </a>
-            </div>
-        </div>
+<div class="ws-hub-header workspace-shell-header">
+    <div class="ws-hub-header-left">
+        <div class="ws-hub-eyebrow"><i class="fa-solid fa-bullseye"></i> AI Prompt Tracker</div>
+        <h1 class="ws-hub-title">The exact prompts you need to win — and who's winning them today.</h1>
+        <p class="ws-hub-description">Add the queries your customers ask AI. We check ChatGPT, Gemini, and Perplexity, then show you who got cited.</p>
     </div>
-</section>
+    <div class="ws-hub-header-right" style="display:flex;gap:.6rem;flex-wrap:wrap;align-items:center;">
+        <form method="post" action="{% url 'aeo:workspace-prompts' %}">
+            {% csrf_token %}
+            <input type="hidden" name="action" value="rerun_all">
+            <button class="button button-secondary" type="submit"
+                    {% if not prompts %}disabled{% endif %}>
+                <i class="fa-solid fa-arrows-rotate"></i> Rerun all
+            </button>
+        </form>
+        <a class="button button-secondary" href="{% url 'aeo:workspace-share-of-voice' %}">
+            <i class="fa-solid fa-chart-pie"></i> Share of Voice
+        </a>
+    </div>
+</div>
 
 {# ── Share of Voice summary strip ────────────────────────────────────── #}
 <section class="public-shell-section" style="padding-top: 1.25rem; padding-bottom: 1.25rem;">
