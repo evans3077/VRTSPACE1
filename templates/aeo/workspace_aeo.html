@@ -147,7 +147,7 @@
 }
 </style>
 
-{% include "includes/workspace_nav.html" %}
+{% include "includes/workspace_nav.html" with workspace_nav_current="aeo" %}
 
 {# ─── Hub Header ─────────────────────────────────────────────────────────── #}
 <div class="container-fluid">
@@ -279,9 +279,11 @@
                     {% if field.errors %}<div class="text-error">{{ field.errors|join:", " }}</div>{% endif %}
                 </div>
                 {% endfor %}
-                <button type="submit" class="button-mega" style="width: 100%; margin-top: 1rem;">
-                    <i class="fa-solid fa-bolt"></i> &nbsp;Run AI Visibility Scan
-                </button>
+                <div class="ws-form-actions" style="margin-top: 1.25rem;">
+                    <button type="submit" class="button button-primary">
+                        <i class="fa-solid fa-bolt"></i> Run AI Visibility Scan
+                    </button>
+                </div>
             </form>
             <p class="text-muted">This run reuses the existing site crawl, so no extra crawl is needed. Each refresh generates new AI citability predictions from the same baseline audit.</p>
         </article>

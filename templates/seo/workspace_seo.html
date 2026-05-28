@@ -2,7 +2,7 @@
 
 {% block content %}
 
-{% include "includes/workspace_nav.html" %}
+{% include "includes/workspace_nav.html" with workspace_nav_current="seo" %}
 
 {# ── Hub Header ─────────────────────────────────────────────────────────── #}
 <div class="container-fluid">
@@ -486,7 +486,11 @@
                         {% if field.errors %}<div class="text-error">{{ field.errors|join:", " }}</div>{% endif %}
                     </div>
                     {% endfor %}
-                    <button type="submit" class="button-mega" style="width: 100%; margin-top: 1rem;">Update SEO Intelligence</button>
+                    <div class="ws-form-actions" style="margin-top: 1.25rem;">
+                        <button type="submit" class="button button-primary">
+                            <i class="fa-solid fa-magnifying-glass-chart"></i> Update SEO Intelligence
+                        </button>
+                    </div>
                 </form>
                 <p class="text-muted">The refresh reuses your latest crawl so users can move from audit evidence to SEO action without another heavy setup step.</p>
                 {% endif %}
@@ -565,17 +569,13 @@
             {# ── Per-stage progress strip ─────────────────────────────── #}
             <div class="seo-stage-strip">
                 {% for stage_key, stage_label in stages_display %}
-                {% with stage_data=stages|default_if_none:{}|default:{}  %}
                 {% with sinfo=seo_refresh_state.refresh_stages %}
                 {% if sinfo %}
-                {% with sd=sinfo|default:{} %}
-                <div class="seo-stage-item seo-stage-item--{% if forloop.counter == 1 and not stages %}running{% elif stage_key in seo_refresh_state.refresh_stages %}{{ seo_refresh_state.refresh_stages|dictsort:stage_key }}{% else %}pending{% endif %}">
+                <div class="seo-stage-item seo-stage-item--{% if forloop.counter == 1 and not stages %}running{% elif stage_key in seo_refresh_state.refresh_stages %}done{% else %}pending{% endif %}">
                     <span class="seo-stage-dot"></span>
                     <span class="seo-stage-label">{{ stage_label }}</span>
                 </div>
-                {% endwith %}
                 {% endif %}
-                {% endwith %}
                 {% endwith %}
                 {% endfor %}
             </div>

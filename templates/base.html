@@ -405,7 +405,9 @@
     /* ── Sidebar layout: hide public nav/footer, offset content ─── */
     body.shell-light .site-header { display: none !important; }
     body.shell-light .vrt-footer  { display: none !important; }
-    body.shell-light main          { padding-left: 240px; min-height: 100vh; }
+    body.shell-light main          { min-height: 100vh; }
+    /* Grid layout handles sidebar column — no padding-left needed */
+    body.shell-light:has(.ws-sidebar) main { padding-left: 0 !important; }
     @media (max-width: 768px) {
         body.shell-light main { padding-left: 0 !important; padding-bottom: 60px !important; }
     }
@@ -1233,6 +1235,8 @@
     /* Root layout — CSS grid so the sidebar pins column 1 across ALL rows,
        and every non-sidebar child (ws-main-content or raw container-fluid)
        lands in column 2 automatically. No wrapper needed on other pages. */
+    /* CSS Grid layout — sidebar in col 1, all content children in col 2.
+       span 999 (not 1/-1) correctly covers auto-placed implicit rows. */
     body:has(.ws-sidebar) > main {
         display: grid;
         grid-template-columns: 240px 1fr;
@@ -1241,15 +1245,37 @@
         background: #f1f5f9;
         align-items: start;
     }
-    /* Sidebar spans ALL grid rows so it stays visible while content grows */
+    /* Sidebar: span all rows so it stays alongside scrolling content */
     body:has(.ws-sidebar) > main > .ws-sidebar {
         grid-column: 1;
-        grid-row: 1 / -1;
+        grid-row: 1 / span 999;
+        align-self: start;
     }
-    /* Every non-sidebar child goes into column 2 */
+    /* Every non-sidebar child goes into column 2, stacking naturally */
     body:has(.ws-sidebar) > main > *:not(.ws-sidebar) {
         grid-column: 2;
         min-width: 0;
+    }
+
+    /* ── Hub header full-width fix ───────────────────────────────── */
+    /* The hub header's container-fluid is a direct child of <main>. The
+       vrt-space-core rule centers it to min(1400px, calc(100% - 3rem)), leaving
+       ~24px auto-margins that produce a floating white-box left edge on
+       shell-light pages. Override: span the full column, let the hub header
+       control its own internal indent so text starts a comfortable 2rem in. */
+    body:has(.ws-sidebar) > main > .container-fluid {
+        width: 100%;
+        max-width: none;
+        margin-left: 0;
+        margin-right: 0;
+        padding-left: 0;
+        padding-right: 0;
+    }
+    /* Give the hub header its own 2rem horizontal padding so the white
+       background band is truly edge-to-edge but text is comfortably indented. */
+    body:has(.ws-sidebar) .ws-hub-header {
+        padding-left: 2rem;
+        padding-right: 2rem;
     }
 
     /* ── Sidebar ─────────────────────────────────────────────────── */
@@ -1844,6 +1870,170 @@
         .mc-kpi-strip { grid-template-columns: 1fr 1fr; }
         .mc-body { padding: 1rem; }
         .mc-modules-grid { grid-template-columns: 1fr; }
+    }
+
+    /* ══════════════════════════════════════════════════════════════════════
+       WORKSPACE FORM SYSTEM — cards, inputs, tables, flash messages
+       Used by Team, CMS, and other form-heavy workspace pages.
+       ══════════════════════════════════════════════════════════════════════ */
+
+    /* Form card wrapper */
+    .ws-form-card { padding: 1.75rem 2rem; }
+    .ws-form-card-header { margin-bottom: 1.5rem; }
+    .ws-form-card-title {
+        font-size: 1rem; font-weight: 700; color: var(--text-primary);
+        display: flex; align-items: center; gap: 0.5rem; margin: 0 0 0.35rem;
+    }
+    .ws-form-card-desc { font-size: 0.875rem; color: var(--text-secondary); margin: 0; }
+    body.shell-light .ws-form-card-title { color: #0f172a; }
+    body.shell-light .ws-form-card-desc  { color: #64748b; }
+
+    /* Form layout */
+    .ws-form { display: flex; flex-direction: column; gap: 0; }
+    .ws-form-row {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.25rem;
+        margin-bottom: 1.25rem;
+    }
+    .ws-form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.25rem; }
+    .ws-form-row .ws-form-group { margin-bottom: 0; }
+
+    .ws-form-label {
+        font-size: 0.78rem; font-weight: 700; letter-spacing: 0.05em;
+        text-transform: uppercase; color: var(--text-secondary);
+    }
+    body.shell-light .ws-form-label { color: #475569; }
+
+    .ws-form-input {
+        width: 100%; padding: 0.65rem 0.875rem;
+        border-radius: 8px; border: 1px solid #cbd5e1;
+        background: #ffffff; color: #0f172a;
+        font-size: 0.9rem; line-height: 1.5;
+        transition: border-color 0.15s, box-shadow 0.15s;
+        outline: none; box-sizing: border-box;
+    }
+    .ws-form-input:focus {
+        border-color: #0284c7;
+        box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.12);
+    }
+    .ws-form-input::placeholder { color: #94a3b8; }
+    .ws-form-select { appearance: none; cursor: pointer;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%2394a3b8' d='M6 8L1 3h10z'/%3E%3C/svg%3E");
+        background-repeat: no-repeat; background-position: right 0.75rem center; padding-right: 2.25rem;
+    }
+    .ws-form-hint { font-size: 0.78rem; color: var(--text-muted); margin: 0; line-height: 1.5; }
+    body.shell-light .ws-form-hint { color: #94a3b8; }
+    .ws-form-hint code { font-family: monospace; font-size: 0.8em; background: #f1f5f9; padding: 0.1em 0.35em; border-radius: 4px; }
+
+    .ws-form-actions {
+        display: flex; align-items: center; gap: 1rem;
+        padding-top: 0.25rem; margin-top: 0.25rem;
+        flex-wrap: wrap;
+    }
+
+    /* Flash messages */
+    .ws-flash {
+        padding: 0.75rem 1rem; border-radius: 8px; font-size: 0.875rem;
+        display: flex; align-items: center; gap: 0.5rem;
+        margin-bottom: 0.5rem;
+        background: #eff6ff; color: #1d4ed8; border: 1px solid #bfdbfe;
+    }
+    .ws-flash--success { background: #f0fdf4; color: #15803d; border-color: #bbf7d0; }
+    .ws-flash--error, .ws-flash--danger { background: #fef2f2; color: #b91c1c; border-color: #fecaca; }
+    .ws-flash--warning { background: #fffbeb; color: #92400e; border-color: #fde68a; }
+
+    /* Info card */
+    .ws-info-card { padding: 1.25rem 1.5rem; }
+    .ws-info-card-inner { display: flex; align-items: flex-start; gap: 1rem; }
+    .ws-info-card-icon { font-size: 1.25rem; color: #0284c7; flex-shrink: 0; padding-top: 0.15rem; }
+    .ws-share-url {
+        font-family: monospace; font-size: 0.8rem; word-break: break-all;
+        color: #0284c7; background: #eff6ff; padding: 0.35rem 0.6rem;
+        border-radius: 6px; border: 1px solid #bfdbfe; margin: 0.25rem 0 0.35rem;
+        display: block;
+    }
+
+    /* Connected platforms list */
+    .ws-connected-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.75rem; }
+    .ws-connected-item {
+        display: flex; align-items: center; gap: 1rem;
+        padding: 0.85rem 1rem; border-radius: 10px;
+        background: #f8fafc; border: 1px solid #e2e8f0;
+    }
+    .ws-connected-icon { font-size: 1.4rem; color: #0284c7; width: 2rem; text-align: center; flex-shrink: 0; }
+    .ws-connected-details { flex: 1; min-width: 0; }
+    .ws-connected-name { font-weight: 700; font-size: 0.875rem; color: #0f172a; margin: 0 0 0.15rem; }
+    .ws-connected-url { font-size: 0.8rem; color: #64748b; margin: 0; word-break: break-all; }
+    .ws-connected-meta { flex-shrink: 0; }
+
+    /* Table */
+    .ws-table-header { padding: 0 0 1rem; margin-bottom: 0; }
+    .ws-table-wrap { overflow-x: auto; margin: 0 -0.25rem; }
+    .ws-table { width: 100%; border-collapse: collapse; font-size: 0.875rem; }
+    .ws-table thead th {
+        text-align: left; font-size: 0.72rem; font-weight: 700;
+        text-transform: uppercase; letter-spacing: 0.05em;
+        color: #94a3b8; padding: 0.6rem 0.85rem;
+        border-bottom: 1px solid #e2e8f0;
+    }
+    .ws-table tbody tr { border-bottom: 1px solid #f1f5f9; transition: background 0.1s; }
+    .ws-table tbody tr:last-child { border-bottom: none; }
+    .ws-table tbody tr:hover { background: #f8fafc; }
+    .ws-table td { padding: 0.75rem 0.85rem; color: #334155; vertical-align: middle; }
+    .ws-table-primary { font-weight: 600; color: #0f172a !important; }
+    .ws-table-muted { color: #94a3b8 !important; font-size: 0.8rem; }
+    .ws-table-action { text-align: right; white-space: nowrap; }
+
+    /* Role & status badges */
+    .ws-role-badge {
+        display: inline-block; padding: 0.2rem 0.6rem;
+        border-radius: 999px; font-size: 0.72rem; font-weight: 700;
+        background: #f1f5f9; color: #475569;
+    }
+    .ws-role-owner { background: #eff6ff; color: #1d4ed8; }
+    .ws-role-member { background: #f0fdf4; color: #15803d; }
+    .ws-role-client { background: #faf5ff; color: #7c3aed; }
+
+    .ws-status-pill {
+        display: inline-block; padding: 0.18rem 0.55rem;
+        border-radius: 999px; font-size: 0.72rem; font-weight: 600;
+        background: #f1f5f9; color: #64748b;
+    }
+    .ws-status-active, .ws-status-accepted { background: #dcfce7; color: #15803d; }
+    .ws-status-pending { background: #fef9c3; color: #854d0e; }
+    .ws-status-revoked { background: #fee2e2; color: #b91c1c; }
+
+    /* Ghost danger button */
+    .ws-btn-ghost {
+        background: none; border: 1px solid #e2e8f0; border-radius: 6px;
+        padding: 0.3rem 0.75rem; font-size: 0.78rem; font-weight: 600;
+        cursor: pointer; transition: all 0.15s; color: #64748b;
+    }
+    .ws-btn-ghost:hover { border-color: #fca5a5; color: #dc2626; background: #fef2f2; }
+    .ws-btn-danger:hover { border-color: #fca5a5; color: #dc2626; background: #fef2f2; }
+
+    /* Empty state inside cards */
+    .ws-empty-state {
+        text-align: center; padding: 2.5rem 1rem;
+        display: flex; flex-direction: column; align-items: center;
+    }
+
+    /* Status tag adjustments */
+    .ws-status-tag { display: inline-flex; align-items: center; gap: 0.5rem;
+        padding: 0.4rem 0.9rem; border-radius: 999px;
+        background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+        font-size: 0.8rem; font-weight: 600; color: var(--text-secondary);
+    }
+    body.shell-light .ws-status-tag { background: #f8fafc; border-color: #e2e8f0; color: #475569; }
+    .ws-status-dot { width: 8px; height: 8px; border-radius: 50%; flex-shrink: 0; }
+    .ws-status-dot.dot-green  { background: #22c55e; box-shadow: 0 0 0 3px rgba(34,197,94,0.2); }
+    .ws-status-dot.dot-amber  { background: #f59e0b; box-shadow: 0 0 0 3px rgba(245,158,11,0.2); }
+    .ws-status-dot.dot-muted  { background: #94a3b8; }
+
+    @media (max-width: 640px) {
+        .ws-form-row { grid-template-columns: 1fr; }
+        .ws-form-card { padding: 1.25rem; }
     }
     </style>
     <script src="https://unpkg.com/htmx.org@1.9.12"></script>

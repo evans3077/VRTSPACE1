@@ -6818,12 +6818,12 @@ body.shell-light .ws-outcome-meta  { color: #94a3b8; }
 /* ── Hide public header & footer on workspace pages ─────────────────────── */
 body.shell-light .site-header  { display: none !important; }
 body.shell-light .vrt-footer   { display: none !important; }
-body.shell-light main          { padding-left: 240px; min-height: 100vh; }
+body.shell-light main          { min-height: 100vh; }
 
-/* ── Sidebar shell ───────────────────────────────────────────────────────── */
+/* ── Sidebar shell — grid-column layout (not fixed) ─────────────────────── */
 .ws-sidebar {
-    position: fixed;
-    top: 0; left: 0;
+    position: sticky;
+    top: 0;
     width: 240px;
     height: 100vh;
     overflow-y: auto;
@@ -6832,10 +6832,11 @@ body.shell-light main          { padding-left: 240px; min-height: 100vh; }
     border-right: 1px solid rgba(255, 255, 255, 0.06);
     display: flex;
     flex-direction: column;
-    z-index: 200;
+    z-index: 100;
     padding-bottom: 1rem;
     scrollbar-width: thin;
     scrollbar-color: rgba(255,255,255,0.08) transparent;
+    flex-shrink: 0;
 }
 
 /* ── Brand area ──────────────────────────────────────────────────────────── */

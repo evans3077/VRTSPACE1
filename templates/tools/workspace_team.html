@@ -2,93 +2,142 @@
 {% load static %}
 
 {% block content %}
-{% include "includes/workspace_nav.html" %}
-<section class="section workspace-team">
-  <div class="container">
-    <header class="section-heading">
-      <p class="eyebrow">Team & Sharing</p>
-      <h1>{{ project.name }} — Collaborators</h1>
-      <p class="section-text">
-        Invite teammates with full workspace access, or share a read-only
-        snapshot with your client. Seats: <strong>{{ seats_used }}/{{ seat_limit }}</strong> used.
-      </p>
-    </header>
+{% include "includes/workspace_nav.html" with workspace_nav_current="team" %}
+
+{# ── Hub Header ─────────────────────────────────────────────────────────── #}
+<div class="container-fluid" style="padding-bottom: 0;">
+    <div class="ws-hub-header workspace-shell-header">
+        <div class="ws-hub-header-left">
+            <div class="ws-hub-eyebrow"><i class="fa-solid fa-users"></i> Team &amp; Sharing</div>
+            <h1 class="ws-hub-title">{{ project.name|default:"Workspace" }} — Collaborators</h1>
+            <p class="ws-hub-description">
+                Invite teammates with full workspace access, or share a read-only link with your client.
+            </p>
+        </div>
+        <div class="ws-hub-header-right">
+            <div class="ws-status-tag">
+                <span class="ws-status-dot {% if seats_used < seat_limit %}dot-green{% else %}dot-amber{% endif %}"></span>
+                {{ seats_used }}/{{ seat_limit }} seat{% if seat_limit != 1 %}s{% endif %} used
+            </div>
+        </div>
+    </div>
+</div>
+
+{# ── Page body ───────────────────────────────────────────────────────────── #}
+<section style="padding: 1.5rem 0 3rem;">
+<div class="container-fluid">
 
     {% if messages %}
-    <div class="form-flash">
-      {% for message in messages %}<p>{{ message }}</p>{% endfor %}
+    <div style="margin-bottom: 1.25rem;">
+        {% for message in messages %}
+        <div class="ws-flash ws-flash--{{ message.tags|default:'info' }}">
+            <i class="fa-solid fa-circle-info"></i> {{ message }}
+        </div>
+        {% endfor %}
     </div>
     {% endif %}
 
-    <article class="card workspace-team-invite">
-      <h2>Invite</h2>
-      <form method="post" action="{% url 'tools:workspace-team' %}" class="premium-form">
-        {% csrf_token %}
-        <div class="form-grid-2">
-          <div class="form-group">
-            <label class="form-label" for="invite-email">Email</label>
-            <input id="invite-email" type="email" name="email" class="form-control" placeholder="name@example.com">
-            <p class="form-hint">Required for owner/member invites. Leave blank for a client share link.</p>
-          </div>
-          <div class="form-group">
-            <label class="form-label" for="invite-role">Role</label>
-            <select id="invite-role" name="role" class="form-control">
-              <option value="member">Member — full workspace access</option>
-              <option value="owner">Owner — full + billing</option>
-              <option value="client">Client — read-only share link</option>
-            </select>
-          </div>
+    {# ── Invite card ── #}
+    <div class="system-card ws-form-card" style="margin-bottom: 1.25rem;">
+        <div class="ws-form-card-header">
+            <h2 class="ws-form-card-title"><i class="fa-solid fa-user-plus"></i> Invite a collaborator</h2>
+            <p class="ws-form-card-desc">Enter an email for a teammate, or leave blank to generate a client share link.</p>
         </div>
-        <button type="submit" class="button button-primary">
-          Send invite <i class="fa-solid fa-paper-plane"></i>
-        </button>
-      </form>
-    </article>
+        <form method="post" action="{% url 'tools:workspace-team' %}" class="ws-form">
+            {% csrf_token %}
+            <div class="ws-form-row">
+                <div class="ws-form-group">
+                    <label class="ws-form-label" for="invite-email">Email address</label>
+                    <input id="invite-email" type="email" name="email" class="ws-form-input"
+                           placeholder="name@company.com" autocomplete="email">
+                    <p class="ws-form-hint">Leave blank to generate a read-only client share link.</p>
+                </div>
+                <div class="ws-form-group">
+                    <label class="ws-form-label" for="invite-role">Role</label>
+                    <select id="invite-role" name="role" class="ws-form-input ws-form-select">
+                        <option value="member">Member — full workspace access</option>
+                        <option value="owner">Owner — full access + billing</option>
+                        <option value="client">Client — read-only share link</option>
+                    </select>
+                    <p class="ws-form-hint">Owners can manage billing and remove members.</p>
+                </div>
+            </div>
+            <div class="ws-form-actions">
+                <button type="submit" class="button button-primary">
+                    <i class="fa-solid fa-paper-plane"></i> Send invite
+                </button>
+            </div>
+        </form>
+    </div>
 
+    {# ── Active client share link ── #}
     {% if client_share_url %}
-    <article class="card workspace-team-client-share">
-      <h2>Active client share link</h2>
-      <p class="section-text">Anyone with this link can view (read-only):</p>
-      <code class="workspace-team-share-url">{{ client_share_url }}</code>
-    </article>
+    <div class="system-card ws-info-card" style="margin-bottom: 1.25rem;">
+        <div class="ws-info-card-inner">
+            <i class="fa-solid fa-link ws-info-card-icon"></i>
+            <div>
+                <p class="ws-form-label" style="margin-bottom: 0.25rem;">Active client share link</p>
+                <p class="ws-share-url">{{ client_share_url }}</p>
+                <p class="ws-form-hint">Anyone with this link can view a read-only snapshot.</p>
+            </div>
+        </div>
+    </div>
     {% endif %}
 
-    <article class="card workspace-team-list">
-      <h2>Current memberships</h2>
-      {% if memberships %}
-      <table class="workspace-team-table">
-        <thead>
-          <tr>
-            <th>Identity</th>
-            <th>Role</th>
-            <th>Status</th>
-            <th>Invited</th>
-            <th></th>
-          </tr>
-        </thead>
-        <tbody>
-          {% for m in memberships %}
-          <tr>
-            <td>{% if m.user %}{{ m.user.email|default:m.user.username }}{% else %}{{ m.invited_email|default:"(pending)" }}{% endif %}</td>
-            <td>{{ m.get_role_display }}</td>
-            <td>{{ m.get_status_display }}</td>
-            <td>{{ m.created_at|date:"M j, Y" }}</td>
-            <td>
-              {% if m.status != "revoked" %}
-              <form method="post" action="{% url 'tools:workspace-team-revoke' pk=m.pk %}" style="display:inline">
-                {% csrf_token %}
-                <button type="submit" class="button button-ghost button-sm">Revoke</button>
-              </form>
-              {% endif %}
-            </td>
-          </tr>
-          {% endfor %}
-        </tbody>
-      </table>
-      {% else %}
-      <p class="section-text">No collaborators yet. Send your first invite above.</p>
-      {% endif %}
-    </article>
-  </div>
+    {# ── Members table ── #}
+    <div class="system-card">
+        <div class="ws-form-card-header">
+            <h2 class="ws-form-card-title"><i class="fa-solid fa-users-rectangle"></i> Current memberships</h2>
+        </div>
+        {% if memberships %}
+        <div class="ws-table-wrap">
+            <table class="ws-table">
+                <thead>
+                    <tr>
+                        <th>Identity</th>
+                        <th>Role</th>
+                        <th>Status</th>
+                        <th>Invited</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for m in memberships %}
+                    <tr>
+                        <td class="ws-table-primary">
+                            <i class="fa-solid fa-circle-user" style="opacity:0.4; margin-right: 0.4rem;"></i>
+                            {% if m.user %}{{ m.user.email|default:m.user.username }}{% else %}{{ m.invited_email|default:"(pending)" }}{% endif %}
+                        </td>
+                        <td>
+                            <span class="ws-role-badge ws-role-{{ m.role }}">{{ m.get_role_display }}</span>
+                        </td>
+                        <td>
+                            <span class="ws-status-pill ws-status-{{ m.status }}">{{ m.get_status_display }}</span>
+                        </td>
+                        <td class="ws-table-muted">{{ m.created_at|date:"M j, Y" }}</td>
+                        <td class="ws-table-action">
+                            {% if m.status != "revoked" %}
+                            <form method="post" action="{% url 'tools:workspace-team-revoke' pk=m.pk %}" style="display:inline">
+                                {% csrf_token %}
+                                <button type="submit" class="ws-btn-ghost ws-btn-danger">Revoke</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="ws-empty-state">
+            <i class="fa-solid fa-users" style="font-size:2rem; opacity:0.2; margin-bottom:0.75rem;"></i>
+            <p style="font-weight:600; color: var(--text-primary); margin-bottom:0.35rem;">No collaborators yet</p>
+            <p style="color: var(--text-muted); font-size: 0.875rem;">Send your first invite above to give a teammate or client access.</p>
+        </div>
+        {% endif %}
+    </div>
+
+</div>
 </section>
+
 {% endblock %}

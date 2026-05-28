@@ -2,7 +2,7 @@
 
 {% block content %}
 
-{% include "includes/workspace_nav.html" %}
+{% include "includes/workspace_nav.html" with workspace_nav_current="content" %}
 
 {# ── Hub Header ─────────────────────────────────────────────────────────── #}
 <div class="container-fluid" style="padding-bottom: 0;">
@@ -213,7 +213,9 @@
                         {% endfor %}
                     </div>
                     {% endfor %}
-                    <button type="submit" class="button button-primary" style="margin-top: 1rem; width: 100%;"><i class="fa-solid fa-bolt"></i> Generate Engine Draft</button>
+                    <div class="ws-form-actions" style="margin-top: 1.25rem;">
+                        <button type="submit" class="button button-primary"><i class="fa-solid fa-bolt"></i> Generate Engine Draft</button>
+                    </div>
                 </form>
                 {% endif %}
             </article>

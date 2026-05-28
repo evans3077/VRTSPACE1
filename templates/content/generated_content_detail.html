@@ -1,29 +1,44 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="hero" style="padding-bottom: 2rem;">
-    <div class="container">
-        <div class="section-heading">
-            <p class="eyebrow">Generated Draft</p>
-            <h1 style="max-width: none;">{{ generated_content.title }}</h1>
-            <p class="section-text" style="max-width: 760px;">
+{% include "includes/workspace_nav.html" with workspace_nav_current="content" %}
+
+{# ── Hub Header ─────────────────────────────────────────────────────────── #}
+<div class="container-fluid" style="padding-bottom: 0;">
+    <div class="ws-hub-header workspace-shell-header">
+        <div class="ws-hub-header-left">
+            <div class="ws-hub-eyebrow">
+                <a href="{{ back_url }}" style="color: inherit; text-decoration: none; opacity: 0.7; font-size: 0.78rem;">
+                    <i class="fa-solid fa-arrow-left"></i> Content
+                </a>
+                <span style="opacity: 0.35; margin: 0 0.35rem;">›</span>
+                <i class="fa-solid fa-file-lines"></i> Generated Draft
+            </div>
+            <h1 class="ws-hub-title">{{ generated_content.title }}</h1>
+            <p class="ws-hub-description">
                 {{ generated_content.get_output_type_display }} for {{ generated_content.business_type }}{% if generated_content.location %} in {{ generated_content.location }}{% endif %}.
             </p>
-            <div style="margin-top: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
-                <a class="button button-secondary" href="{{ back_url }}">Back to drafts</a>
-                <a class="button button-secondary" href="{% url 'content:workspace-content-json' generated_content.pk %}">Open JSON</a>
+        </div>
+        <div class="ws-hub-header-right">
+            <div style="display: flex; gap: 0.65rem; flex-wrap: wrap; align-items: center;">
+                <a class="button button-secondary" href="{{ back_url }}" style="font-size: 0.82rem; padding: 0.4rem 0.85rem;">
+                    <i class="fa-solid fa-arrow-left"></i> Back to drafts
+                </a>
+                <a class="button button-secondary" href="{% url 'content:workspace-content-json' generated_content.pk %}" style="font-size: 0.82rem; padding: 0.4rem 0.85rem;">
+                    <i class="fa-solid fa-code"></i> Open JSON
+                </a>
                 <form method="post" action="{% url 'content:workspace-content-apply' generated_content.pk %}">
                     {% csrf_token %}
-                    <button type="submit" class="button button-primary">Apply to Content Library</button>
+                    <button type="submit" class="button button-primary" style="font-size: 0.82rem; padding: 0.4rem 0.85rem;">
+                        <i class="fa-solid fa-check"></i> Apply to Library
+                    </button>
                 </form>
             </div>
         </div>
     </div>
-</section>
+</div>
 
-{% include "includes/workspace_nav.html" %}
-
-<section class="packages-section content-detail-shell" style="padding-top: 0;">
+<section class="packages-section content-detail-shell" style="padding-top: 1.5rem;">
     <div class="container" style="display: grid; gap: 2rem;">
         <div class="system-grid">
             <article class="system-card">
