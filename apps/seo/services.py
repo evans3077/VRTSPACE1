@@ -813,13 +813,35 @@ def _fetch_competitor_pages(competitor_url, *, business_type="", location=""):
 
 
 def get_or_build_competitor_snapshot(*, competitor, audit_run, profile):
-    latest = (
+    from .discovery import competitor_snapshot_is_fresh
+
+    # 1. Prefer an exact match for this audit run (fastest path, no re-fetch needed)
+    exact = (
         SEOCompetitorSnapshot.objects.filter(competitor=competitor, source_audit_run=audit_run)
         .order_by("-created_at")
         .first()
     )
-    if latest:
-        return latest
+    if exact:
+        return exact
+
+    # 2. Reuse any fresh snapshot for this competitor from a recent audit run.
+    #    Avoids re-crawling competitor pages that were already fetched within the
+    #    reuse window (default 3 days, controlled by COMPETITOR_SNAPSHOT_REUSE_DAYS).
+    recent = (
+        SEOCompetitorSnapshot.objects.filter(competitor=competitor)
+        .order_by("-created_at")
+        .first()
+    )
+    if competitor_snapshot_is_fresh(recent):
+        # Return the recent snapshot without re-fetching; attach it to this audit run
+        # by creating a lightweight copy that shares the same output_json payload.
+        return SEOCompetitorSnapshot.objects.create(
+            competitor=competitor,
+            source_audit_run=audit_run,
+            output_json=recent.output_json,
+        )
+
+    # 3. No fresh snapshot — fetch competitor pages and build a new snapshot.
     payload = _fetch_competitor_pages(
         competitor.homepage_url,
         business_type=profile.business_type,
@@ -1943,19 +1965,39 @@ def build_value_summary(competitor_snapshots, keyword_opportunities, page_map, e
     }
 
 
-def build_seo_context_payload(project, profile, audit_run):
+def build_seo_context_payload(project, profile, audit_run, *, _stage_reporter=None):
+    """
+    Build the full SEO context payload.
+
+    *_stage_reporter* is an optional ``(stage_name, action)`` callable injected
+    by the job layer to record per-stage timing. Stages reported:
+      site_snapshot | discovery | competitor_crawl | analysis
+    """
+    _notify = _stage_reporter if callable(_stage_reporter) else (lambda *a: None)
+
     effective_business_type = profile.business_type or infer_business_type_for_project(
         project,
         audit_run=audit_run,
         primary_service=profile.primary_service,
     )
+
+    # Stage 1: own-site structure snapshot
+    _notify("site_snapshot", "start")
     site_structure_snapshot = get_or_build_site_structure_snapshot(
         project=project,
         audit_run=audit_run,
         profile=profile,
     )
+    _notify("site_snapshot", "done")
+
+    # Stage 2: SERP discovery
+    _notify("discovery", "start")
     sync_project_competitors(project)
     discovery = sync_discovered_competitors(project, profile)
+    _notify("discovery", "done")
+
+    # Stage 3: competitor crawl — respect competitor limit
+    _notify("competitor_crawl", "start")
     competitors = sorted(
         SEOCompetitor.objects.filter(project=project, is_active=True),
         key=_competitor_priority,
@@ -1968,6 +2010,10 @@ def build_seo_context_payload(project, profile, audit_run):
         )
         for competitor in competitors
     ]
+    _notify("competitor_crawl", "done")
+
+    # Stage 4: analysis — benchmarks, patterns, recommendations
+    _notify("analysis", "start")
     competitor_trace = [_build_competitor_trace(snapshot, profile) for snapshot in competitor_snapshots]
     accepted_competitor_snapshots = _accepted_competitor_snapshots(competitor_snapshots, profile)
     site_structure = site_structure_snapshot.output_json
@@ -1989,7 +2035,7 @@ def build_seo_context_payload(project, profile, audit_run):
             target_audience=profile.target_audience,
         )
     )
-    return {
+    _context_payload = {
         "context": {
             "project": project.name,
             "domain": project.normalized_domain,
@@ -2030,6 +2076,8 @@ def build_seo_context_payload(project, profile, audit_run):
             for snapshot in accepted_competitor_snapshots
         ],
     }
+    _notify("analysis", "done")
+    return _context_payload
 
 
 def build_seo_opportunity_payload(project, profile, audit_run, context_snapshot=None):
@@ -2398,18 +2446,33 @@ def get_or_build_seo_opportunity_snapshot(*, project, profile, audit_run, contex
     )
 
 
-def refresh_project_seo_intelligence(project):
+def refresh_project_seo_intelligence(project, *, stage_tracker=None):
+    """
+    Orchestrate a full SEO context + opportunity refresh for *project*.
+
+    *stage_tracker* is an optional ``_StageTracker`` instance (from jobs.py).
+    When provided it records timing for each stage and writes it to the profile
+    metadata so the UI can show live stage state during a running refresh.
+    """
     profile = getattr(project, "seo_profile", None)
     if not profile or not can_generate_seo_snapshot(project):
         return None, None
 
+    _notify = stage_tracker.reporter if stage_tracker else (lambda *a: None)
+
     latest_audit = project.latest_audit_run
+
+    # Stages site_snapshot / discovery / competitor_crawl / analysis are
+    # reported from inside build_seo_context_payload via _stage_reporter.
+    context_payload = build_seo_context_payload(project, profile, latest_audit, _stage_reporter=_notify)
     context_snapshot = SEOContextSnapshot.objects.create(
         project=project,
         profile=profile,
         source_audit_run=latest_audit,
-        output_json=build_seo_context_payload(project, profile, latest_audit),
+        output_json=context_payload,
     )
+
+    _notify("opportunity", "start")
     opportunity_snapshot = SEOOpportunitySnapshot.objects.create(
         project=project,
         profile=profile,
@@ -2422,8 +2485,90 @@ def refresh_project_seo_intelligence(project):
             context_snapshot=context_snapshot,
         ),
     )
+    _notify("opportunity", "done")
     return context_snapshot, opportunity_snapshot
 
 
 def can_generate_seo_snapshot(project):
     return bool(project and getattr(project, "latest_audit_run", None) and project.latest_audit_run.status == "completed")
+
+
+# ---------------------------------------------------------------------------
+# Block 5 — Page-Level Action Packs
+# ---------------------------------------------------------------------------
+
+def _build_edit_item_success_criteria(edit_target, campaign):
+    """Generate measurable success criteria for a single edit target."""
+    criteria = []
+    change_scope = edit_target.get("change_scope", "")
+    page_type = edit_target.get("page_type", "")
+    if change_scope == "new_page":
+        criteria.append(f"New {page_type or 'page'} is live and indexed at the target URL.")
+    else:
+        criteria.append("All listed changes have been applied to the live page.")
+    if campaign.target_keyword:
+        criteria.append(f"Page is aligned to the primary keyword: '{campaign.target_keyword}'.")
+    criteria.append("Page renders without errors and passes Core Web Vitals on a fresh audit run.")
+    criteria.append("Re-run SEO workspace refresh and confirm the page no longer appears in the action queue.")
+    return criteria[:4]
+
+
+def sync_campaign_edit_items(campaign):
+    """
+    Persist the edit_targets stored in campaign.metadata into SEOCampaignEditItem rows.
+    Idempotent — rows are get-or-created by (campaign, ordering_index).
+    Returns a list of SEOCampaignEditItem instances.
+    """
+    from .models import SEOCampaignEditItem
+
+    metadata = campaign.metadata or {}
+    edit_targets = metadata.get("edit_targets") or []
+    competitor_evidence = metadata.get("competitor_evidence") or []
+
+    items = []
+    for idx, target in enumerate(edit_targets):
+        if not isinstance(target, dict):
+            continue
+        obj, created = SEOCampaignEditItem.objects.get_or_create(
+            campaign=campaign,
+            ordering_index=idx,
+            defaults={
+                "page_url": target.get("url", ""),
+                "page_title": target.get("page_title", ""),
+                "page_type": target.get("page_type", campaign.page_type),
+                "change_scope": target.get("change_scope", "existing_page"),
+                "changes": target.get("changes", []),
+                "success_criteria": _build_edit_item_success_criteria(target, campaign),
+                "evidence": {
+                    "competitor_examples": competitor_evidence[:3],
+                    "confidence_label": (metadata.get("evidence") or {}).get("confidence_label", ""),
+                    "evidence_score": (metadata.get("evidence") or {}).get("score", 0),
+                    "summary": (metadata.get("evidence") or {}).get("summary", ""),
+                },
+            },
+        )
+        if not created:
+            # Refresh mutable fields but preserve status / completed_at
+            changed = False
+            if obj.changes != target.get("changes", []):
+                obj.changes = target.get("changes", [])
+                changed = True
+            if not obj.success_criteria:
+                obj.success_criteria = _build_edit_item_success_criteria(target, campaign)
+                changed = True
+            if changed:
+                obj.save(update_fields=["changes", "success_criteria", "updated_at"])
+        items.append(obj)
+    return items
+
+
+def get_action_pack_for_campaign(campaign):
+    """
+    Return all SEOCampaignEditItem rows for a campaign, syncing first if empty.
+    """
+    from .models import SEOCampaignEditItem
+
+    items = list(SEOCampaignEditItem.objects.filter(campaign=campaign).order_by("ordering_index"))
+    if not items:
+        items = sync_campaign_edit_items(campaign)
+    return items

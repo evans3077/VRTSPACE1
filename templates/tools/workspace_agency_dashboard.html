@@ -1,0 +1,206 @@
+{% extends "workspace_shell.html" %}
+{% load static %}
+
+{% block title %}Agency Overview — VRT Space{% endblock %}
+
+{% block workspace_content %}
+<div class="ws-hub-header">
+  <div class="ws-hub-header-inner">
+    <div class="ws-hub-title-row">
+      <div class="ws-hub-icon">
+        <i class="fa-solid fa-grid-2"></i>
+      </div>
+      <div>
+        <h1 class="ws-hub-title">Agency Overview</h1>
+        <p class="ws-hub-subtitle">Health snapshot across all your client projects</p>
+      </div>
+    </div>
+    <div class="ws-hub-actions">
+      <a href="{% url 'tools:workspace-project-create' %}" class="button-primary button-sm">
+        <i class="fa-solid fa-plus"></i> Add Client
+      </a>
+      <a href="{% url 'tools:workspace-audit-start' %}" class="button-secondary button-sm">
+        <i class="fa-solid fa-bolt"></i> Run Audit
+      </a>
+    </div>
+  </div>
+
+  {# ── Summary bar ─────────────────────────────────────────────── #}
+  <div class="agency-summary-bar">
+    <div class="agency-stat">
+      <span class="agency-stat-value">{{ total_count }}</span>
+      <span class="agency-stat-label">Clients</span>
+    </div>
+    <div class="agency-stat agency-stat--green">
+      <span class="agency-stat-value">{{ healthy_count }}</span>
+      <span class="agency-stat-label">Healthy</span>
+    </div>
+    <div class="agency-stat agency-stat--amber">
+      <span class="agency-stat-value">{{ needs_attention_count }}</span>
+      <span class="agency-stat-label">Need Attention</span>
+    </div>
+    <div class="agency-stat agency-stat--muted">
+      <span class="agency-stat-value">{{ stale_count }}</span>
+      <span class="agency-stat-label">Stale (>30 days)</span>
+    </div>
+  </div>
+</div>
+
+{# ── Main grid ───────────────────────────────────────────────────── #}
+<div class="ws-module-body">
+
+  {% if not projects %}
+  {# ── Empty state ── #}
+  <div class="agency-empty-state">
+    <div class="agency-empty-icon">
+      <i class="fa-solid fa-sitemap"></i>
+    </div>
+    <h2 class="agency-empty-title">No client projects yet</h2>
+    <p class="agency-empty-body">Add your first client website to start tracking their SEO and AI visibility health.</p>
+    <a href="{% url 'tools:workspace-project-create' %}" class="button-primary">
+      <i class="fa-solid fa-plus"></i> Add Your First Client
+    </a>
+  </div>
+
+  {% else %}
+
+  {# ── Health filter chips ── #}
+  <div class="agency-filter-row" role="group" aria-label="Filter clients">
+    <button class="agency-chip agency-chip--active" data-filter="all">All <span class="agency-chip-count">{{ total_count }}</span></button>
+    <button class="agency-chip" data-filter="red">Critical <span class="agency-chip-count agency-chip-count--red">{% for p in projects %}{% if p.health_status == "red" %}{% if forloop.last %}{{ forloop.counter }}{% endif %}{% endif %}{% endfor %}</span></button>
+    <button class="agency-chip" data-filter="amber">Warning</button>
+    <button class="agency-chip" data-filter="green">Healthy</button>
+    <button class="agency-chip" data-filter="stale">Stale</button>
+  </div>
+
+  {# ── Project cards grid ── #}
+  <div class="agency-grid" id="agency-grid">
+    {% for project in projects %}
+    <article
+      class="agency-card agency-card--{{ project.health_status|default:'muted' }}"
+      data-health="{{ project.health_status|default:'muted' }}"
+      data-stale="{{ project.audit_is_stale|yesno:'true,false' }}"
+    >
+      {# ── Card header ── #}
+      <div class="agency-card-header">
+        <div class="agency-card-identity">
+          <span class="agency-card-health-dot dot-{{ project.health_status|default:'muted' }}"></span>
+          <div>
+            <h2 class="agency-card-name">{{ project.name }}</h2>
+            <span class="agency-card-domain">{{ project.normalized_domain }}</span>
+          </div>
+        </div>
+        {# Score badge #}
+        <div class="agency-card-score-wrap">
+          {% if project.latest_score is not None %}
+          <span class="agency-score-badge agency-score-badge--{{ project.health_status|default:'muted' }}">
+            {{ project.latest_score }}
+          </span>
+          {% if project.score_delta is not None %}
+          <span class="agency-delta{% if project.score_delta > 0 %} agency-delta--up{% elif project.score_delta < 0 %} agency-delta--down{% endif %}">
+            {% if project.score_delta > 0 %}+{% endif %}{{ project.score_delta }}
+          </span>
+          {% endif %}
+          {% else %}
+          <span class="agency-score-badge agency-score-badge--muted">—</span>
+          {% endif %}
+        </div>
+      </div>
+
+      {# ── At-risk category badge ── #}
+      {% if project.at_risk_category_label %}
+      <div class="agency-card-risk">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span class="agency-risk-label">{{ project.at_risk_category_label }}</span>
+        {% if project.at_risk_category_score is not None %}
+        <span class="agency-risk-score">{{ project.at_risk_category_score }}</span>
+        {% endif %}
+      </div>
+      {% endif %}
+
+      {# ── Last audit info ── #}
+      <div class="agency-card-meta">
+        {% if project.latest_audit_completed_at %}
+        <span class="agency-meta-item{% if project.audit_is_stale %} agency-meta-item--warn{% endif %}">
+          <i class="fa-solid fa-clock{% if project.audit_is_stale %}-rotate-left{% else %}{% endif %}"></i>
+          {% if project.audit_age_days == 0 %}
+            Audited today
+          {% elif project.audit_age_days == 1 %}
+            Audited yesterday
+          {% else %}
+            {{ project.audit_age_days }}d ago
+          {% endif %}
+          {% if project.audit_is_stale %}
+          <span class="agency-stale-pill">Stale</span>
+          {% endif %}
+        </span>
+        {% else %}
+        <span class="agency-meta-item agency-meta-item--muted">
+          <i class="fa-solid fa-circle-dashed"></i> Never audited
+        </span>
+        {% endif %}
+
+        <span class="agency-meta-item">
+          <span class="agency-health-label agency-health-label--{{ project.health_status|default:'muted' }}">{{ project.health_label|default:"No data" }}</span>
+        </span>
+      </div>
+
+      {# ── Actions ── #}
+      <div class="agency-card-actions">
+        <a
+          href="{% url 'tools:workspace-dashboard' %}?project={{ project.pk }}"
+          class="button-secondary button-xs"
+          title="Open workspace for {{ project.name }}"
+        >
+          <i class="fa-solid fa-arrow-up-right-from-square"></i> Open
+        </a>
+        <form method="post" action="{% url 'tools:workspace-audit-start' %}" class="agency-rerun-form" style="display:inline;">
+          {% csrf_token %}
+          <input type="hidden" name="project_id" value="{{ project.pk }}">
+          <button type="submit" class="button-primary button-xs" title="Run a new audit for {{ project.name }}">
+            <i class="fa-solid fa-bolt"></i> Run Audit
+          </button>
+        </form>
+      </div>
+    </article>
+    {% endfor %}
+  </div>
+
+  {% endif %}
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+(function () {
+  "use strict";
+
+  const grid = document.getElementById("agency-grid");
+  if (!grid) return;
+
+  const cards = Array.from(grid.querySelectorAll(".agency-card"));
+  const chips = document.querySelectorAll(".agency-chip");
+
+  chips.forEach(function (chip) {
+    chip.addEventListener("click", function () {
+      chips.forEach(function (c) { c.classList.remove("agency-chip--active"); });
+      chip.classList.add("agency-chip--active");
+
+      const filter = chip.dataset.filter;
+
+      cards.forEach(function (card) {
+        let show = true;
+        if (filter === "all") {
+          show = true;
+        } else if (filter === "stale") {
+          show = card.dataset.stale === "true";
+        } else {
+          show = card.dataset.health === filter;
+        }
+        card.style.display = show ? "" : "none";
+      });
+    });
+  });
+})();
+</script>
+{% endblock %}

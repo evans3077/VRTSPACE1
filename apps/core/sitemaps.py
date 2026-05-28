@@ -21,6 +21,7 @@ from django.urls import reverse
 from apps.case_studies.models import CaseStudy
 from apps.content.models import Article
 from apps.core.industry_pages import list_industry_pages
+from apps.core.site_content import SERVICE_PAGE_LIST
 
 
 class _ProtocolMixin:
@@ -97,9 +98,23 @@ class CaseStudySitemap(_ProtocolMixin, Sitemap):
         return obj.updated_at or obj.created_at
 
 
+class ServicePageSitemap(_ProtocolMixin, Sitemap):
+    """Individual service detail pages at /services/<slug>/."""
+
+    changefreq = "monthly"
+    priority = 0.7
+
+    def items(self):
+        return SERVICE_PAGE_LIST
+
+    def location(self, item):
+        return reverse("core:service-detail", kwargs={"slug": item["slug"]})
+
+
 SITEMAPS = {
     "static": StaticSitemap,
     "industries": IndustryLandingSitemap,
     "articles": ArticleSitemap,
     "case_studies": CaseStudySitemap,
+    "services": ServicePageSitemap,
 }

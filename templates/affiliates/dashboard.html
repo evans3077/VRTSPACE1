@@ -14,7 +14,7 @@
                 <button type="button"
                         class="button button-primary"
                         onclick="navigator.clipboard.writeText(document.getElementById('referral-url').value); this.textContent='Copied';">
-                    <i class="fas fa-link" aria-hidden="true"></i> Copy referral link
+                    <i class="fa-solid fa-link" aria-hidden="true"></i> Copy referral link
                 </button>
                 {% if not affiliate.stripe_connect_payouts_enabled %}
                 <form method="post" action="{% url 'affiliates:connect-onboard' %}" style="display:inline-block;">

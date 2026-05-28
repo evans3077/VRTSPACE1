@@ -1,8 +1,12 @@
 :root {
     --ink: #0f172a;
     --sand: rgba(255, 255, 255, 0.02);
-    --signal: #8b5cf6;
+    --signal: #8b5cf6; /* purple — priority/progress/notification indicators ONLY.
+       For brand CTAs, nav active states, and link colours use var(--brand-primary). */
     --mist: #f1f5f9;
+    /* --bg-surface is the authoritative dark surface token defined in vrt-space-core.css.
+       Redefined here as a safety fallback so site.css is self-contained. */
+    --bg-surface: #0f172a;
     --panel: var(--bg-surface);
     --deep: #e2e8f0;
 }
@@ -17,7 +21,7 @@ html {
 
 body {
     margin: 0;
-    font-family: 'Space Grotesk', 'Segoe UI', sans-serif;
+    font-family: 'Space Grotesk', sans-serif;
     color: #f8fafc !important;
     background: radial-gradient(circle at top right, rgba(139, 92, 246, 0.05), transparent 35%),
         #020617;
@@ -209,11 +213,7 @@ a {
     font-size: 0.9em;
 }
 
-.workspace-subnav-link.is-active {
-    background: var(--signal);
-    color: white;
-    box-shadow: 0 14px 35px rgba(249, 115, 22, 0.22);
-}
+/* .workspace-subnav-link.is-active removed — class unused, was conflating --signal with active-state */
 
 .workspace-credit-strip {
     display: flex;
@@ -1697,45 +1697,9 @@ textarea:focus {
 
 
 /* ============================================================
-   SCORE PILLS — used across audit, SEO, AEO, workspace views
+   SCORE PILLS — canonical definitions live in vrt-space-core.css.
+   This file intentionally omits duplicates to avoid cascade conflicts.
    ============================================================ */
-
-.score-pill {
-    display: inline-flex;
-    align-items: center;
-    padding: 0.28rem 0.65rem;
-    border-radius: 999px;
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.04em;
-    white-space: nowrap;
-}
-
-.score-pill.score-high,
-.score-pill.score-strong {
-    background: rgba(34, 197, 94, 0.15);
-    color: #4ade80;
-    border: 1px solid rgba(34, 197, 94, 0.4);
-    box-shadow: 0 0 10px rgba(34, 197, 94, 0.1);
-}
-
-.score-pill.score-med,
-.score-pill.score-medium,
-.score-pill.score-stable {
-    background: rgba(234, 179, 8, 0.15);
-    color: #fde047;
-    border: 1px solid rgba(234, 179, 8, 0.4);
-    box-shadow: 0 0 10px rgba(234, 179, 8, 0.1);
-}
-
-.score-pill.score-low,
-.score-pill.score-weak,
-.score-pill.score-critical {
-    background: rgba(239, 68, 68, 0.15);
-    color: #fca5a5;
-    border: 1px solid rgba(239, 68, 68, 0.4);
-    box-shadow: 0 0 10px rgba(239, 68, 68, 0.1);
-}
 
 /* ============================================================
    MOBILE NAVIGATION — hamburger + overlay drawer

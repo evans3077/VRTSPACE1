@@ -404,3 +404,44 @@ class WorkspaceMembership(TimestampedModel):
         if not self.magic_expires_at:
             return True
         return self.magic_expires_at >= timezone.now()
+
+
+class GSCConnection(TimestampedModel):
+    """
+    Stores a Google Search Console OAuth connection for a workspace project.
+
+    The refresh token is stored encrypted-at-rest via the GOOGLE_TOKEN_ENCRYPTION_KEY
+    setting (AES-256 via Fernet if available, otherwise plain — configure the key in prod).
+    The access token is ephemeral and refreshed on demand.
+    """
+
+    project = models.OneToOneField(
+        "leads.ClientProject",
+        on_delete=models.CASCADE,
+        related_name="gsc_connection",
+    )
+    # The Google account email that authorised access.
+    google_email = models.EmailField(blank=True)
+    # The Search Console property URL (e.g. "sc-domain:example.com" or "https://example.com/")
+    sc_property = models.CharField(max_length=512, blank=True)
+    # OAuth tokens (access token is refreshed; refresh token is long-lived)
+    refresh_token = models.TextField(blank=True)
+    access_token = models.TextField(blank=True)
+    token_expiry = models.DateTimeField(null=True, blank=True)
+    # Connection health
+    is_active = models.BooleanField(default=True)
+    last_synced_at = models.DateTimeField(null=True, blank=True)
+    error_message = models.TextField(blank=True)
+
+    class Meta:
+        verbose_name = "GSC Connection"
+        verbose_name_plural = "GSC Connections"
+
+    def __str__(self):
+        return f"GSC:{self.google_email or self.sc_property} → {self.project}"
+
+    @property
+    def is_token_fresh(self):
+        if not self.token_expiry:
+            return False
+        return self.token_expiry > timezone.now()

@@ -6,9 +6,9 @@
 
 {# ── Hub Header ─────────────────────────────────────────────────────────── #}
 <div class="container-fluid">
-    <div class="ws-hub-header">
+    <div class="ws-hub-header workspace-shell-header">
         <div class="ws-hub-header-left">
-            <div class="ws-hub-eyebrow"><i class="fas fa-search"></i> SEO that feeds AI Visibility</div>
+            <div class="ws-hub-eyebrow"><i class="fa-solid fa-magnifying-glass"></i> SEO that feeds AI Visibility</div>
             <h1 class="ws-hub-title">{% if project %}{{ project.name }}{% else %}Workspace SEO{% endif %}</h1>
             <p class="ws-hub-description">
                 Fix the technical, content, and entity signals that block AI citations. Live competitor benchmarking surfaces the gaps between you and the sites AI engines actually cite.
@@ -37,7 +37,7 @@
             {% if project and can_generate_snapshot %}
             <form method="post" action="{% url 'seo:workspace-seo' %}" style="margin:0;">
                 {% csrf_token %}
-                <button type="submit" class="button button-primary" style="font-size:0.82rem; padding: 0.55rem 1.25rem;"><i class="fas fa-sync-alt"></i> Run Refresh</button>
+                <button type="submit" class="button button-primary" style="font-size:0.82rem; padding: 0.55rem 1.25rem;"><i class="fa-solid fa-sync-alt"></i> Run Refresh</button>
             </form>
             {% endif %}
 
@@ -134,16 +134,17 @@
 <nav class="page-jump-nav glass-panel" aria-label="Page sections" style="margin: 0 0 1.5rem;">
     <div class="container-fluid">
         <div class="page-jump-links">
-            <a class="page-jump-link" href="#seo-overview"><i class="fas fa-chart-bar"></i> Overview</a>
-            <a class="page-jump-link" href="#seo-benchmark"><i class="fas fa-users"></i> Benchmark</a>
-            <a class="page-jump-link" href="#seo-history"><i class="fas fa-history"></i> History</a>
-            <a class="page-jump-link" href="#seo-competitors"><i class="fas fa-eye"></i> Competitors</a>
-            <a class="page-jump-link" href="#seo-patterns"><i class="fas fa-puzzle-piece"></i> Patterns</a>
-            <a class="page-jump-link" href="#seo-campaigns"><i class="fas fa-tasks"></i> Campaigns</a>
-            <a class="page-jump-link" href="#seo-roadmap"><i class="fas fa-map"></i> Roadmap</a>
-            <a class="page-jump-link" href="#seo-backlinks"><i class="fas fa-link"></i> Backlinks</a>
-            <a class="page-jump-link" href="#seo-opportunities"><i class="fas fa-lightbulb"></i> Ideas</a>
-            <a class="page-jump-link" href="#seo-clinical-intelligence" style="color: var(--accent-blue);"><i class="fas fa-brain"></i> Intelligence Engine</a>
+            <a class="page-jump-link" href="#seo-overview"><i class="fa-solid fa-chart-bar"></i> Overview</a>
+            <a class="page-jump-link" href="#seo-benchmark"><i class="fa-solid fa-users"></i> Benchmark</a>
+            <a class="page-jump-link" href="#seo-history"><i class="fa-solid fa-history"></i> History</a>
+            <a class="page-jump-link" href="#seo-competitors"><i class="fa-solid fa-eye"></i> Competitors</a>
+            <a class="page-jump-link" href="#seo-patterns"><i class="fa-solid fa-puzzle-piece"></i> Patterns</a>
+            <a class="page-jump-link" href="#seo-campaigns"><i class="fa-solid fa-tasks"></i> Campaigns</a>
+            <a class="page-jump-link" href="#seo-roadmap"><i class="fa-solid fa-map"></i> Roadmap</a>
+            <a class="page-jump-link" href="#seo-gsc"><i class="fa-brands fa-google"></i> Search Console</a>
+            <a class="page-jump-link" href="#seo-backlinks"><i class="fa-solid fa-link"></i> Backlinks</a>
+            <a class="page-jump-link" href="#seo-opportunities"><i class="fa-solid fa-lightbulb"></i> Ideas</a>
+            <a class="page-jump-link" href="#seo-clinical-intelligence" style="color: var(--accent-blue);"><i class="fa-solid fa-brain"></i> Intelligence Engine</a>
         </div>
     </div>
 </nav>
@@ -232,7 +233,7 @@
     margin: 0 0 1rem;
 }
 .ws-seo-empty-heading {
-    font-size: clamp(1.55rem, 3vw, 2.1rem);
+    font-size: var(--heading-lg);
     margin: 0 0 0.85rem;
     color: #0f172a !important;
     line-height: 1.2;
@@ -296,14 +297,14 @@
 <section class="dashboard-stack workspace-seo-shell">
     <div class="container-fluid">
         <!-- CLINICAL INTELLIGENCE MODULE -->
-        {% if geo_shootout or clinical_search_volume %}
+        {% if geo_action or clinical_action %}
         <div id="seo-clinical-intelligence" class="layout-split-wide" style="margin-bottom: 2rem;">
             
             <!-- GEO Shootout Card -->
             <article class="system-card" style="border: 1px solid var(--accent-blue); box-shadow: 0 4px 20px rgba(0, 153, 255, 0.1);">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                     <div style="display: flex; justify-content: space-between; align-items: baseline;">
-                        <p class="eyebrow" style="color: var(--accent-blue);"><i class="fas fa-robot"></i> Generative Engine Optimization</p>
+                        <p class="eyebrow" style="color: var(--accent-blue);"><i class="fa-solid fa-robot"></i> Generative Engine Optimization</p>
                         {% if geo_shootout.is_mock %}
                         <span class="score-pill score-medium" style="font-size: 0.65rem;">Structural Preview</span>
                         {% endif %}
@@ -313,7 +314,7 @@
                 </div>
                 
                 
-                {% if geo_action.available %}
+                {% if geo_action.available and not geo_shootout.is_placeholder and geo_shootout.engine_response %}
                 <div style="padding: 1.25rem; border-radius: 14px; background: rgba(0,0,0,0.2); border: 1px solid var(--border-glass); margin-bottom: 1rem;">
                     <strong style="color: var(--text-primary); display:block; margin-bottom:0.5rem;">Perplexity Sonar Pro Output:</strong>
                     <p style="font-family: monospace; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">"{{ geo_shootout.engine_response }}"</p>
@@ -354,7 +355,7 @@
                 {% endif %}
                 {% else %}
                 <div class="workspace-credit-callout">
-                    <p class="workspace-report-kicker" style="color: var(--accent-blue);"><i class="fas fa-lock"></i> Locked Potential</p>
+                    <p class="workspace-report-kicker" style="color: var(--accent-blue);"><i class="fa-solid fa-lock"></i> Locked Potential</p>
                     <h3 style="margin: 0.5rem 0;">Ready to test Perplexity Sonar Pro?</h3>
                     <p>Run a live Generative Engine Optimization shootout to see if AI cites your brand over competitors. This test uses <strong>{{ geo_action.credits }} workspace credits</strong>.</p>
                     
@@ -364,10 +365,12 @@
                         <a href="{% url 'tools:account-dashboard' %}#plans" class="button button-primary">Upgrade Plan</a>
                     </div>
                     {% else %}
-                    <form method="post" action="{% url 'seo:workspace-seo' %}" style="margin-top: 1rem;">
+                    <form method="post" action="{% url 'seo:workspace-geo-shootout' %}" style="margin-top: 1rem;">
                         {% csrf_token %}
-                        <!-- We would hook this to a specific GEO action view, but post to workspace for mock -->
-                        <button type="button" class="button button-primary" onclick="alert('Credit burn triggered for GEO Shootout!');">Run Shootout (-{{ geo_action.credits }} Credits)</button>
+                        <button type="submit" class="button button-primary">
+                            <i class="fa-solid fa-rocket"></i>&nbsp;Run Shootout
+                            <span style="opacity: 0.7; font-size: 0.8em;">&nbsp;({{ geo_action.credits }} credits)</span>
+                        </button>
                     </form>
                     {% endif %}
                 </div>
@@ -377,7 +380,7 @@
             <!-- DataForSEO Market Gap -->
             <article class="system-card" style="border: 1px solid var(--border-glass);">
                 <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
-                    <p class="eyebrow" style="color: var(--text-muted);"><i class="fas fa-database"></i> Clinical Market Data</p>
+                    <p class="eyebrow" style="color: var(--text-muted);"><i class="fa-solid fa-database"></i> Clinical Market Data</p>
                     <h2 style="font-size: 1.8rem;">True Market Gap</h2>
                     <p class="text-muted" style="margin-top:0.2rem;">Search volume and authority metrics verified via Enterprise APIs.</p>
                 </div>
@@ -420,7 +423,7 @@
                 {% endif %}
                 {% else %}
                 <div class="workspace-credit-callout">
-                    <p class="workspace-report-kicker"><i class="fas fa-lock"></i> Locked Potential</p>
+                    <p class="workspace-report-kicker"><i class="fa-solid fa-lock"></i> Locked Potential</p>
                     <h3 style="margin: 0.5rem 0;">Fetch exact search volume and backlink gaps</h3>
                     <p>Stop guessing with inferred audit data. Ping the DataForSEO enterprise endpoints to get true clinical metrics for your targets. Uses <strong>{{ clinical_action.credits }} workspace credits</strong>.</p>
                     
@@ -430,10 +433,12 @@
                         <a href="{% url 'tools:account-dashboard' %}#plans" class="button button-primary">Upgrade Plan</a>
                     </div>
                     {% else %}
-                    <form method="post" action="{% url 'seo:workspace-seo' %}" style="margin-top: 1rem;">
+                    <form method="post" action="{% url 'seo:workspace-clinical-data' %}" style="margin-top: 1rem;">
                         {% csrf_token %}
-                        <!-- We would hook this to a specific Market Gap action view, but post to workspace for mock -->
-                        <button type="button" class="button button-primary" onclick="alert('Credit burn triggered for Market Data!');">Fetch Market Data (-{{ clinical_action.credits }} Credits)</button>
+                        <button type="submit" class="button button-primary">
+                            <i class="fa-solid fa-database"></i>&nbsp;Fetch Market Data
+                            <span style="opacity: 0.7; font-size: 0.8em;">&nbsp;({{ clinical_action.credits }} credits)</span>
+                        </button>
                     </form>
                     {% endif %}
                 </div>
@@ -500,7 +505,7 @@
                     <p>A completed audit is required before the platform can benchmark competitors, detect gaps, and recommend the next SEO actions.</p>
                     <form method="post" action="{% url 'tools:workspace-audit-rerun' %}">
                         {% csrf_token %}
-                        <button type="submit" class="button button-primary">Run First Audit</button>
+                        <button type="submit" class="button button-primary">Run your first audit</button>
                     </form>
                 </div>
                 {% elif seo_refresh_state.refresh_status == "queued" or seo_refresh_state.refresh_status == "running" %}
@@ -549,25 +554,69 @@
         </div>
 
         {% if seo_refresh_state.refresh_status == "queued" or seo_refresh_state.refresh_status == "running" %}
-        <article class="workspace-report-card" data-seo-refresh-state="{{ seo_refresh_state.refresh_status }}">
+        {% with stages=seo_refresh_state.refresh_stages %}
+        <article class="workspace-report-card seo-refresh-live-card" data-seo-refresh-state="{{ seo_refresh_state.refresh_status }}">
             <div class="workspace-report-intro">
-                <p class="workspace-report-kicker">SEO Refresh Status</p>
+                <p class="workspace-report-kicker">SEO Refresh — <span class="seo-refresh-pulse">Live</span></p>
                 <h2>Benchmark refresh in progress</h2>
-                <p>Competitor discovery and page profiling are running in the background. The workspace keeps the latest completed snapshot visible until the new result is ready.</p>
+                <p>The system is discovering competitors, crawling pages, and rebuilding your recommendations in the background. The previous snapshot stays visible until the new one is ready.</p>
             </div>
-            <div class="workspace-block-grid">
-                <div class="workspace-block-card">
-                    <p class="workspace-report-kicker">Current Step</p>
-                    <h3>Collecting market evidence</h3>
-                    <p>Pulling live SERP patterns, competitor pages, and site-level signals tied to the current business profile.</p>
+
+            {# ── Per-stage progress strip ─────────────────────────────── #}
+            <div class="seo-stage-strip">
+                {% for stage_key, stage_label in stages_display %}
+                {% with stage_data=stages|default_if_none:{}|default:{}  %}
+                {% with sinfo=seo_refresh_state.refresh_stages %}
+                {% if sinfo %}
+                {% with sd=sinfo|default:{} %}
+                <div class="seo-stage-item seo-stage-item--{% if forloop.counter == 1 and not stages %}running{% elif stage_key in seo_refresh_state.refresh_stages %}{{ seo_refresh_state.refresh_stages|dictsort:stage_key }}{% else %}pending{% endif %}">
+                    <span class="seo-stage-dot"></span>
+                    <span class="seo-stage-label">{{ stage_label }}</span>
                 </div>
-                <div class="workspace-block-card">
-                    <p class="workspace-report-kicker">Next</p>
-                    <h3>Rebuilding recommendations</h3>
-                    <p>The system will refresh scorecards, opportunity groups, and content priorities as soon as the evidence pass completes.</p>
-                </div>
+                {% endwith %}
+                {% endif %}
+                {% endwith %}
+                {% endwith %}
+                {% endfor %}
             </div>
+
+            {# ── Simplified stage list (template-safe version) ─────────── #}
+            <div class="seo-stage-list">
+                {% with rs=seo_refresh_state.refresh_stages %}
+                <div class="seo-stage-row {% if rs.site_snapshot.status == 'running' %}is-running{% elif rs.site_snapshot.status == 'done' %}is-done{% else %}is-pending{% endif %}">
+                    <span class="seo-stage-icon">{% if rs.site_snapshot.status == 'done' %}<i class="fa-solid fa-circle-check"></i>{% elif rs.site_snapshot.status == 'running' %}<i class="fa-solid fa-circle-notch fa-spin"></i>{% else %}<i class="fa-regular fa-circle"></i>{% endif %}</span>
+                    <span class="seo-stage-name">Site structure snapshot</span>
+                    {% if rs.site_snapshot.elapsed %}<span class="seo-stage-time">{{ rs.site_snapshot.elapsed }}s</span>{% endif %}
+                </div>
+                <div class="seo-stage-row {% if rs.discovery.status == 'running' %}is-running{% elif rs.discovery.status == 'done' %}is-done{% else %}is-pending{% endif %}">
+                    <span class="seo-stage-icon">{% if rs.discovery.status == 'done' %}<i class="fa-solid fa-circle-check"></i>{% elif rs.discovery.status == 'running' %}<i class="fa-solid fa-circle-notch fa-spin"></i>{% else %}<i class="fa-regular fa-circle"></i>{% endif %}</span>
+                    <span class="seo-stage-name">Competitor discovery</span>
+                    {% if rs.discovery.elapsed %}<span class="seo-stage-time">{{ rs.discovery.elapsed }}s</span>{% endif %}
+                </div>
+                <div class="seo-stage-row {% if rs.competitor_crawl.status == 'running' %}is-running{% elif rs.competitor_crawl.status == 'done' %}is-done{% else %}is-pending{% endif %}">
+                    <span class="seo-stage-icon">{% if rs.competitor_crawl.status == 'done' %}<i class="fa-solid fa-circle-check"></i>{% elif rs.competitor_crawl.status == 'running' %}<i class="fa-solid fa-circle-notch fa-spin"></i>{% else %}<i class="fa-regular fa-circle"></i>{% endif %}</span>
+                    <span class="seo-stage-name">Competitor page crawl</span>
+                    {% if rs.competitor_crawl.elapsed %}<span class="seo-stage-time">{{ rs.competitor_crawl.elapsed }}s</span>{% endif %}
+                </div>
+                <div class="seo-stage-row {% if rs.analysis.status == 'running' %}is-running{% elif rs.analysis.status == 'done' %}is-done{% else %}is-pending{% endif %}">
+                    <span class="seo-stage-icon">{% if rs.analysis.status == 'done' %}<i class="fa-solid fa-circle-check"></i>{% elif rs.analysis.status == 'running' %}<i class="fa-solid fa-circle-notch fa-spin"></i>{% else %}<i class="fa-regular fa-circle"></i>{% endif %}</span>
+                    <span class="seo-stage-name">Benchmark analysis</span>
+                    {% if rs.analysis.elapsed %}<span class="seo-stage-time">{{ rs.analysis.elapsed }}s</span>{% endif %}
+                </div>
+                <div class="seo-stage-row {% if rs.opportunity.status == 'running' %}is-running{% elif rs.opportunity.status == 'done' %}is-done{% else %}is-pending{% endif %}">
+                    <span class="seo-stage-icon">{% if rs.opportunity.status == 'done' %}<i class="fa-solid fa-circle-check"></i>{% elif rs.opportunity.status == 'running' %}<i class="fa-solid fa-circle-notch fa-spin"></i>{% else %}<i class="fa-regular fa-circle"></i>{% endif %}</span>
+                    <span class="seo-stage-name">Opportunity &amp; page-map build</span>
+                    {% if rs.opportunity.elapsed %}<span class="seo-stage-time">{{ rs.opportunity.elapsed }}s</span>{% endif %}
+                </div>
+                {% endwith %}
+            </div>
+
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 1rem;">
+                <i class="fa-solid fa-rotate fa-spin" style="margin-right: 0.4rem;"></i>
+                This page will auto-refresh when the new snapshot is ready.
+            </p>
         </article>
+        {% endwith %}
         {% elif seo_refresh_state.refresh_status == "failed" %}
         <article class="workspace-report-card">
             <div class="workspace-status-card is-danger">
@@ -1066,13 +1115,16 @@
                             <button type="submit" class="button button-secondary">Update campaign</button>
                         </div>
                     </form>
+                    <a href="{% url 'seo:campaign-action-pack' campaign.pk %}" class="button button-secondary" style="margin-top: 0.75rem; display: inline-flex; align-items: center; gap: 0.4rem; font-size: 0.82rem;">
+                        <i class="fa-solid fa-list-check"></i> View Action Pack
+                    </a>
                 </div>
                 {% endwith %}
                 {% endfor %}
             </div>
             {% else %}
             <div class="ws-empty-state">
-                <div class="ws-empty-icon"><i class="fas fa-tasks"></i></div>
+                <div class="ws-empty-icon"><i class="fa-solid fa-tasks"></i></div>
                 <p class="ws-empty-title">No campaigns yet</p>
                 <p class="ws-empty-desc">Campaign objects appear once the execution queue is built for this project. Run an SEO refresh to generate the first set.</p>
             </div>
@@ -1093,7 +1145,7 @@
                             <div style="display: flex; gap: 0.45rem; flex-wrap: wrap; justify-content: flex-end;">
                                 <span class="score-pill score-high" style="font-size: 0.7rem;">Priority {{ item.priority_score }}</span>
                                 {% if item.confidence_label %}
-                                <span class="score-pill {% if item.evidence_status == 'strong' %}score-high{% elif item.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.7rem;">{{ item.confidence_label }}</span>
+                                <span class="score-pill {% if item.evidence_status == 'strong' %}score-high{% elif item.evidence_status == 'stable' %}score-medium{% else %}score-low{% endif %}" style="font-size: 0.7rem;">{{ item.confidence_label }}</span>
                                 {% endif %}
                             </div>
                         </div>
@@ -1211,6 +1263,115 @@
             </div>
         </article>
 
+        {# ── Google Search Console Connection ──────────────────────────────── #}
+        {% with gsc=project.gsc_connection %}
+        <article id="seo-gsc" class="system-card" style="margin-bottom: 1.5rem;">
+            <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+                    <div>
+                        <p class="eyebrow text-accent"><i class="fa-brands fa-google"></i>&nbsp;Search Console</p>
+                        <h2 style="font-size: 1.6rem;">Real traffic data</h2>
+                    </div>
+                    {% if gsc and gsc.is_active %}
+                    <span class="score-pill score-high">Connected</span>
+                    {% else %}
+                    <span class="score-pill score-low">Not connected</span>
+                    {% endif %}
+                </div>
+            </div>
+
+            {% if gsc and gsc.is_active %}
+            {# ── Connected state ─────────────────────────────── #}
+            <div class="data-card-grid" style="margin-bottom: 1rem;">
+                <div class="data-card">
+                    <span class="data-card-label">Google Account</span>
+                    <span class="data-card-value" style="font-size: 0.95rem;">{{ gsc.google_email }}</span>
+                </div>
+                <div class="data-card">
+                    <span class="data-card-label">SC Property</span>
+                    <span class="data-card-value" style="font-size: 0.9rem; word-break: break-all;">{{ gsc.sc_property }}</span>
+                </div>
+                {% if gsc.last_synced_at %}
+                <div class="data-card">
+                    <span class="data-card-label">Last synced</span>
+                    <span class="data-card-value" style="font-size: 0.9rem;">{{ gsc.last_synced_at|date:"M j, Y H:i" }}</span>
+                </div>
+                {% endif %}
+            </div>
+
+            <div id="gsc-data-panel" style="background: rgba(255,255,255,0.025); border: 1px solid var(--border-glass); border-radius: 12px; padding: 1rem; min-height: 60px;">
+                <p style="font-size: 0.85rem; color: var(--text-muted);" id="gsc-loading-msg">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i>&nbsp;Loading top queries from Search Console…
+                </p>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap;">
+                <form method="post" action="{% url 'seo:workspace-gsc-disconnect' %}">
+                    {% csrf_token %}
+                    <button type="submit" class="button button-secondary" style="font-size: 0.8rem;">
+                        <i class="fa-solid fa-plug-circle-minus"></i>&nbsp;Disconnect
+                    </button>
+                </form>
+            </div>
+
+            <script>
+            (function() {
+                fetch("{% url 'seo:workspace-gsc-data' %}")
+                    .then(r => r.json())
+                    .then(data => {
+                        const panel = document.getElementById("gsc-data-panel");
+                        if (data.error) {
+                            panel.innerHTML = '<p style="font-size:0.85rem; color:#f87171;">' + data.error + '</p>';
+                            return;
+                        }
+                        if (!data.queries || !data.queries.length) {
+                            panel.innerHTML = '<p style="font-size:0.85rem; color:var(--text-muted);">No query data found for this property in the last 28 days.</p>';
+                            return;
+                        }
+                        let html = '<table style="width:100%; font-size:0.82rem; border-collapse:collapse;">';
+                        html += '<tr style="color:var(--text-muted); text-align:left;"><th style="padding:0.35rem 0.5rem;">Query</th><th style="padding:0.35rem;">Clicks</th><th style="padding:0.35rem;">Impressions</th><th style="padding:0.35rem;">CTR</th><th style="padding:0.35rem;">Pos.</th></tr>';
+                        data.queries.forEach(q => {
+                            html += '<tr style="border-top:1px solid rgba(255,255,255,0.05);">';
+                            html += '<td style="padding:0.4rem 0.5rem; color:var(--text-primary);">' + q.query + '</td>';
+                            html += '<td style="padding:0.4rem 0.5rem; text-align:right;">' + q.clicks + '</td>';
+                            html += '<td style="padding:0.4rem 0.5rem; text-align:right;">' + q.impressions + '</td>';
+                            html += '<td style="padding:0.4rem 0.5rem; text-align:right;">' + q.ctr + '%</td>';
+                            html += '<td style="padding:0.4rem 0.5rem; text-align:right;">' + q.position + '</td>';
+                            html += '</tr>';
+                        });
+                        html += '</table>';
+                        panel.innerHTML = html;
+                    })
+                    .catch(() => {
+                        document.getElementById("gsc-data-panel").innerHTML = '<p style="font-size:0.85rem; color:var(--text-muted);">Could not load GSC data. Try refreshing the page.</p>';
+                    });
+            })();
+            </script>
+
+            {% else %}
+            {# ── Not connected state / Locked Potential ─────── #}
+            <div class="workspace-credit-callout">
+                <p class="workspace-report-kicker" style="color: var(--brand-primary);"><i class="fa-solid fa-magnifying-glass-chart"></i> Locked Potential</p>
+                <h3 style="margin: 0.5rem 0;">Connect real search data</h3>
+                <p style="font-size: 0.9rem; color: var(--text-secondary); margin-bottom: 1rem;">
+                    Replace estimated traffic with exact clicks, impressions, CTR, and average position from Google Search Console.
+                    The system will generate an <strong>Opportunity Finder</strong> action pack targeting high-impression Page 2 URLs for conversion to Page 1.
+                </p>
+                {% if settings.GOOGLE_GSC_ENABLED %}
+                <a href="{% url 'seo:workspace-gsc-connect' %}" class="button button-primary">
+                    <i class="fa-brands fa-google"></i>&nbsp;Connect Google Search Console
+                </a>
+                {% else %}
+                <p style="font-size: 0.8rem; color: var(--text-muted); padding: 0.75rem; background: rgba(255,255,255,0.03); border-radius: 8px; border: 1px solid var(--border-glass);">
+                    <i class="fa-solid fa-circle-info"></i>&nbsp;
+                    Google Search Console integration requires <code>GOOGLE_GSC_CLIENT_ID</code> and <code>GOOGLE_GSC_CLIENT_SECRET</code> to be set in the environment.
+                </p>
+                {% endif %}
+            </div>
+            {% endif %}
+        </article>
+        {% endwith %}
+
         <article id="seo-backlinks" class="system-card">
             <div class="section-heading" style="text-align: left; margin-bottom: 1rem;">
                 <p class="eyebrow">Execution Queue</p>
@@ -1224,7 +1385,7 @@
                         <div style="display: flex; gap: 0.45rem; flex-wrap: wrap; justify-content: flex-end;">
                             <span class="score-pill score-high" style="font-size: 0.7rem;">{{ item.phase }}</span>
                             {% if item.confidence_label %}
-                            <span class="score-pill {% if item.evidence_status == 'strong' %}score-high{% elif item.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}" style="font-size: 0.7rem;">{{ item.confidence_label }}</span>
+                            <span class="score-pill {% if item.evidence_status == 'strong' %}score-high{% elif item.evidence_status == 'stable' %}score-medium{% else %}score-low{% endif %}" style="font-size: 0.7rem;">{{ item.confidence_label }}</span>
                             {% endif %}
                         </div>
                     </div>
@@ -1248,6 +1409,25 @@
                         {% for step in item.action_steps %}
                         <div style="margin-top: 0.15rem;">{{ forloop.counter }}. {{ step }}</div>
                         {% endfor %}
+                    </div>
+                    {% endif %}
+                    {% if item.competitor_evidence %}
+                    <div style="margin-top: 1rem;">
+                        <strong style="display: block; color: var(--text-primary); font-size: 0.8rem; margin-bottom: 0.4rem; text-transform: uppercase; letter-spacing: 0.04em;">Competitor Evidence</strong>
+                        <div style="display: flex; flex-direction: column; gap: 0.3rem;">
+                            {% for comp in item.competitor_evidence|slice:":3" %}
+                            <div style="display: flex; gap: 0.5rem; align-items: baseline; font-size: 0.78rem; color: var(--text-muted);">
+                                <span style="text-transform: capitalize; flex-shrink: 0;">{{ comp.page_type|cut:"_"|default:"page" }}</span>
+                                <a href="{{ comp.url }}" target="_blank" rel="noopener" style="color: var(--signal); text-decoration: none; word-break: break-all;">{{ comp.title|default:comp.url|truncatechars:55 }}</a>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    {% endif %}
+                    {% if item.edit_targets %}
+                    {# Find matching campaign pk via seo_campaigns for deep-link — best effort #}
+                    <div style="margin-top: 1rem; padding-top: 0.75rem; border-top: 1px solid var(--border-glass);">
+                        <span style="font-size: 0.78rem; color: var(--text-muted);">{{ item.edit_targets|length }} page target{{ item.edit_targets|length|pluralize }} in this pack</span>
                     </div>
                     {% endif %}
                 </div>

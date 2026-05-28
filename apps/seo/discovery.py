@@ -1256,6 +1256,17 @@ def discover_serp_competitors(project, profile):
                 )
                 continue
 
+    # ── Vertical source queries (google_local, google_hotels, etc.) ──────────
+    if settings.SERPAPI_API_KEY:
+        vertical_candidates, vertical_errors = _run_vertical_source_queries(
+            profile,
+            own_domain=own_domain,
+            location=getattr(profile, "location", "") or "",
+            country_code=inferred_country_code,
+        )
+        raw_candidates.extend(vertical_candidates)
+        errors.extend(vertical_errors)
+
     aggregated = _aggregate_candidates(raw_candidates)
     competitors = aggregated.get("competitors", [])
     return {
@@ -1275,3 +1286,264 @@ def discover_serp_competitors(project, profile):
         },
         "errors": errors,
     }
+
+
+# ---------------------------------------------------------------------------
+# Vertical source integration — provider-level routing per business type
+# ---------------------------------------------------------------------------
+
+# Maps each business type to the vertical SerpAPI engines that add real signal.
+# These supplement the generic "google" engine rather than replacing it.
+VERTICAL_SOURCE_ENGINES = {
+    "local_service": [
+        {"engine": "google_local", "target_bucket": "benchmark_competitor", "result_key": "local_results"},
+        {"engine": "google_local_services", "target_bucket": "benchmark_competitor", "result_key": "ads"},
+    ],
+    "healthcare": [
+        {"engine": "google_local", "target_bucket": "benchmark_competitor", "result_key": "local_results"},
+        {"engine": "google_local_services", "target_bucket": "benchmark_competitor", "result_key": "ads"},
+    ],
+    "real_estate": [
+        {"engine": "google_local", "target_bucket": "benchmark_competitor", "result_key": "local_results"},
+    ],
+    "automotive": [
+        {"engine": "google_local", "target_bucket": "benchmark_competitor", "result_key": "local_results"},
+    ],
+    "hotel": [
+        {"engine": "google_local", "target_bucket": "market_surface", "result_key": "local_results"},
+        {"engine": "google_hotels", "target_bucket": "market_surface", "result_key": "properties"},
+        {"engine": "google_events", "target_bucket": "citation_source", "result_key": "events_results"},
+    ],
+    "restaurant": [
+        {"engine": "google_local", "target_bucket": "benchmark_competitor", "result_key": "local_results"},
+    ],
+    "ecommerce": [
+        {"engine": "google_local", "target_bucket": "citation_source", "result_key": "local_results"},
+    ],
+}
+
+# Query templates for vertical engines — simpler than benchmark queries.
+# The engine itself handles location filtering.
+_VERTICAL_QUERY_TEMPLATES = {
+    "google_local": "{service} {location}",
+    "google_local_services": "{service} near {location}",
+    "google_hotels": "hotels {location}",
+    "google_events": "events {location}",
+}
+
+
+def _serpapi_vertical_params(engine, query, location="", country_code=""):
+    """Build SerpApi params for non-google vertical engines."""
+    params = {
+        "engine": engine,
+        "api_key": settings.SERPAPI_API_KEY,
+    }
+    # google_local uses "q"; google_hotels/events use slightly different param names
+    if engine in ("google_local", "google_local_services"):
+        params["q"] = query
+        if location and location.strip().lower() != "worldwide":
+            params["location"] = location
+        gl, hl = _infer_gl_hl(location, country_code=country_code)
+        if gl:
+            params["gl"] = gl
+        if hl:
+            params["hl"] = hl
+    elif engine == "google_hotels":
+        params["q"] = query
+        if location and location.strip().lower() != "worldwide":
+            params["location"] = location
+        gl, hl = _infer_gl_hl(location, country_code=country_code)
+        if gl:
+            params["gl"] = gl
+        if hl:
+            params["hl"] = hl
+        params["check_in_date"] = "2026-06-01"
+        params["check_out_date"] = "2026-06-02"
+    elif engine == "google_events":
+        params["q"] = query
+        if location and location.strip().lower() != "worldwide":
+            params["location"] = location
+        gl, hl = _infer_gl_hl(location, country_code=country_code)
+        if gl:
+            params["gl"] = gl
+    return params
+
+
+def fetch_vertical_serpapi_results(engine, query, location="", country_code=""):
+    """
+    Call a SerpAPI vertical engine and return the raw JSON payload.
+    Uses a separate 7-day cache key so vertical results don't evict organic results.
+    """
+    params = _serpapi_vertical_params(engine, query, location=location, country_code=country_code)
+    safe_params = {k: v for k, v in params.items() if k != "api_key"}
+    param_hash = hashlib.md5(json.dumps(safe_params, sort_keys=True).encode("utf-8")).hexdigest()
+    cache_key = f"seo:serpapi:vertical:{engine}:{param_hash}"
+
+    cached = cache.get(cache_key)
+    if cached is not None:
+        return cached
+
+    response = requests.get(
+        "https://serpapi.com/search.json",
+        params=params,
+        timeout=_provider_timeout("serpapi"),
+    )
+    response.raise_for_status()
+    data = response.json()
+    cache.set(cache_key, data, 604800)  # 7-day cache
+    return data
+
+
+def _parse_vertical_result(result, engine, *, query, own_domain, target_bucket, source_family="vertical"):
+    """
+    Extract a normalised candidate dict from a vertical engine result item.
+    Each engine returns different structures; we normalise to the same shape
+    used by _parse_result() so _aggregate_candidates() can process them uniformly.
+    """
+    if not isinstance(result, dict):
+        return None
+
+    # Extract the website URL — field name varies by engine
+    link = (
+        result.get("website")
+        or result.get("link")
+        or result.get("url")
+        or result.get("thumbnail")  # fallback, will likely be filtered
+        or ""
+    ).strip()
+
+    if not link or not link.startswith("http"):
+        # For google_local results that have no website, skip them
+        return None
+
+    domain = extract_domain(link)
+    if _is_blocked_domain(domain, own_domain):
+        return None
+
+    title = (result.get("title") or result.get("name") or "").strip()
+    snippet = (
+        result.get("snippet")
+        or result.get("description")
+        or result.get("type")
+        or ""
+    ).strip()
+
+    # Determine bucket: vertical local results = competitor candidates for peer business types
+    # market-surface engines (hotels, events) stay as market_surface
+    bucket = target_bucket
+    if engine in ("google_local", "google_local_services"):
+        # Trust the caller's target_bucket (set by VERTICAL_SOURCE_ENGINES mapping)
+        pass
+
+    return {
+        "homepage_url": _domain_root_url(link) or normalize_url(link),
+        "normalized_domain": domain,
+        "position": result.get("position", 99),
+        "title": title,
+        "snippet": snippet,
+        "query": query,
+        "result_url": link,
+        "bucket": bucket,
+        "bucket_reason": f"{engine}-vertical",
+        "source_family": source_family,
+        "result_kind": "local" if engine in ("google_local", "google_local_services") else "vertical",
+        "vertical_engine": engine,
+        # Preserve local-specific enrichment signals when present
+        "local_metadata": {
+            k: result.get(k)
+            for k in ("rating", "reviews", "address", "hours", "type", "phone", "place_id")
+            if result.get(k) is not None
+        },
+    }
+
+
+def _run_vertical_source_queries(profile, *, own_domain, location, country_code):
+    """
+    Execute vertical-engine queries for the current business type.
+    Returns (candidates_list, errors_list).
+    Gracefully skips if no vertical engines are configured for this business type
+    or if SerpAPI is unavailable/rate-limited.
+    """
+    business_type = getattr(profile, "business_type", "") or "default"
+    engine_configs = VERTICAL_SOURCE_ENGINES.get(business_type, [])
+    if not engine_configs:
+        return [], []
+
+    service = (getattr(profile, "primary_service", "") or business_type.replace("_", " ")).strip()
+    location_label = location.strip() if location and location.strip().lower() != "worldwide" else ""
+
+    candidates = []
+    errors = []
+    seen_domains = set()
+
+    for config in engine_configs:
+        engine = config["engine"]
+        target_bucket = config["target_bucket"]
+        result_key = config["result_key"]
+
+        # Build the query string for this engine
+        template = _VERTICAL_QUERY_TEMPLATES.get(engine, "{service} {location}")
+        query = template.format(service=service, location=location_label).strip()
+
+        try:
+            payload = fetch_vertical_serpapi_results(
+                engine,
+                query,
+                location=location_label,
+                country_code=country_code,
+            )
+        except Exception as exc:
+            errors.append({
+                "query": query,
+                "route_family": "vertical",
+                "provider": f"serpapi:{engine}",
+                "message": f"Vertical source ({engine}) error: {_clean_error_message(exc, 'serpapi')}",
+            })
+            continue
+
+        raw_items = payload.get(result_key) or []
+        if isinstance(raw_items, dict):
+            # Some engines nest results differently
+            raw_items = list(raw_items.values())
+
+        for item in raw_items[:12]:
+            parsed = _parse_vertical_result(
+                item,
+                engine,
+                query=query,
+                own_domain=own_domain,
+                target_bucket=target_bucket,
+                source_family="vertical",
+            )
+            if not parsed:
+                continue
+            domain = parsed["normalized_domain"]
+            if domain in seen_domains:
+                continue
+            seen_domains.add(domain)
+            candidates.append(parsed)
+
+    return candidates, errors
+
+
+# ---------------------------------------------------------------------------
+# Competitor snapshot freshness — cache and reuse rules
+# ---------------------------------------------------------------------------
+
+COMPETITOR_SNAPSHOT_REUSE_DAYS = int(getattr(settings, "COMPETITOR_SNAPSHOT_REUSE_DAYS", 3))
+
+
+def competitor_snapshot_is_fresh(snapshot, *, days=None):
+    """
+    Return True if a SEOCompetitorSnapshot is fresh enough to reuse without re-fetching.
+    A snapshot is considered fresh when it was created within the reuse window and
+    its output_json contains actual crawl data (non-empty).
+    """
+    if snapshot is None:
+        return False
+    if not snapshot.output_json:
+        return False
+    reuse_days = days if days is not None else COMPETITOR_SNAPSHOT_REUSE_DAYS
+    from django.utils import timezone as _tz
+    cutoff = _tz.now() - __import__("datetime").timedelta(days=reuse_days)
+    return snapshot.created_at >= cutoff

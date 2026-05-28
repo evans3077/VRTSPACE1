@@ -116,7 +116,7 @@
                                     <div class="eyebrow" style="margin-bottom: 0.35rem;">{{ recommendation.category }}</div>
                                     <strong style="color: var(--ink);">{{ recommendation.title }}</strong>
                                 </div>
-                                <span class="score-pill {% if recommendation.priority_score >= 80 %}score-low{% elif recommendation.priority_score >= 60 %}score-med{% else %}score-high{% endif %}">
+                                <span class="score-pill {% if recommendation.priority_score >= 80 %}score-low{% elif recommendation.priority_score >= 60 %}score-medium{% else %}score-high{% endif %}">
                                     {{ recommendation.priority_score }}
                                 </span>
                             </div>

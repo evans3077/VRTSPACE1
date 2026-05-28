@@ -6,9 +6,9 @@
 
 {# ── Hub Header ─────────────────────────────────────────────────────────── #}
 <div class="container-fluid" style="padding-bottom: 0;">
-    <div class="ws-hub-header">
+    <div class="ws-hub-header workspace-shell-header">
         <div class="ws-hub-header-left">
-            <div class="ws-hub-eyebrow"><i class="fas fa-pen-nib"></i> AI Content Engine</div>
+            <div class="ws-hub-eyebrow"><i class="fa-solid fa-pen-nib"></i> AI Content Engine</div>
             <h1 class="ws-hub-title">Generate draft content from workspace context</h1>
             <p class="ws-hub-description">
                 Create structured drafts for service pages, landing pages, articles, and answer blocks using the current audit plus the latest SEO and tracking context.
@@ -72,7 +72,7 @@
                 {% if optimization_engine.gap_analysis.missing_layers %}
                 <div class="alert-panel alert-panel-danger" style="margin: 0;">
                     <div class="alert-panel-header">
-                        <i class="fas fa-exclamation-triangle" style="color: #ef4444;"></i> Missing Page Layers
+                        <i class="fa-solid fa-exclamation-triangle" style="color: #ef4444;"></i> Missing Page Layers
                     </div>
                     <div style="display: grid; gap: 0.75rem;">
                         {% for gap in optimization_engine.gap_analysis.missing_layers %}
@@ -100,7 +100,7 @@
                 {% if optimization_engine.gap_analysis.thin_content %}
                 <div class="alert-panel alert-panel-warning" style="margin: 0;">
                     <div class="alert-panel-header">
-                        <i class="fas fa-file-alt" style="color: #ea580c;"></i> Thin Content Detected
+                        <i class="fa-solid fa-file-alt" style="color: #ea580c;"></i> Thin Content Detected
                     </div>
                     <div style="display: grid; gap: 0.75rem;">
                         {% for item in optimization_engine.gap_analysis.thin_content %}
@@ -130,7 +130,7 @@
             </div>
             {% else %}
             <div class="ws-empty-state" style="margin-bottom: 2rem;">
-                <div class="ws-empty-icon"><i class="fas fa-microscope"></i></div>
+                <div class="ws-empty-icon"><i class="fa-solid fa-microscope"></i></div>
                 <p class="ws-empty-title">Waiting on Competitive Data</p>
                 <p class="ws-empty-desc" style="max-width: 500px; margin: 0 auto;">There are no execution gaps detected against tracking targets at the moment. When competitor vulnerabilities hit the threshold, precision metrics tracking Missing Layers and Content Depth ratios will appear here.</p>
             </div>
@@ -167,22 +167,22 @@
                 
                 {% if not project %}
                 <div class="ws-empty-state">
-                    <div class="ws-empty-icon"><i class="fas fa-folder-plus"></i></div>
+                    <div class="ws-empty-icon"><i class="fa-solid fa-folder-plus"></i></div>
                     <p class="ws-empty-title">No workspace linked</p>
                     <p class="ws-empty-desc">Create a project first. Content generation lives inside a project so drafts, audits, SEO briefs and credit usage stay consistent.</p>
                     <div style="margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; justify-content: center;">
-                        <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}#start-audit"><i class="fas fa-play"></i> Start with audit</a>
+                        <a class="button button-primary" href="{% url 'tools:workspace-dashboard' %}#start-audit"><i class="fa-solid fa-play"></i> Start with audit</a>
                         <a class="button button-secondary" href="{% url 'tools:workspace-dashboard' %}#new-project">Create workspace</a>
                     </div>
                 </div>
                 {% elif not project.latest_audit_run %}
                 <div class="ws-empty-state">
-                    <div class="ws-empty-icon"><i class="fas fa-search"></i></div>
+                    <div class="ws-empty-icon"><i class="fa-solid fa-search"></i></div>
                     <p class="ws-empty-title">Audit required</p>
                     <p class="ws-empty-desc">Run the first audit before generating content. The engine uses the audit as the base context for page decisions, internal links, and score gaps.</p>
                     <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin-top: 1.5rem;">
                         {% csrf_token %}
-                        <button type="submit" class="button button-primary"><i class="fas fa-play"></i> Run first audit</button>
+                        <button type="submit" class="button button-primary"><i class="fa-solid fa-play"></i> Run your first audit</button>
                     </form>
                 </div>
                 {% else %}
@@ -213,7 +213,7 @@
                         {% endfor %}
                     </div>
                     {% endfor %}
-                    <button type="submit" class="button button-primary" style="margin-top: 1rem; width: 100%;"><i class="fas fa-bolt"></i> Generate Engine Draft</button>
+                    <button type="submit" class="button button-primary" style="margin-top: 1rem; width: 100%;"><i class="fa-solid fa-bolt"></i> Generate Engine Draft</button>
                 </form>
                 {% endif %}
             </article>
@@ -325,7 +325,7 @@
                     {% endwith %}
                     {% empty %}
                     <div class="ws-empty-state">
-                        <div class="ws-empty-icon"><i class="fas fa-file-alt"></i></div>
+                        <div class="ws-empty-icon"><i class="fa-solid fa-file-alt"></i></div>
                         <p class="ws-empty-title">Pipeline empty</p>
                         <p class="ws-empty-desc" style="max-width: 450px; margin: 0 auto 1.5rem;">The editorial queue is empty. Sync from the SEO Intelligence Hub to automatically build content briefs from active keyword clusters and missing page layers.</p>
                         {% if project and project.latest_audit_run %}

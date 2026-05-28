@@ -49,9 +49,11 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
         )
         
         aeo_intelligence = {}
+        entity_confidence = {}
         if project and hasattr(project, "seo_profile") and project.seo_profile:
             metadata = getattr(project.seo_profile, "metadata", {}) or {}
             aeo_intelligence = metadata.get("intelligence", {})
+            entity_confidence = metadata.get("entity_confidence", {})
 
         # Always rebuild payload live so new fields (citation_readiness, engine_gaps) are current
         if latest_aeo_audit and latest_aeo_audit.source_audit_run:
@@ -85,6 +87,7 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 "aeo_payload": live_payload,
                 "aeo_history": aeo_history,
                 "aeo_intelligence": aeo_intelligence,
+                "entity_confidence": entity_confidence,
                 "competitor_benchmark": competitor_benchmark,
                 "precision_engine_status": precision_engine_status,
                 "precision_engines_available": precision_engines_available,

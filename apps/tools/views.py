@@ -67,7 +67,7 @@ from .jobs import enqueue_public_site_audit
 from .models import AuditRun, AuditShareLink
 from .pdf_reports import build_audit_report_pdf
 from .recommendations import build_audit_summary
-from .services import extract_domain, normalize_url
+from .services import build_cross_module_decision_summary, build_executive_outcome_summary, extract_domain, normalize_url
 
 
 def _attribute_affiliate_signup(request, user):
@@ -1020,6 +1020,17 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         share_allowed, _ = can_access_audit_feature(self.request.user, "stakeholder_sharing_enabled")
         export_allowed, _ = can_access_audit_feature(self.request.user, "export_reports_enabled")
         email_allowed, _ = can_access_audit_feature(self.request.user, "email_reports_enabled")
+        decision_summary = build_cross_module_decision_summary(
+            project,
+            latest_audit=latest_audit,
+            latest_seo_snapshot=latest_seo_snapshot,
+            latest_aeo_audit=latest_aeo_audit,
+            seo_active_campaign_count=seo_active_campaign_count,
+            seo_execution_item_count=seo_execution_item_count,
+            content_draft_count=content_draft_count,
+            audit_summary=latest_summary,
+            change_report=latest_change_report,
+        )
         context["latest_audit"] = latest_audit
         context["audit_history"] = audit_history
         context["audit_history_with_delta"] = audit_history_with_delta
@@ -1032,6 +1043,7 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         context["seo_execution_item_count"] = seo_execution_item_count
         context["audit_issue_total"] = audit_issue_total
         context["workspace_modules"] = workspace_modules
+        context["decision_summary"] = decision_summary
         context["product_modules"] = _decorate_product_modules(
             latest_summary.get("product_modules", []),
             billing_state["plans"],
@@ -1056,6 +1068,32 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         credit_usage_pct = get_credit_usage_percentage(billing_state["credit_overview"])
         context["credit_usage_pct"] = credit_usage_pct
         context["credit_alert_band"] = get_alert_band(credit_usage_pct)
+
+        # Executive outcome summary — plain-language workspace-state overview
+        _seo_campaigns_qs = (
+            project.seo_campaigns.prefetch_related("edit_items")
+            if getattr(project, "pk", None)
+            else []
+        )
+        _backlink_prospect_count = (
+            project.backlink_prospects.count()
+            if getattr(project, "pk", None)
+            else 0
+        )
+        context["executive_summary"] = build_executive_outcome_summary(
+            project,
+            latest_audit=latest_audit,
+            previous_audit=(
+                audit_history_with_delta[1]["audit"]
+                if audit_history_with_delta and len(audit_history_with_delta) > 1
+                else None
+            ),
+            change_report=latest_change_report,
+            seo_campaigns=_seo_campaigns_qs,
+            content_draft_count=content_draft_count,
+            backlink_prospect_count=_backlink_prospect_count,
+            credit_usage_pct=credit_usage_pct,
+        )
         context["credit_action_guide"] = (
             build_credit_action_guide(project, self.request.user)
             if getattr(project, "pk", None)
@@ -2358,3 +2396,36 @@ class SharedAuditReportPdfView(DetailView):
         response = HttpResponse(pdf_bytes, content_type="application/pdf")
         response["Content-Disposition"] = f'inline; filename="shared-audit-report-{share_link.audit_run.pk}.pdf"'
         return response
+
+
+# ── Phase 13: Agency Dashboard ─────────────────────────────────────────────
+
+class WorkspaceAgencyDashboardView(LoginRequiredMixin, TemplateView):
+    """
+    Bird's-eye health overview of all client projects for the authenticated user.
+    Pure read-only view — all data comes from get_workspace_project_summaries().
+    """
+
+    template_name = "tools/workspace_agency_dashboard.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        summaries = get_workspace_project_summaries(self.request.user)
+
+        # Compute summary stats for the header row
+        total = len(summaries)
+        healthy = sum(1 for s in summaries if s.get("health_status") == "green")
+        stale = sum(1 for s in summaries if s.get("audit_is_stale"))
+        needs_attention = sum(1 for s in summaries if s.get("health_status") in ("red", "amber"))
+
+        context.update(
+            {
+                "projects": summaries,
+                "total_count": total,
+                "healthy_count": healthy,
+                "stale_count": stale,
+                "needs_attention_count": needs_attention,
+                "healthy_pct": round(healthy / total * 100) if total else 0,
+            }
+        )
+        return context

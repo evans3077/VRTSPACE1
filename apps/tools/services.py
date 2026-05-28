@@ -969,3 +969,422 @@ def run_public_site_audit(*, audit_run, page_limit=PAGE_LIMIT):
         "performance_score", "accessibility_score", "best_practices_score", "seo_score", "overall_score"
     ])
     return audit_run
+
+
+# ---------------------------------------------------------------------------
+# Cross-module decision summary — Phase 11 Track A
+# ---------------------------------------------------------------------------
+
+def build_cross_module_decision_summary(
+    project,
+    *,
+    latest_audit=None,
+    latest_seo_snapshot=None,
+    latest_aeo_audit=None,
+    seo_active_campaign_count=0,
+    seo_execution_item_count=0,
+    content_draft_count=0,
+    audit_summary=None,
+    change_report=None,
+):
+    """
+    Produce a cross-module decision summary that tells the user:
+    - primary_action: the single most impactful next step right now
+    - supporting_signals: evidence from existing data that supports the decision
+    - waiting_items: things that depend on the primary action being done first
+    - module_health: per-module status dict (name, status, one-liner)
+    - overall_narrative: a one-sentence state-of-the-workspace description
+
+    This replaces the static numbered-list in the command center with data-driven guidance.
+    """
+    audit_summary = audit_summary or {}
+    recommendations = audit_summary.get("featured_recommendations") or audit_summary.get("recommendations") or []
+    issue_summary = audit_summary.get("issue_summary") or {}
+    score_breakdown = audit_summary.get("score_breakdown") or {}
+
+    # --- Module health signals ---
+    audit_score = getattr(latest_audit, "overall_score", None)
+    audit_date = getattr(latest_audit, "created_at", None)
+    aeo_score = getattr(latest_aeo_audit, "overall_score", None)
+    score_delta = None
+    if change_report:
+        score_delta = getattr(change_report, "overall_score_delta", None)
+
+    has_audit = latest_audit is not None
+    has_seo = latest_seo_snapshot is not None
+    has_aeo = latest_aeo_audit is not None
+    has_content = content_draft_count > 0
+
+    # --- Determine primary action ---
+    primary_action = {}
+    supporting_signals = []
+    waiting_items = []
+
+    if not has_audit:
+        primary_action = {
+            "step": "Run your first audit",
+            "reason": "The audit is the foundation — it creates the baseline score, issue queue, competitor context, and dependency chain for every other module.",
+            "href": "#start-audit",
+            "cta": "Start audit",
+            "urgency": "required",
+        }
+        waiting_items = [
+            {"label": "SEO intelligence", "reason": "Needs the audit's site structure and competitor hints as its base."},
+            {"label": "AI Visibility (AEO)", "reason": "AEO analysis opens once the first audit run completes."},
+            {"label": "Content workspace", "reason": "Content briefs and drafts are generated from SEO and AEO outputs."},
+        ]
+
+    elif not has_seo and not has_aeo:
+        primary_action = {
+            "step": "Run SEO intelligence",
+            "reason": "Your audit is complete. The next highest-value move is mapping competitors and search gaps before optimising individual pages.",
+            "href": "/workspace/seo/",
+            "cta": "Open SEO workspace",
+            "urgency": "high",
+        }
+        if audit_score is not None:
+            supporting_signals.append({
+                "label": "Audit score",
+                "value": f"{audit_score}/100",
+                "note": "Use SEO intelligence to turn this score into a prioritised page-level action queue.",
+            })
+        top_issue = recommendations[0] if recommendations else None
+        if top_issue:
+            supporting_signals.append({
+                "label": "Top issue",
+                "value": top_issue.get("title") or top_issue.get("category", ""),
+                "note": "SEO context will confirm whether competitors have the same gap or if this is a differentiator.",
+            })
+        waiting_items = [
+            {"label": "AI Visibility (AEO)", "reason": "Run AEO in parallel or after SEO to cover the AI citation gap."},
+            {"label": "Content drafts", "reason": "Content briefs are strongest when built on SEO page-map evidence."},
+        ]
+
+    elif has_seo and not has_aeo:
+        primary_action = {
+            "step": "Run AEO analysis",
+            "reason": "SEO is mapped. Close the gap on AI citations — AEO is the platform's primary differentiator and it runs independently of SEO.",
+            "href": "/workspace/aeo/",
+            "cta": "Open AI Visibility",
+            "urgency": "high",
+        }
+        if seo_active_campaign_count:
+            supporting_signals.append({
+                "label": "SEO campaigns",
+                "value": f"{seo_active_campaign_count} active",
+                "note": "Campaigns are queued. Running AEO lets you compare AI visibility gaps against your existing SEO action plan.",
+            })
+        waiting_items = [
+            {"label": "Content briefs", "reason": "Generate content once both SEO and AEO gaps are mapped so drafts address both signals."},
+        ]
+
+    elif has_audit and has_seo and has_aeo:
+        # All modules have data — surface the most urgent signal
+        urgency_items = []
+
+        # Score drop is highest urgency
+        if score_delta is not None and score_delta < -5:
+            urgency_items.append(("score_drop", abs(score_delta)))
+
+        # Low AEO score
+        if aeo_score is not None and aeo_score < 50:
+            urgency_items.append(("low_aeo", 100 - aeo_score))
+
+        # Large SEO campaign backlog
+        if seo_active_campaign_count >= 5:
+            urgency_items.append(("seo_backlog", seo_active_campaign_count))
+
+        # Pending content drafts
+        if has_content:
+            urgency_items.append(("content_drafts", content_draft_count))
+
+        # Top issue queue
+        if recommendations:
+            urgency_items.append(("issue_queue", len(recommendations)))
+
+        urgency_items.sort(key=lambda x: -x[1])
+        top_urgency = urgency_items[0][0] if urgency_items else "issue_queue"
+
+        if top_urgency == "score_drop":
+            primary_action = {
+                "step": f"Address the audit score drop ({score_delta:+d} points)",
+                "reason": "A score drop signals a regression. Identify what changed and run a rerun after the fix to confirm recovery.",
+                "href": f"/workspace/audit/{latest_audit.pk}/" if latest_audit else "#start-audit",
+                "cta": "Open audit",
+                "urgency": "critical",
+            }
+            supporting_signals.append({
+                "label": "Score change",
+                "value": f"{score_delta:+d} vs previous audit",
+                "note": "Check the fix queue for newly flagged issues introduced since the last run.",
+            })
+        elif top_urgency == "low_aeo":
+            primary_action = {
+                "step": "Improve AI visibility",
+                "reason": f"AEO score is {aeo_score}/100. Competitors with stronger entity clarity and answer-ready content are being cited instead.",
+                "href": "/workspace/aeo/",
+                "cta": "Open AI Visibility",
+                "urgency": "high",
+            }
+            supporting_signals.append({
+                "label": "AEO score",
+                "value": f"{aeo_score}/100",
+                "note": "Focus on entity schema, FAQ additions, and direct-answer content blocks.",
+            })
+        elif top_urgency == "seo_backlog":
+            primary_action = {
+                "step": "Work through the SEO campaign queue",
+                "reason": f"{seo_active_campaign_count} SEO campaigns are queued and have not been started. Each carries a specific page-level action pack.",
+                "href": "/workspace/seo/#seo-campaigns",
+                "cta": "Open SEO campaigns",
+                "urgency": "high",
+            }
+            supporting_signals.append({
+                "label": "Active campaigns",
+                "value": str(seo_active_campaign_count),
+                "note": f"{seo_execution_item_count} execution items mapped across these campaigns.",
+            })
+        elif top_urgency == "content_drafts":
+            primary_action = {
+                "step": "Review and publish pending content drafts",
+                "reason": f"{content_draft_count} draft{'s' if content_draft_count != 1 else ''} {'are' if content_draft_count != 1 else 'is'} ready for review. Publishing converts SEO briefs into indexed content.",
+                "href": "/workspace/content/",
+                "cta": "Open content workspace",
+                "urgency": "medium",
+            }
+        else:
+            # Default: point to the top recommendation
+            top_issue = recommendations[0] if recommendations else None
+            if top_issue:
+                primary_action = {
+                    "step": top_issue.get("title") or "Address the top audit issue",
+                    "reason": top_issue.get("recommended_fix") or "This is the highest-priority issue identified across the current audit.",
+                    "href": f"/workspace/audit/{latest_audit.pk}/" if latest_audit else "#start-audit",
+                    "cta": "Open fix queue",
+                    "urgency": "medium",
+                }
+            else:
+                primary_action = {
+                    "step": "Re-run the audit to validate recent changes",
+                    "reason": "All modules have data and no critical gaps are detected. A fresh rerun confirms whether recent changes improved scores.",
+                    "href": "#start-audit",
+                    "cta": "Run rerun",
+                    "urgency": "low",
+                }
+
+        # Add supporting signals from all modules
+        if audit_score is not None:
+            supporting_signals.append({
+                "label": "Audit score",
+                "value": f"{audit_score}/100",
+                "note": f"{issue_summary.get('total', len(recommendations))} issues in queue.",
+            })
+        if seo_active_campaign_count and top_urgency != "seo_backlog":
+            supporting_signals.append({
+                "label": "SEO campaigns",
+                "value": f"{seo_active_campaign_count} active",
+                "note": f"{seo_execution_item_count} execution items mapped.",
+            })
+        if aeo_score is not None and top_urgency != "low_aeo":
+            supporting_signals.append({
+                "label": "AEO score",
+                "value": f"{aeo_score}/100",
+                "note": "AI visibility score from latest analysis.",
+            })
+
+    # --- Module health table ---
+    module_health = []
+    if has_audit:
+        if audit_score is not None and audit_score >= 75:
+            status = "good"
+        elif audit_score is not None and audit_score >= 50:
+            status = "warn"
+        elif audit_score is not None:
+            status = "critical"
+        else:
+            status = "none"
+        module_health.append({"name": "Audit", "status": status, "score": audit_score, "date": audit_date})
+
+    if has_seo:
+        seo_status = "good" if seo_active_campaign_count < 5 else "warn"
+        module_health.append({"name": "SEO", "status": seo_status, "score": None, "date": latest_seo_snapshot.created_at})
+
+    if has_aeo:
+        if aeo_score is not None and aeo_score >= 70:
+            aeo_status = "good"
+        elif aeo_score is not None and aeo_score >= 45:
+            aeo_status = "warn"
+        else:
+            aeo_status = "critical"
+        module_health.append({"name": "AEO", "status": aeo_status, "score": aeo_score, "date": latest_aeo_audit.created_at})
+
+    if has_content:
+        module_health.append({"name": "Content", "status": "active", "score": None, "date": None})
+
+    # --- Overall narrative ---
+    if not has_audit:
+        narrative = "No audit has been run yet — start here to unlock the full workspace."
+    elif not has_seo and not has_aeo:
+        narrative = f"Audit complete ({audit_score}/100). SEO and AEO workspaces are ready to open."
+    elif has_seo and not has_aeo:
+        narrative = f"Audit and SEO are active. AEO analysis is the next open gap."
+    elif score_delta is not None and score_delta < -5:
+        narrative = f"Score dropped {abs(score_delta)} points since the last audit — recovery is the priority."
+    elif aeo_score is not None and aeo_score < 50:
+        narrative = f"All modules are active. AI visibility ({aeo_score}/100) is the weakest signal right now."
+    elif seo_active_campaign_count >= 5:
+        narrative = f"All modules active. {seo_active_campaign_count} SEO campaigns are queued and awaiting execution."
+    else:
+        narrative = "All core modules are active. Work through the fix queue and campaign actions."
+
+    return {
+        "primary_action": primary_action,
+        "supporting_signals": supporting_signals[:4],
+        "waiting_items": waiting_items,
+        "module_health": module_health,
+        "overall_narrative": narrative,
+        "has_data": has_audit,
+    }
+
+
+# ---------------------------------------------------------------------------
+# Executive outcome summary — Phase 11 Track D
+# ---------------------------------------------------------------------------
+
+def build_executive_outcome_summary(
+    project,
+    *,
+    latest_audit=None,
+    previous_audit=None,
+    change_report=None,
+    seo_campaigns=None,
+    content_draft_count=0,
+    backlink_prospect_count=0,
+    credit_usage_pct=0,
+):
+    """
+    Build a plain-language outcome summary suitable for a stakeholder overview panel.
+
+    Returns a dict with:
+      has_data          – bool; False when there is no audit to summarise
+      headline          – one-sentence summary of the workspace state
+      what_was_done     – audit scope metrics
+      score_progress    – score delta and issue resolution stats
+      assets_created    – SEO campaigns, edit items, content drafts
+      links_pursued     – backlink prospect count
+      validation        – campaign completion percentage
+      credit_used_pct   – credit usage band (0-100 int)
+    """
+    has_data = bool(latest_audit and latest_audit.pk)
+    if not has_data:
+        return {"has_data": False}
+
+    # --- What was done --------------------------------------------------
+    pages_scanned = getattr(latest_audit, "pages_crawled", 0) or 0
+    audit_summary_json = getattr(latest_audit, "summary", None) or {}
+    issue_summary = audit_summary_json.get("issue_summary", {}) if isinstance(audit_summary_json, dict) else {}
+    issues_found = issue_summary.get("total", 0)
+
+    what_was_done = {
+        "pages_scanned": pages_scanned,
+        "issues_found": issues_found,
+        "audit_date": latest_audit.created_at,
+    }
+
+    # --- Score progress -------------------------------------------------
+    overall_delta = None
+    from_score = None
+    to_score = getattr(latest_audit, "overall_score", None)
+    resolved_issues = 0
+    new_issues = 0
+
+    if change_report:
+        overall_delta = getattr(change_report, "overall_score_delta", None)
+        resolved_issues = getattr(change_report, "resolved_issue_count", 0) or 0
+        new_issues = getattr(change_report, "new_issue_count", 0) or 0
+        if overall_delta is not None and to_score is not None:
+            from_score = to_score - overall_delta
+    elif previous_audit:
+        prev_score = getattr(previous_audit, "overall_score", None)
+        if prev_score is not None and to_score is not None:
+            overall_delta = to_score - prev_score
+            from_score = prev_score
+
+    score_progress = {
+        "to_score": to_score,
+        "from_score": from_score,
+        "overall_delta": overall_delta,
+        "resolved_issues": resolved_issues,
+        "new_issues": new_issues,
+        "improved": overall_delta > 0 if overall_delta is not None else None,
+    }
+
+    # --- Assets created -------------------------------------------------
+    campaign_list = list(seo_campaigns) if seo_campaigns else []
+    total_campaigns = len(campaign_list)
+    completed_campaigns = sum(
+        1 for c in campaign_list if getattr(c, "status", "") == "completed"
+    )
+
+    total_edit_items = 0
+    completed_edit_items = 0
+    for campaign in campaign_list:
+        items = list(getattr(campaign, "edit_items", None) and campaign.edit_items.all() or [])
+        total_edit_items += len(items)
+        completed_edit_items += sum(1 for item in items if getattr(item, "status", "") == "completed")
+
+    assets_created = {
+        "seo_campaigns": total_campaigns,
+        "seo_edit_items": total_edit_items,
+        "seo_edit_items_completed": completed_edit_items,
+        "content_drafts": content_draft_count,
+    }
+
+    # --- Links pursued --------------------------------------------------
+    links_pursued = {"prospects_found": backlink_prospect_count}
+
+    # --- Validation / completion ----------------------------------------
+    completion_pct = 0
+    if total_edit_items > 0:
+        completion_pct = round(100 * completed_edit_items / total_edit_items)
+    elif total_campaigns > 0:
+        completion_pct = round(100 * completed_campaigns / total_campaigns)
+
+    validation = {
+        "campaigns_completed": completed_campaigns,
+        "campaigns_total": total_campaigns,
+        "completion_pct": completion_pct,
+    }
+
+    # --- Plain-language headline ----------------------------------------
+    if overall_delta is not None and overall_delta > 0:
+        score_note = f"Score up {overall_delta} points."
+    elif overall_delta is not None and overall_delta < 0:
+        score_note = f"Score down {abs(overall_delta)} points since last run."
+    elif to_score is not None:
+        score_note = f"Score holding at {to_score}."
+    else:
+        score_note = ""
+
+    if total_edit_items > 0 and completed_edit_items > 0:
+        action_note = f"{completed_edit_items} of {total_edit_items} page fixes done."
+    elif total_campaigns > 0:
+        action_note = f"{total_campaigns} campaign{'s' if total_campaigns != 1 else ''} queued."
+    elif content_draft_count > 0:
+        action_note = f"{content_draft_count} content draft{'s' if content_draft_count != 1 else ''} ready."
+    else:
+        action_note = f"{pages_scanned} pages scanned, {issues_found} issues found."
+
+    headline_parts = [p for p in [score_note, action_note] if p]
+    headline = " ".join(headline_parts) or f"Workspace active. {pages_scanned} pages scanned."
+
+    return {
+        "has_data": True,
+        "headline": headline,
+        "what_was_done": what_was_done,
+        "score_progress": score_progress,
+        "assets_created": assets_created,
+        "links_pursued": links_pursued,
+        "validation": validation,
+        "credit_used_pct": int(credit_usage_pct or 0),
+    }

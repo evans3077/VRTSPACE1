@@ -91,7 +91,7 @@
         <h1>We could not finish the audit for {{ audit_run.normalized_domain|default:audit_run.start_url }}</h1>
         <p class="lead">{{ audit_run.error_message|default:"The audit could not complete with the current public URL." }}</p>
         <div class="public-cta-actions">
-            <a class="button button-primary" href="{% url 'core:home' %}#audit">Try another audit</a>
+            <a class="button button-primary" href="{% url 'core:home' %}#audit">Run another audit</a>
         </div>
     </div>
 </section>

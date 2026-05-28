@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block content %}
+{% include "includes/workspace_nav.html" %}
+
+<div class="container-fluid" style="max-width: 900px; margin: 0 auto; padding: 2rem 1.5rem 4rem;">
+
+  {# ── Breadcrumb ─────────────────────────────────────────────────────────── #}
+  <nav style="margin-bottom: 2rem; font-size: 0.82rem; color: var(--text-muted);">
+    <a href="{% url 'seo:workspace-seo' %}" style="color: var(--text-secondary); text-decoration: none;">SEO Workspace</a>
+    <span style="margin: 0 0.5rem; opacity: 0.4;">›</span>
+    <span>Action Pack</span>
+  </nav>
+
+  {# ── Campaign Header ────────────────────────────────────────────────────── #}
+  <div class="system-card" style="padding: 2rem; margin-bottom: 2rem;">
+    <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1.5rem; flex-wrap: wrap;">
+      <div style="flex: 1;">
+        <p class="eyebrow" style="margin-bottom: 0.5rem;">{{ campaign.page_type|cut:"_"|title|default:"SEO" }} Campaign</p>
+        <h1 style="font-size: 1.8rem; color: var(--text-primary); margin: 0 0 0.75rem;">{{ campaign.title }}</h1>
+        <div style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-top: 0.75rem;">
+          <span class="score-pill {% if campaign.status == 'completed' %}score-high{% elif campaign.status == 'in_progress' %}score-medium{% else %}score-low{% endif %}" style="font-size: 0.75rem;">{{ campaign.get_status_display }}</span>
+          <span class="score-pill score-high" style="font-size: 0.75rem;">Priority {{ campaign.priority_score }}</span>
+          {% if campaign.target_keyword %}
+          <span class="score-pill score-medium" style="font-size: 0.75rem;">{{ campaign.target_keyword }}</span>
+          {% endif %}
+          {% if evidence.confidence_label %}
+          <span class="score-pill {% if evidence.status == 'strong' %}score-high{% elif evidence.status == 'stable' %}score-medium{% else %}score-low{% endif %}" style="font-size: 0.75rem;">{{ evidence.confidence_label }}</span>
+          {% endif %}
+        </div>
+      </div>
+      {# Progress ring #}
+      <div style="text-align: center; min-width: 80px;">
+        <div style="font-size: 2rem; font-weight: 700; color: var(--text-primary);">{{ completed_items }}/{{ total_items }}</div>
+        <div style="font-size: 0.75rem; color: var(--text-muted); margin-top: 0.25rem;">changes done</div>
+      </div>
+    </div>
+
+    {% if deliverable %}
+    <div style="margin-top: 1.25rem; padding: 1rem 1.25rem; border-radius: 12px; background: rgba(255,255,255,0.03); border: 1px solid var(--border-glass);">
+      <p style="color: var(--text-secondary); font-size: 0.88rem; line-height: 1.65; margin: 0;">{{ deliverable }}</p>
+    </div>
+    {% endif %}
+
+    {% if why_now %}
+    <div style="margin-top: 1rem; color: var(--text-muted); font-size: 0.82rem; line-height: 1.6;">
+      <strong style="color: var(--text-secondary);">Why now:</strong> {{ why_now }}
+    </div>
+    {% endif %}
+
+    {# Campaign status control #}
+    <form method="post" style="margin-top: 1.5rem; display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: center;">
+      {% csrf_token %}
+      <select name="campaign_status" style="background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-glass); border-radius: 8px; padding: 0.4rem 0.75rem; font-size: 0.82rem;">
+        {% for value, label in campaign_status_choices %}
+        <option value="{{ value }}" {% if campaign.status == value %}selected{% endif %}>{{ label }}</option>
+        {% endfor %}
+      </select>
+      <button type="submit" class="button button-secondary" style="font-size: 0.82rem; padding: 0.4rem 1rem;">Update status</button>
+      <a href="{% url 'seo:workspace-seo' %}#seo-campaigns" style="font-size: 0.8rem; color: var(--text-muted); text-decoration: none; margin-left: auto;">← Back to campaigns</a>
+    </form>
+  </div>
+
+  {# ── Evidence Card ─────────────────────────────────────────────────────── #}
+  {% if competitor_evidence or evidence.summary %}
+  <div class="system-card" style="padding: 1.5rem; margin-bottom: 2rem; border-left: 3px solid var(--signal);">
+    <p class="eyebrow" style="margin-bottom: 0.75rem;">Evidence &amp; Signal</p>
+    {% if evidence.summary %}
+    <p style="color: var(--text-secondary); font-size: 0.88rem; margin: 0 0 1rem;">{{ evidence.summary }}</p>
+    {% endif %}
+    {% if evidence.evidence_score %}
+    <div style="display: flex; align-items: center; gap: 1rem; margin-bottom: 1rem;">
+      <div style="flex: 1; height: 6px; border-radius: 3px; background: rgba(255,255,255,0.05); overflow: hidden;">
+        <div style="height: 100%; width: {{ evidence.evidence_score }}%; background: {% if evidence.evidence_score >= 70 %}var(--success){% elif evidence.evidence_score >= 45 %}var(--signal){% else %}var(--error){% endif %}; border-radius: 3px;"></div>
+      </div>
+      <span style="font-size: 0.78rem; color: var(--text-muted); white-space: nowrap;">{{ evidence.evidence_score }}/100 evidence score</span>
+    </div>
+    {% endif %}
+    {% if competitor_evidence %}
+    <div>
+      <strong style="font-size: 0.82rem; color: var(--text-primary); display: block; margin-bottom: 0.5rem;">Competitor Examples</strong>
+      <div style="display: grid; gap: 0.5rem;">
+        {% for comp in competitor_evidence %}
+        <div style="display: flex; align-items: baseline; gap: 0.75rem; padding: 0.5rem 0.75rem; border-radius: 8px; background: rgba(255,255,255,0.02); border: 1px solid var(--border-glass);">
+          <span style="font-size: 0.7rem; color: var(--text-muted); text-transform: capitalize; white-space: nowrap;">{{ comp.page_type|cut:"_"|default:"page" }}</span>
+          <a href="{{ comp.url }}" target="_blank" rel="noopener" style="font-size: 0.82rem; color: var(--signal); text-decoration: none; word-break: break-all; flex: 1;">{{ comp.title|default:comp.url|truncatechars:70 }}</a>
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+    {% endif %}
+  </div>
+  {% endif %}
+
+  {# ── Page Edit Targets ──────────────────────────────────────────────────── #}
+  <div style="margin-bottom: 2rem;">
+    <h2 style="font-size: 1.4rem; color: var(--text-primary); margin-bottom: 1.25rem;">
+      Implementation Pack
+      <span style="font-size: 0.85rem; font-weight: 400; color: var(--text-muted); margin-left: 0.75rem;">{{ total_items }} page target{{ total_items|pluralize }}</span>
+    </h2>
+
+    {% if edit_items %}
+    <div style="display: grid; gap: 1.5rem;">
+      {% for item in edit_items %}
+      <div class="system-card" style="padding: 1.5rem; border-top: 3px solid {% if item.status == 'completed' %}var(--success){% elif item.status == 'in_progress' %}var(--signal){% else %}var(--border-glass){% endif %};">
+        <div style="display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; flex-wrap: wrap; margin-bottom: 1rem;">
+          <div style="flex: 1;">
+            {% if item.is_new_page %}
+            <span class="score-pill score-medium" style="font-size: 0.7rem; margin-bottom: 0.5rem; display: inline-block;">New page</span>
+            {% else %}
+            <span class="score-pill score-low" style="font-size: 0.7rem; margin-bottom: 0.5rem; display: inline-block;">Existing page</span>
+            {% endif %}
+            <div style="font-size: 0.9rem; font-weight: 600; color: var(--text-primary);">
+              {% if item.page_title %}{{ item.page_title }}{% else %}{{ item.page_type|cut:"_"|title|default:"Target Page" }}{% endif %}
+            </div>
+            {% if item.page_url %}
+            <div style="font-family: monospace; font-size: 0.75rem; color: var(--text-muted); margin-top: 0.3rem; word-break: break-all;">{{ item.page_url }}</div>
+            {% endif %}
+          </div>
+          <form method="post" style="display: flex; align-items: center; gap: 0.5rem; flex-shrink: 0;">
+            {% csrf_token %}
+            <input type="hidden" name="item_pk" value="{{ item.pk }}">
+            <select name="item_status" style="background: var(--bg-surface); color: var(--text-primary); border: 1px solid var(--border-glass); border-radius: 8px; padding: 0.3rem 0.6rem; font-size: 0.78rem;">
+              {% for value, label in edit_item_status_choices %}
+              <option value="{{ value }}" {% if item.status == value %}selected{% endif %}>{{ label }}</option>
+              {% endfor %}
+            </select>
+            <button type="submit" style="background: none; border: 1px solid var(--border-glass); border-radius: 8px; padding: 0.3rem 0.6rem; font-size: 0.78rem; color: var(--text-secondary); cursor: pointer;">Save</button>
+          </form>
+        </div>
+
+        {# Specific changes — the implementation instructions #}
+        {% if item.changes %}
+        <div style="margin-bottom: 1.25rem;">
+          <strong style="font-size: 0.8rem; color: var(--text-primary); display: block; margin-bottom: 0.6rem; text-transform: uppercase; letter-spacing: 0.04em;">Changes to make</strong>
+          <ul style="margin: 0; padding: 0; list-style: none; display: grid; gap: 0.4rem;">
+            {% for change in item.changes %}
+            <li style="display: flex; gap: 0.6rem; align-items: baseline; font-size: 0.85rem; color: var(--text-secondary); line-height: 1.55;">
+              <span style="color: var(--signal); flex-shrink: 0; font-size: 0.7rem; margin-top: 0.1rem;">▹</span>
+              {{ change }}
+            </li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        {# Success criteria — what "done" looks like #}
+        {% if item.success_criteria %}
+        <div style="padding: 0.75rem 1rem; border-radius: 10px; background: rgba(34, 197, 94, 0.04); border: 1px solid rgba(34, 197, 94, 0.15);">
+          <strong style="font-size: 0.78rem; color: var(--success, #22c55e); display: block; margin-bottom: 0.5rem; text-transform: uppercase; letter-spacing: 0.04em;">Definition of Done</strong>
+          <ul style="margin: 0; padding: 0; list-style: none; display: grid; gap: 0.35rem;">
+            {% for criterion in item.success_criteria %}
+            <li style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5;">✓ {{ criterion }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+        {% endif %}
+
+        {% if item.status == 'completed' and item.completed_at %}
+        <div style="margin-top: 0.75rem; font-size: 0.75rem; color: var(--success, #22c55e);">
+          Completed {{ item.completed_at|date:"d M Y H:i" }}
+        </div>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+    {% else %}
+    <div class="system-card" style="padding: 1.5rem; color: var(--text-muted); text-align: center;">
+      No edit targets have been generated for this campaign yet. Re-run the SEO workspace refresh to populate the action pack.
+    </div>
+    {% endif %}
+  </div>
+
+  {# ── Action Steps ──────────────────────────────────────────────────────── #}
+  {% if action_steps %}
+  <div class="system-card" style="padding: 1.5rem; margin-bottom: 2rem;">
+    <p class="eyebrow" style="margin-bottom: 0.75rem;">Execution Order</p>
+    <h3 style="font-size: 1.1rem; margin: 0 0 1rem; color: var(--text-primary);">Recommended action steps</h3>
+    <ol style="margin: 0; padding-left: 1.25rem; display: grid; gap: 0.6rem;">
+      {% for step in action_steps %}
+      <li style="font-size: 0.88rem; color: var(--text-secondary); line-height: 1.6;">{{ step }}</li>
+      {% endfor %}
+    </ol>
+  </div>
+  {% endif %}
+
+  {# ── Validation Reminder ────────────────────────────────────────────────── #}
+  <div class="system-card" style="padding: 1.25rem 1.5rem; border-left: 3px solid var(--signal); display: flex; gap: 1rem; align-items: flex-start;">
+    <span style="font-size: 1.2rem; flex-shrink: 0;">🔁</span>
+    <div>
+      <strong style="font-size: 0.88rem; color: var(--text-primary); display: block; margin-bottom: 0.25rem;">Validate with an audit rerun</strong>
+      <p style="font-size: 0.82rem; color: var(--text-secondary); margin: 0; line-height: 1.6;">
+        Once all changes above are live, run a fresh SEO workspace refresh and re-audit the site. The system will confirm whether the page has been removed from the action queue and whether scores improved.
+      </p>
+      <div style="margin-top: 0.75rem; display: flex; gap: 0.75rem; flex-wrap: wrap;">
+        <a href="{% url 'seo:workspace-seo' %}" class="button button-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.9rem;">← SEO Workspace</a>
+        <a href="{% url 'tools:workspace-dashboard' %}" class="button button-secondary" style="font-size: 0.8rem; padding: 0.35rem 0.9rem;">Run Audit</a>
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}

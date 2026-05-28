@@ -411,7 +411,48 @@ SEO_COMPETITOR_LIMIT = max(1, int(os.environ.get("SEO_COMPETITOR_LIMIT", "4")))
 SEO_COMPETITOR_PAGE_LIMIT = max(1, int(os.environ.get("SEO_COMPETITOR_PAGE_LIMIT", "4")))
 SEO_BACKLINK_ASYNC = os.environ.get("SEO_BACKLINK_ASYNC", "1") == "1"
 
+# ── SEO refresh stage budgets ──────────────────────────────────────────────
+# Per-stage runtime ceilings for the background SEO refresh job.
+# Exceeding a budget does NOT kill the stage — it logs a WARNING and
+# adjusts scope for subsequent stages (e.g. fewer competitors if discovery ran long).
+# Set these higher in environments with slower networks.
+STAGE_BUDGET_SITE_SNAPSHOT_SECONDS = int(os.environ.get("STAGE_BUDGET_SITE_SNAPSHOT_SECONDS", "25"))
+STAGE_BUDGET_DISCOVERY_SECONDS = int(os.environ.get("STAGE_BUDGET_DISCOVERY_SECONDS", "50"))
+STAGE_BUDGET_COMPETITOR_CRAWL_SECONDS = int(os.environ.get("STAGE_BUDGET_COMPETITOR_CRAWL_SECONDS", "100"))
+STAGE_BUDGET_ANALYSIS_SECONDS = int(os.environ.get("STAGE_BUDGET_ANALYSIS_SECONDS", "30"))
+STAGE_BUDGET_OPPORTUNITY_SECONDS = int(os.environ.get("STAGE_BUDGET_OPPORTUNITY_SECONDS", "25"))
+STAGE_BUDGET_BACKLINK_SECONDS = int(os.environ.get("STAGE_BUDGET_BACKLINK_SECONDS", "90"))
+# Hard ceiling for the entire context+opportunity job (before backlinks).
+# If this is reached the backlink phase is skipped for this run.
+STAGE_BUDGET_TOTAL_JOB_SECONDS = int(os.environ.get("STAGE_BUDGET_TOTAL_JOB_SECONDS", "300"))
+
 AUDIT_TIER_ENFORCEMENT = os.environ.get("AUDIT_TIER_ENFORCEMENT", "0") == "1"
+
+# ── Phase 12: Clinical Intelligence & Advanced API settings ───────────────
+# DataForSEO (search volume, backlinks)
+#   DATAFORSEO_LOGIN=<your-login>
+#   DATAFORSEO_PASSWORD=<your-password>
+# These are read directly in apps/seo/dataforseo_api.py.
+
+# Perplexity (GEO Shootout / Sonar Pro)
+#   PERPLEXITY_API_KEY=<your-key>
+# Read directly in apps/aeo/geo_api.py.
+
+# Google Cloud Natural Language (entity confidence)
+#   GOOGLE_CLOUD_API_KEY=<your-key>
+# Read directly in apps/aeo/geo_api.py.
+
+# Google Indexing API (ping after content publish)
+GOOGLE_INDEXING_API_KEY = os.environ.get("GOOGLE_INDEXING_API_KEY", "")
+
+# Google Search Console (GSC) OAuth 2.0
+# Create a Web Application credential in GCP → APIs & Services → Credentials.
+# Scopes required: https://www.googleapis.com/auth/webmasters.readonly
+# Redirect URI must be registered: <APP_URL>/workspace/seo/gsc/callback/
+GOOGLE_GSC_CLIENT_ID = os.environ.get("GOOGLE_GSC_CLIENT_ID", "")
+GOOGLE_GSC_CLIENT_SECRET = os.environ.get("GOOGLE_GSC_CLIENT_SECRET", "")
+GOOGLE_GSC_REDIRECT_URI = os.environ.get("GOOGLE_GSC_REDIRECT_URI", "")
+GOOGLE_GSC_ENABLED = bool(GOOGLE_GSC_CLIENT_ID and GOOGLE_GSC_CLIENT_SECRET)
 
 SECURE_PROXY_SSL_HEADER = ("HTTP_X_FORWARDED_PROTO", "https")
 SESSION_COOKIE_SECURE = not DEBUG

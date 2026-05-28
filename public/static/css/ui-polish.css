@@ -541,37 +541,44 @@ body.shell-light .auth-context-card {
    13. SCORE PILLS & STATUS BADGES — Shell-light legibility
    ══════════════════════════════════════════════════════════════════ */
 
-/* Score pills on shell-light: increase text weight */
+/* Score pills on shell-light: increase text weight
+   Canonical: score-high | score-medium | score-low
+   Aliases:   score-strong, score-med, score-stable, score-weak, score-critical */
 body.shell-light .score-high,
+body.shell-light .score-strong,
 body.shell-light .score-medium,
+body.shell-light .score-med,
+body.shell-light .score-stable,
 body.shell-light .score-low,
-body.shell-light .score-med {
+body.shell-light .score-weak,
+body.shell-light .score-critical {
     font-weight: 700;
 }
 
-/* On shell-light score-high: use green that passes WCAG AA */
-body.shell-light .score-high {
+/* On shell-light score-high: green that passes WCAG AA */
+body.shell-light .score-high,
+body.shell-light .score-strong {
     color: #15803d;
     background: rgba(21, 128, 61, 0.08);
     border-color: rgba(21, 128, 61, 0.2);
 }
 
-body.shell-light .score-medium {
+/* On shell-light score-medium: amber that passes WCAG AA */
+body.shell-light .score-medium,
+body.shell-light .score-med,
+body.shell-light .score-stable {
     color: #b45309;
     background: rgba(180, 83, 9, 0.08);
     border-color: rgba(180, 83, 9, 0.2);
 }
 
-body.shell-light .score-low {
+/* On shell-light score-low: red that passes WCAG AA */
+body.shell-light .score-low,
+body.shell-light .score-weak,
+body.shell-light .score-critical {
     color: #b91c1c;
     background: rgba(185, 28, 28, 0.08);
     border-color: rgba(185, 28, 28, 0.2);
-}
-
-body.shell-light .score-med {
-    color: #0369a1;
-    background: rgba(3, 105, 161, 0.08);
-    border-color: rgba(3, 105, 161, 0.2);
 }
 
 
