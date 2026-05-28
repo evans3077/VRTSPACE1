@@ -1,6 +1,9 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% include "includes/workspace_nav.html" with workspace_nav_current="settings" %}
+
+<div class="ws-main-content">
 <section class="account-shell-hero">
     <div class="container account-hero-grid">
         <div class="account-hero-copy">
@@ -373,4 +376,5 @@ document.addEventListener("DOMContentLoaded", function () {
     });
 });
 </script>
+</div>{# /ws-main-content #}
 {% endblock %}

@@ -1313,7 +1313,7 @@
         font-weight: 800;
         letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: #4e6680 !important;
+        color: #7a9ab8 !important;
         padding: 0 1.1rem;
         margin: 0 0 0.4rem;
     }
@@ -1323,7 +1323,7 @@
         gap: 0.65rem;
         padding: 0.54rem 1.1rem;
         font-size: 0.84rem;
-        color: #8faec8 !important;
+        color: #a8c4d8 !important;
         text-decoration: none;
         transition: background 0.12s, color 0.12s;
         position: relative;
@@ -1334,7 +1334,7 @@
         font-size: 0.8rem;
         text-align: center;
         flex-shrink: 0;
-        color: #5c7a96 !important;
+        color: #7a9ab8 !important;
         transition: color 0.12s;
     }
     .ws-sidebar .ws-sidebar-link span { flex: 1; color: inherit !important; }
@@ -1364,6 +1364,12 @@
         border-radius: 999px;
         line-height: 1.5;
     }
+
+    /* Override vrt-space-core shell-light rules that make sidebar credit/logout
+       text too dark to read on the dark sidebar background (#0d1526). */
+    body.shell-light .ws-sidebar .ws-sidebar-credit  { background: rgba(255,255,255,0.04) !important; border-color: rgba(255,255,255,0.07) !important; color: #7a9ab8 !important; }
+    body.shell-light .ws-sidebar .ws-sidebar-logout  { color: #7a9ab8 !important; }
+    body.shell-light .ws-sidebar .ws-sidebar-logout:hover { color: #ef4444 !important; background: rgba(239,68,68,0.1) !important; }
 
     /* Footer — vrt-space-core.css provides the flex-direction:column base;
        these rules fine-tune padding and border only. */
