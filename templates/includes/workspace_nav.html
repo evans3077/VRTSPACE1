@@ -1,129 +1,99 @@
 {% if user.is_authenticated and not user.is_staff %}
-<aside class="ws-sidebar" aria-label="Workspace navigation">
+<aside class="ws-sidebar" id="ws-sidebar" aria-label="Workspace navigation">
 
     {# ── Brand ── #}
-    <div class="ws-sidebar-brand">
-        <a class="ws-sidebar-logo" href="/">VRT SPACE AGENCY</a>
-    </div>
+    <a class="ws-sidebar-brand" href="{% url 'tools:workspace-dashboard' %}">
+        <span class="ws-sidebar-brand-mark">V</span>
+        <span class="ws-sidebar-brand-text">VRT Space</span>
+    </a>
 
-    {# ── Project selector ── #}
-    <div class="ws-sidebar-project-selector" x-data="{ open: false }" @click.outside="open = false">
-        <button class="ws-project-pill" @click="open = !open" type="button">
-            <span class="ws-project-dot"></span>
-            <span class="ws-project-name">{{ active_workspace_project.normalized_domain|default:active_workspace_project.name|default:"Dashboard"|truncatechars:20 }}</span>
-            <i class="fas fa-chevron-down ws-project-chevron" :class="{ 'ws-chevron-open': open }"></i>
-        </button>
-        <div class="ws-project-dropdown" x-show="open" x-cloak x-transition:enter="ws-drop-in" x-transition:leave="ws-drop-out">
-            {% for item in workspace_project_summaries %}
-            {% if not active_workspace_project or item.pk != active_workspace_project.pk %}
-            <form method="post" action="{% url 'tools:workspace-project-select' %}" style="margin:0;">
-                {% csrf_token %}
-                <input type="hidden" name="project_id" value="{{ item.pk }}">
-                <input type="hidden" name="next" value="{{ request.path }}">
-                <button type="submit" class="ws-project-option">
-                    <span class="ws-project-dot health-{{ item.health_status }}"></span>
-                    <span>{{ item.normalized_domain|default:item.name|truncatechars:20 }}</span>
-                </button>
-            </form>
-            {% endif %}
-            {% endfor %}
-            <a href="{% url 'tools:workspace-dashboard' %}#new-project" class="ws-project-option ws-project-option-new">
-                <i class="fas fa-plus" style="font-size:0.68rem;"></i>&nbsp;New project
+    {# ── Active project ── #}
+    {% if active_workspace_project %}
+    <div class="ws-sidebar-project">
+        <span class="ws-sidebar-project-dot"></span>
+        <span class="ws-sidebar-project-name">{{ active_workspace_project.name }}</span>
+    </div>
+    {% endif %}
+
+    {# ── Section: Project tools ── #}
+    <div class="ws-sidebar-section">
+        <span class="ws-sidebar-section-label">Project</span>
+        <nav aria-label="Project modules">
+            <a class="ws-sidebar-link {% if workspace_nav_current == 'workspace' %}is-active{% endif %}"
+               href="{% url 'tools:workspace-dashboard' %}">
+                <i class="fa-solid fa-table-cells-large"></i><span>Overview</span>
             </a>
-        </div>
+            <a class="ws-sidebar-link {% if workspace_nav_current == 'aeo' %}is-active{% endif %}"
+               href="{% url 'aeo:workspace-aeo' %}">
+                <i class="fa-solid fa-robot"></i><span>AI Visibility</span>
+                <span class="ws-sidebar-badge ws-sidebar-badge--new">NEW</span>
+            </a>
+            <a class="ws-sidebar-link {% if workspace_nav_current == 'prompts' %}is-active{% endif %}"
+               href="{% url 'aeo:workspace-prompts' %}">
+                <i class="fa-solid fa-bullseye"></i><span>Prompts</span>
+            </a>
+            <a class="ws-sidebar-link {% if workspace_nav_current == 'sov' %}is-active{% endif %}"
+               href="{% url 'aeo:workspace-share-of-voice' %}">
+                <i class="fa-solid fa-chart-pie"></i><span>Share of Voice</span>
+            </a>
+            <a class="ws-sidebar-link {% if workspace_nav_current == 'seo' %}is-active{% endif %}"
+               href="{% url 'seo:workspace-seo' %}">
+                <i class="fa-solid fa-magnifying-glass"></i><span>SEO Audit</span>
+            </a>
+            <a class="ws-sidebar-link {% if workspace_nav_current == 'content' %}is-active{% endif %}"
+               href="{% url 'content:workspace-content' %}">
+                <i class="fa-solid fa-pen-nib"></i><span>Content</span>
+            </a>
+        </nav>
     </div>
 
-    {# ── PROJECT section ── #}
-    <nav class="ws-sidebar-section" aria-label="Project">
-        <p class="ws-sidebar-section-label">Project</p>
+    {# ── Section: Workspace management ── #}
+    <div class="ws-sidebar-section">
+        <span class="ws-sidebar-section-label">Workspace</span>
+        <nav aria-label="Workspace management">
+            <a class="ws-sidebar-link {% if workspace_nav_current == 'agency' %}is-active{% endif %}"
+               href="{% url 'tools:workspace-agency-dashboard' %}">
+                <i class="fa-solid fa-grid-2"></i><span>All Clients</span>
+            </a>
+            <a class="ws-sidebar-link {% if workspace_nav_current == 'team' %}is-active{% endif %}"
+               href="{% url 'tools:workspace-team' %}">
+                <i class="fa-solid fa-users"></i><span>Team</span>
+            </a>
+            <a class="ws-sidebar-link {% if workspace_nav_current == 'billing' %}is-active{% endif %}"
+               href="{% url 'tools:account-dashboard' %}">
+                <i class="fa-solid fa-credit-card"></i><span>Billing &amp; Credits</span>
+            </a>
+            <a class="ws-sidebar-link {% if workspace_nav_current == 'publishing' %}is-active{% endif %}"
+               href="{% url 'content:workspace-cms-credentials' %}">
+                <i class="fa-solid fa-paper-plane"></i><span>Publishing</span>
+            </a>
+            <a class="ws-sidebar-link {% if workspace_nav_current == 'settings' %}is-active{% endif %}"
+               href="{% url 'tools:account-dashboard' %}">
+                <i class="fa-solid fa-gear"></i><span>Settings</span>
+            </a>
+            {% with affiliate=user.affiliate_profile %}{% if affiliate and affiliate.status == "active" %}
+            <a class="ws-sidebar-link {% if workspace_nav_current == 'affiliate' %}is-active{% endif %}"
+               href="{% url 'affiliates:dashboard' %}">
+                <i class="fa-solid fa-handshake"></i><span>Affiliate</span>
+            </a>
+            {% endif %}{% endwith %}
+        </nav>
+    </div>
 
-        <a class="ws-sidebar-link {% if workspace_nav_current == 'workspace' %}is-active{% endif %}"
-           href="{% url 'tools:workspace-dashboard' %}">
-            <i class="fas fa-th-large"></i><span>Overview</span>
-        </a>
-
-        <a class="ws-sidebar-link {% if workspace_nav_current == 'aeo' %}is-active{% endif %}"
-           href="{% url 'aeo:workspace-aeo' %}">
-            <i class="fas fa-robot"></i>
-            <span>AI Visibility</span>
-        </a>
-
-        <a class="ws-sidebar-link {% if workspace_nav_current == 'prompts' %}is-active{% endif %}"
-           href="{% url 'aeo:workspace-prompts' %}">
-            <i class="fas fa-bullseye"></i><span>Prompts</span>
-        </a>
-
-        <a class="ws-sidebar-link {% if workspace_nav_current == 'sov' %}is-active{% endif %}"
-           href="{% url 'aeo:workspace-share-of-voice' %}">
-            <i class="fas fa-chart-pie"></i><span>Share of Voice</span>
-        </a>
-
-        <a class="ws-sidebar-link {% if workspace_nav_current == 'seo' %}is-active{% endif %}"
-           href="{% url 'seo:workspace-seo' %}">
-            <i class="fas fa-search"></i><span>SEO Audit</span>
-        </a>
-
-        <a class="ws-sidebar-link {% if workspace_nav_current == 'content' %}is-active{% endif %}"
-           href="{% url 'content:workspace-content' %}">
-            <i class="fas fa-pen-nib"></i><span>Content</span>
-        </a>
-
-        <a class="ws-sidebar-link {% if workspace_nav_current == 'publishing' %}is-active{% endif %}"
-           href="{% url 'content:workspace-cms-credentials' %}">
-            <i class="fas fa-paper-plane"></i><span>Publishing</span>
-        </a>
-    </nav>
-
-    {# ── WORKSPACE section ── #}
-    <nav class="ws-sidebar-section" aria-label="Workspace">
-        <p class="ws-sidebar-section-label">Workspace</p>
-
-        <a class="ws-sidebar-link {% if workspace_nav_current == 'workspace' %}is-active{% endif %}"
-           href="{% url 'tools:workspace-dashboard' %}">
-            <i class="fas fa-layer-group"></i><span>All projects</span>
-        </a>
-
-        <a class="ws-sidebar-link {% if workspace_nav_current == 'team' %}is-active{% endif %}"
-           href="{% url 'tools:workspace-team' %}">
-            <i class="fas fa-users"></i><span>Team</span>
-        </a>
-
-        <a class="ws-sidebar-link {% if workspace_nav_current == 'billing' %}is-active{% endif %}"
-           href="{% url 'tools:account-dashboard' %}#billing">
-            <i class="fas fa-credit-card"></i><span>Billing &amp; credits</span>
-        </a>
-
-        <a class="ws-sidebar-link {% if workspace_nav_current == 'settings' %}is-active{% endif %}"
-           href="{% url 'tools:account-dashboard' %}">
-            <i class="fas fa-cog"></i><span>Settings</span>
-        </a>
-
-        {% with affiliate=user.affiliate_profile %}{% if affiliate and affiliate.status == "active" %}
-        <a class="ws-sidebar-link {% if workspace_nav_current == 'affiliate' %}is-active{% endif %}"
-           href="{% url 'affiliates:dashboard' %}">
-            <i class="fas fa-handshake"></i><span>Affiliate</span>
-        </a>
-        {% endif %}{% endwith %}
-    </nav>
-
-    {# ── Footer: credits + logout ── #}
-    <div class="ws-sidebar-spacer"></div>
-    {% with billing=workspace_billing_state %}
+    {# ── Footer: Credits + Logout ── #}
     <div class="ws-sidebar-footer">
-        {% if billing.credits %}
-        {% with credit=billing.credits.0 %}
-        <div class="ws-sidebar-credit-chip">
-            <i class="fas fa-bolt"></i>
-            <span>{{ credit.label }}:</span>
-            <strong>{% if credit.unlimited %}&infin;{% else %}{{ credit.remaining }}{% endif %}</strong>
+        {% if workspace_billing_state.credits %}
+        {% with credit=workspace_billing_state.credits.0 %}
+        <div class="ws-sidebar-credit">
+            <i class="fa-solid fa-bolt"></i>
+            <span>{{ credit.label }}: <strong>{% if credit.unlimited %}&infin;{% else %}{{ credit.remaining }}{% endif %}</strong></span>
         </div>
         {% endwith %}
         {% endif %}
-        <a href="{% url 'tools:workspace-logout' %}" class="ws-sidebar-logout" title="Sign out">
-            <i class="fas fa-power-off"></i>
+        <a class="ws-sidebar-logout" href="{% url 'tools:workspace-logout' %}">
+            <i class="fa-solid fa-power-off"></i><span>Sign out</span>
         </a>
     </div>
-    {% endwith %}
 
 </aside>
 {% endif %}
