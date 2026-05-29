@@ -153,7 +153,7 @@
         >
           <i class="fa-solid fa-arrow-up-right-from-square"></i> Open
         </a>
-        <form method="post" action="{% url 'tools:workspace-audit-start' %}" class="agency-rerun-form" style="display:inline;">
+        <form method="post" action="{% url 'tools:workspace-audit-start' %}" class="agency-rerun-form">
           {% csrf_token %}
           <input type="hidden" name="project_id" value="{{ project.pk }}">
           <button type="submit" class="button button-primary agency-action-btn" title="Run a new audit for {{ project.name }}">

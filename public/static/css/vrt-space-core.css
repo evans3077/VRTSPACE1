@@ -7100,12 +7100,15 @@ body.shell-light .ws-sidebar-logout:hover { color: #dc2626; background: #fef2f2;
 body.shell-light .agency-card {
   background: #ffffff;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 1px 3px rgba(15,23,42,0.04);
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(15,23,42,0.05);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
 body.shell-light .agency-card:hover {
-  border-color: #cbd5e1;
+  transform: translateY(-2px);
+  border-color: #bfdbfe;
   background: #ffffff;
-  box-shadow: 0 6px 18px -8px rgba(15,23,42,0.12);
+  box-shadow: 0 8px 24px -10px rgba(2,132,199,0.15);
 }
 body.shell-light .agency-card--green { border-left: 3px solid #22c55e; }
 body.shell-light .agency-card--amber { border-left: 3px solid #f59e0b; }
@@ -7146,15 +7149,17 @@ body.shell-light .agency-empty-body  { color: #64748b; }
 body.shell-light .agency-empty-icon  { color: var(--brand-primary, #38bdf8); }
 
 /* Equal-width compact action buttons in agency cards */
-.agency-card-actions { display: flex; gap: 0.5rem; margin-top: auto; }
+.agency-card-actions { display: flex; gap: 0.5rem; margin-top: auto; padding-top: 0.5rem; border-top: 1px solid rgba(15,23,42,0.06); }
 .agency-card-actions .agency-action-btn,
-.agency-card-actions .agency-rerun-form { flex: 1; }
+.agency-card-actions .agency-rerun-form { flex: 1; display: flex; }
 .agency-card-actions .agency-action-btn {
   justify-content: center;
   font-size: 0.78rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.45rem 0.75rem;
   width: 100%;
 }
+/* Make the form button full-width inside its flex form wrapper */
+.agency-rerun-form .agency-action-btn { flex: 1; justify-content: center; }
 
 /* Agency score badges / labels — darker foregrounds for contrast on white */
 body.shell-light .agency-score-badge--green { color: #16a34a; background: #dcfce7; }
@@ -7167,8 +7172,10 @@ body.shell-light .agency-health-label--green { color: #16a34a; }
 body.shell-light .agency-health-label--amber { color: #d97706; }
 body.shell-light .agency-health-label--red   { color: #dc2626; }
 body.shell-light .agency-health-label--muted { color: #94a3b8; }
-body.shell-light .agency-card-risk { color: #b45309; background: #fef3c7; }
+body.shell-light .agency-card-risk { color: #b45309; background: #fef3c7; border-radius: 6px; }
 body.shell-light .agency-stale-pill { color: #b45309; background: #fef3c7; border-color: #fde68a; }
+body.shell-light .agency-card-actions { border-top-color: #f1f5f9; }
+body.shell-light .ws-hub-description { color: #64748b; }
 
 /* ============================================================
    PLANS ACCORDION — tighter spacing on the settings page (Phase 15)
