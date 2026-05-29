@@ -402,15 +402,10 @@
        Applies clean white cards + soft borders to ALL system-cards
        inside any workspace shell when body.shell-light is set.
        ══════════════════════════════════════════════════════════ */
-    /* ── Sidebar layout: hide public nav/footer, offset content ─── */
-    body.shell-light .site-header { display: none !important; }
-    body.shell-light .vrt-footer  { display: none !important; }
-    body.shell-light main          { min-height: 100vh; }
-    /* Grid layout handles sidebar column — no padding-left needed */
-    body.shell-light:has(.ws-sidebar) main { padding-left: 0 !important; }
-    @media (max-width: 768px) {
-        body.shell-light main { padding-left: 0 !important; padding-bottom: 60px !important; }
-    }
+    /* ── Sidebar layout — handled by :has(.ws-sidebar) rules below ── */
+    /* Header/footer hide and grid layout are in the sidebar CSS block
+       at the bottom of this <style> tag. Only set min-height here. */
+    body.shell-light main { min-height: 100vh; }
 
     body.shell-light {
         background: #f1f5f9 !important;
@@ -1947,7 +1942,7 @@
     {% endif %}
     {% block extra_head %}{% endblock %}
 </head>
-<body class="{{ shell_theme|default:'' }}">
+<body class="{{ shell_theme|default:'' }}{% if is_workspace_shell %} is-workspace{% endif %}">
     <header class="site-header">
         <div class="container nav-shell">
             <a class="brand" href="/">VRT SPACE AGENCY</a>

@@ -6815,10 +6815,8 @@ body.shell-light .ws-outcome-meta  { color: #94a3b8; }
    Fixed 240 px column; workspace <main> offset with padding-left.
    ══════════════════════════════════════════════════════════════════════════ */
 
-/* ── Hide public header & footer on workspace pages ─────────────────────── */
-body.shell-light .site-header  { display: none !important; }
-body.shell-light .vrt-footer   { display: none !important; }
-body.shell-light main          { min-height: 100vh; }
+/* ── Header/footer hide and layout handled in base.html :has() block ──────── */
+/* body:has(.ws-sidebar) rules in base.html inline <style> are authoritative.  */
 
 /* ── Sidebar shell — grid-column layout (not fixed) ─────────────────────── */
 .ws-sidebar {
@@ -7042,7 +7040,7 @@ body.shell-light .ws-sidebar-logout:hover { color: #dc2626; background: #fef2f2;
 
 /* ── Mobile: collapse to bottom icon bar (≤ 768 px) ─────────────────────── */
 @media (max-width: 768px) {
-    body.shell-light main { padding-left: 0; padding-bottom: 60px; }
+    body.is-workspace main { padding-left: 0; padding-bottom: 60px; }
 
     .ws-sidebar {
         top: auto; bottom: 0; left: 0;
