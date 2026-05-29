@@ -1223,9 +1223,8 @@
        presence alone triggers the layout and hides the marketing chrome.
        ═══════════════════════════════════════════════════════════════ */
 
-    /* Hide marketing chrome when sidebar is on-page */
-    body:has(.ws-sidebar) .site-header,
-    body:has(.ws-sidebar) .vrt-footer { display: none !important; }
+    /* Hide public site-header only — footer stays visible at bottom of workspace pages */
+    body:has(.ws-sidebar) .site-header { display: none !important; }
 
     /* Root layout — CSS grid so the sidebar pins column 1 across ALL rows,
        and every non-sidebar child (ws-main-content or raw container-fluid)
