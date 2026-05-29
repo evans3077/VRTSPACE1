@@ -149,7 +149,7 @@ class WorkspaceAEOViewTests(TestCase):
         response = self.client.get(reverse("aeo:workspace-aeo"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Generate AEO snapshot")
+        self.assertContains(response, "Run AI Visibility analysis")
 
     def test_workspace_aeo_post_creates_snapshot_and_usage_record(self):
         self.client.force_login(self.user)

@@ -16,13 +16,20 @@ class StructuredLocationMixin:
 
     def clean(self):
         cleaned_data = super().clean()
-        
-        # If user cleared the field or Worldwide is selected
-        val = cleaned_data.get("location_display", "").strip()
+
+        # `location_display` is the value the client-side location autocomplete
+        # submits. It is NOT a declared ModelForm field (it lives on this plain
+        # mixin, which Django's form metaclass does not collect), so it never
+        # reaches cleaned_data — read it straight from the raw submission and
+        # fall back to the bound `location` field. Without this the location
+        # was always forced to "Worldwide", silently discarding user input.
+        val = (self.data.get("location_display") or cleaned_data.get("location") or "").strip()
         if not val or val.lower() == "worldwide":
             cleaned_data["location"] = "Worldwide"
-        
-        # Keep legacy fields empty for backwards database compatibility
+        else:
+            cleaned_data["location"] = val
+
+        # Keep legacy structured fields empty for backwards database compatibility
         cleaned_data["location_mode"] = "targeted"
         cleaned_data["location_country"] = ""
         cleaned_data["location_scope"] = ""

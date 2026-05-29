@@ -319,6 +319,20 @@ def get_effective_capabilities(user):
         **metadata.get("credits", {}),
         **capabilities.get("credits", {}),
     }
+    # The WorkspacePlan model carries explicit per-plan capability columns
+    # (populated from the catalog by build_workspace_plan_defaults but also
+    # editable in the admin). Treat those columns as authoritative overrides
+    # for the flags they cover, so a plan can be individually tuned — e.g.
+    # email reports on while public stakeholder sharing stays off.
+    for flag in (
+        "recurring_audits_enabled",
+        "export_reports_enabled",
+        "email_reports_enabled",
+        "competitor_tracking_enabled",
+        "stakeholder_sharing_enabled",
+    ):
+        if hasattr(plan, flag):
+            capabilities["features"][flag] = getattr(plan, flag)
     capabilities["monthly_audits_limit"] = capabilities["limits"].get("audit_runs")
     capabilities["history_limit"] = capabilities["limits"].get("saved_history")
     capabilities["premium_recommendation_limit"] = capabilities["limits"].get("premium_recommendations")
