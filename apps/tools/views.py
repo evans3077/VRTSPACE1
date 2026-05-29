@@ -1598,7 +1598,29 @@ class SharedAuditReportView(DetailView):
         )
         context["meta_robots"] = "noindex, nofollow"
         context["score_breakdown"] = summary.get("score_breakdown", {})
-        context["recommendations"] = (summary.get("featured_recommendations") or summary.get("recommendations", []))[:6]
+        # Apply the project owner's plan profile so a shared report reflects
+        # the tier of whoever created it — a Free owner's share shows Free-level
+        # detail, a Growth owner's stays rich. Falls back to the Free profile
+        # when no owner can be resolved (orphaned / pre-account audits).
+        owner_project = (
+            ClientProject.objects.filter(latest_audit_run=audit_run)
+            .select_related("owner")
+            .first()
+        )
+        if owner_project is None and audit_run.audit_request_id:
+            owner_project = (
+                ClientProject.objects.filter(audit_request_id=audit_run.audit_request_id)
+                .select_related("owner")
+                .first()
+            )
+        owner = getattr(owner_project, "owner", None)
+        audit_profile = get_audit_result_profile(owner)
+        recommendations = summary.get("featured_recommendations") or summary.get("recommendations", [])
+        visible_recommendations, _ = _slice_for_limit(
+            recommendations,
+            audit_profile.get("featured_recommendation_limit") or 6,
+        )
+        context["recommendations"] = visible_recommendations
         context["context_analysis"] = summary.get("context_analysis", {})
         context["issue_summary"] = summary.get("issue_summary", {})
         context["product_modules"] = summary.get("product_modules", [])[:4]
@@ -2426,6 +2448,8 @@ class WorkspaceAgencyDashboardView(LoginRequiredMixin, TemplateView):
                 "stale_count": stale,
                 "needs_attention_count": needs_attention,
                 "healthy_pct": round(healthy / total * 100) if total else 0,
+                "page_title": "Agency Overview | VRT SPACE AGENCY",
+                "shell_theme": "shell-light",
             }
         )
         return context

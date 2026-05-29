@@ -4,7 +4,7 @@
 {% block extra_head %}
 <style>
 .ws-complete-shell {
-    min-height: calc(100vh - 120px);
+    min-height: 100vh;
     display: flex; align-items: center; justify-content: center;
     padding: 3.5rem 1.5rem;
 }
@@ -139,6 +139,7 @@
 {% endblock %}
 
 {% block content %}
+{% include "includes/workspace_nav.html" with workspace_nav_current="workspace" %}
 <div class="ws-complete-shell">
     <div class="ws-complete-card">
         <span class="ws-complete-eyebrow-bar">

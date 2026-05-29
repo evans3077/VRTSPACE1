@@ -1223,8 +1223,12 @@
        presence alone triggers the layout and hides the marketing chrome.
        ═══════════════════════════════════════════════════════════════ */
 
-    /* Hide public site-header only — footer stays visible at bottom of workspace pages */
-    body:has(.ws-sidebar) .site-header { display: none !important; }
+    /* Hide public marketing header on ALL authenticated workspace pages.
+       Pages with a sidebar (.ws-sidebar) get the workspace nav; transition
+       pages without one (welcome, onboarding steps) get a clean focused
+       flow with no distracting public nav links. Footer stays visible. */
+    body:has(.ws-sidebar) .site-header,
+    body.is-workspace .site-header { display: none !important; }
 
     /* Root layout — CSS grid so the sidebar pins column 1 across ALL rows,
        and every non-sidebar child (ws-main-content or raw container-fluid)

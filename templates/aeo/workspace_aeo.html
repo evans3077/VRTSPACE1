@@ -1,6 +1,7 @@
 {% extends "base.html" %}
 
 {% block content %}
+{% include "includes/workspace_nav.html" with workspace_nav_current="aeo" %}
 
 {# ─── Inline AEO Page Styles ──────────────────────────────────────────────── #}
 <style>
@@ -146,8 +147,6 @@
     .aeo-engine-grid { grid-template-columns: 1fr !important; }
 }
 </style>
-
-{% include "includes/workspace_nav.html" with workspace_nav_current="aeo" %}
 
 {# ─── Hub Header ─────────────────────────────────────────────────────────── #}
 <div class="container-fluid">

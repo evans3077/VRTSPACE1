@@ -60,7 +60,7 @@
                 <i class="fa-solid fa-users"></i><span>Team</span>
             </a>
             <a class="ws-sidebar-link {% if workspace_nav_current == 'billing' %}is-active{% endif %}"
-               href="{% url 'tools:account-dashboard' %}">
+               href="{% url 'tools:account-dashboard' %}#billing">
                 <i class="fa-solid fa-credit-card"></i><span>Billing &amp; Credits</span>
             </a>
             <a class="ws-sidebar-link {% if workspace_nav_current == 'publishing' %}is-active{% endif %}"
@@ -68,7 +68,7 @@
                 <i class="fa-solid fa-paper-plane"></i><span>Publishing</span>
             </a>
             <a class="ws-sidebar-link {% if workspace_nav_current == 'settings' %}is-active{% endif %}"
-               href="{% url 'tools:account-dashboard' %}">
+               href="{% url 'tools:account-dashboard' %}#profile">
                 <i class="fa-solid fa-gear"></i><span>Settings</span>
             </a>
             {% with affiliate=user.affiliate_profile %}{% if affiliate and affiliate.status == "active" %}

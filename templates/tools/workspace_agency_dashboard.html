@@ -1,10 +1,11 @@
-{% extends "workspace_shell.html" %}
+{% extends "base.html" %}
 {% load static %}
 
-{% block title %}Agency Overview — VRT Space{% endblock %}
+{% block content %}
+{% include "includes/workspace_nav.html" with workspace_nav_current="agency" %}
 
-{% block workspace_content %}
-<div class="ws-hub-header">
+<div class="container-fluid">
+<div class="ws-hub-header workspace-shell-header">
   <div class="ws-hub-header-inner">
     <div class="ws-hub-title-row">
       <div class="ws-hub-icon">
@@ -168,9 +169,8 @@
 
   {% endif %}
 </div>
-{% endblock %}
+</div>
 
-{% block extra_js %}
 <script>
 (function () {
   "use strict";
@@ -204,3 +204,4 @@
 })();
 </script>
 {% endblock %}
+
