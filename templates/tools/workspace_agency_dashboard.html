@@ -4,51 +4,49 @@
 {% block content %}
 {% include "includes/workspace_nav.html" with workspace_nav_current="agency" %}
 
-<div class="container-fluid">
 <div class="ws-hub-header workspace-shell-header">
-  <div class="ws-hub-header-inner">
-    <div class="ws-hub-title-row">
-      <div class="ws-hub-icon">
-        <i class="fa-solid fa-grid-2"></i>
-      </div>
-      <div>
-        <h1 class="ws-hub-title">Agency Overview</h1>
-        <p class="ws-hub-subtitle">Health snapshot across all your client projects</p>
-      </div>
-    </div>
-    <div class="ws-hub-actions">
-      <a href="{% url 'tools:workspace-project-create' %}" class="button-primary button-sm">
-        <i class="fa-solid fa-plus"></i> Add Client
-      </a>
-      <a href="{% url 'tools:workspace-audit-start' %}" class="button-secondary button-sm">
-        <i class="fa-solid fa-bolt"></i> Run Audit
-      </a>
-    </div>
+  <div class="ws-hub-header-left">
+    <div class="ws-hub-eyebrow"><i class="fa-solid fa-grip"></i> All Clients</div>
+    <h1 class="ws-hub-title">Agency Overview</h1>
+    <p class="ws-hub-description">Health snapshot across all your client projects — scores, deltas, and what needs attention first.</p>
   </div>
-
-  {# ── Summary bar ─────────────────────────────────────────────── #}
-  <div class="agency-summary-bar">
-    <div class="agency-stat">
-      <span class="agency-stat-value">{{ total_count }}</span>
-      <span class="agency-stat-label">Clients</span>
-    </div>
-    <div class="agency-stat agency-stat--green">
-      <span class="agency-stat-value">{{ healthy_count }}</span>
-      <span class="agency-stat-label">Healthy</span>
-    </div>
-    <div class="agency-stat agency-stat--amber">
-      <span class="agency-stat-value">{{ needs_attention_count }}</span>
-      <span class="agency-stat-label">Need Attention</span>
-    </div>
-    <div class="agency-stat agency-stat--muted">
-      <span class="agency-stat-value">{{ stale_count }}</span>
-      <span class="agency-stat-label">Stale (>30 days)</span>
-    </div>
+  <div class="ws-hub-header-right">
+    <a href="{% url 'tools:workspace-project-create' %}" class="button button-primary">
+      <i class="fa-solid fa-plus"></i> Add Client
+    </a>
+    <a href="{% url 'tools:workspace-audit-start' %}" class="button button-secondary">
+      <i class="fa-solid fa-bolt"></i> Run Audit
+    </a>
   </div>
 </div>
 
+{# ── Summary KPI strip (clean glass-panel cards) ──────────────────── #}
+<section class="public-shell-section" style="padding-top: 0; padding-bottom: 1.25rem;">
+  <div class="container">
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 1rem;">
+      <article class="glass-panel" style="padding: 1.3rem 1.4rem;">
+        <p class="eyebrow text-accent">Clients</p>
+        <p style="font-size: 2rem; font-weight: 800; margin: 0.25rem 0 0;">{{ total_count }}</p>
+      </article>
+      <article class="glass-panel" style="padding: 1.3rem 1.4rem; border-top: 3px solid #22c55e;">
+        <p class="eyebrow text-accent">Healthy</p>
+        <p style="font-size: 2rem; font-weight: 800; margin: 0.25rem 0 0; color: #16a34a;">{{ healthy_count }}</p>
+      </article>
+      <article class="glass-panel" style="padding: 1.3rem 1.4rem; border-top: 3px solid #f59e0b;">
+        <p class="eyebrow text-accent">Need Attention</p>
+        <p style="font-size: 2rem; font-weight: 800; margin: 0.25rem 0 0; color: #d97706;">{{ needs_attention_count }}</p>
+      </article>
+      <article class="glass-panel" style="padding: 1.3rem 1.4rem;">
+        <p class="eyebrow text-accent">Stale (&gt;30 days)</p>
+        <p style="font-size: 2rem; font-weight: 800; margin: 0.25rem 0 0; color: #64748b;">{{ stale_count }}</p>
+      </article>
+    </div>
+  </div>
+</section>
+
 {# ── Main grid ───────────────────────────────────────────────────── #}
-<div class="ws-module-body">
+<section class="public-shell-section" style="padding-top: 0;">
+  <div class="container ws-module-body">
 
   {% if not projects %}
   {# ── Empty state ── #}
@@ -58,7 +56,7 @@
     </div>
     <h2 class="agency-empty-title">No client projects yet</h2>
     <p class="agency-empty-body">Add your first client website to start tracking their SEO and AI visibility health.</p>
-    <a href="{% url 'tools:workspace-project-create' %}" class="button-primary">
+    <a href="{% url 'tools:workspace-project-create' %}" class="button button-primary">
       <i class="fa-solid fa-plus"></i> Add Your First Client
     </a>
   </div>
@@ -150,7 +148,7 @@
       <div class="agency-card-actions">
         <a
           href="{% url 'tools:workspace-dashboard' %}?project={{ project.pk }}"
-          class="button-secondary button-xs"
+          class="button button-secondary agency-action-btn"
           title="Open workspace for {{ project.name }}"
         >
           <i class="fa-solid fa-arrow-up-right-from-square"></i> Open
@@ -158,7 +156,7 @@
         <form method="post" action="{% url 'tools:workspace-audit-start' %}" class="agency-rerun-form" style="display:inline;">
           {% csrf_token %}
           <input type="hidden" name="project_id" value="{{ project.pk }}">
-          <button type="submit" class="button-primary button-xs" title="Run a new audit for {{ project.name }}">
+          <button type="submit" class="button button-primary agency-action-btn" title="Run a new audit for {{ project.name }}">
             <i class="fa-solid fa-bolt"></i> Run Audit
           </button>
         </form>
@@ -168,8 +166,8 @@
   </div>
 
   {% endif %}
-</div>
-</div>
+  </div>
+</section>
 
 <script>
 (function () {

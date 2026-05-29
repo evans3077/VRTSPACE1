@@ -828,6 +828,7 @@ class WorkspaceDemoView(TemplateView):
         ctx = super().get_context_data(**kwargs)
         ctx["page_title"] = "Sample Workspace | VRT SPACE AGENCY"
         ctx["meta_robots"] = "noindex, nofollow"
+        ctx["shell_theme"] = "shell-light"
         ctx["demo_domain"] = "example-agency.com"
         ctx["demo_aeo_score"] = 67
         ctx["demo_audit_score"] = 84
