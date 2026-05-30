@@ -48,6 +48,7 @@ class StaticSitemap(_ProtocolMixin, Sitemap):
             "case_studies:case-study-index",
             "aeo:content-optimizer",
             "aeo:aeo-index",
+            "affiliates:partner-inquiry",
         ]
 
     def location(self, item):

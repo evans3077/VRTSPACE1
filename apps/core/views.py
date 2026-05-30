@@ -13,6 +13,7 @@ from .site_content import (
     AGENCY_FAQS,
     ENGAGEMENT_STEPS,
     FAQS,
+    HELP_PAGE_FAQS,
     GLOSSARY_CATEGORIES,
     GLOSSARY_TERMS,
     HELP_CATEGORIES,
@@ -254,8 +255,10 @@ class HelpCenterView(TemplateView):
         return {
             "page_title": "Help Center | VRT SPACE",
             "meta_description": "Guides, definitions, and quick answers for every part of VRT SPACE — AI Visibility, SEO, content, billing, and more.",
+            "canonical_url": self.request.build_absolute_uri(self.request.path),
             "shell_theme": "shell-light",
             "meta_robots": "index,follow",
+            "schema_json": json.dumps(build_faq_schema(HELP_PAGE_FAQS)),
             "help_popular": HELP_POPULAR,
             "help_categories": HELP_CATEGORIES,
         }
@@ -312,10 +315,40 @@ class ForAgenciesView(TemplateView):
                 [
                     {
                         "@context": "https://schema.org",
-                        "@type": "WebPage",
-                        "name": "VRT SPACE for Agencies",
-                        "description": "Manage client SEO and AI visibility in one workspace.",
-                        "url": self.request.build_absolute_uri(self.request.path),
+                        "@type": "SoftwareApplication",
+                        "name": "VRT SPACE",
+                        "applicationCategory": "BusinessApplication",
+                        "operatingSystem": "Web",
+                        "description": (
+                            "SEO and AI Visibility platform for digital agencies. "
+                            "Manage all client websites from one dashboard — run audits, "
+                            "track AI citation share across ChatGPT, Gemini, and Perplexity, "
+                            "monitor score deltas, and schedule weekly or monthly re-audits."
+                        ),
+                        "url": self.request.build_absolute_uri("/"),
+                        "offers": {
+                            "@type": "AggregateOffer",
+                            "priceCurrency": "USD",
+                            "lowPrice": "0",
+                            "highPrice": "349",
+                            "offerCount": "4",
+                            "offers": [
+                                {"@type": "Offer", "name": "Free", "price": "0", "priceCurrency": "USD"},
+                                {"@type": "Offer", "name": "Starter", "price": "59", "priceCurrency": "USD"},
+                                {"@type": "Offer", "name": "Growth", "price": "149", "priceCurrency": "USD"},
+                                {"@type": "Offer", "name": "Authority", "price": "349", "priceCurrency": "USD"},
+                            ],
+                        },
+                        "featureList": [
+                            "AI visibility tracking across ChatGPT, Gemini, and Perplexity",
+                            "Multi-client agency dashboard with score deltas",
+                            "Technical SEO audit with competitor benchmarking",
+                            "Prompt-level share-of-voice analysis",
+                            "Scheduled weekly and monthly automated audits",
+                            "Shareable client-facing audit reports",
+                            "Content generation from SEO briefs",
+                            "Citation readiness scoring",
+                        ],
                         "provider": {
                             "@type": "Organization",
                             "name": "VRT SPACE AGENCY",

@@ -299,6 +299,7 @@ class AEOIndexHomeView(View):
                 "page_title": "AEO Visibility Index — Is your brand visible in ChatGPT, Gemini, and Perplexity?",
                 "meta_description": "Free public tool: check whether ChatGPT, Gemini, and Perplexity cite your brand. AEO visibility scoring for any domain, powered by VRT SPACE AGENCY.",
                 "canonical_url": request.build_absolute_uri(request.path),
+                "meta_robots": "index,follow",
                 "shell_theme": "shell-light",
             },
         )
@@ -349,6 +350,7 @@ class AEOIndexDetailView(View):
                 "page_title": page_title,
                 "meta_description": meta,
                 "canonical_url": request.build_absolute_uri(request.path),
+                "meta_robots": "index,follow",
                 "shell_theme": "shell-light",
             },
         )
@@ -514,6 +516,7 @@ class ContentOptimizerView(View):
                 "page_title": "AI Content Optimizer — Free Citation Readiness Score | VRT SPACE AGENCY",
                 "meta_description": "Free tool: paste any content and get an instant AI Citation Readiness Score with actionable fixes for ChatGPT, Gemini, and Perplexity.",
                 "canonical_url": request.build_absolute_uri(request.path),
+                "meta_robots": "index,follow",
                 "shell_theme": "shell-light",
             },
         )

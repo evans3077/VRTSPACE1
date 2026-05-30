@@ -81,20 +81,61 @@ def llms_txt(request):
 - Home: {base}/
 - How it works (60-second overview): {base}/how-it-works/
 - Glossary (AI visibility / AEO / SEO terms): {base}/glossary/
+- Help Center: {base}/help/
 - Pricing: {base}/packages/
 - For agencies: {base}/for-agencies/
 - Partner program (invite-only affiliate): {base}/partners/
 - Free AI visibility audit: {base}/tools/free-seo-audit/
+- AEO Visibility Index (public domain lookup): {base}/aeo/visibility/
 - AEO content optimizer: {base}/aeo/content-optimizer/
 - Blog: {base}/blog/
 - Case studies: {base}/case-studies/
 - Services: {base}/services/
 
-## Authenticated workspace (not publicly indexable)
+## Authenticated workspace modules
 
-Users access their workspace at {base}/workspace/ after signup.
-Individual audit results, project dashboards, SEO intelligence, and
-AEO tracking are all behind authentication and are NOT indexed.
+The workspace at {base}/workspace/ is behind authentication and individual
+user data is never publicly indexed. However, the following modules are
+core to the product and are described here for AI-engine comprehension.
+
+### AI Visibility (AEO) module — {base}/workspace/aeo/
+Shows a brand's citation presence across ChatGPT, Gemini, and Perplexity.
+Displays an AI Visibility Score (0–100), an engine-by-engine breakdown of
+citation rates, a citation readiness checklist, and prioritised fix recommendations.
+Reruns update the score so progress is trackable over time.
+
+### Prompt Tracker — {base}/workspace/prompts/
+Users define the buyer questions or topics relevant to their market. The platform
+queries AI engines with each prompt and records which brands get cited. Displays
+a per-prompt citation table, citation share trends over 7/30/90 days, and a
+competitor overview. The primary tool for understanding share-of-voice in AI answers.
+
+### AI Share of Voice — {base}/workspace/share-of-voice/
+Cross-prompt aggregate view showing the user's citation share versus named competitors
+for all tracked prompts. Broken down by AI engine (ChatGPT, Gemini, Perplexity) and
+by time window. Shows win/loss ratios and identifies which prompts need attention.
+
+### SEO Intelligence workspace — {base}/workspace/seo/
+Benchmark-based SEO analysis comparing the user's site against real competitors
+across technical health, content coverage, performance, and backlinks. Generates
+action packs — ordered execution plans with the expected impact of each fix.
+Includes a shared stakeholder report export.
+
+### Content workspace — {base}/workspace/content/
+AI-assisted content generation from SEO briefs. Produces drafts aligned with
+target entities, search intent, and answer-readiness requirements. Supports
+CMS publishing integrations and maintains an editorial queue.
+
+### Agency Dashboard — {base}/workspace/agency/
+Multi-client overview for agencies. Displays each client site as a card with:
+overall score, most at-risk category badge, score delta since last audit (colour-coded
+green/red/neutral), last-audit date with a stale-audit warning, and a one-click
+"Run Audit" CTA. Designed for a morning status check across 3–25 client sites.
+
+### Workspace Dashboard — {base}/workspace/dashboard/
+Per-project command centre showing credits remaining, audit history, score timeline,
+quick-launch buttons for each analysis module, and the getting-started checklist
+for first-time users.
 
 ## Contact
 

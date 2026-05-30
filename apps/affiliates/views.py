@@ -97,6 +97,8 @@ class PartnerInquiryView(CreateView):
             "Join the invite-only VRT SPACE partner program. Earn recurring "
             "commission referring agencies and brands to our AI visibility platform.",
         )
+        context.setdefault("canonical_url", self.request.build_absolute_uri(self.request.path))
+        context.setdefault("meta_robots", "index,follow")
         return context
 
     def form_valid(self, form):
@@ -117,6 +119,7 @@ class PartnerInquiryThanksView(TemplateView):
         context = super().get_context_data(**kwargs)
         context.update(_partner_program_context())
         context.setdefault("page_title", "Application received | VRT SPACE AGENCY")
+        context.setdefault("meta_robots", "noindex,nofollow")
         return context
 
 

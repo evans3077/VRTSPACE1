@@ -729,3 +729,30 @@ HELP_CATEGORIES = [
         ],
     },
 ]
+
+HELP_PAGE_FAQS = [
+    {
+        "question": "What does the AI Visibility module show?",
+        "answer": "The AI Visibility module scores how often ChatGPT, Gemini, and Perplexity cite your brand for your tracked queries, and surfaces specific fixes to improve that citation rate.",
+    },
+    {
+        "question": "How does the Prompt Tracker work?",
+        "answer": "You add the buyer questions or topics relevant to your market. The platform runs each prompt through AI engines and records which brands get cited, giving you a citation share timeline you can track over weeks and months.",
+    },
+    {
+        "question": "What does the SEO workspace do that a standard audit tool doesn't?",
+        "answer": "The SEO workspace benchmarks your site against real competitors across technical, content, and performance dimensions, then generates prioritised action packs — not just a list of issues, but an ordered plan with the expected impact of each fix.",
+    },
+    {
+        "question": "What is Share of Voice in AI search?",
+        "answer": "Share of Voice measures what percentage of AI-generated answers for your tracked queries mention your brand compared with competitors. It updates automatically each time prompts are re-checked.",
+    },
+    {
+        "question": "How do credits work?",
+        "answer": "Each action — audit, AEO scan, content draft — consumes credits from your monthly allowance. You receive in-app and email alerts at 50%, 75%, and 90% usage. Credits can be topped up without upgrading your plan.",
+    },
+    {
+        "question": "Can I manage multiple client websites in one account?",
+        "answer": "Yes. The Agency Dashboard gives a bird's-eye view of every client site with overall score, most at-risk category, and score delta since the last audit — all on one screen.",
+    },
+]
