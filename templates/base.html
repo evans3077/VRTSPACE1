@@ -2462,6 +2462,77 @@
     }
     body:not(.shell-light) .tip-body { color: #cbd5e1; }
     body:not(.shell-light) .tip-calc { color: #94a3b8; }
+
+    /* Command palette */
+    .cp-overlay {
+        position: fixed; inset: 0; z-index: 9990;
+        background: rgba(2,6,23,0.6);
+        display: flex; align-items: flex-start; justify-content: center;
+        padding-top: clamp(4rem, 12vh, 8rem);
+        backdrop-filter: blur(4px);
+    }
+    .cp-overlay[hidden] { display: none; }
+    .cp-modal {
+        width: min(640px, calc(100vw - 2rem));
+        background: #fff; border-radius: 16px;
+        box-shadow: 0 32px 80px -16px rgba(0,0,0,0.35);
+        overflow: hidden;
+        animation: cp-in 0.14s ease;
+    }
+    @keyframes cp-in { from { opacity:0; transform:translateY(-8px) scale(0.98); } to { opacity:1; transform:none; } }
+    .cp-input-wrap {
+        display: flex; align-items: center; gap: 0.6rem;
+        padding: 0.85rem 1rem; border-bottom: 1px solid rgba(15,23,42,0.08);
+    }
+    .cp-input-icon { color: #94a3b8; font-size: 0.9rem; flex-shrink: 0; }
+    .cp-input {
+        flex: 1; border: none; outline: none; font-size: 1rem;
+        color: #0f172a; background: transparent;
+    }
+    .cp-input::placeholder { color: #94a3b8; }
+    .cp-esc-hint {
+        font-size: 0.68rem; color: #94a3b8; background: #f1f5f9;
+        border: 1px solid #e2e8f0; border-radius: 5px;
+        padding: 0.15rem 0.4rem; font-family: monospace; flex-shrink: 0;
+    }
+    .cp-listbox {
+        list-style: none; margin: 0; padding: 0.35rem 0;
+        max-height: 380px; overflow-y: auto;
+    }
+    .cp-group-label {
+        font-size: 0.63rem; font-weight: 800; letter-spacing: 0.08em;
+        text-transform: uppercase; font-family: monospace;
+        color: #94a3b8; padding: 0.55rem 1rem 0.2rem;
+    }
+    .cp-item {
+        display: flex; align-items: center; gap: 0.65rem;
+        padding: 0.55rem 1rem; cursor: pointer;
+        color: #334155; font-size: 0.9rem;
+        transition: background 0.08s;
+    }
+    .cp-item[aria-selected="true"] { background: rgba(2,132,199,0.08); color: #0284c7; }
+    .cp-item:hover { background: #f8fafc; }
+    .cp-item-icon {
+        width: 28px; height: 28px; border-radius: 8px;
+        background: rgba(2,132,199,0.08); color: #0284c7;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 0.78rem; flex-shrink: 0;
+    }
+    .cp-item[aria-selected="true"] .cp-item-icon { background: rgba(2,132,199,0.15); }
+    .cp-item-label { flex: 1; font-weight: 500; }
+    .cp-item-cat { font-size: 0.72rem; color: #94a3b8; font-family: monospace; }
+    .cp-empty { text-align: center; padding: 2rem; color: #94a3b8; font-size: 0.88rem; }
+    .cp-footer {
+        display: flex; gap: 1.25rem; padding: 0.5rem 1rem;
+        border-top: 1px solid rgba(15,23,42,0.06);
+        font-size: 0.72rem; color: #94a3b8;
+    }
+    .cp-footer kbd {
+        background: #f1f5f9; border: 1px solid #e2e8f0;
+        border-radius: 4px; padding: 0.1rem 0.3rem;
+        font-family: monospace; font-size: 0.68rem; color: #475569; margin-right: 0.2rem;
+    }
+    @media (prefers-reduced-motion: reduce) { .cp-modal { animation: none; } }
     </style>
 
     <div id="vrt-tip-popover" class="vrt-tip-popover" role="tooltip" hidden>
@@ -2570,6 +2641,7 @@
     </script>
 
     {% include "includes/help_launcher.html" %}
+    {% include "includes/command_palette.html" %}
 
     <style>
     /* Help launcher */
@@ -2748,6 +2820,189 @@
             }
             resultsEl.hidden = false;
             defaultEl.hidden = true;
+        });
+    })();
+    </script>
+
+    <script>
+    (function () {
+        "use strict";
+        var LS_RECENT = "vrt_cp_recent";
+        var overlay  = document.getElementById("cp-overlay");
+        var modal    = document.getElementById("cp-modal");
+        var input    = document.getElementById("cp-input");
+        var listbox  = document.getElementById("cp-listbox");
+        if (!overlay || !input) return;
+
+        var ITEMS = [
+            {group:"Modules", label:"Overview",        icon:"fa-solid fa-house",          url:"/workspace/"},
+            {group:"Modules", label:"AI Visibility",   icon:"fa-solid fa-robot",          url:"/workspace/aeo/"},
+            {group:"Modules", label:"Prompts",         icon:"fa-solid fa-bullseye",       url:"/workspace/prompts/"},
+            {group:"Modules", label:"Share of Voice",  icon:"fa-solid fa-chart-pie",      url:"/workspace/share-of-voice/"},
+            {group:"Modules", label:"SEO Audit",       icon:"fa-solid fa-magnifying-glass",url:"/workspace/seo/"},
+            {group:"Modules", label:"Content",         icon:"fa-solid fa-file-pen",       url:"/workspace/content/"},
+            {group:"Modules", label:"All Clients",     icon:"fa-solid fa-briefcase",      url:"/workspace/agency/"},
+            {group:"Modules", label:"Team",            icon:"fa-solid fa-users",          url:"/workspace/team/"},
+            {group:"Modules", label:"Billing",         icon:"fa-solid fa-credit-card",    url:"/workspace/account/"},
+            {group:"Actions", label:"Run audit",       icon:"fa-solid fa-play",           url:"/workspace/#start-audit"},
+            {group:"Actions", label:"Add prompt",      icon:"fa-solid fa-plus",           url:"/workspace/prompts/"},
+            {group:"Actions", label:"New project",     icon:"fa-solid fa-folder-plus",    url:"/workspace/#new-project"},
+            {group:"Actions", label:"View plans",      icon:"fa-solid fa-layer-group",    url:"/packages/"},
+            {group:"Help",    label:"How VRT Works",   icon:"fa-solid fa-lightbulb",      url:"/how-it-works/"},
+            {group:"Help",    label:"Help Center",     icon:"fa-solid fa-book-open",      url:"/help/"},
+            {group:"Help",    label:"Glossary",        icon:"fa-solid fa-spell-check",    url:"/glossary/"},
+            {group:"Glossary",label:"AI Visibility Score (AVS)", icon:"fa-solid fa-circle-info", url:"/glossary/#avs"},
+            {group:"Glossary",label:"Answer Engine Optimisation (AEO)", icon:"fa-solid fa-circle-info", url:"/glossary/#aeo"},
+            {group:"Glossary",label:"Citation",        icon:"fa-solid fa-circle-info",    url:"/glossary/#citation"},
+            {group:"Glossary",label:"Share of Voice",  icon:"fa-solid fa-circle-info",    url:"/glossary/#share-of-voice"},
+            {group:"Glossary",label:"Prompt / Topic",  icon:"fa-solid fa-circle-info",    url:"/glossary/#prompt"},
+            {group:"Glossary",label:"Core Web Vitals", icon:"fa-solid fa-circle-info",    url:"/glossary/#core-web-vitals"},
+            {group:"Glossary",label:"Technical health",icon:"fa-solid fa-circle-info",    url:"/glossary/#technical-health"},
+            {group:"Glossary",label:"Credits",         icon:"fa-solid fa-circle-info",    url:"/glossary/#credits"},
+        ];
+
+        var activeIdx = -1;
+        var rendered  = [];
+
+        function getRecent() {
+            try { return JSON.parse(localStorage.getItem(LS_RECENT) || "[]"); }
+            catch(e) { return []; }
+        }
+        function saveRecent(url) {
+            var arr = getRecent().filter(function(u){ return u !== url; });
+            arr.unshift(url);
+            localStorage.setItem(LS_RECENT, JSON.stringify(arr.slice(0, 5)));
+        }
+
+        function score(item, q) {
+            var l = item.label.toLowerCase();
+            if (l === q) return 3;
+            if (l.startsWith(q)) return 2;
+            if (l.indexOf(q) !== -1) return 1;
+            return 0;
+        }
+
+        function render(q) {
+            listbox.innerHTML = "";
+            rendered = [];
+            activeIdx = -1;
+
+            if (!q) {
+                var recent = getRecent();
+                if (recent.length) {
+                    addGroupLabel("Recent");
+                    recent.forEach(function(url) {
+                        var item = ITEMS.find(function(it){ return it.url === url; });
+                        if (item) addItem(item);
+                    });
+                }
+                ["Modules","Actions","Help"].forEach(function(group) {
+                    addGroupLabel(group);
+                    ITEMS.filter(function(i){ return i.group === group; }).forEach(addItem);
+                });
+            } else {
+                var groups = {};
+                ITEMS.forEach(function(item) {
+                    var s = score(item, q);
+                    if (s > 0) {
+                        if (!groups[item.group]) groups[item.group] = [];
+                        groups[item.group].push({item:item, score:s});
+                    }
+                });
+                var total = 0;
+                ["Modules","Actions","Help","Glossary"].forEach(function(g) {
+                    if (!groups[g] || !groups[g].length) return;
+                    addGroupLabel(g);
+                    groups[g].sort(function(a,b){ return b.score - a.score; })
+                              .forEach(function(r){ addItem(r.item); total++; });
+                });
+                if (total === 0) {
+                    var p = document.createElement("p");
+                    p.className = "cp-empty";
+                    p.textContent = "No results for "" + q + """;
+                    listbox.appendChild(p);
+                }
+            }
+
+            if (rendered.length > 0) setActive(0);
+        }
+
+        function addGroupLabel(text) {
+            var li = document.createElement("li");
+            li.className = "cp-group-label";
+            li.textContent = text;
+            li.setAttribute("role", "presentation");
+            listbox.appendChild(li);
+        }
+
+        function addItem(item) {
+            var li = document.createElement("li");
+            li.className = "cp-item";
+            li.setAttribute("role", "option");
+            li.setAttribute("aria-selected", "false");
+            li.dataset.url = item.url;
+            li.innerHTML =
+                '<span class="cp-item-icon"><i class="' + item.icon + '" aria-hidden="true"></i></span>' +
+                '<span class="cp-item-label">' + item.label + '</span>' +
+                '<span class="cp-item-cat">' + item.group + '</span>';
+            li.addEventListener("click", function() { navigate(item.url); });
+            listbox.appendChild(li);
+            rendered.push(li);
+        }
+
+        function setActive(i) {
+            rendered.forEach(function(el){ el.setAttribute("aria-selected","false"); });
+            if (i < 0 || i >= rendered.length) { activeIdx = -1; return; }
+            activeIdx = i;
+            rendered[i].setAttribute("aria-selected","true");
+            rendered[i].scrollIntoView({ block:"nearest" });
+        }
+
+        function navigate(url) {
+            saveRecent(url);
+            close();
+            window.location.href = url;
+        }
+
+        var isOpen = false;
+
+        function open() {
+            isOpen = true;
+            overlay.hidden = false;
+            modal.setAttribute("aria-expanded","true");
+            input.value = "";
+            render("");
+            input.focus();
+        }
+
+        function close() {
+            isOpen = false;
+            overlay.hidden = true;
+            modal.setAttribute("aria-expanded","false");
+        }
+
+        document.addEventListener("keydown", function(e) {
+            var tag = document.activeElement.tagName;
+            if ((e.metaKey || e.ctrlKey) && e.key === "k") {
+                e.preventDefault();
+                isOpen ? close() : open();
+                return;
+            }
+            if (!isOpen) return;
+            if (e.key === "Escape") { close(); return; }
+            if (e.key === "ArrowDown") { e.preventDefault(); setActive(Math.min(activeIdx + 1, rendered.length - 1)); return; }
+            if (e.key === "ArrowUp")   { e.preventDefault(); setActive(Math.max(activeIdx - 1, 0)); return; }
+            if (e.key === "Enter") {
+                e.preventDefault();
+                if (activeIdx >= 0 && rendered[activeIdx]) navigate(rendered[activeIdx].dataset.url);
+                return;
+            }
+        });
+
+        input.addEventListener("input", function() { render(input.value.trim().toLowerCase()); });
+
+        overlay.addEventListener("click", function(e) {
+            if (!modal.contains(e.target)) close();
         });
     })();
     </script>

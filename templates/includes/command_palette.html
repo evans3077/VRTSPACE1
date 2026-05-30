@@ -1,0 +1,18 @@
+<div id="cp-overlay" class="cp-overlay" hidden>
+    <div id="cp-modal" class="cp-modal" role="combobox" aria-expanded="false" aria-haspopup="listbox" aria-owns="cp-listbox">
+        <div class="cp-input-wrap">
+            <i class="fa-solid fa-magnifying-glass cp-input-icon" aria-hidden="true"></i>
+            <input id="cp-input" class="cp-input" type="text"
+                   placeholder="Go to a module, search help, or run an action…"
+                   autocomplete="off" autocorrect="off" spellcheck="false"
+                   aria-label="Command palette" aria-autocomplete="list" aria-controls="cp-listbox">
+            <kbd class="cp-esc-hint">Esc</kbd>
+        </div>
+        <ul id="cp-listbox" class="cp-listbox" role="listbox" aria-label="Results"></ul>
+        <div class="cp-footer">
+            <span><kbd>↑</kbd><kbd>↓</kbd> navigate</span>
+            <span><kbd>↵</kbd> open</span>
+            <span><kbd>Esc</kbd> close</span>
+        </div>
+    </div>
+</div>
