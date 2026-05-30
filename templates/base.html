@@ -2370,8 +2370,32 @@
     })();
     </script>
 
-    {# ── Info-tip popover system ──────────────────────────────────────────── #}
+    {# ── Concept primer + Info-tip global styles & behaviour ─────────────── #}
     <style>
+    /* Concept primer */
+    .cp-card {
+        display: flex; align-items: stretch;
+        background: var(--bg-glass, rgba(255,255,255,0.96));
+        border: 1px solid var(--border-glass, rgba(15,23,42,0.08));
+        border-radius: var(--radius-md, 14px);
+        overflow: hidden; margin-bottom: 1.25rem;
+        transition: opacity 0.2s;
+    }
+    .cp-card[hidden] { display: none; }
+    .cp-rail { width: 4px; flex-shrink: 0; background: var(--brand-primary, #0284c7); }
+    .cp-body { flex: 1; padding: 0.75rem 1rem; display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
+    .cp-head { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+    .cp-eyebrow { font-size: 0.65rem; font-weight: 800; letter-spacing: 0.06em; text-transform: uppercase; font-family: monospace; color: var(--brand-primary, #0284c7); }
+    .cp-term { font-size: 0.88rem; color: var(--text-primary, #0f172a); }
+    .cp-def { font-size: 0.82rem; color: var(--text-secondary, #334155); line-height: 1.45; margin: 0; }
+    .cp-why { font-size: 0.78rem; color: var(--text-muted, #64748b); margin: 0; }
+    .cp-why-label { font-weight: 700; color: var(--text-secondary, #475569); margin-right: 0.25em; }
+    .cp-link { font-size: 0.78rem; font-weight: 600; color: var(--brand-primary, #0284c7); text-decoration: none; align-self: flex-start; margin-top: 0.1rem; }
+    .cp-link:hover { text-decoration: underline; }
+    .cp-dismiss { flex-shrink: 0; width: 2.5rem; background: transparent; border: none; color: var(--text-muted, #94a3b8); cursor: pointer; font-size: 0.85rem; padding: 0.7rem 0 0; display: flex; align-items: flex-start; justify-content: center; transition: color 0.15s; }
+    .cp-dismiss:hover { color: var(--text-primary, #0f172a); }
+
+    /* Info-tip popover */
     .vrt-infotip-wrap { display: inline-flex; align-items: center; vertical-align: middle; margin-left: 0.3em; }
     .vrt-infotip {
         display: inline-flex; align-items: center; justify-content: center;
@@ -2502,6 +2526,22 @@
 
         window.addEventListener("scroll", function () { if (current) position(current); }, { passive: true });
         window.addEventListener("resize", function () { if (current) position(current); }, { passive: true });
+    })();
+    </script>
+
+    <script>
+    (function () {
+        var KEY_PREFIX = "vrt_primer_dismissed_";
+        document.querySelectorAll(".cp-card").forEach(function (card) {
+            var id = card.dataset.primerId;
+            if (!id) return;
+            if (localStorage.getItem(KEY_PREFIX + id) === "1") { card.hidden = true; return; }
+            card.querySelector(".cp-dismiss").addEventListener("click", function () {
+                localStorage.setItem(KEY_PREFIX + id, "1");
+                card.style.opacity = "0";
+                setTimeout(function () { card.hidden = true; }, 220);
+            });
+        });
     })();
     </script>
 </body>
