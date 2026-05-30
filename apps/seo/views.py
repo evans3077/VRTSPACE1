@@ -451,6 +451,7 @@ class WorkspaceSEOView(LoginRequiredMixin, View):
             "og_type": "website",
             "twitter_card": "summary",
             "shell_theme": "shell-light",
+            "help_context": "seo",
             "schema_json": json.dumps(
                 {
                     "@context": "https://schema.org",

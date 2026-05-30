@@ -636,3 +636,96 @@ for group in SERVICE_GROUPS:
 
 
 SERVICE_PAGE_LIST = list(SERVICE_PAGE_LOOKUP.values())
+
+
+# ── Help Center ────────────────────────────────────────────────────────────
+
+HELP_POPULAR = [
+    {
+        "title": "How VRT Works",
+        "icon": "fa-solid fa-lightbulb",
+        "url": "/how-it-works/",
+        "desc": "The 60-second mental model for the whole platform.",
+    },
+    {
+        "title": "Run your first audit",
+        "icon": "fa-solid fa-play",
+        "url": "/workspace/",
+        "desc": "Set up your project and get your first health score.",
+    },
+    {
+        "title": "AI Visibility Score explained",
+        "icon": "fa-solid fa-robot",
+        "url": "/glossary/#avs",
+        "desc": "What the number means and how it's calculated.",
+    },
+    {
+        "title": "Share of Voice",
+        "icon": "fa-solid fa-chart-pie",
+        "url": "/glossary/#share-of-voice",
+        "desc": "Your slice of AI citations compared to competitors.",
+    },
+]
+
+HELP_CATEGORIES = [
+    {
+        "icon": "fa-solid fa-rocket",
+        "name": "Getting started",
+        "slug": "getting-started",
+        "articles": [
+            {"title": "How VRT works in 60 seconds", "url": "/how-it-works/"},
+            {"title": "Create your first project and run an audit", "url": "/workspace/"},
+            {"title": "Understand your overall health score", "url": "/glossary/#technical-health"},
+        ],
+    },
+    {
+        "icon": "fa-solid fa-robot",
+        "name": "AI Visibility & AEO",
+        "slug": "ai-visibility",
+        "articles": [
+            {"title": "What is AI Visibility and why it matters", "url": "/glossary/#ai-visibility"},
+            {"title": "AI Visibility Score (AVS) — how it's calculated", "url": "/glossary/#avs"},
+            {"title": "Track prompts and monitor citations", "url": "/workspace/prompts/"},
+        ],
+    },
+    {
+        "icon": "fa-solid fa-chart-pie",
+        "name": "Share of Voice",
+        "slug": "share-of-voice",
+        "articles": [
+            {"title": "What Share of Voice means", "url": "/glossary/#share-of-voice"},
+            {"title": "Add competitors to benchmark against", "url": "/workspace/prompts/"},
+            {"title": "Read the Share of Voice dashboard", "url": "/workspace/share-of-voice/"},
+        ],
+    },
+    {
+        "icon": "fa-solid fa-magnifying-glass",
+        "name": "SEO & Technical",
+        "slug": "seo-technical",
+        "articles": [
+            {"title": "Your audit score and what each category means", "url": "/glossary/#technical-health"},
+            {"title": "Core Web Vitals — LCP, CLS, INP", "url": "/glossary/#core-web-vitals"},
+            {"title": "Crawlability and indexation basics", "url": "/glossary/#crawlability"},
+        ],
+    },
+    {
+        "icon": "fa-solid fa-file-pen",
+        "name": "Content & Publishing",
+        "slug": "content",
+        "articles": [
+            {"title": "Generate content from an SEO brief", "url": "/workspace/content/"},
+            {"title": "What is a topic cluster?", "url": "/glossary/#topic-cluster"},
+            {"title": "Connect your CMS for direct publishing", "url": "/workspace/content/credentials/"},
+        ],
+    },
+    {
+        "icon": "fa-solid fa-credit-card",
+        "name": "Billing & Credits",
+        "slug": "billing",
+        "articles": [
+            {"title": "How credits work and what they cost", "url": "/glossary/#credits"},
+            {"title": "Compare plans and upgrade", "url": "/packages/"},
+            {"title": "Manage your subscription and invoices", "url": "/workspace/account/#billing"},
+        ],
+    },
+]

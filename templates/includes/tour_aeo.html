@@ -1,0 +1,220 @@
+<div id="tour-scrim" class="tour-scrim" aria-hidden="true" hidden></div>
+<div id="tour-tooltip" class="tour-tooltip" role="dialog" aria-modal="true" aria-label="AI Visibility tour" hidden>
+    <p class="tour-step-label" id="tour-step-label"></p>
+    <p class="tour-body" id="tour-body"></p>
+    <div class="tour-dots" id="tour-dots" aria-hidden="true"></div>
+    <div class="tour-actions">
+        <button class="tour-skip" id="tour-skip" type="button">Skip tour</button>
+        <div class="tour-nav">
+            <button class="tour-back" id="tour-back" type="button">Back</button>
+            <button class="tour-next" id="tour-next" type="button">Next</button>
+        </div>
+    </div>
+</div>
+
+<style>
+.tour-scrim {
+    position: fixed; inset: 0; z-index: 980;
+    background: rgba(2,6,23,0.72);
+    pointer-events: all;
+    transition: opacity 0.2s;
+}
+.tour-scrim[hidden] { display: none; }
+.tour-highlight {
+    position: relative !important;
+    z-index: 981 !important;
+    border-radius: var(--radius-md, 14px);
+    outline: 2px solid var(--brand-primary, #38bdf8);
+    outline-offset: 4px;
+    scroll-margin-top: 80px;
+}
+.tour-tooltip {
+    position: fixed; z-index: 982;
+    background: #1e293b;
+    border: 1px solid rgba(255,255,255,0.12);
+    border-radius: 14px;
+    box-shadow: 0 24px 64px -16px rgba(0,0,0,0.7);
+    padding: 1.25rem 1.4rem 1rem;
+    width: 300px;
+    transition: top 0.22s ease, left 0.22s ease, opacity 0.15s;
+}
+.tour-tooltip[hidden] { display: none; }
+.tour-step-label {
+    font-size: 0.65rem; font-weight: 800; letter-spacing: 0.07em;
+    text-transform: uppercase; font-family: monospace;
+    color: var(--brand-primary, #38bdf8); margin: 0 0 0.4rem;
+}
+.tour-body {
+    font-size: 0.9rem; color: #cbd5e1; line-height: 1.5;
+    margin: 0 0 1rem;
+}
+.tour-dots {
+    display: flex; gap: 0.35rem; justify-content: center;
+    margin-bottom: 1rem;
+}
+.tour-dot {
+    width: 6px; height: 6px; border-radius: 50%;
+    background: rgba(255,255,255,0.2);
+    transition: background 0.15s, width 0.15s;
+}
+.tour-dot--active {
+    background: var(--brand-primary, #38bdf8);
+    width: 18px; border-radius: 3px;
+}
+.tour-actions {
+    display: flex; justify-content: space-between; align-items: center;
+}
+.tour-skip {
+    background: transparent; border: none; color: #64748b;
+    font-size: 0.78rem; cursor: pointer; padding: 0;
+}
+.tour-skip:hover { color: #94a3b8; }
+.tour-nav { display: flex; gap: 0.5rem; }
+.tour-back {
+    background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+    color: #94a3b8; font-size: 0.82rem; font-weight: 600;
+    padding: 0.45rem 0.9rem; border-radius: 8px; cursor: pointer;
+}
+.tour-back:hover { background: rgba(255,255,255,0.1); }
+.tour-next {
+    background: var(--brand-primary, #38bdf8); border: none;
+    color: #0f172a; font-size: 0.82rem; font-weight: 700;
+    padding: 0.45rem 0.9rem; border-radius: 8px; cursor: pointer;
+}
+.tour-next:hover { filter: brightness(1.1); }
+@media (prefers-reduced-motion: reduce) {
+    .tour-scrim, .tour-tooltip, .tour-highlight, .tour-dot { transition: none !important; }
+}
+</style>
+
+<script>
+(function () {
+    "use strict";
+    var LS_KEY = "vrt_aeo_tour_seen";
+    if (localStorage.getItem(LS_KEY) === "1") return;
+
+    var STEPS = [
+        {
+            target: "aeo-scores",
+            label: "Step 1 of 4 — AI Visibility Score",
+            body: "These rings are your score — 0 to 100 — showing how often AI engines cite your brand across your tracked topics. Higher is better."
+        },
+        {
+            target: "aeo-llm-visibility",
+            label: "Step 2 of 4 — AI Engine Breakdown",
+            body: "Each row is one engine: ChatGPT, Gemini, Perplexity. Green means cited; red means invisible. Start fixing the red ones first."
+        },
+        {
+            target: "aeo-readiness",
+            label: "Step 3 of 4 — Citation Readiness",
+            body: "This shows how close your site is to being cited. Each bar is one engine — it tells you exactly what's blocking you."
+        },
+        {
+            target: "aeo-recommendations",
+            label: "Step 4 of 4 — Your Fixes",
+            body: "These are the prioritised actions that will raise your score the most. Work through them top to bottom, then rerun the analysis."
+        }
+    ];
+
+    var step = 0;
+    var scrim    = document.getElementById("tour-scrim");
+    var tooltip  = document.getElementById("tour-tooltip");
+    var labelEl  = document.getElementById("tour-step-label");
+    var bodyEl   = document.getElementById("tour-body");
+    var dotsEl   = document.getElementById("tour-dots");
+    var skipBtn  = document.getElementById("tour-skip");
+    var backBtn  = document.getElementById("tour-back");
+    var nextBtn  = document.getElementById("tour-next");
+
+    if (!scrim || !tooltip) return;
+
+    // Only start if all targets exist in the DOM.
+    var allTargets = STEPS.every(function (s) { return document.getElementById(s.target); });
+    if (!allTargets) return;
+
+    function buildDots() {
+        dotsEl.innerHTML = "";
+        STEPS.forEach(function (_, i) {
+            var d = document.createElement("span");
+            d.className = "tour-dot" + (i === step ? " tour-dot--active" : "");
+            dotsEl.appendChild(d);
+        });
+    }
+
+    function position(el) {
+        var r = el.getBoundingClientRect();
+        var tw = 300, gap = 16;
+        var vw = window.innerWidth, vh = window.innerHeight;
+        var top, left;
+        // Prefer below; fall back to above.
+        if (r.bottom + gap + 200 < vh) {
+            top = r.bottom + gap;
+        } else {
+            top = Math.max(8, r.top - 200 - gap);
+        }
+        left = r.left + r.width / 2 - tw / 2;
+        left = Math.max(12, Math.min(left, vw - tw - 12));
+        tooltip.style.top  = top  + "px";
+        tooltip.style.left = left + "px";
+    }
+
+    function show(i) {
+        step = i;
+        var s = STEPS[step];
+        var el = document.getElementById(s.target);
+
+        // Remove previous highlight.
+        document.querySelectorAll(".tour-highlight").forEach(function (e) {
+            e.classList.remove("tour-highlight");
+        });
+        el.classList.add("tour-highlight");
+        el.scrollIntoView({ behavior: "smooth", block: "center" });
+
+        labelEl.textContent = s.label;
+        bodyEl.textContent  = s.body;
+        buildDots();
+
+        backBtn.hidden  = (step === 0);
+        nextBtn.textContent = (step === STEPS.length - 1) ? "Done" : "Next";
+
+        scrim.hidden   = false;
+        tooltip.hidden = false;
+
+        // Reposition after scroll settles.
+        setTimeout(function () { position(el); }, 320);
+    }
+
+    function end() {
+        localStorage.setItem(LS_KEY, "1");
+        document.querySelectorAll(".tour-highlight").forEach(function (e) {
+            e.classList.remove("tour-highlight");
+        });
+        scrim.hidden   = true;
+        tooltip.hidden = true;
+    }
+
+    skipBtn.addEventListener("click", end);
+    backBtn.addEventListener("click", function () { if (step > 0) show(step - 1); });
+    nextBtn.addEventListener("click", function () {
+        if (step < STEPS.length - 1) { show(step + 1); } else { end(); }
+    });
+    scrim.addEventListener("click", end);
+    document.addEventListener("keydown", function (e) {
+        if (tooltip.hidden) return;
+        if (e.key === "Escape") { end(); }
+        if (e.key === "ArrowRight" || e.key === "Enter") {
+            if (step < STEPS.length - 1) { show(step + 1); } else { end(); }
+        }
+        if (e.key === "ArrowLeft" && step > 0) { show(step - 1); }
+    });
+
+    // Kick off on next frame so the page has painted.
+    requestAnimationFrame(function () { show(0); });
+
+    // Expose replay hook for the help launcher.
+    window.vrtReplayAeoTour = function () {
+        localStorage.removeItem(LS_KEY);
+        show(0);
+    };
+})();
+</script>

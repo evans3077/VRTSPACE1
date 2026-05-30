@@ -1,0 +1,32 @@
+<button id="hl-trigger" class="hl-trigger" aria-label="Open help" aria-expanded="false" aria-controls="hl-panel" type="button">
+    <i class="fa-solid fa-circle-question" aria-hidden="true"></i>
+</button>
+
+<div id="hl-panel" class="hl-panel" role="dialog" aria-label="Help" aria-modal="false" hidden>
+    <div class="hl-panel-head">
+        <span class="hl-panel-title">Help</span>
+        <button id="hl-close" class="hl-close" aria-label="Close help" type="button">
+            <i class="fa-solid fa-xmark"></i>
+        </button>
+    </div>
+    <div class="hl-search-wrap">
+        <i class="fa-solid fa-magnifying-glass hl-search-icon" aria-hidden="true"></i>
+        <input id="hl-search" class="hl-search" type="search" placeholder="Search help…" aria-label="Search help articles" autocomplete="off">
+    </div>
+    <div id="hl-results" class="hl-results" hidden></div>
+    <div id="hl-default">
+        <div id="hl-context-links" class="hl-section" hidden>
+            <p class="hl-section-label">On this page</p>
+            <ul class="hl-link-list" id="hl-context-list"></ul>
+        </div>
+        <div class="hl-section">
+            <p class="hl-section-label">Quick links</p>
+            <ul class="hl-link-list">
+                <li><a href="/how-it-works/"><i class="fa-solid fa-lightbulb"></i> How VRT Works</a></li>
+                <li><a href="/help/"><i class="fa-solid fa-book-open"></i> Help Center</a></li>
+                <li><a href="/glossary/"><i class="fa-solid fa-spell-check"></i> Glossary</a></li>
+                <li id="hl-replay-tour" hidden><a href="#" id="hl-replay-link"><i class="fa-solid fa-rotate-right"></i> Replay tour</a></li>
+            </ul>
+        </div>
+    </div>
+</div>

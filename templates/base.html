@@ -2036,7 +2036,7 @@
     {% endif %}
     {% block extra_head %}{% endblock %}
 </head>
-<body class="{{ shell_theme|default:'' }}{% if is_workspace_shell %} is-workspace{% endif %}">
+<body class="{{ shell_theme|default:'' }}{% if is_workspace_shell %} is-workspace{% endif %}"{% if help_context %} data-help-context="{{ help_context }}"{% endif %}>
     <header class="site-header">
         <div class="container nav-shell">
             <a class="brand" href="/">VRT SPACE AGENCY</a>
@@ -2155,6 +2155,7 @@
                     <li><a href="{% url 'content:blog-index' %}"><i class="fa-solid fa-newspaper"></i>Blog</a></li>
                     <li><a href="{% url 'case_studies:case-study-index' %}"><i class="fa-solid fa-star"></i>Case Studies</a></li>
                     <li><a href="{% url 'core:glossary' %}"><i class="fa-solid fa-book"></i>Glossary</a></li>
+                    <li><a href="{% url 'core:help-center' %}"><i class="fa-solid fa-circle-question"></i>Help Center</a></li>
                 </ul>
             </div>
 
@@ -2564,6 +2565,189 @@
                 card.style.opacity = "0";
                 setTimeout(function () { card.hidden = true; }, 220);
             });
+        });
+    })();
+    </script>
+
+    {% include "includes/help_launcher.html" %}
+
+    <style>
+    /* Help launcher */
+    .hl-trigger {
+        position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 900;
+        width: 48px; height: 48px; border-radius: 50%;
+        background: var(--brand-primary, #0284c7);
+        border: none; color: #fff; font-size: 1.2rem; cursor: pointer;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 4px 16px rgba(2,132,199,0.4);
+        transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .hl-trigger:hover { transform: scale(1.08); box-shadow: 0 6px 24px rgba(2,132,199,0.5); }
+    .hl-trigger:focus-visible { outline: 2px solid #fff; outline-offset: 3px; }
+    .hl-panel {
+        position: fixed; bottom: 5rem; right: 1.5rem; z-index: 901;
+        width: 300px; background: #fff; color: #0f172a;
+        border: 1px solid rgba(15,23,42,0.1);
+        border-radius: 16px;
+        box-shadow: 0 20px 60px -12px rgba(0,0,0,0.25);
+        overflow: hidden;
+        animation: hl-in 0.15s ease;
+    }
+    .hl-panel[hidden] { display: none; }
+    @keyframes hl-in { from { opacity:0; transform:translateY(8px); } to { opacity:1; transform:none; } }
+    .hl-panel-head { display: flex; justify-content: space-between; align-items: center; padding: 0.9rem 1rem 0.6rem; border-bottom: 1px solid rgba(15,23,42,0.08); }
+    .hl-panel-title { font-size: 0.82rem; font-weight: 800; color: #0f172a; text-transform: uppercase; letter-spacing: 0.06em; }
+    .hl-close { background: transparent; border: none; color: #94a3b8; cursor: pointer; font-size: 0.9rem; padding: 0; display: flex; }
+    .hl-close:hover { color: #0f172a; }
+    .hl-search-wrap { position: relative; padding: 0.6rem 0.75rem; border-bottom: 1px solid rgba(15,23,42,0.06); }
+    .hl-search-icon { position: absolute; left: 1.35rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.8rem; pointer-events: none; }
+    .hl-search { width: 100%; padding: 0.45rem 0.6rem 0.45rem 2.1rem; border: 1px solid rgba(15,23,42,0.1); border-radius: 8px; font-size: 0.83rem; outline: none; background: #f8fafc; color: #0f172a; }
+    .hl-search:focus { border-color: var(--brand-primary, #0284c7); }
+    .hl-section { padding: 0.75rem 1rem 0.5rem; }
+    .hl-section-label { font-size: 0.65rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.07em; color: #94a3b8; margin: 0 0 0.45rem; }
+    .hl-link-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.2rem; }
+    .hl-link-list a { display: flex; align-items: center; gap: 0.4rem; font-size: 0.84rem; color: #334155; text-decoration: none; padding: 0.3rem 0.2rem; border-radius: 6px; }
+    .hl-link-list a:hover { color: var(--brand-primary, #0284c7); background: rgba(2,132,199,0.05); }
+    .hl-link-list i { width: 14px; text-align: center; color: var(--brand-primary, #0284c7); font-size: 0.78rem; }
+    .hl-results { padding: 0.5rem 0.75rem; max-height: 220px; overflow-y: auto; }
+    .hl-result { display: block; font-size: 0.84rem; color: #334155; text-decoration: none; padding: 0.4rem 0.4rem; border-radius: 6px; }
+    .hl-result:hover { color: var(--brand-primary, #0284c7); background: rgba(2,132,199,0.05); }
+    .hl-result-cat { font-size: 0.68rem; color: #94a3b8; margin-left: 0.3rem; }
+    @media (prefers-reduced-motion: reduce) { .hl-panel { animation: none; } .hl-trigger { transition: none; } }
+    </style>
+
+    <script>
+    (function () {
+        "use strict";
+        var trigger = document.getElementById("hl-trigger");
+        var panel   = document.getElementById("hl-panel");
+        var closeBtn = document.getElementById("hl-close");
+        var searchInput = document.getElementById("hl-search");
+        var resultsEl = document.getElementById("hl-results");
+        var defaultEl = document.getElementById("hl-default");
+        if (!trigger || !panel) return;
+
+        var open = false;
+
+        function setOpen(val) {
+            open = val;
+            panel.hidden = !val;
+            trigger.setAttribute("aria-expanded", val ? "true" : "false");
+            if (val) { setTimeout(function () { searchInput.focus(); }, 60); }
+        }
+
+        trigger.addEventListener("click", function () { setOpen(!open); });
+        closeBtn.addEventListener("click", function () { setOpen(false); });
+
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "?" && !["INPUT","TEXTAREA","SELECT"].includes(document.activeElement.tagName)) {
+                e.preventDefault(); setOpen(!open);
+            }
+            if (e.key === "Escape" && open) setOpen(false);
+        });
+
+        document.addEventListener("click", function (e) {
+            if (open && !panel.contains(e.target) && e.target !== trigger) setOpen(false);
+        }, true);
+
+        // Context links by module.
+        var CTX_LINKS = {
+            "ai-visibility": [
+                {label: "AI Visibility Score explained", url: "/glossary/#avs"},
+                {label: "How citations are tracked", url: "/glossary/#citation"},
+                {label: "Replay AI Visibility tour", tour: true}
+            ],
+            "prompts": [
+                {label: "What is a Prompt?", url: "/glossary/#prompt"},
+                {label: "Add and run your first prompt", url: "/workspace/prompts/"},
+                {label: "Reading your Share of Voice", url: "/glossary/#share-of-voice"}
+            ],
+            "sov": [
+                {label: "Share of Voice explained", url: "/glossary/#share-of-voice"},
+                {label: "Add competitors", url: "/workspace/prompts/"},
+            ],
+            "seo": [
+                {label: "Your audit score explained", url: "/glossary/#technical-health"},
+                {label: "Core Web Vitals", url: "/glossary/#core-web-vitals"},
+                {label: "Crawlability basics", url: "/glossary/#crawlability"}
+            ],
+            "content": [
+                {label: "Generate content from an SEO brief", url: "/workspace/content/"},
+                {label: "What is a topic cluster?", url: "/glossary/#topic-cluster"}
+            ],
+        };
+
+        var ctx = document.body.dataset.helpContext;
+        var contextSection = document.getElementById("hl-context-links");
+        var contextList = document.getElementById("hl-context-list");
+        var replayRow = document.getElementById("hl-replay-tour");
+
+        if (ctx && CTX_LINKS[ctx]) {
+            CTX_LINKS[ctx].forEach(function (item) {
+                var li = document.createElement("li");
+                if (item.tour) {
+                    li.innerHTML = '<a href="#" id="hl-replay-link"><i class="fa-solid fa-rotate-right"></i> ' + item.label + "</a>";
+                    li.querySelector("a").addEventListener("click", function (e) {
+                        e.preventDefault();
+                        setOpen(false);
+                        if (typeof window.vrtReplayAeoTour === "function") window.vrtReplayAeoTour();
+                    });
+                } else {
+                    li.innerHTML = '<a href="' + item.url + '">' + item.label + "</a>";
+                }
+                contextList.appendChild(li);
+            });
+            contextSection.hidden = false;
+        }
+
+        // Search.
+        var ALL_ARTICLES = [];
+        document.querySelectorAll(".hc-article-item, .hc-popular-card").forEach(function (el) {});
+
+        var SEARCH_INDEX = [
+            {title: "How VRT Works", url: "/how-it-works/", cat: "Getting started"},
+            {title: "AI Visibility Score (AVS)", url: "/glossary/#avs", cat: "Glossary"},
+            {title: "Share of Voice", url: "/glossary/#share-of-voice", cat: "Glossary"},
+            {title: "Citation", url: "/glossary/#citation", cat: "Glossary"},
+            {title: "Prompt / Topic", url: "/glossary/#prompt", cat: "Glossary"},
+            {title: "Core Web Vitals", url: "/glossary/#core-web-vitals", cat: "Glossary"},
+            {title: "Answer Engine Optimisation (AEO)", url: "/glossary/#aeo", cat: "Glossary"},
+            {title: "Technical health score", url: "/glossary/#technical-health", cat: "Glossary"},
+            {title: "Crawlability", url: "/glossary/#crawlability", cat: "Glossary"},
+            {title: "Internal linking", url: "/glossary/#internal-linking", cat: "Glossary"},
+            {title: "Topic cluster", url: "/glossary/#topic-cluster", cat: "Glossary"},
+            {title: "Credits", url: "/glossary/#credits", cat: "Glossary"},
+            {title: "Run your first audit", url: "/workspace/", cat: "Getting started"},
+            {title: "Add and track prompts", url: "/workspace/prompts/", cat: "AI Visibility"},
+            {title: "Compare plans and upgrade", url: "/packages/", cat: "Billing"},
+            {title: "View the full glossary", url: "/glossary/", cat: "Reference"},
+            {title: "Help Center", url: "/help/", cat: "Reference"},
+        ];
+
+        searchInput.addEventListener("input", function () {
+            var q = searchInput.value.trim().toLowerCase();
+            if (!q) {
+                resultsEl.hidden = true;
+                defaultEl.hidden = false;
+                return;
+            }
+            var matches = SEARCH_INDEX.filter(function (item) {
+                return item.title.toLowerCase().indexOf(q) !== -1;
+            });
+            resultsEl.innerHTML = "";
+            if (matches.length === 0) {
+                resultsEl.innerHTML = '<p style="font-size:0.82rem;color:#94a3b8;padding:0.4rem;">No results — try the <a href="/glossary/" style="color:inherit;">glossary</a>.</p>';
+            } else {
+                matches.slice(0, 8).forEach(function (item) {
+                    var a = document.createElement("a");
+                    a.className = "hl-result";
+                    a.href = item.url;
+                    a.innerHTML = item.title + ' <span class="hl-result-cat">' + item.cat + "</span>";
+                    resultsEl.appendChild(a);
+                });
+            }
+            resultsEl.hidden = false;
+            defaultEl.hidden = true;
         });
     })();
     </script>

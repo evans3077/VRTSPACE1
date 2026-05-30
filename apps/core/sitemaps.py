@@ -40,6 +40,7 @@ class StaticSitemap(_ProtocolMixin, Sitemap):
             "core:home",
             "core:how-it-works",
             "core:glossary",
+            "core:help-center",
             "core:packages",
             "core:for-agencies",
             "core:services",

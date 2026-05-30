@@ -80,6 +80,7 @@ class WorkspaceGeneratedContentListView(LoginRequiredMixin, ListView):
         context["canonical_url"] = self.request.build_absolute_uri(self.request.path)
         context["meta_robots"] = "noindex, nofollow"
         context["shell_theme"] = "shell-light"
+        context["help_context"] = "content"
         
         # Phase D: Inject Gap Analysis & Keyword Clusters
         context["optimization_engine"] = build_content_optimization_data(project)

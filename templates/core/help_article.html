@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="ha-shell">
+
+    <nav class="ha-breadcrumb" aria-label="Breadcrumb">
+        <a href="{% url 'core:help-center' %}">Help</a>
+        {% if article_category %}<span aria-hidden="true">›</span><a href="{% url 'core:help-center' %}">{{ article_category }}</a>{% endif %}
+        <span aria-hidden="true">›</span><span>{{ article_title }}</span>
+    </nav>
+
+    <div class="ha-layout">
+        <article class="ha-content">
+            <header class="ha-header">
+                <h1>{{ article_title }}</h1>
+                {% if article_read_time %}<p class="ha-meta">{{ article_read_time }} min read</p>{% endif %}
+            </header>
+
+            <div class="ha-body">
+                {% block article_body %}{% endblock %}
+            </div>
+
+            <footer class="ha-footer">
+                <p class="ha-helpful-label">Was this helpful?</p>
+                <div class="ha-helpful-btns">
+                    <button class="ha-helpful-btn" data-val="yes" aria-label="Yes, this was helpful">
+                        <i class="fa-regular fa-thumbs-up"></i> Yes
+                    </button>
+                    <button class="ha-helpful-btn" data-val="no" aria-label="No, this wasn't helpful">
+                        <i class="fa-regular fa-thumbs-down"></i> No
+                    </button>
+                </div>
+                <p class="ha-helpful-thanks" hidden>Thanks for the feedback.</p>
+            </footer>
+
+            {% if article_related %}
+            <aside class="ha-related">
+                <p class="eyebrow" style="margin-bottom: 0.75rem;">Related</p>
+                <ul class="ha-related-list">
+                    {% for item in article_related %}
+                    <li><a href="{{ item.url }}">{{ item.title }}</a></li>
+                    {% endfor %}
+                </ul>
+            </aside>
+            {% endif %}
+        </article>
+
+        {% if article_toc %}
+        <nav class="ha-toc" aria-label="On this page">
+            <p class="ha-toc-label">On this page</p>
+            <ul class="ha-toc-list">
+                {% for anchor in article_toc %}
+                <li><a href="#{{ anchor.id }}">{{ anchor.label }}</a></li>
+                {% endfor %}
+            </ul>
+        </nav>
+        {% endif %}
+    </div>
+</div>
+
+<style>
+.ha-shell { max-width: 860px; margin: 0 auto; padding: 2rem 1.25rem 4rem; }
+.ha-breadcrumb { display: flex; align-items: center; gap: 0.4rem; font-size: 0.78rem; color: var(--text-muted, #64748b); margin-bottom: 1.5rem; flex-wrap: wrap; }
+.ha-breadcrumb a { color: var(--brand-primary, #0284c7); text-decoration: none; }
+.ha-breadcrumb a:hover { text-decoration: underline; }
+.ha-layout { display: grid; grid-template-columns: 1fr 220px; gap: 2.5rem; align-items: start; }
+.ha-header h1 { font-size: clamp(1.5rem, 3vw, 2rem); margin: 0 0 0.4rem; color: var(--text-primary, #0f172a); }
+.ha-meta { font-size: 0.78rem; color: var(--text-muted, #64748b); margin: 0 0 1.5rem; }
+.ha-body { font-size: 0.95rem; color: var(--text-secondary, #334155); line-height: 1.7; }
+.ha-body h2 { font-size: 1.15rem; font-weight: 700; color: var(--text-primary, #0f172a); margin: 2rem 0 0.5rem; }
+.ha-body h3 { font-size: 0.98rem; font-weight: 700; color: var(--text-primary, #0f172a); margin: 1.5rem 0 0.4rem; }
+.ha-body p { margin: 0 0 0.9rem; }
+.ha-body ul, .ha-body ol { padding-left: 1.4rem; margin: 0 0 0.9rem; }
+.ha-body li { margin-bottom: 0.35rem; }
+.ha-body a { color: var(--brand-primary, #0284c7); }
+.ha-body blockquote { border-left: 3px solid var(--brand-primary, #0284c7); margin: 1rem 0; padding: 0.6rem 1rem; background: rgba(56,189,248,0.05); border-radius: 0 8px 8px 0; font-style: italic; color: var(--text-muted); }
+.ha-footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border-glass, rgba(15,23,42,0.08)); }
+.ha-helpful-label { font-size: 0.85rem; font-weight: 600; color: var(--text-primary, #0f172a); margin: 0 0 0.6rem; }
+.ha-helpful-btns { display: flex; gap: 0.5rem; }
+.ha-helpful-btn { background: var(--bg-glass, #f8fafc); border: 1px solid var(--border-glass); border-radius: 8px; padding: 0.4rem 0.85rem; font-size: 0.82rem; cursor: pointer; color: var(--text-secondary, #334155); display: flex; align-items: center; gap: 0.35rem; }
+.ha-helpful-btn:hover { border-color: var(--brand-primary, #0284c7); color: var(--brand-primary, #0284c7); }
+.ha-helpful-thanks { font-size: 0.82rem; color: #10b981; margin: 0.5rem 0 0; }
+.ha-related { margin-top: 2rem; }
+.ha-related-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.4rem; }
+.ha-related-list a { font-size: 0.85rem; color: var(--brand-primary, #0284c7); text-decoration: none; }
+.ha-related-list a:hover { text-decoration: underline; }
+.ha-toc { position: sticky; top: 1.5rem; }
+.ha-toc-label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted, #64748b); margin: 0 0 0.6rem; }
+.ha-toc-list { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 0.35rem; }
+.ha-toc-list a { font-size: 0.8rem; color: var(--text-muted, #64748b); text-decoration: none; }
+.ha-toc-list a:hover { color: var(--brand-primary, #0284c7); }
+@media (max-width: 700px) { .ha-layout { grid-template-columns: 1fr; } .ha-toc { display: none; } }
+</style>
+
+<script>
+(function () {
+    document.querySelectorAll(".ha-helpful-btn").forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            document.querySelector(".ha-helpful-btns").hidden = true;
+            document.querySelector(".ha-helpful-thanks").hidden = false;
+        });
+    });
+})();
+</script>
+{% endblock %}

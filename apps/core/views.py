@@ -15,6 +15,8 @@ from .site_content import (
     FAQS,
     GLOSSARY_CATEGORIES,
     GLOSSARY_TERMS,
+    HELP_CATEGORIES,
+    HELP_POPULAR,
     HOW_IT_WORKS_CONCEPTS,
     HOW_IT_WORKS_PERSONAS,
     HOW_IT_WORKS_STEPS,
@@ -242,6 +244,20 @@ class GlossaryView(TemplateView):
             "schema_json": json.dumps(build_glossary_schema(GLOSSARY_TERMS)),
             "glossary_categories": GLOSSARY_CATEGORIES,
             "glossary_terms": GLOSSARY_TERMS,
+        }
+
+
+class HelpCenterView(TemplateView):
+    template_name = "core/help_center.html"
+
+    def get_context_data(self, **kwargs):
+        return {
+            "page_title": "Help Center | VRT SPACE",
+            "meta_description": "Guides, definitions, and quick answers for every part of VRT SPACE — AI Visibility, SEO, content, billing, and more.",
+            "shell_theme": "shell-light",
+            "meta_robots": "index,follow",
+            "help_popular": HELP_POPULAR,
+            "help_categories": HELP_CATEGORIES,
         }
 
 

@@ -97,6 +97,7 @@ class WorkspaceAEOView(LoginRequiredMixin, View):
                 "canonical_url": request.build_absolute_uri(request.path),
                 "meta_robots": "noindex, nofollow",
                 "shell_theme": "shell-light",
+                "help_context": "ai-visibility",
             },
         )
 
@@ -380,6 +381,7 @@ class WorkspacePromptsView(LoginRequiredMixin, View):
             "canonical_url": request.build_absolute_uri(request.path),
             "meta_robots": "noindex, nofollow",
             "shell_theme": "shell-light",
+            "help_context": "prompts",
         }
 
     def get(self, request, *args, **kwargs):
@@ -573,6 +575,7 @@ class WorkspaceShareOfVoiceView(LoginRequiredMixin, View):
                 "meta_description": "See where your brand wins or loses against competitors in AI-driven answers.",
                 "meta_robots": "noindex, nofollow",
                 "shell_theme": "shell-light",
+                "help_context": "sov",
             },
         )
 

@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="public-shell-section" style="padding-bottom: 1rem;">
+    <div class="container" style="max-width: 760px; text-align: center;">
+        <p class="eyebrow text-accent">Help Center</p>
+        <h1>How can we help?</h1>
+        <p class="lead">Guides and plain-English answers for every part of VRT SPACE.</p>
+        <div class="hc-search-wrap">
+            <i class="fa-solid fa-magnifying-glass hc-search-icon"></i>
+            <input type="search" id="hc-search" class="form-control hc-search"
+                   placeholder="Search guides…" aria-label="Search help articles" autocomplete="off">
+        </div>
+    </div>
+</section>
+
+<section class="public-shell-section" style="padding-top: 0.5rem;">
+    <div class="container" style="max-width: 900px;">
+
+        <p class="eyebrow" style="margin-bottom: 1rem;">Start here</p>
+        <div class="hc-popular-grid">
+            {% for item in help_popular %}
+            <a class="hc-popular-card glass-panel" href="{{ item.url }}" data-hc-title="{{ item.title|lower }}">
+                <span class="hc-popular-icon"><i class="{{ item.icon }}" aria-hidden="true"></i></span>
+                <span class="hc-popular-body">
+                    <strong class="hc-popular-title">{{ item.title }}</strong>
+                    <span class="hc-popular-desc">{{ item.desc }}</span>
+                </span>
+            </a>
+            {% endfor %}
+        </div>
+
+        <p class="eyebrow" style="margin: 2.5rem 0 1rem;">Browse by topic</p>
+        <div class="hc-cat-grid" id="hc-cat-grid">
+            {% for cat in help_categories %}
+            <div class="hc-cat-card glass-panel" data-hc-cat="{{ cat.slug }}">
+                <div class="hc-cat-head">
+                    <span class="hc-cat-icon"><i class="{{ cat.icon }}" aria-hidden="true"></i></span>
+                    <strong class="hc-cat-name">{{ cat.name }}</strong>
+                </div>
+                <ul class="hc-article-list">
+                    {% for article in cat.articles %}
+                    <li class="hc-article-item" data-hc-title="{{ article.title|lower }}">
+                        <a href="{{ article.url }}">{{ article.title }}</a>
+                    </li>
+                    {% endfor %}
+                </ul>
+            </div>
+            {% endfor %}
+        </div>
+
+        <p class="hc-no-results" id="hc-no-results" hidden>
+            No results for that search — try the <a href="{% url 'core:glossary' %}">glossary</a> for term definitions.
+        </p>
+
+    </div>
+</section>
+
+<style>
+.hc-search-wrap { position: relative; max-width: 440px; margin: 1.5rem auto 0; }
+.hc-search-icon { position: absolute; left: 0.9rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.9rem; pointer-events: none; }
+.hc-search.form-control { padding-left: 2.5rem; width: 100%; }
+
+.hc-popular-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 0.85rem; }
+.hc-popular-card { display: flex; align-items: flex-start; gap: 0.75rem; padding: 1rem 1.1rem; text-decoration: none; color: inherit; transition: border-color 0.15s, transform 0.15s; }
+.hc-popular-card:hover { border-color: var(--brand-primary, #0284c7); transform: translateY(-1px); }
+.hc-popular-icon { display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 10px; background: rgba(56,189,248,0.1); color: var(--brand-primary, #0284c7); font-size: 0.95rem; flex-shrink: 0; }
+.hc-popular-body { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; }
+.hc-popular-title { font-size: 0.88rem; font-weight: 700; color: var(--text-primary, #0f172a); }
+.hc-popular-desc { font-size: 0.78rem; color: var(--text-muted, #64748b); line-height: 1.4; }
+
+.hc-cat-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1rem; }
+.hc-cat-card { padding: 1.15rem 1.25rem; }
+.hc-cat-head { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.85rem; }
+.hc-cat-icon { display: flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 8px; background: rgba(56,189,248,0.08); color: var(--brand-primary, #0284c7); font-size: 0.82rem; flex-shrink: 0; }
+.hc-cat-name { font-size: 0.9rem; font-weight: 700; color: var(--text-primary, #0f172a); }
+.hc-article-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.45rem; }
+.hc-article-item a { font-size: 0.83rem; color: var(--text-secondary, #334155); text-decoration: none; display: flex; align-items: center; gap: 0.35rem; }
+.hc-article-item a::before { content: "→"; font-size: 0.7rem; color: var(--brand-primary, #0284c7); flex-shrink: 0; }
+.hc-article-item a:hover { color: var(--brand-primary, #0284c7); }
+.hc-no-results { text-align: center; color: #64748b; padding: 2rem; }
+.hc-no-results a { color: var(--brand-primary, #0284c7); }
+
+@media (max-width: 600px) {
+    .hc-popular-grid { grid-template-columns: 1fr; }
+}
+</style>
+
+<script>
+(function () {
+    var input = document.getElementById("hc-search");
+    var noResults = document.getElementById("hc-no-results");
+    if (!input) return;
+
+    input.addEventListener("input", function () {
+        var q = input.value.trim().toLowerCase();
+        var visible = 0;
+
+        document.querySelectorAll(".hc-popular-card").forEach(function (el) {
+            var match = !q || el.dataset.hcTitle.indexOf(q) !== -1;
+            el.closest(".hc-popular-card").style.display = match ? "" : "none";
+        });
+
+        document.querySelectorAll(".hc-cat-card").forEach(function (card) {
+            var items = card.querySelectorAll(".hc-article-item");
+            var cardVisible = 0;
+            items.forEach(function (item) {
+                var match = !q || item.dataset.hcTitle.indexOf(q) !== -1;
+                item.style.display = match ? "" : "none";
+                if (match) cardVisible++;
+            });
+            card.style.display = cardVisible > 0 ? "" : "none";
+            if (cardVisible > 0) visible++;
+        });
+
+        noResults.hidden = (visible > 0 || !q);
+    });
+})();
+</script>
+{% endblock %}
