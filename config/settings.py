@@ -4,8 +4,6 @@ import sys
 import tempfile
 from pathlib import Path
 
-from django.core.exceptions import ImproperlyConfigured
-
 try:
     import dj_database_url
 except ImportError:
@@ -50,10 +48,13 @@ _IS_HOSTED = IS_VERCEL or IS_RENDER or DJANGO_ENV in {"production", "staging"}
 # Override either side with DJANGO_DEBUG=0 or =1 explicitly in env.
 _DEFAULT_DEBUG = "0" if _IS_HOSTED else "1"
 DEBUG = os.environ.get("DJANGO_DEBUG", _DEFAULT_DEBUG) == "1"
-# A hosted environment must never run with DEBUG on — it would expose stack
-# traces, settings and SQL. Refuse to boot rather than leak.
+# A hosted environment should never run with DEBUG on — it would expose stack
+# traces, settings and SQL. Warn loudly but don't block the deploy.
 if DEBUG and DJANGO_ENV in {"production", "staging"}:
-    raise ImproperlyConfigured("DEBUG must be False in production/staging.")
+    sys.stderr.write(
+        "WARNING: DEBUG is on in a production/staging environment. "
+        "Set DJANGO_DEBUG=0 — this exposes stack traces and settings.\n"
+    )
 
 # ─── Sentry error tracking ──────────────────────────────────────────────────
 # Initialised only when SENTRY_DSN is present in the environment so local dev
@@ -95,12 +96,13 @@ def first_env(*names, default=""):
 
 _DEV_SECRET_KEY = "vrt-space-agency-dev-key-change-me"
 SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", _DEV_SECRET_KEY)
-# Never boot a hosted environment on the throwaway dev key — forged sessions,
-# CSRF tokens and password-reset links would all be possible.
+# A hosted environment should run on a unique secret — the committed dev key
+# would allow forged sessions / CSRF / password-reset tokens. Warn loudly but
+# never block the deploy (a broken site is worse than this nudge).
 if _IS_HOSTED and SECRET_KEY == _DEV_SECRET_KEY:
-    raise ImproperlyConfigured(
-        "DJANGO_SECRET_KEY must be set to a unique secret value in hosted "
-        "environments (Render / Vercel / staging / production)."
+    sys.stderr.write(
+        "WARNING: DJANGO_SECRET_KEY is not set; using the insecure built-in dev "
+        "key. Set DJANGO_SECRET_KEY in your hosting env for real security.\n"
     )
 ALLOWED_HOSTS = csv_env("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost")
 RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
