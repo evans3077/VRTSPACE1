@@ -24,6 +24,8 @@
     </div>
 </section>
 
+{% include "includes/concept_primer.html" with primer_id="sov" term="Share of Voice" acronym="SOV" plain_definition="Share of Voice is the percentage of AI-generated answers — across all your tracked prompts — where your brand is cited, compared to the total citations in that topic space." why_it_matters="It shows you whether you're growing or losing ground to competitors in AI answers, even when your website traffic looks flat." learn_more_url="/glossary/#share-of-voice" %}
+
 {% if not share_of_voice.has_data %}
 <section class="public-shell-section">
     <div class="container">
@@ -41,7 +43,7 @@
     <div class="container">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1.25rem;">
             <article class="glass-panel" style="padding: 1.4rem;">
-                <p class="eyebrow text-accent">Total checks</p>
+                <p class="eyebrow text-accent">Total checks {% include "includes/info_tip.html" with tip_title="Total checks" tip_body="The number of times VRT queried AI engines for your tracked prompts in this time window. Each prompt × each engine = one check." %}</p>
                 <p style="font-size: 2.2rem; font-weight: 800; margin: 0.25rem 0 0;">{{ share_of_voice.total_checks }}</p>
                 <p class="text-muted" style="font-size: 0.78rem; margin: 0.25rem 0 0;">Across {{ share_of_voice.engines|length }} engines.</p>
             </article>

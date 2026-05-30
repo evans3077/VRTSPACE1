@@ -2369,5 +2369,140 @@
         });
     })();
     </script>
+
+    {# ── Info-tip popover system ──────────────────────────────────────────── #}
+    <style>
+    .vrt-infotip-wrap { display: inline-flex; align-items: center; vertical-align: middle; margin-left: 0.3em; }
+    .vrt-infotip {
+        display: inline-flex; align-items: center; justify-content: center;
+        width: 1.25rem; height: 1.25rem; padding: 0;
+        background: transparent; border: none; cursor: pointer;
+        color: var(--text-muted, #94a3b8); font-size: 0.82rem;
+        border-radius: 50%; transition: color 0.15s;
+        line-height: 1;
+    }
+    .vrt-infotip:hover, .vrt-infotip[aria-expanded="true"] { color: var(--brand-primary, #0284c7); }
+    .vrt-infotip:focus-visible { outline: 2px solid var(--brand-primary, #0284c7); outline-offset: 2px; }
+
+    .vrt-tip-popover {
+        position: fixed; z-index: 9999;
+        background: #fff; color: #0f172a;
+        border: 1px solid rgba(15,23,42,0.10);
+        border-radius: 10px;
+        box-shadow: 0 8px 32px rgba(0,0,0,0.16);
+        padding: 0.9rem 1rem;
+        max-width: 280px; width: max-content;
+        pointer-events: auto;
+        animation: tip-in 0.12s ease;
+    }
+    .vrt-tip-popover[hidden] { display: none; }
+    @keyframes tip-in { from { opacity:0; transform:translateY(4px); } to { opacity:1; transform:none; } }
+    .tip-title {
+        font-size: 0.68rem; font-weight: 800; letter-spacing: 0.05em;
+        text-transform: uppercase; font-family: monospace;
+        color: var(--brand-primary, #0284c7); margin: 0 0 0.35rem;
+    }
+    .tip-body { font-size: 0.82rem; color: #334155; line-height: 1.45; margin: 0 0 0.3rem; }
+    .tip-calc { font-size: 0.76rem; color: #64748b; margin: 0 0 0.3rem; }
+    .tip-link { font-size: 0.76rem; font-weight: 600; color: var(--brand-primary, #0284c7); text-decoration: none; }
+    .tip-link:hover { text-decoration: underline; }
+
+    /* dark-shell override so popover stays light-on-dark readable */
+    body:not(.shell-light) .vrt-tip-popover {
+        background: #1e293b; color: #f1f5f9; border-color: rgba(255,255,255,0.1);
+        box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+    }
+    body:not(.shell-light) .tip-body { color: #cbd5e1; }
+    body:not(.shell-light) .tip-calc { color: #94a3b8; }
+    </style>
+
+    <div id="vrt-tip-popover" class="vrt-tip-popover" role="tooltip" hidden>
+        <p class="tip-title" id="vrt-tip-title"></p>
+        <p class="tip-body" id="vrt-tip-body"></p>
+        <p class="tip-calc" id="vrt-tip-calc" hidden></p>
+        <a class="tip-link" id="vrt-tip-link" href="#" hidden></a>
+    </div>
+
+    <script>
+    (function () {
+        "use strict";
+        var pop = document.getElementById("vrt-tip-popover");
+        var titleEl = document.getElementById("vrt-tip-title");
+        var bodyEl  = document.getElementById("vrt-tip-body");
+        var calcEl  = document.getElementById("vrt-tip-calc");
+        var linkEl  = document.getElementById("vrt-tip-link");
+        if (!pop) return;
+
+        var current = null;
+
+        function show(btn) {
+            if (current === btn) return;
+            current = btn;
+            titleEl.textContent = btn.dataset.tipTitle || "";
+            bodyEl.textContent  = btn.dataset.tipBody  || "";
+            var calc = btn.dataset.tipCalc;
+            if (calc) { calcEl.textContent = "How it’s calculated: " + calc; calcEl.hidden = false; }
+            else { calcEl.hidden = true; }
+            var lnk = btn.dataset.tipLink;
+            if (lnk) {
+                linkEl.href = lnk;
+                linkEl.textContent = btn.dataset.tipLinkText || "Learn more";
+                linkEl.hidden = false;
+            } else { linkEl.hidden = true; }
+            pop.hidden = false;
+            btn.setAttribute("aria-expanded", "true");
+            position(btn);
+        }
+
+        function hide() {
+            if (!current) return;
+            current.setAttribute("aria-expanded", "false");
+            current = null;
+            pop.hidden = true;
+        }
+
+        function position(btn) {
+            var r = btn.getBoundingClientRect();
+            var pw = pop.offsetWidth  || 280;
+            var ph = pop.offsetHeight || 120;
+            var vw = window.innerWidth;
+            var vh = window.innerHeight;
+            var gap = 8;
+            var top  = r.bottom + gap;
+            var left = r.left + r.width / 2 - pw / 2;
+            if (top + ph > vh - 8) top = r.top - ph - gap;
+            if (left < 8) left = 8;
+            if (left + pw > vw - 8) left = vw - pw - 8;
+            pop.style.top  = top  + "px";
+            pop.style.left = left + "px";
+        }
+
+        document.addEventListener("click", function (e) {
+            var btn = e.target.closest(".vrt-infotip");
+            if (btn) {
+                if (current === btn) { hide(); } else { show(btn); }
+                e.stopPropagation();
+                return;
+            }
+            if (!pop.contains(e.target)) hide();
+        }, true);
+
+        document.addEventListener("keydown", function (e) {
+            if (e.key === "Escape") hide();
+        });
+
+        document.addEventListener("mouseover", function (e) {
+            var btn = e.target.closest(".vrt-infotip");
+            if (btn && current !== btn) show(btn);
+        });
+
+        document.addEventListener("mouseout", function (e) {
+            if (!e.target.closest(".vrt-infotip") && !pop.contains(e.relatedTarget)) hide();
+        });
+
+        window.addEventListener("scroll", function () { if (current) position(current); }, { passive: true });
+        window.addEventListener("resize", function () { if (current) position(current); }, { passive: true });
+    })();
+    </script>
 </body>
 </html>

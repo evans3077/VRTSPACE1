@@ -1,0 +1,104 @@
+{% comment %}
+Reusable concept primer card. Drop at the top of any complex workspace module.
+
+Required context vars:
+  primer_id       — unique string used as localStorage key (e.g. "aeo", "sov", "prompts")
+  term            — full plain-English term (e.g. "AI Visibility")
+  plain_definition — one sentence a non-expert understands
+  why_it_matters  — one sentence on why it's useful
+
+Optional context vars:
+  acronym         — short label shown as a mono eyebrow (e.g. "AVS")
+  learn_more_url  — URL for "Learn more" link (e.g. {% url 'core:glossary' %}#aeo)
+
+Usage:
+  {% include "includes/concept_primer.html" with primer_id="aeo" term="Answer Engine Optimisation" acronym="AEO" plain_definition="..." why_it_matters="..." learn_more_url="..." %}
+{% endcomment %}
+
+<div class="cp-card" id="cp-{{ primer_id }}" role="note" aria-label="Concept primer: {{ term }}" data-primer-id="{{ primer_id }}">
+    <div class="cp-rail" aria-hidden="true"></div>
+    <div class="cp-body">
+        <div class="cp-head">
+            {% if acronym %}<span class="cp-eyebrow">{{ acronym }}</span>{% endif %}
+            <strong class="cp-term">{{ term }}</strong>
+        </div>
+        <p class="cp-def">{{ plain_definition }}</p>
+        <p class="cp-why"><span class="cp-why-label">Why it matters</span> {{ why_it_matters }}</p>
+        {% if learn_more_url %}
+        <a class="cp-link" href="{{ learn_more_url }}">Learn more <i class="fa-solid fa-arrow-right" style="font-size:0.7em;"></i></a>
+        {% endif %}
+    </div>
+    <button class="cp-dismiss" aria-label="Dismiss this explanation" title="Dismiss">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+</div>
+
+<style>
+.cp-card {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    background: var(--bg-glass, rgba(255,255,255,0.96));
+    border: 1px solid var(--border-glass, rgba(15,23,42,0.08));
+    border-radius: var(--radius-md, 14px);
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    max-height: 140px;
+    transition: opacity 0.2s, max-height 0.3s;
+}
+.cp-card[hidden] { display: none; }
+.cp-rail {
+    width: 4px;
+    flex-shrink: 0;
+    background: var(--brand-primary, #0284c7);
+}
+.cp-body {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    min-width: 0;
+}
+.cp-head { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.cp-eyebrow {
+    font-size: 0.65rem; font-weight: 800; letter-spacing: 0.06em;
+    text-transform: uppercase; font-family: monospace;
+    color: var(--brand-primary, #0284c7);
+    background: transparent; padding: 0;
+}
+.cp-term { font-size: 0.88rem; color: var(--text-primary, #0f172a); }
+.cp-def { font-size: 0.82rem; color: var(--text-secondary, #334155); line-height: 1.45; margin: 0; }
+.cp-why { font-size: 0.78rem; color: var(--text-muted, #64748b); margin: 0; }
+.cp-why-label { font-weight: 700; color: var(--text-secondary, #475569); margin-right: 0.25em; }
+.cp-link { font-size: 0.78rem; font-weight: 600; color: var(--brand-primary, #0284c7); text-decoration: none; align-self: flex-start; margin-top: 0.1rem; }
+.cp-link:hover { text-decoration: underline; }
+.cp-dismiss {
+    flex-shrink: 0; width: 2.5rem; background: transparent; border: none;
+    color: var(--text-muted, #94a3b8); cursor: pointer; font-size: 0.85rem;
+    padding: 0; display: flex; align-items: flex-start; justify-content: center;
+    padding-top: 0.7rem;
+    transition: color 0.15s;
+}
+.cp-dismiss:hover { color: var(--text-primary, #0f172a); }
+</style>
+
+<script>
+(function () {
+    var KEY_PREFIX = "vrt_primer_dismissed_";
+    var card = document.getElementById("cp-{{ primer_id }}");
+    if (!card) return;
+    var id = card.dataset.primerId;
+    if (!id) return;
+    if (localStorage.getItem(KEY_PREFIX + id) === "1") {
+        card.hidden = true;
+        return;
+    }
+    card.querySelector(".cp-dismiss").addEventListener("click", function () {
+        localStorage.setItem(KEY_PREFIX + id, "1");
+        card.style.transition = "opacity 0.2s";
+        card.style.opacity = "0";
+        setTimeout(function () { card.hidden = true; }, 220);
+    });
+})();
+</script>

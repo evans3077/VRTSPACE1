@@ -50,7 +50,7 @@
 <div class="mc-kpi-strip">
 
     <article class="mc-kpi-tile mc-kpi-tile--primary">
-        <p class="mc-kpi-label">AVS</p>
+        <p class="mc-kpi-label">AVS {% include "includes/info_tip.html" with tip_title="AI Visibility Score (AVS)" tip_body="A 0–100 score showing how often AI engines like ChatGPT, Gemini, and Perplexity cite your brand when someone searches for your topics." tip_calc="Percentage of tracked prompts where your brand was cited, averaged across all engines." tip_link="/glossary/#avs" tip_link_text="Glossary" %}</p>
         <p class="mc-kpi-val">
             {% if latest_aeo_audit and latest_aeo_audit.overall_score %}
                 {{ latest_aeo_audit.overall_score }}<span class="kpi-unit">/100</span>
@@ -67,7 +67,7 @@
     </article>
 
     <article class="mc-kpi-tile">
-        <p class="mc-kpi-label">Citations (7d)</p>
+        <p class="mc-kpi-label">Citations (7d) {% include "includes/info_tip.html" with tip_title="Citations" tip_body="The number of times an AI engine named or linked to your brand in its answers over the last 7 days. More citations = more AI visibility." tip_link="/glossary/#citation" tip_link_text="Glossary" %}</p>
         <p class="mc-kpi-val">{{ aeo_citation_count|default:0 }}</p>
         <p class="mc-kpi-delta {% if aeo_citation_count > 0 %}mc-kpi-delta--up{% else %}mc-kpi-delta--flat{% endif %}">
             {% if latest_aeo_audit %}
@@ -84,7 +84,7 @@
     </article>
 
     <article class="mc-kpi-tile">
-        <p class="mc-kpi-label">Audit Health</p>
+        <p class="mc-kpi-label">Audit Health {% include "includes/info_tip.html" with tip_title="Audit Health Score" tip_body="A 0–100 score summing your site's technical SEO health — speed, structure, mobile-readiness, and on-page quality — so you know which pages to fix first." tip_calc="Weighted average of Technical, Content, Performance, and Internal Linking sub-scores." %}</p>
         <p class="mc-kpi-val">
             {% if latest_audit %}{{ latest_audit.overall_score }}<span class="kpi-unit">/100</span>
             {% else %}&mdash;{% endif %}

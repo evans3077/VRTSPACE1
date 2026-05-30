@@ -177,6 +177,8 @@
     </div>
 </div>
 
+{% include "includes/concept_primer.html" with primer_id="aeo" term="AI Visibility" acronym="AEO" plain_definition="AI Visibility measures how often AI engines like ChatGPT, Gemini, and Perplexity name or cite your brand when someone asks about your topics — think of it as your share of AI-generated recommendations." why_it_matters="Half of all searches now generate an AI answer before the user clicks a link. If your brand isn't cited, those readers never see you." learn_more_url="/glossary/#aeo" %}
+
 {% if latest_aeo_audit %}
 <nav class="page-jump-nav" aria-label="AEO sections">
     <div class="container-fluid">
@@ -372,7 +374,7 @@
         <div class="workspace-report-card">
             <div class="workspace-score-head">
                 <div class="workspace-report-intro">
-                    <p class="workspace-report-kicker">Citation Readiness</p>
+                    <p class="workspace-report-kicker">Citation Readiness {% include "includes/info_tip.html" with tip_title="Citation Readiness" tip_body="How ready your site is to be cited by AI engines. It measures whether your content, structure, and authority meet the signals AI tools look for before recommending a source." tip_calc="Composite of structured data, content depth, authority signals, and entity clarity scores." %}</p>
                     <h2>How close the site is to being cited by answer engines</h2>
                     <p>Use the composite score, engine gaps, and the priority fix below to decide what to improve first for AI visibility.</p>
                 </div>

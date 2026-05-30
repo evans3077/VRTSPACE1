@@ -1,0 +1,30 @@
+{% comment %}
+Inline "?" popover component. Place next to any metric label or column header.
+
+Required:
+  tip_title   — short label (e.g. "AI Visibility Score")
+  tip_body    — one plain-English sentence explaining the metric
+
+Optional:
+  tip_calc    — "How it's calculated" line (one sentence)
+  tip_link    — URL for a "Learn more" link
+  tip_link_text — link text (defaults to "Learn more")
+  tip_id      — unique id suffix (auto-generated from tip_title if omitted)
+
+Usage:
+  {% include "includes/info_tip.html" with tip_title="Share of Voice" tip_body="..." tip_calc="..." %}
+{% endcomment %}
+
+{% with safe_id=tip_title|slugify %}
+<span class="vrt-infotip-wrap">
+    <button
+        class="vrt-infotip"
+        type="button"
+        aria-label="What is {{ tip_title }}?"
+        data-tip-title="{{ tip_title }}"
+        data-tip-body="{{ tip_body }}"
+        {% if tip_calc %}data-tip-calc="{{ tip_calc }}"{% endif %}
+        {% if tip_link %}data-tip-link="{{ tip_link }}" data-tip-link-text="{{ tip_link_text|default:'Learn more' }}"{% endif %}
+    ><i class="fa-solid fa-circle-question" aria-hidden="true"></i></button>
+</span>
+{% endwith %}
