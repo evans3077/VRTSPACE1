@@ -1,21 +1,33 @@
 {% extends "base.html" %}
 
 {% block content %}
-<section class="account-shell-hero">
-    <div class="container account-hero-grid" style="text-align:center; justify-content:center;">
-        <div class="account-hero-copy" style="max-width:640px; margin:0 auto;">
-            <p class="eyebrow text-accent">Application received</p>
-            <h1>Thanks — we've got your details</h1>
-            <p class="account-page-text">
-                We review every partner application by hand to keep the program small and high-signal.
-                If you're a fit, you'll hear back from us within a few business days with an invite link
-                and Stripe Connect onboarding.
-            </p>
-            <div class="account-hero-actions" style="justify-content:center;">
-                <a class="button button-primary" href="{% url 'core:home' %}">Back to home</a>
-                <a class="button button-secondary" href="{% url 'core:packages' %}">See pricing</a>
-            </div>
+<section class="public-shell-section">
+    <div class="container" style="max-width: 640px; text-align: center;">
+        <div class="partner-thanks-icon"><i class="fa-solid fa-paper-plane"></i></div>
+        <p class="feature-tag" style="justify-content: center;">Application received</p>
+        <h1>Thanks — we&rsquo;ve got your details.</h1>
+        <p class="lead">
+            We review every partner application by hand to keep the program small and high-signal.
+        </p>
+        <p class="section-text">
+            If you&rsquo;re a fit, you&rsquo;ll hear back within a few business days with an invite link
+            and Stripe Connect onboarding so payouts are automatic from day one.
+        </p>
+        <div class="hero-actions" style="justify-content: center; margin-top: 1.5rem;">
+            <a class="button button-primary" href="{% url 'core:home' %}"><i class="fa-solid fa-house"></i> Back to home</a>
+            <a class="button button-secondary" href="{% url 'core:packages' %}">See pricing</a>
         </div>
     </div>
 </section>
+
+<style>
+    .partner-thanks-icon {
+        width: 64px; height: 64px; margin: 0 auto 1.25rem;
+        border-radius: 18px;
+        background: var(--brand-gradient, linear-gradient(135deg, #38bdf8 0%, #818cf8 100%));
+        color: #fff; font-size: 1.5rem;
+        display: flex; align-items: center; justify-content: center;
+        box-shadow: 0 12px 30px -10px rgba(56, 189, 248, 0.5);
+    }
+</style>
 {% endblock %}

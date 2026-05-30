@@ -71,12 +71,33 @@ class ReferralLandingView(View):
         return response
 
 
+def _partner_program_context():
+    """Shared brand + commission context for the public partner pages."""
+    return {
+        "shell_theme": "shell-light",
+        "first_payment_pct": settings.AFFILIATE_COMMISSION_FIRST_PAYMENT_PCT,
+        "recurring_pct": settings.AFFILIATE_COMMISSION_RECURRING_PCT,
+        "payout_hold_days": settings.AFFILIATE_PAYOUT_HOLD_DAYS,
+    }
+
+
 class PartnerInquiryView(CreateView):
     """Public application form for prospective affiliates."""
 
     template_name = "affiliates/partner_inquiry.html"
     form_class = AffiliateApplicationForm
     success_url = reverse_lazy("affiliates:partner-inquiry-thanks")
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(_partner_program_context())
+        context.setdefault("page_title", "Partner Program | VRT SPACE AGENCY")
+        context.setdefault(
+            "meta_description",
+            "Join the invite-only VRT SPACE partner program. Earn recurring "
+            "commission referring agencies and brands to our AI visibility platform.",
+        )
+        return context
 
     def form_valid(self, form):
         application = form.save(commit=False)
@@ -91,6 +112,12 @@ class PartnerInquiryView(CreateView):
 
 class PartnerInquiryThanksView(TemplateView):
     template_name = "affiliates/partner_inquiry_thanks.html"
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context.update(_partner_program_context())
+        context.setdefault("page_title", "Application received | VRT SPACE AGENCY")
+        return context
 
 
 # ---------------------------------------------------------------------------

@@ -108,20 +108,29 @@ ENGAGEMENT_STEPS = [
 
 FAQS = [
     {
-        "question": "What happens after I run the audit?",
-        "answer": "You get a clearer view of the biggest issues, the quickest wins, and the next steps for SEO and AI visibility. You can then save the work in a workspace and rerun after fixes.",
+        "question": "What is AI visibility and why does it matter?",
+        "answer": "AI visibility is how often AI answer engines — ChatGPT, Gemini, Perplexity, and Google AI Overviews — surface and cite your brand when people ask questions in your market.",
+        "detail": "Buyers increasingly get answers from AI instead of scrolling search results, so if AI doesn't cite you, you're invisible at the exact moment a decision is being made. VRT SPACE measures that visibility and shows you how to improve it.",
     },
     {
-        "question": "Why combine audit, SEO, and AEO in one system?",
-        "answer": "Because most websites need more than one kind of fix. The audit finds the issues, SEO shows what competitors are doing better, and AEO helps you improve visibility in AI-driven answers.",
+        "question": "How do you track whether ChatGPT, Gemini, or Perplexity cite my brand?",
+        "answer": "We run your target queries against the major AI answer engines and report which brands get cited, including whether you appear and where competitors beat you.",
+        "detail": "You get a share-of-voice view across engines, so you can see — query by query — when an AI recommends a competitor but never mentions you.",
     },
     {
-        "question": "Do I need a workspace to keep using the platform?",
-        "answer": "A workspace keeps your audit history, next actions, and reruns together, which makes it much easier to track progress over time.",
+        "question": "How is VRT SPACE different from Ahrefs or SEMrush?",
+        "answer": "Traditional SEO tools measure how you rank on Google; VRT SPACE adds AI visibility (AEO) tracking and change-over-time scoring in one workspace.",
+        "detail": "You still get the technical audit and SEO analysis you'd expect, plus the answer-engine layer those tools don't cover and a score history that proves whether your fixes are working.",
     },
     {
-        "question": "When should I ask for custom help?",
-        "answer": "Start with the product first. Use custom scoping only when the work goes beyond the standard audit, SEO, AEO, and workspace flow.",
+        "question": "Is the website audit free, and what does it include?",
+        "answer": "Yes — you can run a full diagnostic audit for free, covering technical SEO, performance, on-page health, and AI-readiness, with no credit card required.",
+        "detail": "Free runs give you your overall score and category gauges. Paid plans unlock more audits per month, deeper recommendations, PDF export, AI citation tracking over time, and saved workspace history.",
+    },
+    {
+        "question": "How do I actually improve my AI visibility after the audit?",
+        "answer": "Start with the highest-impact fixes the audit surfaces, then rerun to confirm your AI Visibility Score is moving in the right direction.",
+        "detail": "Clear technical health, schema, entity coverage, and answer-first content make your pages easier for AI engines to read, quote, and recommend — and the workspace keeps every recommendation and rerun in one place so progress stays measurable.",
     },
 ]
 

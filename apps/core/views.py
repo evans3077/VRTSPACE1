@@ -64,21 +64,7 @@ def build_home_context(request, **extra):
                     "areaServed": ["Global"],
                     "sameAs": [],
                 },
-                {
-                    "@context": "https://schema.org",
-                    "@type": "FAQPage",
-                    "mainEntity": [
-                        {
-                            "@type": "Question",
-                            "name": item["question"],
-                            "acceptedAnswer": {
-                                "@type": "Answer",
-                                "text": item["answer"],
-                            },
-                        }
-                        for item in FAQS
-                    ],
-                },
+                build_faq_schema(FAQS),
             ]
         ),
         "lead_form": extra.get("lead_form", LeadCaptureForm()),
