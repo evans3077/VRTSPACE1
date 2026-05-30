@@ -129,11 +129,8 @@
                 {% endif %}
             </div>
             {% else %}
-            <div class="ws-empty-state" style="margin-bottom: 2rem;">
-                <div class="ws-empty-icon"><i class="fa-solid fa-microscope"></i></div>
-                <p class="ws-empty-title">Waiting on Competitive Data</p>
-                <p class="ws-empty-desc" style="max-width: 500px; margin: 0 auto;">There are no execution gaps detected against tracking targets at the moment. When competitor vulnerabilities hit the threshold, precision metrics tracking Missing Layers and Content Depth ratios will appear here.</p>
-            </div>
+            {% url 'seo:workspace-seo' as seo_url %}
+            {% include "includes/empty_state.html" with es_icon="fa-solid fa-microscope" es_title="No competitor gaps detected yet" es_desc="Once you've run an audit with competitor data, VRT surfaces the exact content gaps your competitors are winning. Gaps drive the content pipeline." es_cta_url=seo_url es_cta_label="Run SEO audit" %}
             {% endif %}
 
             <!-- Keyword Intent Clusters -->
@@ -373,7 +370,7 @@
                     </div>
                 </a>
                 {% empty %}
-                <div class="evidence-card"><div class="evidence-card-text">No generated drafts saved in the Asset Library yet.</div></div>
+                {% include "includes/empty_state.html" with es_icon="fa-solid fa-file-pen" es_title="No drafts yet" es_desc="Generate your first content draft from an SEO brief. Each draft is saved here so you can refine and publish it at any time." es_cta_url="#content-engine" es_cta_label="Generate content" %}
                 {% endfor %}
             </div>
         </article>

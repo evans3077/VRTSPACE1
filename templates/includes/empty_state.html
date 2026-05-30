@@ -1,0 +1,44 @@
+{% comment %}
+Reusable workspace empty state. Uses the existing .ws-empty-state CSS component.
+
+Required:
+  es_icon      — FontAwesome class string, e.g. "fa-solid fa-robot"
+  es_title     — Headline: the ONE next action (e.g. "Add your first prompt")
+  es_desc      — One reassuring sentence explaining what happens after they act
+
+Optional:
+  es_cta_url   — Primary button URL
+  es_cta_label — Primary button text (default: "Get started")
+  es_cta_post  — Set to "1" to render the CTA as a POST form button (requires es_cta_name + es_cta_value)
+  es_cta_name  — POST form input name (used with es_cta_post)
+  es_cta_value — POST form input value (used with es_cta_post)
+  es_secondary_url   — Secondary link URL
+  es_secondary_label — Secondary link text (default: "See a sample")
+
+Usage (link):
+  {% include "includes/empty_state.html" with es_icon="fa-solid fa-robot" es_title="Add your first prompt" es_desc="..." es_cta_url="/workspace/prompts/" es_cta_label="Add prompt" es_secondary_url="/workspace/demo/" es_secondary_label="See sample workspace" %}
+{% endcomment %}
+
+<div class="ws-empty-state">
+    <div class="ws-empty-icon">
+        <i class="{{ es_icon }}" aria-hidden="true"></i>
+    </div>
+    <p class="ws-empty-title">{{ es_title }}</p>
+    <p class="ws-empty-desc">{{ es_desc }}</p>
+    {% if es_cta_url or es_cta_post %}
+    <div style="display: flex; gap: 0.65rem; justify-content: center; flex-wrap: wrap; margin-top: 0.25rem;">
+        {% if es_cta_post == "1" %}
+        <form method="post" style="margin: 0;">
+            {% csrf_token %}
+            <input type="hidden" name="{{ es_cta_name }}" value="{{ es_cta_value }}">
+            <button type="submit" class="button button-primary">{{ es_cta_label|default:"Get started" }}</button>
+        </form>
+        {% elif es_cta_url %}
+        <a href="{{ es_cta_url }}" class="button button-primary">{{ es_cta_label|default:"Get started" }}</a>
+        {% endif %}
+        {% if es_secondary_url %}
+        <a href="{{ es_secondary_url }}" class="button button-secondary">{{ es_secondary_label|default:"See a sample" }}</a>
+        {% endif %}
+    </div>
+    {% endif %}
+</div>

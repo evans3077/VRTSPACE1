@@ -150,11 +150,7 @@
                 {% endfor %}
             </div>
             {% else %}
-            <div style="padding: 2.5rem 1rem; text-align: center; border: 1px dashed var(--border-glass); border-radius: 12px;">
-                <i class="fa-solid fa-bullseye" style="font-size: 1.8rem; color: var(--brand-primary); margin-bottom: 0.6rem;"></i>
-                <h3 style="margin: 0 0 0.35rem;">No prompts tracked yet</h3>
-                <p class="text-muted" style="margin: 0;">Add the queries your customers ask AI — e.g. "best AI SEO tool", "how to improve AI citations".</p>
-            </div>
+            {% include "includes/empty_state.html" with es_icon="fa-solid fa-bullseye" es_title="Add your first prompt" es_desc="Type a question your customers ask AI — like 'best SEO tool for agencies'. VRT will check whether you're cited in the answer across ChatGPT, Gemini, and Perplexity." %}
             {% endif %}
         </div>
 
