@@ -1,0 +1,38 @@
+{% comment %}
+Reusable FAQ section — SEO/AEO optimised.
+
+Renders the canonical Pattern-A accordion (matches home.html / packages.html)
+plus an answer-first <span class="direct-answer"> that AI answer engines and
+featured-snippet parsers can lift cleanly.
+
+Pair this with the FAQPage JSON-LD emitted from the view's schema_json so the
+visible markup and structured data always stay in sync.
+
+Context variables (all optional except `faqs`):
+  faqs            list of {question, answer, detail?} dicts
+  faq_eyebrow     small label above the heading      (default "Frequently asked")
+  faq_heading     section <h2>                        (default "Common questions")
+  faq_open_first  open the first item by default      (default True)
+{% endcomment %}
+{% if faqs %}
+<section class="faq-section" aria-labelledby="faq-heading">
+    <div class="container section-heading">
+        <p class="eyebrow">{{ faq_eyebrow|default:"Frequently asked" }}</p>
+        <h2 id="faq-heading">{{ faq_heading|default:"Common questions" }}</h2>
+    </div>
+    <div class="container faq-accordion public-faq-shell">
+        {% for item in faqs %}
+        <details class="faq-item"{% if forloop.first and faq_open_first|default:True %} open{% endif %}>
+            <summary class="faq-question">
+                <h3>{{ item.question }}</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">{{ item.answer }}</span>
+                {% if item.detail %}<p>{{ item.detail }}</p>{% endif %}
+            </div>
+        </details>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
