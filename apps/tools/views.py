@@ -1212,21 +1212,50 @@ class WorkspaceDashboardView(LoginRequiredMixin, DetailView):
         else:
             context["tracked_prompt_count"] = 0
 
-        # Pre-compute activation checklist progress so the template doesn't
-        # need to do arithmetic on conditional booleans.
-        _act_steps = [
-            bool(latest_audit),
-            bool(latest_aeo_audit),
-            bool(context["tracked_prompt_count"]),
-            bool(latest_seo_snapshot),
-            bool(schedule),
+        # Getting-started checklist (4 steps, shown on the dashboard).
+        _gs_steps = [
+            {
+                "title": "Add your website",
+                "why": "Creates the project that holds all your audits and scores.",
+                "done": bool(getattr(project, "pk", None)),
+                "url": "#new-project",
+            },
+            {
+                "title": "Run your first audit",
+                "why": "Generates your overall health score and surfaces the top issues to fix.",
+                "done": bool(latest_audit),
+                "url": "#start-audit",
+            },
+            {
+                "title": "Run AI Visibility analysis",
+                "why": "Shows where ChatGPT, Gemini, and Perplexity cite you — and where they cite your competitors.",
+                "done": bool(latest_aeo_audit),
+                "url": reverse("aeo:workspace-aeo"),
+            },
+            {
+                "title": "Track your first AI prompt",
+                "why": "Monitors whether your brand appears in the answers to the questions your customers actually ask.",
+                "done": bool(context["tracked_prompt_count"]),
+                "url": reverse("aeo:workspace-prompts"),
+            },
         ]
-        _done = sum(1 for s in _act_steps if s)
-        _total = len(_act_steps)
+        _done = sum(1 for s in _gs_steps if s["done"])
+        _first_incomplete = True
+        for _s in _gs_steps:
+            _s["current"] = not _s["done"] and _first_incomplete
+            if _s["current"]:
+                _first_incomplete = False
+        _total = len(_gs_steps)
+        context["gs_steps"] = _gs_steps
+        context["gs_done_count"] = _done
+        context["gs_total_count"] = _total
+        context["gs_progress_pct"] = round(100 * _done / _total) if _total else 0
+        context["gs_complete"] = _done == _total
+        # Keep old activation_* vars for any other references.
         context["activation_done_count"] = _done
         context["activation_total_count"] = _total
-        context["activation_progress_pct"] = round(100 * _done / _total) if _total else 0
-        context["activation_complete"] = _done == _total
+        context["activation_progress_pct"] = context["gs_progress_pct"]
+        context["activation_complete"] = context["gs_complete"]
         context["audit_score_delta"] = (
             audit_history_with_delta[0]["delta"]
             if audit_history_with_delta and audit_history_with_delta[0]["delta"] is not None

@@ -2370,8 +2370,31 @@
     })();
     </script>
 
-    {# ── Concept primer + Info-tip global styles & behaviour ─────────────── #}
+    {# ── Help system global styles ────────────────────────────────────────── #}
     <style>
+    /* Getting-started checklist */
+    .gs-card { background: var(--bg-glass); border: 1px solid var(--border-glass); border-radius: var(--radius-md, 14px); padding: 1.1rem 1.25rem; margin-bottom: 1rem; }
+    .gs-head { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 0.55rem; }
+    .gs-label { font-size: 0.72rem; font-weight: 800; text-transform: uppercase; letter-spacing: 0.06em; color: var(--text-muted); }
+    .gs-counter { font-size: 0.72rem; font-weight: 700; font-family: monospace; color: var(--brand-primary); }
+    .gs-bar-track { height: 4px; background: rgba(255,255,255,0.08); border-radius: 999px; overflow: hidden; margin-bottom: 0.9rem; }
+    .gs-bar-fill { height: 100%; background: linear-gradient(90deg, var(--brand-primary), #10b981); border-radius: 999px; transition: width 0.4s ease; }
+    .gs-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 0.55rem; }
+    .gs-step { display: flex; align-items: flex-start; gap: 0.6rem; }
+    .gs-icon { font-size: 0.9rem; margin-top: 0.1rem; flex-shrink: 0; color: var(--text-muted); }
+    .gs-step--done .gs-icon { color: #10b981; }
+    .gs-step--current .gs-icon { color: var(--brand-primary); }
+    .gs-content { display: flex; flex-direction: column; gap: 0.1rem; }
+    .gs-title { font-size: 0.86rem; font-weight: 600; color: var(--text-primary); text-decoration: none; }
+    .gs-step--done .gs-title { color: var(--text-muted); text-decoration: line-through; }
+    .gs-step--current .gs-title { color: var(--brand-primary); }
+    .gs-title:hover { text-decoration: underline; }
+    .gs-step--done .gs-title:hover { text-decoration: line-through; }
+    .gs-why { font-size: 0.76rem; color: var(--text-muted); line-height: 1.4; }
+    .gs-done-pill { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.45rem 0.9rem; background: rgba(16,185,129,0.1); border: 1px solid rgba(16,185,129,0.2); border-radius: 999px; font-size: 0.8rem; font-weight: 600; color: #10b981; margin-bottom: 1rem; transition: opacity 0.2s; }
+    .gs-done-dismiss { background: transparent; border: none; color: #10b981; cursor: pointer; padding: 0; font-size: 0.75rem; display: flex; align-items: center; opacity: 0.6; }
+    .gs-done-dismiss:hover { opacity: 1; }
+
     /* Concept primer */
     .cp-card {
         display: flex; align-items: stretch;

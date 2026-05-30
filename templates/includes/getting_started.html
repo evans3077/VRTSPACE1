@@ -1,0 +1,46 @@
+{% if not gs_complete %}
+<div class="gs-card" id="gs-checklist">
+    <div class="gs-head">
+        <span class="gs-label">Getting started</span>
+        <span class="gs-counter">{{ gs_done_count }} of {{ gs_total_count }} done</span>
+    </div>
+    <div class="gs-bar-track"><div class="gs-bar-fill" style="width:{{ gs_progress_pct }}%"></div></div>
+    <ol class="gs-list">
+        {% for step in gs_steps %}
+        <li class="gs-step{% if step.done %} gs-step--done{% elif step.current %} gs-step--current{% endif %}">
+            <span class="gs-icon" aria-hidden="true">
+                {% if step.done %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-regular fa-circle"></i>{% endif %}
+            </span>
+            <span class="gs-content">
+                {% if step.done %}
+                <span class="gs-title">{{ step.title }}</span>
+                {% else %}
+                <a class="gs-title" href="{{ step.url }}">{{ step.title }}</a>
+                {% endif %}
+                <span class="gs-why">{{ step.why }}</span>
+            </span>
+        </li>
+        {% endfor %}
+    </ol>
+</div>
+{% else %}
+<div class="gs-done-pill" id="gs-done-pill" role="status">
+    <i class="fa-solid fa-circle-check" aria-hidden="true"></i>
+    You're set up — tracking AI visibility end-to-end.
+    <button class="gs-done-dismiss" aria-label="Dismiss">
+        <i class="fa-solid fa-xmark"></i>
+    </button>
+</div>
+<script>
+(function () {
+    var el = document.getElementById("gs-done-pill");
+    if (!el) return;
+    if (localStorage.getItem("vrt_gs_done_dismissed") === "1") { el.hidden = true; return; }
+    el.querySelector(".gs-done-dismiss").addEventListener("click", function () {
+        localStorage.setItem("vrt_gs_done_dismissed", "1");
+        el.style.opacity = "0";
+        setTimeout(function () { el.hidden = true; }, 200);
+    });
+})();
+</script>
+{% endif %}

@@ -208,44 +208,9 @@
     </div>
     {% endif %}
 
-    {# ── Activation checklist ── #}
+    {# ── Getting started checklist ── #}
     {% if project.pk %}
-    <div class="mc-card">
-        <div class="mc-section-head">
-            <h2 class="mc-section-title">Activation checklist</h2>
-            <span class="mc-section-meta" style="font-weight:700;color:#0284c7;">{{ activation_done_count }}/{{ activation_total_count }}</span>
-        </div>
-        <div style="height:5px;background:#e2e8f0;border-radius:999px;overflow:hidden;margin-bottom:1rem;">
-            <div style="height:100%;width:{{ activation_progress_pct }}%;background:linear-gradient(90deg,#0284c7,#10b981);border-radius:999px;transition:width 0.4s;"></div>
-        </div>
-        <ul class="mc-checklist">
-            <li class="mc-check-item {% if latest_audit %}is-done{% endif %}">
-                {% if latest_audit %}<i class="fas fa-circle-check"></i><span class="is-done-text">Run first audit</span>
-                {% else %}<i class="far fa-circle"></i><a href="#start-audit">Run first audit</a>{% endif %}
-            </li>
-            <li class="mc-check-item {% if latest_aeo_audit %}is-done{% endif %}">
-                {% if latest_aeo_audit %}<i class="fas fa-circle-check"></i><span class="is-done-text">Run AI Visibility audit</span>
-                {% else %}<i class="far fa-circle"></i><a href="{% url 'aeo:workspace-aeo' %}">Run AI Visibility audit</a>{% endif %}
-            </li>
-            <li class="mc-check-item {% if tracked_prompt_count %}is-done{% endif %}">
-                {% if tracked_prompt_count %}<i class="fas fa-circle-check"></i><span class="is-done-text">Track AI prompts ({{ tracked_prompt_count }})</span>
-                {% else %}<i class="far fa-circle"></i><a href="{% url 'aeo:workspace-prompts' %}">Track AI prompts</a>{% endif %}
-            </li>
-            <li class="mc-check-item {% if latest_seo_snapshot %}is-done{% endif %}">
-                {% if latest_seo_snapshot %}<i class="fas fa-circle-check"></i><span class="is-done-text">Run SEO analysis</span>
-                {% else %}<i class="far fa-circle"></i><a href="{% url 'seo:workspace-seo' %}">Run SEO analysis</a>{% endif %}
-            </li>
-            <li class="mc-check-item {% if audit_schedule %}is-done{% endif %}">
-                {% if audit_schedule %}<i class="fas fa-circle-check"></i><span class="is-done-text">Schedule a rerun</span>
-                {% else %}<i class="far fa-circle"></i><span>Schedule a rerun</span>{% endif %}
-            </li>
-        </ul>
-        {% if activation_complete %}
-        <div class="mc-success-banner">
-            <i class="fas fa-circle-check"></i> Fully activated — you're tracking AI visibility end-to-end.
-        </div>
-        {% endif %}
-    </div>
+    <div class="mc-card">{% include "includes/getting_started.html" %}</div>
     {% endif %}
 
     {# ── Fix queue ── #}
