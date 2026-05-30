@@ -194,32 +194,33 @@ def _slice_for_limit(items, limit):
     return items[:limit], max(len(items) - limit, 0)
 
 
-# Mirrors the visible accordion in tools/free_audit_landing.html so the FAQPage
-# JSON-LD stays identical to what readers see. Answer-first phrasing.
+# FAQPage JSON-LD for the free-audit landing. Kept faithful to the visible
+# accordion in tools/free_audit_landing.html (same questions, answer-first
+# plain-text answers) so readers and crawlers see the same story.
 FREE_AUDIT_FAQS = [
     {
-        "question": "Is the AI visibility audit really free?",
-        "answer": "Yes. The full audit — score, per-engine breakdown, and top fixes — is free forever, with no credit card required.",
+        "question": "Is it really free?",
+        "answer": "Yes. The full audit — score, per-engine breakdown, and top fixes — is free forever, with no card required.",
         "detail": "We make money when teams who like the audit upgrade to track citations over time. If you just want the audit and nothing else, that's fine too.",
     },
     {
-        "question": "How long does the audit take?",
+        "question": "How long does it take?",
         "answer": "Usually 30–60 seconds, depending on how many pages your site has and how fast they respond.",
         "detail": "The result lands in your inbox and is viewable in the workspace as soon as it finishes.",
     },
     {
         "question": "What if I'm not sure my site is ready to be audited?",
         "answer": "Run it anyway — the audit is built to surface fixes and will tell you exactly what to address first.",
-        "detail": "Teams with scores in the 30s and 40s are common starting points.",
+        "detail": "If your site is in rough shape the report still helps; teams with scores in the 30s and 40s are common starting points.",
     },
     {
-        "question": "Do I need to create an account to see my report?",
-        "answer": "No. You can view your report without signing up.",
+        "question": "Do I need to create an account?",
+        "answer": "No. You can see your report without signing up.",
         "detail": "An account is only useful if you want to track changes over time, re-run on a schedule, or share dashboards with teammates.",
     },
     {
         "question": "Do you sell or share my data?",
-        "answer": "Never. We use your URL to run the audit and your email to send the report — nothing more.",
+        "answer": "Never. We use your URL to run the audit and your email to send the report — that's it.",
         "detail": "We don't sell to data brokers, lead resellers, or ad networks.",
     },
     {
@@ -228,7 +229,7 @@ FREE_AUDIT_FAQS = [
         "detail": "Each client can have their own workspace and tracked score history.",
     },
     {
-        "question": "What's the difference between the free audit and the paid plans?",
+        "question": "What's the difference between this and the paid plans?",
         "answer": "The free audit is a point-in-time snapshot; paid plans add continuous tracking, prompt monitoring, share-of-voice, and team features.",
         "detail": "Paid tiers re-run audits on a schedule so you can see whether fixes are working, monitor specific queries across all engines, and benchmark against competitors.",
     },

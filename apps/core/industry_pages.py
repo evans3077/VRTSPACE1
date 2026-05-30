@@ -302,57 +302,58 @@ def build_industry_faqs(industry: dict) -> list[dict]:
         {
             "question": f"What is AI visibility for {lower}?",
             "answer": (
-                f"AI visibility for {lower} measures how often AI answer engines — ChatGPT, "
-                f"Gemini, Perplexity, and Google AI Overviews — cite your brand when people "
-                f"ask questions in your space."
+                f"AI visibility for {lower} is how often AI answer engines — ChatGPT, Gemini, "
+                f"Perplexity, and Google AI Overviews — name and cite your brand when buyers ask "
+                f"questions in your category."
             ),
             "detail": (
-                f"As buyers in {lower} increasingly start research inside AI chatbots instead of "
-                f"search results, being the cited source is how you stay in the consideration set."
+                f"More {lower} buyers now start with an AI chatbot instead of a search results page, "
+                f"so being the cited source is what keeps you in the consideration set at the moment "
+                f"of decision."
             ),
         },
         {
-            "question": f"How do I know if AI recommends competitors over my {lower} brand?",
+            "question": f"How do I find out whether AI recommends competitors instead of my {lower} brand?",
             "answer": (
-                f"VRT SPACE runs your target {lower} queries against the major AI engines and shows "
-                f"exactly which brands get cited — including whether you appear at all."
+                f"VRT SPACE runs your real {lower} buyer queries against every major AI engine and "
+                f"reports exactly which brands get cited — and whether you appear at all."
             ),
             "detail": (
-                "You get a side-by-side share-of-voice view so the gap between you and the brands "
-                "AI currently favours is clear and measurable."
+                "You see a query-by-query share-of-voice view, so a competitor cited in answers where "
+                "you're absent becomes impossible to miss — and easy to put in front of your team."
             ),
         },
         {
-            "question": f"What should {lower} companies do to get cited by AI?",
+            "question": f"What should a {lower} brand do to get cited by AI?",
             "answer": (
-                "Start with a free audit to fix technical and content gaps, then use AEO "
-                "recommendations to structure pages around the questions buyers actually ask."
+                "Run the free audit to fix the technical and content gaps first, then follow the AEO "
+                "recommendations to structure pages around the exact questions buyers ask."
             ),
             "detail": (
-                "Clear entity coverage, schema, and answer-first content make your pages easier for "
-                "AI engines to read, quote, and recommend."
+                "Clean site health, schema, strong entity coverage, and answer-first content are what "
+                "make your pages easy for an AI engine to read, trust, quote, and recommend."
             ),
         },
         {
-            "question": f"How long until a {lower} brand sees new AI citations?",
+            "question": f"How quickly can a {lower} brand earn new AI citations?",
             "answer": (
-                "Most teams see their first new citations within a few weeks of fixing the gaps the "
+                "Most teams see their first new citations within a few weeks of shipping the fixes the "
                 "audit surfaces."
             ),
             "detail": (
-                "Because every audit run is saved, you can rerun after each change and watch your AI "
-                "Visibility Score move to confirm the work is paying off."
+                "Every audit run is saved, so you can re-run after each change and watch your AI "
+                "Visibility Score move — turning AEO from guesswork into something measurable."
             ),
         },
         {
-            "question": "Which AI engines do you track?",
+            "question": "Which AI engines and search surfaces do you track?",
             "answer": (
-                "We track ChatGPT, Gemini, Perplexity, and Google AI Overviews — the engines buyers "
-                "use most."
+                "We track ChatGPT, Gemini, Perplexity, and Google AI Overviews — the answer engines "
+                "buyers rely on most."
             ),
             "detail": (
-                "You see per-engine attribution, so you know which answer engine is sending traffic "
-                "and which one still cites a competitor."
+                "Per-engine attribution shows which engine already sends you traffic and which one "
+                "still favours a competitor, so you know exactly where to focus."
             ),
         },
     ]

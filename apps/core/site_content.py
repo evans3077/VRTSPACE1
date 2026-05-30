@@ -53,21 +53,6 @@ SERVICE_GROUPS = [
 
 PACKAGES = build_marketing_packages(include_free=False)
 
-SYSTEM_BLOCKS = [
-    {
-        "title": "Start with one clear diagnosis",
-        "body": "The audit shows the biggest blockers first so you know where to focus before guessing what to change.",
-    },
-    {
-        "title": "Keep everything in one workspace",
-        "body": "Save runs, compare changes, and keep the next action visible instead of losing context across separate tools.",
-    },
-    {
-        "title": "Rerun after fixes and track progress",
-        "body": "Use the same flow again after updates so improvements become visible, measurable, and easier to share with your team.",
-    },
-]
-
 VALUE_PILLARS = [
     {
         "title": "See the biggest issues first",
@@ -267,53 +252,63 @@ SERVICES_INDEX_FAQS = [
 AGENCY_FAQS = [
     {
         "question": "Can I manage multiple client sites in one account?",
-        "answer": "Yes. VRT SPACE is built for agencies to manage multiple client projects from a single dashboard with a per-client health view.",
-        "detail": "Each client gets their own workspace, score history, and at-risk-category view, so you can see everyone's status at a glance.",
+        "answer": "Yes. VRT SPACE is built for agencies to run every client from one dashboard, each with its own workspace and health score.",
+        "detail": "The agency view shows all clients side by side — overall score, the most at-risk category, and how each score moved since the last audit — so your morning status check takes seconds, not a spreadsheet.",
     },
     {
-        "question": "How does this help me prove ROI to clients?",
-        "answer": "Every audit run is saved, so you can show a client's score moving from, say, 54 to 71 over 60 days.",
-        "detail": "The AI visibility comparison — showing a competitor cited where the client isn't — is the screenshot agencies use to justify the retainer.",
+        "question": "How does this help me prove ROI and keep retainers?",
+        "answer": "Every audit run is saved, so you can show a client's score climbing from, say, 54 to 71 over 60 days — concrete proof the work is paying off.",
+        "detail": "The AI visibility comparison — a competitor cited in answers where your client isn't — is the screenshot agencies use to win the deal and justify the monthly fee.",
     },
     {
-        "question": "Can I white-label or share reports with clients?",
-        "answer": "Yes. You can generate shareable audit report links and exports to send straight to clients.",
-        "detail": "Shared links let a client discover the platform through your work, while you keep the full workspace.",
+        "question": "Can I share or white-label reports for clients?",
+        "answer": "Yes. You can generate shareable audit report links and exports to send clients directly, no login required on their end.",
+        "detail": "Shared links double as a soft acquisition channel — the client sees your work and discovers the platform — while you keep the full workspace and history.",
     },
     {
-        "question": "Do you offer an affiliate or referral program for agencies?",
-        "answer": "Yes. Agencies and influencers can earn commission on referrals through the built-in affiliate program.",
-        "detail": "Referrals are tracked on signup and commission is calculated automatically, with monthly payout statements.",
+        "question": "How fast can I onboard a new client?",
+        "answer": "Add a client site and run the first audit in under two minutes — no crawl setup, integrations, or onboarding calls required.",
+        "detail": "You get a baseline score and prioritized fixes immediately, then schedule weekly or monthly re-audits so regressions surface before the client notices.",
+    },
+    {
+        "question": "Do you offer an affiliate or referral program?",
+        "answer": "Yes. Agencies and creators earn commission through the built-in invite-only partner program — currently up to 25% on first payment and 15% recurring.",
+        "detail": "Referrals are attributed on signup and commission is calculated automatically, with payouts handled weekly through Stripe.",
     },
     {
         "question": "How is pricing structured for agencies?",
-        "answer": "Plans scale by tracked client sites and monthly audits — Starter ($59), Growth ($149), and Authority ($349).",
-        "detail": "Most agencies bill the tool back to clients, so the plan pays for itself across a handful of retainers.",
+        "answer": "Plans scale by tracked client sites and monthly audits — Starter ($59), Growth ($149), and Authority ($349) per month.",
+        "detail": "Growth fits most agencies at 10 client sites and 24 audits a month. Because the cost is billable back to clients, the plan usually pays for itself across a couple of retainers.",
     },
 ]
 
-# Packages / pricing page — mirrors the visible accordion so the FAQPage schema
-# stays identical to what readers see.
+# Packages / pricing page — single source for both the visible accordion and
+# the FAQPage schema, so they can never drift apart.
 PACKAGES_FAQS = [
     {
-        "question": "Should I start with a plan or with the free audit?",
-        "answer": "Start with the free audit first.",
-        "detail": "It gives you a clearer picture of what is broken, what matters most, and whether you need a paid plan right away.",
+        "question": "Is there a free plan, and what's included?",
+        "answer": "Yes. The free plan includes a tracked website, starter audits, your overall score, and category gauges — no credit card required.",
+        "detail": "It's enough to see where you stand and run your first diagnosis. Paid plans add more audits, more tracked sites, AI citation tracking over time, deeper recommendations, and PDF export.",
     },
     {
-        "question": "What changes as I move up the plan ladder?",
-        "answer": "You unlock more capacity, more follow-through, and more room to keep improving.",
-        "detail": "The higher tiers are designed for teams that need more audits, more active workspace usage, or more advanced delivery support.",
+        "question": "How much does VRT SPACE cost?",
+        "answer": "Paid plans are Starter at $59/mo, Growth at $149/mo, and Authority at $349/mo, billed monthly.",
+        "detail": "Each tier scales the number of monthly audits, tracked websites, and AEO/content capacity. Most agencies bill the cost back to clients, so a single retainer usually covers the plan.",
     },
     {
-        "question": "When should I request custom scope?",
-        "answer": "Only when the normal audit, SEO, AEO, and workspace flow is not enough.",
-        "detail": "If your need is a large rebuild, bespoke implementation, or multi-domain complexity, custom scope becomes the better path.",
+        "question": "How do credits work?",
+        "answer": "Credits are the currency for actions — roughly one credit per audit or AI scan, and a couple per content draft — and they refresh each billing cycle.",
+        "detail": "When you run low you get alerts at 50%, 75%, and 90%, and you can buy a one-time top-up starting at $10 instead of being forced into a higher plan.",
     },
     {
-        "question": "Can I create a workspace before I upgrade?",
-        "answer": "Yes. You can start the relationship before committing to a larger plan.",
-        "detail": "That keeps the first step light and lets the product prove value before you decide how far to scale.",
+        "question": "Can I upgrade, downgrade, or cancel anytime?",
+        "answer": "Yes. You can change plans or cancel at any time from your account — there's no lock-in contract.",
+        "detail": "Upgrades take effect immediately so you get the extra capacity right away, and your workspace history is preserved across plan changes.",
+    },
+    {
+        "question": "What's the difference between the plans for AI visibility?",
+        "answer": "Higher tiers track more target queries across more AI engines and more client sites, so you see a fuller picture of where you're cited.",
+        "detail": "Starter is right for a single brand getting started; Growth suits agencies tracking several clients; Authority adds the deepest query coverage and the most monthly capacity.",
     },
 ]
 

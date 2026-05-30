@@ -19,7 +19,6 @@ from .site_content import (
     SERVICE_GROUPS,
     SERVICE_PAGE_LIST,
     SERVICE_PAGE_LOOKUP,
-    SYSTEM_BLOCKS,
     VALUE_PILLARS,
     build_faq_schema,
 )
@@ -72,7 +71,6 @@ def build_home_context(request, **extra):
         "service_groups": SERVICE_GROUPS,
         "service_page_list": SERVICE_PAGE_LIST,
         "packages": PACKAGES,
-        "system_blocks": SYSTEM_BLOCKS,
         "value_pillars": VALUE_PILLARS,
         "engagement_steps": ENGAGEMENT_STEPS,
         "faqs": FAQS,
@@ -80,12 +78,6 @@ def build_home_context(request, **extra):
             {"value": "3", "label": "AI engines tracked: ChatGPT, Gemini, Perplexity"},
             {"value": "1", "label": "Workspace to track audits, fixes, and AI visibility over time"},
             {"value": "Repeat", "label": "Rerun after fixes and watch your AI visibility score improve"},
-        ],
-        "method_steps": [
-            "Run a live audit to surface the biggest issues affecting speed, search visibility, and AI readiness.",
-            "Review the SEO and AEO signals to understand what competitors are doing better and what your site is missing.",
-            "Save the work in a workspace so your team can track recommendations, history, and next actions in one place.",
-            "Rerun after updates to validate improvements and keep building progress over time.",
         ],
         "trust_signals": ["Audit-first clarity", "SEO roadmap", "AI visibility insight", "Workspace progress tracking"],
         "audiences": ["Founders", "Growth teams", "Enterprise brands", "Global Agencies"],
@@ -213,6 +205,7 @@ class PackagesView(TemplateView):
             ),
             "plans": plans,
             "comparison_matrix": build_plan_comparison_matrix(plans),
+            "faqs": PACKAGES_FAQS,
         }
 
 class ForAgenciesView(TemplateView):

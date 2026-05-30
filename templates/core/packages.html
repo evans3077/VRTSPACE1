@@ -336,46 +336,18 @@ body.shell-light .vrt-enterprise-card .vrt-enterprise-price,
         <h2>Simple answers before you commit.</h2>
     </div>
     <div class="container faq-accordion public-faq-shell">
-        <details class="faq-item" open>
+        {% for item in faqs %}
+        <details class="faq-item"{% if forloop.first %} open{% endif %}>
             <summary class="faq-question">
-                <h3>Should I start with a plan or with the free audit?</h3>
+                <h3>{{ item.question }}</h3>
                 <span class="faq-icon"></span>
             </summary>
             <div class="faq-answer">
-                <span class="direct-answer">Start with the free audit first.</span>
-                <p>It gives you a clearer picture of what is broken, what matters most, and whether you need a paid plan right away.</p>
+                <span class="direct-answer">{{ item.answer }}</span>
+                {% if item.detail %}<p>{{ item.detail }}</p>{% endif %}
             </div>
         </details>
-        <details class="faq-item">
-            <summary class="faq-question">
-                <h3>What changes as I move up the plan ladder?</h3>
-                <span class="faq-icon"></span>
-            </summary>
-            <div class="faq-answer">
-                <span class="direct-answer">You unlock more capacity, more follow-through, and more room to keep improving.</span>
-                <p>The higher tiers are designed for teams that need more audits, more active workspace usage, or more advanced delivery support.</p>
-            </div>
-        </details>
-        <details class="faq-item">
-            <summary class="faq-question">
-                <h3>When should I request custom scope?</h3>
-                <span class="faq-icon"></span>
-            </summary>
-            <div class="faq-answer">
-                <span class="direct-answer">Only when the normal audit, SEO, AEO, and workspace flow is not enough.</span>
-                <p>If your need is a large rebuild, bespoke implementation, or multi-domain complexity, custom scope becomes the better path.</p>
-            </div>
-        </details>
-        <details class="faq-item">
-            <summary class="faq-question">
-                <h3>Can I create a workspace before I upgrade?</h3>
-                <span class="faq-icon"></span>
-            </summary>
-            <div class="faq-answer">
-                <span class="direct-answer">Yes. You can start the relationship before committing to a larger plan.</span>
-                <p>That keeps the first step light and lets the product prove value before you decide how far to scale.</p>
-            </div>
-        </details>
+        {% endfor %}
     </div>
 </section>
 {% endblock %}
