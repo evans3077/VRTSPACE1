@@ -60,7 +60,7 @@
                 <i class="fa-solid fa-users"></i><span>Team</span>
             </a>
             <a class="ws-sidebar-link {% if workspace_nav_current == 'billing' %}is-active{% endif %}"
-               href="{% url 'tools:account-dashboard' %}">
+               href="{% url 'tools:account-dashboard' %}#billing">
                 <i class="fa-solid fa-credit-card"></i><span>Billing &amp; Credits</span>
             </a>
             <a class="ws-sidebar-link {% if workspace_nav_current == 'publishing' %}is-active{% endif %}"
@@ -68,7 +68,7 @@
                 <i class="fa-solid fa-paper-plane"></i><span>Publishing</span>
             </a>
             <a class="ws-sidebar-link {% if workspace_nav_current == 'settings' %}is-active{% endif %}"
-               href="{% url 'tools:account-dashboard' %}">
+               href="{% url 'tools:account-dashboard' %}#profile">
                 <i class="fa-solid fa-gear"></i><span>Settings</span>
             </a>
             {% with affiliate=user.affiliate_profile %}{% if affiliate and affiliate.status == "active" %}
@@ -96,4 +96,30 @@
     </div>
 
 </aside>
+
+{# ── Top bar (renders in the content column) ──────────────────────────── #}
+<header class="ws-topbar">
+    <div class="ws-topbar-crumb">
+        <i class="fa-solid fa-table-cells-large"></i>
+        <span>Workspace</span>
+        <span class="ws-crumb-sep">/</span>
+        <span class="ws-crumb-current">{% if workspace_nav_current == 'workspace' %}Overview{% elif workspace_nav_current == 'aeo' %}AI Visibility{% elif workspace_nav_current == 'prompts' %}Prompts{% elif workspace_nav_current == 'sov' %}Share of Voice{% elif workspace_nav_current == 'seo' %}SEO Audit{% elif workspace_nav_current == 'content' %}Content{% elif workspace_nav_current == 'agency' %}All Clients{% elif workspace_nav_current == 'team' %}Team{% elif workspace_nav_current == 'billing' %}Billing &amp; Credits{% elif workspace_nav_current == 'publishing' %}Publishing{% elif workspace_nav_current == 'settings' %}Settings{% elif workspace_nav_current == 'affiliate' %}Affiliate{% else %}Workspace{% endif %}</span>
+    </div>
+    <div class="ws-topbar-actions">
+        {% if workspace_billing_state.credits %}
+        {% with credit=workspace_billing_state.credits.0 %}
+        <span class="ws-topbar-credit" title="{{ credit.label }}">
+            <i class="fa-solid fa-bolt"></i>
+            <span>{% if credit.unlimited %}&infin;{% else %}{{ credit.remaining }}{% endif %} credits</span>
+        </span>
+        {% endwith %}
+        {% endif %}
+        <a class="ws-topbar-link" href="{% url 'tools:account-dashboard' %}#profile">
+            <i class="fa-solid fa-user-circle"></i><span>Account</span>
+        </a>
+        <a class="ws-topbar-link" href="{% url 'core:home' %}">
+            <i class="fa-solid fa-arrow-up-right-from-square"></i><span>View site</span>
+        </a>
+    </div>
+</header>
 {% endif %}

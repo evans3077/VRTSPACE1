@@ -857,8 +857,8 @@ class WorkspaceSEOViewTests(TestCase):
         response = self.client.get(reverse("seo:workspace-seo"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Entity Context")
-        self.assertContains(response, "Update Intelligence")
+        self.assertContains(response, "Update the SEO intelligence brief")
+        self.assertContains(response, "Update SEO Intelligence")
 
     @patch("apps.seo.services.discover_serp_competitors")
     @patch("apps.seo.services.fetch_many")
@@ -2368,8 +2368,9 @@ class SEOCompetitorDiscoveryTests(TestCase):
         SERP_DISCOVERY_QUERY_LIMIT=1,
         SERP_DISCOVERY_RESULTS_PER_QUERY=5,
     )
+    @patch("apps.seo.discovery.fetch_vertical_serpapi_results", return_value={})
     @patch("apps.seo.discovery.fetch_serpapi_results", return_value="unexpected-payload")
-    def test_discover_serp_competitors_degrades_when_provider_payload_is_invalid(self, mocked_serp_fetch):
+    def test_discover_serp_competitors_degrades_when_provider_payload_is_invalid(self, mocked_serp_fetch, mocked_vertical_fetch):
         audit_request = AuditRequest.objects.create(
             company_name="Northwind",
             email="ops@example.com",

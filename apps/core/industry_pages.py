@@ -288,6 +288,77 @@ INDUSTRY_PAGES = {
 }
 
 
+def build_industry_faqs(industry: dict) -> list[dict]:
+    """Generate curated, AEO-optimised FAQs tailored to one industry.
+
+    Answer-first phrasing (the lead sentence is the liftable snippet) seeded
+    with the vertical's own name so every programmatic landing page ships rich,
+    distinct FAQ content plus matching FAQPage JSON-LD — strong for long-tail
+    "AI visibility for <industry>" queries.
+    """
+    name = industry["name"]
+    lower = name.lower()
+    return [
+        {
+            "question": f"What is AI visibility for {lower}?",
+            "answer": (
+                f"AI visibility for {lower} is how often AI answer engines — ChatGPT, Gemini, "
+                f"Perplexity, and Google AI Overviews — name and cite your brand when buyers ask "
+                f"questions in your category."
+            ),
+            "detail": (
+                f"More {lower} buyers now start with an AI chatbot instead of a search results page, "
+                f"so being the cited source is what keeps you in the consideration set at the moment "
+                f"of decision."
+            ),
+        },
+        {
+            "question": f"How do I find out whether AI recommends competitors instead of my {lower} brand?",
+            "answer": (
+                f"VRT SPACE runs your real {lower} buyer queries against every major AI engine and "
+                f"reports exactly which brands get cited — and whether you appear at all."
+            ),
+            "detail": (
+                "You see a query-by-query share-of-voice view, so a competitor cited in answers where "
+                "you're absent becomes impossible to miss — and easy to put in front of your team."
+            ),
+        },
+        {
+            "question": f"What should a {lower} brand do to get cited by AI?",
+            "answer": (
+                "Run the free audit to fix the technical and content gaps first, then follow the AEO "
+                "recommendations to structure pages around the exact questions buyers ask."
+            ),
+            "detail": (
+                "Clean site health, schema, strong entity coverage, and answer-first content are what "
+                "make your pages easy for an AI engine to read, trust, quote, and recommend."
+            ),
+        },
+        {
+            "question": f"How quickly can a {lower} brand earn new AI citations?",
+            "answer": (
+                "Most teams see their first new citations within a few weeks of shipping the fixes the "
+                "audit surfaces."
+            ),
+            "detail": (
+                "Every audit run is saved, so you can re-run after each change and watch your AI "
+                "Visibility Score move — turning AEO from guesswork into something measurable."
+            ),
+        },
+        {
+            "question": "Which AI engines and search surfaces do you track?",
+            "answer": (
+                "We track ChatGPT, Gemini, Perplexity, and Google AI Overviews — the answer engines "
+                "buyers rely on most."
+            ),
+            "detail": (
+                "Per-engine attribution shows which engine already sends you traffic and which one "
+                "still favours a competitor, so you know exactly where to focus."
+            ),
+        },
+    ]
+
+
 def get_industry_page(slug: str) -> dict | None:
     """Look up an industry config by slug. Returns None if not found."""
     return INDUSTRY_PAGES.get(slug)

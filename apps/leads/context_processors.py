@@ -25,12 +25,20 @@ def workspace_projects(request):
         nav_current = "aeo"
     elif path.startswith("/workspace/content/") or path.startswith("/workspace/cms/"):
         nav_current = "content"
+    elif path.startswith("/workspace/agency/"):
+        nav_current = "agency"
     elif path.startswith("/workspace/team/"):
         nav_current = "team"
     elif path.startswith("/workspace/"):
         nav_current = "workspace"
+    elif path.startswith("/account/"):
+        nav_current = "billing"
     elif path.startswith("/tools/audits/"):
         nav_current = "audits"
+    elif path.startswith("/affiliates/"):
+        nav_current = "affiliate"
+
+    is_workspace = nav_current != ""
 
     return {
         "workspace_projects": get_workspace_projects(user),
@@ -38,4 +46,5 @@ def workspace_projects(request):
         "active_workspace_project": resolve_workspace_project(request=request, user=user),
         "workspace_billing_state": get_billing_state(user),
         "workspace_nav_current": nav_current,
+        "is_workspace_shell": is_workspace,
     }

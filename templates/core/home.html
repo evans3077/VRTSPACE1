@@ -574,18 +574,11 @@
     </div>
 </section>
 
-<section class="insight-section">
-    <div class="container section-heading">
-        <p class="eyebrow">Why this matters</p>
-        <h2>Your website needs more than one kind of fix.</h2>
-        <p class="section-text">{{ critical_insight }}</p>
-    </div>
-</section>
-
 <section class="experience-section">
     <div class="container section-heading">
         <p class="eyebrow">What you get</p>
         <h2>See the issues, understand the impact, and keep the next step clear.</h2>
+        <p class="section-text">{{ critical_insight }}</p>
     </div>
     <div class="container experience-grid">
         {% for pillar in value_pillars %}
@@ -610,39 +603,6 @@
             <p>{{ step.body }}</p>
         </article>
         {% endfor %}
-    </div>
-</section>
-
-<section class="systems-section" id="workspace">
-    <div class="container section-heading">
-        <p class="eyebrow">Why the workspace matters</p>
-        <h2>Keep the work visible after the first audit.</h2>
-    </div>
-    <div class="container system-grid">
-        {% for block in system_blocks %}
-        <article class="system-card">
-            <h3>{{ block.title }}</h3>
-            <p>{{ block.body }}</p>
-        </article>
-        {% endfor %}
-    </div>
-</section>
-
-<section class="method-section" id="method">
-    <div class="container method-grid">
-        <div>
-            <p class="eyebrow">The working method</p>
-            <h2>One simple loop for better visibility.</h2>
-            <p>
-                VRT SPACE is designed to help you diagnose the site, decide what matters most, keep the work in one
-                place, and measure progress after each round of fixes.
-            </p>
-        </div>
-        <ol class="method-list">
-            {% for step in method_steps %}
-            <li>{{ step }}</li>
-            {% endfor %}
-        </ol>
     </div>
 </section>
 
@@ -697,6 +657,7 @@
             </summary>
             <div class="faq-answer">
                 <span class="direct-answer">{{ item.answer }}</span>
+                {% if item.detail %}<p>{{ item.detail }}</p>{% endif %}
             </div>
         </details>
         {% endfor %}

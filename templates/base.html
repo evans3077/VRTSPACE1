@@ -402,15 +402,10 @@
        Applies clean white cards + soft borders to ALL system-cards
        inside any workspace shell when body.shell-light is set.
        ══════════════════════════════════════════════════════════ */
-    /* ── Sidebar layout: hide public nav/footer, offset content ─── */
-    body.shell-light .site-header { display: none !important; }
-    body.shell-light .vrt-footer  { display: none !important; }
-    body.shell-light main          { min-height: 100vh; }
-    /* Grid layout handles sidebar column — no padding-left needed */
-    body.shell-light:has(.ws-sidebar) main { padding-left: 0 !important; }
-    @media (max-width: 768px) {
-        body.shell-light main { padding-left: 0 !important; padding-bottom: 60px !important; }
-    }
+    /* ── Sidebar layout — handled by :has(.ws-sidebar) rules below ── */
+    /* Header/footer hide and grid layout are in the sidebar CSS block
+       at the bottom of this <style> tag. Only set min-height here. */
+    body.shell-light main { min-height: 100vh; }
 
     body.shell-light {
         background: #f1f5f9 !important;
@@ -1228,9 +1223,12 @@
        presence alone triggers the layout and hides the marketing chrome.
        ═══════════════════════════════════════════════════════════════ */
 
-    /* Hide marketing chrome when sidebar is on-page */
+    /* Hide public marketing header on ALL authenticated workspace pages.
+       Pages with a sidebar (.ws-sidebar) get the workspace nav; transition
+       pages without one (welcome, onboarding steps) get a clean focused
+       flow with no distracting public nav links. Footer stays visible. */
     body:has(.ws-sidebar) .site-header,
-    body:has(.ws-sidebar) .vrt-footer { display: none !important; }
+    body.is-workspace .site-header { display: none !important; }
 
     /* Root layout — CSS grid so the sidebar pins column 1 across ALL rows,
        and every non-sidebar child (ws-main-content or raw container-fluid)
@@ -1278,11 +1276,11 @@
         padding-right: 2rem;
     }
 
-    /* ── Sidebar ─────────────────────────────────────────────────── */
+    /* ── Sidebar — light theme, brand-consistent ─────────────────── */
     .ws-sidebar {
         width: 240px;
-        background: #0d1526;
-        border-right: 1px solid rgba(255,255,255,0.09);
+        background: #ffffff;
+        border-right: 1px solid #e2e8f0;
         display: flex;
         flex-direction: column;
         position: sticky;
@@ -1291,67 +1289,93 @@
         overflow-y: auto;
         overflow-x: hidden;
         scrollbar-width: thin;
-        scrollbar-color: rgba(255,255,255,0.1) transparent;
+        scrollbar-color: #cbd5e1 transparent;
     }
     .ws-sidebar::-webkit-scrollbar { width: 4px; }
-    .ws-sidebar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.08); border-radius: 2px; }
+    .ws-sidebar::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 2px; }
 
     .ws-sidebar-brand {
-        padding: 1.2rem 1.1rem 1rem;
-        border-bottom: 1px solid rgba(255,255,255,0.08);
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        padding: 0.85rem 1.1rem 0.75rem;
+        border-bottom: 1px solid #f1f5f9;
+        flex-shrink: 0;
+        text-decoration: none;
+    }
+    .ws-sidebar-brand-mark {
+        width: 30px; height: 30px;
+        border-radius: 8px;
+        background: var(--brand-gradient, linear-gradient(135deg, #38bdf8 0%, #818cf8 100%));
+        color: #ffffff;
+        font-size: 0.95rem;
+        font-weight: 900;
+        display: flex; align-items: center; justify-content: center;
         flex-shrink: 0;
     }
+    .ws-sidebar-brand-text {
+        font-size: 0.82rem; font-weight: 800; letter-spacing: 0.04em;
+        text-transform: uppercase; color: #0f172a; white-space: nowrap;
+    }
+    .ws-sidebar-project {
+        display: flex; align-items: center; gap: 0.5rem;
+        padding: 0.4rem 1.1rem 0.5rem; flex-shrink: 0;
+    }
+    .ws-sidebar-project-dot { width: 6px; height: 6px; border-radius: 50%; background: #22c55e; flex-shrink: 0; }
+    .ws-sidebar-project-name { font-size: 0.74rem; font-weight: 600; color: #64748b; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
     /* Nav sections */
     .ws-sidebar-section {
-        padding: 0.9rem 0 0.5rem;
-        border-bottom: 1px solid rgba(255,255,255,0.06);
+        padding: 0.45rem 0 0.3rem;
         flex-shrink: 0;
     }
+    .ws-sidebar-section + .ws-sidebar-section { border-top: 1px solid #f1f5f9; }
     /* Prefix with .ws-sidebar to beat body.shell-light a/p rules (specificity 0,2,0 > 0,1,1) */
     .ws-sidebar .ws-sidebar-section-label {
-        font-size: 0.6rem;
+        font-size: 0.58rem;
         font-weight: 800;
         letter-spacing: 0.14em;
         text-transform: uppercase;
-        color: #7a9ab8 !important;
-        padding: 0 1.1rem;
+        color: #94a3b8 !important;
+        padding: 0 1.15rem;
         margin: 0 0 0.4rem;
     }
     .ws-sidebar .ws-sidebar-link {
         display: flex;
         align-items: center;
-        gap: 0.65rem;
-        padding: 0.54rem 1.1rem;
-        font-size: 0.84rem;
-        color: #a8c4d8 !important;
+        gap: 0.6rem;
+        padding: 0.38rem 1.1rem;
+        font-size: 0.82rem;
+        font-weight: 500;
+        color: #475569 !important;
         text-decoration: none;
         transition: background 0.12s, color 0.12s;
         position: relative;
         white-space: nowrap;
     }
     .ws-sidebar .ws-sidebar-link i {
-        width: 15px;
-        font-size: 0.8rem;
+        width: 16px;
+        font-size: 0.85rem;
         text-align: center;
         flex-shrink: 0;
-        color: #7a9ab8 !important;
+        color: #94a3b8 !important;
         transition: color 0.12s;
     }
     .ws-sidebar .ws-sidebar-link span { flex: 1; color: inherit !important; }
-    .ws-sidebar .ws-sidebar-link:hover { background: rgba(255,255,255,0.055); color: #dce9f5 !important; }
-    .ws-sidebar .ws-sidebar-link:hover i { color: #8faec8 !important; }
+    .ws-sidebar .ws-sidebar-link:hover { background: #f1f5f9; color: #0f172a !important; }
+    .ws-sidebar .ws-sidebar-link:hover i { color: #475569 !important; }
     .ws-sidebar .ws-sidebar-link.is-active {
-        background: rgba(56,189,248,0.12);
-        color: #5bcefa !important;
-        font-weight: 600;
+        background: #eff6ff;
+        color: #0284c7 !important;
+        font-weight: 700;
     }
-    .ws-sidebar .ws-sidebar-link.is-active i { color: #38bdf8 !important; }
+    .ws-sidebar .ws-sidebar-link.is-active i { color: #0284c7 !important; }
     .ws-sidebar .ws-sidebar-link.is-active::before {
         content: '';
         position: absolute;
         left: 0; top: 0; bottom: 0;
         width: 3px;
-        background: #38bdf8;
+        background: var(--brand-primary, #38bdf8);
         border-radius: 0 3px 3px 0;
     }
     .ws-sidebar-badge {
@@ -1359,36 +1383,101 @@
         padding: 0.1rem 0.42rem;
         background: #0284c7;
         color: #fff;
-        font-size: 0.64rem;
+        font-size: 0.6rem;
         font-weight: 800;
         border-radius: 999px;
         line-height: 1.5;
-    }
-
-    /* Override vrt-space-core shell-light rules that make sidebar credit/logout
-       text too dark to read on the dark sidebar background (#0d1526). */
-    body.shell-light .ws-sidebar .ws-sidebar-credit  { background: rgba(255,255,255,0.04) !important; border-color: rgba(255,255,255,0.07) !important; color: #7a9ab8 !important; }
-    body.shell-light .ws-sidebar .ws-sidebar-logout  { color: #7a9ab8 !important; }
-    body.shell-light .ws-sidebar .ws-sidebar-logout:hover { color: #ef4444 !important; background: rgba(239,68,68,0.1) !important; }
-
-    /* Footer — vrt-space-core.css provides the flex-direction:column base;
-       these rules fine-tune padding and border only. */
-    .ws-sidebar-footer {
-        padding: 0.75rem 1rem;
-        border-top: 1px solid rgba(255,255,255,0.08);
-        gap: 0.35rem;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
         flex-shrink: 0;
     }
+    /* Override the transparent vrt-space-core.css variant — solid pill is readable on white sidebar */
+    .ws-sidebar-badge--new {
+        background: #0ea5e9 !important;
+        color: #fff !important;
+        border: none !important;
+    }
+
+    /* Footer — credits + logout (light) */
+    body.shell-light .ws-sidebar .ws-sidebar-credit  { background: #f8fafc !important; border: 1px solid #e2e8f0 !important; color: #475569 !important; }
+    body.shell-light .ws-sidebar .ws-sidebar-credit strong { color: #0284c7 !important; }
+    body.shell-light .ws-sidebar .ws-sidebar-credit i { color: #0284c7 !important; }
+    body.shell-light .ws-sidebar .ws-sidebar-logout  { color: #64748b !important; }
+    body.shell-light .ws-sidebar .ws-sidebar-logout:hover { color: #dc2626 !important; background: #fef2f2 !important; }
+
+    .ws-sidebar-footer {
+        margin-top: auto;
+        padding: 0.55rem 0.9rem;
+        border-top: 1px solid #e2e8f0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.3rem;
+        flex-shrink: 0;
+    }
+    .ws-sidebar-credit {
+        display: flex; align-items: center; gap: 0.45rem;
+        padding: 0.5rem 0.7rem; border-radius: 8px;
+        font-size: 0.74rem; font-weight: 600;
+    }
+    .ws-sidebar-credit i { font-size: 0.7rem; flex-shrink: 0; }
     .ws-sidebar .ws-sidebar-logout {
-        color: #4e6680 !important;
-        font-size: 0.82rem;
-        padding: 0.32rem 0.45rem;
-        border-radius: 6px;
+        display: flex; align-items: center; gap: 0.7rem;
+        color: #64748b !important;
+        font-size: 0.84rem; font-weight: 500;
+        padding: 0.45rem 0.7rem;
+        border-radius: 8px;
         text-decoration: none;
         transition: color 0.15s, background 0.15s;
         flex-shrink: 0;
     }
-    .ws-sidebar .ws-sidebar-logout:hover { color: #ef4444 !important; background: rgba(239,68,68,0.1); }
+    .ws-sidebar .ws-sidebar-logout i { font-size: 0.78rem; flex-shrink: 0; }
+    .ws-sidebar .ws-sidebar-logout:hover { color: #dc2626 !important; background: #fef2f2; }
+
+    /* ── Workspace top bar (content column) ──────────────────────── */
+    .ws-topbar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+        padding: 0.7rem 1.5rem;
+        background: rgba(255,255,255,0.85);
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
+        border-bottom: 1px solid #e2e8f0;
+        position: sticky;
+        top: 0;
+        z-index: 50;
+    }
+    .ws-topbar-crumb {
+        display: flex; align-items: center; gap: 0.5rem;
+        font-size: 0.8rem; color: #64748b; min-width: 0;
+    }
+    .ws-topbar-crumb i { font-size: 0.72rem; color: #94a3b8; }
+    .ws-topbar-crumb .ws-crumb-sep { color: #cbd5e1; }
+    .ws-topbar-crumb .ws-crumb-current { color: #0f172a; font-weight: 700; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .ws-topbar-actions { display: flex; align-items: center; gap: 0.6rem; flex-shrink: 0; }
+    .ws-topbar-link {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        font-size: 0.8rem; font-weight: 600; color: #475569;
+        text-decoration: none; padding: 0.4rem 0.75rem;
+        border-radius: 8px; border: 1px solid #e2e8f0; background: #ffffff;
+        transition: color 0.15s, border-color 0.15s, background 0.15s;
+        white-space: nowrap;
+    }
+    .ws-topbar-link:hover { color: #0284c7; border-color: #7dd3fc; background: #f0f9ff; }
+    .ws-topbar-link i { font-size: 0.78rem; }
+    .ws-topbar-credit {
+        display: inline-flex; align-items: center; gap: 0.4rem;
+        font-size: 0.78rem; font-weight: 700; color: #475569;
+        padding: 0.4rem 0.75rem; border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0;
+        white-space: nowrap;
+    }
+    .ws-topbar-credit i { color: var(--brand-primary, #38bdf8); font-size: 0.72rem; }
+    .ws-topbar-credit strong { color: #0284c7; }
+    @media (max-width: 768px) {
+        .ws-topbar { padding: 0.6rem 1rem; }
+        .ws-topbar-link span, .ws-topbar-crumb i { display: none; }
+    }
 
     /* ── Main content area ───────────────────────────────────────── */
     .ws-main-content {
@@ -1947,7 +2036,7 @@
     {% endif %}
     {% block extra_head %}{% endblock %}
 </head>
-<body class="{{ shell_theme|default:'' }}">
+<body class="{{ shell_theme|default:'' }}{% if is_workspace_shell %} is-workspace{% endif %}">
     <header class="site-header">
         <div class="container nav-shell">
             <a class="brand" href="/">VRT SPACE AGENCY</a>
@@ -2063,6 +2152,7 @@
                     <li><a href="{% url 'core:packages' %}"><i class="fa-solid fa-layer-group"></i>Pricing</a></li>
                     <li><a href="{% url 'content:blog-index' %}"><i class="fa-solid fa-newspaper"></i>Blog</a></li>
                     <li><a href="{% url 'case_studies:case-study-index' %}"><i class="fa-solid fa-star"></i>Case Studies</a></li>
+                    <li><a href="{% url 'affiliates:partner-inquiry' %}"><i class="fa-solid fa-handshake"></i>Partner Program</a></li>
                 </ul>
             </div>
 

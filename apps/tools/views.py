@@ -1,3 +1,4 @@
+import json
 from urllib.parse import urlencode, urlparse
 
 from django.contrib import messages
@@ -193,11 +194,59 @@ def _slice_for_limit(items, limit):
     return items[:limit], max(len(items) - limit, 0)
 
 
+# FAQPage JSON-LD for the free-audit landing. Kept faithful to the visible
+# accordion in tools/free_audit_landing.html (same questions, answer-first
+# plain-text answers) so readers and crawlers see the same story.
+FREE_AUDIT_FAQS = [
+    {
+        "question": "Is it really free?",
+        "answer": "Yes. The full audit — score, per-engine breakdown, and top fixes — is free forever, with no card required.",
+        "detail": "We make money when teams who like the audit upgrade to track citations over time. If you just want the audit and nothing else, that's fine too.",
+    },
+    {
+        "question": "How long does it take?",
+        "answer": "Usually 30–60 seconds, depending on how many pages your site has and how fast they respond.",
+        "detail": "The result lands in your inbox and is viewable in the workspace as soon as it finishes.",
+    },
+    {
+        "question": "What if I'm not sure my site is ready to be audited?",
+        "answer": "Run it anyway — the audit is built to surface fixes and will tell you exactly what to address first.",
+        "detail": "If your site is in rough shape the report still helps; teams with scores in the 30s and 40s are common starting points.",
+    },
+    {
+        "question": "Do I need to create an account?",
+        "answer": "No. You can see your report without signing up.",
+        "detail": "An account is only useful if you want to track changes over time, re-run on a schedule, or share dashboards with teammates.",
+    },
+    {
+        "question": "Do you sell or share my data?",
+        "answer": "Never. We use your URL to run the audit and your email to send the report — that's it.",
+        "detail": "We don't sell to data brokers, lead resellers, or ad networks.",
+    },
+    {
+        "question": "I'm an agency — can I run it on every client?",
+        "answer": "Yes. Agencies routinely use the free audit as the first slide of every pitch deck to show clients where they're invisible in AI search.",
+        "detail": "Each client can have their own workspace and tracked score history.",
+    },
+    {
+        "question": "What's the difference between this and the paid plans?",
+        "answer": "The free audit is a point-in-time snapshot; paid plans add continuous tracking, prompt monitoring, share-of-voice, and team features.",
+        "detail": "Paid tiers re-run audits on a schedule so you can see whether fixes are working, monitor specific queries across all engines, and benchmark against competitors.",
+    },
+]
+
+
 def _render_landing_with_audit_form(request, form, *, status=400):
+    from apps.core.site_content import build_faq_schema
+
     return render(
         request,
         "tools/free_audit_landing.html",
-        {"audit_form": form},
+        {
+            "audit_form": form,
+            "faqs": FREE_AUDIT_FAQS,
+            "schema_json": json.dumps(build_faq_schema(FREE_AUDIT_FAQS)),
+        },
         status=status,
     )
 
@@ -828,6 +877,7 @@ class WorkspaceDemoView(TemplateView):
         ctx = super().get_context_data(**kwargs)
         ctx["page_title"] = "Sample Workspace | VRT SPACE AGENCY"
         ctx["meta_robots"] = "noindex, nofollow"
+        ctx["shell_theme"] = "shell-light"
         ctx["demo_domain"] = "example-agency.com"
         ctx["demo_aeo_score"] = 67
         ctx["demo_audit_score"] = 84
@@ -1598,7 +1648,29 @@ class SharedAuditReportView(DetailView):
         )
         context["meta_robots"] = "noindex, nofollow"
         context["score_breakdown"] = summary.get("score_breakdown", {})
-        context["recommendations"] = (summary.get("featured_recommendations") or summary.get("recommendations", []))[:6]
+        # Apply the project owner's plan profile so a shared report reflects
+        # the tier of whoever created it — a Free owner's share shows Free-level
+        # detail, a Growth owner's stays rich. Falls back to the Free profile
+        # when no owner can be resolved (orphaned / pre-account audits).
+        owner_project = (
+            ClientProject.objects.filter(latest_audit_run=audit_run)
+            .select_related("owner")
+            .first()
+        )
+        if owner_project is None and audit_run.audit_request_id:
+            owner_project = (
+                ClientProject.objects.filter(audit_request_id=audit_run.audit_request_id)
+                .select_related("owner")
+                .first()
+            )
+        owner = getattr(owner_project, "owner", None)
+        audit_profile = get_audit_result_profile(owner)
+        recommendations = summary.get("featured_recommendations") or summary.get("recommendations", [])
+        visible_recommendations, _ = _slice_for_limit(
+            recommendations,
+            audit_profile.get("featured_recommendation_limit") or 6,
+        )
+        context["recommendations"] = visible_recommendations
         context["context_analysis"] = summary.get("context_analysis", {})
         context["issue_summary"] = summary.get("issue_summary", {})
         context["product_modules"] = summary.get("product_modules", [])[:4]
@@ -2426,6 +2498,8 @@ class WorkspaceAgencyDashboardView(LoginRequiredMixin, TemplateView):
                 "stale_count": stale,
                 "needs_attention_count": needs_attention,
                 "healthy_pct": round(healthy / total * 100) if total else 0,
+                "page_title": "Agency Overview | VRT SPACE AGENCY",
+                "shell_theme": "shell-light",
             }
         )
         return context

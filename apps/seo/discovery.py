@@ -1469,6 +1469,13 @@ def _run_vertical_source_queries(profile, *, own_domain, location, country_code)
     if not engine_configs:
         return [], []
 
+    # Vertical sources all run on SerpAPI. If SerpAPI has already been put in
+    # cooldown (e.g. a 429 during the benchmark queries), skip the vertical
+    # passes entirely rather than firing — and failing — one request per engine.
+    # This is what the docstring promises and stops repeated provider failures.
+    if _provider_is_cooled_down("serpapi"):
+        return [], []
+
     service = (getattr(profile, "primary_service", "") or business_type.replace("_", " ")).strip()
     location_label = location.strip() if location and location.strip().lower() != "worldwide" else ""
 

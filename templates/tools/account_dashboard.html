@@ -170,7 +170,7 @@
                     </div>
                     <div class="billing-plan-accordion" id="billing-plan-accordion">
                         {% for plan in billing_state.plans %}
-                        <details class="billing-plan-card{% if plan.is_current %} is-current{% endif %}"{% if plan.is_current or forloop.first %} open{% endif %}>
+                        <details class="billing-plan-card{% if plan.is_current %} is-current{% endif %}">
                             <summary class="billing-plan-summary">
                                 <div class="billing-plan-summary-main">
                                     <div class="billing-plan-header-row">

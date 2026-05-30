@@ -6815,10 +6815,8 @@ body.shell-light .ws-outcome-meta  { color: #94a3b8; }
    Fixed 240 px column; workspace <main> offset with padding-left.
    ══════════════════════════════════════════════════════════════════════════ */
 
-/* ── Hide public header & footer on workspace pages ─────────────────────── */
-body.shell-light .site-header  { display: none !important; }
-body.shell-light .vrt-footer   { display: none !important; }
-body.shell-light main          { min-height: 100vh; }
+/* ── Header/footer hide and layout handled in base.html :has() block ──────── */
+/* body:has(.ws-sidebar) rules in base.html inline <style> are authoritative.  */
 
 /* ── Sidebar shell — grid-column layout (not fixed) ─────────────────────── */
 .ws-sidebar {
@@ -7042,7 +7040,7 @@ body.shell-light .ws-sidebar-logout:hover { color: #dc2626; background: #fef2f2;
 
 /* ── Mobile: collapse to bottom icon bar (≤ 768 px) ─────────────────────── */
 @media (max-width: 768px) {
-    body.shell-light main { padding-left: 0; padding-bottom: 60px; }
+    body.is-workspace main { padding-left: 0; padding-bottom: 60px; }
 
     .ws-sidebar {
         top: auto; bottom: 0; left: 0;
@@ -7091,3 +7089,108 @@ body.shell-light .ws-sidebar-logout:hover { color: #dc2626; background: #fef2f2;
     }
     body.shell-light .ws-sidebar-link.is-active { border-top-color: #0284c7; background: #eff6ff; }
 }
+
+/* ============================================================
+   AGENCY DASHBOARD — light shell overrides (Phase 15)
+   The base .agency-* styles are dark-theme; on the light
+   workspace shell they render white-on-white. These overrides
+   give clean white cards, readable text, and brand accents
+   consistent with the Share of Voice page.
+   ============================================================ */
+body.shell-light .agency-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  box-shadow: 0 1px 4px rgba(15,23,42,0.05);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+body.shell-light .agency-card:hover {
+  transform: translateY(-2px);
+  border-color: #bfdbfe;
+  background: #ffffff;
+  box-shadow: 0 8px 24px -10px rgba(2,132,199,0.15);
+}
+body.shell-light .agency-card--green { border-left: 3px solid #22c55e; }
+body.shell-light .agency-card--amber { border-left: 3px solid #f59e0b; }
+body.shell-light .agency-card--red   { border-left: 3px solid #ef4444; }
+body.shell-light .agency-card--muted { border-left: 3px solid #cbd5e1; }
+
+body.shell-light .agency-card-name   { color: #0f172a; }
+body.shell-light .agency-card-domain { color: #64748b; }
+
+body.shell-light .agency-chip {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  color: #475569;
+}
+body.shell-light .agency-chip:hover,
+body.shell-light .agency-chip--active {
+  background: #eff6ff;
+  color: #0284c7;
+  border-color: #7dd3fc;
+}
+body.shell-light .agency-chip-count { color: inherit; }
+body.shell-light .agency-chip-count--red { color: #ef4444; }
+
+body.shell-light .agency-dot-muted,
+body.shell-light .dot-muted { background: #cbd5e1; }
+
+body.shell-light .agency-meta-item { color: #64748b; }
+body.shell-light .agency-meta-item--warn { color: #d97706; }
+body.shell-light .agency-meta-item--muted { color: #94a3b8; }
+
+body.shell-light .agency-empty-state {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+}
+body.shell-light .agency-empty-title { color: #0f172a; }
+body.shell-light .agency-empty-body  { color: #64748b; }
+body.shell-light .agency-empty-icon  { color: var(--brand-primary, #38bdf8); }
+
+/* Equal-width compact action buttons in agency cards */
+.agency-card-actions { display: flex; gap: 0.5rem; margin-top: auto; padding-top: 0.5rem; border-top: 1px solid rgba(15,23,42,0.06); }
+.agency-card-actions .agency-action-btn,
+.agency-card-actions .agency-rerun-form { flex: 1; display: flex; }
+.agency-card-actions .agency-action-btn {
+  justify-content: center;
+  font-size: 0.78rem;
+  padding: 0.45rem 0.75rem;
+  width: 100%;
+}
+/* Make the form button full-width inside its flex form wrapper */
+.agency-rerun-form .agency-action-btn { flex: 1; justify-content: center; }
+
+/* Agency score badges / labels — darker foregrounds for contrast on white */
+body.shell-light .agency-score-badge--green { color: #16a34a; background: #dcfce7; }
+body.shell-light .agency-score-badge--amber { color: #d97706; background: #fef3c7; }
+body.shell-light .agency-score-badge--red   { color: #dc2626; background: #fee2e2; }
+body.shell-light .agency-score-badge--muted { color: #64748b; background: #f1f5f9; }
+body.shell-light .agency-delta--up   { color: #16a34a; }
+body.shell-light .agency-delta--down { color: #dc2626; }
+body.shell-light .agency-health-label--green { color: #16a34a; }
+body.shell-light .agency-health-label--amber { color: #d97706; }
+body.shell-light .agency-health-label--red   { color: #dc2626; }
+body.shell-light .agency-health-label--muted { color: #94a3b8; }
+body.shell-light .agency-card-risk { color: #b45309; background: #fef3c7; border-radius: 6px; }
+body.shell-light .agency-stale-pill { color: #b45309; background: #fef3c7; border-color: #fde68a; }
+body.shell-light .agency-card-actions { border-top-color: #f1f5f9; }
+body.shell-light .ws-hub-description { color: #64748b; }
+
+/* ============================================================
+   PLANS ACCORDION — tighter spacing on the settings page (Phase 15)
+   The collapsed plan bars were heavily padded with large radii and
+   wide gaps, making the section feel demanding. Compact them.
+   ============================================================ */
+body.shell-light .billing-plan-accordion { gap: 0.6rem; }
+body.shell-light .billing-plan-card { border-radius: 14px; }
+body.shell-light .billing-plan-summary { padding: 0.9rem 1.2rem; gap: 0.85rem; }
+body.shell-light .billing-plan-summary::after { top: 0.95rem; right: 1.1rem; width: 1.6rem; height: 1.6rem; }
+body.shell-light .billing-plan-header-row h3 { font-size: 1.15rem; }
+body.shell-light .billing-plan-price { font-size: 1.45rem; margin-top: 0.2rem; }
+body.shell-light .billing-plan-summary-main { gap: 0.3rem; }
+body.shell-light .billing-plan-body { padding: 0 1.2rem 1.2rem; gap: 0.9rem; }
+body.shell-light .billing-plan-columns { gap: 0.85rem; padding-top: 0.85rem; }
+body.shell-light .billing-plan-section { padding: 0.85rem 0.95rem; border-radius: 12px; }
+body.shell-light .billing-plan-section-title { margin-bottom: 0.6rem; font-size: 0.88rem; }
+body.shell-light .billing-limit-list { gap: 0.5rem; }

@@ -731,7 +731,7 @@ class ProjectDashboardTests(TestCase):
         )
 
         self.assertEqual(response.status_code, 302)
-        self.assertEqual(response["Location"], reverse("tools:workspace-onboarding"))
+        self.assertEqual(response["Location"], reverse("tools:workspace-welcome"))
 
         user = get_user_model().objects.get(username="user@example.com")
         project = ClientProject.objects.get(audit_request=audit_request)
@@ -739,8 +739,7 @@ class ProjectDashboardTests(TestCase):
 
         dashboard_response = self.client.get(reverse("tools:workspace-dashboard"))
         self.assertEqual(dashboard_response.status_code, 200)
-        self.assertContains(dashboard_response, "Open SEO")
-        self.assertContains(dashboard_response, "Developer mode")
+        self.assertContains(dashboard_response, "Dev mode")
 
     def test_workspace_dashboard_shows_audit_history_and_delta(self):
         user = get_user_model().objects.create_user(
@@ -786,7 +785,7 @@ class ProjectDashboardTests(TestCase):
         response = self.client.get(reverse("tools:workspace-dashboard"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Saved runs and validation")
+        self.assertContains(response, "Saved runs")
         self.assertContains(response, "+13")
 
     def test_workspace_dashboard_shows_fix_locations_and_module_upgrade_cta(self):
@@ -849,9 +848,9 @@ class ProjectDashboardTests(TestCase):
         response = self.client.get(reverse("tools:workspace-dashboard"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Where this appears")
-        self.assertContains(response, "https://example.com/about/")
-        self.assertContains(response, "What needs attention first")
+        self.assertContains(response, "Fix queue")
+        self.assertContains(response, "No H1 tag detected.")
+        self.assertContains(response, "example.com/about")
         self.assertNotContains(response, "Unlock monitoring")
 
     def test_workspace_dashboard_shows_audits_seo_aeo_and_usage_value_panel(self):
@@ -916,8 +915,8 @@ class ProjectDashboardTests(TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertContains(response, "Open audit")
         self.assertContains(response, "Open SEO")
-        self.assertContains(response, "Open AEO")
-        self.assertContains(response, "Balance")
+        self.assertContains(response, "Open AI Visibility")
+        self.assertContains(response, "Credits &amp; balance")
 
     def test_public_audit_result_shows_workspace_and_plan_ctas(self):
         audit_run = AuditRun.objects.create(
@@ -964,9 +963,9 @@ class ProjectDashboardTests(TestCase):
         response = self.client.get(reverse("tools:audit-result", args=[audit_run.pk]))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "Developer preview: plan limits are off")
-        self.assertContains(response, "4 on-page issues")
-        self.assertContains(response, "View Growth plan")
+        self.assertContains(response, "Developer preview")
+        self.assertContains(response, "Unlock the full audit")
+        self.assertContains(response, "Growth")
         self.assertContains(response, reverse("tools:workspace-signup"))
 
 
@@ -1139,9 +1138,13 @@ class WorkspaceBillingTests(TestCase):
         )
 
         payload = mocked_post.call_args.kwargs["data"]
-        self.assertIn("/workspace/billing/success/?next=%2Fworkspace%2Fseo%2F", payload["success_url"])
+        # success_url carries the Stripe session-id placeholder plus the
+        # return path (slashes preserved via quote(safe="/...")).
+        self.assertIn("/workspace/billing/success/", payload["success_url"])
         self.assertIn("session_id=%7BCHECKOUT_SESSION_ID%7D", payload["success_url"])
-        self.assertIn("/workspace/billing/cancel/?next=%2Fworkspace%2Fseo%2F", payload["cancel_url"])
+        self.assertIn("next=/workspace/seo/", payload["success_url"])
+        self.assertIn("/workspace/billing/cancel/", payload["cancel_url"])
+        self.assertIn("next=/workspace/seo/", payload["cancel_url"])
 
     @override_settings(
         STRIPE_PUBLISHABLE_KEY="pk_test_value",
@@ -1181,8 +1184,8 @@ class WorkspaceBillingTests(TestCase):
         self.assertEqual(subscription.status, WorkspaceSubscription.Status.ACTIVE)
         self.assertEqual(subscription.stripe_customer_id, "cus_123")
         balance = get_total_credit_balance_summary(user)
-        self.assertEqual(balance["granted"], 50)
-        self.assertEqual(balance["remaining"], 50)
+        self.assertEqual(balance["granted"], 60)
+        self.assertEqual(balance["remaining"], 60)
 
     @override_settings(
         STRIPE_WEBHOOK_SECRET="whsec_test_value",
@@ -1243,6 +1246,17 @@ class WorkspaceBillingTests(TestCase):
             email="freeuser@example.com",
             website="https://example.com",
         )
+        # Free plan keeps 2 runs of history, so create 3 to push exactly one
+        # run past the limit and assert it is reported as hidden.
+        oldest_run = AuditRun.objects.create(
+            audit_request=audit_request,
+            normalized_domain="example.com",
+            start_url="https://example.com/",
+            overall_score=55,
+            status=AuditRun.Status.COMPLETED,
+            pages_crawled=4,
+            summary={},
+        )
         older_run = AuditRun.objects.create(
             audit_request=audit_request,
             normalized_domain="example.com",
@@ -1276,10 +1290,10 @@ class WorkspaceBillingTests(TestCase):
         response = self.client.get(reverse("tools:workspace-dashboard"))
 
         self.assertEqual(response.status_code, 200)
-        self.assertContains(response, "1 older audit run")
+        self.assertContains(response, "1 older run")
         self.assertContains(response, "74")
         self.assertNotContains(response, str(older_run.created_at))
-        self.assertContains(response, "Open report")
+        self.assertContains(response, "View report")
 
     @override_settings(AUDIT_TIER_ENFORCEMENT=True)
     def test_workspace_rerun_blocks_when_monthly_audit_limit_is_reached(self):
@@ -1312,6 +1326,8 @@ class WorkspaceBillingTests(TestCase):
             contact_email="limited@example.com",
             latest_score=74,
         )
+        # Free plan now includes 2 monthly audits, so consume the full
+        # allowance to exercise the limit-reached block.
         usage_record = UsageRecord.objects.create(
             user=user,
             metric=UsageRecord.Metric.AUDIT_RUN,
@@ -1319,7 +1335,7 @@ class WorkspaceBillingTests(TestCase):
             period_end=latest_run.created_at.date().replace(
                 day=calendar.monthrange(latest_run.created_at.year, latest_run.created_at.month)[1]
             ),
-            quantity=1,
+            quantity=2,
         )
         self.client.force_login(user)
 

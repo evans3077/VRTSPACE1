@@ -10,14 +10,17 @@ from apps.leads.forms import AuditRequestForm, LeadCaptureForm
 from apps.leads.billing import build_plan_cards
 
 from .site_content import (
+    AGENCY_FAQS,
     ENGAGEMENT_STEPS,
     FAQS,
     PACKAGES,
+    PACKAGES_FAQS,
+    SERVICES_INDEX_FAQS,
     SERVICE_GROUPS,
     SERVICE_PAGE_LIST,
     SERVICE_PAGE_LOOKUP,
-    SYSTEM_BLOCKS,
     VALUE_PILLARS,
+    build_faq_schema,
 )
 
 
@@ -60,21 +63,7 @@ def build_home_context(request, **extra):
                     "areaServed": ["Global"],
                     "sameAs": [],
                 },
-                {
-                    "@context": "https://schema.org",
-                    "@type": "FAQPage",
-                    "mainEntity": [
-                        {
-                            "@type": "Question",
-                            "name": item["question"],
-                            "acceptedAnswer": {
-                                "@type": "Answer",
-                                "text": item["answer"],
-                            },
-                        }
-                        for item in FAQS
-                    ],
-                },
+                build_faq_schema(FAQS),
             ]
         ),
         "lead_form": extra.get("lead_form", LeadCaptureForm()),
@@ -82,7 +71,6 @@ def build_home_context(request, **extra):
         "service_groups": SERVICE_GROUPS,
         "service_page_list": SERVICE_PAGE_LIST,
         "packages": PACKAGES,
-        "system_blocks": SYSTEM_BLOCKS,
         "value_pillars": VALUE_PILLARS,
         "engagement_steps": ENGAGEMENT_STEPS,
         "faqs": FAQS,
@@ -90,12 +78,6 @@ def build_home_context(request, **extra):
             {"value": "3", "label": "AI engines tracked: ChatGPT, Gemini, Perplexity"},
             {"value": "1", "label": "Workspace to track audits, fixes, and AI visibility over time"},
             {"value": "Repeat", "label": "Rerun after fixes and watch your AI visibility score improve"},
-        ],
-        "method_steps": [
-            "Run a live audit to surface the biggest issues affecting speed, search visibility, and AI readiness.",
-            "Review the SEO and AEO signals to understand what competitors are doing better and what your site is missing.",
-            "Save the work in a workspace so your team can track recommendations, history, and next actions in one place.",
-            "Rerun after updates to validate improvements and keep building progress over time.",
         ],
         "trust_signals": ["Audit-first clarity", "SEO roadmap", "AI visibility insight", "Workspace progress tracking"],
         "audiences": ["Founders", "Growth teams", "Enterprise brands", "Global Agencies"],
@@ -127,16 +109,22 @@ class ServicesIndexView(TemplateView):
             "meta_robots": "index,follow",
             "shell_theme": "shell-light",
             "schema_json": json.dumps(
-                {
-                    "@context": "https://schema.org",
-                    "@type": "CollectionPage",
-                    "name": "VRT SPACE Services",
-                    "description": "Website audit, SEO analysis, and AI visibility services.",
-                    "url": self.request.build_absolute_uri(self.request.path),
-                }
+                [
+                    {
+                        "@context": "https://schema.org",
+                        "@type": "CollectionPage",
+                        "name": "VRT SPACE Services",
+                        "description": "Website audit, SEO analysis, and AI visibility services.",
+                        "url": self.request.build_absolute_uri(self.request.path),
+                    },
+                    build_faq_schema(SERVICES_INDEX_FAQS),
+                ]
             ),
             "service_groups": SERVICE_GROUPS,
             "service_page_list": SERVICE_PAGE_LIST,
+            "faqs": SERVICES_INDEX_FAQS,
+            "faq_eyebrow": "Frequently asked",
+            "faq_heading": "How the services work together",
         }
 
 
@@ -156,7 +144,22 @@ class ServiceDetailView(TemplateView):
             "meta_robots": "index,follow",
             "shell_theme": "shell-light",
             "schema_json": json.dumps(
-                {
+                [
+                    {
+                        "@context": "https://schema.org",
+                        "@type": "Service",
+                        "name": service["name"],
+                        "description": service["summary"],
+                        "provider": {
+                            "@type": "Organization",
+                            "name": "VRT SPACE AGENCY",
+                        },
+                        "url": self.request.build_absolute_uri(self.request.path),
+                    },
+                    build_faq_schema(service.get("faqs", [])),
+                ]
+                if service.get("faqs")
+                else {
                     "@context": "https://schema.org",
                     "@type": "Service",
                     "name": service["name"],
@@ -170,6 +173,9 @@ class ServiceDetailView(TemplateView):
             ),
             "service": service,
             "service_page_list": SERVICE_PAGE_LIST,
+            "faqs": service.get("faqs", []),
+            "faq_eyebrow": "Frequently asked",
+            "faq_heading": f"{service['name']} — common questions",
         }
 
 
@@ -186,16 +192,20 @@ class PackagesView(TemplateView):
             "meta_robots": "index,follow",
             "shell_theme": "shell-light",
             "schema_json": json.dumps(
-                {
-                    "@context": "https://schema.org",
-                    "@type": "WebPage",
-                    "name": "VRT SPACE Pricing",
-                    "description": "Pricing for audits, SEO analysis, AI visibility, and workspace plans.",
-                    "url": self.request.build_absolute_uri(self.request.path),
-                }
+                [
+                    {
+                        "@context": "https://schema.org",
+                        "@type": "WebPage",
+                        "name": "VRT SPACE Pricing",
+                        "description": "Pricing for audits, SEO analysis, AI visibility, and workspace plans.",
+                        "url": self.request.build_absolute_uri(self.request.path),
+                    },
+                    build_faq_schema(PACKAGES_FAQS),
+                ]
             ),
             "plans": plans,
             "comparison_matrix": build_plan_comparison_matrix(plans),
+            "faqs": PACKAGES_FAQS,
         }
 
 class ForAgenciesView(TemplateView):
@@ -217,20 +227,26 @@ class ForAgenciesView(TemplateView):
             "canonical_url": self.request.build_absolute_uri(self.request.path),
             "meta_robots": "index,follow",
             "schema_json": json.dumps(
-                {
-                    "@context": "https://schema.org",
-                    "@type": "WebPage",
-                    "name": "VRT SPACE for Agencies",
-                    "description": "Manage client SEO and AI visibility in one workspace.",
-                    "url": self.request.build_absolute_uri(self.request.path),
-                    "provider": {
-                        "@type": "Organization",
-                        "name": "VRT SPACE AGENCY",
+                [
+                    {
+                        "@context": "https://schema.org",
+                        "@type": "WebPage",
+                        "name": "VRT SPACE for Agencies",
+                        "description": "Manage client SEO and AI visibility in one workspace.",
+                        "url": self.request.build_absolute_uri(self.request.path),
+                        "provider": {
+                            "@type": "Organization",
+                            "name": "VRT SPACE AGENCY",
+                        },
                     },
-                }
+                    build_faq_schema(AGENCY_FAQS),
+                ]
             ),
             "audit_form": AuditRequestForm(initial={"ref": ref} if ref else {}),
             "ref": ref,
+            "faqs": AGENCY_FAQS,
+            "faq_eyebrow": "Agency questions",
+            "faq_heading": "What agencies ask before switching",
             "shell_theme": "shell-light",
             "agency_stats": [
                 {"value": "3–15", "label": "Client sites managed per agency"},
@@ -330,7 +346,11 @@ class IndustryLandingView(TemplateView):
 
     def get_context_data(self, **kwargs):
         from django.http import Http404
-        from apps.core.industry_pages import get_industry_page, list_industry_pages
+        from apps.core.industry_pages import (
+            build_industry_faqs,
+            get_industry_page,
+            list_industry_pages,
+        )
 
         slug = kwargs.get("slug", "")
         industry = get_industry_page(slug)
@@ -339,14 +359,18 @@ class IndustryLandingView(TemplateView):
 
         # Build canonical URL + schema for SEO
         canonical = self.request.build_absolute_uri(self.request.path)
-        schema_json = json.dumps({
-            "@context": "https://schema.org",
-            "@type": "WebPage",
-            "name": industry["headline"],
-            "description": industry["meta_description"],
-            "url": canonical,
-            "provider": {"@type": "Organization", "name": "VRT SPACE AGENCY"},
-        })
+        industry_faqs = build_industry_faqs(industry)
+        schema_json = json.dumps([
+            {
+                "@context": "https://schema.org",
+                "@type": "WebPage",
+                "name": industry["headline"],
+                "description": industry["meta_description"],
+                "url": canonical,
+                "provider": {"@type": "Organization", "name": "VRT SPACE AGENCY"},
+            },
+            build_faq_schema(industry_faqs),
+        ])
 
         return {
             "industry": industry,
@@ -358,5 +382,8 @@ class IndustryLandingView(TemplateView):
             "canonical_url": canonical,
             "meta_robots": "index,follow",
             "schema_json": schema_json,
+            "faqs": industry_faqs,
+            "faq_eyebrow": f"AI visibility for {industry['name'].lower()}",
+            "faq_heading": "Frequently asked questions",
             "shell_theme": "shell-light",
         }

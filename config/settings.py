@@ -4,6 +4,8 @@ import sys
 import tempfile
 from pathlib import Path
 
+from django.core.exceptions import ImproperlyConfigured
+
 try:
     import dj_database_url
 except ImportError:
@@ -48,6 +50,10 @@ _IS_HOSTED = IS_VERCEL or IS_RENDER or DJANGO_ENV in {"production", "staging"}
 # Override either side with DJANGO_DEBUG=0 or =1 explicitly in env.
 _DEFAULT_DEBUG = "0" if _IS_HOSTED else "1"
 DEBUG = os.environ.get("DJANGO_DEBUG", _DEFAULT_DEBUG) == "1"
+# A hosted environment must never run with DEBUG on — it would expose stack
+# traces, settings and SQL. Refuse to boot rather than leak.
+if DEBUG and DJANGO_ENV in {"production", "staging"}:
+    raise ImproperlyConfigured("DEBUG must be False in production/staging.")
 
 # ─── Sentry error tracking ──────────────────────────────────────────────────
 # Initialised only when SENTRY_DSN is present in the environment so local dev
@@ -87,10 +93,15 @@ def first_env(*names, default=""):
             return value
     return default
 
-SECRET_KEY = os.environ.get(
-    "DJANGO_SECRET_KEY",
-    "vrt-space-agency-dev-key-change-me",
-)
+_DEV_SECRET_KEY = "vrt-space-agency-dev-key-change-me"
+SECRET_KEY = os.environ.get("DJANGO_SECRET_KEY", _DEV_SECRET_KEY)
+# Never boot a hosted environment on the throwaway dev key — forged sessions,
+# CSRF tokens and password-reset links would all be possible.
+if _IS_HOSTED and SECRET_KEY == _DEV_SECRET_KEY:
+    raise ImproperlyConfigured(
+        "DJANGO_SECRET_KEY must be set to a unique secret value in hosted "
+        "environments (Render / Vercel / staging / production)."
+    )
 ALLOWED_HOSTS = csv_env("DJANGO_ALLOWED_HOSTS", "127.0.0.1,localhost")
 RENDER_EXTERNAL_HOSTNAME = os.environ.get("RENDER_EXTERNAL_HOSTNAME")
 if RENDER_EXTERNAL_HOSTNAME:
@@ -463,5 +474,11 @@ X_FRAME_OPTIONS = "DENY"
 
 if not DEBUG or DJANGO_ENV in {"staging", "production"}:
     SECURE_SSL_REDIRECT = os.environ.get("DJANGO_SECURE_SSL_REDIRECT", "1") == "1"
+    # HSTS: tell browsers to stick to HTTPS so the first-visit downgrade window
+    # is closed. One year, including subdomains, preload-eligible.
+    SECURE_HSTS_SECONDS = int(os.environ.get("DJANGO_SECURE_HSTS_SECONDS", "31536000"))
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = True
+    SECURE_HSTS_PRELOAD = True
 else:
     SECURE_SSL_REDIRECT = False
+    SECURE_HSTS_SECONDS = 0

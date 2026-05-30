@@ -864,6 +864,7 @@ class SEOCampaignActionPackView(LoginRequiredMixin, View):
             "campaign_status_choices": SEOCampaign.Status.choices,
             "page_title": f"Action Pack — {campaign.title} | VRT SPACE",
             "meta_robots": "noindex, nofollow",
+            "shell_theme": "shell-light",
         })
 
     def post(self, request, *args, **kwargs):
