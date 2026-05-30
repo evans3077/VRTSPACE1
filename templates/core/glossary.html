@@ -1,0 +1,140 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+<section class="public-shell-section" style="padding-bottom: 1rem;">
+    <div class="container" style="max-width: 760px; text-align: center;">
+        <p class="eyebrow text-accent">Glossary</p>
+        <h1>Every term, in plain English.</h1>
+        <p class="lead">
+            AEO, AI Visibility, Share of Voice, citations — defined the moment you meet them.
+            Search or filter to find what you need.
+        </p>
+    </div>
+</section>
+
+<section class="public-shell-section" style="padding-top: 0.5rem;">
+    <div class="container gl-shell">
+
+        {# ── Sidebar: search + categories ── #}
+        <aside class="gl-rail">
+            <div class="gl-search-wrap">
+                <i class="fa-solid fa-magnifying-glass"></i>
+                <input type="search" id="gl-search" class="form-control gl-search"
+                       placeholder="Search terms…" aria-label="Search glossary terms" autocomplete="off">
+            </div>
+            <div class="gl-cats" role="group" aria-label="Filter by category">
+                <button class="gl-cat is-active" data-cat="all">All</button>
+                {% for cat in glossary_categories %}
+                <button class="gl-cat" data-cat="{{ cat|slugify }}">{{ cat }}</button>
+                {% endfor %}
+            </div>
+        </aside>
+
+        {# ── Definition list ── #}
+        <div class="gl-list" id="gl-list">
+            {% for t in glossary_terms %}
+            <article class="gl-term glass-panel"
+                     id="{{ t.anchor }}"
+                     data-cat="{{ t.category|slugify }}"
+                     data-search="{{ t.term|lower }} {{ t.acronym|lower }} {{ t.definition|lower }}">
+                <div class="gl-term-head">
+                    <h2>{{ t.term }}</h2>
+                    {% if t.acronym %}<span class="gl-chip">{{ t.acronym }}</span>{% endif %}
+                </div>
+                <p class="gl-def">{{ t.definition }}</p>
+                <div class="gl-meta">
+                    {% if t.module_label and t.module_url_name %}
+                    <a class="gl-module" href="{% url t.module_url_name %}">
+                        <i class="fa-solid fa-arrow-right-long"></i> In VRT: {{ t.module_label }}
+                    </a>
+                    {% endif %}
+                    {% if t.related %}
+                    <span class="gl-related">
+                        Related:
+                        {% for rel in t.related %}<a href="#{{ rel|slugify }}">{{ rel }}</a>{% if not forloop.last %}, {% endif %}{% endfor %}
+                    </span>
+                    {% endif %}
+                </div>
+            </article>
+            {% endfor %}
+            <p class="gl-empty" id="gl-empty" hidden>No terms match — try a different word.</p>
+        </div>
+    </div>
+</section>
+
+<style>
+    .gl-shell { display: grid; grid-template-columns: 240px 1fr; gap: 2rem; align-items: start; }
+    .gl-rail { position: sticky; top: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+    .gl-search-wrap { position: relative; }
+    .gl-search-wrap i { position: absolute; left: 0.85rem; top: 50%; transform: translateY(-50%); color: #94a3b8; font-size: 0.85rem; pointer-events: none; }
+    .gl-search.form-control { padding-left: 2.3rem; width: 100%; }
+    .gl-cats { display: flex; flex-direction: column; gap: 0.3rem; }
+    .gl-cat {
+        text-align: left; font-size: 0.85rem; font-weight: 600; color: #475569;
+        background: transparent; border: 1px solid transparent; border-radius: 8px;
+        padding: 0.45rem 0.7rem; cursor: pointer; transition: background 0.12s, color 0.12s, border-color 0.12s;
+    }
+    .gl-cat:hover { background: #f1f5f9; color: #0f172a; }
+    .gl-cat.is-active { background: #eff6ff; color: #0284c7; border-color: #bfdbfe; }
+
+    .gl-list { display: grid; gap: 0.9rem; }
+    .gl-term { padding: 1.25rem 1.4rem; scroll-margin-top: 1.5rem; }
+    .gl-term:target { border-color: var(--brand-primary, #38bdf8); box-shadow: 0 0 0 3px rgba(56,189,248,0.15); }
+    .gl-term-head { display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+    .gl-term-head h2 { font-size: 1.15rem; margin: 0; color: #0f172a; }
+    .gl-chip {
+        font-size: 0.66rem; font-weight: 800; letter-spacing: 0.04em; text-transform: uppercase;
+        color: #0284c7; background: #eff6ff; border: 1px solid #bfdbfe;
+        padding: 0.15rem 0.45rem; border-radius: 999px; font-family: monospace;
+    }
+    .gl-def { font-size: 0.92rem; color: #334155; line-height: 1.6; margin: 0.5rem 0 0.75rem; }
+    .gl-meta { display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; align-items: center; }
+    .gl-module { font-size: 0.78rem; font-weight: 700; color: #0284c7; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; }
+    .gl-module:hover { text-decoration: underline; }
+    .gl-related { font-size: 0.78rem; color: #64748b; }
+    .gl-related a { color: #0284c7; text-decoration: none; }
+    .gl-related a:hover { text-decoration: underline; }
+    .gl-empty { text-align: center; color: #64748b; padding: 2rem; }
+
+    @media (max-width: 820px) {
+        .gl-shell { grid-template-columns: 1fr; }
+        .gl-rail { position: static; }
+        .gl-cats { flex-direction: row; flex-wrap: wrap; }
+    }
+</style>
+
+<script>
+(function () {
+    "use strict";
+    var search = document.getElementById("gl-search");
+    var cats = Array.prototype.slice.call(document.querySelectorAll(".gl-cat"));
+    var terms = Array.prototype.slice.call(document.querySelectorAll(".gl-term"));
+    var empty = document.getElementById("gl-empty");
+    var activeCat = "all";
+
+    function apply() {
+        var q = (search.value || "").trim().toLowerCase();
+        var shown = 0;
+        terms.forEach(function (el) {
+            var matchCat = activeCat === "all" || el.dataset.cat === activeCat;
+            var matchText = !q || (el.dataset.search || "").indexOf(q) !== -1;
+            var show = matchCat && matchText;
+            el.hidden = !show;
+            if (show) shown++;
+        });
+        empty.hidden = shown !== 0;
+    }
+
+    search.addEventListener("input", apply);
+    cats.forEach(function (btn) {
+        btn.addEventListener("click", function () {
+            cats.forEach(function (b) { b.classList.remove("is-active"); });
+            btn.classList.add("is-active");
+            activeCat = btn.dataset.cat;
+            apply();
+        });
+    });
+})();
+</script>
+{% endblock %}

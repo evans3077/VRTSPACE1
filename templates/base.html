@@ -2043,7 +2043,7 @@
             <div class="nav-actions">
                 <nav class="nav-links" aria-label="Primary">
                     <a href="{% url 'core:services' %}">Services</a>
-                    <a href="{% url 'core:home' %}#journey">How It Works</a>
+                    <a href="{% url 'core:how-it-works' %}">How It Works</a>
                     <a href="{% url 'aeo:content-optimizer' %}">Free Tool</a>
                     <a href="{% url 'content:blog-index' %}">Blog</a>
                     <a href="{% url 'core:packages' %}">Pricing</a>
@@ -2147,12 +2147,14 @@
             <div>
                 <p class="vrt-footer-col-label">Platform</p>
                 <ul class="vrt-footer-links">
+                    <li><a href="{% url 'core:how-it-works' %}"><i class="fa-solid fa-compass"></i>How it works</a></li>
                     <li><a href="{% url 'aeo:workspace-aeo' %}"><i class="fa-solid fa-robot"></i>AI Visibility</a></li>
                     <li><a href="{% url 'core:services' %}"><i class="fa-solid fa-chart-line"></i>Services</a></li>
                     <li><a href="{% url 'core:packages' %}"><i class="fa-solid fa-layer-group"></i>Pricing</a></li>
                     <li><a href="{% url 'affiliates:partner-inquiry' %}"><i class="fa-solid fa-handshake"></i>Partner Program</a></li>
                     <li><a href="{% url 'content:blog-index' %}"><i class="fa-solid fa-newspaper"></i>Blog</a></li>
                     <li><a href="{% url 'case_studies:case-study-index' %}"><i class="fa-solid fa-star"></i>Case Studies</a></li>
+                    <li><a href="{% url 'core:glossary' %}"><i class="fa-solid fa-book"></i>Glossary</a></li>
                 </ul>
             </div>
 
@@ -2200,10 +2202,11 @@
                 <div class="mobile-nav-group">
                     <span class="nav-category-head" style="margin-bottom: 1rem;">Explore</span>
                     <a href="{% url 'core:services' %}" style="--i:1">Services</a>
-                    <a href="{% url 'core:home' %}#journey" style="--i:2">How It Works</a>
-                    <a href="{% url 'aeo:aeo-index' %}" style="--i:3">AEO Index</a>
-                    <a href="{% url 'core:packages' %}" style="--i:4">Pricing</a>
-                    <a href="{% url 'core:home' %}#audit" style="--i:5">Free Audit</a>
+                    <a href="{% url 'core:how-it-works' %}" style="--i:2">How It Works</a>
+                    <a href="{% url 'core:glossary' %}" style="--i:3">Glossary</a>
+                    <a href="{% url 'aeo:aeo-index' %}" style="--i:4">AEO Index</a>
+                    <a href="{% url 'core:packages' %}" style="--i:5">Pricing</a>
+                    <a href="{% url 'core:home' %}#audit" style="--i:6">Free Audit</a>
                 </div>
 
                 {% if user.is_staff %}

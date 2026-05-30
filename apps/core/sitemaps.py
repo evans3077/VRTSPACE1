@@ -38,6 +38,8 @@ class StaticSitemap(_ProtocolMixin, Sitemap):
     def items(self):
         return [
             "core:home",
+            "core:how-it-works",
+            "core:glossary",
             "core:packages",
             "core:for-agencies",
             "core:services",

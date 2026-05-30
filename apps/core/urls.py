@@ -1,7 +1,9 @@
 from django.urls import path
 
 from .views import (
+    GlossaryView,
     HomePageView,
+    HowItWorksView,
     IndustryLandingView,
     ServiceDetailView,
     ServicesIndexView,
@@ -14,6 +16,8 @@ app_name = "core"
 
 urlpatterns = [
     path("", HomePageView.as_view(), name="home"),
+    path("how-it-works/", HowItWorksView.as_view(), name="how-it-works"),
+    path("glossary/", GlossaryView.as_view(), name="glossary"),
     path("for-agencies/", ForAgenciesView.as_view(), name="for-agencies"),
     path("api/location/search/", location_autocomplete, name="location-search"),
     path("services/", ServicesIndexView.as_view(), name="services"),

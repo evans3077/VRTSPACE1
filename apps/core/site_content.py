@@ -313,6 +313,299 @@ PACKAGES_FAQS = [
 ]
 
 
+# ── Orientation layer ───────────────────────────────────────────────────────
+# Plain-language help content that makes a feature-rich product feel simple.
+# Powers /how-it-works/ and /glossary/. Golden rule: what it is → why it
+# matters → what to do next.
+
+# The core loop, shown as 4 steps on the "How VRT Works" page.
+HOW_IT_WORKS_STEPS = [
+    {
+        "icon": "fa-magnifying-glass-chart",
+        "title": "Audit your site",
+        "body": "Run a free scan of your website's technical health, content, and AI-readiness.",
+        "module": "Website Audit",
+    },
+    {
+        "icon": "fa-robot",
+        "title": "See where AI ignores you",
+        "body": "Find out which buyer questions AI engines answer with competitors instead of you.",
+        "module": "AI Visibility",
+    },
+    {
+        "icon": "fa-screwdriver-wrench",
+        "title": "Fix the gaps",
+        "body": "Work through prioritized, plain-language recommendations — highest impact first.",
+        "module": "SEO Audit & Content",
+    },
+    {
+        "icon": "fa-arrows-rotate",
+        "title": "Rerun & track",
+        "body": "Re-audit after each change and watch your scores move, so you know it's working.",
+        "module": "Overview",
+    },
+]
+
+# "What the words mean" concept cards on the How VRT Works page.
+HOW_IT_WORKS_CONCEPTS = [
+    {
+        "term": "AI Visibility",
+        "blurb": "How often AI answer engines mention and cite your brand when buyers ask questions.",
+        "anchor": "ai-visibility",
+    },
+    {
+        "term": "Answer Engine Optimization (AEO)",
+        "blurb": "The work of making your site easy for AI engines to read, trust, quote, and recommend.",
+        "anchor": "aeo",
+    },
+    {
+        "term": "Share of Voice",
+        "blurb": "Your slice of all the AI answers in your space, compared with competitors.",
+        "anchor": "share-of-voice",
+    },
+    {
+        "term": "Prompts",
+        "blurb": "The real questions and topics you track to see who AI recommends.",
+        "anchor": "prompt",
+    },
+]
+
+# "Where to start" persona cards.
+HOW_IT_WORKS_PERSONAS = [
+    {
+        "icon": "fa-people-arrows",
+        "title": "Agencies",
+        "body": "Run an audit on a client site and use the AI visibility gap as your pitch.",
+        "cta_label": "See the agency view",
+        "cta_url_name": "core:for-agencies",
+    },
+    {
+        "icon": "fa-user-gear",
+        "title": "In-house SEO",
+        "body": "Baseline your own site, then fix the highest-impact issues and rerun.",
+        "cta_label": "Run a free audit",
+        "cta_url_name": "tools:free-seo-audit",
+    },
+    {
+        "icon": "fa-cube",
+        "title": "SaaS teams",
+        "body": "Track the buyer questions in your category and win the AI recommendation.",
+        "cta_label": "Check your AI visibility",
+        "cta_url_name": "aeo:aeo-index",
+    },
+]
+
+# Glossary — one plain-language source for every term, feeding both the visible
+# page and the DefinedTermSet structured data (great for AEO).
+GLOSSARY_CATEGORIES = [
+    "AI Visibility & AEO",
+    "SEO & Technical",
+    "Content",
+    "Performance",
+    "Workspace & Account",
+]
+
+GLOSSARY_TERMS = [
+    {
+        "term": "AI Visibility",
+        "acronym": "",
+        "category": "AI Visibility & AEO",
+        "definition": "How often AI answer engines — ChatGPT, Gemini, Perplexity, Google AI Overviews — mention and cite your brand when people ask questions in your market.",
+        "module_label": "AI Visibility",
+        "module_url_name": "aeo:workspace-aeo",
+        "related": ["AEO", "AI Visibility Score", "Citation"],
+    },
+    {
+        "term": "Answer Engine Optimization",
+        "acronym": "AEO",
+        "category": "AI Visibility & AEO",
+        "definition": "Making your website easy for AI answer engines to read, trust, quote, and recommend — the AI-era counterpart to SEO.",
+        "module_label": "AI Visibility",
+        "module_url_name": "aeo:workspace-aeo",
+        "related": ["AI Visibility", "Schema", "Citation"],
+    },
+    {
+        "term": "AI Visibility Score",
+        "acronym": "AVS",
+        "category": "AI Visibility & AEO",
+        "definition": "A single 0–100 number summarising how present and prominent your brand is across the AI engines you track. Higher is better.",
+        "module_label": "AI Visibility",
+        "module_url_name": "aeo:workspace-aeo",
+        "related": ["AI Visibility", "Share of Voice"],
+    },
+    {
+        "term": "Citation",
+        "acronym": "",
+        "category": "AI Visibility & AEO",
+        "definition": "A specific mention of your brand or page inside an AI-generated answer. Citations are the AI-search equivalent of ranking on page one.",
+        "module_label": "AI Visibility",
+        "module_url_name": "aeo:workspace-aeo",
+        "related": ["AI Visibility", "Share of Voice"],
+    },
+    {
+        "term": "Share of Voice",
+        "acronym": "SOV",
+        "category": "AI Visibility & AEO",
+        "definition": "Your slice of all the AI answers for your tracked questions, measured against competitors — who AI mentions most in your space.",
+        "module_label": "Share of Voice",
+        "module_url_name": "aeo:workspace-share-of-voice",
+        "related": ["Citation", "Prompt"],
+    },
+    {
+        "term": "Prompt",
+        "acronym": "",
+        "category": "AI Visibility & AEO",
+        "definition": "A question or topic you track — the actual things your customers ask AI tools — so you can see whether you're the recommended answer.",
+        "module_label": "Prompts",
+        "module_url_name": "aeo:workspace-prompts",
+        "related": ["Topic cluster", "Share of Voice"],
+    },
+    {
+        "term": "Recommendation strength",
+        "acronym": "",
+        "category": "AI Visibility & AEO",
+        "definition": "How impactful a suggested fix is. Stronger recommendations move your scores the most, so they're worth doing first.",
+        "module_label": "SEO Audit",
+        "module_url_name": "seo:workspace-seo",
+        "related": ["Technical health"],
+    },
+    {
+        "term": "Technical health",
+        "acronym": "",
+        "category": "SEO & Technical",
+        "definition": "How sound your site is under the hood — speed, crawlability, mobile, structure. Weak technical health holds back both search and AI visibility.",
+        "module_label": "SEO Audit",
+        "module_url_name": "seo:workspace-seo",
+        "related": ["Crawlability", "Core Web Vitals"],
+    },
+    {
+        "term": "Crawlability",
+        "acronym": "",
+        "category": "SEO & Technical",
+        "definition": "How easily search engines and AI bots can read your pages. If they can't crawl a page, they can't rank or cite it.",
+        "module_label": "SEO Audit",
+        "module_url_name": "seo:workspace-seo",
+        "related": ["Indexation", "Technical health"],
+    },
+    {
+        "term": "Indexation",
+        "acronym": "",
+        "category": "SEO & Technical",
+        "definition": "Whether a page is actually stored in a search engine's index. A page that isn't indexed can never appear in results or answers.",
+        "module_label": "SEO Audit",
+        "module_url_name": "seo:workspace-seo",
+        "related": ["Crawlability"],
+    },
+    {
+        "term": "Schema",
+        "acronym": "",
+        "category": "SEO & Technical",
+        "definition": "Structured data added to your pages that spells out what they mean — products, FAQs, articles — so engines and AI can understand and quote them.",
+        "module_label": "SEO Audit",
+        "module_url_name": "seo:workspace-seo",
+        "related": ["AEO", "Crawlability"],
+    },
+    {
+        "term": "Internal linking",
+        "acronym": "",
+        "category": "SEO & Technical",
+        "definition": "The links between your own pages. Good internal links help engines discover content and understand which pages matter most.",
+        "module_label": "SEO Audit",
+        "module_url_name": "seo:workspace-seo",
+        "related": ["Crawlability", "Topic cluster"],
+    },
+    {
+        "term": "Topic cluster",
+        "acronym": "",
+        "category": "Content",
+        "definition": "A group of related pages covering one subject in depth. Clusters signal expertise, which both search and AI engines reward.",
+        "module_label": "Content",
+        "module_url_name": "content:workspace-content",
+        "related": ["Prompt", "Internal linking"],
+    },
+    {
+        "term": "Core Web Vitals",
+        "acronym": "LCP / CLS / INP",
+        "category": "Performance",
+        "definition": "Google's three speed-and-stability metrics: how fast the main content loads (LCP), how much the layout jumps (CLS), and how quickly the page responds (INP).",
+        "module_label": "SEO Audit",
+        "module_url_name": "seo:workspace-seo",
+        "related": ["Technical health"],
+    },
+    {
+        "term": "Workspace",
+        "acronym": "",
+        "category": "Workspace & Account",
+        "definition": "Your home for a brand or client — where audits, recommendations, history, and AI visibility all live together so progress stays in one place.",
+        "module_label": "Overview",
+        "module_url_name": "tools:workspace-dashboard",
+        "related": ["Project", "Credits"],
+    },
+    {
+        "term": "Project",
+        "acronym": "",
+        "category": "Workspace & Account",
+        "definition": "A single tracked website inside a workspace. Each client site is its own project with its own score and history.",
+        "module_label": "Overview",
+        "module_url_name": "tools:workspace-dashboard",
+        "related": ["Workspace"],
+    },
+    {
+        "term": "Credits",
+        "acronym": "",
+        "category": "Workspace & Account",
+        "definition": "The currency for actions — roughly one credit per audit or AI scan. They refresh each billing cycle, and you can top up without changing plans.",
+        "module_label": "Billing & Credits",
+        "module_url_name": "tools:account-dashboard",
+        "related": ["Rerun"],
+    },
+    {
+        "term": "Rerun",
+        "acronym": "",
+        "category": "Workspace & Account",
+        "definition": "Running an audit again after you've made changes, so you can see your scores move and confirm the fixes are working.",
+        "module_label": "Overview",
+        "module_url_name": "tools:workspace-dashboard",
+        "related": ["Credits", "AI Visibility Score"],
+    },
+]
+
+
+def glossary_anchor(term):
+    """Stable anchor id for a glossary term, e.g. 'ai-visibility' (used by
+    in-product info-tips to deep-link, e.g. /glossary#aeo)."""
+    return slugify(term)
+
+
+# Stable anchor ids so in-product info-tips and the How-It-Works concept cards
+# can deep-link reliably (e.g. /glossary#aeo). Overrides where the short common
+# name differs from the full term, so related-term links (which slugify the
+# short name) always resolve.
+_GLOSSARY_ANCHOR_OVERRIDES = {"Answer Engine Optimization": "aeo"}
+for _t in GLOSSARY_TERMS:
+    _t["anchor"] = _GLOSSARY_ANCHOR_OVERRIDES.get(_t["term"], slugify(_t["term"]))
+
+
+def build_glossary_schema(terms):
+    """schema.org DefinedTermSet — strong AEO signal: hands answer engines a
+    clean, machine-readable dictionary of every concept the product uses."""
+    return {
+        "@context": "https://schema.org",
+        "@type": "DefinedTermSet",
+        "name": "VRT SPACE Glossary",
+        "description": "Plain-language definitions of AI visibility, AEO, SEO, and workspace terms.",
+        "hasDefinedTerm": [
+            {
+                "@type": "DefinedTerm",
+                "name": (f"{t['term']} ({t['acronym']})" if t.get("acronym") else t["term"]),
+                "description": t["definition"],
+                "inDefinedTermSet": "/glossary/",
+            }
+            for t in terms
+        ],
+    }
+
+
 SERVICE_PAGE_LOOKUP = {}
 _service_order = count(1)
 for group in SERVICE_GROUPS:

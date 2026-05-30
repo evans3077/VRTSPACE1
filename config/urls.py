@@ -79,8 +79,11 @@ def llms_txt(request):
 ## Key pages
 
 - Home: {base}/
+- How it works (60-second overview): {base}/how-it-works/
+- Glossary (AI visibility / AEO / SEO terms): {base}/glossary/
 - Pricing: {base}/packages/
 - For agencies: {base}/for-agencies/
+- Partner program (invite-only affiliate): {base}/partners/
 - Free AI visibility audit: {base}/tools/free-seo-audit/
 - AEO content optimizer: {base}/aeo/content-optimizer/
 - Blog: {base}/blog/

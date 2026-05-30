@@ -13,6 +13,11 @@ from .site_content import (
     AGENCY_FAQS,
     ENGAGEMENT_STEPS,
     FAQS,
+    GLOSSARY_CATEGORIES,
+    GLOSSARY_TERMS,
+    HOW_IT_WORKS_CONCEPTS,
+    HOW_IT_WORKS_PERSONAS,
+    HOW_IT_WORKS_STEPS,
     PACKAGES,
     PACKAGES_FAQS,
     SERVICES_INDEX_FAQS,
@@ -21,6 +26,7 @@ from .site_content import (
     SERVICE_PAGE_LOOKUP,
     VALUE_PILLARS,
     build_faq_schema,
+    build_glossary_schema,
 )
 
 
@@ -176,6 +182,66 @@ class ServiceDetailView(TemplateView):
             "faqs": service.get("faqs", []),
             "faq_eyebrow": "Frequently asked",
             "faq_heading": f"{service['name']} — common questions",
+        }
+
+
+class HowItWorksView(TemplateView):
+    """Orientation page — the 60-second mental model of what VRT does."""
+
+    template_name = "core/how_it_works.html"
+
+    def get_context_data(self, **kwargs):
+        canonical = self.request.build_absolute_uri(self.request.path)
+        how_to = {
+            "@context": "https://schema.org",
+            "@type": "HowTo",
+            "name": "How VRT SPACE works",
+            "description": "Audit your site, see where AI ignores you, fix the gaps, and rerun to track progress.",
+            "step": [
+                {
+                    "@type": "HowToStep",
+                    "position": i,
+                    "name": step["title"],
+                    "text": step["body"],
+                }
+                for i, step in enumerate(HOW_IT_WORKS_STEPS, start=1)
+            ],
+        }
+        return {
+            "page_title": "How VRT SPACE Works | AI Visibility in 4 Steps",
+            "meta_description": (
+                "Understand VRT SPACE in 60 seconds: audit your site, see where AI engines "
+                "ignore you, fix the gaps, and rerun to track your AI visibility over time."
+            ),
+            "canonical_url": canonical,
+            "meta_robots": "index,follow",
+            "shell_theme": "shell-light",
+            "schema_json": json.dumps(how_to),
+            "steps": HOW_IT_WORKS_STEPS,
+            "concepts": HOW_IT_WORKS_CONCEPTS,
+            "personas": HOW_IT_WORKS_PERSONAS,
+        }
+
+
+class GlossaryView(TemplateView):
+    """Plain-language dictionary for every VRT / SEO / AEO term."""
+
+    template_name = "core/glossary.html"
+
+    def get_context_data(self, **kwargs):
+        canonical = self.request.build_absolute_uri(self.request.path)
+        return {
+            "page_title": "Glossary | VRT SPACE — AI Visibility & SEO Terms Explained",
+            "meta_description": (
+                "Plain-language definitions of AI visibility, AEO, Share of Voice, citations, "
+                "Core Web Vitals, and every other term you'll meet in VRT SPACE."
+            ),
+            "canonical_url": canonical,
+            "meta_robots": "index,follow",
+            "shell_theme": "shell-light",
+            "schema_json": json.dumps(build_glossary_schema(GLOSSARY_TERMS)),
+            "glossary_categories": GLOSSARY_CATEGORIES,
+            "glossary_terms": GLOSSARY_TERMS,
         }
 
 
