@@ -6271,6 +6271,17 @@ body.shell-light .audit-inline-lock {
     font-size: 0.88rem;
 }
 
+body.shell-light .audit-lock-link {
+    color: var(--brand-primary);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+    font-weight: 600;
+    transition: opacity 0.15s;
+}
+body.shell-light .audit-lock-link:hover {
+    opacity: 0.8;
+}
+
 body.shell-light .audit-upsell-panel {
     border: 1px solid rgba(15, 23, 42, 0.12);
     background: linear-gradient(180deg, rgba(255, 255, 255, 0.98), rgba(248, 250, 252, 0.98));

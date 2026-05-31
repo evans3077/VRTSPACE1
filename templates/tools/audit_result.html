@@ -125,7 +125,7 @@
                 {% if viewer_has_workspace %}
                 <a href="{% url 'tools:workspace-dashboard' %}" class="button button-primary">Open Workspace</a>
                 {% else %}
-                <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-primary">Unlock the full audit</a>
+                <a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="button button-primary">See all issues — free workspace</a>
                 {% endif %}
                 {% if user.is_staff %}
                 <a href="{% url 'tools:agency-audit' audit_run.pk %}" class="button button-secondary">Agency View</a>
@@ -133,7 +133,7 @@
             </div>
             {% if not viewer_has_workspace %}
             <p class="hero-cta-note">
-                Save this audit, see every critical issue, track changes over time, and download branded PDF reports on a paid plan. Free workspace to start.
+                Your workspace is free. Save this audit, track all hidden issues, rerun after fixes, and watch your score climb over time.
             </p>
             {% endif %}
         </div>
@@ -213,7 +213,10 @@
                 {% endfor %}
             </div>
             {% if top_issues_locked_count %}
-            <div class="audit-inline-lock">{{ top_issues_locked_count }} more issue{{ top_issues_locked_count|pluralize }} appear on a higher detail layer.</div>
+            <div class="audit-inline-lock">
+                {{ top_issues_locked_count }} more critical issue{{ top_issues_locked_count|pluralize }} hidden —
+                {% if not viewer_has_workspace %}<a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="audit-lock-link">unlock free</a>{% else %}upgrade your plan to see them{% endif %}.
+            </div>
             {% endif %}
         </article>
         <article class="public-capability-card audit-diagnosis-card">
@@ -255,7 +258,10 @@
                 {% endfor %}
             </div>
             {% if quick_wins_locked_count %}
-            <div class="audit-inline-lock">{{ quick_wins_locked_count }} more quick win{{ quick_wins_locked_count|pluralize }} unlock with a deeper plan.</div>
+            <div class="audit-inline-lock">
+                {{ quick_wins_locked_count }} more quick win{{ quick_wins_locked_count|pluralize }} available —
+                {% if not viewer_has_workspace %}<a href="{% url 'tools:workspace-signup' %}?audit={{ audit_run.pk }}" class="audit-lock-link">unlock free</a>{% else %}upgrade your plan{% endif %}.
+            </div>
             {% endif %}
         </article>
         <article class="public-capability-card audit-diagnosis-card">
@@ -572,16 +578,15 @@
 <section id="upsell" class="public-shell-section">
     <div class="container public-cta-panel glass-panel result-upsell-panel audit-upsell-panel">
         <div>
-            <p class="eyebrow">Upgrade Path</p>
-            <h2>Go deeper when the diagnosis is already clear.</h2>
-            <p class="section-text">
-                Free reports stay controlled by design. Starter adds a more detailed audit, Growth opens broader execution depth, and Authority exposes the fullest operating layer.
-            </p>
+            <p class="eyebrow">What's next</p>
             {% if locked_recommendation_count %}
-            <div class="result-lock-banner" style="margin-top: 1rem;">
-                {{ locked_recommendation_count }} more recommendation{{ locked_recommendation_count|pluralize }} are locked behind a deeper plan or higher recommendation tier.
-            </div>
+            <h2>{{ locked_recommendation_count }} more fix{{ locked_recommendation_count|pluralize }} are waiting. Your workspace tracks them all.</h2>
+            {% else %}
+            <h2>Your workspace tracks progress as you fix each issue.</h2>
             {% endif %}
+            <p class="section-text">
+                The free workspace saves this audit, lets you rerun after fixes, and tracks your score over time. Paid plans unlock deeper issues, AI visibility tracking, and multi-site management.
+            </p>
             {% if audit_run.summary.full_audit_teasers %}
             <div class="report-list-stack" style="margin-top: 1rem;">
                 {% for teaser in audit_run.summary.full_audit_teasers %}
