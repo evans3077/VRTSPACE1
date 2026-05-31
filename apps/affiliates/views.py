@@ -139,21 +139,23 @@ class AffiliateLoginView(View):
     """Dedicated login page for affiliate partners."""
     template_name = "affiliates/affiliate_login.html"
 
+    _ctx = {"shell_theme": "aff-login"}
+
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
             aff = Affiliate.objects.filter(user=request.user, status=Affiliate.Status.ACTIVE).first()
             if aff:
                 return redirect("affiliates:dashboard")
-        return render(request, self.template_name, {"form": AffiliateLoginForm(request=request)})
+        return render(request, self.template_name, {"form": AffiliateLoginForm(request=request), **self._ctx})
 
     def post(self, request, *args, **kwargs):
         form = AffiliateLoginForm(request=request, data=request.POST)
         if not form.is_valid():
-            return render(request, self.template_name, {"form": form}, status=400)
+            return render(request, self.template_name, {"form": form, **self._ctx}, status=400)
         user = form.get_user()
         if not Affiliate.objects.filter(user=user).exists():
             form.add_error(None, "No partner account found for these credentials.")
-            return render(request, self.template_name, {"form": form}, status=400)
+            return render(request, self.template_name, {"form": form, **self._ctx}, status=400)
         login(request, user)
         return redirect("affiliates:dashboard")
 

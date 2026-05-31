@@ -35,7 +35,7 @@ def workspace_projects(request):
         nav_current = "billing"
     elif path.startswith("/tools/audits/"):
         nav_current = "audits"
-    elif path.startswith("/affiliates/"):
+    elif path.startswith("/affiliate/") or path.startswith("/affiliates/"):
         nav_current = "affiliate"
 
     is_workspace = nav_current != ""

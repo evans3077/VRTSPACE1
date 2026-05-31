@@ -6401,6 +6401,8 @@ body.shell-light .audit-upsell-panel {
     background: rgba(239, 68, 68, 0.06);
     border-color: rgba(239, 68, 68, 0.2);
     color: var(--error, #ef4444);
+}
+
 /* ── Agency landing page ─────────────────────────────────────────────────── */
 .agency-hero {
     display: grid;
@@ -7366,9 +7368,70 @@ body.shell-light .billing-limit-list { gap: 0.5rem; }
    Dark shell. .aff-sidebar overrides the workspace light bg.
    ═══════════════════════════════════════════════════════════════ */
 
-/* Override the workspace light bg for affiliate pages */
+/* ── Affiliate grid layout — completely independent of .ws-sidebar ── *
+ * Removing .ws-sidebar from the affiliate <aside> means the workspace
+ * body:has(.ws-sidebar) rules (including the #f1f5f9 background) never fire.
+ * Everything the affiliate shell needs is defined here.                     */
+
+body:has(.aff-sidebar) .site-header,
+body:has(.aff-sidebar) .vrt-footer,
+body.aff-login .site-header,
+body.aff-login .vrt-footer { display: none !important; }
+
 body:has(.aff-sidebar) > main {
-    background: var(--bg-main, #020617) !important;
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    grid-auto-rows: auto;
+    min-height: 100vh;
+    background: #020617;
+    align-items: start;
+}
+body:has(.aff-sidebar) > main > .aff-sidebar {
+    grid-column: 1;
+    grid-row: 1 / span 999;
+    align-self: start;
+    position: sticky;
+    top: 0;
+    width: 240px;
+    height: 100vh;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #0f172a;
+    border-right: 1px solid rgba(255,255,255,0.06);
+    display: flex;
+    flex-direction: column;
+    z-index: 100;
+    padding-bottom: 1rem;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255,255,255,0.08) transparent;
+    flex-shrink: 0;
+}
+body:has(.aff-sidebar) > main > *:not(.aff-sidebar) {
+    grid-column: 2;
+    min-width: 0;
+}
+
+@media (max-width: 960px) {
+    body:has(.aff-sidebar) > main {
+        grid-template-columns: 1fr;
+        grid-auto-rows: auto;
+    }
+    body:has(.aff-sidebar) > main > .aff-sidebar {
+        grid-column: 1;
+        grid-row: 1;
+        width: 100%;
+        height: auto;
+        position: relative;
+        flex-direction: row;
+        flex-wrap: nowrap;
+        overflow-x: auto;
+        overflow-y: hidden;
+        border-right: none;
+        border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    body:has(.aff-sidebar) > main > *:not(.aff-sidebar) {
+        grid-column: 1;
+    }
 }
 
 /* ── Sidebar label ──────────────────────────────────────────────── */
