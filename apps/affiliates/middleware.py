@@ -15,10 +15,15 @@ def get_referral_slug_from_request(request) -> str:
 
     Order of precedence:
       1. ?ref=<slug> query param (allows manual override / link sharing).
-      2. The persisted cookie set by the /r/<slug>/ redirect.
+      2. ref_code POST field (signup form manual entry).
+      3. The persisted cookie set by the /r/<slug>/ redirect.
     """
     ref = (request.GET.get("ref") or "").strip().lower()
     if ref:
         return ref[:64]
+    if request.method == "POST":
+        ref = (request.POST.get("ref_code") or "").strip().lower()
+        if ref:
+            return ref[:64]
     cookie_name = getattr(settings, "AFFILIATE_COOKIE_NAME", "vrt_ref")
     return (request.COOKIES.get(cookie_name) or "").strip().lower()[:64]

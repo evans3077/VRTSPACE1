@@ -4,7 +4,7 @@
 <section class="public-shell-section">
     <div class="container auth-shell">
         <div class="auth-intro-card glass-panel">
-            <p class="feature-tag">Create Workspace</p>
+            <p class="feature-tag">Free to start</p>
             <h1>Save your audit and keep the next steps visible.</h1>
             <p class="lead">
                 Create a workspace to keep this audit, unlock plan-based modules, and rerun after fixes without losing
@@ -78,7 +78,18 @@
                     {% endif %}
                 </div>
 
-                <button type="submit" class="button button-primary button-block">Create Workspace <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
+                <div class="form-group">
+                    <label for="id_ref_code" style="font-size:0.82rem;color:var(--text-muted);">
+                        Referral code <span style="font-weight:400;opacity:0.7;">(optional)</span>
+                    </label>
+                    <input type="text" id="id_ref_code" name="ref_code"
+                           value="{{ ref_code_prefill }}"
+                           placeholder="e.g. partner-name"
+                           autocomplete="off"
+                           style="font-size:0.88rem;">
+                </div>
+
+                <button type="submit" class="button button-primary button-block">Create account <i class="fa-solid fa-arrow-right" aria-hidden="true"></i></button>
             </form>
 
             <p class="auth-assist-text">

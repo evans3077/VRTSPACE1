@@ -597,6 +597,7 @@ class WorkspaceSignupView(View):
                 "google_oauth_enabled": is_google_oauth_enabled(),
                 "google_oauth_url": self._build_google_oauth_url(),
                 "login_url": self._build_auth_url("tools:workspace-login"),
+                "ref_code_prefill": (request.GET.get("ref") or "").strip()[:64],
                 "shell_theme": "shell-light",
             },
         )
