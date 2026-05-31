@@ -15,6 +15,8 @@
     </div>
 
     <div class="container-fluid aff-content-wrap">
+
+        {# ── Profile + Security form ── #}
         <form method="post" class="aff-settings-form">
             {% csrf_token %}
 
@@ -83,43 +85,6 @@
                 </div>
             </section>
 
-            {# ── Stripe Connect ── #}
-            <section class="aff-section glass-panel">
-                <div class="aff-section-head">
-                    <div>
-                        <p class="eyebrow">Payments</p>
-                        <h2>Stripe Connect</h2>
-                    </div>
-                    <span class="aff-stripe-status {% if affiliate.stripe_connect_payouts_enabled %}aff-stripe-status--active{% else %}aff-stripe-status--pending{% endif %}">
-                        {% if affiliate.stripe_connect_payouts_enabled %}
-                            <i class="fa-solid fa-circle-check"></i> Active
-                        {% elif affiliate.stripe_connect_account_id %}
-                            <i class="fa-solid fa-circle-half-stroke"></i> In progress
-                        {% else %}
-                            <i class="fa-solid fa-circle-xmark"></i> Not connected
-                        {% endif %}
-                    </span>
-                </div>
-                <p class="aff-settings-body-text">
-                    {% if affiliate.stripe_connect_payouts_enabled %}
-                    Your Stripe account is active. Cleared commissions transfer automatically every Monday.
-                    {% elif affiliate.stripe_connect_account_id %}
-                    Stripe onboarding was started but not completed. Resume below to unlock payouts.
-                    {% else %}
-                    Connect a Stripe account to receive payouts. Commissions accrue regardless.
-                    {% endif %}
-                </p>
-                {% if not affiliate.stripe_connect_payouts_enabled %}
-                <form method="post" action="{% url 'affiliates:connect-onboard' %}" style="margin-top:1rem;">
-                    {% csrf_token %}
-                    <button type="submit" class="button button-primary">
-                        <i class="fab fa-stripe-s"></i>
-                        {% if affiliate.stripe_connect_account_id %}Resume Stripe onboarding{% else %}Connect Stripe account{% endif %}
-                    </button>
-                </form>
-                {% endif %}
-            </section>
-
             {# ── Save ── #}
             <div class="aff-settings-save">
                 <button type="submit" class="button button-primary">
@@ -127,6 +92,44 @@
                 </button>
             </div>
         </form>
+
+        {# ── Stripe Connect — separate form to avoid nested-form collision ── #}
+        <section class="aff-section glass-panel">
+            <div class="aff-section-head">
+                <div>
+                    <p class="eyebrow">Payments</p>
+                    <h2>Stripe Connect</h2>
+                </div>
+                <span class="aff-stripe-status {% if affiliate.stripe_connect_payouts_enabled %}aff-stripe-status--active{% else %}aff-stripe-status--pending{% endif %}">
+                    {% if affiliate.stripe_connect_payouts_enabled %}
+                        <i class="fa-solid fa-circle-check"></i> Active
+                    {% elif affiliate.stripe_connect_account_id %}
+                        <i class="fa-solid fa-circle-half-stroke"></i> In progress
+                    {% else %}
+                        <i class="fa-solid fa-circle-xmark"></i> Not connected
+                    {% endif %}
+                </span>
+            </div>
+            <p class="aff-settings-body-text">
+                {% if affiliate.stripe_connect_payouts_enabled %}
+                Your Stripe account is active. Cleared commissions transfer automatically every Monday.
+                {% elif affiliate.stripe_connect_account_id %}
+                Stripe onboarding was started but not completed. Resume below to unlock payouts.
+                {% else %}
+                Connect a Stripe account to receive payouts. Commissions accrue regardless.
+                {% endif %}
+            </p>
+            {% if not affiliate.stripe_connect_payouts_enabled %}
+            <form method="post" action="{% url 'affiliates:connect-onboard' %}" style="margin-top:1rem;">
+                {% csrf_token %}
+                <button type="submit" class="button button-primary">
+                    <i class="fab fa-stripe-s"></i>
+                    {% if affiliate.stripe_connect_account_id %}Resume Stripe onboarding{% else %}Connect Stripe account{% endif %}
+                </button>
+            </form>
+            {% endif %}
+        </section>
+
     </div>
 </div>
 {% endblock %}
