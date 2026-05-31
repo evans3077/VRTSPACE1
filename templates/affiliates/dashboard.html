@@ -4,100 +4,109 @@
 <div class="aff-page">
 
     {# ── Page heading ── #}
-    <div class="ws-hub-header workspace-shell-header">
-        <div class="container-fluid">
-            <div class="ws-hub-header-inner">
-                <div>
-                    <p class="eyebrow">Partner Portal</p>
-                    <h1 class="ws-hub-title">{{ affiliate.display_name }}</h1>
-                </div>
-                <span class="aff-status-badge aff-status-badge--{{ affiliate.status }}">
-                    {{ affiliate.get_status_display }}
-                </span>
+    <div class="aff-page-header">
+        <div class="aff-page-header-inner">
+            <div>
+                <p class="aff-page-eyebrow">Partner Portal</p>
+                <h1 class="aff-page-title">{{ affiliate.display_name }}</h1>
             </div>
+            <span class="aff-status-badge aff-status-badge--{{ affiliate.status }}">
+                {{ affiliate.get_status_display }}
+            </span>
         </div>
     </div>
 
-    <div class="container-fluid aff-content-wrap">
+    <div class="aff-content-wrap">
 
         {# ── Stats row ── #}
         <div class="aff-stats-row">
-            <div class="aff-stat-card glass-panel">
+            <div class="aff-stat-card aff-stat-card--green">
                 <p class="aff-stat-label">Total Earned</p>
                 <p class="aff-stat-value">{{ earned_display }}</p>
                 <p class="aff-stat-sub">Paid out to date</p>
             </div>
-            <div class="aff-stat-card glass-panel">
+            <div class="aff-stat-card aff-stat-card--amber">
                 <p class="aff-stat-label">Pending Hold</p>
                 <p class="aff-stat-value">{{ pending_display }}</p>
                 <p class="aff-stat-sub">Clears after {{ payout_hold_days }} days</p>
             </div>
-            <div class="aff-stat-card glass-panel">
+            <div class="aff-stat-card aff-stat-card--blue">
                 <p class="aff-stat-label">Clicks</p>
                 <p class="aff-stat-value">{{ summary.funnel_30d.clicks }}</p>
                 <p class="aff-stat-sub">Last 30 days</p>
             </div>
-            <div class="aff-stat-card glass-panel">
+            <div class="aff-stat-card aff-stat-card--violet">
                 <p class="aff-stat-label">Conversions</p>
                 <p class="aff-stat-value">{{ summary.funnel_30d.paid }}</p>
-                <p class="aff-stat-sub">Paying customers, last 30 days</p>
+                <p class="aff-stat-sub">Paying customers, 30 days</p>
             </div>
         </div>
 
         {# ── Referral tools ── #}
         <div class="aff-referral-row">
-            <div class="aff-referral-card glass-panel">
-                <p class="eyebrow">Referral Link</p>
-                <p class="aff-referral-hint">Share this URL — clicks are tracked automatically.</p>
+            <div class="aff-referral-card">
+                <div class="aff-referral-card-label">
+                    <i class="fa-solid fa-link"></i>
+                    <span>Referral Link</span>
+                </div>
+                <p class="aff-referral-hint">Share this URL — every click is tracked automatically.</p>
                 <div class="aff-copy-row">
                     <input id="aff-ref-url" type="text" readonly value="{{ referral_url }}" class="aff-copy-input">
-                    <button type="button" class="button button-secondary aff-copy-btn"
-                            data-copy-target="aff-ref-url">
+                    <button type="button" class="aff-copy-btn" data-copy-target="aff-ref-url">
                         <i class="fa-regular fa-copy"></i> Copy link
                     </button>
                 </div>
             </div>
-            <div class="aff-referral-card glass-panel">
-                <p class="eyebrow">Referral Code</p>
-                <p class="aff-referral-hint">Customers type this at signup instead of clicking your link.</p>
+            <div class="aff-referral-card">
+                <div class="aff-referral-card-label">
+                    <i class="fa-solid fa-tag"></i>
+                    <span>Referral Code</span>
+                </div>
+                <p class="aff-referral-hint">Customers type this at signup — perfect for podcasts and live events.</p>
                 <div class="aff-copy-row">
                     <input id="aff-ref-code" type="text" readonly value="{{ referral_code }}" class="aff-copy-input aff-copy-input--code">
-                    <button type="button" class="button button-secondary aff-copy-btn"
-                            data-copy-target="aff-ref-code">
+                    <button type="button" class="aff-copy-btn" data-copy-target="aff-ref-code">
                         <i class="fa-regular fa-copy"></i> Copy code
                     </button>
                 </div>
             </div>
         </div>
 
-        {# ── Commission rates summary ── #}
-        <div class="aff-rates-bar glass-panel">
-            <span><i class="fa-solid fa-star" style="color:var(--brand-primary);"></i> First payment: <strong>{{ first_payment_pct }}% commission</strong></span>
-            <span class="aff-rates-sep">·</span>
-            <span><i class="fa-solid fa-rotate" style="color:var(--brand-secondary);"></i> Recurring: <strong>{{ recurring_pct }}% commission</strong></span>
-            <span class="aff-rates-sep">·</span>
-            <span><i class="fa-solid fa-clock" style="color:var(--text-muted);"></i> {{ payout_hold_days }}-day hold, then weekly payout</span>
+        {# ── Commission rates bar ── #}
+        <div class="aff-rates-bar">
+            <div class="aff-rates-item">
+                <i class="fa-solid fa-star aff-rates-icon aff-rates-icon--green"></i>
+                <span>First payment</span>
+                <strong>{{ first_payment_pct }}%</strong>
+            </div>
+            <div class="aff-rates-divider"></div>
+            <div class="aff-rates-item">
+                <i class="fa-solid fa-rotate aff-rates-icon aff-rates-icon--blue"></i>
+                <span>Recurring</span>
+                <strong>{{ recurring_pct }}%</strong>
+            </div>
+            <div class="aff-rates-divider"></div>
+            <div class="aff-rates-item">
+                <i class="fa-solid fa-clock aff-rates-icon"></i>
+                <span>{{ payout_hold_days }}-day hold, weekly payout</span>
+            </div>
         </div>
 
         {# ── Getting started checklist ── #}
         {% if not checklist_done %}
-        <section class="aff-section aff-checklist glass-panel" id="getting-started">
+        <section class="aff-section aff-checklist" id="getting-started">
             <div class="aff-section-head">
                 <div>
-                    <p class="eyebrow">Getting started</p>
-                    <h2>Complete your setup</h2>
+                    <p class="aff-section-eyebrow">Getting started</p>
+                    <h2 class="aff-section-title">Complete your setup</h2>
                 </div>
-                <span class="aff-checklist-progress">
-                    {{ checklist.values|dictsort:"0"|length }}
-                    {% with done=checklist.stripe|add:checklist.first_click|add:checklist.first_signup|add:checklist.first_commission %}{% endwith %}
-                    — see steps below
+                <span class="aff-progress-pill">
+                    {{ checklist_steps_done }} / 4 complete
                 </span>
             </div>
             <ol class="aff-checklist-list">
                 <li class="aff-checklist-item {% if checklist.stripe %}aff-checklist-item--done{% endif %}">
-                    <span class="aff-checklist-icon">
-                        {% if checklist.stripe %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-regular fa-circle"></i>{% endif %}
-                    </span>
+                    <span class="aff-checklist-num">{% if checklist.stripe %}<i class="fa-solid fa-check"></i>{% else %}1{% endif %}</span>
                     <div class="aff-checklist-body">
                         <strong>Connect your Stripe account</strong>
                         <p>Required to receive payouts. Commissions accrue regardless — nothing is lost while you set up.</p>
@@ -107,27 +116,21 @@
                     </div>
                 </li>
                 <li class="aff-checklist-item {% if checklist.first_click %}aff-checklist-item--done{% endif %}">
-                    <span class="aff-checklist-icon">
-                        {% if checklist.first_click %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-regular fa-circle"></i>{% endif %}
-                    </span>
+                    <span class="aff-checklist-num">{% if checklist.first_click %}<i class="fa-solid fa-check"></i>{% else %}2{% endif %}</span>
                     <div class="aff-checklist-body">
                         <strong>Share your link and get your first click</strong>
                         <p>Copy your referral link or code above and share it — on your blog, newsletter, social, or with your audience directly.</p>
                     </div>
                 </li>
                 <li class="aff-checklist-item {% if checklist.first_signup %}aff-checklist-item--done{% endif %}">
-                    <span class="aff-checklist-icon">
-                        {% if checklist.first_signup %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-regular fa-circle"></i>{% endif %}
-                    </span>
+                    <span class="aff-checklist-num">{% if checklist.first_signup %}<i class="fa-solid fa-check"></i>{% else %}3{% endif %}</span>
                     <div class="aff-checklist-body">
                         <strong>Get your first signup</strong>
                         <p>When someone signs up using your link or types your code, they appear in your Referred Users table below.</p>
                     </div>
                 </li>
                 <li class="aff-checklist-item {% if checklist.first_commission %}aff-checklist-item--done{% endif %}">
-                    <span class="aff-checklist-icon">
-                        {% if checklist.first_commission %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-regular fa-circle"></i>{% endif %}
-                    </span>
+                    <span class="aff-checklist-num">{% if checklist.first_commission %}<i class="fa-solid fa-check"></i>{% else %}4{% endif %}</span>
                     <div class="aff-checklist-body">
                         <strong>Earn your first commission</strong>
                         <p>Commissions appear when a referred user makes their first payment. After a {{ payout_hold_days }}-day hold they clear for payout.</p>
@@ -138,11 +141,11 @@
         {% endif %}
 
         {# ── Referred users ── #}
-        <section class="aff-section glass-panel" id="referrals">
+        <section class="aff-section" id="referrals">
             <div class="aff-section-head">
                 <div>
-                    <p class="eyebrow">Referred Users</p>
-                    <h2>Signups attributed to your link or code</h2>
+                    <p class="aff-section-eyebrow">Referred Users</p>
+                    <h2 class="aff-section-title">Signups attributed to your link or code</h2>
                 </div>
                 <div class="aff-funnel-pills">
                     <span class="aff-funnel-pill">{{ summary.funnel_all_time.clicks }} clicks</span>
@@ -190,11 +193,11 @@
         </section>
 
         {# ── Commission ledger ── #}
-        <section class="aff-section glass-panel" id="commissions">
+        <section class="aff-section" id="commissions">
             <div class="aff-section-head">
                 <div>
-                    <p class="eyebrow">Commissions</p>
-                    <h2>Every commission and its hold status</h2>
+                    <p class="aff-section-eyebrow">Commissions</p>
+                    <h2 class="aff-section-title">Every commission and its hold status</h2>
                 </div>
                 {% if cleared_display != "$0.00" %}
                 <div class="aff-cleared-pill">
@@ -244,11 +247,11 @@
         </section>
 
         {# ── Payouts ── #}
-        <section class="aff-section glass-panel" id="payouts">
+        <section class="aff-section" id="payouts">
             <div class="aff-section-head">
                 <div>
-                    <p class="eyebrow">Payouts</p>
-                    <h2>Stripe Connect transfers</h2>
+                    <p class="aff-section-eyebrow">Payouts</p>
+                    <h2 class="aff-section-title">Stripe Connect transfers</h2>
                 </div>
             </div>
 
@@ -285,18 +288,18 @@
         </section>
 
         {# ── Help & FAQ ── #}
-        <section class="aff-section aff-faq glass-panel" id="help">
+        <section class="aff-section aff-faq" id="help">
             <div class="aff-section-head">
                 <div>
-                    <p class="eyebrow">Help</p>
-                    <h2>Common questions</h2>
+                    <p class="aff-section-eyebrow">Help</p>
+                    <h2 class="aff-section-title">Common questions</h2>
                 </div>
             </div>
             <div class="aff-faq-list">
 
                 <details class="aff-faq-item">
                     <summary class="aff-faq-question">
-                        What's the difference between my referral link and my referral code?
+                        <span>What's the difference between my referral link and my referral code?</span>
                         <i class="fa-solid fa-chevron-down aff-faq-chevron"></i>
                     </summary>
                     <div class="aff-faq-answer">
@@ -307,7 +310,7 @@
 
                 <details class="aff-faq-item">
                     <summary class="aff-faq-question">
-                        How do commissions work?
+                        <span>How do commissions work?</span>
                         <i class="fa-solid fa-chevron-down aff-faq-chevron"></i>
                     </summary>
                     <div class="aff-faq-answer">
@@ -318,7 +321,7 @@
 
                 <details class="aff-faq-item">
                     <summary class="aff-faq-question">
-                        When do I get paid?
+                        <span>When do I get paid?</span>
                         <i class="fa-solid fa-chevron-down aff-faq-chevron"></i>
                     </summary>
                     <div class="aff-faq-answer">
@@ -328,7 +331,7 @@
 
                 <details class="aff-faq-item">
                     <summary class="aff-faq-question">
-                        What counts as a conversion?
+                        <span>What counts as a conversion?</span>
                         <i class="fa-solid fa-chevron-down aff-faq-chevron"></i>
                     </summary>
                     <div class="aff-faq-answer">
@@ -338,7 +341,7 @@
 
                 <details class="aff-faq-item">
                     <summary class="aff-faq-question">
-                        My referred user signed up but I don't see commission — why?
+                        <span>My referred user signed up but I don't see commission — why?</span>
                         <i class="fa-solid fa-chevron-down aff-faq-chevron"></i>
                     </summary>
                     <div class="aff-faq-answer">
@@ -348,7 +351,7 @@
 
                 <details class="aff-faq-item">
                     <summary class="aff-faq-question">
-                        How do I connect Stripe to receive payouts?
+                        <span>How do I connect Stripe to receive payouts?</span>
                         <i class="fa-solid fa-chevron-down aff-faq-chevron"></i>
                     </summary>
                     <div class="aff-faq-answer">
@@ -364,16 +367,19 @@
 </div>
 
 <script>
-document.querySelectorAll('.aff-copy-btn').forEach(function(btn) {
+document.querySelectorAll('[data-copy-target]').forEach(function(btn) {
     btn.addEventListener('click', function() {
         var target = document.getElementById(btn.dataset.copyTarget);
-        if (target) {
-            navigator.clipboard.writeText(target.value).then(function() {
-                var orig = btn.innerHTML;
-                btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
-                setTimeout(function() { btn.innerHTML = orig; }, 2000);
-            });
-        }
+        if (!target) return;
+        navigator.clipboard.writeText(target.value).then(function() {
+            var orig = btn.innerHTML;
+            btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied!';
+            btn.classList.add('aff-copy-btn--copied');
+            setTimeout(function() {
+                btn.innerHTML = orig;
+                btn.classList.remove('aff-copy-btn--copied');
+            }, 2000);
+        });
     });
 });
 </script>

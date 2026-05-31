@@ -221,6 +221,7 @@ class AffiliateDashboardView(AffiliateOnlyMixin, TemplateView):
             "first_commission": earnings["total_cents"] > 0,
         }
         checklist_done = all(checklist.values())
+        checklist_steps_done = sum(1 for v in checklist.values() if v)
 
         ctx.update({
             "affiliate": affiliate,
@@ -238,6 +239,7 @@ class AffiliateDashboardView(AffiliateOnlyMixin, TemplateView):
             "cleared_display": _fmt(earnings["approved_cents"]),
             "checklist": checklist,
             "checklist_done": checklist_done,
+            "checklist_steps_done": checklist_steps_done,
             "affiliate_nav_current": "overview",
         })
         return ctx
