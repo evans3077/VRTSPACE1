@@ -672,19 +672,30 @@ class WorkspaceLoginView(View):
 
     def get(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect("tools:workspace-dashboard")
+            return redirect(self._post_login_url(request.user))
         return render(request, self.template_name, self._build_context(form=WorkspaceLoginForm(request=request)))
 
     def post(self, request, *args, **kwargs):
         if request.user.is_authenticated:
-            return redirect("tools:workspace-dashboard")
+            return redirect(self._post_login_url(request.user))
         form = WorkspaceLoginForm(request=request, data=request.POST)
         if not form.is_valid():
             return render(request, self.template_name, self._build_context(form=form), status=400)
 
-        login(request, form.get_user())
-        self._link_audit_to_user(form.get_user())
-        return redirect("tools:workspace-dashboard")
+        user = form.get_user()
+        login(request, user)
+        self._link_audit_to_user(user)
+        return redirect(self._post_login_url(user))
+
+    @staticmethod
+    def _post_login_url(user):
+        try:
+            from apps.affiliates.models import Affiliate
+            if Affiliate.objects.filter(user=user, status=Affiliate.Status.ACTIVE).exists():
+                return reverse("affiliates:dashboard")
+        except Exception:
+            pass
+        return reverse("tools:workspace-dashboard")
 
     def _build_context(self, *, form):
         signup_url = self._build_auth_url("tools:workspace-signup")

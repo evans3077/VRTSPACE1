@@ -32,7 +32,6 @@ class AffiliateAdmin(admin.ModelAdmin):
     list_filter = ("status", "stripe_connect_payouts_enabled", "stripe_connect_onboarded")
     search_fields = ("display_name", "slug", "contact_email", "stripe_connect_account_id")
     readonly_fields = (
-        "user",
         "stripe_connect_account_id",
         "stripe_connect_onboarded",
         "stripe_connect_payouts_enabled",
@@ -44,6 +43,12 @@ class AffiliateAdmin(admin.ModelAdmin):
     )
     autocomplete_fields = ("user",)
     actions = ("activate_affiliates", "suspend_affiliates", "run_payout_now")
+
+    def get_readonly_fields(self, request, obj=None):
+        if obj:
+            # Editing — lock the linked user to prevent re-assignment
+            return ("user",) + self.readonly_fields
+        return self.readonly_fields
 
     @admin.display(description="Stripe", boolean=True)
     def stripe_ready(self, obj):
