@@ -66,7 +66,7 @@
                                     {% if plan.is_current %}
                                     <button class="button button-secondary vrt-pricing-cta" disabled>Current plan</button>
                                     {% elif plan.is_free %}
-                                    <a href="{% url 'core:home' %}#audit" class="button button-secondary vrt-pricing-cta">Run free audit</a>
+                                    <a href="{% url 'core:home' %}#audit" class="button button-secondary vrt-pricing-cta">Run Free AI Visibility Audit</a>
                                     {% else %}
                                     <form method="post" action="{% url 'tools:workspace-billing-checkout' %}" class="vrt-pricing-cta-form">
                                         {% csrf_token %}

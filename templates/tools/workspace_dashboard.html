@@ -21,19 +21,19 @@
         <div class="mc-actions">
             {% if project.pk and latest_audit %}
             <a class="button button-secondary mc-btn" href="{% url 'tools:audit-result' latest_audit.pk %}">
-                <i class="fas fa-file-chart-line"></i> View report
+                <i class="fa-solid fa-file-chart-line"></i> View report
             </a>
             <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin:0;">
                 {% csrf_token %}
                 <button type="submit" class="button button-primary mc-btn">
-                    <i class="fas fa-redo"></i> Re-run
+                    <i class="fa-solid fa-redo"></i> Re-run
                 </button>
             </form>
             {% elif project.pk %}
             <form method="post" action="{% url 'tools:workspace-audit-rerun' %}" style="margin:0;">
                 {% csrf_token %}
                 <button type="submit" class="button button-primary mc-btn">
-                    <i class="fas fa-play"></i> Run First Audit
+                    <i class="fa-solid fa-play"></i> Run First Audit
                 </button>
             </form>
             {% else %}
@@ -94,9 +94,9 @@
             {% elif audit_score_delta is not None and audit_score_delta < 0 %}mc-kpi-delta--down
             {% else %}mc-kpi-delta--flat{% endif %}">
             {% if audit_score_delta is not None and audit_score_delta > 0 %}
-                <i class="fas fa-arrow-up" style="font-size:0.6rem;"></i> +{{ audit_score_delta }} vs prev
+                <i class="fa-solid fa-arrow-up" style="font-size:0.6rem;"></i> +{{ audit_score_delta }} vs prev
             {% elif audit_score_delta is not None and audit_score_delta < 0 %}
-                <i class="fas fa-arrow-down" style="font-size:0.6rem;"></i> {{ audit_score_delta }} vs prev
+                <i class="fa-solid fa-arrow-down" style="font-size:0.6rem;"></i> {{ audit_score_delta }} vs prev
             {% elif latest_audit %}
                 {{ latest_audit.created_at|date:"M j, Y" }}
             {% else %}No audit yet{% endif %}
@@ -189,11 +189,11 @@
             {% for module in workspace_modules %}
             <article class="mc-module-card mc-module-card--{{ module.tone }}">
                 <div class="mc-module-icon mc-module-icon--{{ module.tone }}">
-                    {% if module.tone == "audit" %}<i class="fas fa-magnifying-glass"></i>
-                    {% elif module.tone == "seo" %}<i class="fas fa-chart-line"></i>
-                    {% elif module.tone == "aeo" %}<i class="fas fa-robot"></i>
-                    {% elif module.tone == "content" %}<i class="fas fa-pen-nib"></i>
-                    {% else %}<i class="fas fa-circle-dot"></i>{% endif %}
+                    {% if module.tone == "audit" %}<i class="fa-solid fa-magnifying-glass"></i>
+                    {% elif module.tone == "seo" %}<i class="fa-solid fa-chart-line"></i>
+                    {% elif module.tone == "aeo" %}<i class="fa-solid fa-robot"></i>
+                    {% elif module.tone == "content" %}<i class="fa-solid fa-pen-nib"></i>
+                    {% else %}<i class="fa-solid fa-circle-dot"></i>{% endif %}
                 </div>
                 <p class="mc-module-eyebrow">{{ module.label }}</p>
                 <p class="mc-module-val">{{ module.value }}</p>
@@ -228,7 +228,7 @@
                     <span class="score-pill score-high">{{ recommendation.root_cause_label }}</span>
                     {% endif %}
                     {% if recommendation.confidence_label %}
-                    <span class="score-pill {% if recommendation.evidence_status == 'strong' %}score-high{% elif recommendation.evidence_status == 'stable' %}score-med{% else %}score-low{% endif %}">{{ recommendation.confidence_label }}</span>
+                    <span class="score-pill {% if recommendation.evidence_status == 'strong' %}score-high{% elif recommendation.evidence_status == 'stable' %}score-medium{% else %}score-low{% endif %}">{{ recommendation.confidence_label }}</span>
                     {% endif %}
                 </div>
                 <strong class="mc-fix-title">{{ recommendation.title }}</strong>
@@ -330,7 +330,7 @@
                 </div>
                 <div class="workspace-progress-date">{{ item.audit.created_at|date:"M j" }}</div>
                 {% if item.audit.status == "completed" %}
-                <a class="workspace-progress-link" href="{% url 'tools:audit-result' item.audit.pk %}"><i class="fas fa-external-link-alt"></i></a>
+                <a class="workspace-progress-link" href="{% url 'tools:audit-result' item.audit.pk %}"><i class="fa-solid fa-external-link-alt"></i></a>
                 {% endif %}
             </div>
             {% endfor %}
@@ -463,7 +463,7 @@
         <div class="mc-section-head">
             <h2 class="mc-section-title">Credits &amp; balance</h2>
             {% if credit_usage_pct is not None %}
-            <span class="score-pill {% if credit_alert_band == 100 %}score-low{% elif credit_alert_band >= 90 %}score-low{% elif credit_alert_band >= 75 %}score-med{% else %}score-high{% endif %}">{{ credit_usage_pct }}% used</span>
+            <span class="score-pill {% if credit_alert_band == 100 %}score-low{% elif credit_alert_band >= 90 %}score-low{% elif credit_alert_band >= 75 %}score-medium{% else %}score-high{% endif %}">{{ credit_usage_pct }}% used</span>
             {% endif %}
         </div>
         {% if credit_alert_band == 100 %}
