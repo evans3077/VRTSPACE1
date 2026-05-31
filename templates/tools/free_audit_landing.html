@@ -563,12 +563,25 @@
 </section>
 
 {# ─────────────────────────────────────────────────────────────────────
-   FAQ — addresses the most common conversion objections
+   Final CTA — for anyone who scrolled past the form
    ───────────────────────────────────────────────────────────────────── #}
-<section class="fa-faq">
+<section class="fa-final">
+    <div class="fa-final-card">
+        <h2>Ready to see your AI Visibility Score?</h2>
+        <p>One URL, one email, 60 seconds. No credit card, no commitment. See exactly where you stand on ChatGPT, Gemini, and Perplexity — and what to fix first.</p>
+        <a href="#top" class="button button-primary" onclick="document.querySelector('#id_website')?.focus();return false;">
+            Run my free audit&nbsp; <i class="fa-solid fa-arrow-up"></i>
+        </a>
+    </div>
+</section>
+
+{# ─────────────────────────────────────────────────────────────────────
+   FAQ — always last section before footer
+   ───────────────────────────────────────────────────────────────────── #}
+<section class="fa-faq" aria-labelledby="fa-faq-heading">
     <div class="fa-section-head">
-        <p class="fa-section-eyebrow">FAQ</p>
-        <h2>Quick answers</h2>
+        <p class="fa-section-eyebrow">Frequently Asked Questions</p>
+        <h2 id="fa-faq-heading">Quick answers</h2>
     </div>
 
     <details class="fa-faq-item" open>
@@ -617,19 +630,6 @@
             <p>See the full comparison on the <a href="{% url 'core:packages' %}">pricing page</a>.</p>
         </div>
     </details>
-</section>
-
-{# ─────────────────────────────────────────────────────────────────────
-   Final CTA — for anyone who scrolled past the form
-   ───────────────────────────────────────────────────────────────────── #}
-<section class="fa-final">
-    <div class="fa-final-card">
-        <h2>Ready to see your AI Visibility Score?</h2>
-        <p>One URL, one email, 60 seconds. No credit card, no commitment. See exactly where you stand on ChatGPT, Gemini, and Perplexity — and what to fix first.</p>
-        <a href="#top" class="button button-primary" onclick="document.querySelector('#id_website')?.focus();return false;">
-            Run my free audit&nbsp; <i class="fa-solid fa-arrow-up"></i>
-        </a>
-    </div>
 </section>
 
 {% endblock %}

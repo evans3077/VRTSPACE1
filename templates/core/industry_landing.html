@@ -353,9 +353,6 @@
     </div>
   </section>
 
-  {# ── FAQ ─────────────────────────────────────────────────── #}
-  {% include "includes/faq_section.html" %}
-
   {# ── Cross-links to other industries ─────────────────────── #}
   {% if all_industries %}
   <section class="ind-cross-links">
@@ -375,6 +372,9 @@
     </div>
   </section>
   {% endif %}
+
+  {# FAQ — always last section before footer #}
+  {% include "includes/faq_section.html" %}
 
 </div>
 {% endblock %}

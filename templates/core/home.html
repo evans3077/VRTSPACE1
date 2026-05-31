@@ -642,27 +642,6 @@
     </div>
 </section>
 
-<section class="faq-section">
-    <div class="container section-heading">
-        <p class="eyebrow">Frequently asked</p>
-        <h2>Common questions about VRT SPACE.</h2>
-    </div>
-    <div class="container faq-accordion">
-        {% for item in faqs %}
-        <details class="faq-item">
-            <summary class="faq-question">
-                <h3>{{ item.question }}</h3>
-                <span class="faq-icon"></span>
-            </summary>
-            <div class="faq-answer">
-                <span class="direct-answer">{{ item.answer }}</span>
-                {% if item.detail %}<p>{{ item.detail }}</p>{% endif %}
-            </div>
-        </details>
-        {% endfor %}
-    </div>
-</section>
-
 <section class="contact-section" id="contact">
     <div class="container contact-grid">
         <div>
@@ -707,6 +686,29 @@
         </form>
     </div>
 </section>
+
+{% if faqs %}
+<section class="faq-section" aria-labelledby="home-faq-heading">
+    <div class="container section-heading">
+        <p class="eyebrow">Frequently Asked Questions</p>
+        <h2 id="home-faq-heading">Common questions about VRT Space.</h2>
+    </div>
+    <div class="container faq-accordion">
+        {% for item in faqs %}
+        <details class="faq-item">
+            <summary class="faq-question">
+                <h3>{{ item.question }}</h3>
+                <span class="faq-icon"></span>
+            </summary>
+            <div class="faq-answer">
+                <span class="direct-answer">{{ item.answer }}</span>
+                {% if item.detail %}<p>{{ item.detail }}</p>{% endif %}
+            </div>
+        </details>
+        {% endfor %}
+    </div>
+</section>
+{% endif %}
 
 <style>
 /* ─────────────────────────────────────────────────────────────────

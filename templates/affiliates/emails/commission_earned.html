@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>Commission earned — VRT Space</title>
+</head>
+<body style="margin:0;padding:0;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#1e293b;">
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;">
+<tr><td align="center" style="padding:32px 16px;">
+
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+
+  <!-- Header -->
+  <tr>
+    <td style="background:#0f172a;border-radius:16px 16px 0 0;padding:24px 32px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>
+            <div style="display:inline-block;width:36px;height:36px;background:#0ea5e9;border-radius:8px;line-height:36px;text-align:center;font-size:18px;font-weight:800;color:#ffffff;vertical-align:middle;">V</div>
+            <span style="font-size:15px;font-weight:700;color:#ffffff;vertical-align:middle;margin-left:8px;">VRT Space</span>
+          </td>
+          <td align="right">
+            <span style="font-size:11px;color:#475569;">Partner Program</span>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- Hero amount -->
+  <tr>
+    <td style="background:#059669;padding:32px;text-align:center;">
+      <p style="margin:0 0 4px;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:rgba(255,255,255,0.75);">Commission earned</p>
+      <p style="margin:0;font-size:52px;font-weight:800;color:#ffffff;line-height:1;">{{ amount_display }}</p>
+      <p style="margin:8px 0 0;font-size:14px;color:rgba(255,255,255,0.8);">{{ commission.get_kind_display }} · {{ commission.commission_rate_pct }}% rate</p>
+    </td>
+  </tr>
+
+  <!-- Body -->
+  <tr>
+    <td style="background:#ffffff;padding:32px;">
+
+      <p style="margin:0 0 24px;font-size:15px;color:#475569;line-height:1.6;">
+        Hi <strong style="color:#0f172a;">{{ affiliate.display_name }}</strong> — a commission just landed in your account.
+      </p>
+
+      <!-- Details table -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:24px;">
+        <tr>
+          <td style="padding:16px 20px;border-bottom:1px solid #e2e8f0;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="font-size:13px;color:#64748b;">Amount</td>
+                <td align="right" style="font-size:14px;font-weight:700;color:#059669;">{{ amount_display }}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:16px 20px;border-bottom:1px solid #e2e8f0;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="font-size:13px;color:#64748b;">Commission type</td>
+                <td align="right" style="font-size:14px;font-weight:600;color:#0f172a;">{{ commission.get_kind_display }}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:16px 20px;border-bottom:1px solid #e2e8f0;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="font-size:13px;color:#64748b;">Rate applied</td>
+                <td align="right" style="font-size:14px;font-weight:600;color:#0f172a;">{{ commission.commission_rate_pct }}%</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+        <tr>
+          <td style="padding:16px 20px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="font-size:13px;color:#64748b;">Release date</td>
+                <td align="right" style="font-size:14px;font-weight:600;color:#0f172a;">{{ release_date|date:"F j, Y" }}</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+      <!-- Hold notice -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;margin-bottom:24px;">
+        <tr>
+          <td style="padding:14px 18px;">
+            <p style="margin:0;font-size:13px;color:#78350f;line-height:1.5;">
+              <strong>Hold period:</strong> This commission is held until {{ release_date|date:"F j" }} to cover potential refunds and chargebacks. Once released, it transfers to your Stripe account automatically — no action needed.
+            </p>
+          </td>
+        </tr>
+      </table>
+
+      <!-- CTA -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td align="center">
+            <a href="{{ portal_url }}" style="display:inline-block;background:#0ea5e9;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 28px;border-radius:999px;">View your dashboard &rarr;</a>
+          </td>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+
+  <!-- Footer -->
+  <tr>
+    <td style="background:#f8fafc;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 16px 16px;padding:18px 32px;text-align:center;">
+      <p style="margin:0 0 4px;font-size:12px;color:#64748b;">VRT Space Partner Program</p>
+      <p style="margin:0;font-size:11px;color:#94a3b8;">Questions? Reply to this email.</p>
+    </td>
+  </tr>
+
+</table>
+
+</td></tr>
+</table>
+</body>
+</html>

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<title>New signup via your referral — VRT Space</title>
+</head>
+<body style="margin:0;padding:0;background:#f1f5f9;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Helvetica,Arial,sans-serif;color:#1e293b;">
+
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f1f5f9;">
+<tr><td align="center" style="padding:32px 16px;">
+
+<table role="presentation" width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+
+  <!-- Header -->
+  <tr>
+    <td style="background:#0f172a;border-radius:16px 16px 0 0;padding:24px 32px;">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td>
+            <div style="display:inline-block;width:36px;height:36px;background:#0ea5e9;border-radius:8px;line-height:36px;text-align:center;font-size:18px;font-weight:800;color:#ffffff;vertical-align:middle;">V</div>
+            <span style="font-size:15px;font-weight:700;color:#ffffff;vertical-align:middle;margin-left:8px;">VRT Space</span>
+          </td>
+          <td align="right">
+            <span style="font-size:11px;color:#475569;">Partner Program</span>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+
+  <!-- Hero -->
+  <tr>
+    <td style="background:#f0fdf4;border:1px solid #bbf7d0;border-top:none;padding:28px 32px;text-align:center;">
+      <div style="font-size:36px;margin-bottom:8px;">&#127881;</div>
+      <p style="margin:0 0 4px;font-size:12px;font-weight:700;letter-spacing:0.12em;text-transform:uppercase;color:#059669;">New referral</p>
+      <h1 style="margin:0;font-size:22px;font-weight:800;color:#065f46;line-height:1.2;">Someone just signed up through your link</h1>
+    </td>
+  </tr>
+
+  <!-- Body -->
+  <tr>
+    <td style="background:#ffffff;padding:32px;">
+
+      <p style="margin:0 0 20px;font-size:15px;color:#475569;line-height:1.6;">
+        Hi <strong style="color:#0f172a;">{{ affiliate.display_name }}</strong> — a new user just created their VRT Space workspace using your referral link.
+      </p>
+
+      <!-- Signup details -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#f8fafc;border:1px solid #e2e8f0;border-radius:12px;margin-bottom:24px;">
+        <tr>
+          <td style="padding:16px 20px;">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+              <tr>
+                <td style="font-size:13px;color:#64748b;">Signup time</td>
+                <td align="right" style="font-size:14px;font-weight:600;color:#0f172a;">{{ attribution.created_at|date:"F j, Y" }} at {{ attribution.created_at|time:"H:i" }} UTC</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+
+      <!-- What happens next -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;margin-bottom:24px;">
+        <tr>
+          <td style="padding:16px 20px;">
+            <p style="margin:0 0 6px;font-size:12px;font-weight:700;letter-spacing:0.08em;text-transform:uppercase;color:#92400e;">What happens next</p>
+            <p style="margin:0;font-size:13px;color:#78350f;line-height:1.6;">
+              This is a free signup — your commission is recorded when this user <strong>upgrades to a paid plan</strong>. We'll notify you the moment that happens.
+            </p>
+          </td>
+        </tr>
+      </table>
+
+      <!-- CTA -->
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0">
+        <tr>
+          <td align="center">
+            <a href="{{ portal_url }}" style="display:inline-block;background:#0ea5e9;color:#ffffff;text-decoration:none;font-weight:700;font-size:14px;padding:12px 28px;border-radius:999px;">View funnel in your dashboard &rarr;</a>
+          </td>
+        </tr>
+      </table>
+
+    </td>
+  </tr>
+
+  <!-- Footer -->
+  <tr>
+    <td style="background:#f8fafc;border:1px solid #e2e8f0;border-top:none;border-radius:0 0 16px 16px;padding:18px 32px;text-align:center;">
+      <p style="margin:0 0 4px;font-size:12px;color:#64748b;">VRT Space Partner Program</p>
+      <p style="margin:0;font-size:11px;color:#94a3b8;">Questions? Reply to this email.</p>
+    </td>
+  </tr>
+
+</table>
+
+</td></tr>
+</table>
+</body>
+</html>
