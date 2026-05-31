@@ -370,42 +370,42 @@ class ForAgenciesView(TemplateView):
             ],
             "pain_points": [
                 {
-                    "icon": "fas fa-random",
+                    "icon": "fa-solid fa-shuffle",
                     "title": "Context-switching between tools",
                     "body": "Ahrefs for backlinks, GSC for search, separate tools for AI — no single view of a client's health.",
                 },
                 {
-                    "icon": "fas fa-eye-slash",
+                    "icon": "fa-solid fa-eye-slash",
                     "title": "No AI visibility data",
                     "body": "None of the tools you already pay for tell you if your client is being cited in ChatGPT, Gemini, or Perplexity.",
                 },
                 {
-                    "icon": "fas fa-chart-bar",
+                    "icon": "fa-solid fa-chart-bar",
                     "title": "Can't show progress over time",
                     "body": "Clients ask 'Is it working?' You have no automated score history to point at.",
                 },
             ],
             "platform_features": [
                 {
-                    "icon": "fas fa-th-large",
+                    "icon": "fa-solid fa-grip",
                     "tag": "Dashboard",
                     "title": "Bird's-eye view of every client",
                     "body": "One screen shows all your client sites with their overall score, the most at-risk category, and how the score has moved since the last audit.",
                 },
                 {
-                    "icon": "fas fa-robot",
+                    "icon": "fa-solid fa-robot",
                     "tag": "AEO",
                     "title": "AI search visibility — measured",
                     "body": "See exactly which of your client's target queries are answered by AI and whether their brand is cited. No guessing.",
                 },
                 {
-                    "icon": "fas fa-history",
+                    "icon": "fa-solid fa-clock-rotate-left",
                     "tag": "Progress",
                     "title": "Score deltas that justify the retainer",
                     "body": "Every audit run is saved. When a client asks if the work is paying off, you show them the score moving from 54 to 71 over 60 days.",
                 },
                 {
-                    "icon": "fas fa-calendar-check",
+                    "icon": "fa-solid fa-calendar-check",
                     "tag": "Automation",
                     "title": "Scheduled audits — no manual triggers",
                     "body": "Set weekly or monthly audit schedules per client. Get notified when a score drops so you catch regressions before the client does.",
