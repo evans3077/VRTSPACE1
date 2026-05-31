@@ -212,6 +212,16 @@ class AffiliateDashboardView(AffiliateOnlyMixin, TemplateView):
         )
 
         earnings = summary["earnings"]
+        funnel = summary["funnel_all_time"]
+
+        checklist = {
+            "stripe": affiliate.stripe_connect_payouts_enabled,
+            "first_click": funnel["clicks"] > 0,
+            "first_signup": funnel["signups"] > 0,
+            "first_commission": earnings["total_cents"] > 0,
+        }
+        checklist_done = all(checklist.values())
+
         ctx.update({
             "affiliate": affiliate,
             "summary": summary,
@@ -223,10 +233,11 @@ class AffiliateDashboardView(AffiliateOnlyMixin, TemplateView):
             "first_payment_pct": settings.AFFILIATE_COMMISSION_FIRST_PAYMENT_PCT,
             "recurring_pct": settings.AFFILIATE_COMMISSION_RECURRING_PCT,
             "payout_hold_days": settings.AFFILIATE_PAYOUT_HOLD_DAYS,
-            # Pre-formatted dollar strings — no cents math in templates
             "earned_display": _fmt(earnings["paid_cents"]),
             "pending_display": _fmt(earnings["pending_cents"]),
             "cleared_display": _fmt(earnings["approved_cents"]),
+            "checklist": checklist,
+            "checklist_done": checklist_done,
             "affiliate_nav_current": "overview",
         })
         return ctx

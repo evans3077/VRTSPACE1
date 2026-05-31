@@ -79,6 +79,64 @@
             <span><i class="fa-solid fa-clock" style="color:var(--text-muted);"></i> {{ payout_hold_days }}-day hold, then weekly payout</span>
         </div>
 
+        {# ── Getting started checklist ── #}
+        {% if not checklist_done %}
+        <section class="aff-section aff-checklist glass-panel" id="getting-started">
+            <div class="aff-section-head">
+                <div>
+                    <p class="eyebrow">Getting started</p>
+                    <h2>Complete your setup</h2>
+                </div>
+                <span class="aff-checklist-progress">
+                    {{ checklist.values|dictsort:"0"|length }}
+                    {% with done=checklist.stripe|add:checklist.first_click|add:checklist.first_signup|add:checklist.first_commission %}{% endwith %}
+                    — see steps below
+                </span>
+            </div>
+            <ol class="aff-checklist-list">
+                <li class="aff-checklist-item {% if checklist.stripe %}aff-checklist-item--done{% endif %}">
+                    <span class="aff-checklist-icon">
+                        {% if checklist.stripe %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-regular fa-circle"></i>{% endif %}
+                    </span>
+                    <div class="aff-checklist-body">
+                        <strong>Connect your Stripe account</strong>
+                        <p>Required to receive payouts. Commissions accrue regardless — nothing is lost while you set up.</p>
+                        {% if not checklist.stripe %}
+                        <a href="{% url 'affiliates:settings' %}" class="aff-checklist-action">Go to Settings &rarr;</a>
+                        {% endif %}
+                    </div>
+                </li>
+                <li class="aff-checklist-item {% if checklist.first_click %}aff-checklist-item--done{% endif %}">
+                    <span class="aff-checklist-icon">
+                        {% if checklist.first_click %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-regular fa-circle"></i>{% endif %}
+                    </span>
+                    <div class="aff-checklist-body">
+                        <strong>Share your link and get your first click</strong>
+                        <p>Copy your referral link or code above and share it — on your blog, newsletter, social, or with your audience directly.</p>
+                    </div>
+                </li>
+                <li class="aff-checklist-item {% if checklist.first_signup %}aff-checklist-item--done{% endif %}">
+                    <span class="aff-checklist-icon">
+                        {% if checklist.first_signup %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-regular fa-circle"></i>{% endif %}
+                    </span>
+                    <div class="aff-checklist-body">
+                        <strong>Get your first signup</strong>
+                        <p>When someone signs up using your link or types your code, they appear in your Referred Users table below.</p>
+                    </div>
+                </li>
+                <li class="aff-checklist-item {% if checklist.first_commission %}aff-checklist-item--done{% endif %}">
+                    <span class="aff-checklist-icon">
+                        {% if checklist.first_commission %}<i class="fa-solid fa-circle-check"></i>{% else %}<i class="fa-regular fa-circle"></i>{% endif %}
+                    </span>
+                    <div class="aff-checklist-body">
+                        <strong>Earn your first commission</strong>
+                        <p>Commissions appear when a referred user makes their first payment. After a {{ payout_hold_days }}-day hold they clear for payout.</p>
+                    </div>
+                </li>
+            </ol>
+        </section>
+        {% endif %}
+
         {# ── Referred users ── #}
         <section class="aff-section glass-panel" id="referrals">
             <div class="aff-section-head">
@@ -224,6 +282,82 @@
                 <p class="aff-empty-hint">The first weekly sweep runs once you have cleared commissions and Stripe is connected.</p>
             </div>
             {% endif %}
+        </section>
+
+        {# ── Help & FAQ ── #}
+        <section class="aff-section aff-faq glass-panel" id="help">
+            <div class="aff-section-head">
+                <div>
+                    <p class="eyebrow">Help</p>
+                    <h2>Common questions</h2>
+                </div>
+            </div>
+            <div class="aff-faq-list">
+
+                <details class="aff-faq-item">
+                    <summary class="aff-faq-question">
+                        What's the difference between my referral link and my referral code?
+                        <i class="fa-solid fa-chevron-down aff-faq-chevron"></i>
+                    </summary>
+                    <div class="aff-faq-answer">
+                        Your <strong>referral link</strong> is a full URL — share it in blog posts, YouTube descriptions, newsletters, or anywhere people click through to the site. Every visit is tracked automatically.<br><br>
+                        Your <strong>referral code</strong> is the short word (<code>{{ referral_code }}</code>) that customers type in the "Referral code" field at signup. Use it when you can't share a clickable link — podcasts, live events, verbal recommendations.
+                    </div>
+                </details>
+
+                <details class="aff-faq-item">
+                    <summary class="aff-faq-question">
+                        How do commissions work?
+                        <i class="fa-solid fa-chevron-down aff-faq-chevron"></i>
+                    </summary>
+                    <div class="aff-faq-answer">
+                        You earn <strong>{{ first_payment_pct }}%</strong> on the first payment from each referred customer, and <strong>{{ recurring_pct }}%</strong> on every recurring payment after that — for as long as they stay subscribed.<br><br>
+                        Commissions appear in your ledger as <em>Pending</em> immediately after the payment. After a {{ payout_hold_days }}-day hold (to cover refund windows) they move to <em>Approved</em> and go into your next weekly payout.
+                    </div>
+                </details>
+
+                <details class="aff-faq-item">
+                    <summary class="aff-faq-question">
+                        When do I get paid?
+                        <i class="fa-solid fa-chevron-down aff-faq-chevron"></i>
+                    </summary>
+                    <div class="aff-faq-answer">
+                        Payouts run every Monday, automatically via Stripe Connect, for any commissions that have cleared the {{ payout_hold_days }}-day hold. You need a connected Stripe account — go to <a href="{% url 'affiliates:settings' %}">Settings</a> to set one up.
+                    </div>
+                </details>
+
+                <details class="aff-faq-item">
+                    <summary class="aff-faq-question">
+                        What counts as a conversion?
+                        <i class="fa-solid fa-chevron-down aff-faq-chevron"></i>
+                    </summary>
+                    <div class="aff-faq-answer">
+                        A referred user who makes their first payment. Free signups are tracked and appear in your Referred Users table, but don't generate commission until they upgrade to a paid plan. Once they pay, you earn the first-payment rate on that transaction.
+                    </div>
+                </details>
+
+                <details class="aff-faq-item">
+                    <summary class="aff-faq-question">
+                        My referred user signed up but I don't see commission — why?
+                        <i class="fa-solid fa-chevron-down aff-faq-chevron"></i>
+                    </summary>
+                    <div class="aff-faq-answer">
+                        Commission only triggers on payment, not signup. If your referred user is on the free tier, they'll show as <em>Free</em> in your Referred Users table. Commission will appear automatically when they upgrade and complete their first payment.
+                    </div>
+                </details>
+
+                <details class="aff-faq-item">
+                    <summary class="aff-faq-question">
+                        How do I connect Stripe to receive payouts?
+                        <i class="fa-solid fa-chevron-down aff-faq-chevron"></i>
+                    </summary>
+                    <div class="aff-faq-answer">
+                        Go to <a href="{% url 'affiliates:settings' %}">Settings</a> and click <strong>Connect Stripe account</strong>. You'll be walked through Stripe's onboarding — it takes about 5 minutes. You can use an existing Stripe account or create one during the flow.<br><br>
+                        Commissions accrue regardless of Stripe status — nothing is lost while you set up.
+                    </div>
+                </details>
+
+            </div>
         </section>
 
     </div>

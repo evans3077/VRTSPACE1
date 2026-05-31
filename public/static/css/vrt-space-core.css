@@ -7677,3 +7677,116 @@ body.shell-light .billing-limit-list { gap: 0.5rem; }
     .aff-rates-bar { gap: 0.5rem; }
     .aff-rates-sep { display: none; }
 }
+
+/* ── Affiliate getting-started checklist ───────────────────────── */
+.aff-checklist-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+}
+.aff-checklist-item {
+    display: flex;
+    gap: 1rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    align-items: flex-start;
+}
+.aff-checklist-item:last-child { border-bottom: none; }
+.aff-checklist-icon {
+    flex-shrink: 0;
+    font-size: 1.1rem;
+    margin-top: 0.1rem;
+    color: var(--text-muted);
+    width: 1.25rem;
+    text-align: center;
+}
+.aff-checklist-item--done .aff-checklist-icon { color: #4ade80; }
+.aff-checklist-item--done .aff-checklist-body strong { color: var(--text-muted); text-decoration: line-through; opacity: 0.6; }
+.aff-checklist-body { flex: 1; min-width: 0; }
+.aff-checklist-body strong { display: block; font-size: 0.9rem; color: var(--text-primary); margin-bottom: 0.25rem; }
+.aff-checklist-body p { font-size: 0.82rem; color: var(--text-muted); margin: 0; line-height: 1.5; }
+.aff-checklist-action {
+    display: inline-block;
+    margin-top: 0.5rem;
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--brand-primary);
+    text-decoration: none;
+}
+.aff-checklist-action:hover { text-decoration: underline; }
+.aff-checklist-progress {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    white-space: nowrap;
+}
+
+/* ── Affiliate FAQ ──────────────────────────────────────────────── */
+.aff-faq-list { display: flex; flex-direction: column; }
+.aff-faq-item {
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.aff-faq-item:last-child { border-bottom: none; }
+.aff-faq-question {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem 0;
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    cursor: pointer;
+    list-style: none;
+    user-select: none;
+}
+.aff-faq-question::-webkit-details-marker { display: none; }
+.aff-faq-question:hover { color: var(--brand-primary); }
+.aff-faq-chevron {
+    font-size: 0.7rem;
+    color: var(--text-muted);
+    flex-shrink: 0;
+    transition: transform 0.2s ease;
+}
+details[open] .aff-faq-chevron { transform: rotate(180deg); }
+.aff-faq-answer {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    padding: 0 0 1.25rem 0;
+}
+.aff-faq-answer strong { color: var(--text-primary); }
+.aff-faq-answer a { color: var(--brand-primary); text-decoration: none; }
+.aff-faq-answer a:hover { text-decoration: underline; }
+.aff-faq-answer code {
+    font-family: monospace;
+    font-size: 0.88em;
+    background: rgba(255,255,255,0.08);
+    padding: 0.1em 0.4em;
+    border-radius: 4px;
+    color: var(--brand-primary);
+}
+
+/* Workspace team — share URL display (M-5) */
+.ws-share-url {
+    font-family: monospace;
+    font-size: 0.82rem;
+    color: var(--brand-primary);
+    word-break: break-all;
+    margin: 0;
+}
+.ws-form-label {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--text-secondary);
+    letter-spacing: 0.04em;
+    margin: 0;
+}
+.ws-form-hint {
+    font-size: 0.74rem;
+    color: var(--text-muted);
+    margin: 0.2rem 0 0;
+    line-height: 1.4;
+}
