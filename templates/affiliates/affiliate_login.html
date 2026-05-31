@@ -1,0 +1,72 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="public-shell-section aff-login-section">
+    <div class="container auth-shell">
+
+        <div class="auth-intro-card glass-panel">
+            <p class="eyebrow">Partner Portal</p>
+            <h1>Welcome back. Your referrals are waiting.</h1>
+            <p class="lead">
+                Track clicks, monitor conversions, and watch commissions clear — all in one place.
+            </p>
+            <div class="public-chip-row">
+                <span class="premium-pill">Referral tracking</span>
+                <span class="premium-pill">Commission ledger</span>
+                <span class="premium-pill">Stripe payouts</span>
+            </div>
+        </div>
+
+        <article class="auth-form-card glass-panel">
+            <div class="auth-form-head">
+                <p class="eyebrow">Sign in</p>
+                <h2>Access your partner dashboard</h2>
+                <p class="section-text">Use the email and password from your partner invitation.</p>
+            </div>
+
+            <form method="post" class="premium-form auth-form" novalidate>
+                {% csrf_token %}
+
+                {% if form.non_field_errors %}
+                <div class="flash flash-error" role="alert">
+                    <span class="flash-text">{{ form.non_field_errors|join:", " }}</span>
+                </div>
+                {% endif %}
+
+                <div class="form-group">
+                    <label for="{{ form.username.id_for_label }}">Email address</label>
+                    {{ form.username }}
+                    {% if form.username.errors %}
+                    <span class="text-error">{{ form.username.errors|join:", " }}</span>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label for="{{ form.password.id_for_label }}">Password</label>
+                    {{ form.password }}
+                    {% if form.password.errors %}
+                    <span class="text-error">{{ form.password.errors|join:", " }}</span>
+                    {% endif %}
+                </div>
+
+                <button type="submit" class="button button-primary button-block">
+                    Sign in <i class="fa-solid fa-arrow-right" aria-hidden="true"></i>
+                </button>
+            </form>
+
+            <p class="auth-assist-text">
+                <a href="{% url 'affiliates:password-reset' %}">Forgot your password?</a>
+            </p>
+
+            <div class="aff-login-divider"></div>
+
+            <p class="auth-assist-text" style="text-align:center;">
+                <a href="{% url 'core:home' %}" style="color:var(--text-muted);font-size:0.82rem;">
+                    <i class="fa-solid fa-arrow-left" style="font-size:0.72rem;"></i> Back to VRT SPACE
+                </a>
+            </p>
+        </article>
+
+    </div>
+</section>
+{% endblock %}

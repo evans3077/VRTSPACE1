@@ -1,0 +1,132 @@
+{% extends "affiliates/affiliate_shell.html" %}
+
+{% block affiliate_content %}
+<div class="aff-page">
+
+    <div class="ws-hub-header workspace-shell-header">
+        <div class="container-fluid">
+            <div class="ws-hub-header-inner">
+                <div>
+                    <p class="eyebrow">Partner Portal</p>
+                    <h1 class="ws-hub-title">Settings</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container-fluid aff-content-wrap">
+        <form method="post" class="aff-settings-form">
+            {% csrf_token %}
+
+            {% if form.non_field_errors %}
+            <div class="flash flash-error" role="alert">
+                <span class="flash-text">{{ form.non_field_errors|join:", " }}</span>
+            </div>
+            {% endif %}
+
+            {# ── Profile ── #}
+            <section class="aff-section glass-panel">
+                <div class="aff-section-head">
+                    <div>
+                        <p class="eyebrow">Profile</p>
+                        <h2>Your partner identity</h2>
+                    </div>
+                </div>
+                <div class="aff-settings-grid">
+                    <div class="form-group">
+                        <label for="{{ form.display_name.id_for_label }}">Display name</label>
+                        {{ form.display_name }}
+                        {% if form.display_name.errors %}
+                        <span class="text-error">{{ form.display_name.errors|join:", " }}</span>
+                        {% endif %}
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.contact_email.id_for_label }}">Contact email</label>
+                        {{ form.contact_email }}
+                        {% if form.contact_email.errors %}
+                        <span class="text-error">{{ form.contact_email.errors|join:", " }}</span>
+                        {% endif %}
+                        <span class="aff-field-hint">Used for commission and payout notifications.</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Referral code</label>
+                        <input type="text" value="{{ affiliate.slug }}" readonly class="aff-readonly-field">
+                        <span class="aff-field-hint">Contact us to change your referral handle.</span>
+                    </div>
+                </div>
+            </section>
+
+            {# ── Security ── #}
+            <section class="aff-section glass-panel">
+                <div class="aff-section-head">
+                    <div>
+                        <p class="eyebrow">Security</p>
+                        <h2>Change your password</h2>
+                    </div>
+                </div>
+                <div class="aff-settings-grid">
+                    <div class="form-group">
+                        <label for="{{ form.new_password.id_for_label }}">New password</label>
+                        {{ form.new_password }}
+                        {% if form.new_password.errors %}
+                        <span class="text-error">{{ form.new_password.errors|join:", " }}</span>
+                        {% endif %}
+                        <span class="aff-field-hint">Minimum 8 characters. Leave blank to keep your current password.</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="{{ form.confirm_password.id_for_label }}">Confirm new password</label>
+                        {{ form.confirm_password }}
+                        {% if form.confirm_password.errors %}
+                        <span class="text-error">{{ form.confirm_password.errors|join:", " }}</span>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+
+            {# ── Stripe Connect ── #}
+            <section class="aff-section glass-panel">
+                <div class="aff-section-head">
+                    <div>
+                        <p class="eyebrow">Payments</p>
+                        <h2>Stripe Connect</h2>
+                    </div>
+                    <span class="aff-stripe-status {% if affiliate.stripe_connect_payouts_enabled %}aff-stripe-status--active{% else %}aff-stripe-status--pending{% endif %}">
+                        {% if affiliate.stripe_connect_payouts_enabled %}
+                            <i class="fa-solid fa-circle-check"></i> Active
+                        {% elif affiliate.stripe_connect_account_id %}
+                            <i class="fa-solid fa-circle-half-stroke"></i> In progress
+                        {% else %}
+                            <i class="fa-solid fa-circle-xmark"></i> Not connected
+                        {% endif %}
+                    </span>
+                </div>
+                <p class="aff-settings-body-text">
+                    {% if affiliate.stripe_connect_payouts_enabled %}
+                    Your Stripe account is active. Cleared commissions transfer automatically every Monday.
+                    {% elif affiliate.stripe_connect_account_id %}
+                    Stripe onboarding was started but not completed. Resume below to unlock payouts.
+                    {% else %}
+                    Connect a Stripe account to receive payouts. Commissions accrue regardless.
+                    {% endif %}
+                </p>
+                {% if not affiliate.stripe_connect_payouts_enabled %}
+                <form method="post" action="{% url 'affiliates:connect-onboard' %}" style="margin-top:1rem;">
+                    {% csrf_token %}
+                    <button type="submit" class="button button-primary">
+                        <i class="fab fa-stripe-s"></i>
+                        {% if affiliate.stripe_connect_account_id %}Resume Stripe onboarding{% else %}Connect Stripe account{% endif %}
+                    </button>
+                </form>
+                {% endif %}
+            </section>
+
+            {# ── Save ── #}
+            <div class="aff-settings-save">
+                <button type="submit" class="button button-primary">
+                    Save changes <i class="fa-solid fa-check" aria-hidden="true"></i>
+                </button>
+            </div>
+        </form>
+    </div>
+</div>
+{% endblock %}

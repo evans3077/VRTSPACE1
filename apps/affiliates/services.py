@@ -549,10 +549,19 @@ def create_affiliate(
     return affiliate
 
 
-def activate_affiliate(affiliate: Affiliate) -> Affiliate:
+def activate_affiliate(affiliate: Affiliate, *, site_base_url: str = "") -> Affiliate:
     affiliate.status = Affiliate.Status.ACTIVE
     affiliate.activated_at = timezone.now()
     affiliate.save(update_fields=["status", "activated_at", "updated_at"])
+    try:
+        from django.urls import reverse
+        from .notifications import notify_affiliate_welcome
+        base = site_base_url.rstrip("/") if site_base_url else getattr(settings, "SITE_URL", "https://vrtspace.co").rstrip("/")
+        login_url = base + reverse("affiliates:login")
+        referral_url = base + reverse("affiliates:referral-landing", kwargs={"slug": affiliate.slug})
+        notify_affiliate_welcome(affiliate, login_url=login_url, referral_url=referral_url)
+    except Exception:
+        logger.exception("Failed to send affiliate welcome email: slug=%s", affiliate.slug)
     return affiliate
 
 

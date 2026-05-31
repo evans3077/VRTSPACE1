@@ -2,16 +2,17 @@ from __future__ import annotations
 
 from django.conf import settings
 from django.contrib import messages
+from django.contrib.auth import login, logout
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, redirect
+from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse, reverse_lazy
 from django.utils.decorators import method_decorator
 from django.utils.http import url_has_allowed_host_and_scheme
 from django.views.decorators.cache import never_cache
 from django.views.generic import CreateView, TemplateView, View
 
-from .forms import AffiliateApplicationForm
+from .forms import AffiliateApplicationForm, AffiliateLoginForm, AffiliateSettingsForm
 from .middleware import get_referral_slug_from_request
 from .models import (
     Affiliate,
@@ -28,6 +29,11 @@ from .services import (
     record_click,
     refresh_connect_account_status,
 )
+
+
+def _fmt(cents: int) -> str:
+    """Format integer cents as a dollar string: 150050 → '$1,500.50'"""
+    return f"${cents / 100:,.2f}"
 
 
 SAFE_REDIRECT_BASE = "/"
@@ -128,16 +134,50 @@ class PartnerInquiryThanksView(TemplateView):
 # ---------------------------------------------------------------------------
 
 
+@method_decorator(never_cache, name="dispatch")
+class AffiliateLoginView(View):
+    """Dedicated login page for affiliate partners."""
+    template_name = "affiliates/affiliate_login.html"
+
+    def get(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            aff = Affiliate.objects.filter(user=request.user, status=Affiliate.Status.ACTIVE).first()
+            if aff:
+                return redirect("affiliates:dashboard")
+        return render(request, self.template_name, {"form": AffiliateLoginForm(request=request)})
+
+    def post(self, request, *args, **kwargs):
+        form = AffiliateLoginForm(request=request, data=request.POST)
+        if not form.is_valid():
+            return render(request, self.template_name, {"form": form}, status=400)
+        user = form.get_user()
+        if not Affiliate.objects.filter(user=user).exists():
+            form.add_error(None, "No partner account found for these credentials.")
+            return render(request, self.template_name, {"form": form}, status=400)
+        login(request, user)
+        return redirect("affiliates:dashboard")
+
+
+class AffiliateLogoutView(View):
+    def post(self, request, *args, **kwargs):
+        logout(request)
+        return redirect("affiliates:login")
+
+    def get(self, request, *args, **kwargs):
+        logout(request)
+        return redirect("affiliates:login")
+
+
 class AffiliateOnlyMixin(LoginRequiredMixin):
-    login_url = reverse_lazy("tools:workspace-login")
+    login_url = reverse_lazy("affiliates:login")
 
     def dispatch(self, request, *args, **kwargs):
         if not request.user.is_authenticated:
             return self.handle_no_permission()
         affiliate = Affiliate.objects.filter(user=request.user).first()
         if not affiliate:
-            messages.error(request, "You don't have an affiliate profile on this account.")
-            return redirect("tools:workspace-dashboard")
+            messages.error(request, "No partner account found for this login.")
+            return redirect("affiliates:login")
         request.affiliate = affiliate
         return super().dispatch(request, *args, **kwargs)
 
@@ -171,6 +211,7 @@ class AffiliateDashboardView(AffiliateOnlyMixin, TemplateView):
             reverse("affiliates:referral-landing", kwargs={"slug": affiliate.slug})
         )
 
+        earnings = summary["earnings"]
         ctx.update({
             "affiliate": affiliate,
             "summary": summary,
@@ -178,11 +219,43 @@ class AffiliateDashboardView(AffiliateOnlyMixin, TemplateView):
             "commissions": commissions,
             "payouts": payouts,
             "referral_url": referral_url,
+            "referral_code": affiliate.slug,
             "first_payment_pct": settings.AFFILIATE_COMMISSION_FIRST_PAYMENT_PCT,
             "recurring_pct": settings.AFFILIATE_COMMISSION_RECURRING_PCT,
             "payout_hold_days": settings.AFFILIATE_PAYOUT_HOLD_DAYS,
+            # Pre-formatted dollar strings — no cents math in templates
+            "earned_display": _fmt(earnings["paid_cents"]),
+            "pending_display": _fmt(earnings["pending_cents"]),
+            "cleared_display": _fmt(earnings["approved_cents"]),
+            "affiliate_nav_current": "overview",
         })
         return ctx
+
+
+class AffiliateSettingsView(AffiliateOnlyMixin, View):
+    template_name = "affiliates/settings.html"
+
+    def get(self, request, *args, **kwargs):
+        affiliate = request.affiliate
+        form = AffiliateSettingsForm(instance=affiliate, user=request.user)
+        return render(request, self.template_name, {
+            "affiliate": affiliate,
+            "form": form,
+            "affiliate_nav_current": "settings",
+        })
+
+    def post(self, request, *args, **kwargs):
+        affiliate = request.affiliate
+        form = AffiliateSettingsForm(request.POST, instance=affiliate, user=request.user)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Settings saved successfully.")
+            return redirect("affiliates:settings")
+        return render(request, self.template_name, {
+            "affiliate": affiliate,
+            "form": form,
+            "affiliate_nav_current": "settings",
+        })
 
 
 class StripeConnectOnboardingStartView(AffiliateOnlyMixin, View):

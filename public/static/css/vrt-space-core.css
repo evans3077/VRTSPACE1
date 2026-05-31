@@ -7360,3 +7360,320 @@ body.shell-light .billing-limit-list { gap: 0.5rem; }
 .mc-schedule-lock-icon { font-size: 1.4rem; color: var(--text-muted); flex-shrink: 0; margin-top: .1rem; }
 .mc-schedule-lock-title { font-size: .85rem; font-weight: 600; color: var(--text-primary); margin: 0 0 .2rem; }
 .mc-schedule-lock-body { font-size: .78rem; color: var(--text-muted); margin: 0; line-height: 1.5; }
+
+/* ═══════════════════════════════════════════════════════════════
+   AFFILIATE PORTAL
+   Dark shell. Reuses ws-sidebar grid layout from base.html.
+   ═══════════════════════════════════════════════════════════════ */
+
+/* "Partner Portal" label under sidebar brand */
+.aff-portal-label {
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--brand-primary);
+    padding: 0 1rem 0.75rem 1rem;
+    margin-top: -0.5rem;
+    opacity: 0.8;
+}
+
+/* Stripe warning banner */
+.aff-stripe-banner {
+    grid-column: 2;
+    background: rgba(251, 191, 36, 0.1);
+    border-bottom: 1px solid rgba(251, 191, 36, 0.25);
+    padding: 0.75rem 1.5rem;
+}
+.aff-stripe-banner-inner {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.875rem;
+    color: #fbbf24;
+    max-width: 1200px;
+    margin: 0 auto;
+}
+.aff-stripe-banner-inner i { flex-shrink: 0; }
+.aff-banner-btn {
+    background: none;
+    border: none;
+    color: #fbbf24;
+    font-weight: 700;
+    cursor: pointer;
+    padding: 0;
+    text-decoration: underline;
+    font-size: 0.875rem;
+}
+.aff-banner-btn:hover { opacity: 0.8; }
+
+/* Flash messages */
+.aff-messages {
+    grid-column: 2;
+    padding: 0.75rem 1.5rem 0;
+}
+.aff-message {
+    padding: 0.75rem 1rem;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    margin-bottom: 0.5rem;
+}
+.aff-message--success { background: rgba(34, 197, 94, 0.12); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.25); }
+.aff-message--error   { background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25); }
+
+/* Page wrapper */
+.aff-page { min-height: 100vh; background: var(--bg-main); }
+
+/* Hub header matches workspace pattern */
+.aff-page .ws-hub-header { padding: 2rem 0 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.ws-hub-header-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.ws-hub-title { font-size: 1.75rem; font-weight: 800; color: var(--text-primary); margin: 0; }
+
+/* Content wrap */
+.aff-content-wrap { padding: 2rem 2rem 4rem; max-width: 1200px; }
+
+/* Status badge */
+.aff-status-badge {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+}
+.aff-status-badge--active   { background: rgba(34, 197, 94, 0.15); color: #4ade80; border: 1px solid rgba(34, 197, 94, 0.3); }
+.aff-status-badge--pending  { background: rgba(251, 191, 36, 0.15); color: #fbbf24; border: 1px solid rgba(251, 191, 36, 0.3); }
+.aff-status-badge--suspended,
+.aff-status-badge--revoked  { background: rgba(239, 68, 68, 0.12); color: #f87171; border: 1px solid rgba(239, 68, 68, 0.25); }
+
+/* Stats row */
+.aff-stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+.aff-stat-card {
+    padding: 1.25rem 1.5rem;
+    border-radius: 12px;
+}
+.aff-stat-label {
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin: 0 0 0.5rem;
+}
+.aff-stat-value {
+    font-size: 2rem;
+    font-weight: 800;
+    color: var(--text-primary);
+    line-height: 1;
+    margin: 0 0 0.35rem;
+}
+.aff-stat-sub { font-size: 0.75rem; color: var(--text-muted); margin: 0; }
+
+/* Referral tools */
+.aff-referral-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+.aff-referral-card { padding: 1.25rem 1.5rem; border-radius: 12px; }
+.aff-referral-card .eyebrow { margin-bottom: 0.35rem; }
+.aff-referral-hint { font-size: 0.82rem; color: var(--text-muted); margin: 0 0 1rem; }
+.aff-copy-row { display: flex; gap: 0.75rem; align-items: center; }
+.aff-copy-input {
+    flex: 1;
+    min-width: 0;
+    padding: 0.5rem 0.75rem;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    color: var(--text-primary);
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 0.875rem;
+}
+.aff-copy-input--code {
+    font-family: monospace;
+    font-size: 1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--brand-primary);
+}
+.aff-copy-input:focus { outline: none; border-color: var(--brand-primary); }
+
+/* Commission rates bar */
+.aff-rates-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+    padding: 1rem 1.5rem;
+    border-radius: 10px;
+    font-size: 0.82rem;
+    color: var(--text-secondary);
+    margin-bottom: 1.5rem;
+}
+.aff-rates-bar strong { color: var(--text-primary); }
+.aff-rates-sep { color: var(--text-muted); }
+
+/* Section cards */
+.aff-section {
+    border-radius: 12px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+.aff-section-head {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+.aff-section-head h2 { font-size: 1.1rem; font-weight: 700; color: var(--text-primary); margin: 0.25rem 0 0; }
+
+/* Funnel pills */
+.aff-funnel-pills { display: flex; gap: 0.5rem; flex-wrap: wrap; align-items: center; }
+.aff-funnel-pill {
+    font-size: 0.72rem;
+    font-weight: 600;
+    padding: 0.25rem 0.65rem;
+    border-radius: 999px;
+    background: rgba(255,255,255,0.06);
+    color: var(--text-secondary);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.aff-funnel-pill--paid { background: rgba(34,197,94,0.12); color: #4ade80; border-color: rgba(34,197,94,0.25); }
+
+/* Cleared pill */
+.aff-cleared-pill {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #4ade80;
+    background: rgba(34,197,94,0.12);
+    border: 1px solid rgba(34,197,94,0.25);
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    white-space: nowrap;
+}
+
+/* Tables */
+.aff-table-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.aff-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.875rem;
+}
+.aff-table th {
+    text-align: left;
+    padding: 0.5rem 0.75rem 0.75rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+}
+.aff-table td {
+    padding: 0.75rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+    vertical-align: middle;
+}
+.aff-table tr:last-child td { border-bottom: none; }
+.aff-table td strong { color: var(--text-primary); }
+.aff-monospace { font-family: monospace; font-size: 0.78rem; color: var(--text-muted); }
+
+/* Status/type badges */
+.aff-badge {
+    display: inline-block;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    padding: 0.2rem 0.55rem;
+    border-radius: 999px;
+}
+.aff-badge--paying  { background: rgba(34,197,94,0.12); color: #4ade80; }
+.aff-badge--free    { background: rgba(255,255,255,0.06); color: var(--text-muted); }
+.aff-badge--approved { background: rgba(34,197,94,0.12); color: #4ade80; }
+.aff-badge--pending,
+.aff-badge--on_hold { background: rgba(251,191,36,0.12); color: #fbbf24; }
+.aff-badge--paid    { background: rgba(99,102,241,0.15); color: #a5b4fc; }
+.aff-badge--voided  { background: rgba(239,68,68,0.1); color: #f87171; }
+.aff-badge--completed { background: rgba(34,197,94,0.12); color: #4ade80; }
+.aff-badge--initiated { background: rgba(251,191,36,0.12); color: #fbbf24; }
+
+/* Hide on small screens */
+@media (max-width: 768px) { .aff-col-hide-sm { display: none; } }
+
+/* Empty states */
+.aff-empty {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: var(--text-muted);
+}
+.aff-empty i { font-size: 2rem; margin-bottom: 1rem; opacity: 0.4; display: block; }
+.aff-empty p { margin: 0; font-size: 0.95rem; }
+.aff-empty-hint { font-size: 0.82rem; margin-top: 0.5rem !important; }
+
+/* Settings */
+.aff-settings-form { display: flex; flex-direction: column; gap: 0; }
+.aff-settings-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.25rem; }
+.aff-settings-body-text { color: var(--text-secondary); font-size: 0.9rem; margin: 0; }
+.aff-field-hint { font-size: 0.75rem; color: var(--text-muted); margin-top: 0.35rem; display: block; }
+.aff-readonly-field {
+    width: 100%;
+    padding: 0.6rem 0.85rem;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 8px;
+    color: var(--text-muted);
+    font-family: monospace;
+    font-size: 0.9rem;
+    cursor: default;
+}
+.aff-settings-save { padding: 0 0 2rem; }
+
+/* Stripe status in settings */
+.aff-stripe-status {
+    font-size: 0.78rem;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.3rem 0.75rem;
+    border-radius: 999px;
+}
+.aff-stripe-status--active  { background: rgba(34,197,94,0.12); color: #4ade80; }
+.aff-stripe-status--pending { background: rgba(251,191,36,0.12); color: #fbbf24; }
+
+/* Affiliate login page separator */
+.aff-login-divider {
+    border-top: 1px solid rgba(255,255,255,0.07);
+    margin: 1.5rem 0 1rem;
+}
+
+/* Responsive: stack sidebar on mobile */
+@media (max-width: 768px) {
+    .aff-stats-row { grid-template-columns: repeat(2, 1fr); }
+    .aff-referral-row { grid-template-columns: 1fr; }
+    .aff-settings-grid { grid-template-columns: 1fr; }
+    .aff-content-wrap { padding: 1.25rem 1rem 3rem; }
+    .aff-copy-row { flex-direction: column; align-items: stretch; }
+    .aff-rates-bar { gap: 0.5rem; }
+    .aff-rates-sep { display: none; }
+}

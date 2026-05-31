@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block content %}
+{# ── Affiliate sidebar — reuses ws-sidebar CSS grid rules from base.html ── #}
+<aside class="ws-sidebar" id="aff-sidebar" aria-label="Partner navigation">
+
+    <a class="ws-sidebar-brand" href="{% url 'affiliates:dashboard' %}">
+        <span class="ws-sidebar-brand-mark">V</span>
+        <span class="ws-sidebar-brand-text">VRT Space</span>
+    </a>
+    <div class="aff-portal-label">Partner Portal</div>
+
+    <div class="ws-sidebar-section">
+        <nav aria-label="Partner navigation">
+            <a class="ws-sidebar-link {% if affiliate_nav_current == 'overview' %}is-active{% endif %}"
+               href="{% url 'affiliates:dashboard' %}">
+                <i class="fa-solid fa-chart-line"></i><span>Overview</span>
+            </a>
+            <a class="ws-sidebar-link {% if affiliate_nav_current == 'commissions' %}is-active{% endif %}"
+               href="{% url 'affiliates:dashboard' %}#commissions">
+                <i class="fa-solid fa-coins"></i><span>Commissions</span>
+            </a>
+            <a class="ws-sidebar-link {% if affiliate_nav_current == 'payouts' %}is-active{% endif %}"
+               href="{% url 'affiliates:dashboard' %}#payouts">
+                <i class="fa-solid fa-money-bill-transfer"></i><span>Payouts</span>
+            </a>
+            <a class="ws-sidebar-link {% if affiliate_nav_current == 'settings' %}is-active{% endif %}"
+               href="{% url 'affiliates:settings' %}">
+                <i class="fa-solid fa-gear"></i><span>Settings</span>
+            </a>
+        </nav>
+    </div>
+
+    <div class="ws-sidebar-footer">
+        <form method="post" action="{% url 'affiliates:logout' %}" style="width:100%;">
+            {% csrf_token %}
+            <button type="submit" class="ws-sidebar-logout" style="width:100%;border:none;background:none;cursor:pointer;text-align:left;">
+                <i class="fa-solid fa-power-off"></i><span>Sign out</span>
+            </button>
+        </form>
+    </div>
+</aside>
+
+{# ── Stripe Connect warning banner — shown on every page if not connected ── #}
+{% if affiliate and not affiliate.stripe_connect_payouts_enabled %}
+<div class="aff-stripe-banner">
+    <div class="aff-stripe-banner-inner">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <span>
+            {% if affiliate.stripe_connect_account_id %}
+                Stripe onboarding isn't complete. Commissions are accruing but payouts are paused.
+                <form method="post" action="{% url 'affiliates:connect-onboard' %}" style="display:inline;">
+                    {% csrf_token %}<button type="submit" class="aff-banner-btn">Resume setup &rarr;</button>
+                </form>
+            {% else %}
+                Connect a Stripe account to receive payouts. Commissions are accruing in the meantime.
+                <form method="post" action="{% url 'affiliates:connect-onboard' %}" style="display:inline;">
+                    {% csrf_token %}<button type="submit" class="aff-banner-btn">Connect Stripe &rarr;</button>
+                </form>
+            {% endif %}
+        </span>
+    </div>
+</div>
+{% endif %}
+
+{# ── Flash messages ── #}
+{% if messages %}
+<div class="aff-messages">
+    {% for message in messages %}
+    <div class="aff-message aff-message--{{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+</div>
+{% endif %}
+
+{% block affiliate_content %}{% endblock %}
+{% endblock %}

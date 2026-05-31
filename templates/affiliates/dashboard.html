@@ -1,196 +1,246 @@
-{% extends "base.html" %}
+{% extends "affiliates/affiliate_shell.html" %}
 
-{% block content %}
-<section class="account-shell-hero">
-    <div class="container account-hero-grid">
-        <div class="account-hero-copy">
-            <p class="eyebrow text-accent">Affiliate Partner</p>
-            <h1>{{ affiliate.display_name }}</h1>
-            <p class="account-page-text">
-                Track your referral funnel, watch commissions clear the {{ payout_hold_days }}-day hold,
-                and get paid automatically through Stripe Connect.
-            </p>
-            <div class="account-hero-actions">
-                <button type="button"
-                        class="button button-primary"
-                        onclick="navigator.clipboard.writeText(document.getElementById('referral-url').value); this.textContent='Copied';">
-                    <i class="fa-solid fa-link" aria-hidden="true"></i> Copy referral link
-                </button>
-                {% if not affiliate.stripe_connect_payouts_enabled %}
-                <form method="post" action="{% url 'affiliates:connect-onboard' %}" style="display:inline-block;">
-                    {% csrf_token %}
-                    <button type="submit" class="button button-secondary">
-                        <i class="fab fa-stripe-s" aria-hidden="true"></i>
-                        {% if affiliate.stripe_connect_account_id %}Resume Stripe onboarding{% else %}Connect Stripe account{% endif %}
-                    </button>
-                </form>
-                {% endif %}
+{% block affiliate_content %}
+<div class="aff-page">
+
+    {# ── Page heading ── #}
+    <div class="ws-hub-header workspace-shell-header">
+        <div class="container-fluid">
+            <div class="ws-hub-header-inner">
+                <div>
+                    <p class="eyebrow">Partner Portal</p>
+                    <h1 class="ws-hub-title">{{ affiliate.display_name }}</h1>
+                </div>
+                <span class="aff-status-badge aff-status-badge--{{ affiliate.status }}">
+                    {{ affiliate.get_status_display }}
+                </span>
             </div>
-            <div style="margin-top:1rem;">
-                <input id="referral-url" type="text" readonly value="{{ referral_url }}"
-                       style="width:100%;max-width:480px;padding:0.5rem 0.75rem;border:1px solid var(--border-glass);border-radius:8px;font-family:monospace;font-size:0.9rem;">
+        </div>
+    </div>
+
+    <div class="container-fluid aff-content-wrap">
+
+        {# ── Stats row ── #}
+        <div class="aff-stats-row">
+            <div class="aff-stat-card glass-panel">
+                <p class="aff-stat-label">Total Earned</p>
+                <p class="aff-stat-value">{{ earned_display }}</p>
+                <p class="aff-stat-sub">Paid out to date</p>
+            </div>
+            <div class="aff-stat-card glass-panel">
+                <p class="aff-stat-label">Pending Hold</p>
+                <p class="aff-stat-value">{{ pending_display }}</p>
+                <p class="aff-stat-sub">Clears after {{ payout_hold_days }} days</p>
+            </div>
+            <div class="aff-stat-card glass-panel">
+                <p class="aff-stat-label">Clicks</p>
+                <p class="aff-stat-value">{{ summary.funnel_30d.clicks }}</p>
+                <p class="aff-stat-sub">Last 30 days</p>
+            </div>
+            <div class="aff-stat-card glass-panel">
+                <p class="aff-stat-label">Conversions</p>
+                <p class="aff-stat-value">{{ summary.funnel_30d.paid }}</p>
+                <p class="aff-stat-sub">Paying customers, last 30 days</p>
             </div>
         </div>
 
-        <article class="account-hero-panel">
-            <div class="account-hero-panel-head">
-                <p class="eyebrow">Earnings</p>
-                <span class="account-plan-badge">{{ affiliate.get_status_display }}</span>
+        {# ── Referral tools ── #}
+        <div class="aff-referral-row">
+            <div class="aff-referral-card glass-panel">
+                <p class="eyebrow">Referral Link</p>
+                <p class="aff-referral-hint">Share this URL — clicks are tracked automatically.</p>
+                <div class="aff-copy-row">
+                    <input id="aff-ref-url" type="text" readonly value="{{ referral_url }}" class="aff-copy-input">
+                    <button type="button" class="button button-secondary aff-copy-btn"
+                            data-copy-target="aff-ref-url">
+                        <i class="fa-regular fa-copy"></i> Copy link
+                    </button>
+                </div>
             </div>
-            <div class="account-hero-plan-row">
+            <div class="aff-referral-card glass-panel">
+                <p class="eyebrow">Referral Code</p>
+                <p class="aff-referral-hint">Customers type this at signup instead of clicking your link.</p>
+                <div class="aff-copy-row">
+                    <input id="aff-ref-code" type="text" readonly value="{{ referral_code }}" class="aff-copy-input aff-copy-input--code">
+                    <button type="button" class="button button-secondary aff-copy-btn"
+                            data-copy-target="aff-ref-code">
+                        <i class="fa-regular fa-copy"></i> Copy code
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        {# ── Commission rates summary ── #}
+        <div class="aff-rates-bar glass-panel">
+            <span><i class="fa-solid fa-star" style="color:var(--brand-primary);"></i> First payment: <strong>{{ first_payment_pct }}% commission</strong></span>
+            <span class="aff-rates-sep">·</span>
+            <span><i class="fa-solid fa-rotate" style="color:var(--brand-secondary);"></i> Recurring: <strong>{{ recurring_pct }}% commission</strong></span>
+            <span class="aff-rates-sep">·</span>
+            <span><i class="fa-solid fa-clock" style="color:var(--text-muted);"></i> {{ payout_hold_days }}-day hold, then weekly payout</span>
+        </div>
+
+        {# ── Referred users ── #}
+        <section class="aff-section glass-panel" id="referrals">
+            <div class="aff-section-head">
                 <div>
-                    <strong class="account-hero-plan-name">${{ summary.earnings.paid_cents|floatformat:0|default:"0"|slice:":-2"|default:"0" }}.{{ summary.earnings.paid_cents|stringformat:"04d"|slice:"-2:" }}</strong>
-                    <p class="account-page-text">Paid out to date</p>
+                    <p class="eyebrow">Referred Users</p>
+                    <h2>Signups attributed to your link or code</h2>
                 </div>
-                <div class="account-hero-meta">
-                    <span>Pending hold: ${{ summary.earnings.pending_cents|stringformat:"04d"|slice:":-2" }}.{{ summary.earnings.pending_cents|stringformat:"04d"|slice:"-2:" }}</span>
-                    <span>Cleared, awaiting payout: ${{ summary.earnings.approved_cents|stringformat:"04d"|slice:":-2" }}.{{ summary.earnings.approved_cents|stringformat:"04d"|slice:"-2:" }}</span>
-                    <span>Commission rates: {{ first_payment_pct }}% first / {{ recurring_pct }}% recurring</span>
+                <div class="aff-funnel-pills">
+                    <span class="aff-funnel-pill">{{ summary.funnel_all_time.clicks }} clicks</span>
+                    <span class="aff-funnel-pill">{{ summary.funnel_all_time.signups }} signups</span>
+                    <span class="aff-funnel-pill aff-funnel-pill--paid">{{ summary.funnel_all_time.paid }} paying</span>
                 </div>
             </div>
-            <div class="account-hero-panel-note">
-                {% if affiliate.stripe_connect_payouts_enabled %}
-                Stripe Connect is active — cleared commissions transfer automatically every Monday.
-                {% elif affiliate.stripe_connect_account_id %}
-                Stripe onboarding started but isn't complete. Resume above to unlock payouts.
-                {% else %}
-                Connect a Stripe account to start receiving payouts. Commissions accrue either way.
+
+            {% if attributions %}
+            <div class="aff-table-wrap">
+                <table class="aff-table">
+                    <thead>
+                        <tr>
+                            <th>Signed up</th>
+                            <th>Status</th>
+                            <th>First payment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for attr in attributions %}
+                        <tr>
+                            <td>{{ attr.created_at|date:"M j, Y" }}</td>
+                            <td>
+                                {% if attr.first_payment_at %}
+                                <span class="aff-badge aff-badge--paying">Paying</span>
+                                {% else %}
+                                <span class="aff-badge aff-badge--free">Free</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if attr.first_payment_at %}{{ attr.first_payment_at|date:"M j, Y" }}{% else %}&mdash;{% endif %}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="aff-empty">
+                <i class="fa-solid fa-user-plus"></i>
+                <p>No referrals yet.</p>
+                <p class="aff-empty-hint">Share your link or code above to start building your funnel.</p>
+            </div>
+            {% endif %}
+        </section>
+
+        {# ── Commission ledger ── #}
+        <section class="aff-section glass-panel" id="commissions">
+            <div class="aff-section-head">
+                <div>
+                    <p class="eyebrow">Commissions</p>
+                    <h2>Every commission and its hold status</h2>
+                </div>
+                {% if cleared_display != "$0.00" %}
+                <div class="aff-cleared-pill">
+                    <i class="fa-solid fa-circle-check"></i> {{ cleared_display }} cleared &amp; awaiting payout
+                </div>
                 {% endif %}
             </div>
-        </article>
-    </div>
-</section>
 
-<section class="account-shell">
-    <div class="container account-dashboard-stack">
-
-        <article class="account-nav-card">
-            <div class="account-card-heading">
-                <p class="eyebrow">Funnel</p>
-                <h2>Traffic, signups, and paying conversions</h2>
-            </div>
-            <div class="account-hero-meta" style="gap:2rem; flex-wrap:wrap;">
-                <div>
-                    <p class="eyebrow">All time</p>
-                    <p><strong>{{ summary.funnel_all_time.clicks }}</strong> clicks</p>
-                    <p><strong>{{ summary.funnel_all_time.signups }}</strong> signups</p>
-                    <p><strong>{{ summary.funnel_all_time.paid }}</strong> paying conversions</p>
-                </div>
-                <div>
-                    <p class="eyebrow">Last 30 days</p>
-                    <p><strong>{{ summary.funnel_30d.clicks }}</strong> clicks</p>
-                    <p><strong>{{ summary.funnel_30d.signups }}</strong> signups</p>
-                    <p><strong>{{ summary.funnel_30d.paid }}</strong> paying conversions</p>
-                </div>
-            </div>
-        </article>
-
-        <article class="account-nav-card">
-            <div class="account-card-heading">
-                <p class="eyebrow">Referred users</p>
-                <h2>Latest signups attributed to your link</h2>
-            </div>
-            {% if attributions %}
-            <table class="account-table" style="width:100%;border-collapse:collapse;">
-                <thead>
-                    <tr style="text-align:left;border-bottom:1px solid var(--border-glass);">
-                        <th style="padding:0.5rem 0;">Signed up</th>
-                        <th style="padding:0.5rem 0;">Status</th>
-                        <th style="padding:0.5rem 0;">First payment</th>
-                        <th style="padding:0.5rem 0;">Flag</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for attribution in attributions %}
-                    <tr style="border-bottom:1px solid var(--border-glass);">
-                        <td style="padding:0.5rem 0;">{{ attribution.created_at|date:"Y-m-d" }}</td>
-                        <td style="padding:0.5rem 0;">
-                            {% if attribution.first_payment_at %}Paying{% else %}Signed up{% endif %}
-                        </td>
-                        <td style="padding:0.5rem 0;">
-                            {% if attribution.first_payment_at %}{{ attribution.first_payment_at|date:"Y-m-d" }}{% else %}&mdash;{% endif %}
-                        </td>
-                        <td style="padding:0.5rem 0;">
-                            {% if attribution.fraud_flag == "none" %}<span class="text-muted">Clean</span>
-                            {% else %}<span style="color:var(--error)">{{ attribution.get_fraud_flag_display }}</span>{% endif %}
-                        </td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <p class="account-page-text">No signups yet. Share your referral link to start the funnel.</p>
-            {% endif %}
-        </article>
-
-        <article class="account-nav-card">
-            <div class="account-card-heading">
-                <p class="eyebrow">Commission ledger</p>
-                <h2>Every commission and its hold status</h2>
-            </div>
             {% if commissions %}
-            <table class="account-table" style="width:100%;border-collapse:collapse;">
-                <thead>
-                    <tr style="text-align:left;border-bottom:1px solid var(--border-glass);">
-                        <th style="padding:0.5rem 0;">Date</th>
-                        <th style="padding:0.5rem 0;">Type</th>
-                        <th style="padding:0.5rem 0;">Gross</th>
-                        <th style="padding:0.5rem 0;">Rate</th>
-                        <th style="padding:0.5rem 0;">Commission</th>
-                        <th style="padding:0.5rem 0;">Status</th>
-                        <th style="padding:0.5rem 0;">Releases</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for commission in commissions %}
-                    <tr style="border-bottom:1px solid var(--border-glass);">
-                        <td style="padding:0.5rem 0;">{{ commission.created_at|date:"Y-m-d" }}</td>
-                        <td style="padding:0.5rem 0;">{{ commission.get_kind_display }}</td>
-                        <td style="padding:0.5rem 0;">${{ commission.gross_amount_cents|stringformat:"04d"|slice:":-2" }}.{{ commission.gross_amount_cents|stringformat:"04d"|slice:"-2:" }}</td>
-                        <td style="padding:0.5rem 0;">{{ commission.commission_rate_pct }}%</td>
-                        <td style="padding:0.5rem 0;"><strong>${{ commission.commission_amount_cents|stringformat:"04d"|slice:":-2" }}.{{ commission.commission_amount_cents|stringformat:"04d"|slice:"-2:" }}</strong></td>
-                        <td style="padding:0.5rem 0;">{{ commission.get_status_display }}</td>
-                        <td style="padding:0.5rem 0;">{{ commission.release_at|date:"Y-m-d" }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
-            {% else %}
-            <p class="account-page-text">No commissions recorded yet.</p>
-            {% endif %}
-        </article>
-
-        <article class="account-nav-card">
-            <div class="account-card-heading">
-                <p class="eyebrow">Payouts</p>
-                <h2>Stripe Connect transfers</h2>
+            <div class="aff-table-wrap">
+                <table class="aff-table aff-table--commissions">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th class="aff-col-hide-sm">Gross</th>
+                            <th class="aff-col-hide-sm">Rate</th>
+                            <th>Commission</th>
+                            <th>Status</th>
+                            <th class="aff-col-hide-sm">Releases</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for c in commissions %}
+                        <tr>
+                            <td>{{ c.created_at|date:"M j, Y" }}</td>
+                            <td>{{ c.get_kind_display }}</td>
+                            <td class="aff-col-hide-sm">${{ c.gross_amount_cents|floatformat:"-2" }}</td>
+                            <td class="aff-col-hide-sm">{{ c.commission_rate_pct }}%</td>
+                            <td><strong>${{ c.commission_amount_cents|floatformat:"-2" }}</strong></td>
+                            <td>
+                                <span class="aff-badge aff-badge--{{ c.status }}">{{ c.get_status_display }}</span>
+                            </td>
+                            <td class="aff-col-hide-sm">{{ c.release_at|date:"M j, Y" }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
             </div>
-            {% if payouts %}
-            <table class="account-table" style="width:100%;border-collapse:collapse;">
-                <thead>
-                    <tr style="text-align:left;border-bottom:1px solid var(--border-glass);">
-                        <th style="padding:0.5rem 0;">Date</th>
-                        <th style="padding:0.5rem 0;">Amount</th>
-                        <th style="padding:0.5rem 0;">Status</th>
-                        <th style="padding:0.5rem 0;">Stripe transfer</th>
-                    </tr>
-                </thead>
-                <tbody>
-                {% for payout in payouts %}
-                    <tr style="border-bottom:1px solid var(--border-glass);">
-                        <td style="padding:0.5rem 0;">{{ payout.created_at|date:"Y-m-d" }}</td>
-                        <td style="padding:0.5rem 0;"><strong>${{ payout.amount_cents|stringformat:"04d"|slice:":-2" }}.{{ payout.amount_cents|stringformat:"04d"|slice:"-2:" }}</strong></td>
-                        <td style="padding:0.5rem 0;">{{ payout.get_status_display }}</td>
-                        <td style="padding:0.5rem 0;font-family:monospace;font-size:0.85rem;">{{ payout.stripe_transfer_id|default:"—" }}</td>
-                    </tr>
-                {% endfor %}
-                </tbody>
-            </table>
             {% else %}
-            <p class="account-page-text">No payouts yet. The first weekly sweep happens once you have cleared commissions.</p>
+            <div class="aff-empty">
+                <i class="fa-solid fa-coins"></i>
+                <p>No commissions yet.</p>
+                <p class="aff-empty-hint">Commissions appear here once a referred user makes their first payment.</p>
+            </div>
             {% endif %}
-        </article>
+        </section>
+
+        {# ── Payouts ── #}
+        <section class="aff-section glass-panel" id="payouts">
+            <div class="aff-section-head">
+                <div>
+                    <p class="eyebrow">Payouts</p>
+                    <h2>Stripe Connect transfers</h2>
+                </div>
+            </div>
+
+            {% if payouts %}
+            <div class="aff-table-wrap">
+                <table class="aff-table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th class="aff-col-hide-sm">Stripe transfer</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    {% for p in payouts %}
+                        <tr>
+                            <td>{{ p.created_at|date:"M j, Y" }}</td>
+                            <td><strong>${{ p.amount_cents|floatformat:"-2" }}</strong></td>
+                            <td><span class="aff-badge aff-badge--{{ p.status }}">{{ p.get_status_display }}</span></td>
+                            <td class="aff-col-hide-sm aff-monospace">{{ p.stripe_transfer_id|default:"—" }}</td>
+                        </tr>
+                    {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <div class="aff-empty">
+                <i class="fa-solid fa-money-bill-transfer"></i>
+                <p>No payouts yet.</p>
+                <p class="aff-empty-hint">The first weekly sweep runs once you have cleared commissions and Stripe is connected.</p>
+            </div>
+            {% endif %}
+        </section>
 
     </div>
-</section>
+</div>
+
+<script>
+document.querySelectorAll('.aff-copy-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        var target = document.getElementById(btn.dataset.copyTarget);
+        if (target) {
+            navigator.clipboard.writeText(target.value).then(function() {
+                var orig = btn.innerHTML;
+                btn.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+                setTimeout(function() { btn.innerHTML = orig; }, 2000);
+            });
+        }
+    });
+});
+</script>
 {% endblock %}

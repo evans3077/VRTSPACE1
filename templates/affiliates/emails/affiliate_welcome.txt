@@ -1,0 +1,28 @@
+Hi {{ affiliate.display_name }},
+
+Welcome to the VRT SPACE Partner Program — your account is now active.
+
+Here's everything you need to get started:
+
+SIGN IN
+{{ login_url }}
+
+YOUR REFERRAL LINK
+{{ referral_url }}
+Share this link — every click is tracked automatically.
+
+YOUR REFERRAL CODE
+{{ referral_code }}
+Customers can type this at the signup step instead of clicking your link.
+
+COMMISSION RATES
+First payment: {{ affiliate.commission_rate_pct|default:"See dashboard" }}%
+Check your dashboard for current rates.
+
+GETTING PAID
+Connect your Stripe account from the Settings page to unlock weekly payouts.
+Commissions accrue regardless — nothing is lost while you set up.
+
+If you have any questions, reply to this email.
+
+— The VRT SPACE Team

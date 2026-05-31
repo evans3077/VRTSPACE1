@@ -73,6 +73,20 @@ def notify_commission_earned(commission: CommissionLedger) -> None:
     )
 
 
+def notify_affiliate_welcome(affiliate: Affiliate, login_url: str, referral_url: str) -> None:
+    _send(
+        subject="Welcome to the VRT SPACE Partner Program",
+        template="affiliates/emails/affiliate_welcome.txt",
+        context={
+            "affiliate": affiliate,
+            "login_url": login_url,
+            "referral_url": referral_url,
+            "referral_code": affiliate.slug,
+        },
+        to_email=affiliate.contact_email,
+    )
+
+
 def notify_payout_sent(payout: Payout) -> None:
     affiliate = payout.affiliate
     _send(
