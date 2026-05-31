@@ -463,7 +463,7 @@
         <div class="mc-section-head">
             <h2 class="mc-section-title">Credits &amp; balance</h2>
             {% if credit_usage_pct is not None %}
-            <span class="score-pill {% if credit_alert_band == 100 %}score-low{% elif credit_alert_band >= 90 %}score-low{% elif credit_alert_band >= 75 %}score-medium{% else %}score-high{% endif %}">{{ credit_usage_pct }}% used</span>
+            <span class="usage-pill {% if credit_alert_band == 100 %}usage-pill--critical{% elif credit_alert_band >= 90 %}usage-pill--critical{% elif credit_alert_band >= 75 %}usage-pill--warning{% elif credit_alert_band >= 50 %}usage-pill--notice{% else %}usage-pill--ok{% endif %}">{{ credit_usage_pct }}% used</span>
             {% endif %}
         </div>
         {% if credit_alert_band == 100 %}
