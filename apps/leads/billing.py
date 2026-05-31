@@ -82,11 +82,11 @@ ACTION_FEATURE_LABELS = {
 }
 AUDIT_RESULT_PROFILES = {
     "free": {
-        "label": "Free tier audit",
+        "label": "Audit entry layer",
         "summary": "Clear enough to confirm the main blockers, but intentionally shaped to push the next decision instead of dumping everything.",
         "top_issue_limit": 2,
         "quick_win_limit": 3,
-        "featured_recommendation_limit": 3,
+        "featured_recommendation_limit": 2,
         "secondary_recommendation_limit": 0,
         "performance_metric_limit": 3,
         "score_breakdown_keys": ["technical", "seo", "performance", "aeo"],
@@ -97,7 +97,7 @@ AUDIT_RESULT_PROFILES = {
         "pdf_export_enabled": False,
     },
     "starter": {
-        "label": "Action-ready audit",
+        "label": "Focused operator plan",
         "summary": "Detailed enough to act on the audit inside the workspace, without exposing the full operating depth reserved for larger plans.",
         "top_issue_limit": 4,
         "quick_win_limit": 4,
@@ -112,7 +112,7 @@ AUDIT_RESULT_PROFILES = {
         "pdf_export_enabled": True,
     },
     "growth": {
-        "label": "Growth planning layer",
+        "label": "Team growth plan",
         "summary": "Designed for teams who need deeper audit context, broader score visibility, and enough evidence to keep execution moving.",
         "top_issue_limit": 6,
         "quick_win_limit": 6,
@@ -127,7 +127,7 @@ AUDIT_RESULT_PROFILES = {
         "pdf_export_enabled": True,
     },
     "authority": {
-        "label": "Full audit depth",
+        "label": "Authority operating system",
         "summary": "The deepest audit layer with broader evidence, technical footprint, and the clearest handoff into execution workflows.",
         "top_issue_limit": None,
         "quick_win_limit": None,
