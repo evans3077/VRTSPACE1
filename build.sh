@@ -12,6 +12,11 @@ python manage.py collectstatic --no-input
 echo "── Applying database migrations ─────────────────────────────────"
 python manage.py migrate --no-input
 
+echo "── Ensuring superuser account ───────────────────────────────────"
+# Runs only when SUPERUSER_EMAIL + SUPERUSER_PASSWORD env vars are set.
+# Remove the env vars from Render dashboard after first successful deploy.
+python manage.py ensure_superuser || echo "INFO ensure_superuser skipped (env vars not set)"
+
 echo "── Syncing workspace plan catalog ───────────────────────────────"
 # Idempotent: only inserts/updates plans that don't already exist.
 python -c "
