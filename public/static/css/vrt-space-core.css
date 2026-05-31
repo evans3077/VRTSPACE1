@@ -721,32 +721,43 @@ input::placeholder, textarea::placeholder {
     .case-study-wrapper {
         padding: 1.5rem 1.25rem !important;
     }
+    /* Vertical connector line */
     .case-study-content {
-        position: static;
-        padding-left: 0;
-        gap: 1rem;
+        position: relative;
+        padding-left: 2.75rem;
+        gap: 1.25rem;
     }
-    /* Each step becomes a bordered card — number lives inside the border */
+    .case-study-content::before {
+        content: '';
+        position: absolute;
+        left: 0.75rem;
+        top: 0.4rem;
+        bottom: 0.4rem;
+        width: 2px;
+        background: linear-gradient(180deg, transparent, var(--brand-primary) 20%, var(--brand-secondary) 80%, transparent);
+        opacity: 0.35;
+    }
+    /* Step: number sits on the left border of its text box */
     .case-step {
+        position: relative;
+        gap: 0;
         flex-direction: column;
-        gap: 0.5rem;
-        border: 1px solid rgba(255, 255, 255, 0.1);
-        border-radius: 8px;
-        padding: 1rem;
-        position: static;
-    }
-    .step-num {
-        position: static;
-        display: block;
-        font-size: 0.7rem;
-        width: auto;
-        text-align: left;
-        margin-bottom: 0.15rem;
-        opacity: 0.7;
     }
     .case-step > div {
         width: 100%;
         min-width: 0;
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 8px;
+        padding: 0.875rem 1rem;
+    }
+    /* Number on the left border edge of the card */
+    .step-num {
+        position: absolute;
+        left: -0.6rem;
+        top: 0.65rem;
+        font-size: 0.72rem;
+        line-height: 1;
+        z-index: 1;
     }
 }
 
