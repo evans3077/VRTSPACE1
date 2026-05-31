@@ -717,6 +717,29 @@ input::placeholder, textarea::placeholder {
     }
 }
 
+@media (max-width: 640px) {
+    .case-study-wrapper {
+        padding: 1.5rem 1.25rem !important;
+    }
+    .case-step {
+        gap: 0.875rem;
+        align-items: flex-start;
+    }
+    .step-num {
+        min-width: 1.75rem;
+        flex-shrink: 0;
+        font-size: 0.85rem;
+        padding-top: 0.15rem;
+    }
+    .case-step > div {
+        flex: 1;
+        min-width: 0;
+    }
+    .case-study-content {
+        gap: 2rem;
+    }
+}
+
 /* Minimalist-Authority FAQ Accordion (Ahrefs-Inspired) */
 .faq-accordion {
     max-width: 900px !important;
