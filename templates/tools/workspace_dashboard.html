@@ -467,9 +467,25 @@
             {% endif %}
         </div>
         {% if credit_alert_band == 100 %}
-        <div class="workspace-credit-banner workspace-credit-banner-critical"><strong>All credits used.</strong> <a href="{% url 'tools:account-dashboard' %}#billing">Top up &rarr;</a></div>
-        {% elif credit_alert_band == 90 %}
-        <div class="workspace-credit-banner workspace-credit-banner-warning"><strong>90% of credits used.</strong> <a href="{% url 'tools:account-dashboard' %}#billing">Top up &rarr;</a></div>
+        <div class="workspace-credit-banner workspace-credit-banner-critical">
+            <strong>All credits used.</strong> New credit-spending actions are paused until you top up or your plan renews.
+            <a href="{% url 'tools:account-dashboard' %}#billing">Top up &rarr;</a>
+        </div>
+        {% elif credit_alert_band >= 90 %}
+        <div class="workspace-credit-banner workspace-credit-banner-warning">
+            <strong>90% of credits used.</strong> Only 10% remaining — top up to keep audits and analyses running.
+            <a href="{% url 'tools:account-dashboard' %}#billing">Top up &rarr;</a>
+        </div>
+        {% elif credit_alert_band >= 75 %}
+        <div class="workspace-credit-banner workspace-credit-banner-warning">
+            <strong>75% of credits used.</strong> You have 25% of your monthly allowance left.
+            <a href="{% url 'tools:account-dashboard' %}#billing">View usage &rarr;</a>
+        </div>
+        {% elif credit_alert_band >= 50 %}
+        <div class="workspace-credit-banner workspace-credit-banner-info">
+            <strong>50% of credits used.</strong> Halfway through your monthly allowance.
+            <a href="{% url 'tools:account-dashboard' %}#billing">View usage &rarr;</a>
+        </div>
         {% endif %}
         <div class="mc-credits-row">
             <div>
