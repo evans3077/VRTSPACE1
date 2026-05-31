@@ -724,7 +724,7 @@ input::placeholder, textarea::placeholder {
     /* Vertical connector line */
     .case-study-content {
         position: relative;
-        padding-left: 2.75rem;
+        padding-left: 2rem;
         gap: 1.25rem;
     }
     .case-study-content::before {
@@ -750,14 +750,15 @@ input::placeholder, textarea::placeholder {
         border-radius: 8px;
         padding: 0.875rem 1rem;
     }
-    /* Number on the left border edge of the card */
+    /* Number sits right on the left border of the card */
     .step-num {
         position: absolute;
-        left: -0.6rem;
+        left: 0;
         top: 0.65rem;
         font-size: 0.72rem;
         line-height: 1;
         z-index: 1;
+        transform: translateX(-50%);
     }
 }
 
