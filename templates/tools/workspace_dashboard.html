@@ -486,6 +486,111 @@
     </div>
     {% endif %}
 
+    {# ── Recurring audit schedule ── #}
+    {% if project.pk %}
+    <div class="mc-card mc-schedule-card">
+        <div class="mc-section-head">
+            <h2 class="mc-section-title">Recurring audits</h2>
+            {% if current_capabilities.recurring_audits_enabled %}
+                {% if audit_schedule and audit_schedule.is_active %}
+                <span class="schedule-status-pill schedule-status-pill--on">
+                    <i class="fa-solid fa-circle" style="font-size:0.45rem;"></i> Active
+                </span>
+                {% else %}
+                <span class="schedule-status-pill schedule-status-pill--off">Paused</span>
+                {% endif %}
+            {% else %}
+            <span class="schedule-lock-badge"><i class="fa-solid fa-lock"></i> Growth+</span>
+            {% endif %}
+        </div>
+
+        {% if current_capabilities.recurring_audits_enabled %}
+        <p class="mc-schedule-description">
+            Run audits automatically on a set cadence and get notified when scores drop or new issues appear.
+        </p>
+
+        {% if audit_schedule and audit_schedule.is_active %}
+        <div class="mc-schedule-status-row">
+            <div class="mc-schedule-meta">
+                <span><i class="fa-regular fa-calendar"></i> {{ audit_schedule.get_cadence_display }} schedule</span>
+                {% if audit_schedule.next_run_at %}
+                <span><i class="fa-solid fa-clock"></i> Next run {{ audit_schedule.next_run_at|date:"M j" }}</span>
+                {% endif %}
+                {% if audit_schedule.last_run_at %}
+                <span><i class="fa-solid fa-rotate"></i> Last ran {{ audit_schedule.last_run_at|timesince }} ago</span>
+                {% endif %}
+            </div>
+        </div>
+        {% endif %}
+
+        <form method="post" action="{% url 'tools:workspace-audit-schedule' %}" class="mc-schedule-form">
+            {% csrf_token %}
+            <div class="mc-schedule-row">
+                <label class="mc-schedule-toggle">
+                    <input type="checkbox" name="is_active" value="1"
+                        {% if audit_schedule and audit_schedule.is_active %}checked{% endif %}
+                        id="schedule-active-toggle">
+                    <span class="mc-toggle-track"><span class="mc-toggle-thumb"></span></span>
+                    <span class="mc-toggle-label">Enable recurring audits</span>
+                </label>
+            </div>
+            <div class="mc-schedule-row">
+                <span class="mc-schedule-label">Cadence</span>
+                <div class="mc-cadence-group">
+                    <label class="mc-cadence-opt">
+                        <input type="radio" name="cadence" value="weekly"
+                            {% if not audit_schedule or audit_schedule.cadence == "weekly" %}checked{% endif %}>
+                        <span>Weekly</span>
+                    </label>
+                    <label class="mc-cadence-opt">
+                        <input type="radio" name="cadence" value="monthly"
+                            {% if audit_schedule and audit_schedule.cadence == "monthly" %}checked{% endif %}>
+                        <span>Monthly</span>
+                    </label>
+                </div>
+            </div>
+            <div class="mc-schedule-row">
+                <span class="mc-schedule-label">Notifications</span>
+                <div class="mc-schedule-checks">
+                    <label class="mc-check-opt">
+                        <input type="checkbox" name="email_reports_enabled" value="1"
+                            {% if audit_schedule and audit_schedule.email_reports_enabled %}checked{% endif %}>
+                        <span>Email report after each run</span>
+                    </label>
+                    <label class="mc-check-opt">
+                        <input type="checkbox" name="alert_on_score_drop" value="1"
+                            {% if audit_schedule and audit_schedule.alert_on_score_drop %}checked{% endif %}>
+                        <span>Alert when score drops</span>
+                    </label>
+                    <label class="mc-check-opt">
+                        <input type="checkbox" name="alert_on_new_issues" value="1"
+                            {% if audit_schedule and audit_schedule.alert_on_new_issues %}checked{% endif %}>
+                        <span>Alert on new issues</span>
+                    </label>
+                </div>
+            </div>
+            <button type="submit" class="button button-primary mc-schedule-save">Save schedule</button>
+        </form>
+
+        {% else %}
+        {# Upgrade nudge for Free / Starter users #}
+        <p class="mc-schedule-description">
+            Set weekly or monthly audit schedules and get notified when a score drops — so you catch regressions before your client does.
+        </p>
+        <div class="mc-schedule-locked">
+            <i class="fa-solid fa-calendar-check mc-schedule-lock-icon"></i>
+            <div>
+                <p class="mc-schedule-lock-title">Available on Growth and above</p>
+                <p class="mc-schedule-lock-body">Recurring audits are included in the Growth ($149/mo) and Authority ($349/mo) plans.</p>
+            </div>
+        </div>
+        <a href="{% url 'tools:account-dashboard' %}#billing" class="button button-secondary" style="font-size:0.82rem;">
+            View plans &rarr;
+        </a>
+        {% endif %}
+    </div>
+    {% endif %}
+
 </div>{# end mc-body #}
 </div>{# end ws-main-content #}
 

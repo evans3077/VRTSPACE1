@@ -7194,3 +7194,124 @@ body.shell-light .billing-plan-columns { gap: 0.85rem; padding-top: 0.85rem; }
 body.shell-light .billing-plan-section { padding: 0.85rem 0.95rem; border-radius: 12px; }
 body.shell-light .billing-plan-section-title { margin-bottom: 0.6rem; font-size: 0.88rem; }
 body.shell-light .billing-limit-list { gap: 0.5rem; }
+
+/* ============================================================
+   RECURRING AUDIT SCHEDULE — mc-card variant (workspace dashboard)
+   ============================================================ */
+
+.mc-schedule-description {
+  font-size: .82rem;
+  color: var(--text-muted);
+  margin: 0 0 1rem;
+  line-height: 1.55;
+}
+
+.mc-schedule-status-row { margin-bottom: .75rem; }
+.mc-schedule-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem .85rem;
+  font-size: .78rem;
+  color: var(--text-muted);
+}
+.mc-schedule-meta span { display: flex; align-items: center; gap: .3rem; }
+
+.mc-schedule-form { display: flex; flex-direction: column; gap: .85rem; }
+
+.mc-schedule-row { display: flex; flex-direction: column; gap: .45rem; }
+.mc-schedule-label { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .07em; color: var(--text-muted); }
+
+/* Toggle */
+.mc-schedule-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: .6rem;
+  cursor: pointer;
+  user-select: none;
+}
+.mc-schedule-toggle input[type="checkbox"] { display: none; }
+.mc-toggle-track {
+  width: 2.2rem; height: 1.2rem;
+  background: rgba(255,255,255,.1);
+  border: 1px solid rgba(255,255,255,.15);
+  border-radius: 9999px;
+  position: relative;
+  transition: background .18s, border-color .18s;
+  flex-shrink: 0;
+}
+.mc-toggle-thumb {
+  position: absolute;
+  top: .15rem; left: .15rem;
+  width: .85rem; height: .85rem;
+  border-radius: 50%;
+  background: var(--text-muted);
+  transition: transform .18s, background .18s;
+}
+.mc-schedule-toggle input:checked ~ .mc-toggle-track { background: rgba(56,189,248,.25); border-color: var(--brand-primary); }
+.mc-schedule-toggle input:checked ~ .mc-toggle-track .mc-toggle-thumb { transform: translateX(.95rem); background: var(--brand-primary); }
+.mc-toggle-label { font-size: .85rem; color: var(--text-primary); }
+
+/* Cadence radio group */
+.mc-cadence-group { display: flex; gap: .5rem; }
+.mc-cadence-opt {
+  display: inline-flex;
+  align-items: center;
+  gap: .35rem;
+  padding: .3rem .75rem;
+  border-radius: 9999px;
+  border: 1px solid rgba(255,255,255,.12);
+  font-size: .8rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: background .15s, color .15s, border-color .15s;
+}
+.mc-cadence-opt:has(input:checked) {
+  background: rgba(56,189,248,.1);
+  border-color: rgba(56,189,248,.4);
+  color: var(--brand-primary);
+}
+.mc-cadence-opt input[type="radio"] { display: none; }
+
+/* Notification checkboxes */
+.mc-schedule-checks { display: flex; flex-direction: column; gap: .35rem; }
+.mc-check-opt {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  font-size: .82rem;
+  color: var(--text-muted);
+  cursor: pointer;
+  user-select: none;
+}
+.mc-check-opt input[type="checkbox"] { accent-color: var(--brand-primary); width: .85rem; height: .85rem; cursor: pointer; }
+.mc-check-opt:hover { color: var(--text-primary); }
+
+.mc-schedule-save { align-self: flex-start; font-size: .82rem; padding: .5rem 1.1rem; }
+
+/* Status pills */
+.schedule-status-pill {
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .05em;
+  padding: .18rem .5rem; border-radius: 9999px;
+}
+.schedule-status-pill--on { background: rgba(74,222,128,.1); color: #4ade80; border: 1px solid rgba(74,222,128,.25); }
+.schedule-status-pill--off { background: rgba(255,255,255,.05); color: var(--text-muted); border: 1px solid rgba(255,255,255,.1); }
+.schedule-lock-badge {
+  display: inline-flex; align-items: center; gap: .3rem;
+  font-size: .68rem; font-weight: 700; letter-spacing: .04em;
+  padding: .18rem .5rem; border-radius: 9999px;
+  background: rgba(255,255,255,.05); color: var(--text-muted); border: 1px solid rgba(255,255,255,.1);
+}
+
+/* Locked / upgrade state */
+.mc-schedule-locked {
+  display: flex; align-items: flex-start; gap: .75rem;
+  padding: .85rem 1rem;
+  background: rgba(255,255,255,.03);
+  border: 1px solid rgba(255,255,255,.08);
+  border-radius: .6rem;
+  margin-bottom: .85rem;
+}
+.mc-schedule-lock-icon { font-size: 1.4rem; color: var(--text-muted); flex-shrink: 0; margin-top: .1rem; }
+.mc-schedule-lock-title { font-size: .85rem; font-weight: 600; color: var(--text-primary); margin: 0 0 .2rem; }
+.mc-schedule-lock-body { font-size: .78rem; color: var(--text-muted); margin: 0; line-height: 1.5; }
