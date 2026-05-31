@@ -721,22 +721,39 @@ input::placeholder, textarea::placeholder {
     .case-study-wrapper {
         padding: 1.5rem 1.25rem !important;
     }
+    /* Vertical connector line — mirrors the journey section on mobile */
+    .case-study-content {
+        position: relative;
+        padding-left: 2.75rem;
+        gap: 2rem;
+    }
+    .case-study-content::before {
+        content: '';
+        position: absolute;
+        left: 0.75rem;
+        top: 0.4rem;
+        bottom: 0.4rem;
+        width: 2px;
+        background: linear-gradient(180deg, transparent, var(--brand-primary) 20%, var(--brand-secondary) 80%, transparent);
+        opacity: 0.35;
+    }
+    /* Number anchored to the line, text div takes full remaining width */
     .case-step {
-        gap: 0.875rem;
-        align-items: flex-start;
+        position: relative;
+        gap: 0;
     }
     .step-num {
-        min-width: 1.75rem;
-        flex-shrink: 0;
-        font-size: 0.85rem;
-        padding-top: 0.15rem;
+        position: absolute;
+        left: -2rem;
+        top: 0.1rem;
+        font-size: 0.75rem;
+        line-height: 1.2;
+        width: 1.5rem;
+        text-align: center;
     }
     .case-step > div {
-        flex: 1;
+        width: 100%;
         min-width: 0;
-    }
-    .case-study-content {
-        gap: 2rem;
     }
 }
 
