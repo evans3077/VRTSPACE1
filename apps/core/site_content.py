@@ -410,106 +410,284 @@ GLOSSARY_TERMS = [
         "term": "AI Visibility",
         "acronym": "",
         "category": "AI Visibility & AEO",
-        "definition": "How often AI answer engines — ChatGPT, Gemini, Perplexity, Google AI Overviews — mention and cite your brand when people ask questions in your market.",
+        "definition": (
+            "AI visibility is a measure of how frequently and prominently a brand appears "
+            "in AI-generated answers from systems like ChatGPT, Gemini, Perplexity, and Google "
+            "AI Overviews. When someone asks an AI tool a question relevant to your market, "
+            "brands with high AI visibility are named in the response; brands with low AI "
+            "visibility are absent — invisible at the exact moment a potential customer is "
+            "receiving a recommendation."
+        ),
+        "context": (
+            "VRT SPACE measures AI visibility with the AI Visibility Score (AVS), tracks it "
+            "across engines over time, and surfaces the specific fixes — schema coverage, entity "
+            "clarity, content structure — that move a brand from invisible to consistently cited."
+        ),
         "module_label": "AI Visibility",
         "module_url_name": "aeo:workspace-aeo",
-        "related": ["AEO", "AI Visibility Score", "Citation"],
+        "related": ["Answer Engine Optimization", "AI Visibility Score", "Citation"],
     },
     {
         "term": "Answer Engine Optimization",
         "acronym": "AEO",
         "category": "AI Visibility & AEO",
-        "definition": "Making your website easy for AI answer engines to read, trust, quote, and recommend — the AI-era counterpart to SEO.",
+        "definition": (
+            "Answer Engine Optimization (AEO) is the practice of structuring website content, "
+            "technical architecture, and authority signals so that AI answer engines can reliably "
+            "read, trust, and cite a brand when generating responses to user queries. Where "
+            "traditional SEO targets ranked links on a search results page, AEO targets the "
+            "synthesised answer the AI produces and positions the brand as the authoritative source "
+            "within it. Core AEO levers include schema markup, entity coverage, FAQ-structured "
+            "content, clean crawlability, and demonstrated topical depth."
+        ),
+        "context": (
+            "VRT SPACE runs AEO audits that score citation readiness across every major signal "
+            "category, identify entity and schema gaps, and generate a prioritised fix list ordered "
+            "by expected impact on AI Visibility Score."
+        ),
         "module_label": "AI Visibility",
         "module_url_name": "aeo:workspace-aeo",
-        "related": ["AI Visibility", "Schema", "Citation"],
+        "related": ["AI Visibility", "Schema", "Citation", "GEO"],
+    },
+    {
+        "term": "Generative Engine Optimization",
+        "acronym": "GEO",
+        "category": "AI Visibility & AEO",
+        "definition": (
+            "Generative Engine Optimization (GEO) is the discipline of optimising content and "
+            "brand signals specifically for large language models (LLMs) — AI systems such as "
+            "GPT-4, Gemini, and Claude that produce synthesised answers rather than ranked link "
+            "lists. GEO focuses on the signals LLMs use when deciding what to include in a "
+            "generated response: entity recognition, topical authority, factual accuracy, "
+            "structured data clarity, and citation likelihood. While AEO is the broader practice "
+            "of optimising for AI answer engines, GEO zooms into the mechanics of how generative "
+            "models select, verify, and present information from the web."
+        ),
+        "context": (
+            "VRT SPACE's AEO audit, schema checks, entity coverage analysis, and prompt-level "
+            "citation tracking are all built on GEO principles — giving brands the data and "
+            "actionable fixes needed to improve how generative AI systems understand, trust, "
+            "and recommend them."
+        ),
+        "module_label": "AI Visibility",
+        "module_url_name": "aeo:workspace-aeo",
+        "related": ["Answer Engine Optimization", "AI Visibility", "Schema", "Citation"],
     },
     {
         "term": "AI Visibility Score",
         "acronym": "AVS",
         "category": "AI Visibility & AEO",
-        "definition": "A single 0–100 number summarising how present and prominent your brand is across the AI engines you track. Higher is better.",
+        "definition": (
+            "The AI Visibility Score (AVS) is a composite 0–100 metric that quantifies how often "
+            "and how prominently a brand is cited across the AI engines it tracks. The score "
+            "weighs citation frequency, query relevance, and competitive positioning into a single "
+            "number that can be monitored week over week as a KPI for AEO and GEO performance. "
+            "A score of 0 means the brand was not cited in any tracked query; 100 means it was "
+            "cited as the top recommendation in every query across all engines."
+        ),
+        "context": (
+            "In VRT SPACE, the AVS appears on the workspace dashboard alongside a delta showing "
+            "movement since the previous run. Each rerun updates the score, so teams can confirm "
+            "whether AEO fixes are translating into real citation gains."
+        ),
         "module_label": "AI Visibility",
         "module_url_name": "aeo:workspace-aeo",
-        "related": ["AI Visibility", "Share of Voice"],
+        "related": ["AI Visibility", "Share of Voice", "Rerun"],
     },
     {
         "term": "Citation",
         "acronym": "",
         "category": "AI Visibility & AEO",
-        "definition": "A specific mention of your brand or page inside an AI-generated answer. Citations are the AI-search equivalent of ranking on page one.",
+        "definition": (
+            "A citation in AI search is a direct mention, reference, or recommendation of a brand, "
+            "product, or page inside an AI-generated response. When ChatGPT, Gemini, or Perplexity "
+            "names a company as part of its answer to a user's question, that is a citation. "
+            "In the context of AI search, a citation functions like a page-one organic ranking in "
+            "traditional SEO — the AI has selected that brand as a trustworthy, relevant answer "
+            "to surface to the user."
+        ),
+        "context": (
+            "VRT SPACE tracks citation counts per prompt and per AI engine, showing which queries "
+            "a brand is winning, which competitors are being cited instead, and what content or "
+            "structural changes are most likely to improve citation rate."
+        ),
         "module_label": "AI Visibility",
         "module_url_name": "aeo:workspace-aeo",
-        "related": ["AI Visibility", "Share of Voice"],
+        "related": ["AI Visibility", "Share of Voice", "Prompt"],
     },
     {
         "term": "Share of Voice",
         "acronym": "SOV",
         "category": "AI Visibility & AEO",
-        "definition": "Your slice of all the AI answers for your tracked questions, measured against competitors — who AI mentions most in your space.",
+        "definition": (
+            "Share of Voice (SOV) in AI search is the percentage of AI-generated answers — across "
+            "a defined set of tracked queries and engines — that mention a brand compared with the "
+            "total brand mentions across all named competitors. A brand with 40% AI Share of Voice "
+            "wins more than two-fifths of AI recommendations in its category; a brand at 5% is "
+            "practically invisible relative to the competition. SOV is calculated per AI engine "
+            "and per time period, making it possible to see where a brand is gaining ground and "
+            "where competitors are pulling ahead."
+        ),
+        "context": (
+            "VRT SPACE aggregates citation data from all tracked prompts into a Share of Voice "
+            "dashboard broken down by AI engine (ChatGPT, Gemini, Perplexity) and time window "
+            "(7/30/90 days) — so teams can see the full competitive picture of their AI presence "
+            "at a glance rather than prompt by prompt."
+        ),
         "module_label": "Share of Voice",
         "module_url_name": "aeo:workspace-share-of-voice",
-        "related": ["Citation", "Prompt"],
+        "related": ["Citation", "Prompt", "AI Visibility Score"],
     },
     {
         "term": "Prompt",
         "acronym": "",
         "category": "AI Visibility & AEO",
-        "definition": "A question or topic you track — the actual things your customers ask AI tools — so you can see whether you're the recommended answer.",
+        "definition": (
+            "In AI visibility tracking, a prompt is a specific question, query, or topic phrase "
+            "that a target audience types into an AI tool such as ChatGPT, Gemini, or Perplexity. "
+            "Examples: 'best CRM for small business', 'what is AEO?', 'how do I improve my Google "
+            "rankings'. Tracking the right prompts reveals whether a brand is the answer AI gives "
+            "when buyers ask the questions most relevant to that business — and shows which "
+            "competitors are winning the queries that matter."
+        ),
+        "context": (
+            "In VRT SPACE, you define the prompts most relevant to your market. The platform "
+            "queries AI engines on a recurring cadence, logs every citation result, and builds a "
+            "citation timeline per prompt — so you can see how AI presence for each specific "
+            "question changes as AEO fixes are implemented."
+        ),
         "module_label": "Prompts",
         "module_url_name": "aeo:workspace-prompts",
-        "related": ["Topic cluster", "Share of Voice"],
+        "related": ["Citation", "Share of Voice", "Topic cluster"],
     },
     {
         "term": "Recommendation strength",
         "acronym": "",
         "category": "AI Visibility & AEO",
-        "definition": "How impactful a suggested fix is. Stronger recommendations move your scores the most, so they're worth doing first.",
+        "definition": (
+            "Recommendation strength is a priority signal assigned to each audit fix that indicates "
+            "how much implementing it is expected to improve overall or category scores. Strength "
+            "is determined by the number of pages affected, the severity of the underlying issue, "
+            "and how directly the fix correlates with the ranking and citation signals that engines "
+            "weight most heavily. A high-strength recommendation addresses a systemic problem; a "
+            "low-strength one is a polish item."
+        ),
+        "context": (
+            "VRT SPACE sorts every recommendation in the fix queue by strength so the "
+            "highest-impact actions are always at the top. Prioritising strong items — broken "
+            "schema, missing heading structure, or slow LCP — delivers the most score movement "
+            "per hour of implementation work."
+        ),
         "module_label": "SEO Audit",
         "module_url_name": "seo:workspace-seo",
-        "related": ["Technical health"],
+        "related": ["Technical health", "Schema"],
     },
     {
         "term": "Technical health",
         "acronym": "",
         "category": "SEO & Technical",
-        "definition": "How sound your site is under the hood — speed, crawlability, mobile, structure. Weak technical health holds back both search and AI visibility.",
+        "definition": (
+            "Technical health is a composite measure of a website's foundational quality across "
+            "four dimensions: performance (how fast pages load), crawlability (how easily bots "
+            "navigate and read pages), mobile usability (how well the site works on smaller "
+            "screens), and structural integrity (clean HTML, valid redirects, correct canonical "
+            "tags). Poor technical health creates a ceiling on both search rankings and AI "
+            "citations — even excellent content is overlooked by engines that struggle to crawl "
+            "or reliably parse the site."
+        ),
+        "context": (
+            "VRT SPACE assigns a Technical Health score in every audit, surfacing specific issues "
+            "— crawl errors, slow LCP, JavaScript-blocked pages, redirect chains — with "
+            "plain-language explanations and a prioritised fix list."
+        ),
         "module_label": "SEO Audit",
         "module_url_name": "seo:workspace-seo",
-        "related": ["Crawlability", "Core Web Vitals"],
+        "related": ["Crawlability", "Core Web Vitals", "Indexation"],
     },
     {
         "term": "Crawlability",
         "acronym": "",
         "category": "SEO & Technical",
-        "definition": "How easily search engines and AI bots can read your pages. If they can't crawl a page, they can't rank or cite it.",
+        "definition": (
+            "Crawlability refers to how accessible a website is to automated bots — including "
+            "Googlebot, Bingbot, and the indexing crawlers used by AI training and discovery "
+            "systems. Pages blocked by robots.txt rules, noindex meta tags, login walls, or "
+            "JavaScript rendering failures cannot be read by these bots. A site with poor "
+            "crawlability may contain excellent content that never ranks or gets cited simply "
+            "because the relevant engines cannot reliably access it."
+        ),
+        "context": (
+            "Every VRT SPACE audit checks crawlability — surfacing blocked URLs, crawl depth "
+            "issues, excessive redirect chains, and bot-unfriendly response codes — so teams can "
+            "confirm their most important content is reachable by every engine it needs to "
+            "appear in."
+        ),
         "module_label": "SEO Audit",
         "module_url_name": "seo:workspace-seo",
-        "related": ["Indexation", "Technical health"],
+        "related": ["Indexation", "Technical health", "Schema"],
     },
     {
         "term": "Indexation",
         "acronym": "",
         "category": "SEO & Technical",
-        "definition": "Whether a page is actually stored in a search engine's index. A page that isn't indexed can never appear in results or answers.",
+        "definition": (
+            "Indexation is the process by which a search engine evaluates and stores a web page "
+            "in its searchable database. A page must be indexed before it can appear in search "
+            "results or be drawn on as a citation source by AI systems. Common causes of "
+            "indexation failure include noindex directives, duplicate content signals, canonical "
+            "tag conflicts, thin or low-quality content, and crawl budget exhaustion on "
+            "large sites."
+        ),
+        "context": (
+            "VRT SPACE flags indexation failures in every audit — identifying the specific pages "
+            "that are not entering the index and explaining the technical cause — so problems are "
+            "diagnosed and fixed rather than surfacing as unexplained traffic gaps months later."
+        ),
         "module_label": "SEO Audit",
         "module_url_name": "seo:workspace-seo",
-        "related": ["Crawlability"],
+        "related": ["Crawlability", "Technical health"],
     },
     {
         "term": "Schema",
         "acronym": "",
         "category": "SEO & Technical",
-        "definition": "Structured data added to your pages that spells out what they mean — products, FAQs, articles — so engines and AI can understand and quote them.",
+        "definition": (
+            "Schema markup (schema.org) is a standardised vocabulary of structured data added "
+            "to HTML pages that explicitly communicates content meaning to search engines and AI "
+            "systems. By marking up FAQs as FAQPage, articles as Article, or products as Product, "
+            "webmasters replace engine inference with a readable label — making pages "
+            "significantly more likely to be selected for rich snippets and AI citations. Schema "
+            "is one of the highest-return AEO investments: it removes ambiguity, and both search "
+            "algorithms and large language models consistently reward structural clarity."
+        ),
+        "context": (
+            "VRT SPACE audits schema implementation as part of every run — detecting missing, "
+            "incomplete, or invalid markup — and highlights the specific schema types most likely "
+            "to improve citation rates for each content category."
+        ),
         "module_label": "SEO Audit",
         "module_url_name": "seo:workspace-seo",
-        "related": ["AEO", "Crawlability"],
+        "related": ["Answer Engine Optimization", "Crawlability", "GEO"],
     },
     {
         "term": "Internal linking",
         "acronym": "",
         "category": "SEO & Technical",
-        "definition": "The links between your own pages. Good internal links help engines discover content and understand which pages matter most.",
+        "definition": (
+            "Internal linking is the practice of creating hyperlinks between pages on the same "
+            "website. For search engines, internal links signal page importance — pages with "
+            "more internal links pointing at them carry more authority — and help bots discover "
+            "deeper content. For AI systems, a well-linked structure that connects a topic hub "
+            "to its supporting pages creates the topical depth signal that increases citation "
+            "likelihood: the AI can follow a trail of related evidence and treat the site as an "
+            "authoritative source rather than an isolated page."
+        ),
+        "context": (
+            "VRT SPACE includes internal linking as a scored category in the audit, identifying "
+            "orphaned pages, hub-and-spoke coverage gaps, and anchor-text diversity issues — "
+            "with recommendations that distribute link authority more effectively across "
+            "high-value content."
+        ),
         "module_label": "SEO Audit",
         "module_url_name": "seo:workspace-seo",
         "related": ["Crawlability", "Topic cluster"],
@@ -518,16 +696,45 @@ GLOSSARY_TERMS = [
         "term": "Topic cluster",
         "acronym": "",
         "category": "Content",
-        "definition": "A group of related pages covering one subject in depth. Clusters signal expertise, which both search and AI engines reward.",
+        "definition": (
+            "A topic cluster is a content architecture model where one comprehensive pillar page "
+            "covers a broad subject, and multiple supporting pages — each addressing a specific "
+            "sub-topic — link back to it. This structure demonstrates topical depth and authority "
+            "to both search engines and AI models. Sites built around strong topic clusters are "
+            "consistently preferred for rankings and citations in their subject area because the "
+            "breadth and interconnection of content signals genuine expertise, not a single "
+            "thin-coverage answer."
+        ),
+        "context": (
+            "VRT SPACE identifies topic cluster gaps in the content workspace — subjects where "
+            "coverage is shallow or internal links are missing — and generates SEO-brief-aligned "
+            "drafts to fill them, improving both ranking potential and AI citation likelihood."
+        ),
         "module_label": "Content",
         "module_url_name": "content:workspace-content",
-        "related": ["Prompt", "Internal linking"],
+        "related": ["Prompt", "Internal linking", "Answer Engine Optimization"],
     },
     {
         "term": "Core Web Vitals",
         "acronym": "LCP / CLS / INP",
         "category": "Performance",
-        "definition": "Google's three speed-and-stability metrics: how fast the main content loads (LCP), how much the layout jumps (CLS), and how quickly the page responds (INP).",
+        "definition": (
+            "Core Web Vitals are Google's three user-experience performance metrics, each "
+            "measuring a distinct aspect of how a page feels to use. Largest Contentful Paint "
+            "(LCP) measures how quickly the main visible content loads — Google's target is "
+            "under 2.5 seconds. Cumulative Layout Shift (CLS) measures visual instability, "
+            "quantifying how much page elements move during load — target under 0.1. Interaction "
+            "to Next Paint (INP) measures how fast the page responds to user input — target "
+            "under 200 milliseconds. All three are official Google ranking signals and indirect "
+            "AI citation quality signals: slow, unstable pages signal low technical quality to "
+            "both search algorithms and generative systems."
+        ),
+        "context": (
+            "VRT SPACE pulls live Core Web Vitals data from the Google PageSpeed API in every "
+            "audit run, displaying per-metric scores alongside specific optimisation tasks — "
+            "broken down by unoptimised images, render-blocking scripts, and layout instability "
+            "causes — so developers have an actionable task list rather than a raw lab number."
+        ),
         "module_label": "SEO Audit",
         "module_url_name": "seo:workspace-seo",
         "related": ["Technical health"],
@@ -536,7 +743,13 @@ GLOSSARY_TERMS = [
         "term": "Workspace",
         "acronym": "",
         "category": "Workspace & Account",
-        "definition": "Your home for a brand or client — where audits, recommendations, history, and AI visibility all live together so progress stays in one place.",
+        "definition": (
+            "In VRT SPACE, a workspace is the dedicated environment for a single brand or client "
+            "website. It consolidates audit history, AI Visibility Score trends, SEO intelligence "
+            "data, tracked prompts, content drafts, and credit usage in one persistent place — "
+            "so every team member starts from the same current context and progress is measurable "
+            "across weeks and months rather than stored in disconnected spreadsheets."
+        ),
         "module_label": "Overview",
         "module_url_name": "tools:workspace-dashboard",
         "related": ["Project", "Credits"],
@@ -545,25 +758,45 @@ GLOSSARY_TERMS = [
         "term": "Project",
         "acronym": "",
         "category": "Workspace & Account",
-        "definition": "A single tracked website inside a workspace. Each client site is its own project with its own score and history.",
+        "definition": (
+            "A project in VRT SPACE is a single tracked website within an account. Each project "
+            "maintains its own audit history, score timelines, AEO data, scheduled audit settings, "
+            "and credit log — keeping client sites or business units cleanly separated so their "
+            "data never bleeds across each other. Agencies typically run one project per client "
+            "website, with the Agency Dashboard providing a bird's-eye view across all projects "
+            "at once."
+        ),
         "module_label": "Overview",
         "module_url_name": "tools:workspace-dashboard",
-        "related": ["Workspace"],
+        "related": ["Workspace", "Credits"],
     },
     {
         "term": "Credits",
         "acronym": "",
         "category": "Workspace & Account",
-        "definition": "The currency for actions — roughly one credit per audit or AI scan. They refresh each billing cycle, and you can top up without changing plans.",
+        "definition": (
+            "Credits are the usage currency inside VRT SPACE. Each action consumes credits from "
+            "a monthly allowance: one audit run costs one credit, one AEO analysis costs one "
+            "credit, and a content draft costs two credits. Credits reset each billing cycle. "
+            "In-app and email alerts fire at 50%, 75%, and 90% consumption, and additional "
+            "credits can be purchased at any time without upgrading the subscription plan."
+        ),
         "module_label": "Billing & Credits",
         "module_url_name": "tools:account-dashboard",
-        "related": ["Rerun"],
+        "related": ["Rerun", "Project"],
     },
     {
         "term": "Rerun",
         "acronym": "",
         "category": "Workspace & Account",
-        "definition": "Running an audit again after you've made changes, so you can see your scores move and confirm the fixes are working.",
+        "definition": (
+            "A rerun is a fresh audit execution on a website that has previously been audited "
+            "at least once. Because VRT SPACE retains every audit result, a rerun creates a "
+            "directly comparable data point — the score delta between the previous and current "
+            "run shows exactly how much implemented fixes moved the needle. Reruns are the "
+            "feedback mechanism that makes AEO and SEO work measurable rather than assumed, "
+            "and they form the core of the fix-validate-repeat workflow."
+        ),
         "module_label": "Overview",
         "module_url_name": "tools:workspace-dashboard",
         "related": ["Credits", "AI Visibility Score"],
@@ -581,7 +814,10 @@ def glossary_anchor(term):
 # can deep-link reliably (e.g. /glossary#aeo). Overrides where the short common
 # name differs from the full term, so related-term links (which slugify the
 # short name) always resolve.
-_GLOSSARY_ANCHOR_OVERRIDES = {"Answer Engine Optimization": "aeo"}
+_GLOSSARY_ANCHOR_OVERRIDES = {
+    "Answer Engine Optimization": "aeo",
+    "Generative Engine Optimization": "geo",
+}
 for _t in GLOSSARY_TERMS:
     _t["anchor"] = _GLOSSARY_ANCHOR_OVERRIDES.get(_t["term"], slugify(_t["term"]))
 

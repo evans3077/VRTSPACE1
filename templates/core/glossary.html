@@ -37,12 +37,13 @@
             <article class="gl-term glass-panel"
                      id="{{ t.anchor }}"
                      data-cat="{{ t.category|slugify }}"
-                     data-search="{{ t.term|lower }} {{ t.acronym|lower }} {{ t.definition|lower }}">
+                     data-search="{{ t.term|lower }} {{ t.acronym|lower }} {{ t.definition|lower }} {{ t.context|lower }}">
                 <div class="gl-term-head">
                     <h2>{{ t.term }}</h2>
                     {% if t.acronym %}<span class="gl-chip">{{ t.acronym }}</span>{% endif %}
                 </div>
                 <p class="gl-def">{{ t.definition }}</p>
+                {% if t.context %}<p class="gl-context">{{ t.context }}</p>{% endif %}
                 <div class="gl-meta">
                     {% if t.module_label and t.module_url_name %}
                     <a class="gl-module" href="{% url t.module_url_name %}">
@@ -88,7 +89,13 @@
         color: #0284c7; background: #eff6ff; border: 1px solid #bfdbfe;
         padding: 0.15rem 0.45rem; border-radius: 999px; font-family: monospace;
     }
-    .gl-def { font-size: 0.92rem; color: #334155; line-height: 1.6; margin: 0.5rem 0 0.75rem; }
+    .gl-def { font-size: 0.92rem; color: #334155; line-height: 1.6; margin: 0.5rem 0 0.5rem; }
+    .gl-context {
+        font-size: 0.83rem; color: #0284c7; line-height: 1.58; margin: 0 0 0.75rem;
+        padding: 0.45rem 0.75rem; border-left: 2px solid #bfdbfe;
+        background: #f0f9ff;
+        border-radius: 0 6px 6px 0;
+    }
     .gl-meta { display: flex; flex-wrap: wrap; gap: 0.75rem 1.25rem; align-items: center; }
     .gl-module { font-size: 0.78rem; font-weight: 700; color: #0284c7; text-decoration: none; display: inline-flex; align-items: center; gap: 0.35rem; }
     .gl-module:hover { text-decoration: underline; }
