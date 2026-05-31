@@ -13,6 +13,7 @@
     <title>{{ resolved_page_title }}</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <meta name="description" content="{{ resolved_meta_description }}">
     {% if canonical_url %}
     <link rel="canonical" href="{{ canonical_url }}">
@@ -29,8 +30,10 @@
     <meta name="twitter:card" content="{{ resolved_twitter_card }}">
     <meta name="twitter:title" content="{{ resolved_og_title }}">
     <meta name="twitter:description" content="{{ resolved_og_description }}">
-    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&display=swap"></noscript>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer" media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css" referrerpolicy="no-referrer"></noscript>
     <link rel="stylesheet" href="{% static 'css/site.css' %}">
     <link rel="stylesheet" href="{% static 'css/vrt-space-core.css' %}">
     <link rel="stylesheet" href="{% static 'css/ui-polish.css' %}">
@@ -254,7 +257,7 @@
     /* ── Eyebrow / muted text safety on shell-light ───────────────── */
     body.shell-light .feature-tag,
     body.shell-light .eyebrow {
-        color: #0369a1 !important;
+        color: #0c4a6e !important;
     }
     body.shell-light .text-muted { color: #64748b !important; }
     body.shell-light .text-secondary { color: #334155 !important; }
@@ -447,7 +450,7 @@
     body.shell-light .system-card h3 { color: #0f172a !important; }
     body.shell-light .system-card p,
     body.shell-light .system-card .section-text { color: #475569 !important; }
-    body.shell-light .eyebrow { color: #0284c7 !important; }
+    body.shell-light .eyebrow { color: #065a8f !important; }
     body.shell-light .text-muted,
     body.shell-light .ws-kpi-meta { color: #94a3b8 !important; }
 
@@ -1082,8 +1085,8 @@
         font-weight: 800 !important;
         text-transform: uppercase;
         letter-spacing: 0.14em;
-        color: #64748b !important;
-        -webkit-text-fill-color: #64748b !important;
+        color: #8b9bac !important;
+        -webkit-text-fill-color: #8b9bac !important;
         background: none !important;
         margin: 0 0 1.1rem;
     }
@@ -1202,8 +1205,8 @@
         max-width: 1200px;
         margin: 0 auto;
         font-size: 0.75rem !important;
-        color: rgba(148,163,184,0.55) !important;
-        -webkit-text-fill-color: rgba(148,163,184,0.55) !important;
+        color: #7f91a6 !important;
+        -webkit-text-fill-color: #7f91a6 !important;
         background: none !important;
         flex-wrap: wrap;
     }
@@ -2195,7 +2198,7 @@
     </footer>
 
     <!-- Premium Mobile Navigation Overlay -->
-    <div class="nav-mobile-drawer" id="nav-mobile-drawer" role="dialog" aria-modal="true" aria-label="Mobile navigation">
+    <div class="nav-mobile-drawer" id="nav-mobile-drawer" role="dialog" aria-modal="true" aria-label="Mobile navigation" aria-hidden="true" inert>
         <div class="mobile-drawer-content glass-panel">
             <button class="nav-mobile-close" id="nav-mobile-close" aria-label="Close navigation">&times;</button>
             <div class="nav-mobile-brand gradient-text">VRT SPACE AGENCY</div>
@@ -2248,10 +2251,16 @@
 
         function openDrawer() {
             drawer.classList.add('is-open');
+            drawer.removeAttribute('aria-hidden');
+            drawer.removeAttribute('inert');
+            hamburger.setAttribute('aria-expanded', 'true');
             document.body.style.overflow = 'hidden';
         }
         function closeDrawer() {
             drawer.classList.remove('is-open');
+            drawer.setAttribute('aria-hidden', 'true');
+            drawer.setAttribute('inert', '');
+            hamburger.setAttribute('aria-expanded', 'false');
             document.body.style.overflow = '';
         }
 
@@ -2271,20 +2280,22 @@
         var auditExpandBtn = document.getElementById('audit-form-expand');
         var auditAdvancedSection = document.getElementById('audit-form-advanced');
         if (auditExpandBtn && auditAdvancedSection) {
-            // Remove any inline display:none so the CSS max-height transition drives visibility
+            // Remove any inline display:none so the CSS max-height transition drives visibility.
+            // Set inert initially so hidden inputs are not reachable via keyboard/AT.
             auditAdvancedSection.style.removeProperty('display');
+            auditAdvancedSection.setAttribute('inert', '');
             auditExpandBtn.addEventListener('click', function() {
                 var isExpanded = auditExpandBtn.getAttribute('aria-expanded') === 'true';
                 if (!isExpanded) {
                     auditExpandBtn.setAttribute('aria-expanded', 'true');
                     auditAdvancedSection.classList.add('is-open');
-                    auditAdvancedSection.setAttribute('aria-hidden', 'false');
+                    auditAdvancedSection.removeAttribute('inert');
                     var label = document.getElementById('audit-expand-label');
                     if (label) label.textContent = 'Hide advanced context';
                 } else {
                     auditExpandBtn.setAttribute('aria-expanded', 'false');
                     auditAdvancedSection.classList.remove('is-open');
-                    auditAdvancedSection.setAttribute('aria-hidden', 'true');
+                    auditAdvancedSection.setAttribute('inert', '');
                     var label = document.getElementById('audit-expand-label');
                     if (label) label.textContent = 'Add context for a richer report';
                 }
