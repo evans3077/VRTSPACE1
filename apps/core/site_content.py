@@ -951,7 +951,7 @@ HELP_CATEGORIES = [
         "articles": [
             {"title": "Generate content from an SEO brief", "url": "/workspace/content/"},
             {"title": "What is a topic cluster?", "url": "/glossary/#topic-cluster"},
-            {"title": "Connect your CMS for direct publishing", "url": "/workspace/content/credentials/"},
+            {"title": "Connect your CMS for direct publishing", "url": "/workspace/cms/credentials/"},
         ],
     },
     {
@@ -961,7 +961,7 @@ HELP_CATEGORIES = [
         "articles": [
             {"title": "How credits work and what they cost", "url": "/glossary/#credits"},
             {"title": "Compare plans and upgrade", "url": "/packages/"},
-            {"title": "Manage your subscription and invoices", "url": "/workspace/account/#billing"},
+            {"title": "Manage your subscription and invoices", "url": "/account/#billing"},
         ],
     },
 ]

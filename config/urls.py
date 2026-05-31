@@ -36,6 +36,8 @@ def robots_txt(request):
         "Disallow: /tools/audits/\n"
         "Disallow: /auth/\n"
         "Disallow: /billing/\n"
+        "Disallow: /ops/\n"
+        "Disallow: /affiliate/\n"
         "\n"
         f"Sitemap: {sitemap_url}\n"
         f"# LLM-readable index: {llms_url}\n"
@@ -86,8 +88,8 @@ def llms_txt(request):
 - For agencies: {base}/for-agencies/
 - Partner program (invite-only affiliate): {base}/partners/
 - Free AI visibility audit: {base}/tools/free-seo-audit/
-- AEO Visibility Index (public domain lookup): {base}/aeo/visibility/
-- AEO content optimizer: {base}/aeo/content-optimizer/
+- AEO Visibility Index (public domain lookup): {base}/aeo-index/
+- AEO content optimizer: {base}/tools/ai-content-optimizer/
 - Blog: {base}/blog/
 - Case studies: {base}/case-studies/
 - Services: {base}/services/
@@ -132,7 +134,7 @@ overall score, most at-risk category badge, score delta since last audit (colour
 green/red/neutral), last-audit date with a stale-audit warning, and a one-click
 "Run Audit" CTA. Designed for a morning status check across 3–25 client sites.
 
-### Workspace Dashboard — {base}/workspace/dashboard/
+### Workspace Dashboard — {base}/workspace/
 Per-project command centre showing credits remaining, audit history, score timeline,
 quick-launch buttons for each analysis module, and the getting-started checklist
 for first-time users.
