@@ -7394,6 +7394,55 @@ body:has(.aff-sidebar) .vrt-footer,
 body.aff-login .site-header,
 body.aff-login .vrt-footer { display: none !important; }
 
+/* ── Affiliate login page spacing (body.aff-login ≠ body.shell-light) ── */
+body.aff-login {
+    background: #020617;
+    color: #e2e8f0;
+}
+body.aff-login > main {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.5rem 1rem;
+}
+body.aff-login .public-shell-section {
+    padding: 3rem 0;
+    width: 100%;
+}
+body.aff-login .auth-shell {
+    display: grid;
+    gap: 1.5rem;
+    grid-template-columns: minmax(0, 1.15fr) minmax(300px, 0.85fr);
+    align-items: start;
+    max-width: 1000px;
+    margin: 0 auto;
+    width: 100%;
+    padding: 0 1rem;
+}
+body.aff-login .auth-intro-card,
+body.aff-login .auth-form-card {
+    padding: 2rem !important;
+    background: rgba(255,255,255,0.04) !important;
+    border: 1px solid rgba(255,255,255,0.08) !important;
+    border-radius: 16px !important;
+}
+body.aff-login .auth-form-head {
+    display: grid;
+    gap: 0.7rem;
+    margin-bottom: 1rem;
+}
+@media (max-width: 720px) {
+    body.aff-login > main {
+        padding: 1.5rem 0.75rem;
+        align-items: flex-start;
+    }
+    body.aff-login .auth-shell {
+        grid-template-columns: 1fr;
+        padding: 0;
+    }
+}
+
 body:has(.aff-sidebar) > main {
     display: grid;
     grid-template-columns: 240px 1fr;
@@ -7481,39 +7530,32 @@ body:has(.aff-sidebar) > main > *:not(.aff-sidebar) {
     }
     body:has(.aff-sidebar) .aff-portal-label { display: none; }
     body:has(.aff-sidebar) .ws-sidebar-footer {
-        display: flex !important;          /* override the global hide */
-        border-top: none !important;
-        border-left: 1px solid rgba(255,255,255,0.12) !important;
-        padding: 0 !important;
-        margin-left: auto;
-        flex-shrink: 0;
-        align-items: center;
+        display: none !important;          /* keep hidden on mobile — nav logout handles this */
     }
-    body:has(.aff-sidebar) .ws-sidebar-logout {
-        display: flex !important;
-        align-items: center;
-        justify-content: center;
-        padding: 0 1.1rem !important;
-        height: 100%;
-        color: #f87171 !important;
-        background: none !important;
-        border: none !important;
-        cursor: pointer;
-    }
-    body:has(.aff-sidebar) .ws-sidebar-logout i {
-        font-size: 1.2rem !important;
-        color: #f87171 !important;
-    }
-    /* Hide the text — icon alone is universally understood as logout */
-    body:has(.aff-sidebar) .ws-sidebar-logout span {
-        display: none !important;
-    }
-    body:has(.aff-sidebar) .ws-sidebar-logout:hover i {
-        color: #ef4444 !important;
-    }
-    /* On mobile the sidebar-footer logout is visible — hide the duplicate nav one */
+    /* On mobile: show the nav logout as icon-only, red, aligned with other tabs */
     body:has(.aff-sidebar) .aff-nav-logout-form {
+        display: block !important;
+    }
+    body:has(.aff-sidebar) .aff-nav-logout-btn span {
         display: none !important;
+    }
+    body:has(.aff-sidebar) .aff-nav-logout-btn {
+        color: #f87171 !important;
+        border-top: none !important;
+        margin-top: 0 !important;
+        padding: 0.75rem 1rem !important;
+        font-size: 0.78rem;
+        border-radius: 0 !important;
+        white-space: nowrap;
+        justify-content: center;
+    }
+    body:has(.aff-sidebar) .aff-nav-logout-btn i {
+        font-size: 1rem !important;
+        color: #f87171 !important;
+    }
+    body:has(.aff-sidebar) .aff-nav-logout-btn:hover {
+        background: rgba(248, 113, 113, 0.12) !important;
+        color: #ef4444 !important;
     }
 }
 
