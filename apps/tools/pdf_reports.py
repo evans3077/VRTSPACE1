@@ -1096,12 +1096,34 @@ def _build_seo_report_html(payload):
 # ─── Playwright renderer ─────────────────────────────────────────────────────
 
 def _html_to_pdf_bytes(html_content):
+    import os
+    import subprocess
     from playwright.sync_api import sync_playwright
+
+    # Use PLAYWRIGHT_CHROMIUM_PATH env var, then the dev-machine path, then auto-detect.
+    custom_path = os.environ.get(
+        "PLAYWRIGHT_CHROMIUM_PATH",
+        "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
+    )
+    launch_kwargs = {"args": ["--no-sandbox", "--disable-dev-shm-usage"]}
+    if os.path.exists(custom_path):
+        launch_kwargs["executable_path"] = custom_path
+
+    def _launch(p):
+        return p.chromium.launch(**launch_kwargs)
+
     with sync_playwright() as p:
-        browser = p.chromium.launch(
-            executable_path="/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
-            args=["--no-sandbox", "--disable-dev-shm-usage"],
-        )
+        try:
+            browser = _launch(p)
+        except Exception:
+            # Browser binary missing — install it then retry (first-run on a fresh server).
+            subprocess.run(
+                ["playwright", "install", "chromium"],
+                check=False,
+                capture_output=True,
+            )
+            browser = _launch(p)
+
         page = browser.new_page()
         page.set_content(html_content, wait_until="networkidle")
         pdf_bytes = page.pdf(

@@ -7481,6 +7481,7 @@ body:has(.aff-sidebar) > main > *:not(.aff-sidebar) {
     }
     body:has(.aff-sidebar) .aff-portal-label { display: none; }
     body:has(.aff-sidebar) .ws-sidebar-footer {
+        display: flex !important;          /* override the global hide */
         border-top: none !important;
         border-left: 1px solid rgba(255,255,255,0.08) !important;
         padding: 0 !important;
@@ -7492,9 +7493,13 @@ body:has(.aff-sidebar) > main > *:not(.aff-sidebar) {
         white-space: nowrap;
         font-size: 0.78rem;
     }
+    /* On mobile the sidebar-footer logout is visible — hide the duplicate nav one */
+    body:has(.aff-sidebar) .aff-nav-logout-form {
+        display: none !important;
+    }
 }
 
-/* ── Nav logout — visible on all screen sizes ───────────────────── */
+/* ── Nav logout — visible on desktop only (mobile uses sidebar-footer) ── */
 .aff-nav-logout-form {
     margin: 0;
     padding: 0;
