@@ -28,6 +28,13 @@
                href="{% url 'affiliates:settings' %}">
                 <i class="fa-solid fa-gear"></i><span>Settings</span>
             </a>
+            {# Logout in nav — always visible on mobile and desktop #}
+            <form method="post" action="{% url 'affiliates:logout' %}" class="aff-nav-logout-form">
+                {% csrf_token %}
+                <button type="submit" class="ws-sidebar-link aff-nav-logout-btn" title="Sign out">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i><span>Sign out</span>
+                </button>
+            </form>
         </nav>
     </div>
 

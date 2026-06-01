@@ -43,15 +43,17 @@ _PDF_CSS = """
 
 :root {
     --brand: #0ea5e9;
+    --brand-teal: #0f766e;
     --brand-dark: #0369a1;
-    --bg-dark: #0f172a;
-    --bg-mid: #1e293b;
-    --text-light: #f8fafc;
+    --text-primary: #0f172a;
+    --text-secondary: #475569;
     --text-muted: #94a3b8;
     --border: #e2e8f0;
-    --green: #22c55e;
-    --amber: #f59e0b;
-    --red: #ef4444;
+    --bg-page: #f8fafc;
+    --bg-card: #ffffff;
+    --green: #059669;
+    --amber: #d97706;
+    --red: #dc2626;
     --radius: 8px;
 }
 
@@ -59,91 +61,119 @@ body {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     font-size: 10pt;
     line-height: 1.5;
-    color: #1e293b;
+    color: var(--text-primary);
     background: #ffffff;
 }
 
-/* ─── Cover page ──────────────────────────────────────────── */
+/* ─── Cover page — shell-light design ────────────────────── */
 .cover {
     min-height: 100vh;
-    background: linear-gradient(160deg, #0f172a 0%, #1e3a5f 55%, #0c4a6e 100%);
+    background: #ffffff;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    padding: 60px 56px 48px;
+    padding: 0 0 48px;
     page-break-after: always;
     position: relative;
-    overflow: hidden;
 }
+/* Teal accent bar across the very top */
 .cover::before {
     content: "";
     position: absolute;
-    top: -120px; right: -120px;
-    width: 480px; height: 480px;
-    background: radial-gradient(circle, rgba(14,165,233,0.15) 0%, transparent 70%);
-    border-radius: 50%;
+    top: 0; left: 0; right: 0; height: 6px;
+    background: linear-gradient(90deg, #0f766e 0%, #0ea5e9 60%, #818cf8 100%);
+}
+.cover-header {
+    padding: 32px 56px 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-top: 6px;
 }
 .cover-brand {
     display: flex;
     align-items: center;
-    gap: 12px;
+    gap: 10px;
 }
 .cover-brand-mark {
-    width: 44px; height: 44px;
-    background: var(--brand);
-    border-radius: 10px;
+    width: 36px; height: 36px;
+    background: #0ea5e9;
+    border-radius: 8px;
     display: flex; align-items: center; justify-content: center;
-    font-size: 22px; font-weight: 800; color: #fff;
+    font-size: 18px; font-weight: 800; color: #fff;
 }
 .cover-brand-name {
-    font-size: 16pt; font-weight: 700; color: #fff;
+    font-size: 14pt; font-weight: 700; color: #0f172a;
     letter-spacing: -0.02em;
+}
+.cover-report-badge {
+    font-size: 8pt; font-weight: 700; letter-spacing: 0.08em;
+    text-transform: uppercase; color: #0369a1;
+    background: #eff6ff; border: 1px solid #bfdbfe;
+    padding: 4px 12px; border-radius: 999px;
 }
 .cover-body {
     flex: 1;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    padding: 60px 0 40px;
+    padding: 52px 56px 40px;
 }
 .cover-report-type {
-    font-size: 9pt; font-weight: 600; letter-spacing: 0.1em;
-    text-transform: uppercase; color: var(--brand);
-    margin-bottom: 16px;
+    font-size: 9pt; font-weight: 700; letter-spacing: 0.1em;
+    text-transform: uppercase; color: #0f766e;
+    margin-bottom: 14px;
+    display: flex; align-items: center; gap: 8px;
+}
+.cover-report-type::before {
+    content: "";
+    display: inline-block;
+    width: 20px; height: 2px;
+    background: #0f766e;
+    border-radius: 1px;
 }
 .cover-domain {
-    font-size: 34pt; font-weight: 800; color: #fff;
+    font-size: 36pt; font-weight: 800; color: #0f172a;
     letter-spacing: -0.03em; line-height: 1.1;
-    margin-bottom: 12px; word-break: break-all;
+    margin-bottom: 10px; word-break: break-all;
 }
 .cover-subtitle {
-    font-size: 13pt; color: #94a3b8; margin-bottom: 40px;
+    font-size: 12pt; color: #64748b; margin-bottom: 44px;
+    font-weight: 400;
 }
 .cover-score-row {
-    display: flex; gap: 24px; flex-wrap: wrap;
+    display: flex; gap: 16px; flex-wrap: wrap;
 }
 .cover-score-card {
-    background: rgba(255,255,255,0.07);
-    border: 1px solid rgba(255,255,255,0.12);
+    background: #f8fafc;
+    border: 1px solid #e2e8f0;
     border-radius: var(--radius);
-    padding: 18px 24px;
-    min-width: 130px;
+    padding: 18px 22px;
+    min-width: 120px;
+    position: relative;
+    overflow: hidden;
+}
+.cover-score-card::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; height: 3px;
+    background: var(--card-accent, #0ea5e9);
 }
 .cover-score-card-label {
     font-size: 8pt; font-weight: 600; letter-spacing: 0.06em;
     text-transform: uppercase; color: #64748b;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
 }
 .cover-score-card-value {
-    font-size: 26pt; font-weight: 800; line-height: 1;
+    font-size: 28pt; font-weight: 800; line-height: 1;
+    color: var(--card-accent, #0ea5e9);
 }
 .cover-score-card-sub {
-    font-size: 8pt; color: #64748b; margin-top: 4px;
+    font-size: 8pt; color: #94a3b8; margin-top: 4px;
+    font-weight: 500;
 }
 .cover-footer {
+    margin: 0 56px;
     display: flex; justify-content: space-between;
-    font-size: 8pt; color: #475569;
-    border-top: 1px solid rgba(255,255,255,0.08);
+    font-size: 8pt; color: #94a3b8;
+    border-top: 1px solid #e2e8f0;
     padding-top: 20px;
 }
 
@@ -415,35 +445,37 @@ def _build_audit_report_html(audit_run):
     pages = audit_run.pages_crawled or 0
     total_issues = issue_summary.get("total", 0)
 
-    # Cover score cards
+    # Cover score cards — shell-light color palette
+    score_accent = _score_color(overall)
+    issue_accent = "#dc2626" if total_issues > 10 else "#d97706" if total_issues > 3 else "#059669"
     cover_cards_html = f"""
-    <div class="cover-score-card">
+    <div class="cover-score-card" style="--card-accent:{score_accent}">
         <div class="cover-score-card-label">Overall Score</div>
-        <div class="cover-score-card-value" style="color:{_score_color(overall)}">{overall}</div>
+        <div class="cover-score-card-value">{overall}</div>
         <div class="cover-score-card-sub">{_score_label(overall)}</div>
     </div>
-    <div class="cover-score-card">
+    <div class="cover-score-card" style="--card-accent:#0ea5e9">
         <div class="cover-score-card-label">Pages Crawled</div>
-        <div class="cover-score-card-value" style="color:#e2e8f0">{pages}</div>
+        <div class="cover-score-card-value">{pages}</div>
         <div class="cover-score-card-sub">Scanned this run</div>
     </div>
-    <div class="cover-score-card">
+    <div class="cover-score-card" style="--card-accent:{issue_accent}">
         <div class="cover-score-card-label">Issues Found</div>
-        <div class="cover-score-card-value" style="color:{'#ef4444' if total_issues > 10 else '#f59e0b' if total_issues > 3 else '#22c55e'}">{total_issues}</div>
+        <div class="cover-score-card-value">{total_issues}</div>
         <div class="cover-score-card-sub">Across all categories</div>
     </div>
     """
 
     if change_report:
         cover_cards_html += f"""
-        <div class="cover-score-card">
+        <div class="cover-score-card" style="--card-accent:#dc2626">
             <div class="cover-score-card-label">New Issues</div>
-            <div class="cover-score-card-value" style="color:#ef4444">{change_report.new_issue_count}</div>
+            <div class="cover-score-card-value">{change_report.new_issue_count}</div>
             <div class="cover-score-card-sub">Since last audit</div>
         </div>
-        <div class="cover-score-card">
+        <div class="cover-score-card" style="--card-accent:#059669">
             <div class="cover-score-card-label">Resolved</div>
-            <div class="cover-score-card-value" style="color:#22c55e">{change_report.resolved_issue_count}</div>
+            <div class="cover-score-card-value">{change_report.resolved_issue_count}</div>
             <div class="cover-score-card-sub">Fixed since last run</div>
         </div>
         """
@@ -640,26 +672,26 @@ def _build_audit_report_html(audit_run):
         </div>
         """
 
-    # Change report banner
+    # Change report banner — light theme
     change_html = ""
     if change_report:
         headline = _esc(change_report.summary.get("headline", ""))
         change_html = f"""
-        <div style="margin: 0 56px; background: linear-gradient(135deg,#0f172a,#1e3a5f);
-                    border-radius: var(--radius); padding: 20px 24px; color:#fff;
+        <div style="margin: 0 56px 0; background: #f0fdf4; border: 1px solid #bbf7d0;
+                    border-radius: var(--radius); padding: 18px 24px;
                     display:flex; gap:24px; align-items:center; flex-wrap:wrap;">
             <div style="flex:1">
-                <div style="font-size:8pt;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#38bdf8;margin-bottom:6px">Changes since last audit</div>
-                <div style="font-size:11pt;font-weight:700">{headline}</div>
+                <div style="font-size:8pt;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#059669;margin-bottom:6px">Changes since last audit</div>
+                <div style="font-size:11pt;font-weight:700;color:#0f172a">{headline}</div>
             </div>
             <div style="display:flex;gap:20px;">
                 <div style="text-align:center">
-                    <div style="font-size:22pt;font-weight:800;color:#ef4444">{change_report.new_issue_count}</div>
-                    <div style="font-size:8pt;color:#94a3b8">New issues</div>
+                    <div style="font-size:22pt;font-weight:800;color:#dc2626">{change_report.new_issue_count}</div>
+                    <div style="font-size:8pt;color:#64748b">New issues</div>
                 </div>
                 <div style="text-align:center">
-                    <div style="font-size:22pt;font-weight:800;color:#22c55e">{change_report.resolved_issue_count}</div>
-                    <div style="font-size:8pt;color:#94a3b8">Resolved</div>
+                    <div style="font-size:22pt;font-weight:800;color:#059669">{change_report.resolved_issue_count}</div>
+                    <div style="font-size:8pt;color:#64748b">Resolved</div>
                 </div>
             </div>
         </div>
@@ -717,21 +749,24 @@ def _build_audit_report_html(audit_run):
 </head>
 <body>
 
-<!-- Cover -->
+<!-- Cover — shell-light design -->
 <div class="cover">
-    <div class="cover-brand">
-        <div class="cover-brand-mark">V</div>
-        <div class="cover-brand-name">VRT Space</div>
+    <div class="cover-header">
+        <div class="cover-brand">
+            <div class="cover-brand-mark">V</div>
+            <div class="cover-brand-name">VRT Space</div>
+        </div>
+        <span class="cover-report-badge">Audit Report</span>
     </div>
     <div class="cover-body">
-        <div class="cover-report-type">Audit Report</div>
+        <div class="cover-report-type">AI Visibility &amp; SEO Audit</div>
         <div class="cover-domain">{domain}</div>
-        <div class="cover-subtitle">AI-driven SEO &amp; AEO visibility analysis</div>
+        <div class="cover-subtitle">Comprehensive site analysis — technical, SEO, AEO, content &amp; performance</div>
         <div class="cover-score-row">{cover_cards_html}</div>
     </div>
     <div class="cover-footer">
         <span>Generated {generated}</span>
-        <span>Confidential — for client use only</span>
+        <span>Confidential · for client use only</span>
     </div>
 </div>
 
@@ -900,35 +935,38 @@ def _build_seo_report_html(payload):
 </head>
 <body>
 
-<!-- Cover -->
+<!-- Cover — shell-light design -->
 <div class="cover">
-    <div class="cover-brand">
-        <div class="cover-brand-mark">V</div>
-        <div class="cover-brand-name">VRT Space</div>
+    <div class="cover-header">
+        <div class="cover-brand">
+            <div class="cover-brand-mark">V</div>
+            <div class="cover-brand-name">VRT Space</div>
+        </div>
+        <span class="cover-report-badge">SEO Strategy Report</span>
     </div>
     <div class="cover-body">
         <div class="cover-report-type">SEO Strategy Report</div>
         <div class="cover-domain">{proj_name}</div>
         <div class="cover-subtitle">{domain}{f' · {location}' if location else ''}{f' · {biz_type}' if biz_type else ''}</div>
         <div class="cover-score-row">
-            <div class="cover-score-card">
+            <div class="cover-score-card" style="--card-accent:#0ea5e9">
                 <div class="cover-score-card-label">Competitors</div>
-                <div class="cover-score-card-value" style="color:#e2e8f0">{comp_count}</div>
+                <div class="cover-score-card-value">{comp_count}</div>
                 <div class="cover-score-card-sub">Benchmarked</div>
             </div>
-            <div class="cover-score-card">
+            <div class="cover-score-card" style="--card-accent:#0f766e">
                 <div class="cover-score-card-label">Execution Items</div>
-                <div class="cover-score-card-value" style="color:#e2e8f0">{exec_items}</div>
+                <div class="cover-score-card-value">{exec_items}</div>
                 <div class="cover-score-card-sub">Action ready</div>
             </div>
-            <div class="cover-score-card">
+            <div class="cover-score-card" style="--card-accent:#7c3aed">
                 <div class="cover-score-card-label">Backlink Prospects</div>
-                <div class="cover-score-card-value" style="color:#e2e8f0">{prospect_count}</div>
+                <div class="cover-score-card-value">{prospect_count}</div>
                 <div class="cover-score-card-sub">Discovered</div>
             </div>
-            <div class="cover-score-card">
+            <div class="cover-score-card" style="--card-accent:#d97706">
                 <div class="cover-score-card-label">Avg Relevance</div>
-                <div class="cover-score-card-value" style="color:#e2e8f0">{avg_relevance}</div>
+                <div class="cover-score-card-value">{avg_relevance}</div>
                 <div class="cover-score-card-sub">Discovery precision</div>
             </div>
         </div>

@@ -7494,6 +7494,27 @@ body:has(.aff-sidebar) > main > *:not(.aff-sidebar) {
     }
 }
 
+/* ── Nav logout — visible on all screen sizes ───────────────────── */
+.aff-nav-logout-form {
+    margin: 0;
+    padding: 0;
+}
+.aff-nav-logout-btn {
+    width: 100%;
+    border: none;
+    background: none;
+    cursor: pointer;
+    text-align: left;
+    border-top: 1px solid rgba(255, 255, 255, 0.06);
+    margin-top: 0.25rem;
+    color: #94a3b8 !important;
+}
+.aff-nav-logout-btn:hover {
+    color: #f87171 !important;
+    background: rgba(248, 113, 113, 0.07) !important;
+}
+.aff-nav-logout-btn i { color: inherit !important; }
+
 /* ── Sidebar label ──────────────────────────────────────────────── */
 .aff-portal-label {
     font-size: 0.66rem;
