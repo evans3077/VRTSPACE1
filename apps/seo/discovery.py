@@ -180,10 +180,23 @@ DISCOVERY_QUERY_TEMPLATES = {
     "default": [
         "{service} {location}",
         "best {service} {location}",
-        "{service} pricing {location}",
-        "{service} faq {location}",
-        "{service} contact {location}",
+        "{service} company {location}",
+        "{service} supplier {location}",
         "{service} near me",
+    ],
+    "local_service": [
+        "{service} {location}",
+        "best {service} {location}",
+        "{service} company {location}",
+        "{service} services {location}",
+        "{service} near me",
+    ],
+    "ecommerce": [
+        "{service} {location}",
+        "best {service} {location}",
+        "{service} company {location}",
+        "{service} brands {location}",
+        "buy {service} {location}",
     ],
     "automotive": [
         "{service} {location}",
@@ -427,13 +440,13 @@ def _build_benchmark_queries(profile, project=None):
     location = (profile.location or "").strip()
     audience = (profile.target_audience or "").strip()
     goal = (profile.target_goal or "").strip().lower()
-    industry_terms = INDUSTRY_DISCOVERY_TERMS.get(profile.business_type, [])
     templates = DISCOVERY_QUERY_TEMPLATES.get(profile.business_type, DISCOVERY_QUERY_TEMPLATES["default"])
-    
-    # Extract city-only from canonical for tighter local queries
+
+    # Parse location into parts: city, country
     loc_parts = _parse_canonical_location(location)
     city_only = loc_parts["city"] if loc_parts["city"] else location
-    
+    country_only = loc_parts["country"] if loc_parts["country"] else location
+
     if _is_hospitality_event_focus(profile):
         templates = [
             "{service} {location}",
@@ -455,12 +468,19 @@ def _build_benchmark_queries(profile, project=None):
     if city_only and city_only.lower() != location.lower():
         queries.append(f"{service} in {city_only}".strip())
         queries.append(f"best {service} in {city_only}".strip())
+    # Add country-level fallback so national competitors surface even when
+    # the county/city is too niche to return results from SerpAPI
+    if country_only and country_only.lower() != location.lower() and country_only.lower() != city_only.lower():
+        queries.append(f"{service} company {country_only}".strip())
+        queries.append(f"{service} supplier {country_only}".strip())
+        queries.append(f"best {service} {country_only}".strip())
     if audience:
         queries.append(f"{service} for {audience} {location}".strip())
     if "lead" in goal or "inquiry" in goal or "book" in goal or "sales" in goal:
         queries.append(f"{service} {location} contact".strip())
-    for term in industry_terms[:2]:
-        queries.append(f"{term} {location}".strip())
+    # NOTE: INDUSTRY_DISCOVERY_TERMS are intentionally NOT appended here.
+    # Generic terms like "services {location}" or "near me {location}" return random
+    # local businesses that are not true competitors and poison the benchmark set.
     for hint in _audit_query_hints(project)[:2]:
         queries.append(f"{hint} {location}".strip())
     return queries
@@ -950,15 +970,25 @@ def _aggregate_candidates(raw_candidates):
             }
         )
 
+    def _has_service_signal(signals):
+        return any(
+            signal.startswith("service:")
+            or signal.startswith("industry:")
+            or signal.startswith("primary_service:")
+            for signal in signals
+        )
+
     discovered = [
         item
         for item in bucketed_items["benchmark_competitor"]
         if (
+            # Criterion A: strong single-query match (≥7 relevance, no fatal flags)
             (
                 item["average_relevance"] >= 7
                 and "non_competitor_host" not in item["match_signals"]
                 and "missing_primary_service_alignment" not in item["match_signals"]
             )
+            # Criterion B: multi-query match with moderate relevance
             or (
                 item["query_count"] >= 2
                 and item["average_relevance"] >= 5
@@ -972,6 +1002,16 @@ def _aggregate_candidates(raw_candidates):
                     for signal in item["match_signals"]
                 )
             )
+            # Criterion C: single-query but very strong service signal match (≥10)
+            # Handles niche/local markets where competitors appear in only one query
+            or (
+                item["query_count"] >= 1
+                and item["average_relevance"] >= 10
+                and "non_competitor_host" not in item["match_signals"]
+                and "missing_primary_service_alignment" not in item["match_signals"]
+                and _has_service_signal(item["match_signals"])
+            )
+            # Criterion D: local pack results with any reasonable relevance
             or (
                 "local" in item["result_kinds"]
                 and item["average_relevance"] >= 3
