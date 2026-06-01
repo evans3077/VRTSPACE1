@@ -7483,15 +7483,33 @@ body:has(.aff-sidebar) > main > *:not(.aff-sidebar) {
     body:has(.aff-sidebar) .ws-sidebar-footer {
         display: flex !important;          /* override the global hide */
         border-top: none !important;
-        border-left: 1px solid rgba(255,255,255,0.08) !important;
+        border-left: 1px solid rgba(255,255,255,0.12) !important;
         padding: 0 !important;
         margin-left: auto;
         flex-shrink: 0;
+        align-items: center;
     }
     body:has(.aff-sidebar) .ws-sidebar-logout {
-        padding: 0.75rem 1rem !important;
-        white-space: nowrap;
-        font-size: 0.78rem;
+        display: flex !important;
+        align-items: center;
+        justify-content: center;
+        padding: 0 1.1rem !important;
+        height: 100%;
+        color: #f87171 !important;
+        background: none !important;
+        border: none !important;
+        cursor: pointer;
+    }
+    body:has(.aff-sidebar) .ws-sidebar-logout i {
+        font-size: 1.2rem !important;
+        color: #f87171 !important;
+    }
+    /* Hide the text — icon alone is universally understood as logout */
+    body:has(.aff-sidebar) .ws-sidebar-logout span {
+        display: none !important;
+    }
+    body:has(.aff-sidebar) .ws-sidebar-logout:hover i {
+        color: #ef4444 !important;
     }
     /* On mobile the sidebar-footer logout is visible — hide the duplicate nav one */
     body:has(.aff-sidebar) .aff-nav-logout-form {
