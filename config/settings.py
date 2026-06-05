@@ -397,7 +397,11 @@ AFFILIATE_PROGRAM_FROM_EMAIL = os.environ.get(
 
 SERP_DISCOVERY_PROVIDER = first_env("SERP_DISCOVERY_PROVIDER", default="serpapi,duckduckgo")
 SERPAPI_API_KEY = first_env("SERPAPI_API_KEY", "SERP_API_KEY")
-SERP_DISCOVERY_QUERY_LIMIT = int(os.environ.get("SERP_DISCOVERY_QUERY_LIMIT", "4"))
+# 6 benchmark queries per audit: enough room for ~4 local + 2 national-fallback
+# queries so niche city/county markets still surface competitors that rank
+# nationally. Non-benchmark families define only 3 queries each, so raising this
+# only adds benchmark-competitor coverage (≈15 SerpAPI calls/audit total).
+SERP_DISCOVERY_QUERY_LIMIT = int(os.environ.get("SERP_DISCOVERY_QUERY_LIMIT", "6"))
 SERP_DISCOVERY_RESULTS_PER_QUERY = int(os.environ.get("SERP_DISCOVERY_RESULTS_PER_QUERY", "8"))
 SERP_PROVIDER_TIMEOUT_SECONDS = int(os.environ.get("SERP_PROVIDER_TIMEOUT_SECONDS", "10"))
 SERP_DUCKDUCKGO_TIMEOUT_SECONDS = int(os.environ.get("SERP_DUCKDUCKGO_TIMEOUT_SECONDS", "8"))
