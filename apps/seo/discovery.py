@@ -157,25 +157,47 @@ _COUNTRY_CODE_TO_GL = {
 INDUSTRY_DISCOVERY_TERMS = {
     "automotive": ["used car dealership", "used cars for sale", "car dealer", "vehicle financing"],
     "agency": ["services", "pricing", "case study", "consulting"],
-    "saas": ["software", "platform", "pricing", "features"],
+    "saas": ["software", "platform", "pricing", "features", "SaaS", "tool"],
     "hotel": ["rooms", "booking", "amenities", "events"],
+    "restaurant_food": ["restaurant", "cafe", "dining", "catering", "eatery", "bistro", "food"],
     "ecommerce": ["shop", "products", "category", "pricing"],
-    "healthcare": ["clinic", "appointment", "care", "service"],
+    "healthcare": ["clinic", "appointment", "care", "service", "medical", "doctor"],
     "real_estate": ["property", "listing", "homes", "real estate"],
     "local_service": ["services", "near me", "pricing", "reviews"],
+    "legal": ["law firm", "lawyer", "attorney", "legal services", "solicitor", "advocate"],
+    "education": ["school", "academy", "tutoring", "courses", "training", "institute"],
+    "finance": ["financial advisor", "finance", "insurance", "accounting", "fintech", "investment"],
+    "beauty_wellness": ["salon", "spa", "beauty", "wellness", "barbershop", "therapy", "grooming"],
+    "construction": ["contractor", "builder", "renovation", "roofing", "plumbing", "electrician"],
+    "manufacturing": ["manufacturer", "supplier", "industrial", "wholesale", "fabrication", "factory"],
+    "media": ["publication", "magazine", "news", "blog", "editorial", "content", "broadcast"],
+    "travel": ["tour operator", "travel agency", "safari", "adventure", "package tours", "destination"],
     "events": ["event venue", "wedding venue", "garden venue", "event gardens", "conference venue"],
+    "nonprofit": ["nonprofit", "charity", "foundation", "ngo", "community organization", "donation"],
+    "other": [],
 }
 
 INDUSTRY_MUST_HAVE_TERMS = {
     "automotive": ["car", "cars", "vehicle", "vehicles", "dealer", "dealership", "used car", "auto"],
     "agency": ["agency", "marketing", "seo", "design", "consulting"],
-    "saas": ["software", "platform", "app", "tool", "dashboard"],
+    "saas": ["software", "platform", "app", "tool", "dashboard", "saas"],
     "hotel": ["hotel", "room", "booking", "stay"],
+    "restaurant_food": ["restaurant", "food", "cafe", "menu", "dining", "catering", "eatery", "kitchen", "eat"],
     "ecommerce": ["shop", "store", "product", "products"],
-    "healthcare": ["clinic", "doctor", "medical", "care"],
+    "healthcare": ["clinic", "doctor", "medical", "care", "health", "hospital", "pharmacy"],
     "real_estate": ["property", "real estate", "home", "homes"],
     "local_service": ["service", "services", "repair", "installation"],
+    "legal": ["law", "lawyer", "attorney", "legal", "firm", "counsel", "solicitor", "advocate"],
+    "education": ["school", "education", "learning", "courses", "training", "academy", "tutoring", "college"],
+    "finance": ["finance", "financial", "investment", "insurance", "accounting", "bank", "loan", "advisor"],
+    "beauty_wellness": ["salon", "spa", "beauty", "wellness", "hair", "nails", "massage", "grooming", "barber"],
+    "construction": ["contractor", "construction", "builder", "renovation", "repair", "installation", "trades"],
+    "manufacturing": ["manufacturer", "manufacturing", "supplier", "industrial", "factory", "wholesale", "produce"],
+    "media": ["media", "news", "blog", "content", "publication", "magazine", "editorial", "broadcast"],
+    "travel": ["tour", "travel", "tourism", "safari", "adventure", "trip", "package", "destination"],
     "events": ["event", "events", "venue", "garden", "gardens", "wedding", "conference", "party"],
+    "nonprofit": ["nonprofit", "charity", "foundation", "ngo", "organization", "community", "volunteer", "cause"],
+    "other": ["service", "company", "business"],
 }
 
 DISCOVERY_QUERY_TEMPLATES = {
@@ -218,6 +240,14 @@ DISCOVERY_QUERY_TEMPLATES = {
         "best {service} {location}",
         "{service} case study {location}",
     ],
+    "saas": [
+        "best {service} software",
+        "{service} platform comparison",
+        "{service} tool pricing",
+        "{service} software {location}",
+        "{service} alternatives",
+        "{service} SaaS reviews",
+    ],
     "hotel": [
         "{service} {location}",
         "hotel {location}",
@@ -225,6 +255,22 @@ DISCOVERY_QUERY_TEMPLATES = {
         "best hotel {location}",
         "{service} amenities {location}",
         "{service} booking {location}",
+    ],
+    "restaurant_food": [
+        "{service} {location}",
+        "best {service} {location}",
+        "{service} near me",
+        "restaurants in {location}",
+        "{service} menu {location}",
+        "top {service} {location}",
+    ],
+    "healthcare": [
+        "{service} {location}",
+        "best {service} {location}",
+        "{service} clinic {location}",
+        "{service} doctor {location}",
+        "{service} specialist {location}",
+        "{service} near me",
     ],
     "real_estate": [
         "{service} {location}",
@@ -234,6 +280,70 @@ DISCOVERY_QUERY_TEMPLATES = {
         "{service} pricing {location}",
         "best {service} {location}",
     ],
+    "legal": [
+        "{service} lawyer {location}",
+        "{service} attorney {location}",
+        "best {service} law firm {location}",
+        "law firm {location}",
+        "{service} legal services {location}",
+        "{service} advocate {location}",
+    ],
+    "education": [
+        "{service} {location}",
+        "best {service} {location}",
+        "{service} courses {location}",
+        "{service} school {location}",
+        "{service} training {location}",
+        "online {service} courses",
+    ],
+    "finance": [
+        "{service} {location}",
+        "best {service} {location}",
+        "{service} company {location}",
+        "financial advisor {location}",
+        "{service} services {location}",
+        "{service} firm {location}",
+    ],
+    "beauty_wellness": [
+        "{service} {location}",
+        "best {service} {location}",
+        "{service} near me",
+        "{service} salon {location}",
+        "top {service} {location}",
+        "{service} spa {location}",
+    ],
+    "construction": [
+        "{service} contractor {location}",
+        "{service} company {location}",
+        "best {service} {location}",
+        "{service} services {location}",
+        "{service} builder {location}",
+        "licensed {service} contractor {location}",
+    ],
+    "manufacturing": [
+        "{service} manufacturer {location}",
+        "{service} supplier {location}",
+        "{service} company {location}",
+        "best {service} manufacturer {location}",
+        "wholesale {service} {location}",
+        "{service} factory {location}",
+    ],
+    "media": [
+        "top {service} publications",
+        "best {service} {location}",
+        "{service} news {location}",
+        "{service} magazine {location}",
+        "{service} blog {location}",
+        "{service} content platform",
+    ],
+    "travel": [
+        "{service} {location}",
+        "best {service} {location}",
+        "{service} tours {location}",
+        "{service} packages {location}",
+        "{service} agency {location}",
+        "{service} operator {location}",
+    ],
     "events": [
         "{service} {location}",
         "event venue {location}",
@@ -241,6 +351,14 @@ DISCOVERY_QUERY_TEMPLATES = {
         "garden venue {location}",
         "best {service} {location}",
         "{service} hire {location}",
+    ],
+    "nonprofit": [
+        "{service} {location}",
+        "nonprofit {location}",
+        "charity {location}",
+        "{service} organization {location}",
+        "best {service} {location}",
+        "{service} foundation {location}",
     ],
 }
 
@@ -287,9 +405,36 @@ DISCOVERY_SOURCE_FAMILY_RULES = {
         {"key": "citation_sources", "target_bucket": "citation_source"},
         {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
     ],
-    "local_service": [
+    "automotive": [
         {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
         {"key": "citation_sources", "target_bucket": "citation_source"},
+        {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+    "agency": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
+        {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+    "saas": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
+        {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+    "hotel": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
+        {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "citation_sources", "target_bucket": "citation_source"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+    "restaurant_food": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
+        {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "citation_sources", "target_bucket": "citation_source"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+    "ecommerce": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
         {"key": "market_surfaces", "target_bucket": "market_surface"},
         {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
     ],
@@ -305,25 +450,64 @@ DISCOVERY_SOURCE_FAMILY_RULES = {
         {"key": "market_surfaces", "target_bucket": "market_surface"},
         {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
     ],
-    "hotel": [
+    "local_service": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
+        {"key": "citation_sources", "target_bucket": "citation_source"},
+        {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+    "legal": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
+        {"key": "citation_sources", "target_bucket": "citation_source"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+    "education": [
         {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
         {"key": "market_surfaces", "target_bucket": "market_surface"},
         {"key": "citation_sources", "target_bucket": "citation_source"},
         {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
     ],
-    "ecommerce": [
+    "finance": [
         {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
         {"key": "market_surfaces", "target_bucket": "market_surface"},
         {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
     ],
-    "saas": [
+    "beauty_wellness": [
         {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
         {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "citation_sources", "target_bucket": "citation_source"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+    "construction": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
+        {"key": "citation_sources", "target_bucket": "citation_source"},
+        {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+    "manufacturing": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
+        {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+    "media": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+        {"key": "market_surfaces", "target_bucket": "market_surface"},
+    ],
+    "travel": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
+        {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "citation_sources", "target_bucket": "citation_source"},
         {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
     ],
     "events": [
         {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
         {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "citation_sources", "target_bucket": "citation_source"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+    "nonprofit": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
         {"key": "citation_sources", "target_bucket": "citation_source"},
         {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
     ],
@@ -579,6 +763,48 @@ def _family_query_templates(profile):
             f"{service} {location} reviews".strip(),
             f"{service} {location} listing".strip(),
             f"{service} {location} directions".strip(),
+        ]
+    elif profile.business_type == "restaurant_food":
+        families["market_surfaces"] = [
+            f"best restaurants {location}".strip(),
+            f"{service} reviews {location}".strip(),
+            f"food delivery {location}".strip(),
+        ]
+        families["citation_sources"] = [
+            f"{service} {location} reviews".strip(),
+            f"{service} {location} listing".strip(),
+        ]
+    elif profile.business_type == "legal":
+        families["citation_sources"] = [
+            f"{service} lawyer {location} directory".strip(),
+            f"law firm {location} directory".strip(),
+            f"{service} attorney {location} reviews".strip(),
+        ]
+    elif profile.business_type == "travel":
+        families["market_surfaces"] = [
+            f"best {service} tours {location}".strip(),
+            f"{service} {location} reviews".strip(),
+            f"{service} comparison {location}".strip(),
+        ]
+        families["citation_sources"] = [
+            f"{service} {location} directory".strip(),
+            f"tour operators {location}".strip(),
+        ]
+    elif profile.business_type == "beauty_wellness":
+        families["market_surfaces"] = [
+            f"best {service} {location}".strip(),
+            f"{service} reviews {location}".strip(),
+            f"top {service} near me".strip(),
+        ]
+        families["citation_sources"] = [
+            f"{service} {location} reviews".strip(),
+            f"{service} {location} listing".strip(),
+        ]
+    elif profile.business_type == "education":
+        families["market_surfaces"] = [
+            f"best {service} {location}".strip(),
+            f"{service} courses comparison".strip(),
+            f"top {service} schools {location}".strip(),
         ]
     return families
 
