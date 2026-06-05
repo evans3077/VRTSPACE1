@@ -2368,8 +2368,9 @@ class SEOCompetitorDiscoveryTests(TestCase):
         SERP_DISCOVERY_QUERY_LIMIT=1,
         SERP_DISCOVERY_RESULTS_PER_QUERY=5,
     )
+    @patch("apps.seo.discovery.fetch_vertical_serpapi_results", return_value={})
     @patch("apps.seo.discovery.fetch_serpapi_results", return_value="unexpected-payload")
-    def test_discover_serp_competitors_degrades_when_provider_payload_is_invalid(self, mocked_serp_fetch):
+    def test_discover_serp_competitors_degrades_when_provider_payload_is_invalid(self, mocked_serp_fetch, mocked_vertical_fetch):
         audit_request = AuditRequest.objects.create(
             company_name="Northwind",
             email="ops@example.com",
@@ -2455,9 +2456,10 @@ class SEOCompetitorDiscoveryTests(TestCase):
         SERP_PROVIDER_COOLDOWN_SECONDS=60,
         SERP_DUCKDUCKGO_COOLDOWN_SECONDS=60,
     )
+    @patch("apps.seo.discovery.fetch_vertical_serpapi_results", return_value={})
     @patch("apps.seo.discovery.fetch_duckduckgo_results", side_effect=requests.Timeout("duckduckgo timeout"))
     @patch("apps.seo.discovery.fetch_serpapi_results")
-    def test_discover_serp_competitors_stops_repeating_provider_failures(self, mocked_serpapi, mocked_duckduckgo):
+    def test_discover_serp_competitors_stops_repeating_provider_failures(self, mocked_serpapi, mocked_duckduckgo, mocked_vertical_fetch):
         cache.clear()
         response = requests.Response()
         response.status_code = 429
