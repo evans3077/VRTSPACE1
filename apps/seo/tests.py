@@ -2486,9 +2486,10 @@ class SEOCompetitorDiscoveryTests(TestCase):
         SERP_PROVIDER_COOLDOWN_SECONDS=60,
         SERP_DUCKDUCKGO_COOLDOWN_SECONDS=60,
     )
+    @patch("apps.seo.discovery.fetch_vertical_serpapi_results", return_value={})
     @patch("apps.seo.discovery.fetch_duckduckgo_results", side_effect=requests.Timeout("duckduckgo timeout"))
     @patch("apps.seo.discovery.fetch_serpapi_results")
-    def test_discover_serp_competitors_stops_repeating_provider_failures(self, mocked_serpapi, mocked_duckduckgo):
+    def test_discover_serp_competitors_stops_repeating_provider_failures(self, mocked_serpapi, mocked_duckduckgo, mocked_vertical_fetch):
         cache.clear()
         response = requests.Response()
         response.status_code = 429
