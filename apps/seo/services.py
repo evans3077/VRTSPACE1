@@ -194,6 +194,18 @@ NON_COMPETITOR_HOST_HINTS = {
     "priceline.com",
     "google.com",
     "google.co.ke",
+    # Social platforms — never direct competitors
+    "facebook.com",
+    "instagram.com",
+    "linkedin.com",
+    "twitter.com",
+    "x.com",
+    "youtube.com",
+    "tiktok.com",
+    "pinterest.com",
+    # Government / civic
+    "wikipedia.org",
+    "reddit.com",
 }
 
 # FOREIGN_GEO_HINTS removed — geo conflict detection is now dynamic.
@@ -825,7 +837,7 @@ def _score_competitor_payload_fit(payload, profile):
     page_scores = [_score_competitor_page_fit(page, profile) for page in pages]
     event_focused_hospitality = _is_event_focused_hospitality(profile)
     matching_threshold = 3 if event_focused_hospitality else 4
-    acceptance_threshold = 4 if event_focused_hospitality else 6
+    acceptance_threshold = matching_threshold  # accept when best page meets the match bar
     matching_pages = [item for item in page_scores if item["score"] >= matching_threshold]
     best_score = max((item["score"] for item in page_scores), default=0)
     total_topic = sum(item["topic_score"] for item in page_scores)

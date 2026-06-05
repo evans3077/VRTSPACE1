@@ -12,31 +12,28 @@ from apps.tools.services import extract_domain, normalize_url
 
 
 BLOCKED_COMPETITOR_DOMAINS = {
+    # Social platforms — never yield useful competitor data; block before crawl
     "facebook.com",
     "instagram.com",
     "linkedin.com",
     "x.com",
     "twitter.com",
     "youtube.com",
+    "tiktok.com",
+    "pinterest.com",
+    # General reference — not competitor sites
     "wikipedia.org",
     "reddit.com",
-    "yelp.com",
-    "tripadvisor.com",
-    "booking.com",
-    "expedia.com",
-    "yellowpages.com",
-    "mapquest.com",
+    # Google-owned surfaces (search engine result pages, not competitor pages)
     "maps.google.com",
     "google.com",
     "google.co.ke",
     "googleusercontent.com",
-    "trivago.com",
-    "kayak.com",
-    "travelocity.com",
-    "hotels.com",
-    "agoda.com",
-    "airbnb.com",
-    "priceline.com",
+    # Note: yelp, tripadvisor, booking.com etc. are NOT here — they appear as
+    # market_surfaces or citation_sources via MARKET_SURFACE_HOST_HINTS /
+    # LOCAL_CITATION_HOST_HINTS and should pass through _parse_result to be
+    # classified into those buckets. Only block domains that produce zero
+    # useful data for any discovery bucket.
 }
 
 DISCOVERY_STOPWORDS = {
@@ -1080,14 +1077,14 @@ def _candidate_link(result):
     return ""
 
 
+def _matches_domain_hint(domain, hints):
+    return any(domain == hint or domain.endswith(f".{hint}") for hint in hints)
+
+
 def _is_blocked_domain(domain, own_domain):
     if not domain or domain == own_domain:
         return True
-    return False
-
-
-def _matches_domain_hint(domain, hints):
-    return any(domain == hint or domain.endswith(f".{hint}") for hint in hints)
+    return _matches_domain_hint(domain, BLOCKED_COMPETITOR_DOMAINS)
 
 
 def _classify_result_bucket(*, domain, haystack, profile):
