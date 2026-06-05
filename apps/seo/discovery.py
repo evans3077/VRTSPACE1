@@ -633,6 +633,36 @@ def _is_hospitality_event_focus(profile):
     return any(token in service for token in ("event", "events", "garden", "venue", "wedding", "conference"))
 
 
+# For an event-focused venue, the real competitive set includes any local
+# hotel, resort, or venue that ALSO hosts events — even when their pages never
+# use the exact niche phrase (e.g. "events gardens"). Matching any of these
+# terms counts as primary-service alignment so genuine peers aren't filtered.
+EVENT_HOSPITALITY_ALIGNMENT_TERMS = (
+    "event", "events", "venue", "venues", "garden", "gardens", "wedding",
+    "weddings", "conference", "conferences", "banquet", "banquets", "hall",
+    "halls", "grounds", "lawn", "lawns", "retreat", "resort", "resorts",
+    "hotel", "hotels", "lodge", "lodges", "camp", "reception", "receptions",
+    "meeting", "meetings", "function", "functions", "party", "parties",
+    "gala", "exhibition", "expo", "gardens", "hospitality",
+)
+
+
+def _primary_service_alignment_satisfied(profile, haystack, primary_matches):
+    """Whether a result aligns with the profile's primary service well enough
+    to avoid the missing-primary-service penalty.
+
+    A direct token match always satisfies alignment. For event-focused
+    hospitality we also accept the broader event/venue/hospitality vocabulary,
+    since a hotel or resort that hosts events is a legitimate benchmark peer
+    for an events-gardens venue even when its pages lack the exact niche phrase.
+    """
+    if primary_matches > 0:
+        return True
+    if _is_hospitality_event_focus(profile):
+        return any(term in haystack for term in EVENT_HOSPITALITY_ALIGNMENT_TERMS)
+    return False
+
+
 def _has_foreign_geo_conflict(haystack, location):
     """Detect geo-conflict using dynamic location parsing instead of a hardcoded list."""
     location_parts = _parse_canonical_location(location)
@@ -1456,7 +1486,9 @@ def _relevance_signals(result, profile, *, query="", result_kind="organic"):
     ):
         score -= 2 if local_pack else 5
         signals.append("missing_industry_match")
-    if _primary_service_tokens(profile) and primary_matches == 0:
+    if _primary_service_tokens(profile) and not _primary_service_alignment_satisfied(
+        profile, haystack, primary_matches
+    ):
         score -= 2 if local_pack else 5
         signals.append("missing_primary_service_alignment")
     if (

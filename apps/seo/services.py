@@ -13,6 +13,7 @@ from .discovery import (
     discover_serp_competitors,
     _parse_canonical_location,
     _is_foreign_location,
+    _primary_service_alignment_satisfied,
 )
 from apps.tools.services import (
     ParsedPage,
@@ -803,7 +804,9 @@ def _score_competitor_page_fit(page, profile):
     if _has_foreign_geo_conflict(haystack, profile.location):
         penalty += 6
         signals.append("foreign_location_conflict")
-    if primary_service_tokens and primary_service_matches == 0:
+    if primary_service_tokens and not _primary_service_alignment_satisfied(
+        profile, haystack, primary_service_matches
+    ):
         penalty += 6
         signals.append("missing_primary_service_alignment")
     return {

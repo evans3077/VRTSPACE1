@@ -1805,6 +1805,47 @@ class SEOCompetitorDiscoveryTests(TestCase):
             queries,
         )
 
+    def test_event_focused_venue_keeps_hotel_competitors(self):
+        """A local hotel/resort that hosts events is a legitimate benchmark peer
+        for an events-gardens venue, even when its pages never use the exact
+        niche phrase. It must NOT be flagged as missing primary-service
+        alignment or scored out of the competitor set."""
+        from apps.seo.discovery import _relevance_signals
+
+        profile = SEOProjectProfile(
+            business_type="events",
+            location="Machakos County, Kenya",
+            target_goal="increase organic leads and bookings",
+            primary_service="events gardens",
+            target_audience="people looking for events gardens",
+        )
+
+        gelian = {
+            "title": "Gelian Hotel Machakos - Rooms, Conference & Event Venue",
+            "snippet": "Gelian Hotel in Machakos offers rooms, conference halls "
+            "and an outdoor event venue for weddings.",
+            "link": "https://www.gelianhotel.com/",
+        }
+        score, signals = _relevance_signals(
+            gelian, profile, query="event venue Machakos County, Kenya"
+        )
+
+        self.assertNotIn("missing_primary_service_alignment", signals)
+        # Strong enough to clear Criterion A (relevance >= 7)
+        self.assertGreaterEqual(score, 7)
+
+        # A genuinely unrelated result is still penalised and flagged.
+        noise = {
+            "title": "Cheap flights and car hire deals worldwide",
+            "snippet": "Compare cheap flights and rental cars.",
+            "link": "https://example-traveldeals.com/",
+        }
+        noise_score, noise_signals = _relevance_signals(
+            noise, profile, query="event venue Machakos County, Kenya"
+        )
+        self.assertIn("missing_primary_service_alignment", noise_signals)
+        self.assertLess(noise_score, 7)
+
     def test_build_discovery_routes_varies_by_business_type(self):
         profile = SEOProjectProfile(
             business_type="local_service",
