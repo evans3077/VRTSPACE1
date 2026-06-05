@@ -163,6 +163,7 @@ INDUSTRY_DISCOVERY_TERMS = {
     "healthcare": ["clinic", "appointment", "care", "service"],
     "real_estate": ["property", "listing", "homes", "real estate"],
     "local_service": ["services", "near me", "pricing", "reviews"],
+    "events": ["event venue", "wedding venue", "garden venue", "event gardens", "conference venue"],
 }
 
 INDUSTRY_MUST_HAVE_TERMS = {
@@ -174,6 +175,7 @@ INDUSTRY_MUST_HAVE_TERMS = {
     "healthcare": ["clinic", "doctor", "medical", "care"],
     "real_estate": ["property", "real estate", "home", "homes"],
     "local_service": ["service", "services", "repair", "installation"],
+    "events": ["event", "events", "venue", "garden", "gardens", "wedding", "conference", "party"],
 }
 
 DISCOVERY_QUERY_TEMPLATES = {
@@ -231,6 +233,14 @@ DISCOVERY_QUERY_TEMPLATES = {
         "homes for sale {location}",
         "{service} pricing {location}",
         "best {service} {location}",
+    ],
+    "events": [
+        "{service} {location}",
+        "event venue {location}",
+        "wedding venue {location}",
+        "garden venue {location}",
+        "best {service} {location}",
+        "{service} hire {location}",
     ],
 }
 
@@ -309,6 +319,12 @@ DISCOVERY_SOURCE_FAMILY_RULES = {
     "saas": [
         {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
         {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
+    ],
+    "events": [
+        {"key": "benchmark_competitors", "target_bucket": "benchmark_competitor"},
+        {"key": "market_surfaces", "target_bucket": "market_surface"},
+        {"key": "citation_sources", "target_bucket": "citation_source"},
         {"key": "backlink_prospects", "target_bucket": "backlink_prospect"},
     ],
 }
@@ -423,7 +439,11 @@ def _primary_service_tokens(profile):
 
 
 def _is_hospitality_event_focus(profile):
-    if getattr(profile, "business_type", "") != "hotel":
+    business_type = getattr(profile, "business_type", "")
+    # The dedicated "events" vertical is always event-venue focused.
+    if business_type == "events":
+        return True
+    if business_type != "hotel":
         return False
     service = str(getattr(profile, "primary_service", "") or "").lower()
     return any(token in service for token in ("event", "events", "garden", "venue", "wedding", "conference"))
@@ -440,50 +460,79 @@ def _build_benchmark_queries(profile, project=None):
     location = (profile.location or "").strip()
     audience = (profile.target_audience or "").strip()
     goal = (profile.target_goal or "").strip().lower()
-    templates = DISCOVERY_QUERY_TEMPLATES.get(profile.business_type, DISCOVERY_QUERY_TEMPLATES["default"])
 
     # Parse location into parts: city, country
     loc_parts = _parse_canonical_location(location)
     city_only = loc_parts["city"] if loc_parts["city"] else location
     country_only = loc_parts["country"] if loc_parts["country"] else location
+    has_country = bool(
+        country_only
+        and country_only.lower() != location.lower()
+        and country_only.lower() != city_only.lower()
+    )
 
-    if _is_hospitality_event_focus(profile):
-        templates = [
-            "{service} {location}",
-            "event venue {location}",
-            "wedding venue {location}",
-            "conference venue {location}",
-            "{service} booking {location}",
-            "{service} contact {location}",
+    event_focus = _is_hospitality_event_focus(profile)
+
+    # IMPORTANT: SERP_DISCOVERY_QUERY_LIMIT (default 4) truncates this list, so
+    # queries MUST be ordered by priority. We interleave a national fallback
+    # within the first few slots so niche city/county markets still surface
+    # competitors that rank nationally rather than only hyper-local results.
+    queries = []
+    if event_focus:
+        # Priority: local primary → local venue intent → NATIONAL fallback → local secondary
+        queries.append(f"{service} {location}".strip())
+        queries.append(f"event venue {location}".strip())
+        if has_country:
+            queries.append(f"{service} {country_only}".strip())       # national fallback (slot 3)
+        queries.append(f"garden venue {location}".strip())
+        queries.append(f"wedding venue {location}".strip())
+        if has_country:
+            queries.append(f"event venue {country_only}".strip())
+            queries.append(f"best {service} {country_only}".strip())
+    else:
+        templates = DISCOVERY_QUERY_TEMPLATES.get(
+            profile.business_type, DISCOVERY_QUERY_TEMPLATES["default"]
+        )
+        local_q = [
+            template.format(
+                service=service, location=location, audience=audience or "buyers"
+            ).strip()
+            for template in templates
         ]
-    queries = [
-        template.format(
-            service=service,
-            location=location,
-            audience=audience or "buyers",
-        ).strip()
-        for template in templates
-    ]
-    # Add city-only variants for tighter local discovery
+        # Keep the two strongest local queries, then inject a national fallback
+        # at slot 3, then the rest — so the national query survives truncation.
+        queries.extend(local_q[:2])
+        if has_country:
+            queries.append(f"{service} company {country_only}".strip())  # national (slot 3)
+        queries.extend(local_q[2:])
+        if has_country:
+            queries.append(f"{service} supplier {country_only}".strip())
+            queries.append(f"best {service} {country_only}".strip())
+
+    # Tighter city-only variants (lower priority — appended after core set)
     if city_only and city_only.lower() != location.lower():
         queries.append(f"{service} in {city_only}".strip())
         queries.append(f"best {service} in {city_only}".strip())
-    # Add country-level fallback so national competitors surface even when
-    # the county/city is too niche to return results from SerpAPI
-    if country_only and country_only.lower() != location.lower() and country_only.lower() != city_only.lower():
-        queries.append(f"{service} company {country_only}".strip())
-        queries.append(f"{service} supplier {country_only}".strip())
-        queries.append(f"best {service} {country_only}".strip())
-    if audience:
+    # Only add an audience-targeted query when the audience is a short phrase
+    # (a full descriptive sentence makes a useless, over-specific query).
+    if audience and len(audience.split()) <= 3 and not event_focus:
         queries.append(f"{service} for {audience} {location}".strip())
-    if "lead" in goal or "inquiry" in goal or "book" in goal or "sales" in goal:
+    if not event_focus and ("lead" in goal or "inquiry" in goal or "book" in goal or "sales" in goal):
         queries.append(f"{service} {location} contact".strip())
     # NOTE: INDUSTRY_DISCOVERY_TERMS are intentionally NOT appended here.
     # Generic terms like "services {location}" or "near me {location}" return random
     # local businesses that are not true competitors and poison the benchmark set.
     for hint in _audit_query_hints(project)[:2]:
         queries.append(f"{hint} {location}".strip())
-    return queries
+
+    # Dedupe while preserving priority order
+    seen = set()
+    ordered = []
+    for q in queries:
+        if q and q not in seen:
+            seen.add(q)
+            ordered.append(q)
+    return ordered
 
 
 def _family_query_templates(profile):

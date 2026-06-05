@@ -197,7 +197,11 @@ def get_industry_rule(business_type):
 
 
 def _is_event_focused_hospitality(profile):
-    if getattr(profile, "business_type", "") != "hotel":
+    business_type = getattr(profile, "business_type", "")
+    # The dedicated "events" vertical is always event-venue focused.
+    if business_type == "events":
+        return True
+    if business_type != "hotel":
         return False
     haystack = " ".join(
         [

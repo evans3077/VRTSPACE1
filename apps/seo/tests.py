@@ -1770,10 +1770,40 @@ class SEOCompetitorDiscoveryTests(TestCase):
 
         queries = build_discovery_queries(profile)
 
+        # Local venue-intent queries lead the set
         self.assertIn("events gardens Machakos, Kenya", queries)
         self.assertIn("event venue Machakos, Kenya", queries)
-        self.assertIn("wedding venue Machakos, Kenya", queries)
+        # A national fallback is interleaved within the query limit so niche
+        # city/county markets still surface competitors that rank nationally
+        self.assertIn("events gardens Kenya", queries)
+        # Hotel-specific room queries should not leak into an event-venue set
         self.assertNotIn("rooms in Machakos, Kenya", queries)
+
+    def test_events_business_type_triggers_venue_discovery(self):
+        """The dedicated 'events' vertical must get venue-intent queries and a
+        national fallback — not the generic default templates."""
+        profile = SEOProjectProfile(
+            business_type="events",
+            location="Machakos, Kenya",
+            target_goal="quality organic traffic",
+            primary_service="events gardens",
+            target_audience="people looking for events gardens",
+        )
+
+        queries = build_discovery_queries(profile)
+
+        self.assertIn("events gardens Machakos, Kenya", queries)
+        self.assertIn("event venue Machakos, Kenya", queries)
+        # National fallback survives the query-limit truncation
+        self.assertIn("events gardens Kenya", queries)
+        # No generic noise queries that surface non-competitor local businesses
+        self.assertNotIn("services Machakos, Kenya", queries)
+        self.assertNotIn("near me Machakos, Kenya", queries)
+        # No over-specific audience-sentence query
+        self.assertNotIn(
+            "events gardens for people looking for events gardens Machakos, Kenya",
+            queries,
+        )
 
     def test_build_discovery_routes_varies_by_business_type(self):
         profile = SEOProjectProfile(
