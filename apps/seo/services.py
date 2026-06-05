@@ -1798,27 +1798,51 @@ def build_benchmark_summary(site_structure, competitor_snapshots, discovery=None
     }
 
 
+_BUCKET_REASON_FRIENDLY = {
+    "comparison-surface": "Comparison & booking platform",
+    "comparison-surface-route": "Comparison & booking platform",
+    "market-surface-host": "Leading market platform",
+    "market-surface-route": "Market-level platform",
+    "citation-host": "Local listing directory",
+    "citation-host-route": "Local listing directory",
+    "directory-surface": "Business directory",
+    "directory-surface-route": "Business directory",
+    "editorial-surface": "Editorial & content site",
+    "editorial-surface-route": "Editorial & content site",
+    "association-resource": "Industry association",
+    "social-surface": "Social platform",
+    "social-surface-route": "Social platform",
+    "google-vertical": "Google vertical result",
+    "bing-vertical": "Bing vertical result",
+    "local-pack-competitor": "Local search competitor",
+    "direct-serp-match": "Direct SERP match",
+    "missing_primary_service_alignment": "Partial match — different core offer",
+    "foreign-location": "Different geographic market",
+}
+
+
 def build_discovery_workspace_sections(discovery):
     discovery = discovery or {}
     def _humanize(value):
-        return str(value or "").replace("_", " ").replace("-", " ").strip().title()
+        raw = str(value or "").strip()
+        return _BUCKET_REASON_FRIENDLY.get(raw) or raw.replace("_", " ").replace("-", " ").title()
 
     sections = []
     section_specs = [
         (
             "market_surfaces",
             "Market surfaces",
-            "Ranked discovery surfaces that shape the market but should not enter peer benchmarking.",
+            "These platforms dominate search results for your target queries — they're not direct competitors, but your business should be listed on them so customers find you where they compare options.",
         ),
         (
             "citation_sources",
             "Citation sources",
-            "Directory and local listing surfaces that can support local trust, citations, and entity coverage.",
+            "Local directories and listing sites where your business should appear. Getting listed here builds trust signals that help Google confirm your business details and improve local rankings.",
         ),
         (
             "backlink_prospects",
             "Backlink prospects",
-            "Editorial or resource surfaces that can be reused later for link acquisition and authority work.",
+            "Editorially relevant sites worth approaching for content placements, mentions, or links. Each one you earn improves your domain authority and AI engine citation potential.",
         ),
     ]
     for key, label, description in section_specs:

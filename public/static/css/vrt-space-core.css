@@ -6089,6 +6089,38 @@ body.shell-light .workspace-seo-shell [style*="background: #f8fafc"] {
     border-color: rgba(15, 23, 42, 0.08) !important;
 }
 
+body.shell-light .workspace-seo-shell [style*="background: rgba(255,255,255,0.02)"],
+body.shell-light .workspace-seo-shell [style*="background: rgba(255,255,255,0.01)"],
+body.shell-light .workspace-seo-shell [style*="background: rgba(255, 255, 255, 0.02)"],
+body.shell-light .workspace-seo-shell [style*="background: rgba(255, 255, 255, 0.01)"] {
+    background: #f8fafc !important;
+    border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+body.shell-light .workspace-seo-shell [style*="border: 1px solid var(--border-glass)"] {
+    border-color: rgba(15, 23, 42, 0.08) !important;
+}
+
+body.shell-light .workspace-seo-shell select,
+body.shell-light .workspace-seo-shell input[type="text"],
+body.shell-light .workspace-seo-shell input[type="email"],
+body.shell-light .workspace-seo-shell input[type="url"],
+body.shell-light .workspace-seo-shell textarea {
+    background: #ffffff !important;
+    border-color: rgba(15, 23, 42, 0.12) !important;
+    color: var(--text-primary) !important;
+}
+
+body.shell-light .workspace-seo-shell .seo-section-eyebrow {
+    color: #0369a1 !important;
+}
+
+body.shell-light .workspace-seo-shell .seo-inline-tag {
+    background: #ffffff !important;
+    border: 1px solid rgba(15, 23, 42, 0.08) !important;
+    color: var(--text-secondary) !important;
+}
+
 body.shell-light .workspace-seo-shell [style*="border-bottom: 1px solid rgba(255, 255, 255, 0.08)"],
 body.shell-light .workspace-seo-shell [style*="border-bottom: 1px solid rgba(255, 255, 255, 0.05)"],
 body.shell-light .workspace-aeo-shell [style*="border-bottom: 1px solid rgba(255,255,255,0.08)"],

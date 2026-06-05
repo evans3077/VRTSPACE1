@@ -703,8 +703,6 @@
                 <div class="data-card"><span class="data-card-label">Scripts Profiled</span><span class="data-card-value">{{ seo_value_summary.competitor_scripts_profiled|default:0 }}</span><p class="data-card-desc">Third-party app stack signals captured</p></div>
                 <div class="data-card"><span class="data-card-label">Keyword Targets</span><span class="data-card-value">{{ seo_value_summary.keyword_targets|default:0 }}</span><p class="data-card-desc">Targets from structure and competitor evidence</p></div>
                 <div class="data-card"><span class="data-card-label">Execution Items</span><span class="data-card-value">{{ seo_value_summary.execution_items|default:0 }}</span><p class="data-card-desc">Actionable tasks from benchmark output</p></div>
-            </div>
-            <div class="data-card-grid" style="margin-top: 1rem;">
                 <div class="data-card"><span class="data-card-label">Campaigns Advanced</span><span class="data-card-value">{{ seo_chain_value_summary.campaign_count|default:0 }}</span><p class="data-card-desc">Items carried into tracked campaigns</p></div>
                 <div class="data-card"><span class="data-card-label">Briefs Linked</span><span class="data-card-value">{{ seo_chain_value_summary.brief_count|default:0 }}</span><p class="data-card-desc">Campaigns with a live editorial brief</p></div>
                 <div class="data-card"><span class="data-card-label">Drafts Created</span><span class="data-card-value">{{ seo_chain_value_summary.draft_count|default:0 }}</span><p class="data-card-desc">Campaigns that produced a content draft</p></div>
@@ -775,7 +773,7 @@
                 {% for section in seo_discovery_sections %}
                 {% if section.count %}
                 <article class="system-card" style="padding: 1.5rem;">
-                    <p class="eyebrow" style="color: var(--signal);">{{ section.label }}</p>
+                    <p class="eyebrow seo-section-eyebrow">{{ section.label }}</p>
                     <h3 style="font-size: 1.8rem; margin: 0.5rem 0; color: var(--text-primary);">{{ section.count }}</h3>
                     <p style="color: var(--text-secondary); font-size: 0.9rem;">{{ section.description }}</p>
                     <div style="margin-top: 1.25rem; display: grid; gap: 1rem;">
