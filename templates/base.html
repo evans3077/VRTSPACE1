@@ -292,7 +292,7 @@
        inline ▲/▼ delta text, CSS sparkline bars at bottom.
        ══════════════════════════════════════════════════════════ */
     .ws-kpi-section {
-        padding: 1.25rem 0 0;
+        padding: 1.25rem 0 1.25rem;
         border-bottom: 1px solid #e2e8f0;
         background: #f8fafc;
     }
@@ -439,6 +439,12 @@
     body.shell-light .ws-hub-header {
         background: #ffffff;
         border-bottom: 1px solid #e2e8f0;
+        /* Lift off the topbar — show a sliver of #f1f5f9 above the card */
+        margin-top: 0.5rem;
+        /* Rounded top corners: looks like a card floating on the page */
+        border-radius: 12px 12px 0 0;
+        /* Subtle depth shadow below the header chrome */
+        box-shadow: 0 2px 12px rgba(15,23,42,0.06);
     }
     body.shell-light .ws-hub-title   { color: #0f172a !important; }
     body.shell-light .ws-hub-eyebrow { color: #0284c7 !important; }
@@ -1271,6 +1277,8 @@
         margin-right: 0;
         padding-left: 0;
         padding-right: 0;
+        /* Consistent vertical breathing room between major page sections */
+        padding-bottom: 0.5rem;
     }
     /* Give the hub header its own 2rem horizontal padding so the white
        background band is truly edge-to-edge but text is comfortably indented. */
@@ -1442,8 +1450,8 @@
         align-items: center;
         justify-content: space-between;
         gap: 1rem;
-        padding: 0.7rem 1.5rem;
-        background: rgba(255,255,255,0.85);
+        padding: 0.85rem 1.5rem;
+        background: rgba(255,255,255,0.92);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
         border-bottom: 1px solid #e2e8f0;
@@ -1885,15 +1893,14 @@
     body.shell-light .ws-form-card-desc  { color: #64748b; }
 
     /* Form layout */
-    .ws-form { display: flex; flex-direction: column; gap: 0; }
+    .ws-form { display: flex; flex-direction: column; gap: 1.25rem; }
     .ws-form-row {
         display: grid;
         grid-template-columns: 1fr 1fr;
         gap: 1.25rem;
         margin-bottom: 1.25rem;
     }
-    .ws-form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 1.25rem; }
-    .ws-form-row .ws-form-group { margin-bottom: 0; }
+    .ws-form-group { display: flex; flex-direction: column; gap: 0.4rem; margin-bottom: 0; }
 
     .ws-form-label {
         font-size: 0.78rem; font-weight: 700; letter-spacing: 0.05em;
