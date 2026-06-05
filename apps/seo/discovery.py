@@ -1257,7 +1257,15 @@ def discover_serp_competitors(project, profile):
                 continue
 
     # ── Vertical source queries (google_local, google_hotels, etc.) ──────────
-    if settings.SERPAPI_API_KEY:
+    # Skip if serpapi is on cooldown (rate-limited) or all providers are exhausted,
+    # since vertical queries also require a working SerpAPI key.
+    _serpapi_available = (
+        settings.SERPAPI_API_KEY
+        and not _provider_is_cooled_down("serpapi")
+        and not runtime_state.get("providers_exhausted")
+        and "serpapi" not in runtime_state.get("disabled_providers", set())
+    )
+    if _serpapi_available:
         vertical_candidates, vertical_errors = _run_vertical_source_queries(
             profile,
             own_domain=own_domain,
@@ -1493,12 +1501,16 @@ def _run_vertical_source_queries(profile, *, own_domain, location, country_code)
                 country_code=country_code,
             )
         except Exception as exc:
-            errors.append({
-                "query": query,
-                "route_family": "vertical",
-                "provider": f"serpapi:{engine}",
-                "message": f"Vertical source ({engine}) error: {_clean_error_message(exc, 'serpapi')}",
-            })
+            # Only surface rate-limit and timeout errors as actionable errors;
+            # auth errors (403) and other HTTP failures are silently skipped so
+            # they don't pollute the error list when the API key is misconfigured.
+            if _should_disable_provider(exc):
+                errors.append({
+                    "query": query,
+                    "route_family": "vertical",
+                    "provider": f"serpapi:{engine}",
+                    "message": f"Vertical source ({engine}) error: {_clean_error_message(exc, 'serpapi')}",
+                })
             continue
 
         raw_items = payload.get(result_key) or []
